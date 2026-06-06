@@ -23,7 +23,9 @@ const getSubType = (bp) => {
       return sub
     }
     if (parts[i] === 'ammo' && parts[i - 1] === 'fpsgear') {
-      return parts[i + 1]?.replace('$', '')
+      const ammoType = parts[i + 1]?.replace('$', '')
+      if (['plasma', 'laser', 'electron'].includes(ammoType)) return 'energy'
+      return ammoType
     }
     if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
       let sub = parts[i + 1]?.replace('$', '')

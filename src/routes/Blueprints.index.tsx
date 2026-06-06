@@ -34,7 +34,9 @@ const getSubType = (bp) => {
     
     // FPS ammo
     if (parts[i] === 'ammo' && parts[i - 1] === 'fpsgear') {
-      return parts[i + 1]?.replace('$', '')
+      const ammoType = parts[i + 1]?.replace('$', '')
+      if (['plasma', 'laser', 'electron'].includes(ammoType)) return 'energy'
+      return ammoType
     }
     
     // FPS armour: fpsgear\armour\[type] or fpsgear\armour\combat\[weight] or fpsgear\armour\$templates\[type]
