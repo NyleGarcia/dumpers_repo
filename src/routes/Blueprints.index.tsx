@@ -91,9 +91,13 @@ export default function BlueprintsRoute() {
 
   const { data: blueprints, isLoading } = useBlueprintData()
 
-  React.useEffect(() => {
+  const refreshUsersList = React.useCallback(() => {
     fetchUsersWithBlueprints().then(setUsersWithBlueprints)
-  }, [])
+  }, [fetchUsersWithBlueprints])
+
+  React.useEffect(() => {
+    refreshUsersList()
+  }, [refreshUsersList, myAcquiredBlueprints])
 
   React.useEffect(() => {
     if (selectedUserId === 'all' || selectedUserId === user?.id) {
