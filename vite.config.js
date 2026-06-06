@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/dumpers_repo/',
+  base: '/',
   server: {
     headers: {
       'X-Frame-Options': 'DENY',
