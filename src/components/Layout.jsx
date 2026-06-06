@@ -142,14 +142,7 @@ export default function Layout() {
 
       {/* Footer */}
       <footer className="mt-12 py-6 text-center text-slate-500 border-t border-slate-800">
-        <p>© 2024 Black Star Dumpers - All blueprints subject to game EULA</p>
-        <div className="flex justify-center gap-4 mt-2 text-sm">
-          <a href="#" className="hover:text-red-400 transition-colors">About</a>
-          <span className="text-slate-600">|</span>
-          <a href="#" className="hover:text-red-400 transition-colors">Privacy</a>
-          <span className="text-slate-600">|</span>
-          <a href="#" className="hover:text-red-400 transition-colors">Contact</a>
-        </div>
+        <p>© 2026 Black Star - All Blueprints Subject to Change Every Patch</p>
       </footer>
     </div>
   )
