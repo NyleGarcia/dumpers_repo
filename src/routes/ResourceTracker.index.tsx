@@ -4,6 +4,7 @@ import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import { useBlueprintData } from './blueprints'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { ORDER_QUALITY_TIERS } from '../config/dfp'
+import { SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
@@ -139,13 +140,7 @@ export default function ResourceTrackerRoute() {
   return (
     <FeaturePageLayout
       title="Resource Tracker"
-      subtitle={
-        activeTab === 'personal'
-          ? 'Add quality-tier stock cards, then adjust SCU as you refine in-game'
-          : activeTab === 'org'
-            ? 'Read-only sum of My Resources across approved members'
-            : 'Submit buy orders for blueprints and/or refined materials (→ Custom Orders)'
-      }
+      subtitle={SITE_SLOGAN}
       actions={
         isSuperAdmin && isInventoryTab ? (
           <button

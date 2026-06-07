@@ -1,4 +1,5 @@
 import React from 'react'
+import { SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
@@ -29,7 +30,12 @@ export default function Login() {
           >
             Dumper's Repo
           </h1>
-          <p className="text-slate-400">Sign in to track your blueprints</p>
+          <p
+            className="text-slate-300 tracking-[0.25em] uppercase text-sm sm:text-base"
+            style={{ fontFamily: "'Orbitron', sans-serif" }}
+          >
+            {SITE_SLOGAN}
+          </p>
         </div>
 
         <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 shadow-2xl">

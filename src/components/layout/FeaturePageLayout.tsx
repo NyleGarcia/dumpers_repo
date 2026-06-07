@@ -38,7 +38,14 @@ export default function FeaturePageLayout({
                   </span>
                 )}
               </div>
-              {subtitle && <p className="text-slate-400 text-sm mt-1">{subtitle}</p>}
+              {subtitle && (
+                <p
+                  className="text-slate-300 text-sm mt-1 tracking-[0.2em] uppercase"
+                  style={{ fontFamily: 'Orbitron, sans-serif' }}
+                >
+                  {subtitle}
+                </p>
+              )}
             </div>
             {actions && <div className="flex items-center gap-2 flex-wrap">{actions}</div>}
           </div>

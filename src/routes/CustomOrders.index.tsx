@@ -9,6 +9,7 @@ import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
 import { buildStockTotalsByResource } from '../lib/inventoryStock'
+import { SITE_SLOGAN } from '../config/site'
 import { getOrderAcceptBlockers } from '../lib/orderAccept'
 import {
   orderTotalDfp,
@@ -260,7 +261,7 @@ export default function CustomOrdersRoute() {
   return (
     <FeaturePageLayout
       title="Custom Orders"
-      subtitle="Request crafted items by blueprint — DFP is the required aUEC price for the org"
+      subtitle={SITE_SLOGAN}
       badge="Preview"
       actions={
         <>

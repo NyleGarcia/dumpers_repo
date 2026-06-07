@@ -5,6 +5,7 @@ import OrderRatingModal from '../components/OrderRatingModal'
 import ReputationBadge from '../components/ReputationBadge'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
+import { SITE_SLOGAN } from '../config/site'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
@@ -246,7 +247,7 @@ export default function FulfillmentRoute() {
   return (
     <FeaturePageLayout
       title="Fulfillment"
-      subtitle="Craft assigned orders at the customer's required DFP price — resources deduct from personal stock"
+      subtitle={SITE_SLOGAN}
       badge="Preview"
       actions={
         <Link
