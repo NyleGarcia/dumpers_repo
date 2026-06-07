@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useRouterState } from '@tanstack/react-router'
 import SiteBrandMark from '../SiteBrandMark'
 import SiteBrandTitle from '../SiteBrandTitle'
 import { SITE_COPYRIGHT } from '../../config/site'
@@ -34,15 +35,21 @@ export default function AppChrome({
   onOpenAdmin,
   onSignOut,
 }: AppChromeProps) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
   return (
     <div className="site-page-bg min-h-screen flex flex-col">
-      <header className="site-app-header">
-        <div className="site-shell flex items-center gap-3 py-2.5">
+      <header className="site-app-header fixed top-0 inset-x-0 z-50">
+        <div className="site-shell h-14 flex items-center gap-3">
           <SiteBrandMark size="md" />
           <div className="hidden sm:block border-l border-slate-700/70 pl-3 min-w-0">
-            <SiteBrandTitle size="compact" layout="inline" align="left" />
+            <SiteBrandTitle size="compact" layout="inline" align="left" subtle />
           </div>
-          <AppNavTabs items={navItems} className="hidden lg:flex flex-1 justify-center px-2" />
+          <AppNavTabs items={navItems} className="hidden lg:flex flex-1 justify-center px-2 min-h-9 items-center" />
           <AppUserMenu
             displayName={displayName}
             profile={profile}
@@ -56,12 +63,12 @@ export default function AppChrome({
             onSignOut={onSignOut}
           />
         </div>
-        <div className="lg:hidden border-t border-slate-800/70">
-          <AppNavTabs items={navItems} className="site-shell py-2 overflow-x-auto" />
+        <div className="lg:hidden border-t border-slate-800/70 h-11 flex items-center">
+          <AppNavTabs items={navItems} className="site-shell overflow-x-auto min-h-9 items-center" />
         </div>
       </header>
 
-      <div className="flex-1">{children}</div>
+      <div className="site-main-offset flex-1 flex flex-col">{children}</div>
 
       <footer className="site-footer site-shell mt-8">
         <p>{SITE_COPYRIGHT}</p>

@@ -425,9 +425,9 @@ export default function BlueprintsRoute() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="site-shell py-24 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin mx-auto"></div>
+          <div className="w-12 h-12 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin mx-auto" />
           <p className="text-slate-400 text-lg font-medium">Loading blueprints...</p>
         </div>
       </div>
@@ -436,7 +436,7 @@ export default function BlueprintsRoute() {
 
   if (!blueprints) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="site-shell py-24 flex items-center justify-center">
         <p className="text-red-400 text-xl font-medium">Failed to load blueprints</p>
       </div>
     )
@@ -478,7 +478,7 @@ export default function BlueprintsRoute() {
   const hasSubFilters = showVehicleSizes || showArmorWeights || showArmorSlots || showSubTypes
 
   return (
-    <div className="site-shell py-4 sm:py-6 overflow-x-hidden">
+    <div className="site-shell py-6 overflow-x-hidden">
       <div className="space-y-3 mb-6 pb-5 border-b border-slate-800/80">
         <div className="text-center">
           <h1 className="site-page-title">Blueprints</h1>

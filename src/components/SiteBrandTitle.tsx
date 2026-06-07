@@ -9,6 +9,8 @@ interface SiteBrandTitleProps {
   align?: 'center' | 'left'
   slogan?: string
   subtitle?: React.ReactNode
+  /** Header chrome — skip glow that blurs at small sizes */
+  subtle?: boolean
   className?: string
 }
 
@@ -39,11 +41,20 @@ export default function SiteBrandTitle({
   align = 'center',
   slogan,
   subtitle,
+  subtle = false,
   className = '',
 }: SiteBrandTitleProps) {
   const alignClass = align === 'center' ? 'text-center' : 'text-left'
   const titleSize = titleSizeClasses[size]
   const isStacked = layout === 'stacked'
+  const repoStyle = subtle
+    ? {
+        fontFamily: SITE_BRAND_FONT,
+        background: SITE_BRAND_REPO_GRADIENT,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+      }
+    : repoLineStyle
 
   return (
     <div className={`${alignClass} ${className}`}>
@@ -53,7 +64,7 @@ export default function SiteBrandTitle({
         <span className={`text-white ${isStacked ? 'block' : ''}`} style={brandLineStyle}>
           Dumper&apos;s
         </span>
-        <span className={isStacked ? 'block' : ''} style={repoLineStyle}>
+        <span className={isStacked ? 'block' : ''} style={repoStyle}>
           {isStacked ? 'Repo' : ' Repo'}
         </span>
       </h1>

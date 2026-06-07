@@ -2,13 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+}
+
 @layer components {
   .site-page-bg {
     @apply bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950;
   }
 
   .site-app-header {
-    @apply sticky top-0 z-50 backdrop-blur-xl bg-slate-900/90 border-b border-orange-500/20 shadow-lg shadow-orange-950/20;
+    @apply backdrop-blur-xl bg-slate-900/95 border-b border-orange-500/20 shadow-lg shadow-orange-950/20;
+  }
+
+  /* h-14 top row; + h-11 mobile nav row below lg */
+  .site-main-offset {
+    padding-top: 6.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    .site-main-offset {
+      padding-top: 3.5rem;
+    }
   }
 
   .site-shell {
