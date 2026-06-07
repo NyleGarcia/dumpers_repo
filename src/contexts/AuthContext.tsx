@@ -186,21 +186,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   profileRef.current = profile
 
   const refreshOrgContext = useCallback(async (profileData?: Profile | null) => {
-    const activeProfile = profileData ?? profileRef.current
+    let activeProfile = profileData ?? profileRef.current
     if (!activeProfile?.org_id) {
       setOrganization(null)
       setOrgMembership(null)
       return
     }
 
-    const [org, membership] = await Promise.all([
-      fetchOrganization(activeProfile.org_id),
-      fetchOrgMembership(activeProfile.id, activeProfile.org_id),
-    ])
+    let org = await fetchOrganization(activeProfile.org_id)
+    let membership = await fetchOrgMembership(activeProfile.id, activeProfile.org_id)
+
+    if (!org || !membership) {
+      await ensureDumpersMembership()
+      const refreshed = await fetchProfile(activeProfile.id)
+      if (refreshed) {
+        activeProfile = refreshed
+        setProfile(refreshed)
+        if (refreshed.org_id) {
+          org = await fetchOrganization(refreshed.org_id)
+          membership = await fetchOrgMembership(refreshed.id, refreshed.org_id)
+        }
+      }
+    }
 
     setOrganization(org)
     setOrgMembership(membership)
-  }, [])
+  }, [fetchProfile])
 
   const loadUserData = useCallback(async (sessionUser: User, isSignIn = false) => {
     const banned = await checkBanned(sessionUser.id, sessionUser.email)
