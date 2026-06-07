@@ -46,6 +46,11 @@ const getSubType = (bp) => {
       if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
       // For combat armor, return 'standard' as the type - weight is a separate filter
       if (sub === 'combat') return 'standard'
+      // For flightsuit: helmets are "standard" type, bodies are "flightsuit" type
+      if (sub === 'flightsuit') {
+        if (filename.includes('_helmet')) return 'standard'
+        return 'flightsuit'
+      }
       return sub
     }
     
@@ -64,6 +69,9 @@ const getArmorWeight = (bp) => {
   // Check if this is FPS armor
   const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
   if (!isArmor) return null
+  
+  // Check for flightsuit folder - these are "flight" weight
+  if (parts.some(p => p.toLowerCase() === 'flightsuit')) return 'flight'
   
   // Extract weight from filename (works for both combat and template armor)
   // Patterns: armor_heavy_arms, utility_light_backpack, combat_medium_core, etc.
@@ -521,7 +529,7 @@ export default function BlueprintsRoute() {
               {/* Weight filters for FPS Armour */}
               {Object.keys(currentArmorWeights).length > 0 && (
                 <>
-                  {['light', 'medium', 'heavy', 'superheavy'].filter(w => currentArmorWeights[w]).map(weight => {
+                  {['flight', 'light', 'medium', 'heavy', 'superheavy'].filter(w => allArmorWeights[w] !== undefined).map(weight => {
                     const count = currentArmorWeights[weight] || 0
                     const displayName = weight === 'superheavy' ? 'Super Heavy' : weight.charAt(0).toUpperCase() + weight.slice(1)
                     return (

@@ -32,6 +32,11 @@ const getSubType = (bp) => {
       if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
       // Combat armor shows as "standard" type - weight is shown separately
       if (sub === 'combat') return 'standard'
+      // For flightsuit: helmets are "standard" type, bodies are "flightsuit" type
+      if (sub === 'flightsuit') {
+        if (filename.includes('_helmet')) return 'standard'
+        return 'flightsuit'
+      }
       return sub
     }
     if (parts[i] === 'vehiclegear' && parts[i + 1] !== 'weapons') {
@@ -53,6 +58,9 @@ const getArmorWeight = (bp) => {
   // Check if this is FPS armor
   const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
   if (!isArmor) return null
+  
+  // Check for flightsuit folder - these are "flight" weight
+  if (parts.some(p => p.toLowerCase() === 'flightsuit')) return 'flight'
   
   // Extract weight from filename (works for both combat and template armor)
   if (filename.includes('_superheavy_') || filename.includes('_superheavy.')) return 'superheavy'
