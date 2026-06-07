@@ -48,22 +48,23 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [orgSetupLoading, setOrgSetupLoading] = useState(false)
-
-  const hasOrgAffiliation = !!(organization || profile?.org_id)
+  const [orgSetupError, setOrgSetupError] = useState<string | null>(null)
 
   const runOrgSetup = async () => {
     setOrgSetupLoading(true)
+    setOrgSetupError(null)
     try {
-      await reloadProfile()
+      const result = await reloadProfile()
+      if (result.error) setOrgSetupError(result.error)
     } finally {
       setOrgSetupLoading(false)
     }
   }
 
   useEffect(() => {
-    if (!profile?.id || organization || profile?.org_id) return
+    if (!profile?.id) return
     void runOrgSetup()
-  }, [profile?.id, profile?.org_id, organization, reloadProfile])
+  }, [profile?.id])
 
   useEffect(() => {
     setRsiHandle(profile?.rsi_handle || '')
@@ -272,7 +273,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             </button>
           </SettingsSection>
 
-          {hasOrgAffiliation && (
+          {profile && (
             <SettingsSection
               title="Organization"
               description="Your org affiliation and org-scoped preferences"
@@ -281,13 +282,11 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 <p className="text-sm text-slate-400 bg-slate-800/40 border border-slate-700 rounded-lg px-3 py-3">
                   Loading organization...
                 </p>
-              ) : organization || profile?.org_id ? (
+              ) : organization ? (
               <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-3 space-y-2">
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm text-slate-400">Org</span>
-                  <span className="text-sm font-medium text-white">
-                    {organization?.name ?? 'Dumpers'}
-                  </span>
+                  <span className="text-sm font-medium text-white">{organization.name}</span>
                 </div>
                 {orgMembership && (
                   <div className="flex items-center justify-between gap-3">
@@ -312,7 +311,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm text-slate-400">Org stock visibility</span>
                   <span className="text-xs text-slate-400">
-                    {organization?.resources_public !== false
+                    {organization.resources_public
                       ? 'Other orgs can view shared org stock'
                       : 'Org stock visible to your org only'}
                   </span>
@@ -326,14 +325,29 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                     Org stock is hidden until an officer verifies your membership.
                   </p>
                 )}
-                {(!organization || isDumpersOrg(organization)) && (
+                {isDumpersOrg(organization) && (
                   <p className="text-xs text-slate-500 pt-1">
                     Every member starts in Dumpers Repo. Switch to another org later when org
                     transfer is available.
                   </p>
                 )}
               </div>
-              ) : null}
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-sm text-red-300 bg-red-950/30 border border-red-500/30 rounded-lg px-3 py-2">
+                    Could not load your organization.
+                    {orgSetupError ? ` ${orgSetupError}` : ' Tap retry or sign out and back in.'}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => void runOrgSetup()}
+                    disabled={orgSetupLoading}
+                    className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-lg disabled:opacity-50"
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
 
               {organization && canManageOrgPrivacy(visibilityContext) && (
                 isDumpersOrg(organization) ? (
@@ -382,19 +396,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                   />
                 </>
               )}
-            </SettingsSection>
-          )}
-
-          {!hasOrgAffiliation && (
-            <SettingsSection
-              title="Organization"
-              description="Your default Dumpers Repo membership"
-            >
-              <p className="text-sm text-slate-400 bg-slate-800/40 border border-slate-700 rounded-lg px-3 py-3">
-                {orgSetupLoading
-                  ? 'Setting up your Dumpers Repo membership...'
-                  : 'Organization setup did not complete. Refresh the page or sign in again.'}
-              </p>
             </SettingsSection>
           )}
 

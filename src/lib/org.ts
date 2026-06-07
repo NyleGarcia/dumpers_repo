@@ -66,10 +66,10 @@ interface MyOrgContextPayload {
   membership?: OrgMembership
 }
 
-function parseMyOrgContextPayload(data: unknown): MyOrgContextPayload | null {
-  if (!data) return null
+function parseNestedRecord<T extends object>(value: unknown): T | null {
+  if (!value) return null
 
-  let raw: unknown = data
+  let raw: unknown = value
   if (typeof raw === 'string') {
     try {
       raw = JSON.parse(raw)
@@ -79,7 +79,21 @@ function parseMyOrgContextPayload(data: unknown): MyOrgContextPayload | null {
   }
 
   if (typeof raw !== 'object' || raw === null) return null
-  return raw as MyOrgContextPayload
+  return raw as T
+}
+
+function parseMyOrgContextPayload(data: unknown): MyOrgContextPayload | null {
+  const root = parseNestedRecord<Record<string, unknown>>(data)
+  if (!root) return null
+
+  const organization = parseNestedRecord<Organization>(root.organization)
+  const membership = parseNestedRecord<OrgMembership>(root.membership)
+
+  if (!organization && !membership) return null
+  return {
+    organization: organization ?? undefined,
+    membership: membership ?? undefined,
+  }
 }
 
 async function loadOrgContextFromTables(userId: string): Promise<{
@@ -131,30 +145,30 @@ export async function fetchMyOrgContext(): Promise<{
 
   let { payload, error: rpcError } = await readRpc()
 
-  if (!payload?.organization || !payload?.membership) {
+  if (!payload?.organization) {
     const repair = await ensureDumpersMembership()
     if (repair.error) {
-      return { organization: null, membership: null, error: repair.error }
+      console.error('ensure_dumpers_membership failed:', repair.error)
     }
 
     ;({ payload, error: rpcError } = await readRpc())
   }
 
-  if (payload?.organization && payload?.membership) {
+  if (payload?.organization) {
     return {
       organization: payload.organization,
-      membership: payload.membership,
+      membership: payload.membership ?? null,
     }
   }
 
   const fromTables = await loadOrgContextFromTables(user.id)
-  if (fromTables.organization && fromTables.membership) {
+  if (fromTables.organization) {
     return fromTables
   }
 
   return {
     organization: null,
-    membership: null,
+    membership: fromTables.membership,
     error:
       rpcError ??
       'Organization context not found after repair (check profile.org_id and org_memberships)',
