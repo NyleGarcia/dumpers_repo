@@ -21,6 +21,7 @@ export interface Profile {
   created_at: string
   approved_at: string | null
   approved_by: string | null
+  ghost_mode: boolean
 }
 
 export function getDisplayName(profile: Profile | null): string {
@@ -71,6 +72,20 @@ export async function unbanUser(
   const { data, error } = await supabase.functions.invoke('unban-user', {
     body: { userId },
   })
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  if (data?.error) {
+    return { success: false, error: data.error }
+  }
+
+  return { success: true }
+}
+
+export async function deleteAccount(): Promise<{ success: boolean; error?: string }> {
+  const { data, error } = await supabase.functions.invoke('delete-account')
 
   if (error) {
     return { success: false, error: error.message }

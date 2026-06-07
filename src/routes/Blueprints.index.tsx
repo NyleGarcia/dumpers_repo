@@ -164,6 +164,7 @@ export default function BlueprintsRoute() {
     acquiredBlueprints: myAcquiredBlueprints, 
     toggleAcquired, 
     canModifyBlueprints,
+    showMemberCollections,
     isPending,
     fetchUsersWithBlueprints,
     fetchUserBlueprints,
@@ -191,10 +192,13 @@ export default function BlueprintsRoute() {
   }, [fetchUsersWithBlueprints])
 
   React.useEffect(() => {
-    if (canModifyBlueprints) {
+    if (showMemberCollections) {
       refreshUsersList()
+    } else {
+      setUsersWithBlueprints([])
+      setSelectedUserId('all')
     }
-  }, [refreshUsersList, myAcquiredBlueprints, canModifyBlueprints])
+  }, [refreshUsersList, myAcquiredBlueprints, showMemberCollections])
 
   React.useEffect(() => {
     if (selectedUserId === 'all' || selectedUserId === user?.id) {
@@ -506,7 +510,7 @@ export default function BlueprintsRoute() {
             >
               ★ Rewards
             </button>
-            {canModifyBlueprints && (
+            {showMemberCollections && (
               <select
                 value={selectedUserId}
                 onChange={(e) => setSelectedUserId(e.target.value)}

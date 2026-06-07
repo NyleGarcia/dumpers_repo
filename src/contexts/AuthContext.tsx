@@ -20,13 +20,16 @@ interface AuthContextType {
   signOut: () => Promise<void>
   toggleAcquired: (blueprintId: string) => Promise<void>
   updateRsiHandle: (handle: string) => Promise<boolean>
+  updateGhostMode: (enabled: boolean) => Promise<boolean>
   fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   displayName: string
   isOfficerOrAbove: boolean
   isSuperAdmin: boolean
   isPending: boolean
+  isGhostMode: boolean
   canModifyBlueprints: boolean
+  showMemberCollections: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -292,6 +295,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }
 
+  const updateGhostMode = async (enabled: boolean): Promise<boolean> => {
+    if (!user) return false
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ ghost_mode: enabled })
+      .eq('id', user.id)
+
+    if (error) {
+      console.error('Error updating ghost mode:', error)
+      return false
+    }
+
+    setProfile(prev => prev ? { ...prev, ghost_mode: enabled } : null)
+    return true
+  }
+
   const fetchUsersWithBlueprints = async (): Promise<UserWithBlueprints[]> => {
     const { data: blueprintCounts, error: countError } = await supabase
       .from('acquired_blueprints')
@@ -315,6 +335,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .select('id, display_name, rsi_handle, role')
       .in('id', userIdsWithBlueprints)
       .neq('role', 'pending')
+      .eq('ghost_mode', false)
 
     if (profileError) {
       console.error('Error fetching profiles:', profileError)
@@ -354,7 +375,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isOfficerOrAbove = profile?.role === 'officer' || profile?.role === 'super-admin'
   const isSuperAdmin = profile?.role === 'super-admin'
   const isPending = profile?.role === 'pending'
+  const isGhostMode = profile?.ghost_mode ?? false
   const canModifyBlueprints = !!profile && profile.role !== 'pending'
+  const showMemberCollections = canModifyBlueprints && !isGhostMode
   const displayName = getDisplayName(profile)
 
   return (
@@ -370,13 +393,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signOut,
         toggleAcquired,
         updateRsiHandle,
+        updateGhostMode,
         fetchUsersWithBlueprints,
         fetchUserBlueprints,
         displayName,
         isOfficerOrAbove,
         isSuperAdmin,
         isPending,
+        isGhostMode,
         canModifyBlueprints,
+        showMemberCollections,
       }}
     >
       {children}
