@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { supabase, Profile, UserRole, BannedUser, banUser, getDisplayName } from '../lib/supabase'
+import { supabase, Profile, UserRole, BannedUser, banUser, unbanUser, getDisplayName } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 
 type TabType = 'pending' | 'members' | 'officers' | 'banned'
@@ -13,6 +13,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [banTarget, setBanTarget] = useState<Profile | null>(null)
   const [banReason, setBanReason] = useState('')
+  const [unbanTarget, setUnbanTarget] = useState<BannedUser | null>(null)
 
   useEffect(() => {
     if (activeTab === 'banned') {
@@ -98,6 +99,22 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
       setBanTarget(null)
       setBanReason('')
       fetchUsers()
+    }
+
+    setActionLoading(null)
+  }
+
+  const handleUnban = async () => {
+    if (!unbanTarget) return
+
+    setActionLoading(unbanTarget.id)
+    const result = await unbanUser(unbanTarget.id)
+
+    if (!result.success) {
+      alert(result.error || 'Failed to unban user')
+    } else {
+      setUnbanTarget(null)
+      fetchBannedUsers()
     }
 
     setActionLoading(null)
@@ -200,6 +217,16 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                           <p className="text-slate-500 text-xs mt-1">Reason: {banned.reason}</p>
                         )}
                       </div>
+
+                      {isSuperAdmin && (
+                        <button
+                          onClick={() => setUnbanTarget(banned)}
+                          disabled={actionLoading === banned.id}
+                          className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          {actionLoading === banned.id ? '...' : 'Unban'}
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -309,7 +336,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
           <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
             <h3 className="text-lg font-bold text-white mb-2">Ban User</h3>
             <p className="text-slate-400 text-sm mb-4">
-              Permanently remove <span className="text-white">{getDisplayName(banTarget)}</span>'s blueprint data and block sign-in. This cannot be undone from the app.
+              Permanently remove <span className="text-white">{getDisplayName(banTarget)}</span>'s blueprint data and block sign-in. A super-admin can unban from the Banned tab.
             </p>
             <label className="block text-slate-400 text-sm mb-1">Reason (optional)</label>
             <input
@@ -335,6 +362,32 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                 className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50"
               >
                 {actionLoading === banTarget.id ? 'Banning...' : 'Confirm Ban'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {unbanTarget && (
+        <div className="fixed inset-0 bg-black/90 z-[80] flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-white mb-2">Unban User</h3>
+            <p className="text-slate-400 text-sm mb-4">
+              Restore <span className="text-white">{unbanTarget.rsi_handle || unbanTarget.display_name || unbanTarget.email || 'this user'}</span> with <span className="text-amber-400">pending</span> status so they can sign in and await officer approval. Their blueprint data will not be restored.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setUnbanTarget(null)}
+                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUnban}
+                disabled={actionLoading === unbanTarget.id}
+                className="flex-1 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors disabled:opacity-50"
+              >
+                {actionLoading === unbanTarget.id ? 'Unbanning...' : 'Confirm Unban'}
               </button>
             </div>
           </div>

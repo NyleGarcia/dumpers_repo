@@ -64,3 +64,21 @@ export async function banUser(
 
   return { success: true }
 }
+
+export async function unbanUser(
+  userId: string
+): Promise<{ success: boolean; error?: string }> {
+  const { data, error } = await supabase.functions.invoke('unban-user', {
+    body: { userId },
+  })
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  if (data?.error) {
+    return { success: false, error: data.error }
+  }
+
+  return { success: true }
+}
