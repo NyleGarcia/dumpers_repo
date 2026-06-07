@@ -122,7 +122,17 @@ const getArmorSlot = (bp) => {
   return null
 }
 
-export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggleAcquired, canModify = true, isPending = false }) {
+export default function BlueprintCard({
+  blueprint,
+  onClick,
+  isAcquired,
+  onToggleAcquired,
+  canModify = true,
+  isPending = false,
+  showTargetControl = false,
+  isOnTargetList = false,
+  onToggleTarget,
+}) {
   if (!blueprint.file || !blueprint.blueprintName) return null
 
   const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
@@ -138,6 +148,17 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
       onToggleAcquired()
     }
   }
+
+  const handleTargetClick = (e) => {
+    e.stopPropagation()
+    if (showTargetControl && onToggleTarget) {
+      onToggleTarget()
+    }
+  }
+
+  const hasCategoryTags = !!(blueprint.categoryName || subType || armorWeight || armorSlot)
+  const hasRewardLabel = typeof blueprint.isReward === 'boolean'
+  const showFooter = showTargetControl || hasCategoryTags || hasRewardLabel
 
   return (
     <div
@@ -222,35 +243,54 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
             </div>
           ) : null}
 
-          <div className="mt-3 pt-2.5 border-t border-slate-700 space-y-1.5">
-            {(blueprint.categoryName || subType || armorWeight || armorSlot) && (
-              <div className="flex flex-wrap gap-1">
-                {blueprint.categoryName && (
-                  <span className="px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded text-[10px] border border-slate-700">
-                    {blueprint.categoryName}
-                  </span>
-                )}
-                {armorWeight && (
-                  <span className="px-1.5 py-0.5 bg-blue-950/50 text-blue-400 rounded text-[10px] border border-blue-500/30">
-                    {armorWeight === 'superheavy' ? 'Super Heavy' : formatSubType(armorWeight)}
-                  </span>
-                )}
-                {armorSlot && (
-                  <span className="px-1.5 py-0.5 bg-green-950/50 text-green-400 rounded text-[10px] border border-green-500/30">
-                    {formatSubType(armorSlot)}
-                  </span>
-                )}
-                {subType && (
-                  <span className="px-1.5 py-0.5 bg-orange-950/50 text-orange-400 rounded text-[10px] border border-orange-500/30">
-                    {formatSubType(subType)}
-                  </span>
+          {showFooter && (
+            <div className="mt-3 pt-2.5 border-t border-slate-700">
+              <div className="flex items-end justify-between gap-2">
+                <div className="flex-1 min-w-0 space-y-1.5">
+                  {hasCategoryTags && (
+                    <div className="flex flex-wrap gap-1">
+                      {blueprint.categoryName && (
+                        <span className="px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded text-[10px] border border-slate-700">
+                          {blueprint.categoryName}
+                        </span>
+                      )}
+                      {armorWeight && (
+                        <span className="px-1.5 py-0.5 bg-blue-950/50 text-blue-400 rounded text-[10px] border border-blue-500/30">
+                          {armorWeight === 'superheavy' ? 'Super Heavy' : formatSubType(armorWeight)}
+                        </span>
+                      )}
+                      {armorSlot && (
+                        <span className="px-1.5 py-0.5 bg-green-950/50 text-green-400 rounded text-[10px] border border-green-500/30">
+                          {formatSubType(armorSlot)}
+                        </span>
+                      )}
+                      {subType && (
+                        <span className="px-1.5 py-0.5 bg-orange-950/50 text-orange-400 rounded text-[10px] border border-orange-500/30">
+                          {formatSubType(subType)}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {hasRewardLabel && (
+                    <span className="text-xs text-slate-500">{blueprint.isReward ? '★ Reward Blueprint' : '🔶 Standard'}</span>
+                  )}
+                </div>
+                {showTargetControl && (
+                  <button
+                    onClick={handleTargetClick}
+                    className={`shrink-0 px-2 py-1 text-[10px] font-semibold rounded-md border transition-colors ${
+                      isOnTargetList
+                        ? 'bg-amber-900/50 text-amber-300 border-amber-500/50 hover:bg-amber-900/70'
+                        : 'bg-slate-800/80 text-slate-400 border-slate-600 hover:border-amber-500/40 hover:text-amber-300'
+                    }`}
+                    title={isOnTargetList ? 'Remove from target list' : 'Add to target list'}
+                  >
+                    {isOnTargetList ? '★ Target' : '+ Target'}
+                  </button>
                 )}
               </div>
-            )}
-            {typeof blueprint.isReward === 'boolean' && (
-              <span className="text-xs text-slate-500">{blueprint.isReward ? '★ Reward Blueprint' : '🔶 Standard'}</span>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

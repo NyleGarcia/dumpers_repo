@@ -721,6 +721,9 @@ export default function BlueprintsRoute() {
                 onToggleAcquired={() => toggleAcquired(bp.file)}
                 canModify={canModifyBlueprints && !isViewingOther}
                 isPending={isPending}
+                showTargetControl={isApproved && !isViewingOther && !acquiredBlueprints[bp.file]}
+                isOnTargetList={isOnTargetList(bp.file)}
+                onToggleTarget={() => toggleTarget(bp.file)}
               />
             ))}
           </div>
@@ -738,28 +741,14 @@ export default function BlueprintsRoute() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
-              <div className="flex justify-between items-start gap-3 mb-4">
-                <h2 className="text-2xl font-bold text-white flex-1">{selectedBlueprint.blueprintName}</h2>
-                <div className="flex items-center gap-2 shrink-0">
-                  {isApproved && !isViewingOther && !acquiredBlueprints[selectedBlueprint.file] && (
-                    <button
-                      onClick={() => void toggleTarget(selectedBlueprint.file)}
-                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
-                        isOnTargetList(selectedBlueprint.file)
-                          ? 'bg-amber-900/40 text-amber-300 border-amber-500/50 hover:bg-amber-900/60'
-                          : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-amber-500/40 hover:text-amber-300'
-                      }`}
-                    >
-                      {isOnTargetList(selectedBlueprint.file) ? '★ On Target List' : '+ Target List'}
-                    </button>
-                  )}
-                  <button 
-                    onClick={() => setSelectedBlueprint(null)}
-                    className="text-slate-400 hover:text-white text-2xl leading-none"
-                  >
-                    ×
-                  </button>
-                </div>
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-2xl font-bold text-white">{selectedBlueprint.blueprintName}</h2>
+                <button 
+                  onClick={() => setSelectedBlueprint(null)}
+                  className="text-slate-400 hover:text-white text-2xl leading-none"
+                >
+                  ×
+                </button>
               </div>
               
               <div className="space-y-4">
@@ -817,21 +806,30 @@ export default function BlueprintsRoute() {
                 )}
 
                 {selectedBlueprint.rewardMissions && selectedBlueprint.rewardMissions.length > 0 && (
-                  <div className="bg-slate-800/50 rounded-xl p-4">
-                    <h3 className="text-slate-400 text-sm mb-3">Reward Missions ({selectedBlueprint.rewardMissions.length})</h3>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {selectedBlueprint.rewardMissions.slice(0, 10).map((m, idx) => (
-                        <div key={idx} className="text-sm text-slate-300 bg-slate-900/50 rounded p-2">
-                          {m.mission}
-                          {m.locations && m.locations.length > 0 && (
-                            <span className="text-slate-500 ml-2">({m.locations.join(', ')})</span>
-                          )}
-                        </div>
-                      ))}
-                      {selectedBlueprint.rewardMissions.length > 10 && (
-                        <p className="text-slate-500 text-sm">...and {selectedBlueprint.rewardMissions.length - 10} more</p>
-                      )}
-                    </div>
+                  <div className="bg-amber-950/20 border border-amber-500/25 rounded-xl p-4">
+                    <h3 className="text-amber-300/90 text-sm font-semibold mb-2">
+                      Reward Missions ({selectedBlueprint.rewardMissions.length})
+                    </h3>
+                    {!isApproved ? (
+                      <p className="text-sm text-slate-400">
+                        After your account is approved, add this blueprint to your Target BP List to track which missions reward it.
+                      </p>
+                    ) : acquiredBlueprints[selectedBlueprint.file] ? (
+                      <p className="text-sm text-slate-400">
+                        This blueprint is already in your pool. Reward missions are only tracked on your Target BP List while you are still hunting a blueprint.
+                      </p>
+                    ) : isOnTargetList(selectedBlueprint.file) ? (
+                      <p className="text-sm text-slate-400">
+                        This blueprint is on your Target BP List. Open{' '}
+                        <strong className="text-amber-300/90">Target BP List</strong> from the menu to see grouped missions, toggle them on/off, and track progress.
+                      </p>
+                    ) : (
+                      <p className="text-sm text-slate-400">
+                        Use <strong className="text-amber-300/90">+ Target</strong> on the card to add this blueprint to your Target BP List.
+                        Missions that reward it will appear on the{' '}
+                        <strong className="text-amber-300/90">Target BP List</strong> page — not here in the catalog.
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
