@@ -61,6 +61,34 @@ export async function ensureDumpersMembership(): Promise<{ error?: string }> {
   return {}
 }
 
+interface MyOrgContextPayload {
+  organization?: Organization
+  membership?: OrgMembership
+}
+
+/** Repairs Dumpers membership server-side and returns org context (bypasses RLS edge cases). */
+export async function fetchMyOrgContext(): Promise<{
+  organization: Organization | null
+  membership: OrgMembership | null
+  error?: string
+}> {
+  const { data, error } = await supabase.rpc('get_my_org_context')
+
+  if (error) {
+    return { organization: null, membership: null, error: error.message }
+  }
+
+  if (!data) {
+    return { organization: null, membership: null, error: 'Organization context not found' }
+  }
+
+  const payload = data as MyOrgContextPayload
+  return {
+    organization: payload.organization ?? null,
+    membership: payload.membership ?? null,
+  }
+}
+
 export async function setOrgResourcesPublic(isPublic: boolean): Promise<{ error?: string }> {
   const { error } = await supabase.rpc('set_org_resources_public', { p_public: isPublic })
   if (error) return { error: error.message }

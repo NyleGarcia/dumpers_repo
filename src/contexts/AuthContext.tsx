@@ -9,9 +9,7 @@ import {
 } from '../lib/featureAccess'
 import { removeTargetBlueprint } from '../lib/targetList'
 import {
-  ensureDumpersMembership,
-  fetchOrgMembership,
-  fetchOrganization,
+  fetchMyOrgContext,
   type MemberScope,
   type OrgMembership,
   type Organization,
@@ -44,7 +42,7 @@ interface AuthContextType {
   organization: Organization | null
   orgMembership: OrgMembership | null
   refreshOrgContext: () => Promise<void>
-  reloadProfile: () => Promise<void>
+  reloadProfile: () => Promise<{ error?: string }>
   fetchUsersWithBlueprints: (scope?: MemberScope) => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   displayName: string
@@ -186,31 +184,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   profileRef.current = profile
 
   const refreshOrgContext = useCallback(async (profileData?: Profile | null) => {
-    let activeProfile = profileData ?? profileRef.current
-    if (!activeProfile?.org_id) {
+    const activeProfile = profileData ?? profileRef.current
+    const ctx = await fetchMyOrgContext()
+
+    if (ctx.error) {
+      console.error('Error loading org context:', ctx.error)
       setOrganization(null)
       setOrgMembership(null)
       return
     }
 
-    let org = await fetchOrganization(activeProfile.org_id)
-    let membership = await fetchOrgMembership(activeProfile.id, activeProfile.org_id)
+    setOrganization(ctx.organization)
+    setOrgMembership(ctx.membership)
 
-    if (!org || !membership) {
-      await ensureDumpersMembership()
+    if (
+      activeProfile?.id &&
+      ctx.organization &&
+      activeProfile.org_id !== ctx.organization.id
+    ) {
       const refreshed = await fetchProfile(activeProfile.id)
-      if (refreshed) {
-        activeProfile = refreshed
-        setProfile(refreshed)
-        if (refreshed.org_id) {
-          org = await fetchOrganization(refreshed.org_id)
-          membership = await fetchOrgMembership(refreshed.id, refreshed.org_id)
-        }
-      }
+      if (refreshed) setProfile(refreshed)
     }
-
-    setOrganization(org)
-    setOrgMembership(membership)
   }, [fetchProfile])
 
   const loadUserData = useCallback(async (sessionUser: User, isSignIn = false) => {
@@ -222,11 +216,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setIsBanned(false)
     let profileData = await fetchProfile(sessionUser.id)
-
-    if (profileData && !profileData.org_id) {
-      await ensureDumpersMembership()
-      profileData = await fetchProfile(sessionUser.id)
-    }
 
     setProfile(profileData)
     await refreshOrgContext(profileData)
@@ -303,19 +292,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const acquiredRef = useRef(acquiredBlueprints)
   acquiredRef.current = acquiredBlueprints
 
-  const reloadProfile = useCallback(async () => {
+  const reloadProfile = useCallback(async (): Promise<{ error?: string }> => {
     const activeUser = userRef.current
-    if (!activeUser) return
+    if (!activeUser) return { error: 'Not signed in' }
 
-    let profileData = await fetchProfile(activeUser.id)
-    if (profileData && !profileData.org_id) {
-      await ensureDumpersMembership()
-      profileData = await fetchProfile(activeUser.id)
+    const ctx = await fetchMyOrgContext()
+    if (ctx.error) {
+      setOrganization(null)
+      setOrgMembership(null)
+      return { error: ctx.error }
     }
 
+    const profileData = await fetchProfile(activeUser.id)
     setProfile(profileData)
-    await refreshOrgContext(profileData)
-  }, [fetchProfile, refreshOrgContext])
+    setOrganization(ctx.organization)
+    setOrgMembership(ctx.membership)
+    return {}
+  }, [fetchProfile])
 
   const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
