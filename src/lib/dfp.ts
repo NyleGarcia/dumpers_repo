@@ -144,6 +144,38 @@ export function getDfpTypeModifier(blueprint: BlueprintDfpInput): number {
 }
 
 /** Order-level min quality applied to all material slots, then × craft quantity. */
+/** Raw/refined material price only — no blueprint craft type modifier or premium. */
+export function calculateMaterialDfpPrice(
+  resourceName: string,
+  minQuality: number,
+  scuQuantity: number
+): number {
+  const quality = resolveQuality(minQuality)
+  const scu = Math.max(scuQuantity, MIN_SCU)
+  const base = baseValueForScu(quality, scu)
+  const modifier = getRarityModifier(resourceName)
+  return Math.round(base * modifier)
+}
+
+export function calculateMaterialDfpLine(
+  resourceName: string,
+  minQuality: number,
+  scuQuantity: number
+): DfpLineItem {
+  const quality = resolveQuality(minQuality)
+  const scu = Math.max(scuQuantity, MIN_SCU)
+  const base = baseValueForScu(quality, scu)
+  const modifier = getRarityModifier(resourceName)
+  return {
+    resource: resourceName,
+    quality,
+    scu,
+    baseValue: base,
+    modifier,
+    lineTotal: Math.round(base * modifier),
+  }
+}
+
 export function calculateBlueprintDfpForOrder(
   blueprint: BlueprintDfpInput,
   orderMinQuality: number,

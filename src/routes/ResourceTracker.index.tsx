@@ -1,9 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import ResourceMarketPanel from '../components/ResourceMarketPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canManageOrgInventory, canUseFeature } from '../lib/featureAccess'
-import { adjustInventoryQuantity, setInventoryQuantity, type InventoryScope } from '../lib/operations'
+import { adjustInventoryQuantity, setInventoryQuantity } from '../lib/operations'
+import type { InventoryScope } from '../lib/operations'
+import {
+  formatResourceQuantity,
+  parseResourceQuantity,
+  RESOURCE_QUANTITY_STEP,
+  roundResourceQuantity,
+} from '../lib/resourceQuantity'
+
+type TrackerTab = InventoryScope | 'market'
+
+const ADJUST_STEPS = [0.001, 0.01, 0.1, 1] as const
 
 export default function ResourceTrackerRoute() {
   const { user, siteOrg, visibilityContext, isSuperAdmin, isGhostMode } = useAuth()
@@ -11,24 +23,28 @@ export default function ResourceTrackerRoute() {
     !isGhostMode && canUseFeature('org_resources', visibilityContext)
   const canEditShared = canManageOrgInventory(visibilityContext)
 
-  const [activeTab, setActiveTab] = useState<InventoryScope>('personal')
+  const [activeTab, setActiveTab] = useState<TrackerTab>('personal')
 
   useEffect(() => {
     if (isGhostMode && activeTab === 'org') setActiveTab('personal')
   }, [isGhostMode, activeTab])
+
   const [search, setSearch] = useState('')
   const [showInactive, setShowInactive] = useState(false)
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
 
+  const inventoryScope: InventoryScope =
+    activeTab === 'org' ? 'org' : 'personal'
+
   const inventoryContext = useMemo(() => {
     if (!user?.id) return null
     return {
-      scope: activeTab,
+      scope: inventoryScope,
       userId: user.id,
       orgId: siteOrg?.id ?? null,
     }
-  }, [user?.id, siteOrg?.id, activeTab])
+  }, [user?.id, siteOrg?.id, inventoryScope])
 
   const readOnly = activeTab === 'org' && !canEditShared
 
@@ -42,11 +58,26 @@ export default function ResourceTrackerRoute() {
   } = useResourceCatalog({
     enableCatalogSync: isSuperAdmin,
     includeInactive: showInactive,
-    withInventory: true,
-    inventoryContext,
+    withInventory: activeTab !== 'market',
+    inventoryContext: activeTab === 'market' ? null : inventoryContext,
   })
 
-  const filteredResources = catalogWithInventory.filter((resource) => {
+  const {
+    catalogWithInventory: personalCatalog,
+    loading: personalLoading,
+  } = useResourceCatalog({
+    includeInactive: false,
+    withInventory: true,
+    inventoryContext:
+      user?.id && activeTab === 'market'
+        ? { scope: 'personal', userId: user.id, orgId: siteOrg?.id ?? null }
+        : null,
+  })
+
+  const displayCatalog =
+    activeTab === 'market' ? personalCatalog : catalogWithInventory
+
+  const filteredResources = displayCatalog.filter((resource) => {
     const matchesSearch =
       search === '' ||
       resource.label.toLowerCase().includes(search.toLowerCase()) ||
@@ -55,11 +86,11 @@ export default function ResourceTrackerRoute() {
     return matchesSearch && matchesActive
   })
 
-  const activeCount = catalogWithInventory.filter((r) => r.is_active).length
-  const inStockCount = catalogWithInventory.filter((r) => r.is_active && r.quantity > 0).length
-  const totalQty = catalogWithInventory
-    .filter((r) => r.is_active)
-    .reduce((sum, r) => sum + r.quantity, 0)
+  const activeCount = displayCatalog.filter((r) => r.is_active).length
+  const inStockCount = displayCatalog.filter((r) => r.is_active && r.quantity > 0).length
+  const totalQty = roundResourceQuantity(
+    displayCatalog.filter((r) => r.is_active).reduce((sum, r) => sum + r.quantity, 0)
+  )
 
   const handleAdjust = async (resourceKey: string, delta: number) => {
     if (!inventoryContext || readOnly) return
@@ -70,8 +101,8 @@ export default function ResourceTrackerRoute() {
 
   const handleSaveEdit = async (resourceKey: string) => {
     if (!inventoryContext || readOnly) return
-    const qty = Number(editValue)
-    if (Number.isNaN(qty) || qty < 0) return
+    const qty = parseResourceQuantity(editValue)
+    if (qty == null) return
 
     const result = await setInventoryQuantity(inventoryContext, resourceKey, qty)
     if (result.error) return
@@ -81,18 +112,27 @@ export default function ResourceTrackerRoute() {
     await refresh()
   }
 
-  const tabLabel = activeTab === 'personal' ? 'My Resources' : 'Shared Stock'
+  const tabLabel =
+    activeTab === 'personal'
+      ? 'My Resources'
+      : activeTab === 'org'
+        ? 'Shared Stock'
+        : 'Market'
+
+  const isInventoryTab = activeTab === 'personal' || activeTab === 'org'
 
   return (
     <FeaturePageLayout
       title="Resource Tracker"
       subtitle={
         activeTab === 'personal'
-          ? 'Your personal crafting material inventory'
-          : `${siteOrg?.name ?? 'Shared'} stock`
+          ? 'Personal crafting materials (SCU, up to 3 decimals)'
+          : activeTab === 'org'
+            ? `${siteOrg?.name ?? 'Shared'} stock`
+            : 'Buy and sell refined materials at material-only DFP'
       }
       actions={
-        isSuperAdmin ? (
+        isSuperAdmin && isInventoryTab ? (
           <button
             onClick={() => void syncFromBlueprints()}
             className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
@@ -102,19 +142,19 @@ export default function ResourceTrackerRoute() {
         ) : undefined
       }
     >
-      {canViewShared && (
-        <div className="flex gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit">
-          <button
-            type="button"
-            onClick={() => setActiveTab('personal')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              activeTab === 'personal'
-                ? 'bg-red-600 text-white shadow-lg shadow-red-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
-          >
-            My Resources
-          </button>
+      <div className="flex flex-wrap gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit">
+        <button
+          type="button"
+          onClick={() => setActiveTab('personal')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+            activeTab === 'personal'
+              ? 'bg-red-600 text-white shadow-lg shadow-red-500/20'
+              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+          }`}
+        >
+          My Resources
+        </button>
+        {canViewShared && (
           <button
             type="button"
             onClick={() => setActiveTab('org')}
@@ -126,8 +166,19 @@ export default function ResourceTrackerRoute() {
           >
             Shared Stock
           </button>
-        </div>
-      )}
+        )}
+        <button
+          type="button"
+          onClick={() => setActiveTab('market')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+            activeTab === 'market'
+              ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/20'
+              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+          }`}
+        >
+          Market
+        </button>
+      </div>
 
       {readOnly && (
         <div className="mb-4 p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
@@ -140,14 +191,13 @@ export default function ResourceTrackerRoute() {
           {error}
           {error.includes('relation') && (
             <p className="mt-2 text-red-200/80">
-              Run <code className="text-red-100">013_resource_inventory_v2.sql</code> then{' '}
-              <code className="text-red-100">014_fulfill_org_inventory.sql</code> in Supabase first.
+              Run pending Supabase migrations (013+, 025 for market) first.
             </p>
           )}
         </div>
       )}
 
-      {isSuperAdmin && syncResult && (
+      {isSuperAdmin && syncResult && isInventoryTab && (
         <div className="mb-4 p-3 rounded-lg bg-purple-900/20 border border-purple-500/30 text-purple-200 text-sm">
           Catalog synced from blueprints: {syncResult.totalActive} active
           {syncResult.added > 0 && ` · ${syncResult.added} new`}
@@ -156,155 +206,176 @@ export default function ResourceTrackerRoute() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">{tabLabel} · types</p>
-          <p className="text-2xl font-bold text-white mt-1">{activeCount}</p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">In stock (types)</p>
-          <p className="text-2xl font-bold text-green-400 mt-1">{inStockCount}</p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Total quantity</p>
-          <p className="text-2xl font-bold text-purple-400 mt-1">{totalQty.toLocaleString()}</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search resources..."
-          className="flex-1 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20"
-        />
-        <label className="flex items-center gap-2 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-slate-300 text-sm cursor-pointer">
-          <input
-            type="checkbox"
-            checked={showInactive}
-            onChange={(e) => setShowInactive(e.target.checked)}
-            className="rounded border-slate-500"
+      {activeTab === 'market' ? (
+        user?.id ? (
+          <ResourceMarketPanel
+            userId={user.id}
+            orgId={siteOrg?.id ?? null}
+            catalog={personalCatalog}
           />
-          Show retired
-        </label>
-      </div>
-
-      {loading ? (
-        <div className="text-center py-16">
-          <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
-          <p className="text-slate-400 mt-4">Loading resources...</p>
-        </div>
+        ) : null
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {filteredResources.map((resource) => {
-            const isEditing = editingKey === resource.resource_key
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+              <p className="text-slate-500 text-xs uppercase tracking-wide">{tabLabel} · types</p>
+              <p className="text-2xl font-bold text-white mt-1">{activeCount}</p>
+            </div>
+            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+              <p className="text-slate-500 text-xs uppercase tracking-wide">In stock (types)</p>
+              <p className="text-2xl font-bold text-green-400 mt-1">{inStockCount}</p>
+            </div>
+            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+              <p className="text-slate-500 text-xs uppercase tracking-wide">Total SCU</p>
+              <p className="text-2xl font-bold text-purple-400 mt-1 tabular-nums">
+                {formatResourceQuantity(totalQty)}
+              </p>
+            </div>
+          </div>
 
-            return (
-              <div
-                key={resource.resource_key}
-                className={`bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-4 ${
-                  resource.is_active ? 'border-slate-700' : 'border-slate-800 opacity-70'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="text-white font-medium">{resource.label}</h3>
-                    <p className="text-slate-500 text-xs mt-0.5">
-                      {resource.is_active ? 'From blueprints' : 'Retired — no longer in blueprints'}
-                    </p>
-                  </div>
-                  <span
-                    className={`px-2 py-0.5 rounded text-xs border ${
-                      resource.quantity > 0
-                        ? 'bg-green-950/50 text-green-400 border-green-500/30'
-                        : 'bg-slate-800 text-slate-500 border-slate-600'
+          <div className="flex flex-col sm:flex-row gap-3 mb-4">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search resources..."
+              className="flex-1 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20"
+            />
+            <label className="flex items-center gap-2 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-slate-300 text-sm cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showInactive}
+                onChange={(e) => setShowInactive(e.target.checked)}
+                className="rounded border-slate-500"
+              />
+              Show retired
+            </label>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-16">
+              <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
+              <p className="text-slate-400 mt-4">Loading resources...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+              {filteredResources.map((resource) => {
+                const isEditing = editingKey === resource.resource_key
+
+                return (
+                  <div
+                    key={resource.resource_key}
+                    className={`bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-4 ${
+                      resource.is_active ? 'border-slate-700' : 'border-slate-800 opacity-70'
                     }`}
                   >
-                    {resource.quantity > 0 ? 'In stock' : 'Empty'}
-                  </span>
-                </div>
-
-                <div className="mt-4 flex items-center gap-2">
-                  {isEditing && !readOnly ? (
-                    <>
-                      <input
-                        type="number"
-                        min="0"
-                        value={editValue}
-                        onChange={(e) => setEditValue(e.target.value)}
-                        className="w-24 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm"
-                      />
-                      <button
-                        onClick={() => void handleSaveEdit(resource.resource_key)}
-                        className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded"
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <h3 className="text-white font-medium">{resource.label}</h3>
+                        <p className="text-slate-500 text-xs mt-0.5">
+                          {resource.is_active
+                            ? 'SCU in stock'
+                            : 'Retired — no longer in blueprints'}
+                        </p>
+                      </div>
+                      <span
+                        className={`px-2 py-0.5 rounded text-xs border ${
+                          resource.quantity > 0
+                            ? 'bg-green-950/50 text-green-400 border-green-500/30'
+                            : 'bg-slate-800 text-slate-500 border-slate-600'
+                        }`}
                       >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => {
-                          setEditingKey(null)
-                          setEditValue('')
-                        }}
-                        className="px-2 py-1 text-xs text-slate-400"
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-2xl font-bold text-white tabular-nums">
-                        {resource.quantity}
+                        {resource.quantity > 0 ? 'In stock' : 'Empty'}
                       </span>
-                      {!readOnly && (
-                        <button
-                          onClick={() => {
-                            setEditingKey(resource.resource_key)
-                            setEditValue(String(resource.quantity))
-                          }}
-                          className="text-xs text-slate-400 hover:text-white ml-1"
-                        >
-                          Set
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
+                    </div>
 
-                {resource.is_active && !readOnly && (
-                  <div className="mt-3 flex gap-2">
-                    <button
-                      onClick={() => void handleAdjust(resource.resource_key, -1)}
-                      className="flex-1 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg"
-                    >
-                      −1
-                    </button>
-                    <button
-                      onClick={() => void handleAdjust(resource.resource_key, 1)}
-                      className="flex-1 py-1.5 text-sm bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded-lg"
-                    >
-                      +1
-                    </button>
-                    <button
-                      onClick={() => void handleAdjust(resource.resource_key, 10)}
-                      className="flex-1 py-1.5 text-sm bg-purple-950/50 hover:bg-purple-900/50 text-purple-300 border border-purple-500/30 rounded-lg"
-                    >
-                      +10
-                    </button>
+                    <div className="mt-4 flex items-center gap-2 flex-wrap">
+                      {isEditing && !readOnly ? (
+                        <>
+                          <input
+                            type="number"
+                            min="0"
+                            step={RESOURCE_QUANTITY_STEP}
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            className="w-28 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm tabular-nums"
+                          />
+                          <span className="text-slate-500 text-xs">SCU</span>
+                          <button
+                            onClick={() => void handleSaveEdit(resource.resource_key)}
+                            className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEditingKey(null)
+                              setEditValue('')
+                            }}
+                            className="px-2 py-1 text-xs text-slate-400"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-2xl font-bold text-white tabular-nums">
+                            {formatResourceQuantity(resource.quantity)}
+                          </span>
+                          <span className="text-slate-500 text-sm">SCU</span>
+                          {!readOnly && (
+                            <button
+                              onClick={() => {
+                                setEditingKey(resource.resource_key)
+                                setEditValue(formatResourceQuantity(resource.quantity))
+                              }}
+                              className="text-xs text-slate-400 hover:text-white ml-1"
+                            >
+                              Set
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    {resource.is_active && !readOnly && (
+                      <div className="mt-3 grid grid-cols-2 gap-1.5">
+                        {ADJUST_STEPS.map((step) => (
+                          <div key={step} className="flex gap-1">
+                            <button
+                              onClick={() => void handleAdjust(resource.resource_key, -step)}
+                              className="flex-1 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded"
+                            >
+                              −{step}
+                            </button>
+                            <button
+                              onClick={() => void handleAdjust(resource.resource_key, step)}
+                              className="flex-1 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded"
+                            >
+                              +{step}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
+                )
+              })}
+            </div>
+          )}
+
+          {isSuperAdmin && (
+            <p className="text-slate-500 text-xs mt-6">
+              Quantities are in SCU (3 decimal precision, matching in-game refining). Resource types
+              come from <code>Blueprints.json</code> — use <strong className="text-slate-400">Sync
+              from blueprints</strong> after updates.
+            </p>
+          )}
+        </>
       )}
 
-      {isSuperAdmin && (
-        <p className="text-slate-500 text-xs mt-6">
-          Resource types come from <code>Blueprints.json</code>. After you update that file, use{' '}
-          <strong className="text-slate-400">Sync from blueprints</strong> to import new
-          requirements into the catalog.
-        </p>
+      {activeTab === 'market' && personalLoading && (
+        <div className="text-center py-8 text-slate-500 text-sm">Loading inventory...</div>
       )}
     </FeaturePageLayout>
   )

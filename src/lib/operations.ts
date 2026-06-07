@@ -4,6 +4,7 @@ import {
   type BlueprintWithSlots,
   type ExtractedBlueprintResource,
 } from './blueprintResources'
+import { roundResourceQuantity } from './resourceQuantity'
 
 export type CustomOrderStatus =
   | 'pending'
@@ -125,6 +126,48 @@ export interface ResourceCatalogSyncResult {
   reactivated: number
   deactivated: number
   totalActive: number
+}
+
+export type ResourceMarketStatus = 'open' | 'filled' | 'sold' | 'cancelled'
+
+export interface ResourceBuyRequest {
+  id: string
+  requester_id: string
+  org_id: string | null
+  resource_key: string
+  resource_label: string
+  min_quality: number
+  quantity_scu: number
+  dfp_total_auec: number
+  notes: string | null
+  status: ResourceMarketStatus
+  created_at: string
+  updated_at: string
+  requester?: {
+    rsi_handle: string | null
+    display_name: string | null
+    email: string | null
+  }
+}
+
+export interface ResourceSaleListing {
+  id: string
+  seller_id: string
+  org_id: string | null
+  resource_key: string
+  resource_label: string
+  min_quality: number
+  quantity_scu: number
+  dfp_total_auec: number
+  notes: string | null
+  status: ResourceMarketStatus
+  created_at: string
+  updated_at: string
+  seller?: {
+    rsi_handle: string | null
+    display_name: string | null
+    email: string | null
+  }
 }
 
 export async function syncBlueprintResourceCatalog(
@@ -316,7 +359,7 @@ export async function adjustInventoryQuantity(
 
   if (fetchError) return { error: fetchError.message }
 
-  const nextQty = Math.max(0, Number(current?.quantity ?? 0) + delta)
+  const nextQty = roundResourceQuantity(Math.max(0, Number(current?.quantity ?? 0) + delta))
   const now = new Date().toISOString()
 
   const row =
@@ -360,19 +403,133 @@ export async function setInventoryQuantity(
           user_id: ctx.userId,
           org_id: ctx.orgId,
           resource_key: resourceKey,
-          quantity: Math.max(0, quantity),
+          quantity: roundResourceQuantity(Math.max(0, quantity)),
           updated_at: now,
         }
       : {
           org_id: ctx.orgId!,
           resource_key: resourceKey,
-          quantity: Math.max(0, quantity),
+          quantity: roundResourceQuantity(Math.max(0, quantity)),
           updated_at: now,
         }
 
   const { error } = await supabase.from(table).upsert(row, {
     onConflict: ctx.scope === 'personal' ? 'user_id,resource_key' : 'org_id,resource_key',
   })
+
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function fetchResourceBuyRequests(): Promise<{
+  data: ResourceBuyRequest[]
+  error?: string
+}> {
+  const { data, error } = await supabase
+    .from('resource_buy_requests')
+    .select(`
+      *,
+      requester:profiles!resource_buy_requests_requester_id_fkey(rsi_handle, display_name, email)
+    `)
+    .eq('status', 'open')
+    .order('created_at', { ascending: false })
+
+  if (error) return { data: [], error: error.message }
+  return { data: (data ?? []) as ResourceBuyRequest[] }
+}
+
+export async function createResourceBuyRequest(input: {
+  requesterId: string
+  orgId: string | null
+  resourceKey: string
+  resourceLabel: string
+  minQuality: number
+  quantityScu: number
+  dfpTotalAuec: number
+  notes?: string
+}): Promise<{ data?: ResourceBuyRequest; error?: string }> {
+  const { data, error } = await supabase
+    .from('resource_buy_requests')
+    .insert({
+      requester_id: input.requesterId,
+      org_id: input.orgId,
+      resource_key: input.resourceKey,
+      resource_label: input.resourceLabel,
+      min_quality: input.minQuality,
+      quantity_scu: roundResourceQuantity(input.quantityScu),
+      dfp_total_auec: Math.round(input.dfpTotalAuec),
+      notes: input.notes?.trim() || null,
+      status: 'open',
+    })
+    .select()
+    .single()
+
+  if (error || !data) return { error: error?.message ?? 'Failed to post buy request' }
+  return { data: data as ResourceBuyRequest }
+}
+
+export async function cancelResourceBuyRequest(requestId: string): Promise<{ error?: string }> {
+  const { error } = await supabase
+    .from('resource_buy_requests')
+    .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+    .eq('id', requestId)
+
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function fetchResourceSaleListings(): Promise<{
+  data: ResourceSaleListing[]
+  error?: string
+}> {
+  const { data, error } = await supabase
+    .from('resource_sale_listings')
+    .select(`
+      *,
+      seller:profiles!resource_sale_listings_seller_id_fkey(rsi_handle, display_name, email)
+    `)
+    .eq('status', 'open')
+    .order('created_at', { ascending: false })
+
+  if (error) return { data: [], error: error.message }
+  return { data: (data ?? []) as ResourceSaleListing[] }
+}
+
+export async function createResourceSaleListing(input: {
+  sellerId: string
+  orgId: string | null
+  resourceKey: string
+  resourceLabel: string
+  minQuality: number
+  quantityScu: number
+  dfpTotalAuec: number
+  notes?: string
+}): Promise<{ data?: ResourceSaleListing; error?: string }> {
+  const { data, error } = await supabase
+    .from('resource_sale_listings')
+    .insert({
+      seller_id: input.sellerId,
+      org_id: input.orgId,
+      resource_key: input.resourceKey,
+      resource_label: input.resourceLabel,
+      min_quality: input.minQuality,
+      quantity_scu: roundResourceQuantity(input.quantityScu),
+      dfp_total_auec: Math.round(input.dfpTotalAuec),
+      notes: input.notes?.trim() || null,
+      status: 'open',
+    })
+    .select()
+    .single()
+
+  if (error || !data) return { error: error?.message ?? 'Failed to post sale listing' }
+  return { data: data as ResourceSaleListing }
+}
+
+export async function cancelResourceSaleListing(listingId: string): Promise<{ error?: string }> {
+  const { error } = await supabase
+    .from('resource_sale_listings')
+    .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+    .eq('id', listingId)
 
   if (error) return { error: error.message }
   return {}
