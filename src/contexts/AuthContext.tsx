@@ -44,6 +44,7 @@ interface AuthContextType {
   organization: Organization | null
   orgMembership: OrgMembership | null
   refreshOrgContext: () => Promise<void>
+  reloadProfile: () => Promise<void>
   fetchUsersWithBlueprints: (scope?: MemberScope) => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   displayName: string
@@ -290,6 +291,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   userRef.current = user
   const acquiredRef = useRef(acquiredBlueprints)
   acquiredRef.current = acquiredBlueprints
+
+  const reloadProfile = useCallback(async () => {
+    const activeUser = userRef.current
+    if (!activeUser) return
+
+    let profileData = await fetchProfile(activeUser.id)
+    if (profileData && !profileData.org_id) {
+      await ensureDumpersMembership()
+      profileData = await fetchProfile(activeUser.id)
+    }
+
+    setProfile(profileData)
+    await refreshOrgContext(profileData)
+  }, [fetchProfile, refreshOrgContext])
 
   const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -595,6 +610,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       organization,
       orgMembership,
       refreshOrgContext,
+      reloadProfile,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       displayName,
@@ -630,6 +646,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       organization,
       orgMembership,
       refreshOrgContext,
+      reloadProfile,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       displayName,
