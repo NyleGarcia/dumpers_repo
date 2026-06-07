@@ -3,6 +3,7 @@ import { useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -183,7 +184,8 @@ export default function BlueprintsRoute() {
   const [selectedArmorSlot, setSelectedArmorSlot] = React.useState(null)
   const [showOnlyRewards, setShowOnlyRewards] = React.useState(true)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
-  
+  useBodyScrollLock(!!selectedBlueprint)
+
   const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
   const [selectedUserId, setSelectedUserId] = React.useState('all')
   const [viewedUserBlueprints, setViewedUserBlueprints] = React.useState({})
@@ -733,11 +735,11 @@ export default function BlueprintsRoute() {
       {/* Blueprint Details Modal */}
       {selectedBlueprint && (
         <div 
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 overflow-hidden"
           onClick={() => setSelectedBlueprint(null)}
         >
           <div 
-            className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto overscroll-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">

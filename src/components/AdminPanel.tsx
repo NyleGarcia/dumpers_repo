@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { supabase, Profile, UserRole, BannedUser, banUser, unbanUser, getDisplayName } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 
 type TabType = 'pending' | 'members' | 'officers' | 'banned'
 
 export default function AdminPanel({ onClose }: { onClose: () => void }) {
+  useBodyScrollLock()
   const { profile: currentUser, isOfficerOrAbove, isSuperAdmin } = useAuth()
   const [activeTab, setActiveTab] = useState<TabType>('pending')
   const [users, setUsers] = useState<Profile[]>([])
@@ -147,7 +149,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
   ]
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4 overflow-hidden">
       <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
         <div className="flex items-center justify-between p-4 border-b border-slate-700">
           <h2 className="text-xl font-bold text-white">Admin Panel</h2>
@@ -175,7 +177,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
           ))}
         </div>
 
-        <div className="p-4 overflow-y-auto max-h-[60vh]">
+        <div className="p-4 overflow-y-auto overscroll-contain max-h-[60vh]">
           {loading ? (
             <div className="text-center py-8">
               <div className="w-8 h-8 border-t-2 border-red-500 rounded-full animate-spin mx-auto"></div>

@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 
 export default function BlueprintDetailsModal({ blueprint, onClose }) {
+  useBodyScrollLock(!!blueprint)
   if (!blueprint) return null
   
   const [isOwned, setIsOwned] = useState(false)
@@ -20,9 +22,9 @@ export default function BlueprintDetailsModal({ blueprint, onClose }) {
   })
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60] p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60] p-4 overflow-hidden" onClick={onClose}>
       <div 
-        className="bg-slate-900 border border-slate-700 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-slate-900 border border-slate-700 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto overscroll-contain"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

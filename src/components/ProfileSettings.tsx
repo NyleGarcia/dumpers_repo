@@ -4,8 +4,10 @@ import { deleteAccount } from '../lib/supabase'
 import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
+  useBodyScrollLock()
   const { profile, updateRsiHandle, updateGhostMode, updatePreviewFeatures, signOut, isSuperAdmin, isOfficerOrAbove } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
@@ -90,7 +92,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4 overflow-hidden">
       <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-4 border-b border-slate-700 shrink-0">
           <div>
@@ -105,7 +107,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <div className="p-4 space-y-4 overflow-y-auto flex-1">
+        <div className="p-4 space-y-4 overflow-y-auto overscroll-contain flex-1">
           {message && (
             <div className={`p-3 rounded-lg text-sm ${
               message.type === 'success'
