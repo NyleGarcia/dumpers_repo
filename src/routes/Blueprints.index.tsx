@@ -111,6 +111,16 @@ const MAIN_CATEGORY_GROUPS = {
   'Mission Items': ['MissionItem'],
 }
 
+const ARMOR_WEIGHT_OPTIONS = ['flight', 'light', 'medium', 'heavy', 'superheavy']
+const ARMOR_SLOT_OPTIONS = ['helmet', 'arms', 'core', 'legs', 'backpack']
+const VEHICLE_SIZE_OPTIONS = {
+  'Vehicle Components': ['S0', 'S1', 'S2', 'S3', 'S4'],
+  'Vehicle Weapons': ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'],
+}
+const STATIC_SUBTYPE_OPTIONS = {
+  'FPS Armour': ['standard', 'flightsuit', 'explorer', 'salvager', 'stealth'],
+}
+
 const formatSubType = (sub) => {
   if (!sub) return sub
   return sub.charAt(0).toUpperCase() + sub.slice(1).replace(/([A-Z])/g, ' $1')
@@ -380,27 +390,32 @@ export default function BlueprintsRoute() {
     )
   }
 
-  const currentSizes = selectedMainCategory ? categoryData.sizes[selectedMainCategory] || {} : {}
-  // For armor weights: show all possible weights but with filtered counts
-  const allArmorWeights = selectedMainCategory === 'FPS Armour' ? categoryData.armorWeights || {} : {}
-  const currentArmorWeights = Object.keys(allArmorWeights).reduce((acc, key) => {
-    acc[key] = filteredArmorCounts.weights[key] || 0
+  const sizeOptions = selectedMainCategory ? VEHICLE_SIZE_OPTIONS[selectedMainCategory] || [] : []
+  const currentSizes = sizeOptions.reduce((acc, size) => {
+    acc[size] = (categoryData.sizes[selectedMainCategory]?.[size] ?? 0)
     return acc
   }, {})
-  // For armor slots: show all possible slots but with filtered counts
-  const allArmorSlots = selectedMainCategory === 'FPS Armour' ? categoryData.armorSlots || {} : {}
-  const currentArmorSlots = Object.keys(allArmorSlots).reduce((acc, key) => {
-    acc[key] = filteredArmorCounts.slots[key] || 0
+  const currentArmorWeights = ARMOR_WEIGHT_OPTIONS.reduce((acc, weight) => {
+    acc[weight] = filteredArmorCounts.weights[weight] || 0
     return acc
   }, {})
-  // Get all subtypes for the category (unfiltered) to ensure we always show all type buttons
-  const allSubTypes = selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {}
-  // Always use filteredSubTypeCounts for the actual counts - it respects size/weight/slot filters when active
-  const currentSubTypes = Object.keys(allSubTypes).reduce((acc, key) => {
+  const currentArmorSlots = ARMOR_SLOT_OPTIONS.reduce((acc, slot) => {
+    acc[slot] = filteredArmorCounts.slots[slot] || 0
+    return acc
+  }, {})
+  const discoveredSubTypes = selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {}
+  const subTypeOptions = selectedMainCategory
+    ? [...new Set([...(STATIC_SUBTYPE_OPTIONS[selectedMainCategory] || []), ...Object.keys(discoveredSubTypes)])].sort()
+    : []
+  const currentSubTypes = subTypeOptions.reduce((acc, key) => {
     acc[key] = filteredSubTypeCounts[key] || 0
     return acc
   }, {})
-  const hasSubFilters = Object.keys(allSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(allArmorWeights).length > 0 || Object.keys(allArmorSlots).length > 0
+  const showVehicleSizes = sizeOptions.length > 0
+  const showArmorWeights = selectedMainCategory === 'FPS Armour'
+  const showArmorSlots = selectedMainCategory === 'FPS Armour'
+  const showSubTypes = subTypeOptions.length > 0
+  const hasSubFilters = showVehicleSizes || showArmorWeights || showArmorSlots || showSubTypes
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-2 sm:p-4 overflow-x-hidden">
@@ -498,9 +513,9 @@ export default function BlueprintsRoute() {
           {hasSubFilters && (
             <div className="flex flex-wrap gap-1.5 lg:gap-2 justify-center pt-2 border-t border-slate-700/50">
               {/* Size filters for Vehicle categories */}
-              {Object.keys(currentSizes).length > 0 && (
+              {showVehicleSizes && (
                 <>
-                  {Object.keys(currentSizes).sort().map(size => {
+                  {sizeOptions.map(size => {
                     const count = currentSizes[size] || 0
                     return (
                       <button
@@ -527,9 +542,9 @@ export default function BlueprintsRoute() {
               )}
               
               {/* Weight filters for FPS Armour */}
-              {Object.keys(currentArmorWeights).length > 0 && (
+              {showArmorWeights && (
                 <>
-                  {['flight', 'light', 'medium', 'heavy', 'superheavy'].filter(w => allArmorWeights[w] !== undefined).map(weight => {
+                  {ARMOR_WEIGHT_OPTIONS.map(weight => {
                     const count = currentArmorWeights[weight] || 0
                     const displayName = weight === 'superheavy' ? 'Super Heavy' : weight.charAt(0).toUpperCase() + weight.slice(1)
                     return (
@@ -557,9 +572,9 @@ export default function BlueprintsRoute() {
               )}
               
               {/* Slot filters for FPS Armour */}
-              {Object.keys(currentArmorSlots).length > 0 && (
+              {showArmorSlots && (
                 <>
-                  {['helmet', 'arms', 'core', 'legs', 'backpack'].filter(s => currentArmorSlots[s]).map(slot => {
+                  {ARMOR_SLOT_OPTIONS.map(slot => {
                     const count = currentArmorSlots[slot] || 0
                     const displayName = slot.charAt(0).toUpperCase() + slot.slice(1)
                     return (
@@ -587,7 +602,7 @@ export default function BlueprintsRoute() {
               )}
               
               {/* Type filters */}
-              {Object.keys(currentSubTypes).sort().map(sub => {
+              {showSubTypes && subTypeOptions.map(sub => {
                 const count = currentSubTypes[sub] || 0
                 return (
                   <button
