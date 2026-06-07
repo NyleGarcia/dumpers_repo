@@ -1,5 +1,5 @@
 import React from 'react'
-import { useBlueprintData } from './blueprints'
+import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
@@ -498,6 +498,8 @@ export default function BlueprintsRoute() {
             </h1>
             <p className="text-slate-500 text-sm hidden sm:block">
               Comprehensive Crafting Database & Mission Rewards Tracker
+              <span className="mx-2">•</span>
+              <span>LIVE {blueprintDataVersion}</span>
               <span className="mx-2">•</span>
               <span className="text-green-400">{Object.keys(acquiredBlueprints).length} acquired</span>
             </p>

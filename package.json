@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build && node scripts/write-build-version.mjs",
     "preview": "vite preview",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "fetch-blueprints": "node scripts/fetch-blueprints.mjs",
+    "validate-blueprints": "node scripts/validate-blueprints.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.107.0",
