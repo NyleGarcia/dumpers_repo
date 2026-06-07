@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import AuecTransferLimitModal from '../components/AuecTransferLimitModal'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
@@ -99,6 +100,7 @@ export default function CustomOrdersRoute() {
   const [cartLines, setCartLines] = useState<CartLine[]>([])
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [showTransferLimitModal, setShowTransferLimitModal] = useState(false)
 
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
@@ -211,8 +213,7 @@ export default function CustomOrdersRoute() {
     setCartLines((prev) => prev.filter((line) => line.cartKey !== cartKey))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const submitOrder = useCallback(async () => {
     if (!user?.id || cartLines.length === 0) return
 
     const resourceLines = extractOrderLineItemsFromBlueprints(
@@ -263,12 +264,29 @@ export default function CustomOrdersRoute() {
       return
     }
 
+    setShowTransferLimitModal(false)
     setNotes('')
     setCartLines([])
     setLineQuantity('1')
     setMinQuality('500')
     setShowForm(false)
     await loadOrders()
+  }, [user?.id, cartLines, blueprintById, notes, cartTotalDfp, loadOrders])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!user?.id || cartLines.length === 0 || submitting) return
+
+    if (exceedsSingleTransferLimit(cartTotalDfp)) {
+      setShowTransferLimitModal(true)
+      return
+    }
+
+    void submitOrder()
+  }
+
+  const handleTransferLimitConfirm = () => {
+    void submitOrder()
   }
 
   const handleStatusChange = async (orderId: string, status: CustomOrderStatus) => {
@@ -531,7 +549,10 @@ export default function CustomOrdersRoute() {
           )}
 
           {cartLines.length > 0 && exceedsSingleTransferLimit(cartTotalDfp) && (
-            <AuecTransferLimitNotice totalAuec={cartTotalDfp} context="customer" />
+            <p className="text-orange-300/90 text-xs">
+              Total exceeds 1M aUEC — you will need to confirm in-game payment limits before
+              submitting.
+            </p>
           )}
 
           <div>
@@ -568,6 +589,15 @@ export default function CustomOrdersRoute() {
             {submitting ? 'Submitting...' : `Submit order · ${formatDfpAuec(cartTotalDfp)}`}
           </button>
         </form>
+      )}
+
+      {showTransferLimitModal && (
+        <AuecTransferLimitModal
+          totalAuec={cartTotalDfp}
+          onConfirm={handleTransferLimitConfirm}
+          onCancel={() => setShowTransferLimitModal(false)}
+          confirming={submitting}
+        />
       )}
 
       {loading || catalogLoading ? (
