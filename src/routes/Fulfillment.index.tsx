@@ -2,25 +2,37 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderRatingModal from '../components/OrderRatingModal'
+import ReputationBadge from '../components/ReputationBadge'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
+import { getOrderAcceptBlockers } from '../lib/orderAccept'
+import { canFulfillerArchive } from '../lib/orderArchive'
 import {
   orderTotalDfp,
   resolveOrderBlueprintLines,
   resolveOrderResourceLines,
 } from '../lib/orderPricing'
+import {
+  buyerReputationFromRow,
+  fulfillerMeetsOrderMinRep,
+  fulfillerReputationFromRow,
+  passesBuyerRepFilter,
+  type MemberReputationRow,
+} from '../lib/reputation'
 import { formatResourceQuantity } from '../lib/resourceQuantity'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useAuth } from '../contexts/AuthContext'
-import { canFulfillerArchive } from '../lib/orderArchive'
 import {
+  acceptCustomOrder,
   archiveCustomOrderWithRating,
   completeOrderCraft,
   fetchCustomOrders,
   fetchFulfillments,
   fetchInventory,
+  fetchMemberReputations,
   startCustomOrderWork,
   type CustomOrder,
   type OrderFulfillment,
@@ -29,16 +41,19 @@ import {
 import { displayNameFromFields } from '../lib/supabase'
 
 export default function FulfillmentRoute() {
-  const { user, siteOrg } = useAuth()
+  const { user, siteOrg, acquiredBlueprints } = useAuth()
   const { labelMap } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [inventory, setInventory] = useState<ResourceInventoryRow[]>([])
   const [fulfillments, setFulfillments] = useState<OrderFulfillment[]>([])
+  const [reputations, setReputations] = useState<Record<string, MemberReputationRow>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [acceptingOrderId, setAcceptingOrderId] = useState<string | null>(null)
+  const [minBuyerRepFilter, setMinBuyerRepFilter] = useState('')
   const [archiveOrder, setArchiveOrder] = useState<CustomOrder | null>(null)
   const [archiving, setArchiving] = useState(false)
 
@@ -64,9 +79,22 @@ export default function FulfillmentRoute() {
     if (inventoryResult.error && !ordersResult.error) setError(inventoryResult.error)
     if (fulfillmentsResult.error && !ordersResult.error) setError(fulfillmentsResult.error)
 
-    setOrders(ordersResult.data)
+    const nextOrders = ordersResult.data
+    setOrders(nextOrders)
     setInventory(inventoryResult.data)
     setFulfillments(fulfillmentsResult.data)
+
+    const repIds = new Set<string>()
+    if (userId) repIds.add(userId)
+    nextOrders.forEach((order) => {
+      repIds.add(order.requester_id)
+      if (order.assignee_id) repIds.add(order.assignee_id)
+    })
+
+    const repResult = await fetchMemberReputations([...repIds])
+    if (repResult.error && !ordersResult.error) setError(repResult.error)
+    setReputations(repResult.data)
+
     setLoading(false)
   }, [userId, orgId])
 
@@ -81,6 +109,43 @@ export default function FulfillmentRoute() {
     })
     return map
   }, [inventory])
+
+  const myFulfillerRep = useMemo(
+    () => fulfillerReputationFromRow(userId ? reputations[userId] : undefined),
+    [reputations, userId]
+  )
+
+  const personalStock = useMemo(() => {
+    const stock: Record<string, number> = {}
+    inventory.forEach((row) => {
+      stock[row.resource_key] = Number(row.quantity)
+    })
+    return stock
+  }, [inventory])
+
+  const pendingOrders = useMemo(() => {
+    const minFilter = minBuyerRepFilter ? Number(minBuyerRepFilter) : null
+
+    return orders.filter((order) => {
+      if (order.status !== 'pending' || order.requester_id === userId) return false
+
+      const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
+      if (!passesBuyerRepFilter(buyerRep, minFilter)) return false
+
+      return true
+    })
+  }, [orders, userId, minBuyerRepFilter, reputations])
+
+  const myBuyingOrders = useMemo(
+    () =>
+      orders.filter(
+        (o) =>
+          o.requester_id === userId &&
+          o.assignee_id != null &&
+          ['accepted', 'in_progress', 'ready_for_pickup', 'completed'].includes(o.status)
+      ),
+    [orders, userId]
+  )
 
   const myAssignedOrders = useMemo(
     () =>
@@ -136,6 +201,22 @@ export default function FulfillmentRoute() {
 
     return { canFulfill: shortages.length === 0, shortages }
   }, [selectedOrder, quantityByKey, labelMap])
+
+  const handleAccept = async (orderId: string) => {
+    setAcceptingOrderId(orderId)
+    setError(null)
+
+    const result = await acceptCustomOrder(orderId)
+
+    setAcceptingOrderId(null)
+
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+
+    await loadData()
+  }
 
   const handleStartWork = async (orderId: string) => {
     setSubmitting(true)
@@ -194,13 +275,18 @@ export default function FulfillmentRoute() {
       )}
 
       <p className="mb-4 text-slate-500 text-sm">
-        Accept orders on Custom Orders only if you own the blueprint and have enough resources in{' '}
+        Browse pending orders here with buyer reputation before accepting. You need the blueprint
+        and enough stock in{' '}
         <Link to="/resources" className="text-red-400 hover:text-red-300">
           My Resources
         </Link>
-        . The DFP total is the required aUEC price you must honor. Completing craft deducts
-        personal inventory and notifies the requester.
+        . Ratings show as <span className="text-slate-400 italic">Pending</span> until a member has
+        5 completed orders or fulfillments.
       </p>
+
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} />
+      </div>
 
       {loading ? (
         <div className="text-center py-16">
@@ -208,15 +294,101 @@ export default function FulfillmentRoute() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <section>
+          <section className="space-y-6">
+            <div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                <h2 className="text-white font-medium">Available orders</h2>
+                <label className="flex items-center gap-2 text-xs text-slate-400">
+                  <span className="shrink-0">Min buyer rep</span>
+                  <select
+                    value={minBuyerRepFilter}
+                    onChange={(e) => setMinBuyerRepFilter(e.target.value)}
+                    className="px-2 py-1 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                  >
+                    <option value="">All buyers</option>
+                    {REPUTATION_STAR_OPTIONS.map((tier) => (
+                      <option key={tier} value={tier}>
+                        {tier}+
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <p className="text-slate-500 text-xs mb-3">
+                Buyers without 5 completed orders always appear — they cannot be filtered out.
+              </p>
+              {pendingOrders.length === 0 ? (
+                <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                  No pending orders match your filters.
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {pendingOrders.map((order) => {
+                    const totalDfp = orderTotalDfp(order)
+                    const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
+                    const acceptBlockers = getOrderAcceptBlockers({
+                      order,
+                      acquiredBlueprints,
+                      personalStock,
+                      labelMap,
+                    })
+                    const meetsMinRep = fulfillerMeetsOrderMinRep(
+                      myFulfillerRep,
+                      order.min_fulfiller_reputation
+                    )
+                    const canAccept = acceptBlockers.length === 0 && meetsMinRep
+                    const accepting = acceptingOrderId === order.id
+
+                    return (
+                      <div
+                        key={order.id}
+                        className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                          <div className="space-y-2">
+                            <p className="text-white font-medium">{order.title}</p>
+                            <p className="text-slate-500 text-xs">
+                              Buyer: {displayNameFromFields(order.requester)}
+                              {totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              <ReputationBadge label="Buyer rep" reputation={buyerRep} />
+                              {order.min_fulfiller_reputation != null && (
+                                <span className="px-2 py-0.5 rounded text-xs border bg-slate-800 text-slate-300 border-slate-600">
+                                  Requires fulfiller {order.min_fulfiller_reputation}+
+                                </span>
+                              )}
+                            </div>
+                            {!meetsMinRep && (
+                              <p className="text-amber-400/90 text-xs">
+                                Your fulfiller reputation is below this order&apos;s minimum.
+                              </p>
+                            )}
+                            {acceptBlockers.length > 0 && (
+                              <p className="text-amber-400/80 text-xs">{acceptBlockers.join(' · ')}</p>
+                            )}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => void handleAccept(order.id)}
+                            disabled={!canAccept || accepting}
+                            className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
+                          >
+                            {accepting ? 'Accepting...' : 'Accept order'}
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div>
             <h2 className="text-white font-medium mb-3">My assigned orders</h2>
             {myAssignedOrders.length === 0 ? (
               <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                No orders assigned to you. Accept a pending order on{' '}
-                <Link to="/orders" className="text-red-400 hover:text-red-300">
-                  Custom Orders
-                </Link>
-                .
+                No orders assigned to you. Accept a pending order from Available orders above.
               </div>
             ) : (
               <div className="space-y-2">
@@ -260,6 +432,12 @@ export default function FulfillmentRoute() {
                           </span>
                         )}
                       </p>
+                      <div className="mt-2">
+                        <ReputationBadge
+                          label="Buyer rep"
+                          reputation={buyerReputationFromRow(reputations[order.requester_id])}
+                        />
+                      </div>
                       {exceedsSingleTransferLimit(totalDfp) && (
                         <AuecTransferLimitNotice
                           totalAuec={totalDfp}
@@ -374,9 +552,48 @@ export default function FulfillmentRoute() {
                 )}
               </div>
             )}
+            </div>
           </section>
 
-          <section>
+          <section className="space-y-6">
+            {myBuyingOrders.length > 0 && (
+              <div>
+                <h2 className="text-white font-medium mb-3">Orders you&apos;re buying</h2>
+                <p className="text-slate-500 text-xs mb-3">
+                  Fulfiller reputation appears after they accept your order.
+                </p>
+                <div className="space-y-2">
+                  {myBuyingOrders.map((order) => {
+                    const totalDfp = orderTotalDfp(order)
+                    const fulfillerRep = fulfillerReputationFromRow(
+                      order.assignee_id ? reputations[order.assignee_id] : undefined
+                    )
+
+                    return (
+                      <div
+                        key={order.id}
+                        className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
+                      >
+                        <p className="text-white text-sm font-medium">{order.title}</p>
+                        <p className="text-slate-500 text-xs mt-1">
+                          {order.status.replace(/_/g, ' ')}
+                          {order.assignee &&
+                            ` · Fulfiller: ${displayNameFromFields(order.assignee)}`}
+                          {totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                        </p>
+                        {order.assignee_id && (
+                          <div className="mt-2">
+                            <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} />
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div>
             <h2 className="text-white font-medium mb-3">Finished orders</h2>
             {myFinishedOrders.length === 0 ? (
               <div className="p-6 mb-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
@@ -402,6 +619,12 @@ export default function FulfillmentRoute() {
                               ` · Customer: ${displayNameFromFields(order.requester)}`}
                             {totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                           </p>
+                          <div className="mt-2">
+                            <ReputationBadge
+                              label="Buyer rep"
+                              reputation={buyerReputationFromRow(reputations[order.requester_id])}
+                            />
+                          </div>
                           {order.status === 'ready_for_pickup' && (
                             <p className="text-cyan-300/80 text-xs mt-2">
                               Waiting for customer pickup confirmation.
@@ -429,6 +652,9 @@ export default function FulfillmentRoute() {
               </div>
             )}
 
+            </div>
+
+            <div>
             <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
             {fulfillments.length === 0 ? (
               <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
@@ -470,6 +696,7 @@ export default function FulfillmentRoute() {
                 ))}
               </div>
             )}
+            </div>
           </section>
         </div>
       )}

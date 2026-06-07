@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
 import { ORDER_QUALITY_TIERS } from '../config/dfp'
+import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
 import {
@@ -64,6 +65,7 @@ export default function ResourceBuyOrderPanel({
   const [resQuality, setResQuality] = useState(String(ORDER_QUALITY_TIERS[0]))
   const [resQty, setResQty] = useState('1')
   const [notes, setNotes] = useState('')
+  const [minFulfillerRep, setMinFulfillerRep] = useState('')
   const [bpCart, setBpCart] = useState<CartBlueprintLine[]>([])
   const [resCart, setResCart] = useState<CartResourceLine[]>([])
   const [submitting, setSubmitting] = useState(false)
@@ -182,6 +184,7 @@ export default function ResourceBuyOrderPanel({
       title: buildOrderTitle(bpCart.length, resCart.length),
       notes,
       totalDfpAuec: cartTotalDfp,
+      minFulfillerReputation: minFulfillerRep ? Number(minFulfillerRep) : null,
       blueprints: bpCart.map((line) => ({
         blueprintId: line.blueprintId,
         blueprintTitle: line.blueprintTitle,
@@ -215,6 +218,7 @@ export default function ResourceBuyOrderPanel({
     setBpCart([])
     setResCart([])
     setNotes('')
+    setMinFulfillerRep('')
     onSubmitted?.()
   }
 
@@ -434,6 +438,29 @@ export default function ResourceBuyOrderPanel({
             Over 1M DFP — confirm in-game payment limits before submitting.
           </p>
         )}
+
+        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-2">
+          <label htmlFor="min-fulfiller-rep" className="text-slate-300 text-sm font-medium">
+            Min fulfiller reputation
+          </label>
+          <p className="text-slate-500 text-xs">
+            Whole-number minimum (1–5) after fulfillers have 5+ completed jobs. Unrated fulfillers
+            are always eligible — they must be given a chance.
+          </p>
+          <select
+            id="min-fulfiller-rep"
+            value={minFulfillerRep}
+            onChange={(e) => setMinFulfillerRep(e.target.value)}
+            className="w-full sm:w-48 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+          >
+            <option value="">No minimum</option>
+            {REPUTATION_STAR_OPTIONS.map((tier) => (
+              <option key={tier} value={tier}>
+                {tier}+ stars
+              </option>
+            ))}
+          </select>
+        </div>
 
         <textarea
           value={notes}

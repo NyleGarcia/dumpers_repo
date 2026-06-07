@@ -1,3 +1,4 @@
+import type { MemberReputationRow } from './reputation'
 import { supabase } from './supabase'
 import {
   extractBlueprintResources,
@@ -83,6 +84,7 @@ export interface CustomOrder {
   min_quality: number
   quantity: number
   total_dfp_auec: number
+  min_fulfiller_reputation: number | null
   assignee_id: string | null
   accepted_at: string | null
   requester_archived_at: string | null
@@ -429,6 +431,7 @@ export async function createCustomOrder(input: {
   title: string
   notes?: string
   totalDfpAuec: number
+  minFulfillerReputation?: number | null
   blueprints: CustomOrderBlueprintInput[]
   resources: CustomOrderResourceInput[]
   items: { resourceKey: string; quantity: number }[]
@@ -451,6 +454,7 @@ export async function createCustomOrder(input: {
       min_quality: firstBp?.minQuality ?? input.resources[0]?.minQuality ?? 500,
       quantity: firstBp?.quantity ?? 1,
       total_dfp_auec: Math.round(input.totalDfpAuec),
+      min_fulfiller_reputation: input.minFulfillerReputation ?? null,
       status: 'pending',
     })
     .select()
@@ -560,6 +564,26 @@ export async function confirmOrderPickup(orderId: string): Promise<{ error?: str
   const { error } = await supabase.rpc('confirm_order_pickup', { p_order_id: orderId })
   if (error) return { error: error.message }
   return {}
+}
+
+export async function fetchMemberReputations(userIds: string[]): Promise<{
+  data: Record<string, MemberReputationRow>
+  error?: string
+}> {
+  const unique = [...new Set(userIds.filter(Boolean))]
+  if (unique.length === 0) return { data: {} }
+
+  const { data, error } = await supabase.rpc('get_member_reputations', {
+    p_user_ids: unique,
+  })
+
+  if (error) return { data: {}, error: error.message }
+
+  const map: Record<string, MemberReputationRow> = {}
+  for (const row of (data ?? []) as MemberReputationRow[]) {
+    map[row.user_id] = row
+  }
+  return { data: map }
 }
 
 export async function archiveCustomOrderWithRating(

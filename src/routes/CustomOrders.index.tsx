@@ -7,8 +7,8 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
+import { getOrderAcceptBlockers } from '../lib/orderAccept'
 import {
-  orderBlueprintIds,
   orderTotalDfp,
   resolveOrderBlueprintLines,
   resolveOrderResourceLines,
@@ -27,7 +27,6 @@ import {
   type OrderListTab,
 } from '../lib/orderArchive'
 import {
-  acceptCustomOrder,
   archiveCustomOrderWithRating,
   confirmOrderPickup,
   fetchCustomOrders,
@@ -146,15 +145,6 @@ export default function CustomOrdersRoute() {
     await loadOrders()
   }
 
-  const handleAccept = async (orderId: string) => {
-    const result = await acceptCustomOrder(orderId)
-    if (result.error) {
-      setError(result.error)
-      return
-    }
-    await loadOrders()
-  }
-
   const handleConfirmPickup = async (orderId: string) => {
     const result = await confirmOrderPickup(orderId)
     if (result.error) {
@@ -165,23 +155,13 @@ export default function CustomOrdersRoute() {
     await loadOrders()
   }
 
-  const getAcceptBlockers = (order: CustomOrder): string[] => {
-    const blockers: string[] = []
-    for (const bpId of orderBlueprintIds(order)) {
-      if (!acquiredBlueprints[bpId]) {
-        blockers.push(`Missing blueprint: ${bpId}`)
-      }
-    }
-    for (const item of order.items ?? []) {
-      const have = personalStock[item.resource_key] ?? 0
-      if (have < Number(item.quantity)) {
-        blockers.push(
-          `Need ${getResourceLabel(item.resource_key, labelMap)} × ${item.quantity} (have ${have})`
-        )
-      }
-    }
-    return blockers
-  }
+  const getAcceptBlockers = (order: CustomOrder): string[] =>
+    getOrderAcceptBlockers({
+      order,
+      acquiredBlueprints,
+      personalStock,
+      labelMap,
+    })
 
   const handleMarkRead = async (notificationId: string) => {
     await markNotificationRead(notificationId)
@@ -414,9 +394,8 @@ export default function CustomOrdersRoute() {
           {visibleOrders.map((order) => {
             const isOwn = order.requester_id === user?.id
             const isAssignee = order.assignee_id === user?.id
-            const acceptBlockers = getAcceptBlockers(order)
-            const canAccept =
-              order.status === 'pending' && !isOwn && acceptBlockers.length === 0
+            const acceptBlockers =
+              order.status === 'pending' && !isOwn ? getAcceptBlockers(order) : []
             const totalDfp = orderTotalDfp(order)
             const blueprintLines = resolveOrderBlueprintLines(order)
             const resourceLines = resolveOrderResourceLines(order)
@@ -440,6 +419,11 @@ export default function CustomOrdersRoute() {
                       {totalDfp > 0 && (
                         <span className="px-2 py-0.5 rounded text-xs border bg-amber-950/50 text-amber-200 border-amber-500/30 font-medium">
                           {formatDfpRequiredPrice(totalDfp)}
+                        </span>
+                      )}
+                      {order.min_fulfiller_reputation != null && (
+                        <span className="px-2 py-0.5 rounded text-xs border bg-slate-800 text-slate-300 border-slate-600">
+                          Min fulfiller rep {order.min_fulfiller_reputation}+
                         </span>
                       )}
                     </div>
@@ -506,16 +490,12 @@ export default function CustomOrdersRoute() {
                   <div className="flex flex-col items-end gap-1">
                     <div className="flex gap-2 flex-wrap justify-end">
                       {order.status === 'pending' && !isOwn && (
-                        <button
-                          onClick={() => void handleAccept(order.id)}
-                          disabled={!canAccept}
-                          title={
-                            acceptBlockers.length > 0 ? acceptBlockers.join('; ') : undefined
-                          }
-                          className="px-2 py-1 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 disabled:cursor-not-allowed"
+                        <Link
+                          to="/fulfillment"
+                          className="px-2 py-1 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded"
                         >
-                          Accept order
-                        </button>
+                          Accept on Fulfillment →
+                        </Link>
                       )}
                       {order.status === 'ready_for_pickup' && isOwn && (
                         <button
