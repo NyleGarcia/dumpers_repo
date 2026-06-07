@@ -35,8 +35,8 @@ CREATE POLICY "custom_order_ratings_preview_all"
   ON public.custom_order_ratings
   FOR ALL
   TO authenticated
-  USING (public.user_has_preview_access())
-  WITH CHECK (public.user_has_preview_access());
+  USING (public.can_access_preview_features())
+  WITH CHECK (public.can_access_preview_features());
 
 CREATE OR REPLACE FUNCTION public.archive_custom_order_with_rating(
   p_order_id uuid,
