@@ -119,7 +119,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     if (!isOfficerOrAbove) return false
     if (targetUser.id === currentUser?.id) return false
     if (targetUser.role === 'super-admin') return false
-    return activeTab === 'members' || activeTab === 'officers'
+    return activeTab === 'pending' || activeTab === 'members' || activeTab === 'officers'
   }
 
   const tabs: { id: TabType; label: string }[] = [

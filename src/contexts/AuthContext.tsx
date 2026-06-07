@@ -25,6 +25,7 @@ interface AuthContextType {
   displayName: string
   isOfficerOrAbove: boolean
   isSuperAdmin: boolean
+  isPending: boolean
   canModifyBlueprints: boolean
 }
 
@@ -352,6 +353,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isOfficerOrAbove = profile?.role === 'officer' || profile?.role === 'super-admin'
   const isSuperAdmin = profile?.role === 'super-admin'
+  const isPending = profile?.role === 'pending'
   const canModifyBlueprints = !!profile && profile.role !== 'pending'
   const displayName = getDisplayName(profile)
 
@@ -373,6 +375,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         displayName,
         isOfficerOrAbove,
         isSuperAdmin,
+        isPending,
         canModifyBlueprints,
       }}
     >

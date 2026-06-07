@@ -164,6 +164,7 @@ export default function BlueprintsRoute() {
     acquiredBlueprints: myAcquiredBlueprints, 
     toggleAcquired, 
     canModifyBlueprints,
+    isPending,
     fetchUsersWithBlueprints,
     fetchUserBlueprints,
     user
@@ -190,8 +191,10 @@ export default function BlueprintsRoute() {
   }, [fetchUsersWithBlueprints])
 
   React.useEffect(() => {
-    refreshUsersList()
-  }, [refreshUsersList, myAcquiredBlueprints])
+    if (canModifyBlueprints) {
+      refreshUsersList()
+    }
+  }, [refreshUsersList, myAcquiredBlueprints, canModifyBlueprints])
 
   React.useEffect(() => {
     if (selectedUserId === 'all' || selectedUserId === user?.id) {
@@ -503,18 +506,20 @@ export default function BlueprintsRoute() {
             >
               ★ Rewards
             </button>
-            <select
-              value={selectedUserId}
-              onChange={(e) => setSelectedUserId(e.target.value)}
-              className="px-2 py-1.5 text-sm bg-slate-900/70 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all min-w-[100px] sm:min-w-[140px]"
-            >
-              <option value="all">All</option>
-              {usersWithBlueprints.map(u => (
-                <option key={u.id} value={u.id}>
-                  {u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
-                </option>
-              ))}
-            </select>
+            {canModifyBlueprints && (
+              <select
+                value={selectedUserId}
+                onChange={(e) => setSelectedUserId(e.target.value)}
+                className="px-2 py-1.5 text-sm bg-slate-900/70 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all min-w-[100px] sm:min-w-[140px]"
+              >
+                <option value="all">All</option>
+                {usersWithBlueprints.map(u => (
+                  <option key={u.id} value={u.id}>
+                    {u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
           
           {isViewingOther && (
@@ -707,6 +712,7 @@ export default function BlueprintsRoute() {
                 isAcquired={!!acquiredBlueprints[bp.file]}
                 onToggleAcquired={() => toggleAcquired(bp.file)}
                 canModify={canModifyBlueprints && !isViewingOther}
+                isPending={isPending}
               />
             ))}
           </div>

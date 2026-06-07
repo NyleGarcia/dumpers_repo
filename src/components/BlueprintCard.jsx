@@ -120,7 +120,7 @@ const getArmorSlot = (bp) => {
   return null
 }
 
-export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggleAcquired, canModify = true }) {
+export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggleAcquired, canModify = true, isPending = false }) {
   if (!blueprint.file || !blueprint.blueprintName) return null
 
   const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
@@ -157,7 +157,7 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
                   ? 'bg-transparent border-slate-500 hover:border-green-400'
                   : 'bg-transparent border-slate-600 cursor-not-allowed opacity-50'
             }`}
-            title={!canModify ? 'Sign in to track blueprints' : isAcquired ? 'Mark as not acquired' : 'Mark as acquired'}
+            title={!canModify ? (isPending ? 'Awaiting officer approval' : 'Sign in to track blueprints') : isAcquired ? 'Mark as not acquired' : 'Mark as acquired'}
           >
             {isAcquired && (
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
