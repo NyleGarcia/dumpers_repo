@@ -194,23 +194,29 @@ export default function BlueprintsRoute() {
     return counts
   }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, categoryData.subTypes])
 
-  // Final filtered blueprints (applies category filters on top of base)
+  // Final filtered blueprints (applies category filters on top of base, sorted A-Z)
   const filteredBlueprints = React.useMemo(() => {
-    if (!selectedMainCategory) return baseFilteredBlueprints
+    let results = baseFilteredBlueprints
 
-    return baseFilteredBlueprints.filter(bp => {
-      const validCategories = MAIN_CATEGORY_GROUPS[selectedMainCategory] || []
-      if (!validCategories.includes(bp.categoryName)) return false
-      
-      if (selectedSize && !bp.categoryName.includes(selectedSize)) return false
-      
-      if (selectedSubCategory) {
-        const bpSubType = getSubType(bp)
-        if (bpSubType !== selectedSubCategory) return false
-      }
-      
-      return true
-    })
+    if (selectedMainCategory) {
+      results = results.filter(bp => {
+        const validCategories = MAIN_CATEGORY_GROUPS[selectedMainCategory] || []
+        if (!validCategories.includes(bp.categoryName)) return false
+        
+        if (selectedSize && !bp.categoryName.includes(selectedSize)) return false
+        
+        if (selectedSubCategory) {
+          const bpSubType = getSubType(bp)
+          if (bpSubType !== selectedSubCategory) return false
+        }
+        
+        return true
+      })
+    }
+
+    return results.sort((a, b) => 
+      (a.blueprintName || '').localeCompare(b.blueprintName || '')
+    )
   }, [baseFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize])
 
   const handleMainCategoryClick = (cat) => {
