@@ -56,6 +56,16 @@ const formatSubType = (sub) => {
   return sub.charAt(0).toUpperCase() + sub.slice(1)
 }
 
+const getArmorWeightFromPath = (parts) => {
+  const armourIdx = parts.indexOf('armour')
+  if (armourIdx < 0) return null
+  for (let i = armourIdx + 1; i < parts.length - 1; i++) {
+    const segment = parts[i]?.toLowerCase()
+    if (['superheavy', 'heavy', 'medium', 'light'].includes(segment)) return segment
+  }
+  return null
+}
+
 const getArmorWeight = (bp) => {
   const parts = bp.file.split('\\')
   const filename = parts[parts.length - 1]?.toLowerCase() || ''
@@ -73,7 +83,8 @@ const getArmorWeight = (bp) => {
   if (filename.includes('_medium_') || filename.includes('_medium.')) return 'medium'
   if (filename.includes('_light_') || filename.includes('_light.')) return 'light'
   
-  return null
+  // Fallback: weight from folder path (e.g. combat\light\bp_craft_gys_jacket_01_01_01.json)
+  return getArmorWeightFromPath(parts)
 }
 
 const getArmorSlot = (bp) => {
@@ -87,8 +98,8 @@ const getArmorSlot = (bp) => {
   // Extract slot from filename
   if (filename.includes('_helmet')) return 'helmet'
   if (filename.includes('_arms')) return 'arms'
-  if (filename.includes('_core')) return 'core'
-  if (filename.includes('_legs')) return 'legs'
+  if (filename.includes('_core') || filename.includes('_jacket')) return 'core'
+  if (filename.includes('_legs') || filename.includes('_pants')) return 'legs'
   if (filename.includes('_backpack') || filename.includes('backpack_')) return 'backpack'
   
   return null
