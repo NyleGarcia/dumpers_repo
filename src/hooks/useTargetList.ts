@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useLatestRef } from './useLatestRef'
 import { useAuth } from '../contexts/AuthContext'
 import { missionKey } from '../lib/missions'
 import {
@@ -15,8 +16,7 @@ export function useTargetList() {
   const [missionPrefs, setMissionPrefs] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const acquiredRef = useRef(acquiredBlueprints)
-  acquiredRef.current = acquiredBlueprints
+  const acquiredRef = useLatestRef(acquiredBlueprints)
 
   const refresh = useCallback(async () => {
     if (!user?.id || !isApproved) {
@@ -57,6 +57,8 @@ export function useTargetList() {
     } finally {
       setLoading(false)
     }
+    // acquiredRef is intentionally omitted — stable ref to latest map without re-fetch loops
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, isApproved])
 
   useEffect(() => {

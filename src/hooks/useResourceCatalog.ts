@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { useAsyncEffect } from './useAsyncEffect'
 import { useBlueprintData } from '../routes/blueprints'
 import { buildResourceLabelMap } from '../lib/blueprintResources'
 import {
@@ -95,32 +96,24 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     await loadCatalog()
   }, [blueprints, syncOnLoad, loadCatalog])
 
-  useEffect(() => {
+  useAsyncEffect(async ({ cancelled }) => {
     if (!blueprints) return
 
-    let cancelled = false
-
-    void (async () => {
-      if (syncOnLoad && !hasSyncedRef.current) {
-        const syncResponse = await syncBlueprintResourceCatalog(blueprints)
-        if (cancelled) return
-        if (syncResponse.error) {
-          setError(syncResponse.error)
-          setLoading(false)
-          return
-        }
-        setSyncResult(syncResponse.result ?? null)
-        hasSyncedRef.current = true
-      }
-
+    if (syncOnLoad && !hasSyncedRef.current) {
+      const syncResponse = await syncBlueprintResourceCatalog(blueprints)
       if (cancelled) return
-      await loadCatalog()
-    })()
-
-    return () => {
-      cancelled = true
+      if (syncResponse.error) {
+        setError(syncResponse.error)
+        setLoading(false)
+        return
+      }
+      setSyncResult(syncResponse.result ?? null)
+      hasSyncedRef.current = true
     }
-  }, [blueprints, syncOnLoad, loadCatalog])
+
+    if (cancelled) return
+    await loadCatalog()
+  }, [blueprints, syncOnLoad, inventoryScope, inventoryUserId, inventoryOrgId, withInventory, includeInactive])
 
   return {
     catalog,

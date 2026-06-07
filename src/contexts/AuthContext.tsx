@@ -180,8 +180,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  const profileRef = useRef(profile)
+  profileRef.current = profile
+
   const refreshOrgContext = useCallback(async (profileData?: Profile | null) => {
-    const activeProfile = profileData ?? profile
+    const activeProfile = profileData ?? profileRef.current
     if (!activeProfile?.org_id) {
       setOrganization(null)
       setOrgMembership(null)
@@ -195,7 +198,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setOrganization(org)
     setOrgMembership(membership)
-  }, [profile])
+  }, [])
 
   const loadUserData = useCallback(async (sessionUser: User, isSignIn = false) => {
     const banned = await checkBanned(sessionUser.id, sessionUser.email)
@@ -276,7 +279,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('focus', onFocus)
   }, [checkBanned, handleBannedUser, fetchProfile, refreshOrgContext])
 
-  const signInWithGoogle = async () => {
+  const userRef = useRef(user)
+  userRef.current = user
+  const acquiredRef = useRef(acquiredBlueprints)
+  acquiredRef.current = acquiredBlueprints
+
+  const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -287,30 +295,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Error signing in:', error)
       throw error
     }
-  }
+  }, [])
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut()
     if (error) {
       console.error('Error signing out:', error)
       throw error
     }
     setIsBanned(false)
-  }
+  }, [])
 
-  const toggleAcquired = async (blueprintId: string) => {
-    if (!user || !profile || profile.role === 'pending') {
+  const toggleAcquired = useCallback(async (blueprintId: string) => {
+    const activeUser = userRef.current
+    const activeProfile = profileRef.current
+    if (!activeUser || !activeProfile || activeProfile.role === 'pending') {
       console.warn('Cannot toggle: user not authenticated or pending')
       return
     }
 
-    const isCurrentlyAcquired = acquiredBlueprints[blueprintId]
+    const isCurrentlyAcquired = acquiredRef.current[blueprintId]
 
     if (isCurrentlyAcquired) {
       const { error } = await supabase
         .from('acquired_blueprints')
         .delete()
-        .eq('user_id', user.id)
+        .eq('user_id', activeUser.id)
         .eq('blueprint_id', blueprintId)
 
       if (!error) {
@@ -323,26 +333,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       const { error } = await supabase
         .from('acquired_blueprints')
-        .insert({ user_id: user.id, blueprint_id: blueprintId })
+        .insert({ user_id: activeUser.id, blueprint_id: blueprintId })
 
       if (!error) {
         setAcquiredBlueprints(prev => ({
           ...prev,
           [blueprintId]: true,
         }))
-        await removeTargetBlueprint(user.id, blueprintId)
+        await removeTargetBlueprint(activeUser.id, blueprintId)
       }
     }
-  }
+  }, [])
 
-  const updateRsiHandle = async (handle: string): Promise<boolean> => {
-    if (!user) return false
+  const updateRsiHandle = useCallback(async (handle: string): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser) return false
 
     const trimmedHandle = handle.trim() || null
     const { error } = await supabase
       .from('profiles')
       .update({ rsi_handle: trimmedHandle })
-      .eq('id', user.id)
+      .eq('id', activeUser.id)
 
     if (error) {
       console.error('Error updating RSI handle:', error)
@@ -351,15 +362,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setProfile(prev => prev ? { ...prev, rsi_handle: trimmedHandle } : null)
     return true
-  }
+  }, [])
 
-  const updateGhostMode = async (enabled: boolean): Promise<boolean> => {
-    if (!user) return false
+  const updateGhostMode = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser) return false
 
     const { error } = await supabase
       .from('profiles')
       .update({ ghost_mode: enabled })
-      .eq('id', user.id)
+      .eq('id', activeUser.id)
 
     if (error) {
       console.error('Error updating ghost mode:', error)
@@ -368,16 +380,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setProfile(prev => prev ? { ...prev, ghost_mode: enabled } : null)
     return true
-  }
+  }, [])
 
-  const updatePreviewFeatures = async (enabled: boolean): Promise<boolean> => {
-    if (!user) return false
-    if (profile?.role !== 'officer') return false
+  const updatePreviewFeatures = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    const activeProfile = profileRef.current
+    if (!activeUser) return false
+    if (activeProfile?.role !== 'officer') return false
 
     const { error } = await supabase
       .from('profiles')
       .update({ preview_features_enabled: enabled })
-      .eq('id', user.id)
+      .eq('id', activeUser.id)
 
     if (error) {
       console.error('Error updating preview features:', error)
@@ -386,15 +400,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setProfile(prev => prev ? { ...prev, preview_features_enabled: enabled } : null)
     return true
-  }
+  }, [])
 
-  const updateOrgOnlyMode = async (enabled: boolean): Promise<boolean> => {
-    if (!user) return false
+  const updateOrgOnlyMode = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser) return false
 
     const { error } = await supabase
       .from('profiles')
       .update({ org_only_mode: enabled })
-      .eq('id', user.id)
+      .eq('id', activeUser.id)
 
     if (error) {
       console.error('Error updating org-only mode:', error)
@@ -403,15 +418,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setProfile(prev => prev ? { ...prev, org_only_mode: enabled } : null)
     return true
-  }
+  }, [])
 
-  const updateFulfillmentEnabled = async (enabled: boolean): Promise<boolean> => {
-    if (!user) return false
+  const updateFulfillmentEnabled = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser) return false
 
     const { error } = await supabase
       .from('profiles')
       .update({ fulfillment_enabled: enabled })
-      .eq('id', user.id)
+      .eq('id', activeUser.id)
 
     if (error) {
       console.error('Error updating fulfillment enabled:', error)
@@ -420,15 +436,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setProfile(prev => prev ? { ...prev, fulfillment_enabled: enabled } : null)
     return true
-  }
+  }, [])
 
-  const updateSharePersonalResources = async (enabled: boolean): Promise<boolean> => {
-    if (!user) return false
+  const updateSharePersonalResources = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser) return false
 
     const { error } = await supabase
       .from('profiles')
       .update({ share_personal_resources: enabled })
-      .eq('id', user.id)
+      .eq('id', activeUser.id)
 
     if (error) {
       console.error('Error updating share personal resources:', error)
@@ -437,7 +454,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setProfile(prev => prev ? { ...prev, share_personal_resources: enabled } : null)
     return true
-  }
+  }, [])
 
   const fetchUsersWithBlueprints = useCallback(async (
     scope: MemberScope = 'all'
@@ -466,8 +483,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .neq('role', 'pending')
       .eq('ghost_mode', false)
 
-    if (scope === 'org' && profile?.org_id) {
-      profileQuery = profileQuery.eq('org_id', profile.org_id)
+    if (scope === 'org' && profileRef.current?.org_id) {
+      profileQuery = profileQuery.eq('org_id', profileRef.current.org_id)
     }
 
     const { data: profiles, error: profileError } = await profileQuery
@@ -487,7 +504,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const nameB = b.rsi_handle || b.display_name || ''
       return nameA.localeCompare(nameB)
     })
-  }, [profile?.org_id])
+  }, [])
 
   const fetchUserBlueprints = useCallback(async (userId: string): Promise<Record<string, boolean>> => {
     const { data, error } = await supabase
@@ -526,53 +543,106 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         orgVerified: !!orgMembership?.verified_at,
         orgResourcesPublic: organization?.resources_public ?? false,
       }),
-    [profile, orgMembership?.org_role, orgMembership?.verified_at, organization?.resources_public]
+    [
+      profile?.role,
+      profile?.ghost_mode,
+      profile?.preview_features_enabled,
+      profile?.org_only_mode,
+      profile?.fulfillment_enabled,
+      profile?.org_id,
+      orgMembership?.org_role,
+      orgMembership?.verified_at,
+      organization?.resources_public,
+    ]
   )
   const showMemberCollections = canUseFeature('member_directory', visibilityContext)
   const isSociallyHidden = visibilityContext.isSociallyHidden
-  const canAccess = (minRole: UserRole) => roleAtLeast(profile?.role, minRole)
+  const canAccess = useCallback(
+    (minRole: UserRole) => roleAtLeast(profile?.role, minRole),
+    [profile?.role]
+  )
   const canAccessPreviewFeatures = visibilityContext.canAccessPreviewFeatures
-  const checkFeature = (featureId: FeatureId) => canUseFeature(featureId, visibilityContext)
+  const checkFeature = useCallback(
+    (featureId: FeatureId) => canUseFeature(featureId, visibilityContext),
+    [visibilityContext]
+  )
   const displayName = getDisplayName(profile)
 
+  const contextValue = useMemo(
+    () => ({
+      user,
+      profile,
+      session,
+      loading,
+      isBanned,
+      acquiredBlueprints,
+      signInWithGoogle,
+      signOut,
+      toggleAcquired,
+      updateRsiHandle,
+      updateGhostMode,
+      updatePreviewFeatures,
+      updateOrgOnlyMode,
+      updateFulfillmentEnabled,
+      updateSharePersonalResources,
+      organization,
+      orgMembership,
+      refreshOrgContext,
+      fetchUsersWithBlueprints,
+      fetchUserBlueprints,
+      displayName,
+      isOfficerOrAbove,
+      isSuperAdmin,
+      isPending,
+      isGhostMode,
+      isSociallyHidden,
+      canModifyBlueprints,
+      showMemberCollections,
+      isApproved,
+      canAccess,
+      canAccessPreviewFeatures,
+      visibilityContext,
+      canUseFeature: checkFeature,
+    }),
+    [
+      user,
+      profile,
+      session,
+      loading,
+      isBanned,
+      acquiredBlueprints,
+      signInWithGoogle,
+      signOut,
+      toggleAcquired,
+      updateRsiHandle,
+      updateGhostMode,
+      updatePreviewFeatures,
+      updateOrgOnlyMode,
+      updateFulfillmentEnabled,
+      updateSharePersonalResources,
+      organization,
+      orgMembership,
+      refreshOrgContext,
+      fetchUsersWithBlueprints,
+      fetchUserBlueprints,
+      displayName,
+      isOfficerOrAbove,
+      isSuperAdmin,
+      isPending,
+      isGhostMode,
+      isSociallyHidden,
+      canModifyBlueprints,
+      showMemberCollections,
+      isApproved,
+      canAccess,
+      canAccessPreviewFeatures,
+      visibilityContext,
+      checkFeature,
+    ]
+  )
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        profile,
-        session,
-        loading,
-        isBanned,
-        acquiredBlueprints,
-        signInWithGoogle,
-        signOut,
-        toggleAcquired,
-        updateRsiHandle,
-        updateGhostMode,
-        updatePreviewFeatures,
-        updateOrgOnlyMode,
-        updateFulfillmentEnabled,
-        updateSharePersonalResources,
-        organization,
-        orgMembership,
-        refreshOrgContext,
-        fetchUsersWithBlueprints,
-        fetchUserBlueprints,
-        displayName,
-        isOfficerOrAbove,
-        isSuperAdmin,
-        isPending,
-        isGhostMode,
-        isSociallyHidden,
-        canModifyBlueprints,
-        showMemberCollections,
-        isApproved,
-        canAccess,
-        canAccessPreviewFeatures,
-        visibilityContext,
-        canUseFeature: checkFeature,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   )

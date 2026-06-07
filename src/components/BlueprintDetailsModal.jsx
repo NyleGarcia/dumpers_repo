@@ -2,10 +2,9 @@ import { useState } from 'react'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 
 export default function BlueprintDetailsModal({ blueprint, onClose }) {
+  const [isOwned, setIsOwned] = useState(false)
   useBodyScrollLock(!!blueprint)
   if (!blueprint) return null
-  
-  const [isOwned, setIsOwned] = useState(false)
 
   const craftTime = blueprint.craftTime || {}
   const timeSeconds = Math.floor(craftTime.seconds || 0) + (typeof craftTime.minutes === 'number' ? craftTime.minutes * 60 : 0) + (typeof craftTime.hours === 'number' ? craftTime.hours * 3600 : 0) + (typeof craftTime.days === 'number' ? craftTime.days * 86400 : 0)

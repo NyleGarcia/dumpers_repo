@@ -26,8 +26,11 @@ export default function FulfillmentRoute() {
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  const userId = user?.id
+  const orgId = profile?.org_id ?? null
+
   const loadData = useCallback(async () => {
-    if (!user || !profile?.org_id) {
+    if (!userId || !orgId) {
       setLoading(false)
       return
     }
@@ -37,7 +40,7 @@ export default function FulfillmentRoute() {
 
     const [ordersResult, inventoryResult, fulfillmentsResult] = await Promise.all([
       fetchCustomOrders(),
-      fetchInventory({ scope: 'org', userId: user.id, orgId: profile.org_id }),
+      fetchInventory({ scope: 'org', userId, orgId }),
       fetchFulfillments(),
     ])
 
@@ -49,7 +52,7 @@ export default function FulfillmentRoute() {
     setInventory(inventoryResult.data)
     setFulfillments(fulfillmentsResult.data)
     setLoading(false)
-  }, [user, profile?.org_id])
+  }, [userId, orgId])
 
   useEffect(() => {
     void loadData()

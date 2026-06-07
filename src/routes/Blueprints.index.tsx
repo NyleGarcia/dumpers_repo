@@ -4,6 +4,7 @@ import BlueprintCard from '../components/BlueprintCard'
 import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import {
   readMemberScope,
   writeMemberScope,
@@ -34,7 +35,7 @@ const getSubType = (bp) => {
     
     // FPS weapons: fpsgear\weapons\[type] or fpsgear\weapons\$templates\...
     if (parts[i] === 'weapons' && parts[i - 1] === 'fpsgear') {
-      let sub = parts[i + 1]?.replace('$', '')
+      const sub = parts[i + 1]?.replace('$', '')
       // If in templates folder, extract type from filename
       if (sub === 'templates') {
         return getFpsWeaponTypeFromFilename(filename) || 'other'
@@ -54,7 +55,7 @@ const getSubType = (bp) => {
     // FPS armour: fpsgear\armour\[type] or fpsgear\armour\combat\[weight] or fpsgear\armour\$templates\[type]
     // Combat armor gets "standard" as type, template armor gets its specific type
     if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
-      let sub = parts[i + 1]?.replace('$', '')
+      const sub = parts[i + 1]?.replace('$', '')
       if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
       // For combat armor, return 'standard' as the type - weight is a separate filter
       if (sub === 'combat') return 'standard'
@@ -208,22 +209,16 @@ export default function BlueprintsRoute() {
     setSelectedUserId('all')
   }
 
-  React.useEffect(() => {
+  useAsyncEffect(async ({ cancelled }) => {
     if (!showMemberCollections) {
       setUsersWithBlueprints([])
       setSelectedUserId('all')
       return
     }
 
-    let cancelled = false
-    fetchUsersWithBlueprints(memberScope).then((users) => {
-      if (!cancelled) setUsersWithBlueprints(users)
-    })
-
-    return () => {
-      cancelled = true
-    }
-  }, [fetchUsersWithBlueprints, memberScope, showMemberCollections])
+    const users = await fetchUsersWithBlueprints(memberScope)
+    if (!cancelled) setUsersWithBlueprints(users)
+  }, [memberScope, showMemberCollections])
 
   React.useEffect(() => {
     if (selectedUserId !== 'all' && !usersWithBlueprints.some((u) => u.id === selectedUserId)) {
@@ -231,26 +226,19 @@ export default function BlueprintsRoute() {
     }
   }, [usersWithBlueprints, selectedUserId])
 
-  React.useEffect(() => {
+  useAsyncEffect(async ({ cancelled }) => {
     if (selectedUserId === 'all' || selectedUserId === user?.id) {
       setViewedUserBlueprints({})
       setLoadingUserBlueprints(false)
       return
     }
 
-    let cancelled = false
     setLoadingUserBlueprints(true)
-    fetchUserBlueprints(selectedUserId).then((blueprints) => {
-      if (!cancelled) {
-        setViewedUserBlueprints(blueprints)
-        setLoadingUserBlueprints(false)
-      }
-    })
-
-    return () => {
-      cancelled = true
-    }
-  }, [selectedUserId, user?.id, fetchUserBlueprints])
+    const blueprints = await fetchUserBlueprints(selectedUserId)
+    if (cancelled) return
+    setViewedUserBlueprints(blueprints)
+    setLoadingUserBlueprints(false)
+  }, [selectedUserId, user?.id])
 
   const isViewingOther = selectedUserId !== 'all' && selectedUserId !== user?.id
   const acquiredBlueprints = isViewingOther ? viewedUserBlueprints : myAcquiredBlueprints

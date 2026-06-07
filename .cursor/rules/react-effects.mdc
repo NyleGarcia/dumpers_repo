@@ -1,0 +1,26 @@
+---
+description: Prevent React effect reload loops from unstable dependencies
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React effects — no reload loops
+
+## Dependency rules
+
+- **Never** put context objects, `user`, `profile`, or `inventoryContext` in `useEffect` / `useCallback` deps. Use primitives: `user?.id`, `profile?.org_id`, `scope`, flags.
+- **Never** depend on a callback from context unless it is wrapped in `useCallback` in the provider and listed in a memoized context value.
+- **Never** put frequently-changing maps (`acquiredBlueprints`, `targetIds`) in fetch-effect deps. Read them via `useLatestRef` inside the effect/callback.
+- **Never** chain `useCallback` → `useEffect([callback])` when the callback wraps a fetch; call the fetch inline in `useAsyncEffect` with primitive deps instead.
+
+## Fetch / sync patterns
+
+- Use `useAsyncEffect` from `src/hooks/useAsyncEffect.ts` for data loading. Always check `controls.cancelled` before `setState`.
+- One-time sync (e.g. catalog sync): guard with a `useRef` flag (`hasSyncedRef`) so sync does not rerun when only inventory scope changes.
+- Context providers: wrap handlers in `useCallback`, memoize the provider `value` with `useMemo`, and use primitive fields in `useMemo` deps (not whole `profile` objects).
+
+## Red flags
+
+- Page flickers / "Syncing…" never settles → unstable effect deps.
+- Network tab shows the same request repeating → effect body runs every render.
+- `loading` toggles true/false rapidly → fetch tied to object identity.
