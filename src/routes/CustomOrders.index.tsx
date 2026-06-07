@@ -2,10 +2,18 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import {
-  extractOrderLineItemsFromBlueprint,
+  extractOrderLineItemsFromBlueprints,
   getResourceLabel,
   type BlueprintWithSlots,
 } from '../lib/blueprintResources'
+import { formatDfpAuec, formatDfpLabel, formatDfpRequiredPrice } from '../lib/dfp'
+import {
+  orderBlueprintIds,
+  orderTotalDfp,
+  pricingForBlueprintLine,
+  resolveOrderBlueprintLines,
+  type OrderBlueprintLine,
+} from '../lib/orderPricing'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
@@ -42,6 +50,10 @@ const OPEN_STATUSES: CustomOrderStatus[] = [
   'ready_for_pickup',
 ]
 
+interface CartLine extends OrderBlueprintLine {
+  cartKey: string
+}
+
 function profileFromOrderFields(
   userId: string,
   fields?: { rsi_handle: string | null; display_name: string | null; email: string | null } | null
@@ -64,6 +76,10 @@ function profileFromOrderFields(
   }
 }
 
+function nextCartKey() {
+  return `cart-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
 export default function CustomOrdersRoute() {
   const { user, profile, acquiredBlueprints, siteOrg } = useAuth()
   const [personalStock, setPersonalStock] = useState<Record<string, number>>({})
@@ -77,20 +93,46 @@ export default function CustomOrdersRoute() {
   const [bpSearch, setBpSearch] = useState('')
   const [selectedBlueprintId, setSelectedBlueprintId] = useState('')
   const [minQuality, setMinQuality] = useState('500')
-  const [orderQuantity, setOrderQuantity] = useState('1')
+  const [lineQuantity, setLineQuantity] = useState('1')
+  const [cartLines, setCartLines] = useState<CartLine[]>([])
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  const blueprintById = useMemo(() => {
+    const map = new Map<string, BlueprintWithSlots>()
+    blueprints.forEach((bp) => {
+      if (bp.file) map.set(bp.file, bp as BlueprintWithSlots)
+    })
+    return map
+  }, [blueprints])
+
   const selectedBlueprint = useMemo(
-    () => blueprints.find((bp) => bp.file === selectedBlueprintId) as BlueprintWithSlots | undefined,
-    [blueprints, selectedBlueprintId]
+    () => blueprintById.get(selectedBlueprintId),
+    [blueprintById, selectedBlueprintId]
   )
 
-  const derivedItems = useMemo(() => {
-    if (!selectedBlueprint) return []
-    const qty = Math.max(1, Number(orderQuantity) || 1)
-    return extractOrderLineItemsFromBlueprint(selectedBlueprint, qty)
-  }, [selectedBlueprint, orderQuantity])
+  const draftPricing = useMemo(() => {
+    if (!selectedBlueprint) return null
+    const qty = Math.max(1, Number(lineQuantity) || 1)
+    const quality = Math.min(1000, Math.max(0, Number(minQuality) || 500))
+    return pricingForBlueprintLine(selectedBlueprint, quality, qty)
+  }, [selectedBlueprint, lineQuantity, minQuality])
+
+  const cartTotalDfp = useMemo(
+    () => cartLines.reduce((sum, line) => sum + line.lineDfpAuec, 0),
+    [cartLines]
+  )
+
+  const cartDerivedItems = useMemo(
+    () =>
+      extractOrderLineItemsFromBlueprints(
+        cartLines.map((line) => ({
+          blueprint: blueprintById.get(line.blueprintId)!,
+          quantity: line.quantity,
+        })).filter((row) => row.blueprint)
+      ),
+    [cartLines, blueprintById]
+  )
 
   const filteredBlueprints = useMemo(() => {
     const q = bpSearch.trim().toLowerCase()
@@ -139,31 +181,74 @@ export default function CustomOrdersRoute() {
     setSelectedBlueprintId(filteredBlueprints[0].file ?? '')
   }, [filteredBlueprints, selectedBlueprintId])
 
+  const handleAddToOrder = () => {
+    if (!selectedBlueprint?.file) return
+
+    const qty = Math.max(1, Number(lineQuantity) || 1)
+    const quality = Math.min(1000, Math.max(0, Number(minQuality) || 500))
+    const pricing = pricingForBlueprintLine(selectedBlueprint, quality, qty)
+    const title = selectedBlueprint.blueprintName || selectedBlueprint.file
+
+    setCartLines((prev) => [
+      ...prev,
+      {
+        cartKey: nextCartKey(),
+        blueprintId: selectedBlueprint.file!,
+        blueprintTitle: title,
+        minQuality: quality,
+        quantity: qty,
+        unitDfpAuec: pricing.unitDfpAuec,
+        lineDfpAuec: pricing.lineDfpAuec,
+      },
+    ])
+    setLineQuantity('1')
+    setError(null)
+  }
+
+  const handleRemoveCartLine = (cartKey: string) => {
+    setCartLines((prev) => prev.filter((line) => line.cartKey !== cartKey))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user?.id || !selectedBlueprint) return
+    if (!user?.id || cartLines.length === 0) return
 
-    const qty = Math.max(1, Number(orderQuantity) || 1)
-    const quality = Math.min(1000, Math.max(0, Number(minQuality) || 500))
-    const items = extractOrderLineItemsFromBlueprint(selectedBlueprint, qty)
+    const resourceLines = extractOrderLineItemsFromBlueprints(
+      cartLines
+        .map((line) => ({
+          blueprint: blueprintById.get(line.blueprintId),
+          quantity: line.quantity,
+        }))
+        .filter((row): row is { blueprint: BlueprintWithSlots; quantity: number } => !!row.blueprint)
+    )
 
-    if (items.length === 0) {
-      setError('Selected blueprint has no craftable resource requirements')
+    if (resourceLines.length === 0) {
+      setError('Order blueprints have no craftable resource requirements')
       return
     }
 
     setSubmitting(true)
     setError(null)
 
-    const title = selectedBlueprint.blueprintName || selectedBlueprint.file || 'Blueprint order'
+    const title =
+      cartLines.length === 1
+        ? cartLines[0].blueprintTitle
+        : `${cartLines.length} blueprint order`
+
     const result = await createCustomOrder({
       requesterId: user.id,
       title,
       notes,
-      blueprintId: selectedBlueprint.file ?? null,
-      minQuality: quality,
-      quantity: qty,
-      items: items.map((item) => ({
+      totalDfpAuec: cartTotalDfp,
+      blueprints: cartLines.map((line) => ({
+        blueprintId: line.blueprintId,
+        blueprintTitle: line.blueprintTitle,
+        minQuality: line.minQuality,
+        quantity: line.quantity,
+        unitDfpAuec: line.unitDfpAuec,
+        lineDfpAuec: line.lineDfpAuec,
+      })),
+      items: resourceLines.map((item) => ({
         resourceKey: item.resourceKey,
         quantity: item.quantity,
       })),
@@ -177,7 +262,8 @@ export default function CustomOrdersRoute() {
     }
 
     setNotes('')
-    setOrderQuantity('1')
+    setCartLines([])
+    setLineQuantity('1')
     setMinQuality('500')
     setShowForm(false)
     await loadOrders()
@@ -212,8 +298,10 @@ export default function CustomOrdersRoute() {
 
   const getAcceptBlockers = (order: CustomOrder): string[] => {
     const blockers: string[] = []
-    if (order.blueprint_id && !acquiredBlueprints[order.blueprint_id]) {
-      blockers.push('You do not own this blueprint')
+    for (const bpId of orderBlueprintIds(order)) {
+      if (!acquiredBlueprints[bpId]) {
+        blockers.push(`Missing blueprint: ${bpId}`)
+      }
     }
     for (const item of order.items ?? []) {
       const have = personalStock[item.resource_key] ?? 0
@@ -242,7 +330,7 @@ export default function CustomOrdersRoute() {
   return (
     <FeaturePageLayout
       title="Custom Orders"
-      subtitle="Request crafted items by blueprint — resources auto-derived from blueprint data"
+      subtitle="Request crafted items by blueprint — DFP is the required aUEC price for the org"
       badge="Preview"
       actions={
         <>
@@ -337,7 +425,8 @@ export default function CustomOrdersRoute() {
         >
           <h2 className="text-white font-medium">Request blueprint craft</h2>
           <p className="text-slate-500 text-xs">
-            Preview: orders post under {getDisplayName(profile)}. Another preview user can accept.
+            Add one or more blueprints. Total DFP is the required aUEC price the fulfiller must
+            honor. Orders post under {getDisplayName(profile)}.
           </p>
 
           <div>
@@ -361,7 +450,7 @@ export default function CustomOrdersRoute() {
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-slate-400 text-sm mb-1">Min quality</label>
               <input
@@ -378,12 +467,66 @@ export default function CustomOrdersRoute() {
               <input
                 type="number"
                 min={1}
-                value={orderQuantity}
-                onChange={(e) => setOrderQuantity(e.target.value)}
+                value={lineQuantity}
+                onChange={(e) => setLineQuantity(e.target.value)}
                 className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white"
               />
             </div>
+            <div className="flex items-end">
+              <button
+                type="button"
+                onClick={handleAddToOrder}
+                disabled={!selectedBlueprint}
+                className="w-full py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+              >
+                Add to order
+              </button>
+            </div>
           </div>
+
+          {draftPricing && selectedBlueprint && (
+            <p className="text-slate-400 text-xs">
+              Line preview: {formatDfpLabel(draftPricing.lineDfpAuec)} (
+              {formatDfpAuec(draftPricing.lineDfpAuec)})
+            </p>
+          )}
+
+          {cartLines.length > 0 && (
+            <div className="border border-slate-700 rounded-lg overflow-hidden">
+              <div className="px-3 py-2 bg-slate-800/80 text-slate-300 text-sm font-medium">
+                Order blueprints ({cartLines.length})
+              </div>
+              <ul className="divide-y divide-slate-800">
+                {cartLines.map((line) => (
+                  <li
+                    key={line.cartKey}
+                    className="px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                  >
+                    <div>
+                      <p className="text-white text-sm">{line.blueprintTitle}</p>
+                      <p className="text-slate-500 text-xs">
+                        Qty {line.quantity} · min quality {line.minQuality} ·{' '}
+                        {formatDfpAuec(line.lineDfpAuec)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCartLine(line.cartKey)}
+                      className="text-xs text-red-400 hover:text-red-300 shrink-0"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <div className="px-3 py-3 bg-amber-950/30 border-t border-amber-500/20 flex items-center justify-between">
+                <span className="text-amber-200 text-sm font-medium">Required total (DFP)</span>
+                <span className="text-amber-100 font-bold">
+                  {formatDfpRequiredPrice(cartTotalDfp)}
+                </span>
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-slate-400 text-sm mb-1">Notes (optional)</label>
@@ -395,11 +538,11 @@ export default function CustomOrdersRoute() {
             />
           </div>
 
-          {derivedItems.length > 0 && (
+          {cartDerivedItems.length > 0 && (
             <div>
-              <p className="text-slate-400 text-sm mb-2">Required resources (from blueprint)</p>
+              <p className="text-slate-400 text-sm mb-2">Required resources (combined)</p>
               <div className="flex flex-wrap gap-2">
-                {derivedItems.map((item) => (
+                {cartDerivedItems.map((item) => (
                   <span
                     key={item.resourceKey}
                     className="px-2 py-1 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
@@ -413,10 +556,10 @@ export default function CustomOrdersRoute() {
 
           <button
             type="submit"
-            disabled={submitting || !selectedBlueprint}
+            disabled={submitting || cartLines.length === 0}
             className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
           >
-            {submitting ? 'Submitting...' : 'Submit order'}
+            {submitting ? 'Submitting...' : `Submit order · ${formatDfpAuec(cartTotalDfp)}`}
           </button>
         </form>
       )}
@@ -437,6 +580,8 @@ export default function CustomOrdersRoute() {
             const acceptBlockers = getAcceptBlockers(order)
             const canAccept =
               order.status === 'pending' && !isOwn && acceptBlockers.length === 0
+            const totalDfp = orderTotalDfp(order)
+            const blueprintLines = resolveOrderBlueprintLines(order)
 
             return (
               <div
@@ -444,7 +589,7 @@ export default function CustomOrdersRoute() {
                 className="bg-slate-900/60 border border-slate-700 rounded-xl p-4"
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-white font-medium">{order.title}</h3>
                       <span
@@ -454,17 +599,17 @@ export default function CustomOrdersRoute() {
                       >
                         {order.status.replace(/_/g, ' ')}
                       </span>
+                      {totalDfp > 0 && (
+                        <span className="px-2 py-0.5 rounded text-xs border bg-amber-950/50 text-amber-200 border-amber-500/30 font-medium">
+                          {formatDfpRequiredPrice(totalDfp)}
+                        </span>
+                      )}
                     </div>
                     <p className="text-slate-500 text-xs mt-1">
                       Requested by{' '}
                       {getDisplayName(profileFromOrderFields(order.requester_id, order.requester))}{' '}
                       · {new Date(order.created_at).toLocaleString()}
                     </p>
-                    {order.blueprint_id && (
-                      <p className="text-slate-500 text-xs mt-1">
-                        Blueprint · qty {order.quantity} · min quality {order.min_quality}
-                      </p>
-                    )}
                     {order.assignee && (
                       <p className="text-emerald-400/80 text-xs mt-1">
                         Accepted by{' '}
@@ -474,6 +619,26 @@ export default function CustomOrdersRoute() {
                       </p>
                     )}
                     {order.notes && <p className="text-slate-400 text-sm mt-2">{order.notes}</p>}
+
+                    {blueprintLines.length > 0 && (
+                      <ul className="mt-3 space-y-1">
+                        {blueprintLines.map((line) => (
+                          <li
+                            key={`${order.id}-${line.blueprintId}-${line.minQuality}-${line.quantity}`}
+                            className="text-slate-400 text-xs flex flex-wrap gap-x-2"
+                          >
+                            <span className="text-slate-300">{line.blueprintTitle}</span>
+                            <span>× {line.quantity}</span>
+                            <span>· min Q {line.minQuality}</span>
+                            {line.lineDfpAuec > 0 && (
+                              <span className="text-amber-300/90">
+                                · {formatDfpAuec(line.lineDfpAuec)}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
                   <div className="flex flex-col items-end gap-1">
@@ -516,6 +681,11 @@ export default function CustomOrdersRoute() {
                         </button>
                       )}
                     </div>
+                    {order.status === 'pending' && !isOwn && totalDfp > 0 && (
+                      <p className="text-amber-300/90 text-xs max-w-xs text-right">
+                        Customer expects {formatDfpRequiredPrice(totalDfp)}
+                      </p>
+                    )}
                     {order.status === 'pending' && !isOwn && acceptBlockers.length > 0 && (
                       <p className="text-amber-400/80 text-xs max-w-xs text-right">
                         {acceptBlockers.join(' · ')}

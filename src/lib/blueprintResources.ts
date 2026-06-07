@@ -99,3 +99,23 @@ export function extractOrderLineItemsFromBlueprint(
 
   return [...totals.values()].sort((a, b) => a.label.localeCompare(b.label))
 }
+
+/** Aggregate resource lines across multiple blueprint × quantity rows. */
+export function extractOrderLineItemsFromBlueprints(
+  lines: { blueprint: BlueprintWithSlots; quantity: number }[]
+): BlueprintOrderLineItem[] {
+  const totals = new Map<string, BlueprintOrderLineItem>()
+
+  for (const { blueprint, quantity } of lines) {
+    for (const item of extractOrderLineItemsFromBlueprint(blueprint, quantity)) {
+      const existing = totals.get(item.resourceKey)
+      if (existing) {
+        existing.quantity += item.quantity
+      } else {
+        totals.set(item.resourceKey, { ...item })
+      }
+    }
+  }
+
+  return [...totals.values()].sort((a, b) => a.label.localeCompare(b.label))
+}

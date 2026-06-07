@@ -143,6 +143,30 @@ export function getDfpTypeModifier(blueprint: BlueprintDfpInput): number {
   return modifier * DFP_CRAFT_PREMIUM
 }
 
+/** Order-level min quality applied to all material slots, then × craft quantity. */
+export function calculateBlueprintDfpForOrder(
+  blueprint: BlueprintDfpInput,
+  orderMinQuality: number,
+  craftQuantity = 1
+): DfpResult {
+  const quality = resolveQuality(orderMinQuality)
+  const qty = Math.max(1, craftQuantity)
+  const adjusted: BlueprintDfpInput = {
+    categoryName: blueprint.categoryName,
+    subCategoryName: blueprint.subCategoryName,
+    slots: (blueprint.slots ?? []).map((slot) => ({
+      requiredCount: slot.requiredCount,
+      options: (slot.options ?? []).map((option) => ({
+        ...option,
+        minQuality: quality,
+      })),
+    })),
+  }
+  const unitResult = calculateBlueprintDfp(adjusted)
+  const total = Math.round(unitResult.total * qty)
+  return { ...unitResult, total }
+}
+
 export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {
   const lines: DfpLineItem[] = []
 
@@ -203,4 +227,16 @@ export function formatDfpLabel(value: number): string {
   const formatted = formatDfpValue(value)
   if (formatted === '—') return 'DFP —'
   return `DFP ${formatted}`
+}
+
+/** Full aUEC amount for order pricing (required DFP price). */
+export function formatDfpAuec(value: number): string {
+  if (!Number.isFinite(value) || value <= 0) return '—'
+  return `${Math.round(value).toLocaleString()} aUEC`
+}
+
+export function formatDfpRequiredPrice(value: number): string {
+  const auec = formatDfpAuec(value)
+  if (auec === '—') return 'DFP —'
+  return `${auec} (DFP required)`
 }

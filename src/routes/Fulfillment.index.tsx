@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { getResourceLabel } from '../lib/blueprintResources'
+import { formatDfpAuec, formatDfpRequiredPrice } from '../lib/dfp'
+import { orderTotalDfp, resolveOrderBlueprintLines } from '../lib/orderPricing'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useAuth } from '../contexts/AuthContext'
 import {
@@ -134,7 +136,7 @@ export default function FulfillmentRoute() {
   return (
     <FeaturePageLayout
       title="Fulfillment"
-      subtitle="Craft assigned orders — resources deduct from your personal stock when complete"
+      subtitle="Craft assigned orders at the customer's required DFP price — resources deduct from personal stock"
       badge="Preview"
       actions={
         <Link
@@ -156,7 +158,8 @@ export default function FulfillmentRoute() {
         <Link to="/resources" className="text-red-400 hover:text-red-300">
           My Resources
         </Link>
-        . Completing craft deducts from your personal inventory and notifies the requester.
+        . The DFP total is the required aUEC price you must honor. Completing craft deducts
+        personal inventory and notifies the requester.
       </p>
 
       {loading ? (
@@ -179,6 +182,7 @@ export default function FulfillmentRoute() {
               <div className="space-y-2">
                 {myAssignedOrders.map((order) => {
                   const isSelected = selectedOrderId === order.id
+                  const totalDfp = orderTotalDfp(order)
                   const shortages = (order.items ?? []).filter((item) => {
                     const available = quantityByKey[item.resource_key] ?? 0
                     return available < Number(item.quantity)
@@ -208,7 +212,13 @@ export default function FulfillmentRoute() {
                         </span>
                       </div>
                       <p className="text-slate-500 text-xs mt-1">
-                        {order.status.replace(/_/g, ' ')} · {(order.items ?? []).length} line items
+                        {order.status.replace(/_/g, ' ')} · {(order.items ?? []).length} resources
+                        {totalDfp > 0 && (
+                          <span className="text-amber-300/90">
+                            {' '}
+                            · {formatDfpAuec(totalDfp)}
+                          </span>
+                        )}
                       </p>
                     </button>
                   )
@@ -218,7 +228,26 @@ export default function FulfillmentRoute() {
 
             {selectedOrder && (
               <div className="mt-4 p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3">
-                <h3 className="text-white font-medium">{selectedOrder.title}</h3>
+                <div>
+                  <h3 className="text-white font-medium">{selectedOrder.title}</h3>
+                  {orderTotalDfp(selectedOrder) > 0 && (
+                    <p className="text-amber-200 text-sm font-medium mt-1">
+                      Required price: {formatDfpRequiredPrice(orderTotalDfp(selectedOrder))}
+                    </p>
+                  )}
+                </div>
+
+                {resolveOrderBlueprintLines(selectedOrder).length > 0 && (
+                  <ul className="text-xs text-slate-400 space-y-1">
+                    {resolveOrderBlueprintLines(selectedOrder).map((line) => (
+                      <li key={`${selectedOrder.id}-${line.blueprintId}-${line.quantity}`}>
+                        {line.blueprintTitle} × {line.quantity} (Q{line.minQuality})
+                        {line.lineDfpAuec > 0 && ` · ${formatDfpAuec(line.lineDfpAuec)}`}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
                 <div className="space-y-2">
                   {(selectedOrder.items ?? []).map((item) => {
                     const available = quantityByKey[item.resource_key] ?? 0
@@ -303,6 +332,9 @@ export default function FulfillmentRoute() {
                     <p className="text-slate-500 text-xs mt-1">
                       {new Date(entry.created_at).toLocaleString()}
                       {entry.order?.status && ` · ${entry.order.status.replace(/_/g, ' ')}`}
+                      {entry.order?.total_dfp_auec != null &&
+                        Number(entry.order.total_dfp_auec) > 0 &&
+                        ` · ${formatDfpAuec(Number(entry.order.total_dfp_auec))}`}
                     </p>
                     {entry.notes && (
                       <p className="text-slate-400 text-sm mt-2">{entry.notes}</p>

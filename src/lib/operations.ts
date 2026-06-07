@@ -50,6 +50,27 @@ export interface CustomOrderItem {
   quantity: number
 }
 
+export interface CustomOrderBlueprint {
+  id: string
+  order_id: string
+  blueprint_id: string
+  blueprint_title: string | null
+  min_quality: number
+  quantity: number
+  unit_dfp_auec: number
+  line_dfp_auec: number
+  sort_order: number
+}
+
+export interface CustomOrderBlueprintInput {
+  blueprintId: string
+  blueprintTitle: string
+  minQuality: number
+  quantity: number
+  unitDfpAuec: number
+  lineDfpAuec: number
+}
+
 export interface CustomOrder {
   id: string
   requester_id: string
@@ -59,11 +80,13 @@ export interface CustomOrder {
   blueprint_id: string | null
   min_quality: number
   quantity: number
+  total_dfp_auec: number
   assignee_id: string | null
   accepted_at: string | null
   created_at: string
   updated_at: string
   items?: CustomOrderItem[]
+  blueprints?: CustomOrderBlueprint[]
   requester?: {
     rsi_handle: string | null
     display_name: string | null
@@ -94,7 +117,7 @@ export interface OrderFulfillment {
   notes: string | null
   created_at: string
   items?: { resource_key: string; quantity: number }[]
-  order?: Pick<CustomOrder, 'title' | 'status'>
+  order?: Pick<CustomOrder, 'title' | 'status' | 'total_dfp_auec'>
 }
 
 export interface ResourceCatalogSyncResult {
@@ -364,6 +387,7 @@ export async function fetchCustomOrders(): Promise<{
     .select(`
       *,
       items:custom_order_items(*),
+      blueprints:custom_order_blueprints(*),
       requester:profiles!custom_orders_requester_id_fkey(rsi_handle, display_name, email),
       assignee:profiles!custom_orders_assignee_id_fkey(rsi_handle, display_name, email)
     `)
@@ -377,20 +401,27 @@ export async function createCustomOrder(input: {
   requesterId: string
   title: string
   notes?: string
-  blueprintId?: string | null
-  minQuality?: number
-  quantity?: number
+  totalDfpAuec: number
+  blueprints: CustomOrderBlueprintInput[]
   items: { resourceKey: string; quantity: number }[]
 }): Promise<{ data?: CustomOrder; error?: string }> {
+  if (input.blueprints.length === 0) {
+    return { error: 'Add at least one blueprint to the order' }
+  }
+
+  const first = input.blueprints[0]
+  const legacyBlueprintId = input.blueprints.length === 1 ? first.blueprintId : null
+
   const { data: order, error: orderError } = await supabase
     .from('custom_orders')
     .insert({
       requester_id: input.requesterId,
       title: input.title.trim(),
       notes: input.notes?.trim() || null,
-      blueprint_id: input.blueprintId ?? null,
-      min_quality: input.minQuality ?? 500,
-      quantity: input.quantity ?? 1,
+      blueprint_id: legacyBlueprintId,
+      min_quality: first.minQuality,
+      quantity: first.quantity,
+      total_dfp_auec: Math.round(input.totalDfpAuec),
       status: 'pending',
     })
     .select()
@@ -398,6 +429,24 @@ export async function createCustomOrder(input: {
 
   if (orderError || !order) {
     return { error: orderError?.message ?? 'Failed to create order' }
+  }
+
+  const { error: blueprintsError } = await supabase.from('custom_order_blueprints').insert(
+    input.blueprints.map((bp, index) => ({
+      order_id: order.id,
+      blueprint_id: bp.blueprintId,
+      blueprint_title: bp.blueprintTitle,
+      min_quality: bp.minQuality,
+      quantity: bp.quantity,
+      unit_dfp_auec: Math.round(bp.unitDfpAuec),
+      line_dfp_auec: Math.round(bp.lineDfpAuec),
+      sort_order: index,
+    }))
+  )
+
+  if (blueprintsError) {
+    await supabase.from('custom_orders').delete().eq('id', order.id)
+    return { error: blueprintsError.message }
   }
 
   if (input.items.length > 0) {
@@ -520,7 +569,7 @@ export async function fetchFulfillments(): Promise<{
     .select(`
       *,
       items:fulfillment_items(resource_key, quantity),
-      order:custom_orders(title, status)
+      order:custom_orders(title, status, total_dfp_auec)
     `)
     .order('created_at', { ascending: false })
 
