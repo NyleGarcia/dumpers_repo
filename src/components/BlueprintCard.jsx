@@ -66,6 +66,15 @@ const getArmorWeightFromPath = (parts) => {
   return null
 }
 
+const isFlightArmor = (parts, filename, blueprintName = '') => {
+  if (parts.some(p => p.toLowerCase() === 'flightsuit')) return true
+  if (parts.some(p => p.toLowerCase() === 'racer')) return true
+  if (filename.includes('flightsuit')) return true
+  const name = (blueprintName || '').toLowerCase()
+  if (name.includes('flight') || name.includes('racing')) return true
+  return false
+}
+
 const getArmorWeight = (bp) => {
   const parts = bp.file.split('\\')
   const filename = parts[parts.length - 1]?.toLowerCase() || ''
@@ -74,8 +83,8 @@ const getArmorWeight = (bp) => {
   const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
   if (!isArmor) return null
   
-  // Check for flightsuit folder - these are "flight" weight
-  if (parts.some(p => p.toLowerCase() === 'flightsuit')) return 'flight'
+  // Flight suits, racing gear, and flight/racing helmets
+  if (isFlightArmor(parts, filename, bp.blueprintName)) return 'flight'
   
   // Extract weight from filename (works for both combat and template armor)
   if (filename.includes('_superheavy_') || filename.includes('_superheavy.')) return 'superheavy'
@@ -84,7 +93,13 @@ const getArmorWeight = (bp) => {
   if (filename.includes('_light_') || filename.includes('_light.')) return 'light'
   
   // Fallback: weight from folder path (e.g. combat\light\bp_craft_gys_jacket_01_01_01.json)
-  return getArmorWeightFromPath(parts)
+  const fromPath = getArmorWeightFromPath(parts)
+  if (fromPath) return fromPath
+
+  // Undersuits are the lightest base layer
+  if (parts.some(p => p.toLowerCase() === 'undersuit')) return 'light'
+  
+  return null
 }
 
 const getArmorSlot = (bp) => {
