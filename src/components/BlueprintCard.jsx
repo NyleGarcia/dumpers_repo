@@ -1,3 +1,13 @@
+const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
+
+const getFpsWeaponTypeFromFilename = (filename) => {
+  const fn = (filename || '').toLowerCase()
+  for (const type of FPS_WEAPON_TYPE_OPTIONS) {
+    if (fn.includes(`_${type}_`) || fn.includes(`_${type}.`)) return type
+  }
+  return null
+}
+
 const getSubType = (bp) => {
   const parts = bp.file.split('\\')
   const filename = parts[parts.length - 1] || ''
@@ -11,21 +21,16 @@ const getSubType = (bp) => {
     if (parts[i] === 'weapons' && parts[i - 1] === 'fpsgear') {
       let sub = parts[i + 1]?.replace('$', '')
       if (sub === 'templates') {
-        if (filename.includes('crossbow')) return 'crossbow'
-        if (filename.includes('lmg')) return 'lmg'
-        if (filename.includes('pistol')) return 'pistol'
-        if (filename.includes('rifle')) return 'rifle'
-        if (filename.includes('shotgun')) return 'shotgun'
-        if (filename.includes('smg')) return 'smg'
-        if (filename.includes('sniper')) return 'sniper'
-        return null
+        return getFpsWeaponTypeFromFilename(filename)
       }
       return sub
     }
     if (parts[i] === 'ammo' && parts[i - 1] === 'fpsgear') {
-      const ammoType = parts[i + 1]?.replace('$', '')
-      if (['plasma', 'laser', 'electron'].includes(ammoType)) return 'energy'
-      return ammoType
+      const fromFilename = getFpsWeaponTypeFromFilename(filename)
+      if (fromFilename) return fromFilename
+      const folderType = parts[i + 1]?.replace('$', '')
+      if (FPS_WEAPON_TYPE_OPTIONS.includes(folderType)) return folderType
+      return null
     }
     if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
       let sub = parts[i + 1]?.replace('$', '')

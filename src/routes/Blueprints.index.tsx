@@ -3,6 +3,16 @@ import { useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import { useAuth } from '../contexts/AuthContext'
 
+const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
+
+const getFpsWeaponTypeFromFilename = (filename) => {
+  const fn = (filename || '').toLowerCase()
+  for (const type of FPS_WEAPON_TYPE_OPTIONS) {
+    if (fn.includes(`_${type}_`) || fn.includes(`_${type}.`)) return type
+  }
+  return null
+}
+
 const getSubType = (bp) => {
   const parts = bp.file.split('\\')
   const filename = parts[parts.length - 1] || ''
@@ -20,23 +30,18 @@ const getSubType = (bp) => {
       let sub = parts[i + 1]?.replace('$', '')
       // If in templates folder, extract type from filename
       if (sub === 'templates') {
-        if (filename.includes('crossbow')) return 'crossbow'
-        if (filename.includes('lmg')) return 'lmg'
-        if (filename.includes('pistol')) return 'pistol'
-        if (filename.includes('rifle')) return 'rifle'
-        if (filename.includes('shotgun')) return 'shotgun'
-        if (filename.includes('smg')) return 'smg'
-        if (filename.includes('sniper')) return 'sniper'
-        return 'other'
+        return getFpsWeaponTypeFromFilename(filename) || 'other'
       }
       return sub
     }
     
-    // FPS ammo
+    // FPS ammo: categorize by weapon type (pistol, rifle, etc.) like FPS weapons
     if (parts[i] === 'ammo' && parts[i - 1] === 'fpsgear') {
-      const ammoType = parts[i + 1]?.replace('$', '')
-      if (['plasma', 'laser', 'electron'].includes(ammoType)) return 'energy'
-      return ammoType
+      const fromFilename = getFpsWeaponTypeFromFilename(filename)
+      if (fromFilename) return fromFilename
+      const folderType = parts[i + 1]?.replace('$', '')
+      if (FPS_WEAPON_TYPE_OPTIONS.includes(folderType)) return folderType
+      return null
     }
     
     // FPS armour: fpsgear\armour\[type] or fpsgear\armour\combat\[weight] or fpsgear\armour\$templates\[type]
@@ -118,6 +123,8 @@ const VEHICLE_SIZE_OPTIONS = {
   'Vehicle Weapons': ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'],
 }
 const STATIC_SUBTYPE_OPTIONS = {
+  'FPS Weapons': FPS_WEAPON_TYPE_OPTIONS,
+  'Ammo': FPS_WEAPON_TYPE_OPTIONS,
   'FPS Armour': ['standard', 'flightsuit', 'explorer', 'salvager', 'stealth'],
 }
 
@@ -404,8 +411,16 @@ export default function BlueprintsRoute() {
     return acc
   }, {})
   const discoveredSubTypes = selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {}
+  const staticSubTypes = STATIC_SUBTYPE_OPTIONS[selectedMainCategory] || []
   const subTypeOptions = selectedMainCategory
-    ? [...new Set([...(STATIC_SUBTYPE_OPTIONS[selectedMainCategory] || []), ...Object.keys(discoveredSubTypes)])].sort()
+    ? [...new Set([...staticSubTypes, ...Object.keys(discoveredSubTypes)])].sort((a, b) => {
+        const ia = staticSubTypes.indexOf(a)
+        const ib = staticSubTypes.indexOf(b)
+        if (ia !== -1 && ib !== -1) return ia - ib
+        if (ia !== -1) return -1
+        if (ib !== -1) return 1
+        return a.localeCompare(b)
+      })
     : []
   const currentSubTypes = subTypeOptions.reduce((acc, key) => {
     acc[key] = filteredSubTypeCounts[key] || 0
