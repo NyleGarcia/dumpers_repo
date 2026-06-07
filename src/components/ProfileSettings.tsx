@@ -48,25 +48,22 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [orgSetupLoading, setOrgSetupLoading] = useState(false)
-  const [orgSetupError, setOrgSetupError] = useState<string | null>(null)
 
   const hasOrgAffiliation = !!(organization || profile?.org_id)
 
   const runOrgSetup = async () => {
     setOrgSetupLoading(true)
-    setOrgSetupError(null)
     try {
-      const result = await reloadProfile()
-      if (result.error) setOrgSetupError(result.error)
+      await reloadProfile()
     } finally {
       setOrgSetupLoading(false)
     }
   }
 
   useEffect(() => {
-    if (!profile?.id || organization) return
+    if (!profile?.id || organization || profile?.org_id) return
     void runOrgSetup()
-  }, [profile?.id, organization, reloadProfile])
+  }, [profile?.id, profile?.org_id, organization, reloadProfile])
 
   useEffect(() => {
     setRsiHandle(profile?.rsi_handle || '')
@@ -284,26 +281,13 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 <p className="text-sm text-slate-400 bg-slate-800/40 border border-slate-700 rounded-lg px-3 py-3">
                   Loading organization...
                 </p>
-              ) : !organization && profile?.org_id ? (
-                <div className="space-y-2">
-                  <p className="text-sm text-red-300 bg-red-950/30 border border-red-500/30 rounded-lg px-3 py-2">
-                    Could not load your organization.
-                    {orgSetupError ? ` ${orgSetupError}` : ' Tap retry, or sign out and back in.'}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => void runOrgSetup()}
-                    disabled={orgSetupLoading}
-                    className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-lg disabled:opacity-50"
-                  >
-                    Retry
-                  </button>
-                </div>
-              ) : organization ? (
+              ) : organization || profile?.org_id ? (
               <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-3 space-y-2">
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm text-slate-400">Org</span>
-                  <span className="text-sm font-medium text-white">{organization.name}</span>
+                  <span className="text-sm font-medium text-white">
+                    {organization?.name ?? 'Dumpers'}
+                  </span>
                 </div>
                 {orgMembership && (
                   <div className="flex items-center justify-between gap-3">
@@ -328,7 +312,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm text-slate-400">Org stock visibility</span>
                   <span className="text-xs text-slate-400">
-                    {organization.resources_public
+                    {organization?.resources_public !== false
                       ? 'Other orgs can view shared org stock'
                       : 'Org stock visible to your org only'}
                   </span>
@@ -337,12 +321,12 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                   Personal resources are never visible across orgs. Same-org mates only see yours if
                   you opt in below (Dumpers members are always visible to each other after verify).
                 </p>
-                {!orgMembership?.verified_at && !isDumpersOrg(organization) && (
+                {!orgMembership?.verified_at && organization && !isDumpersOrg(organization) && (
                   <p className="text-xs text-amber-300/80 pt-1">
                     Org stock is hidden until an officer verifies your membership.
                   </p>
                 )}
-                {isDumpersOrg(organization) && (
+                {(!organization || isDumpersOrg(organization)) && (
                   <p className="text-xs text-slate-500 pt-1">
                     Every member starts in Dumpers Repo. Switch to another org later when org
                     transfer is available.

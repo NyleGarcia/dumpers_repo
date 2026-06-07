@@ -9,7 +9,9 @@ import {
 } from '../lib/featureAccess'
 import { removeTargetBlueprint } from '../lib/targetList'
 import {
-  fetchMyOrgContext,
+  ensureDumpersMembership,
+  fetchOrgMembership,
+  fetchOrganization,
   type MemberScope,
   type OrgMembership,
   type Organization,
@@ -41,7 +43,11 @@ interface AuthContextType {
   updateSharePersonalResources: (enabled: boolean) => Promise<boolean>
   organization: Organization | null
   orgMembership: OrgMembership | null
-  refreshOrgContext: () => Promise<void>
+  refreshOrgContext: () => Promise<{
+    organization: Organization | null
+    membership: OrgMembership | null
+    error?: string
+  }>
   reloadProfile: () => Promise<{ error?: string }>
   fetchUsersWithBlueprints: (scope?: MemberScope) => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
@@ -183,28 +189,70 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const profileRef = useRef(profile)
   profileRef.current = profile
 
-  const refreshOrgContext = useCallback(async (profileData?: Profile | null) => {
+  const refreshOrgContext = useCallback(async (
+    profileData?: Profile | null
+  ): Promise<{
+    organization: Organization | null
+    membership: OrgMembership | null
+    error?: string
+  }> => {
     const activeProfile = profileData ?? profileRef.current
-    const ctx = await fetchMyOrgContext()
-
-    if (ctx.error) {
-      console.error('Error loading org context:', ctx.error)
+    if (!activeProfile?.id) {
       setOrganization(null)
       setOrgMembership(null)
-      return
+      return { organization: null, membership: null }
     }
 
-    setOrganization(ctx.organization)
-    setOrgMembership(ctx.membership)
+    let orgId = activeProfile.org_id
+    let profileSnapshot = activeProfile
 
-    if (
-      activeProfile?.id &&
-      ctx.organization &&
-      activeProfile.org_id !== ctx.organization.id
-    ) {
+    const loadFromOrgId = async (userId: string, id: string) =>
+      Promise.all([
+        fetchOrganization(id),
+        fetchOrgMembership(userId, id),
+      ])
+
+    if (!orgId) {
+      await ensureDumpersMembership()
       const refreshed = await fetchProfile(activeProfile.id)
-      if (refreshed) setProfile(refreshed)
+      if (refreshed) {
+        profileSnapshot = refreshed
+        setProfile(refreshed)
+        orgId = refreshed.org_id
+      }
     }
+
+    if (!orgId) {
+      setOrganization(null)
+      setOrgMembership(null)
+      return { organization: null, membership: null, error: 'No organization on profile' }
+    }
+
+    let [organization, membership] = await loadFromOrgId(profileSnapshot.id, orgId)
+
+    if (!organization) {
+      await ensureDumpersMembership()
+      const refreshed = await fetchProfile(profileSnapshot.id)
+      if (refreshed?.org_id) {
+        profileSnapshot = refreshed
+        setProfile(refreshed)
+        orgId = refreshed.org_id
+        ;[organization, membership] = await loadFromOrgId(refreshed.id, orgId)
+      }
+    }
+
+    setOrganization(organization)
+    setOrgMembership(membership)
+
+    if (!organization) {
+      return {
+        organization: null,
+        membership,
+        error: 'Could not read organization (check RLS / org_id)',
+      }
+    }
+
+    return { organization, membership }
   }, [fetchProfile])
 
   const loadUserData = useCallback(async (sessionUser: User, isSignIn = false) => {
@@ -296,19 +344,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const activeUser = userRef.current
     if (!activeUser) return { error: 'Not signed in' }
 
-    const ctx = await fetchMyOrgContext()
-    if (ctx.error) {
-      setOrganization(null)
-      setOrgMembership(null)
-      return { error: ctx.error }
-    }
-
     const profileData = await fetchProfile(activeUser.id)
     setProfile(profileData)
-    setOrganization(ctx.organization)
-    setOrgMembership(ctx.membership)
+    const ctx = await refreshOrgContext(profileData)
+    if (!ctx.organization && !profileData?.org_id) {
+      return { error: ctx.error ?? 'Could not load organization' }
+    }
     return {}
-  }, [fetchProfile])
+  }, [fetchProfile, refreshOrgContext])
 
   const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
