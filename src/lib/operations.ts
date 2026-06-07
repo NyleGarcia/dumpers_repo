@@ -252,17 +252,7 @@ export async function seedScopedInventory(
     return {}
   }
 
-  if (!ctx.orgId) return { error: 'Organization required for org inventory' }
-
-  const rows = resourceKeys.map((resource_key) => ({
-    org_id: ctx.orgId,
-    resource_key,
-    quantity: 0,
-  }))
-  const { error } = await supabase
-    .from('org_resource_inventory')
-    .upsert(rows, { onConflict: 'org_id,resource_key', ignoreDuplicates: true })
-  if (error) return { error: error.message }
+  // Org Total is aggregated from member inventories — no org inventory rows to seed
   return {}
 }
 
@@ -304,19 +294,30 @@ export async function fetchInventory(ctx: InventoryContext): Promise<{
   data: ResourceInventoryRow[]
   error?: string
 }> {
-  if (ctx.scope === 'org' && !ctx.orgId) {
-    return { data: [], error: 'Organization required for org inventory' }
+  if (ctx.scope === 'org') {
+    const { data, error } = await supabase.rpc('get_org_total_inventory')
+
+    if (error) return { data: [], error: error.message }
+
+    const rows = ((data ?? []) as { resource_key: string; quantity: number }[]).map(
+      (row) => ({
+        id: row.resource_key,
+        resource_key: row.resource_key,
+        quantity: Number(row.quantity),
+        updated_at: '',
+        updated_by: null,
+        org_id: ctx.orgId,
+      })
+    )
+
+    return { data: rows as ResourceInventoryRow[] }
   }
 
-  let query = supabase.from(inventoryTable(ctx.scope)).select('*').order('resource_key')
-
-  if (ctx.scope === 'personal') {
-    query = query.eq('user_id', ctx.userId)
-  } else {
-    query = query.eq('org_id', ctx.orgId!)
-  }
-
-  const { data, error } = await query
+  const { data, error } = await supabase
+    .from('personal_resource_inventory')
+    .select('*')
+    .eq('user_id', ctx.userId)
+    .order('resource_key')
 
   if (error) return { data: [], error: error.message }
   return { data: (data ?? []) as ResourceInventoryRow[] }
@@ -327,8 +328,8 @@ export async function adjustInventoryQuantity(
   resourceKey: string,
   delta: number
 ): Promise<{ error?: string }> {
-  if (ctx.scope === 'org' && !ctx.orgId) {
-    return { error: 'Organization required for org inventory' }
+  if (ctx.scope === 'org') {
+    return { error: 'Org Total is read-only — update My Resources instead' }
   }
 
   const table = inventoryTable(ctx.scope)
@@ -376,8 +377,8 @@ export async function setInventoryQuantity(
   resourceKey: string,
   quantity: number
 ): Promise<{ error?: string }> {
-  if (ctx.scope === 'org' && !ctx.orgId) {
-    return { error: 'Organization required for org inventory' }
+  if (ctx.scope === 'org') {
+    return { error: 'Org Total is read-only — update My Resources instead' }
   }
 
   const table = inventoryTable(ctx.scope)

@@ -4,7 +4,7 @@ import { useBlueprintData } from './blueprints'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
-import { canManageOrgInventory, canUseFeature } from '../lib/featureAccess'
+import { canUseFeature } from '../lib/featureAccess'
 import { adjustInventoryQuantity, setInventoryQuantity } from '../lib/operations'
 import type { InventoryScope } from '../lib/operations'
 import {
@@ -20,9 +20,8 @@ const ADJUST_STEPS = [0.001, 0.01, 0.1, 1] as const
 
 export default function ResourceTrackerRoute() {
   const { user, siteOrg, visibilityContext, isSuperAdmin, isGhostMode } = useAuth()
-  const canViewShared =
+  const canViewOrgTotal =
     !isGhostMode && canUseFeature('org_resources', visibilityContext)
-  const canEditShared = canManageOrgInventory(visibilityContext)
 
   const [activeTab, setActiveTab] = useState<TrackerTab>('personal')
   const [orderError, setOrderError] = useState<string | null>(null)
@@ -49,7 +48,7 @@ export default function ResourceTrackerRoute() {
     }
   }, [user?.id, siteOrg?.id, inventoryScope])
 
-  const readOnly = activeTab === 'org' && !canEditShared
+  const readOnly = activeTab === 'org'
 
   const {
     catalog,
@@ -108,7 +107,7 @@ export default function ResourceTrackerRoute() {
     activeTab === 'personal'
       ? 'My Resources'
       : activeTab === 'org'
-        ? 'Shared Stock'
+        ? 'Org Total'
         : 'Place order'
 
   const isInventoryTab = activeTab === 'personal' || activeTab === 'org'
@@ -120,7 +119,7 @@ export default function ResourceTrackerRoute() {
         activeTab === 'personal'
           ? 'Personal crafting materials (SCU, up to 3 decimals)'
           : activeTab === 'org'
-            ? `${siteOrg?.name ?? 'Shared'} stock`
+            ? 'Read-only sum of My Resources across approved members'
             : 'Submit buy orders for blueprints and/or refined materials (→ Custom Orders)'
       }
       actions={
@@ -146,7 +145,7 @@ export default function ResourceTrackerRoute() {
         >
           My Resources
         </button>
-        {canViewShared && (
+        {canViewOrgTotal && (
           <button
             type="button"
             onClick={() => setActiveTab('org')}
@@ -156,7 +155,7 @@ export default function ResourceTrackerRoute() {
                 : 'text-slate-400 hover:text-white hover:bg-slate-800'
             }`}
           >
-            Shared Stock
+            Org Total
           </button>
         )}
         <button
@@ -174,7 +173,8 @@ export default function ResourceTrackerRoute() {
 
       {readOnly && (
         <div className="mb-4 p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
-          Shared stock is read-only for members. Officers can update quantities.
+          Org Total is a read-only aggregate ledger — summed from every approved member&apos;s My
+          Resources. Update your own quantities under My Resources.
         </div>
       )}
 
@@ -183,7 +183,7 @@ export default function ResourceTrackerRoute() {
           {error}
           {error.includes('relation') && (
             <p className="mt-2 text-red-200/80">
-              Run pending Supabase migrations (013+, 026 for resource order lines) first.
+              Run pending Supabase migrations (013+, 029 for org totals) first.
             </p>
           )}
         </div>
@@ -278,7 +278,9 @@ export default function ResourceTrackerRoute() {
                         <h3 className="text-white font-medium">{resource.label}</h3>
                         <p className="text-slate-500 text-xs mt-0.5">
                           {resource.is_active
-                            ? 'SCU in stock'
+                            ? activeTab === 'org'
+                              ? 'SCU org-wide total'
+                              : 'SCU in stock'
                             : 'Retired — no longer in blueprints'}
                         </p>
                       </div>
