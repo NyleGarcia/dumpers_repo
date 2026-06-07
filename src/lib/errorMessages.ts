@@ -9,8 +9,9 @@ const ERROR_MESSAGES: Record<number, ErrorCopy> = {
     message: 'That request did not parse in this system. Double-check the route and try again.',
   },
   403: {
-    headline: 'Port authority denied',
-    message: 'You do not have clearance for this hangar. Head back or contact an officer.',
+    headline: 'Crimestat',
+    message:
+      'You have a Crimestat and docking privileges have been revoked. Clear it before trying this route again.',
   },
   404: {
     headline: 'Dead Space',
@@ -31,8 +32,8 @@ const ERROR_MESSAGES: Record<number, ErrorCopy> = {
     message: 'Upstream comms are down. Give it a minute, then punch it again.',
   },
   503: {
-    headline: 'Station under maintenance',
-    message: 'Services are temporarily offline. The crew is probably patching a hull breach.',
+    headline: 'Hangars offline',
+    message: 'Hangars seem to be borked again. Give it a minute, then try the approach one more time.',
   },
 }
 
