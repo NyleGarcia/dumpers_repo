@@ -63,12 +63,31 @@ const getArmorWeight = (bp) => {
   return null
 }
 
+const getArmorSlot = (bp) => {
+  const parts = bp.file.split('\\')
+  const filename = parts[parts.length - 1]?.toLowerCase() || ''
+  
+  // Check if this is FPS armor
+  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
+  if (!isArmor) return null
+  
+  // Extract slot from filename
+  if (filename.includes('_helmet')) return 'helmet'
+  if (filename.includes('_arms')) return 'arms'
+  if (filename.includes('_core')) return 'core'
+  if (filename.includes('_legs')) return 'legs'
+  if (filename.includes('_backpack') || filename.includes('backpack_')) return 'backpack'
+  
+  return null
+}
+
 export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggleAcquired, canModify = true }) {
   if (!blueprint.file || !blueprint.blueprintName) return null
 
   const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
   const subType = getSubType(blueprint)
   const armorWeight = getArmorWeight(blueprint)
+  const armorSlot = getArmorSlot(blueprint)
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation()
@@ -150,7 +169,7 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
           ) : null}
 
           <div className="mt-3 pt-2.5 border-t border-slate-700 space-y-1.5">
-            {(blueprint.categoryName || subType || armorWeight) && (
+            {(blueprint.categoryName || subType || armorWeight || armorSlot) && (
               <div className="flex flex-wrap gap-1">
                 {blueprint.categoryName && (
                   <span className="px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded text-[10px] border border-slate-700">
@@ -160,6 +179,11 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
                 {armorWeight && (
                   <span className="px-1.5 py-0.5 bg-blue-950/50 text-blue-400 rounded text-[10px] border border-blue-500/30">
                     {armorWeight === 'superheavy' ? 'Super Heavy' : formatSubType(armorWeight)}
+                  </span>
+                )}
+                {armorSlot && (
+                  <span className="px-1.5 py-0.5 bg-green-950/50 text-green-400 rounded text-[10px] border border-green-500/30">
+                    {formatSubType(armorSlot)}
                   </span>
                 )}
                 {subType && (

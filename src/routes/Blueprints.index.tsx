@@ -75,6 +75,25 @@ const getArmorWeight = (bp) => {
   return null
 }
 
+const getArmorSlot = (bp) => {
+  const parts = bp.file.split('\\')
+  const filename = parts[parts.length - 1]?.toLowerCase() || ''
+  
+  // Check if this is FPS armor
+  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
+  if (!isArmor) return null
+  
+  // Extract slot from filename
+  // Patterns: armor_heavy_helmet, armor_heavy_arms, armor_heavy_core, armor_heavy_legs, combat_heavy_backpack
+  if (filename.includes('_helmet')) return 'helmet'
+  if (filename.includes('_arms')) return 'arms'
+  if (filename.includes('_core')) return 'core'
+  if (filename.includes('_legs')) return 'legs'
+  if (filename.includes('_backpack') || filename.includes('backpack_')) return 'backpack'
+  
+  return null
+}
+
 const MAIN_CATEGORY_GROUPS = {
   'FPS Weapons': ['FPSWeapons'],
   'FPS Armour': ['FPSArmours'],
@@ -104,6 +123,7 @@ export default function BlueprintsRoute() {
   const [selectedSubCategory, setSelectedSubCategory] = React.useState(null)
   const [selectedSize, setSelectedSize] = React.useState(null)
   const [selectedArmorWeight, setSelectedArmorWeight] = React.useState(null)
+  const [selectedArmorSlot, setSelectedArmorSlot] = React.useState(null)
   const [showOnlyRewards, setShowOnlyRewards] = React.useState(true)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
   
@@ -156,11 +176,12 @@ export default function BlueprintsRoute() {
 
   // Category data with counts based on current global filters
   const categoryData = React.useMemo(() => {
-    if (!baseFilteredBlueprints.length) return { subTypes: {}, sizes: {}, armorWeights: {}, mainCounts: {} }
+    if (!baseFilteredBlueprints.length) return { subTypes: {}, sizes: {}, armorWeights: {}, armorSlots: {}, mainCounts: {} }
     
     const subTypes = {}
     const sizes = {}
     const armorWeights = {}
+    const armorSlots = {}
     const mainCounts = {}
     
     baseFilteredBlueprints.forEach(bp => {
@@ -197,13 +218,18 @@ export default function BlueprintsRoute() {
         if (weight) {
           armorWeights[weight] = (armorWeights[weight] || 0) + 1
         }
+        // Count for armor slots
+        const slot = getArmorSlot(bp)
+        if (slot) {
+          armorSlots[slot] = (armorSlots[slot] || 0) + 1
+        }
       }
     })
     
-    return { subTypes, sizes, armorWeights, mainCounts }
+    return { subTypes, sizes, armorWeights, armorSlots, mainCounts }
   }, [baseFilteredBlueprints])
 
-  // Subcategory counts filtered by selected size (for Vehicle categories) or armor weight (for FPS Armour)
+  // Subcategory counts filtered by selected size (for Vehicle categories) or armor weight/slot (for FPS Armour)
   const filteredSubTypeCounts = React.useMemo(() => {
     if (!selectedMainCategory) return {}
     
@@ -223,6 +249,12 @@ export default function BlueprintsRoute() {
         if (weight !== selectedArmorWeight) return
       }
       
+      // Filter by armor slot if selected
+      if (selectedArmorSlot && selectedMainCategory === 'FPS Armour') {
+        const slot = getArmorSlot(bp)
+        if (slot !== selectedArmorSlot) return
+      }
+      
       const sub = getSubType(bp)
       if (sub) {
         counts[sub] = (counts[sub] || 0) + 1
@@ -230,7 +262,7 @@ export default function BlueprintsRoute() {
     })
     
     return counts
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, selectedArmorWeight])
+  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, selectedArmorWeight, selectedArmorSlot])
 
   // Final filtered blueprints (applies category filters on top of base, sorted A-Z)
   const filteredBlueprints = React.useMemo(() => {
@@ -249,6 +281,12 @@ export default function BlueprintsRoute() {
           if (weight !== selectedArmorWeight) return false
         }
         
+        // Filter by armor slot for FPS Armour
+        if (selectedArmorSlot && selectedMainCategory === 'FPS Armour') {
+          const slot = getArmorSlot(bp)
+          if (slot !== selectedArmorSlot) return false
+        }
+        
         if (selectedSubCategory) {
           const bpSubType = getSubType(bp)
           if (bpSubType !== selectedSubCategory) return false
@@ -261,7 +299,7 @@ export default function BlueprintsRoute() {
     return results.sort((a, b) => 
       (a.blueprintName || '').localeCompare(b.blueprintName || '')
     )
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize, selectedArmorWeight])
+  }, [baseFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize, selectedArmorWeight, selectedArmorSlot])
 
   const handleMainCategoryClick = (cat) => {
     if (selectedMainCategory === cat) {
@@ -269,11 +307,13 @@ export default function BlueprintsRoute() {
       setSelectedSubCategory(null)
       setSelectedSize(null)
       setSelectedArmorWeight(null)
+      setSelectedArmorSlot(null)
     } else {
       setSelectedMainCategory(cat)
       setSelectedSubCategory(null)
       setSelectedSize(null)
       setSelectedArmorWeight(null)
+      setSelectedArmorSlot(null)
     }
   }
 
@@ -298,14 +338,15 @@ export default function BlueprintsRoute() {
 
   const currentSizes = selectedMainCategory ? categoryData.sizes[selectedMainCategory] || {} : {}
   const currentArmorWeights = selectedMainCategory === 'FPS Armour' ? categoryData.armorWeights || {} : {}
+  const currentArmorSlots = selectedMainCategory === 'FPS Armour' ? categoryData.armorSlots || {} : {}
   // Get all subtypes for the category (unfiltered) to ensure we always show all type buttons
   const allSubTypes = selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {}
-  // Always use filteredSubTypeCounts for the actual counts - it respects size/weight filters when active
+  // Always use filteredSubTypeCounts for the actual counts - it respects size/weight/slot filters when active
   const currentSubTypes = Object.keys(allSubTypes).reduce((acc, key) => {
     acc[key] = filteredSubTypeCounts[key] || 0
     return acc
   }, {})
-  const hasSubFilters = Object.keys(allSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(currentArmorWeights).length > 0
+  const hasSubFilters = Object.keys(allSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(currentArmorWeights).length > 0 || Object.keys(currentArmorSlots).length > 0
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-2 sm:p-4 overflow-x-hidden">
@@ -461,6 +502,36 @@ export default function BlueprintsRoute() {
                 </>
               )}
               
+              {/* Slot filters for FPS Armour */}
+              {Object.keys(currentArmorSlots).length > 0 && (
+                <>
+                  {['helmet', 'arms', 'core', 'legs', 'backpack'].filter(s => currentArmorSlots[s]).map(slot => {
+                    const count = currentArmorSlots[slot] || 0
+                    const displayName = slot.charAt(0).toUpperCase() + slot.slice(1)
+                    return (
+                      <button
+                        key={slot}
+                        onClick={() => {
+                          setSelectedArmorSlot(selectedArmorSlot === slot ? null : slot)
+                          setSelectedSubCategory(null)
+                        }}
+                        disabled={count === 0}
+                        className={`px-2 py-0.5 lg:px-2.5 lg:py-1 xl:px-3 rounded text-[11px] lg:text-xs xl:text-sm font-medium transition-all ${
+                          selectedArmorSlot === slot
+                            ? 'bg-green-600 text-white'
+                            : count === 0
+                              ? 'bg-green-950/30 text-green-800 border border-green-900/50 cursor-not-allowed'
+                              : 'bg-green-950/50 text-green-400 hover:bg-green-900/50 border border-green-800/50'
+                        }`}
+                      >
+                        {displayName}<span className="opacity-70 ml-0.5">({count})</span>
+                      </button>
+                    )
+                  })}
+                  <span className="text-slate-500 self-center text-sm hidden lg:inline">+</span>
+                </>
+              )}
+              
               {/* Type filters */}
               {Object.keys(currentSubTypes).sort().map(sub => {
                 const count = currentSubTypes[sub] || 0
@@ -506,6 +577,7 @@ export default function BlueprintsRoute() {
                 setSelectedSubCategory(null)
                 setSelectedSize(null)
                 setSelectedArmorWeight(null)
+                setSelectedArmorSlot(null)
                 setShowOnlyRewards(false)
                 setSearchTerm('')
                 setSelectedUserId('all')
