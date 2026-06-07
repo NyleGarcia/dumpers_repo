@@ -100,7 +100,7 @@ export default function PersonalStockAddPanel({
         <h2 className="text-white font-medium text-sm">Add material stock</h2>
         <p className="text-slate-500 text-xs mt-1">
           Create a card per resource and quality tier — Q0 for store-bought and salvage (RMC,
-          construction material), Q10–Q1000 for mined/refined ore. Use the buttons on each card to
+          construction material), Q100–Q1000 for mined/refined ore. Use the buttons on each card to
           adjust in-game.
         </p>
       </div>

@@ -13,10 +13,10 @@ export const DFP_ASSUMED_QUALITY = 500
 /** Internal DFP math tiers (50-point steps for base value lookup). */
 export const DFP_QUALITY_TIERS = [500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000] as const
 
-/** Q0 = store-bought; Q10–Q1000 = mined/refined in 10-point steps. */
+/** Q0 = store-bought; Q100–Q1000 = mined/refined in 100-point steps. */
 export const STOCK_QUALITY_TIERS: readonly number[] = [
   0,
-  ...Array.from({ length: 100 }, (_, i) => (i + 1) * 10),
+  ...Array.from({ length: 10 }, (_, i) => (i + 1) * 100),
 ]
 
 /** Min quality on buy orders (non-ammo). Same tiers as personal stock cards. */
