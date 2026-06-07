@@ -827,7 +827,7 @@ export default function BlueprintsRoute() {
                       <p className="text-sm text-slate-400">
                         Use <strong className="text-amber-300/90">+ Target</strong> on the card to add this blueprint to your Target BP List.
                         Missions that reward it will appear on the{' '}
-                        <strong className="text-amber-300/90">Target BP List</strong> page — not here in the catalog.
+                        <strong className="text-amber-300/90">Target BP List</strong> page.
                       </p>
                     )}
                   </div>
