@@ -55,8 +55,8 @@ const getSubType = (bp) => {
     // FPS armour: fpsgear\armour\[type] or fpsgear\armour\combat\[weight] or fpsgear\armour\$templates\[type]
     // Combat armor gets "standard" as type, template armor gets its specific type
     if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
-      const sub = parts[i + 1]?.replace('$', '')
-      if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
+      const rawSub = parts[i + 1]?.replace('$', '')
+      const sub = rawSub === 'templates' && parts[i + 2] ? parts[i + 2] : rawSub
       // For combat armor, return 'standard' as the type - weight is a separate filter
       if (sub === 'combat') return 'standard'
       // For flightsuit: helmets are "standard" type, bodies are "flightsuit" type
