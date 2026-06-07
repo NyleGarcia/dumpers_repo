@@ -5,24 +5,16 @@ import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
-import { canManageOrgPrivacy } from '../lib/featureAccess'
-import { isDumpersOrg, ORG_ROLE_LABELS, setOrgResourcesPublic } from '../lib/org'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   useBodyScrollLock()
   const {
     profile,
-    organization,
-    orgMembership,
     updateRsiHandle,
     updateGhostMode,
     updatePreviewFeatures,
-    updateOrgOnlyMode,
     updateFulfillmentEnabled,
     updateSharePersonalResources,
-    refreshOrgContext,
-    reloadProfile,
-    visibilityContext,
     signOut,
     isSuperAdmin,
     isOfficerOrAbove,
@@ -30,15 +22,11 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
   const [previewFeatures, setPreviewFeatures] = useState(profile?.preview_features_enabled ?? false)
-  const [orgOnlyMode, setOrgOnlyMode] = useState(profile?.org_only_mode ?? false)
   const [fulfillmentEnabled, setFulfillmentEnabled] = useState(profile?.fulfillment_enabled ?? false)
   const [savingRsi, setSavingRsi] = useState(false)
   const [savingGhost, setSavingGhost] = useState(false)
   const [savingPreview, setSavingPreview] = useState(false)
-  const [savingOrgOnly, setSavingOrgOnly] = useState(false)
   const [savingFulfillment, setSavingFulfillment] = useState(false)
-  const [resourcesPublic, setResourcesPublic] = useState(organization?.resources_public ?? false)
-  const [savingResourcesPublic, setSavingResourcesPublic] = useState(false)
   const [sharePersonalResources, setSharePersonalResources] = useState(
     profile?.share_personal_resources ?? false
   )
@@ -47,48 +35,20 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const [orgSetupLoading, setOrgSetupLoading] = useState(false)
-  const [orgSetupError, setOrgSetupError] = useState<string | null>(null)
-
-  const runOrgSetup = async () => {
-    setOrgSetupLoading(true)
-    setOrgSetupError(null)
-    try {
-      const result = await reloadProfile()
-      if (result.error) setOrgSetupError(result.error)
-    } finally {
-      setOrgSetupLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (!profile?.id) return
-    void runOrgSetup()
-  }, [profile?.id])
 
   useEffect(() => {
     setRsiHandle(profile?.rsi_handle || '')
     setGhostMode(profile?.ghost_mode ?? false)
     setPreviewFeatures(profile?.preview_features_enabled ?? false)
-    setOrgOnlyMode(profile?.org_only_mode ?? false)
     setFulfillmentEnabled(profile?.fulfillment_enabled ?? false)
+    setSharePersonalResources(profile?.share_personal_resources ?? false)
   }, [
     profile?.rsi_handle,
     profile?.ghost_mode,
     profile?.preview_features_enabled,
-    profile?.org_only_mode,
     profile?.fulfillment_enabled,
-    organization?.resources_public,
     profile?.share_personal_resources,
   ])
-
-  useEffect(() => {
-    setResourcesPublic(organization?.resources_public ?? false)
-  }, [organization?.resources_public])
-
-  useEffect(() => {
-    setSharePersonalResources(profile?.share_personal_resources ?? false)
-  }, [profile?.share_personal_resources])
 
   const handleSaveRsi = async () => {
     setSavingRsi(true)
@@ -137,22 +97,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setSavingPreview(false)
   }
 
-  const handleOrgOnlyModeChange = async (enabled: boolean) => {
-    const previous = orgOnlyMode
-    setOrgOnlyMode(enabled)
-    setSavingOrgOnly(true)
-    setMessage(null)
-
-    const success = await updateOrgOnlyMode(enabled)
-
-    if (!success) {
-      setOrgOnlyMode(previous)
-      setMessage({ type: 'error', text: 'Failed to update Org-only mode.' })
-    }
-
-    setSavingOrgOnly(false)
-  }
-
   const handleFulfillmentEnabledChange = async (enabled: boolean) => {
     const previous = fulfillmentEnabled
     setFulfillmentEnabled(enabled)
@@ -167,24 +111,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingFulfillment(false)
-  }
-
-  const handleResourcesPublicChange = async (enabled: boolean) => {
-    const previous = resourcesPublic
-    setResourcesPublic(enabled)
-    setSavingResourcesPublic(true)
-    setMessage(null)
-
-    const result = await setOrgResourcesPublic(enabled)
-
-    if (result.error) {
-      setResourcesPublic(previous)
-      setMessage({ type: 'error', text: result.error })
-    } else {
-      await refreshOrgContext()
-    }
-
-    setSavingResourcesPublic(false)
   }
 
   const handleSharePersonalResourcesChange = async (enabled: boolean) => {
@@ -227,7 +153,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
         <div className="flex items-center justify-between p-4 border-b border-slate-700 shrink-0">
           <div>
             <h2 className="text-xl font-bold text-white">Settings</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Profile, org, privacy, and account</p>
+            <p className="text-xs text-slate-500 mt-0.5">Profile, privacy, and account</p>
           </div>
           <button
             onClick={onClose}
@@ -273,131 +199,26 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             </button>
           </SettingsSection>
 
-          {profile && (
-            <SettingsSection
-              title="Organization"
-              description="Your org affiliation and org-scoped preferences"
-            >
-              {orgSetupLoading ? (
-                <p className="text-sm text-slate-400 bg-slate-800/40 border border-slate-700 rounded-lg px-3 py-3">
-                  Loading organization...
-                </p>
-              ) : organization ? (
-              <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-3 space-y-2">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm text-slate-400">Org</span>
-                  <span className="text-sm font-medium text-white">{organization.name}</span>
-                </div>
-                {orgMembership && (
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm text-slate-400">Org role</span>
-                    <span className="text-sm font-medium text-purple-300">
-                      {ORG_ROLE_LABELS[orgMembership.org_role]}
-                    </span>
-                  </div>
-                )}
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm text-slate-400">Verification</span>
-                  <span
-                    className={`text-xs font-semibold px-2 py-0.5 rounded ${
-                      orgMembership?.verified_at
-                        ? 'bg-green-900/40 text-green-400 border border-green-500/30'
-                        : 'bg-amber-900/30 text-amber-300 border border-amber-500/30'
-                    }`}
-                  >
-                    {orgMembership?.verified_at ? 'Verified org mate' : 'Pending verification'}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm text-slate-400">Org stock visibility</span>
-                  <span className="text-xs text-slate-400">
-                    {organization.resources_public
-                      ? 'Other orgs can view shared org stock'
-                      : 'Org stock visible to your org only'}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500">
-                  Personal resources are never visible across orgs. Same-org mates only see yours if
-                  you opt in below (Dumpers members are always visible to each other after verify).
-                </p>
-                {!orgMembership?.verified_at && organization && !isDumpersOrg(organization) && (
-                  <p className="text-xs text-amber-300/80 pt-1">
-                    Org stock is hidden until an officer verifies your membership.
-                  </p>
-                )}
-                {isDumpersOrg(organization) && (
-                  <p className="text-xs text-slate-500 pt-1">
-                    Every member starts in Dumpers Repo. Switch to another org later when org
-                    transfer is available.
-                  </p>
-                )}
-              </div>
-              ) : (
-                <div className="space-y-2">
-                  <p className="text-sm text-red-300 bg-red-950/30 border border-red-500/30 rounded-lg px-3 py-2">
-                    Could not load your organization.
-                    {orgSetupError ? ` ${orgSetupError}` : ' Tap retry or sign out and back in.'}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => void runOrgSetup()}
-                    disabled={orgSetupLoading}
-                    className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-lg disabled:opacity-50"
-                  >
-                    Retry
-                  </button>
-                </div>
-              )}
+          <SettingsSection
+            title="Resources"
+            description="Control who can see your personal stock"
+          >
+            <SettingsToggle
+              label="Share my personal resources"
+              description="When on, other approved members can view your personal resource inventory. Off by default."
+              checked={sharePersonalResources}
+              onChange={handleSharePersonalResourcesChange}
+              saving={savingSharePersonal}
+            />
 
-              {organization && canManageOrgPrivacy(visibilityContext) && (
-                isDumpersOrg(organization) ? (
-                  <p className="text-sm text-slate-400 bg-slate-800/40 border border-slate-700 rounded-lg px-3 py-2">
-                    Dumpers Repo shared org stock is always public to other orgs. Verified Dumpers
-                    members can always see each other&apos;s personal stock — never visible outside
-                    Dumpers.
-                  </p>
-                ) : (
-                  <SettingsToggle
-                    label="Public org stock"
-                    description="When on, members of other organizations can view your org's shared stock (not anyone's personal inventory)."
-                    checked={resourcesPublic}
-                    onChange={handleResourcesPublicChange}
-                    saving={savingResourcesPublic}
-                  />
-                )
-              )}
-
-              {organization && !isDumpersOrg(organization) && (
-                <SettingsToggle
-                  label="Share my personal resources"
-                  description="Let other verified members of your org see your personal stock. Never visible to other orgs or non-members."
-                  checked={sharePersonalResources}
-                  onChange={handleSharePersonalResourcesChange}
-                  saving={savingSharePersonal}
-                />
-              )}
-
-              {organization && (
-                <>
-                  <SettingsToggle
-                    label="Org-only views"
-                    description="Default member lists and data views to your organization instead of all site members."
-                    checked={orgOnlyMode}
-                    onChange={handleOrgOnlyModeChange}
-                    saving={savingOrgOnly}
-                  />
-
-                  <SettingsToggle
-                    label="Fulfillment volunteer"
-                    description="Opt in to accept and fulfill custom orders when fulfillment launches for members."
-                    checked={fulfillmentEnabled}
-                    onChange={handleFulfillmentEnabledChange}
-                    saving={savingFulfillment}
-                  />
-                </>
-              )}
-            </SettingsSection>
-          )}
+            <SettingsToggle
+              label="Fulfillment volunteer"
+              description="Opt in to accept and fulfill custom orders when fulfillment launches for members."
+              checked={fulfillmentEnabled}
+              onChange={handleFulfillmentEnabledChange}
+              saving={savingFulfillment}
+            />
+          </SettingsSection>
 
           <SettingsSection
             title="Privacy"

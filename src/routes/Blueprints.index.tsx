@@ -5,12 +5,6 @@ import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
-import {
-  readMemberScope,
-  writeMemberScope,
-  type MemberScope,
-} from '../lib/org'
-
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
 const getFpsWeaponTypeFromFilename = (filename) => {
@@ -178,7 +172,6 @@ export default function BlueprintsRoute() {
     fetchUserBlueprints,
     user,
     isApproved,
-    profile,
   } = useAuth()
 
   const { isOnTargetList, toggleTarget } = useTargetList()
@@ -193,21 +186,12 @@ export default function BlueprintsRoute() {
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
   useBodyScrollLock(!!selectedBlueprint)
 
-  const [memberScope, setMemberScope] = React.useState<MemberScope>(() =>
-    readMemberScope(profile?.org_only_mode ? 'org' : 'all')
-  )
   const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
   const [selectedUserId, setSelectedUserId] = React.useState('all')
   const [viewedUserBlueprints, setViewedUserBlueprints] = React.useState({})
   const [loadingUserBlueprints, setLoadingUserBlueprints] = React.useState(false)
 
   const { data: blueprints, isLoading } = useBlueprintData()
-
-  const handleMemberScopeChange = (scope: MemberScope) => {
-    setMemberScope(scope)
-    writeMemberScope(scope)
-    setSelectedUserId('all')
-  }
 
   useAsyncEffect(async ({ cancelled }) => {
     if (!showMemberCollections) {
@@ -216,9 +200,9 @@ export default function BlueprintsRoute() {
       return
     }
 
-    const users = await fetchUsersWithBlueprints(memberScope)
+    const users = await fetchUsersWithBlueprints()
     if (!cancelled) setUsersWithBlueprints(users)
-  }, [memberScope, showMemberCollections])
+  }, [showMemberCollections, fetchUsersWithBlueprints])
 
   React.useEffect(() => {
     if (selectedUserId !== 'all' && !usersWithBlueprints.some((u) => u.id === selectedUserId)) {
@@ -540,15 +524,6 @@ export default function BlueprintsRoute() {
             </button>
             {showMemberCollections && (
               <>
-                <select
-                  value={memberScope}
-                  onChange={(e) => handleMemberScopeChange(e.target.value as MemberScope)}
-                  className="px-2 py-1.5 text-sm bg-slate-900/70 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all min-w-[72px]"
-                  title="Member list scope"
-                >
-                  <option value="all">All</option>
-                  <option value="org">Org</option>
-                </select>
                 <select
                   value={selectedUserId}
                   onChange={(e) => setSelectedUserId(e.target.value)}

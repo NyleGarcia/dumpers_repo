@@ -23,9 +23,7 @@ export interface Profile {
   approved_by: string | null
   ghost_mode: boolean
   preview_features_enabled: boolean
-  org_only_mode: boolean
   fulfillment_enabled: boolean
-  org_id: string | null
   share_personal_resources: boolean
 }
 

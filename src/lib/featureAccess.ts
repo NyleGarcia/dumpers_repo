@@ -1,8 +1,6 @@
 import type { UserRole } from './supabase'
 import { roleAtLeast } from './roles'
 
-export type OrgRole = 'owner' | 'admin' | 'officer' | 'member'
-
 export type FeatureId =
   | 'blueprints_browse'
   | 'blueprints_acquire'
@@ -22,12 +20,8 @@ export interface VisibilityContext {
   role: UserRole | null
   ghostMode: boolean
   previewFeaturesEnabled: boolean
-  orgOnlyMode: boolean
   fulfillmentEnabled: boolean
-  orgId: string | null
-  orgRole: OrgRole | null
-  orgVerified: boolean
-  orgResourcesPublic: boolean
+  siteOrgId: string | null
   isSuperAdmin: boolean
   isOfficerOrAbove: boolean
   isApproved: boolean
@@ -41,12 +35,8 @@ export interface BuildVisibilityContextInput {
   role?: UserRole | null
   ghostMode?: boolean
   previewFeaturesEnabled?: boolean
-  orgOnlyMode?: boolean
   fulfillmentEnabled?: boolean
-  orgId?: string | null
-  orgRole?: OrgRole | null
-  orgVerified?: boolean
-  orgResourcesPublic?: boolean
+  siteOrgId?: string | null
 }
 
 export function buildVisibilityContext(input: BuildVisibilityContextInput): VisibilityContext {
@@ -64,12 +54,8 @@ export function buildVisibilityContext(input: BuildVisibilityContextInput): Visi
     role,
     ghostMode,
     previewFeaturesEnabled,
-    orgOnlyMode: input.orgOnlyMode ?? false,
     fulfillmentEnabled: input.fulfillmentEnabled ?? false,
-    orgId: input.orgId ?? null,
-    orgRole: input.orgRole ?? null,
-    orgVerified: input.orgVerified ?? false,
-    orgResourcesPublic: input.orgResourcesPublic ?? false,
+    siteOrgId: input.siteOrgId ?? null,
     isSuperAdmin,
     isOfficerOrAbove,
     isApproved,
@@ -112,10 +98,10 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.isApproved
 
     case 'org_resources':
-      return ctx.isApproved && !ctx.ghostMode && !!ctx.orgId && ctx.orgVerified
+      return ctx.isApproved && !ctx.ghostMode && !!ctx.siteOrgId
 
     case 'org_orders':
-      return ctx.isApproved && !ctx.ghostMode && !!ctx.orgId
+      return ctx.isApproved && !ctx.ghostMode && !!ctx.siteOrgId
 
     case 'fulfillment_provider':
       return (
@@ -138,33 +124,8 @@ export function passesGhostNavGate(
   return ghostAllowed !== false
 }
 
-export function canManageOrgMembers(ctx: VisibilityContext): boolean {
-  return ctx.orgRole === 'owner' || ctx.orgRole === 'admin'
-}
-
-export function canTransferOrgOwnership(ctx: VisibilityContext): boolean {
-  return ctx.orgRole === 'owner' || ctx.isSuperAdmin
-}
-
-export function canVerifyOrgMates(ctx: VisibilityContext): boolean {
-  return (
-    ctx.orgRole === 'owner' ||
-    ctx.orgRole === 'admin' ||
-    ctx.orgRole === 'officer'
-  )
-}
-
-export function canManageOrgPrivacy(ctx: VisibilityContext): boolean {
-  return ctx.orgRole === 'owner' || ctx.orgRole === 'admin' || ctx.isSuperAdmin
-}
-
 export function canManageOrgInventory(ctx: VisibilityContext): boolean {
-  return (
-    ctx.isOfficerOrAbove ||
-    ctx.orgRole === 'owner' ||
-    ctx.orgRole === 'admin' ||
-    ctx.orgRole === 'officer'
-  )
+  return ctx.isOfficerOrAbove
 }
 
 export function roleMeetsMin(role: UserRole | null | undefined, minRole: UserRole): boolean {

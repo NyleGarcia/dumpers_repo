@@ -11,7 +11,7 @@ import {
 } from '../lib/targetList'
 
 export function useTargetList() {
-  const { user, profile, isApproved, acquiredBlueprints } = useAuth()
+  const { user, isApproved, acquiredBlueprints } = useAuth()
   const [targetIds, setTargetIds] = useState<Record<string, boolean>>({})
   const [missionPrefs, setMissionPrefs] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
@@ -106,7 +106,7 @@ export function useTargetList() {
           return next
         })
       } else {
-        const result = await addTargetBlueprint(user.id, blueprintId, profile?.org_id)
+        const result = await addTargetBlueprint(user.id, blueprintId)
         if (result.error) {
           setError(result.error)
           return false
@@ -116,7 +116,7 @@ export function useTargetList() {
 
       return true
     },
-    [user, isApproved, targetIds, profile?.org_id, acquiredBlueprints]
+    [user, isApproved, targetIds, acquiredBlueprints]
   )
 
   const setMissionOnChecklist = useCallback(

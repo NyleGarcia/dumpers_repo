@@ -6,14 +6,11 @@ import { canManageOrgInventory, canUseFeature } from '../lib/featureAccess'
 import { adjustInventoryQuantity, setInventoryQuantity, type InventoryScope } from '../lib/operations'
 
 export default function ResourceTrackerRoute() {
-  const { user, profile, organization, visibilityContext, isSuperAdmin } = useAuth()
-  const canViewOrg = canUseFeature('org_resources', visibilityContext)
-  const canEditOrg = canManageOrgInventory(visibilityContext)
+  const { user, siteOrg, visibilityContext, isSuperAdmin } = useAuth()
+  const canViewShared = canUseFeature('org_resources', visibilityContext)
+  const canEditShared = canManageOrgInventory(visibilityContext)
 
-  const defaultTab: InventoryScope =
-    profile?.org_only_mode && canViewOrg ? 'org' : 'personal'
-
-  const [activeTab, setActiveTab] = useState<InventoryScope>(defaultTab)
+  const [activeTab, setActiveTab] = useState<InventoryScope>('personal')
   const [search, setSearch] = useState('')
   const [showInactive, setShowInactive] = useState(false)
   const [editingKey, setEditingKey] = useState<string | null>(null)
@@ -24,11 +21,11 @@ export default function ResourceTrackerRoute() {
     return {
       scope: activeTab,
       userId: user.id,
-      orgId: profile?.org_id ?? null,
+      orgId: siteOrg?.id ?? null,
     }
-  }, [user?.id, profile?.org_id, activeTab])
+  }, [user?.id, siteOrg?.id, activeTab])
 
-  const readOnly = activeTab === 'org' && !canEditOrg
+  const readOnly = activeTab === 'org' && !canEditShared
 
   const {
     catalogWithInventory,
@@ -79,7 +76,7 @@ export default function ResourceTrackerRoute() {
     await refresh()
   }
 
-  const tabLabel = activeTab === 'personal' ? 'My Resources' : 'Org Resources'
+  const tabLabel = activeTab === 'personal' ? 'My Resources' : 'Shared Stock'
 
   return (
     <FeaturePageLayout
@@ -87,7 +84,7 @@ export default function ResourceTrackerRoute() {
       subtitle={
         activeTab === 'personal'
           ? 'Your personal crafting material inventory'
-          : `${organization?.name ?? 'Organization'} shared stock`
+          : `${siteOrg?.name ?? 'Shared'} stock`
       }
       actions={
         isSuperAdmin ? (
@@ -100,15 +97,7 @@ export default function ResourceTrackerRoute() {
         ) : undefined
       }
     >
-      {profile?.org_id && !visibilityContext.orgVerified && (
-        <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">
-          Org stock unlocks after an officer verifies your organization membership. You can still
-          track <strong className="text-amber-100">My Resources</strong> below. Join or change org in
-          Settings.
-        </div>
-      )}
-
-      {canViewOrg && (
+      {canViewShared && (
         <div className="flex gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit">
           <button
             type="button"
@@ -130,14 +119,14 @@ export default function ResourceTrackerRoute() {
                 : 'text-slate-400 hover:text-white hover:bg-slate-800'
             }`}
           >
-            Org Resources
+            Shared Stock
           </button>
         </div>
       )}
 
       {readOnly && (
         <div className="mb-4 p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
-          Org inventory is read-only for members. Org officers and site officers can update stock.
+          Shared stock is read-only for members. Officers can update quantities.
         </div>
       )}
 
@@ -158,7 +147,7 @@ export default function ResourceTrackerRoute() {
           Catalog synced from blueprints: {syncResult.totalActive} active
           {syncResult.added > 0 && ` · ${syncResult.added} new`}
           {syncResult.reactivated > 0 && ` · ${syncResult.reactivated} reactivated`}
-          {syncResult.deactivated > 0 && ` · ${syncResult.deactivated} retired`}
+          {syncResult.deactivated > 0 && ` · ${syncResult.deactivated} deactivated`}
         </div>
       )}
 

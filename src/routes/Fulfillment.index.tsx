@@ -15,7 +15,7 @@ import {
 } from '../lib/operations'
 
 export default function FulfillmentRoute() {
-  const { user, profile } = useAuth()
+  const { user, siteOrg } = useAuth()
   const { labelMap } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [inventory, setInventory] = useState<ResourceInventoryRow[]>([])
@@ -27,7 +27,7 @@ export default function FulfillmentRoute() {
   const [submitting, setSubmitting] = useState(false)
 
   const userId = user?.id
-  const orgId = profile?.org_id ?? null
+  const orgId = siteOrg?.id ?? null
 
   const loadData = useCallback(async () => {
     if (!userId || !orgId) {

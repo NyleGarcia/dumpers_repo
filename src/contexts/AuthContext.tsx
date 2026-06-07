@@ -8,12 +8,7 @@ import {
   type VisibilityContext,
 } from '../lib/featureAccess'
 import { removeTargetBlueprint } from '../lib/targetList'
-import {
-  fetchMyOrgContext,
-  type MemberScope,
-  type OrgMembership,
-  type Organization,
-} from '../lib/org'
+import { fetchSiteOrg, type SiteOrg } from '../lib/org'
 import type { User, Session } from '@supabase/supabase-js'
 
 export interface UserWithBlueprints {
@@ -36,18 +31,10 @@ interface AuthContextType {
   updateRsiHandle: (handle: string) => Promise<boolean>
   updateGhostMode: (enabled: boolean) => Promise<boolean>
   updatePreviewFeatures: (enabled: boolean) => Promise<boolean>
-  updateOrgOnlyMode: (enabled: boolean) => Promise<boolean>
   updateFulfillmentEnabled: (enabled: boolean) => Promise<boolean>
   updateSharePersonalResources: (enabled: boolean) => Promise<boolean>
-  organization: Organization | null
-  orgMembership: OrgMembership | null
-  refreshOrgContext: () => Promise<{
-    organization: Organization | null
-    membership: OrgMembership | null
-    error?: string
-  }>
-  reloadProfile: () => Promise<{ error?: string }>
-  fetchUsersWithBlueprints: (scope?: MemberScope) => Promise<UserWithBlueprints[]>
+  siteOrg: SiteOrg | null
+  fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   displayName: string
   isOfficerOrAbove: boolean
@@ -74,8 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isBanned, setIsBanned] = useState(false)
   const isBannedRef = useRef(false)
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
-  const [organization, setOrganization] = useState<Organization | null>(null)
-  const [orgMembership, setOrgMembership] = useState<OrgMembership | null>(null)
+  const [siteOrg, setSiteOrg] = useState<SiteOrg | null>(null)
 
   useEffect(() => {
     isBannedRef.current = isBanned
@@ -187,42 +173,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const profileRef = useRef(profile)
   profileRef.current = profile
 
-  const refreshOrgContext = useCallback(async (
-    profileData?: Profile | null
-  ): Promise<{
-    organization: Organization | null
-    membership: OrgMembership | null
-    error?: string
-  }> => {
-    const activeProfile = profileData ?? profileRef.current
-    if (!activeProfile?.id) {
-      setOrganization(null)
-      setOrgMembership(null)
-      return { organization: null, membership: null }
-    }
-
-    const ctx = await fetchMyOrgContext()
-
-    setOrganization(ctx.organization)
-    setOrgMembership(ctx.membership)
-
-    if (ctx.error) {
-      console.error('Error loading org context:', ctx.error)
-    }
-
-    if (
-      ctx.organization &&
-      activeProfile.org_id !== ctx.organization.id
-    ) {
-      const refreshed = await fetchProfile(activeProfile.id)
-      if (refreshed) setProfile(refreshed)
-    } else if (!activeProfile.org_id && (ctx.organization || ctx.membership)) {
-      const refreshed = await fetchProfile(activeProfile.id)
-      if (refreshed) setProfile(refreshed)
-    }
-
-    return ctx
-  }, [fetchProfile])
+  const loadSiteOrg = useCallback(async () => {
+    const org = await fetchSiteOrg()
+    setSiteOrg(org)
+    return org
+  }, [])
 
   const loadUserData = useCallback(async (sessionUser: User, isSignIn = false) => {
     const banned = await checkBanned(sessionUser.id, sessionUser.email)
@@ -232,10 +187,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setIsBanned(false)
-    let profileData = await fetchProfile(sessionUser.id)
+    const profileData = await fetchProfile(sessionUser.id)
 
     setProfile(profileData)
-    await refreshOrgContext(profileData)
+    await loadSiteOrg()
 
     if (!profileData) {
       const stillBanned = await checkBanned(sessionUser.id, sessionUser.email)
@@ -251,9 +206,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const acquired = await fetchAcquiredBlueprints(sessionUser.id)
     setAcquiredBlueprints(acquired)
-  }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints, refreshOrgContext])
+  }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints, loadSiteOrg])
 
   useEffect(() => {
+    void loadSiteOrg()
+
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
@@ -274,13 +231,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else if (!isBannedRef.current) {
         setProfile(null)
         setAcquiredBlueprints({})
-        setOrganization(null)
-        setOrgMembership(null)
       }
     })
 
     return () => subscription.unsubscribe()
-  }, [loadUserData])
+  }, [loadUserData, loadSiteOrg])
 
   useEffect(() => {
     const onFocus = async () => {
@@ -294,33 +249,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const profileData = await fetchProfile(session.user.id)
-      if (profileData) {
-        setProfile(profileData)
-        await refreshOrgContext(profileData)
-      }
+      if (profileData) setProfile(profileData)
+      await loadSiteOrg()
     }
 
     window.addEventListener('focus', onFocus)
     return () => window.removeEventListener('focus', onFocus)
-  }, [checkBanned, handleBannedUser, fetchProfile, refreshOrgContext])
+  }, [checkBanned, handleBannedUser, fetchProfile, loadSiteOrg])
 
   const userRef = useRef(user)
   userRef.current = user
   const acquiredRef = useRef(acquiredBlueprints)
   acquiredRef.current = acquiredBlueprints
-
-  const reloadProfile = useCallback(async (): Promise<{ error?: string }> => {
-    const activeUser = userRef.current
-    if (!activeUser) return { error: 'Not signed in' }
-
-    const profileData = await fetchProfile(activeUser.id)
-    setProfile(profileData)
-    const ctx = await refreshOrgContext(profileData)
-    if (!ctx.organization) {
-      return { error: ctx.error ?? 'Could not load organization' }
-    }
-    return {}
-  }, [fetchProfile, refreshOrgContext])
 
   const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -440,24 +380,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
-  const updateOrgOnlyMode = useCallback(async (enabled: boolean): Promise<boolean> => {
-    const activeUser = userRef.current
-    if (!activeUser) return false
-
-    const { error } = await supabase
-      .from('profiles')
-      .update({ org_only_mode: enabled })
-      .eq('id', activeUser.id)
-
-    if (error) {
-      console.error('Error updating org-only mode:', error)
-      return false
-    }
-
-    setProfile(prev => prev ? { ...prev, org_only_mode: enabled } : null)
-    return true
-  }, [])
-
   const updateFulfillmentEnabled = useCallback(async (enabled: boolean): Promise<boolean> => {
     const activeUser = userRef.current
     if (!activeUser) return false
@@ -494,9 +416,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
-  const fetchUsersWithBlueprints = useCallback(async (
-    scope: MemberScope = 'all'
-  ): Promise<UserWithBlueprints[]> => {
+  const fetchUsersWithBlueprints = useCallback(async (): Promise<UserWithBlueprints[]> => {
     const { data: blueprintCounts, error: countError } = await supabase
       .from('acquired_blueprints')
       .select('user_id')
@@ -514,16 +434,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const userIdsWithBlueprints = Object.keys(userCounts)
     if (userIdsWithBlueprints.length === 0) return []
 
-    let profileQuery = supabase
+    const profileQuery = supabase
       .from('profiles')
       .select('id, display_name, rsi_handle, role')
       .in('id', userIdsWithBlueprints)
       .neq('role', 'pending')
       .eq('ghost_mode', false)
-
-    if (scope === 'org' && profileRef.current?.org_id) {
-      profileQuery = profileQuery.eq('org_id', profileRef.current.org_id)
-    }
 
     const { data: profiles, error: profileError } = await profileQuery
 
@@ -574,23 +490,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         role: profile?.role ?? null,
         ghostMode: profile?.ghost_mode ?? false,
         previewFeaturesEnabled: profile?.preview_features_enabled ?? false,
-        orgOnlyMode: profile?.org_only_mode ?? false,
         fulfillmentEnabled: profile?.fulfillment_enabled ?? false,
-        orgId: profile?.org_id ?? null,
-        orgRole: orgMembership?.org_role ?? null,
-        orgVerified: !!orgMembership?.verified_at,
-        orgResourcesPublic: organization?.resources_public ?? false,
+        siteOrgId: siteOrg?.id ?? null,
       }),
     [
       profile?.role,
       profile?.ghost_mode,
       profile?.preview_features_enabled,
-      profile?.org_only_mode,
       profile?.fulfillment_enabled,
-      profile?.org_id,
-      orgMembership?.org_role,
-      orgMembership?.verified_at,
-      organization?.resources_public,
+      siteOrg?.id,
     ]
   )
   const showMemberCollections = canUseFeature('member_directory', visibilityContext)
@@ -620,13 +528,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateRsiHandle,
       updateGhostMode,
       updatePreviewFeatures,
-      updateOrgOnlyMode,
       updateFulfillmentEnabled,
       updateSharePersonalResources,
-      organization,
-      orgMembership,
-      refreshOrgContext,
-      reloadProfile,
+      siteOrg,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       displayName,
@@ -656,13 +560,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateRsiHandle,
       updateGhostMode,
       updatePreviewFeatures,
-      updateOrgOnlyMode,
       updateFulfillmentEnabled,
       updateSharePersonalResources,
-      organization,
-      orgMembership,
-      refreshOrgContext,
-      reloadProfile,
+      siteOrg,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       displayName,

@@ -25,13 +25,11 @@ export async function fetchTargetBlueprintIds(userId: string): Promise<string[]>
 
 export async function addTargetBlueprint(
   userId: string,
-  blueprintId: string,
-  orgId?: string | null
+  blueprintId: string
 ): Promise<{ error?: string }> {
   const { error } = await supabase.from('target_list_blueprints').insert({
     user_id: userId,
     blueprint_id: blueprintId,
-    org_id: orgId ?? null,
   })
 
   if (error) {
