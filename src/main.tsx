@@ -5,6 +5,7 @@ import { routeTree } from './routes/root'
 import QueryClientProvider from './providers/QueryClientProvider'
 import { AuthProvider } from './contexts/AuthContext'
 import './index.css'
+import { setupCacheBusting, checkAppVersion } from './lib/appVersion'
 
 const router = createRouter({ routeTree })
 
@@ -18,13 +19,18 @@ const appElement = document.getElementById('root')
 
 if (appElement) {
   const root = ReactDOM.createRoot(appElement)
-  root.render(
-    <React.StrictMode>
-      <AuthProvider>
-        <QueryClientProvider>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </AuthProvider>
-    </React.StrictMode>
-  )
+
+  setupCacheBusting()
+
+  void checkAppVersion().then(() => {
+    root.render(
+      <React.StrictMode>
+        <AuthProvider>
+          <QueryClientProvider>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </AuthProvider>
+      </React.StrictMode>
+    )
+  })
 }

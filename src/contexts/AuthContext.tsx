@@ -207,17 +207,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const onFocus = async () => {
       const { data: { session } } = await supabase.auth.getSession()
-      if (session?.user) {
-        const banned = await checkBanned(session.user.id, session.user.email)
-        if (banned) {
-          await handleBannedUser()
-        }
+      if (!session?.user) return
+
+      const banned = await checkBanned(session.user.id, session.user.email)
+      if (banned) {
+        await handleBannedUser()
+        return
+      }
+
+      const profileData = await fetchProfile(session.user.id)
+      if (profileData) {
+        setProfile(profileData)
       }
     }
 
     window.addEventListener('focus', onFocus)
     return () => window.removeEventListener('focus', onFocus)
-  }, [checkBanned, handleBannedUser])
+  }, [checkBanned, handleBannedUser, fetchProfile])
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
