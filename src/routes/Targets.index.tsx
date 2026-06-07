@@ -105,7 +105,7 @@ export default function TargetsRoute() {
     return (
       <FeaturePageLayout
         title="Target BP List"
-        subtitle="Track blueprints you want and the missions that reward them"
+        subtitle="Your Blueprint Reward and Mission Tracker"
       >
         <div className="text-center py-16 text-slate-400">
           Available after your account is approved.
@@ -117,7 +117,7 @@ export default function TargetsRoute() {
   return (
     <FeaturePageLayout
       title="Target BP List"
-      subtitle="Build your mission checklist from the targets you are still hunting"
+      subtitle="Your Blueprint Reward and Mission Tracker"
       actions={
         <button
           onClick={() => void refresh()}
@@ -140,7 +140,7 @@ export default function TargetsRoute() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Still needed</p>
+          <p className="text-slate-500 text-xs uppercase tracking-wide">Targets</p>
           <p className="text-2xl font-bold text-white mt-1">{targetCount}</p>
         </div>
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
