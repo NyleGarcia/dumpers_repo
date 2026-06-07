@@ -8,6 +8,7 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
+import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import { getOrderAcceptBlockers } from '../lib/orderAccept'
 import {
   orderTotalDfp,
@@ -132,11 +133,7 @@ export default function CustomOrdersRoute() {
     setOrders(ordersResult.data)
     setNotifications(notificationsResult.data)
 
-    const stock: Record<string, number> = {}
-    inventoryResult.data?.forEach((row) => {
-      stock[row.resource_key] = Number(row.quantity)
-    })
-    setPersonalStock(stock)
+    setPersonalStock(buildStockTotalsByResource(inventoryResult.data ?? []))
 
     if (user?.id) {
       const repResult = await fetchMemberReputations([user.id])

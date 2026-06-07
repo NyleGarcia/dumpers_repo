@@ -8,6 +8,7 @@ import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
+import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import { getOrderAcceptBlockers } from '../lib/orderAccept'
 import { canFulfillerArchive } from '../lib/orderArchive'
 import {
@@ -102,26 +103,14 @@ export default function FulfillmentRoute() {
     void loadData()
   }, [loadData])
 
-  const quantityByKey = useMemo(() => {
-    const map: Record<string, number> = {}
-    inventory.forEach((row) => {
-      map[row.resource_key] = Number(row.quantity)
-    })
-    return map
-  }, [inventory])
+  const quantityByKey = useMemo(() => buildStockTotalsByResource(inventory), [inventory])
 
   const myFulfillerRep = useMemo(
     () => fulfillerReputationFromRow(userId ? reputations[userId] : undefined),
     [reputations, userId]
   )
 
-  const personalStock = useMemo(() => {
-    const stock: Record<string, number> = {}
-    inventory.forEach((row) => {
-      stock[row.resource_key] = Number(row.quantity)
-    })
-    return stock
-  }, [inventory])
+  const personalStock = useMemo(() => buildStockTotalsByResource(inventory), [inventory])
 
   const pendingOrders = useMemo(() => {
     const minFilter = minBuyerRepFilter ? Number(minBuyerRepFilter) : null

@@ -35,6 +35,7 @@ export interface InventoryContext {
 export interface ResourceInventoryRow {
   id: string
   resource_key: string
+  quality: number
   quantity: number
   updated_at: string
   updated_by: string | null
@@ -44,6 +45,16 @@ export interface ResourceInventoryRow {
 
 export interface ResourceCatalogEntry extends BlueprintResourceRow {
   quantity: number
+  quality?: number
+}
+
+export interface PersonalInventoryCard {
+  id: string
+  resource_key: string
+  quality: number
+  quantity: number
+  label: string
+  is_active: boolean
 }
 
 export interface CustomOrderItem {
@@ -232,36 +243,14 @@ export async function fetchResourceCatalog(options?: {
   return { data: (data ?? []) as BlueprintResourceRow[] }
 }
 
-export async function seedScopedInventory(
-  resourceKeys: string[],
-  ctx: InventoryContext
-): Promise<{ error?: string }> {
-  if (resourceKeys.length === 0) return {}
-
-  if (ctx.scope === 'personal') {
-    const rows = resourceKeys.map((resource_key) => ({
-      user_id: ctx.userId,
-      org_id: ctx.orgId,
-      resource_key,
-      quantity: 0,
-    }))
-    const { error } = await supabase
-      .from('personal_resource_inventory')
-      .upsert(rows, { onConflict: 'user_id,resource_key', ignoreDuplicates: true })
-    if (error) return { error: error.message }
-    return {}
-  }
-
-  // Org Total is aggregated from member inventories — no org inventory rows to seed
-  return {}
-}
-
-export async function fetchResourceCatalogWithInventory(
+export async function fetchPersonalInventoryCards(
   ctx: InventoryContext,
-  options?: {
-    includeInactive?: boolean
+  options?: { includeInactive?: boolean }
+): Promise<{ data: PersonalInventoryCard[]; error?: string }> {
+  if (ctx.scope !== 'personal') {
+    return { data: [], error: 'Personal inventory only' }
   }
-): Promise<{ data: ResourceCatalogEntry[]; error?: string }> {
+
   const [catalogResult, inventoryResult] = await Promise.all([
     fetchResourceCatalog(options),
     fetchInventory(ctx),
@@ -270,24 +259,75 @@ export async function fetchResourceCatalogWithInventory(
   if (catalogResult.error) return { data: [], error: catalogResult.error }
   if (inventoryResult.error) return { data: [], error: inventoryResult.error }
 
-  const activeKeys = catalogResult.data.map((r) => r.resource_key)
-  await seedScopedInventory(activeKeys, ctx)
+  const catalogByKey = new Map(catalogResult.data.map((r) => [r.resource_key, r]))
 
-  const quantityByKey: Record<string, number> = {}
-  inventoryResult.data.forEach((row) => {
-    quantityByKey[row.resource_key] = Number(row.quantity)
-  })
-
-  const data = catalogResult.data.map((resource) => ({
-    ...resource,
-    quantity: quantityByKey[resource.resource_key] ?? 0,
-  }))
+  const data = inventoryResult.data
+    .map((row) => {
+      const catalog = catalogByKey.get(row.resource_key)
+      return {
+        id: row.id,
+        resource_key: row.resource_key,
+        quality: row.quality,
+        quantity: Number(row.quantity),
+        label: catalog?.label ?? row.resource_key,
+        is_active: catalog?.is_active ?? true,
+      }
+    })
+    .sort((a, b) => {
+      const labelCmp = a.label.localeCompare(b.label)
+      if (labelCmp !== 0) return labelCmp
+      return a.quality - b.quality
+    })
 
   return { data }
 }
 
-function inventoryTable(scope: InventoryScope): string {
-  return scope === 'personal' ? 'personal_resource_inventory' : 'org_resource_inventory'
+export async function fetchResourceCatalogWithInventory(
+  ctx: InventoryContext,
+  options?: {
+    includeInactive?: boolean
+  }
+): Promise<{ data: ResourceCatalogEntry[]; error?: string }> {
+  if (ctx.scope === 'personal') {
+    const cards = await fetchPersonalInventoryCards(ctx, options)
+    if (cards.error) return { data: [], error: cards.error }
+    return {
+      data: cards.data.map((card) => ({
+        resource_key: card.resource_key,
+        label: card.label,
+        is_active: card.is_active,
+        synced_at: '',
+        quantity: card.quantity,
+        quality: card.quality,
+      })),
+    }
+  }
+
+  const [catalogResult, inventoryResult] = await Promise.all([
+    fetchResourceCatalog(options),
+    fetchInventory(ctx),
+  ])
+
+  if (catalogResult.error) return { data: [], error: catalogResult.error }
+  if (inventoryResult.error) return { data: [], error: inventoryResult.error }
+
+  const catalogByKey = new Map(catalogResult.data.map((r) => [r.resource_key, r]))
+
+  const data = inventoryResult.data
+    .filter((row) => Number(row.quantity) > 0)
+    .map((row) => {
+      const catalog = catalogByKey.get(row.resource_key)
+      return {
+        resource_key: row.resource_key,
+        label: catalog?.label ?? row.resource_key,
+        is_active: catalog?.is_active ?? true,
+        synced_at: catalog?.synced_at ?? '',
+        quantity: Number(row.quantity),
+      }
+    })
+    .sort((a, b) => a.label.localeCompare(b.label))
+
+  return { data }
 }
 
 export async function fetchInventory(ctx: InventoryContext): Promise<{
@@ -303,6 +343,7 @@ export async function fetchInventory(ctx: InventoryContext): Promise<{
       (row) => ({
         id: row.resource_key,
         resource_key: row.resource_key,
+        quality: 0,
         quantity: Number(row.quantity),
         updated_at: '',
         updated_by: null,
@@ -318,55 +359,93 @@ export async function fetchInventory(ctx: InventoryContext): Promise<{
     .select('*')
     .eq('user_id', ctx.userId)
     .order('resource_key')
+    .order('quality')
 
   if (error) return { data: [], error: error.message }
   return { data: (data ?? []) as ResourceInventoryRow[] }
 }
 
+export async function addPersonalInventoryLine(input: {
+  userId: string
+  orgId: string | null
+  resourceKey: string
+  quality: number
+  quantityScu: number
+}): Promise<{ error?: string }> {
+  const qty = roundResourceQuantity(Math.max(0.001, input.quantityScu))
+  const now = new Date().toISOString()
+
+  const { data: existing, error: fetchError } = await supabase
+    .from('personal_resource_inventory')
+    .select('id, quantity')
+    .eq('user_id', input.userId)
+    .eq('resource_key', input.resourceKey)
+    .eq('quality', input.quality)
+    .maybeSingle()
+
+  if (fetchError) return { error: fetchError.message }
+
+  if (existing) {
+    const nextQty = roundResourceQuantity(Number(existing.quantity) + qty)
+    const { error } = await supabase
+      .from('personal_resource_inventory')
+      .update({ quantity: nextQty, updated_at: now })
+      .eq('id', existing.id)
+
+    if (error) return { error: error.message }
+    return {}
+  }
+
+  const { error } = await supabase.from('personal_resource_inventory').insert({
+    user_id: input.userId,
+    org_id: input.orgId,
+    resource_key: input.resourceKey,
+    quality: input.quality,
+    quantity: qty,
+    updated_at: now,
+  })
+
+  if (error) return { error: error.message }
+  return {}
+}
+
 export async function adjustInventoryQuantity(
   ctx: InventoryContext,
   resourceKey: string,
+  quality: number,
   delta: number
 ): Promise<{ error?: string }> {
   if (ctx.scope === 'org') {
     return { error: 'Org Total is read-only — update My Resources instead' }
   }
 
-  const table = inventoryTable(ctx.scope)
-  let fetchQuery = supabase.from(table).select('quantity').eq('resource_key', resourceKey)
-
-  if (ctx.scope === 'personal') {
-    fetchQuery = fetchQuery.eq('user_id', ctx.userId)
-  } else {
-    fetchQuery = fetchQuery.eq('org_id', ctx.orgId!)
-  }
-
-  const { data: current, error: fetchError } = await fetchQuery.maybeSingle()
+  const { data: current, error: fetchError } = await supabase
+    .from('personal_resource_inventory')
+    .select('id, quantity')
+    .eq('user_id', ctx.userId)
+    .eq('resource_key', resourceKey)
+    .eq('quality', quality)
+    .maybeSingle()
 
   if (fetchError) return { error: fetchError.message }
+  if (!current) return { error: 'Stock card not found — add it first' }
 
-  const nextQty = roundResourceQuantity(Math.max(0, Number(current?.quantity ?? 0) + delta))
+  const nextQty = roundResourceQuantity(Math.max(0, Number(current.quantity) + delta))
   const now = new Date().toISOString()
 
-  const row =
-    ctx.scope === 'personal'
-      ? {
-          user_id: ctx.userId,
-          org_id: ctx.orgId,
-          resource_key: resourceKey,
-          quantity: nextQty,
-          updated_at: now,
-        }
-      : {
-          org_id: ctx.orgId!,
-          resource_key: resourceKey,
-          quantity: nextQty,
-          updated_at: now,
-        }
+  if (nextQty <= 0) {
+    const { error } = await supabase
+      .from('personal_resource_inventory')
+      .delete()
+      .eq('id', current.id)
+    if (error) return { error: error.message }
+    return {}
+  }
 
-  const { error } = await supabase.from(table).upsert(row, {
-    onConflict: ctx.scope === 'personal' ? 'user_id,resource_key' : 'org_id,resource_key',
-  })
+  const { error } = await supabase
+    .from('personal_resource_inventory')
+    .update({ quantity: nextQty, updated_at: now })
+    .eq('id', current.id)
 
   if (error) return { error: error.message }
   return {}
@@ -375,33 +454,40 @@ export async function adjustInventoryQuantity(
 export async function setInventoryQuantity(
   ctx: InventoryContext,
   resourceKey: string,
+  quality: number,
   quantity: number
 ): Promise<{ error?: string }> {
   if (ctx.scope === 'org') {
     return { error: 'Org Total is read-only — update My Resources instead' }
   }
 
-  const table = inventoryTable(ctx.scope)
+  const nextQty = roundResourceQuantity(Math.max(0, quantity))
   const now = new Date().toISOString()
-  const row =
-    ctx.scope === 'personal'
-      ? {
-          user_id: ctx.userId,
-          org_id: ctx.orgId,
-          resource_key: resourceKey,
-          quantity: roundResourceQuantity(Math.max(0, quantity)),
-          updated_at: now,
-        }
-      : {
-          org_id: ctx.orgId!,
-          resource_key: resourceKey,
-          quantity: roundResourceQuantity(Math.max(0, quantity)),
-          updated_at: now,
-        }
 
-  const { error } = await supabase.from(table).upsert(row, {
-    onConflict: ctx.scope === 'personal' ? 'user_id,resource_key' : 'org_id,resource_key',
-  })
+  const { data: current, error: fetchError } = await supabase
+    .from('personal_resource_inventory')
+    .select('id')
+    .eq('user_id', ctx.userId)
+    .eq('resource_key', resourceKey)
+    .eq('quality', quality)
+    .maybeSingle()
+
+  if (fetchError) return { error: fetchError.message }
+  if (!current) return { error: 'Stock card not found — add it first' }
+
+  if (nextQty <= 0) {
+    const { error } = await supabase
+      .from('personal_resource_inventory')
+      .delete()
+      .eq('id', current.id)
+    if (error) return { error: error.message }
+    return {}
+  }
+
+  const { error } = await supabase
+    .from('personal_resource_inventory')
+    .update({ quantity: nextQty, updated_at: now })
+    .eq('id', current.id)
 
   if (error) return { error: error.message }
   return {}

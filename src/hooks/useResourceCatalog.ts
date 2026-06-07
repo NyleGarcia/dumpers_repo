@@ -3,6 +3,7 @@ import { useAsyncEffect } from './useAsyncEffect'
 import { useBlueprintData } from '../routes/blueprints'
 import { buildResourceLabelMap } from '../lib/blueprintResources'
 import {
+  fetchPersonalInventoryCards,
   fetchResourceCatalog,
   fetchResourceCatalogWithInventory,
   syncBlueprintResourceCatalog,
@@ -64,12 +65,30 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     setError(null)
 
     if (withInventory && ctx) {
-      const { data, error: fetchError } = await fetchResourceCatalogWithInventory(ctx, {
-        includeInactive,
-      })
-      if (fetchError) setError(fetchError)
-      setCatalogWithInventory(data)
-      setCatalog(data.map(({ quantity: _q, ...resource }) => resource))
+      const catalogResult = await fetchResourceCatalog({ includeInactive })
+      if (catalogResult.error) setError(catalogResult.error)
+      setCatalog(catalogResult.data)
+
+      if (ctx.scope === 'personal') {
+        const cardsResult = await fetchPersonalInventoryCards(ctx, { includeInactive })
+        if (cardsResult.error && !catalogResult.error) setError(cardsResult.error)
+        setCatalogWithInventory(
+          cardsResult.data.map((card) => ({
+            resource_key: card.resource_key,
+            label: card.label,
+            is_active: card.is_active,
+            synced_at: '',
+            quantity: card.quantity,
+            quality: card.quality,
+          }))
+        )
+      } else {
+        const { data, error: fetchError } = await fetchResourceCatalogWithInventory(ctx, {
+          includeInactive,
+        })
+        if (fetchError && !catalogResult.error) setError(fetchError)
+        setCatalogWithInventory(data)
+      }
     } else {
       const { data, error: fetchError } = await fetchResourceCatalog({ includeInactive })
       if (fetchError) setError(fetchError)
