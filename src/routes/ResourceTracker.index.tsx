@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import ResourceMarketPanel from '../components/ResourceMarketPanel'
+import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
+import { useBlueprintData } from './blueprints'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
@@ -13,7 +14,7 @@ import {
   roundResourceQuantity,
 } from '../lib/resourceQuantity'
 
-type TrackerTab = InventoryScope | 'market'
+type TrackerTab = InventoryScope | 'place-order'
 
 const ADJUST_STEPS = [0.001, 0.01, 0.1, 1] as const
 
@@ -24,6 +25,8 @@ export default function ResourceTrackerRoute() {
   const canEditShared = canManageOrgInventory(visibilityContext)
 
   const [activeTab, setActiveTab] = useState<TrackerTab>('personal')
+  const [orderError, setOrderError] = useState<string | null>(null)
+  const { data: blueprints = [] } = useBlueprintData()
 
   useEffect(() => {
     if (isGhostMode && activeTab === 'org') setActiveTab('personal')
@@ -49,7 +52,9 @@ export default function ResourceTrackerRoute() {
   const readOnly = activeTab === 'org' && !canEditShared
 
   const {
+    catalog,
     catalogWithInventory,
+    labelMap,
     syncResult,
     loading,
     error,
@@ -58,24 +63,11 @@ export default function ResourceTrackerRoute() {
   } = useResourceCatalog({
     enableCatalogSync: isSuperAdmin,
     includeInactive: showInactive,
-    withInventory: activeTab !== 'market',
-    inventoryContext: activeTab === 'market' ? null : inventoryContext,
+    withInventory: activeTab !== 'place-order',
+    inventoryContext: activeTab === 'place-order' ? null : inventoryContext,
   })
 
-  const {
-    catalogWithInventory: personalCatalog,
-    loading: personalLoading,
-  } = useResourceCatalog({
-    includeInactive: false,
-    withInventory: true,
-    inventoryContext:
-      user?.id && activeTab === 'market'
-        ? { scope: 'personal', userId: user.id, orgId: siteOrg?.id ?? null }
-        : null,
-  })
-
-  const displayCatalog =
-    activeTab === 'market' ? personalCatalog : catalogWithInventory
+  const displayCatalog = catalogWithInventory
 
   const filteredResources = displayCatalog.filter((resource) => {
     const matchesSearch =
@@ -117,7 +109,7 @@ export default function ResourceTrackerRoute() {
       ? 'My Resources'
       : activeTab === 'org'
         ? 'Shared Stock'
-        : 'Market'
+        : 'Place order'
 
   const isInventoryTab = activeTab === 'personal' || activeTab === 'org'
 
@@ -129,7 +121,7 @@ export default function ResourceTrackerRoute() {
           ? 'Personal crafting materials (SCU, up to 3 decimals)'
           : activeTab === 'org'
             ? `${siteOrg?.name ?? 'Shared'} stock`
-            : 'Buy and sell refined materials at material-only DFP'
+            : 'Submit buy orders for blueprints and/or refined materials (→ Custom Orders)'
       }
       actions={
         isSuperAdmin && isInventoryTab ? (
@@ -169,14 +161,14 @@ export default function ResourceTrackerRoute() {
         )}
         <button
           type="button"
-          onClick={() => setActiveTab('market')}
+          onClick={() => setActiveTab('place-order')}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-            activeTab === 'market'
+            activeTab === 'place-order'
               ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/20'
               : 'text-slate-400 hover:text-white hover:bg-slate-800'
           }`}
         >
-          Market
+          Place order
         </button>
       </div>
 
@@ -191,7 +183,7 @@ export default function ResourceTrackerRoute() {
           {error}
           {error.includes('relation') && (
             <p className="mt-2 text-red-200/80">
-              Run pending Supabase migrations (013+, 025 for market) first.
+              Run pending Supabase migrations (013+, 026 for resource order lines) first.
             </p>
           )}
         </div>
@@ -206,12 +198,24 @@ export default function ResourceTrackerRoute() {
         </div>
       )}
 
-      {activeTab === 'market' ? (
+      {orderError && activeTab === 'place-order' && (
+        <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
+          {orderError}
+        </div>
+      )}
+
+      {activeTab === 'place-order' ? (
         user?.id ? (
-          <ResourceMarketPanel
+          <ResourceBuyOrderPanel
             userId={user.id}
-            orgId={siteOrg?.id ?? null}
-            catalog={personalCatalog}
+            blueprints={blueprints}
+            catalog={catalog}
+            labelMap={labelMap}
+            onError={setOrderError}
+            onSubmitted={() => {
+              setOrderError(null)
+              setActiveTab('personal')
+            }}
           />
         ) : null
       ) : (
@@ -374,9 +378,6 @@ export default function ResourceTrackerRoute() {
         </>
       )}
 
-      {activeTab === 'market' && personalLoading && (
-        <div className="text-center py-8 text-slate-500 text-sm">Loading inventory...</div>
-      )}
     </FeaturePageLayout>
   )
 }

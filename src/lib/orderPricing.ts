@@ -1,12 +1,26 @@
-import type { BlueprintWithSlots } from './blueprintResources'
-import { calculateBlueprintDfpForOrder } from './dfp'
-import type { CustomOrder, CustomOrderBlueprint } from './operations'
+import { extractOrderLineItemsFromBlueprints, type BlueprintWithSlots } from './blueprintResources'
+import { calculateBlueprintDfpForOrder, calculateMaterialDfpPrice } from './dfp'
+import type {
+  CustomOrder,
+  CustomOrderBlueprint,
+  CustomOrderResourceLine,
+} from './operations'
+import { roundResourceQuantity } from './resourceQuantity'
 
 export interface OrderBlueprintLine {
   blueprintId: string
   blueprintTitle: string
   minQuality: number
   quantity: number
+  unitDfpAuec: number
+  lineDfpAuec: number
+}
+
+export interface OrderResourceLine {
+  resourceKey: string
+  resourceLabel: string
+  minQuality: number
+  quantityScu: number
   unitDfpAuec: number
   lineDfpAuec: number
 }
@@ -52,6 +66,57 @@ export function resolveOrderBlueprintLines(order: CustomOrder): OrderBlueprintLi
   return []
 }
 
+export function pricingForResourceLine(
+  resourceLabel: string,
+  minQuality: number,
+  quantityScu: number
+): { unitDfpAuec: number; lineDfpAuec: number } {
+  const qty = roundResourceQuantity(Math.max(RESOURCE_MIN_SCU, quantityScu))
+  const lineDfpAuec = calculateMaterialDfpPrice(resourceLabel, minQuality, qty)
+  const unitDfpAuec = qty > 0 ? Math.round(lineDfpAuec / qty) : lineDfpAuec
+  return { unitDfpAuec, lineDfpAuec }
+}
+
+const RESOURCE_MIN_SCU = 0.001
+
+export function resolveOrderResourceLines(order: CustomOrder): OrderResourceLine[] {
+  if (order.resource_lines && order.resource_lines.length > 0) {
+    return [...order.resource_lines]
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((row: CustomOrderResourceLine) => ({
+        resourceKey: row.resource_key,
+        resourceLabel: row.resource_label,
+        minQuality: row.min_quality,
+        quantityScu: Number(row.quantity_scu),
+        unitDfpAuec: Number(row.unit_dfp_auec),
+        lineDfpAuec: Number(row.line_dfp_auec),
+      }))
+  }
+  return []
+}
+
+export function buildOrderFulfillmentItems(input: {
+  blueprintLines: { blueprint: BlueprintWithSlots; quantity: number }[]
+  resourceLines: { resourceKey: string; quantityScu: number }[]
+}): { resourceKey: string; quantity: number }[] {
+  const totals = new Map<string, number>()
+
+  for (const item of extractOrderLineItemsFromBlueprints(input.blueprintLines)) {
+    totals.set(item.resourceKey, (totals.get(item.resourceKey) ?? 0) + item.quantity)
+  }
+
+  for (const line of input.resourceLines) {
+    totals.set(
+      line.resourceKey,
+      roundResourceQuantity((totals.get(line.resourceKey) ?? 0) + line.quantityScu)
+    )
+  }
+
+  return [...totals.entries()]
+    .map(([resourceKey, quantity]) => ({ resourceKey, quantity }))
+    .sort((a, b) => a.resourceKey.localeCompare(b.resourceKey))
+}
+
 export function orderBlueprintIds(order: CustomOrder): string[] {
   const lines = resolveOrderBlueprintLines(order)
   return lines.map((line) => line.blueprintId)
@@ -60,5 +125,20 @@ export function orderBlueprintIds(order: CustomOrder): string[] {
 export function orderTotalDfp(order: CustomOrder): number {
   const stored = Number(order.total_dfp_auec)
   if (stored > 0) return stored
-  return resolveOrderBlueprintLines(order).reduce((sum, line) => sum + line.lineDfpAuec, 0)
+  const bp = resolveOrderBlueprintLines(order).reduce((sum, line) => sum + line.lineDfpAuec, 0)
+  const res = resolveOrderResourceLines(order).reduce((sum, line) => sum + line.lineDfpAuec, 0)
+  return bp + res
+}
+
+export function buildOrderTitle(
+  blueprintCount: number,
+  resourceCount: number
+): string {
+  if (blueprintCount > 0 && resourceCount > 0) {
+    return `${blueprintCount} blueprint + ${resourceCount} resource order`
+  }
+  if (blueprintCount === 1) return 'Blueprint order'
+  if (blueprintCount > 1) return `${blueprintCount} blueprint order`
+  if (resourceCount === 1) return 'Resource order'
+  return `${resourceCount} resource order`
 }

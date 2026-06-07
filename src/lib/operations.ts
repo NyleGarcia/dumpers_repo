@@ -88,6 +88,7 @@ export interface CustomOrder {
   updated_at: string
   items?: CustomOrderItem[]
   blueprints?: CustomOrderBlueprint[]
+  resource_lines?: CustomOrderResourceLine[]
   requester?: {
     rsi_handle: string | null
     display_name: string | null
@@ -128,46 +129,25 @@ export interface ResourceCatalogSyncResult {
   totalActive: number
 }
 
-export type ResourceMarketStatus = 'open' | 'filled' | 'sold' | 'cancelled'
-
-export interface ResourceBuyRequest {
+export interface CustomOrderResourceLine {
   id: string
-  requester_id: string
-  org_id: string | null
+  order_id: string
   resource_key: string
   resource_label: string
   min_quality: number
   quantity_scu: number
-  dfp_total_auec: number
-  notes: string | null
-  status: ResourceMarketStatus
-  created_at: string
-  updated_at: string
-  requester?: {
-    rsi_handle: string | null
-    display_name: string | null
-    email: string | null
-  }
+  unit_dfp_auec: number
+  line_dfp_auec: number
+  sort_order: number
 }
 
-export interface ResourceSaleListing {
-  id: string
-  seller_id: string
-  org_id: string | null
-  resource_key: string
-  resource_label: string
-  min_quality: number
-  quantity_scu: number
-  dfp_total_auec: number
-  notes: string | null
-  status: ResourceMarketStatus
-  created_at: string
-  updated_at: string
-  seller?: {
-    rsi_handle: string | null
-    display_name: string | null
-    email: string | null
-  }
+export interface CustomOrderResourceInput {
+  resourceKey: string
+  resourceLabel: string
+  minQuality: number
+  quantityScu: number
+  unitDfpAuec: number
+  lineDfpAuec: number
 }
 
 export async function syncBlueprintResourceCatalog(
@@ -421,120 +401,6 @@ export async function setInventoryQuantity(
   return {}
 }
 
-export async function fetchResourceBuyRequests(): Promise<{
-  data: ResourceBuyRequest[]
-  error?: string
-}> {
-  const { data, error } = await supabase
-    .from('resource_buy_requests')
-    .select(`
-      *,
-      requester:profiles!resource_buy_requests_requester_id_fkey(rsi_handle, display_name, email)
-    `)
-    .eq('status', 'open')
-    .order('created_at', { ascending: false })
-
-  if (error) return { data: [], error: error.message }
-  return { data: (data ?? []) as ResourceBuyRequest[] }
-}
-
-export async function createResourceBuyRequest(input: {
-  requesterId: string
-  orgId: string | null
-  resourceKey: string
-  resourceLabel: string
-  minQuality: number
-  quantityScu: number
-  dfpTotalAuec: number
-  notes?: string
-}): Promise<{ data?: ResourceBuyRequest; error?: string }> {
-  const { data, error } = await supabase
-    .from('resource_buy_requests')
-    .insert({
-      requester_id: input.requesterId,
-      org_id: input.orgId,
-      resource_key: input.resourceKey,
-      resource_label: input.resourceLabel,
-      min_quality: input.minQuality,
-      quantity_scu: roundResourceQuantity(input.quantityScu),
-      dfp_total_auec: Math.round(input.dfpTotalAuec),
-      notes: input.notes?.trim() || null,
-      status: 'open',
-    })
-    .select()
-    .single()
-
-  if (error || !data) return { error: error?.message ?? 'Failed to post buy request' }
-  return { data: data as ResourceBuyRequest }
-}
-
-export async function cancelResourceBuyRequest(requestId: string): Promise<{ error?: string }> {
-  const { error } = await supabase
-    .from('resource_buy_requests')
-    .update({ status: 'cancelled', updated_at: new Date().toISOString() })
-    .eq('id', requestId)
-
-  if (error) return { error: error.message }
-  return {}
-}
-
-export async function fetchResourceSaleListings(): Promise<{
-  data: ResourceSaleListing[]
-  error?: string
-}> {
-  const { data, error } = await supabase
-    .from('resource_sale_listings')
-    .select(`
-      *,
-      seller:profiles!resource_sale_listings_seller_id_fkey(rsi_handle, display_name, email)
-    `)
-    .eq('status', 'open')
-    .order('created_at', { ascending: false })
-
-  if (error) return { data: [], error: error.message }
-  return { data: (data ?? []) as ResourceSaleListing[] }
-}
-
-export async function createResourceSaleListing(input: {
-  sellerId: string
-  orgId: string | null
-  resourceKey: string
-  resourceLabel: string
-  minQuality: number
-  quantityScu: number
-  dfpTotalAuec: number
-  notes?: string
-}): Promise<{ data?: ResourceSaleListing; error?: string }> {
-  const { data, error } = await supabase
-    .from('resource_sale_listings')
-    .insert({
-      seller_id: input.sellerId,
-      org_id: input.orgId,
-      resource_key: input.resourceKey,
-      resource_label: input.resourceLabel,
-      min_quality: input.minQuality,
-      quantity_scu: roundResourceQuantity(input.quantityScu),
-      dfp_total_auec: Math.round(input.dfpTotalAuec),
-      notes: input.notes?.trim() || null,
-      status: 'open',
-    })
-    .select()
-    .single()
-
-  if (error || !data) return { error: error?.message ?? 'Failed to post sale listing' }
-  return { data: data as ResourceSaleListing }
-}
-
-export async function cancelResourceSaleListing(listingId: string): Promise<{ error?: string }> {
-  const { error } = await supabase
-    .from('resource_sale_listings')
-    .update({ status: 'cancelled', updated_at: new Date().toISOString() })
-    .eq('id', listingId)
-
-  if (error) return { error: error.message }
-  return {}
-}
-
 export async function fetchCustomOrders(): Promise<{
   data: CustomOrder[]
   error?: string
@@ -545,6 +411,7 @@ export async function fetchCustomOrders(): Promise<{
       *,
       items:custom_order_items(*),
       blueprints:custom_order_blueprints(*),
+      resource_lines:custom_order_resource_lines(*),
       requester:profiles!custom_orders_requester_id_fkey(rsi_handle, display_name, email),
       assignee:profiles!custom_orders_assignee_id_fkey(rsi_handle, display_name, email)
     `)
@@ -560,14 +427,16 @@ export async function createCustomOrder(input: {
   notes?: string
   totalDfpAuec: number
   blueprints: CustomOrderBlueprintInput[]
+  resources: CustomOrderResourceInput[]
   items: { resourceKey: string; quantity: number }[]
 }): Promise<{ data?: CustomOrder; error?: string }> {
-  if (input.blueprints.length === 0) {
-    return { error: 'Add at least one blueprint to the order' }
+  if (input.blueprints.length === 0 && input.resources.length === 0) {
+    return { error: 'Add at least one blueprint or resource to the order' }
   }
 
-  const first = input.blueprints[0]
-  const legacyBlueprintId = input.blueprints.length === 1 ? first.blueprintId : null
+  const firstBp = input.blueprints[0]
+  const legacyBlueprintId =
+    input.blueprints.length === 1 && input.resources.length === 0 ? firstBp.blueprintId : null
 
   const { data: order, error: orderError } = await supabase
     .from('custom_orders')
@@ -576,8 +445,8 @@ export async function createCustomOrder(input: {
       title: input.title.trim(),
       notes: input.notes?.trim() || null,
       blueprint_id: legacyBlueprintId,
-      min_quality: first.minQuality,
-      quantity: first.quantity,
+      min_quality: firstBp?.minQuality ?? input.resources[0]?.minQuality ?? 500,
+      quantity: firstBp?.quantity ?? 1,
       total_dfp_auec: Math.round(input.totalDfpAuec),
       status: 'pending',
     })
@@ -588,22 +457,44 @@ export async function createCustomOrder(input: {
     return { error: orderError?.message ?? 'Failed to create order' }
   }
 
-  const { error: blueprintsError } = await supabase.from('custom_order_blueprints').insert(
-    input.blueprints.map((bp, index) => ({
-      order_id: order.id,
-      blueprint_id: bp.blueprintId,
-      blueprint_title: bp.blueprintTitle,
-      min_quality: bp.minQuality,
-      quantity: bp.quantity,
-      unit_dfp_auec: Math.round(bp.unitDfpAuec),
-      line_dfp_auec: Math.round(bp.lineDfpAuec),
-      sort_order: index,
-    }))
-  )
+  if (input.blueprints.length > 0) {
+    const { error: blueprintsError } = await supabase.from('custom_order_blueprints').insert(
+      input.blueprints.map((bp, index) => ({
+        order_id: order.id,
+        blueprint_id: bp.blueprintId,
+        blueprint_title: bp.blueprintTitle,
+        min_quality: bp.minQuality,
+        quantity: bp.quantity,
+        unit_dfp_auec: Math.round(bp.unitDfpAuec),
+        line_dfp_auec: Math.round(bp.lineDfpAuec),
+        sort_order: index,
+      }))
+    )
 
-  if (blueprintsError) {
-    await supabase.from('custom_orders').delete().eq('id', order.id)
-    return { error: blueprintsError.message }
+    if (blueprintsError) {
+      await supabase.from('custom_orders').delete().eq('id', order.id)
+      return { error: blueprintsError.message }
+    }
+  }
+
+  if (input.resources.length > 0) {
+    const { error: resourcesError } = await supabase.from('custom_order_resource_lines').insert(
+      input.resources.map((line, index) => ({
+        order_id: order.id,
+        resource_key: line.resourceKey,
+        resource_label: line.resourceLabel,
+        min_quality: line.minQuality,
+        quantity_scu: roundResourceQuantity(line.quantityScu),
+        unit_dfp_auec: Math.round(line.unitDfpAuec),
+        line_dfp_auec: Math.round(line.lineDfpAuec),
+        sort_order: index,
+      }))
+    )
+
+    if (resourcesError) {
+      await supabase.from('custom_orders').delete().eq('id', order.id)
+      return { error: resourcesError.message }
+    }
   }
 
   if (input.items.length > 0) {
