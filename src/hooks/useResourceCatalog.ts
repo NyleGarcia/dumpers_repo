@@ -6,6 +6,7 @@ import {
   fetchResourceCatalogWithInventory,
   syncBlueprintResourceCatalog,
   type BlueprintResourceRow,
+  type InventoryContext,
   type ResourceCatalogEntry,
   type ResourceCatalogSyncResult,
 } from '../lib/operations'
@@ -14,10 +15,16 @@ interface UseResourceCatalogOptions {
   syncOnLoad?: boolean
   includeInactive?: boolean
   withInventory?: boolean
+  inventoryContext?: InventoryContext | null
 }
 
 export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
-  const { syncOnLoad = true, includeInactive = false, withInventory = false } = options
+  const {
+    syncOnLoad = true,
+    includeInactive = false,
+    withInventory = false,
+    inventoryContext = null,
+  } = options
   const { data: blueprints } = useBlueprintData()
 
   const [catalog, setCatalog] = useState<BlueprintResourceRow[]>([])
@@ -30,6 +37,10 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
 
   const refresh = useCallback(async () => {
     if (!blueprints) return
+    if (withInventory && !inventoryContext) {
+      setLoading(false)
+      return
+    }
 
     setLoading(true)
     setError(null)
@@ -44,10 +55,11 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
       setSyncResult(syncResponse.result ?? null)
     }
 
-    if (withInventory) {
-      const { data, error: fetchError } = await fetchResourceCatalogWithInventory({
-        includeInactive,
-      })
+    if (withInventory && inventoryContext) {
+      const { data, error: fetchError } = await fetchResourceCatalogWithInventory(
+        inventoryContext,
+        { includeInactive }
+      )
       if (fetchError) setError(fetchError)
       setCatalogWithInventory(data)
       setCatalog(data.map(({ quantity: _q, ...resource }) => resource))
@@ -59,7 +71,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     }
 
     setLoading(false)
-  }, [blueprints, syncOnLoad, includeInactive, withInventory])
+  }, [blueprints, syncOnLoad, includeInactive, withInventory, inventoryContext])
 
   useEffect(() => {
     if (blueprints) void refresh()

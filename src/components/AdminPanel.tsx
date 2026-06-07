@@ -3,7 +3,6 @@ import { supabase, Profile, UserRole, BannedUser, banUser, unbanUser, getDisplay
 import { useAuth } from '../contexts/AuthContext'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import {
-  ensureDefaultOrgMembership,
   fetchOrgMembershipsForUsers,
   revokeOrgVerification,
   verifyOrgMember,
@@ -107,13 +106,6 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
       alert('Failed to update user role')
       setActionLoading(null)
       return
-    }
-
-    if (newRole === 'member' || newRole === 'officer') {
-      const orgResult = await ensureDefaultOrgMembership(userId)
-      if (orgResult.error) {
-        console.error('Error assigning org membership:', orgResult.error)
-      }
     }
 
     fetchUsers()

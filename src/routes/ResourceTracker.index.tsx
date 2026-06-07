@@ -1,13 +1,34 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
-import { adjustInventoryQuantity, setInventoryQuantity } from '../lib/operations'
+import { canManageOrgInventory, canUseFeature } from '../lib/featureAccess'
+import { adjustInventoryQuantity, setInventoryQuantity, type InventoryScope } from '../lib/operations'
 
 export default function ResourceTrackerRoute() {
+  const { user, profile, organization, visibilityContext } = useAuth()
+  const canViewOrg = canUseFeature('org_resources', visibilityContext)
+  const canEditOrg = canManageOrgInventory(visibilityContext)
+
+  const defaultTab: InventoryScope =
+    profile?.org_only_mode && canViewOrg ? 'org' : 'personal'
+
+  const [activeTab, setActiveTab] = useState<InventoryScope>(defaultTab)
   const [search, setSearch] = useState('')
   const [showInactive, setShowInactive] = useState(false)
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
+
+  const inventoryContext = useMemo(() => {
+    if (!user) return null
+    return {
+      scope: activeTab,
+      userId: user.id,
+      orgId: profile?.org_id ?? null,
+    }
+  }, [user, profile?.org_id, activeTab])
+
+  const readOnly = activeTab === 'org' && !canEditOrg
 
   const {
     catalogWithInventory,
@@ -19,6 +40,7 @@ export default function ResourceTrackerRoute() {
     syncOnLoad: true,
     includeInactive: showInactive,
     withInventory: true,
+    inventoryContext,
   })
 
   const filteredResources = catalogWithInventory.filter((resource) => {
@@ -37,16 +59,18 @@ export default function ResourceTrackerRoute() {
     .reduce((sum, r) => sum + r.quantity, 0)
 
   const handleAdjust = async (resourceKey: string, delta: number) => {
-    const result = await adjustInventoryQuantity(resourceKey, delta)
+    if (!inventoryContext || readOnly) return
+    const result = await adjustInventoryQuantity(inventoryContext, resourceKey, delta)
     if (result.error) return
     await refresh()
   }
 
   const handleSaveEdit = async (resourceKey: string) => {
+    if (!inventoryContext || readOnly) return
     const qty = Number(editValue)
     if (Number.isNaN(qty) || qty < 0) return
 
-    const result = await setInventoryQuantity(resourceKey, qty)
+    const result = await setInventoryQuantity(inventoryContext, resourceKey, qty)
     if (result.error) return
 
     setEditingKey(null)
@@ -54,11 +78,16 @@ export default function ResourceTrackerRoute() {
     await refresh()
   }
 
+  const tabLabel = activeTab === 'personal' ? 'My Resources' : 'Org Resources'
+
   return (
     <FeaturePageLayout
       title="Resource Tracker"
-      subtitle="Org inventory synced from blueprint crafting requirements"
-      badge="Super-admin preview"
+      subtitle={
+        activeTab === 'personal'
+          ? 'Your personal crafting material inventory'
+          : `${organization?.name ?? 'Organization'} shared stock`
+      }
       actions={
         <button
           onClick={() => void refresh()}
@@ -68,13 +97,54 @@ export default function ResourceTrackerRoute() {
         </button>
       }
     >
+      {profile?.org_id && !visibilityContext.orgVerified && (
+        <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">
+          Org stock unlocks after an officer verifies your organization membership. You can still
+          track <strong className="text-amber-100">My Resources</strong> below. Join or change org in
+          Settings.
+        </div>
+      )}
+
+      {canViewOrg && (
+        <div className="flex gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit">
+          <button
+            type="button"
+            onClick={() => setActiveTab('personal')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+              activeTab === 'personal'
+                ? 'bg-red-600 text-white shadow-lg shadow-red-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+            }`}
+          >
+            My Resources
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('org')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+              activeTab === 'org'
+                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+            }`}
+          >
+            Org Resources
+          </button>
+        </div>
+      )}
+
+      {readOnly && (
+        <div className="mb-4 p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
+          Org inventory is read-only for members. Org officers and site officers can update stock.
+        </div>
+      )}
+
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
           {error}
           {error.includes('relation') && (
             <p className="mt-2 text-red-200/80">
-              Run migrations <code className="text-red-100">006_operations.sql</code> and{' '}
-              <code className="text-red-100">007_blueprint_resources.sql</code> in Supabase first.
+              Run <code className="text-red-100">013_resource_inventory_v2.sql</code> then{' '}
+              <code className="text-red-100">014_fulfill_org_inventory.sql</code> in Supabase first.
             </p>
           )}
         </div>
@@ -91,7 +161,7 @@ export default function ResourceTrackerRoute() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Blueprint resources</p>
+          <p className="text-slate-500 text-xs uppercase tracking-wide">{tabLabel} · types</p>
           <p className="text-2xl font-bold text-white mt-1">{activeCount}</p>
         </div>
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
@@ -159,7 +229,7 @@ export default function ResourceTrackerRoute() {
                 </div>
 
                 <div className="mt-4 flex items-center gap-2">
-                  {isEditing ? (
+                  {isEditing && !readOnly ? (
                     <>
                       <input
                         type="number"
@@ -189,20 +259,22 @@ export default function ResourceTrackerRoute() {
                       <span className="text-2xl font-bold text-white tabular-nums">
                         {resource.quantity}
                       </span>
-                      <button
-                        onClick={() => {
-                          setEditingKey(resource.resource_key)
-                          setEditValue(String(resource.quantity))
-                        }}
-                        className="text-xs text-slate-400 hover:text-white ml-1"
-                      >
-                        Set
-                      </button>
+                      {!readOnly && (
+                        <button
+                          onClick={() => {
+                            setEditingKey(resource.resource_key)
+                            setEditValue(String(resource.quantity))
+                          }}
+                          className="text-xs text-slate-400 hover:text-white ml-1"
+                        >
+                          Set
+                        </button>
+                      )}
                     </>
                   )}
                 </div>
 
-                {resource.is_active && (
+                {resource.is_active && !readOnly && (
                   <div className="mt-3 flex gap-2">
                     <button
                       onClick={() => void handleAdjust(resource.resource_key, -1)}

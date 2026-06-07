@@ -1,10 +1,21 @@
 import { supabase } from './supabase'
 import type { OrgRole } from './featureAccess'
 
+export const DUMPERS_ORG_SLUG = 'dumpers'
+
 export interface Organization {
   id: string
   name: string
   slug: string
+  resources_public?: boolean
+  joinable?: boolean
+}
+
+export interface JoinableOrganization {
+  id: string
+  name: string
+  slug: string
+  resources_public: boolean
 }
 
 export interface OrgMembership {
@@ -16,10 +27,43 @@ export interface OrgMembership {
   joined_at: string
 }
 
+export function isDumpersOrg(org: Pick<Organization, 'slug'> | null | undefined): boolean {
+  return org?.slug === DUMPERS_ORG_SLUG
+}
+
+export async function searchJoinableOrganizations(
+  query = ''
+): Promise<{ data: JoinableOrganization[]; error?: string }> {
+  const { data, error } = await supabase.rpc('search_joinable_organizations', {
+    p_query: query,
+  })
+
+  if (error) return { data: [], error: error.message }
+  return { data: (data ?? []) as JoinableOrganization[] }
+}
+
+export async function joinOrganization(orgId: string): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('join_organization', { p_org_id: orgId })
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function joinDumpersOrganization(): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('join_dumpers_organization')
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function setOrgResourcesPublic(isPublic: boolean): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('set_org_resources_public', { p_public: isPublic })
+  if (error) return { error: error.message }
+  return {}
+}
+
 export async function fetchOrganization(orgId: string): Promise<Organization | null> {
   const { data, error } = await supabase
     .from('organizations')
-    .select('id, name, slug')
+    .select('id, name, slug, resources_public, joinable')
     .eq('id', orgId)
     .maybeSingle()
 

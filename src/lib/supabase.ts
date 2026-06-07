@@ -26,6 +26,7 @@ export interface Profile {
   org_only_mode: boolean
   fulfillment_enabled: boolean
   org_id: string | null
+  share_personal_resources: boolean
 }
 
 export function getDisplayName(profile: Profile | null): string {

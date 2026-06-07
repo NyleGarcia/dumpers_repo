@@ -26,6 +26,8 @@ export interface VisibilityContext {
   fulfillmentEnabled: boolean
   orgId: string | null
   orgRole: OrgRole | null
+  orgVerified: boolean
+  orgResourcesPublic: boolean
   isSuperAdmin: boolean
   isOfficerOrAbove: boolean
   isApproved: boolean
@@ -43,6 +45,8 @@ export interface BuildVisibilityContextInput {
   fulfillmentEnabled?: boolean
   orgId?: string | null
   orgRole?: OrgRole | null
+  orgVerified?: boolean
+  orgResourcesPublic?: boolean
 }
 
 export function buildVisibilityContext(input: BuildVisibilityContextInput): VisibilityContext {
@@ -64,6 +68,8 @@ export function buildVisibilityContext(input: BuildVisibilityContextInput): Visi
     fulfillmentEnabled: input.fulfillmentEnabled ?? false,
     orgId: input.orgId ?? null,
     orgRole: input.orgRole ?? null,
+    orgVerified: input.orgVerified ?? false,
+    orgResourcesPublic: input.orgResourcesPublic ?? false,
     isSuperAdmin,
     isOfficerOrAbove,
     isApproved,
@@ -94,7 +100,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.canAccessPreviewFeatures && !ctx.ghostMode
 
     case 'resource_tracker':
-      return ctx.canAccessPreviewFeatures && !ctx.ghostMode
+      return ctx.isApproved && !ctx.ghostMode
 
     case 'custom_orders':
       return ctx.canAccessPreviewFeatures && !ctx.ghostMode
@@ -106,7 +112,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.isApproved
 
     case 'org_resources':
-      return ctx.isApproved && !ctx.ghostMode && !!ctx.orgId
+      return ctx.isApproved && !ctx.ghostMode && !!ctx.orgId && ctx.orgVerified
 
     case 'org_orders':
       return ctx.isApproved && !ctx.ghostMode && !!ctx.orgId
@@ -142,6 +148,19 @@ export function canTransferOrgOwnership(ctx: VisibilityContext): boolean {
 
 export function canVerifyOrgMates(ctx: VisibilityContext): boolean {
   return (
+    ctx.orgRole === 'owner' ||
+    ctx.orgRole === 'admin' ||
+    ctx.orgRole === 'officer'
+  )
+}
+
+export function canManageOrgPrivacy(ctx: VisibilityContext): boolean {
+  return ctx.orgRole === 'owner' || ctx.orgRole === 'admin' || ctx.isSuperAdmin
+}
+
+export function canManageOrgInventory(ctx: VisibilityContext): boolean {
+  return (
+    ctx.isOfficerOrAbove ||
     ctx.orgRole === 'owner' ||
     ctx.orgRole === 'admin' ||
     ctx.orgRole === 'officer'

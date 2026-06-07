@@ -39,6 +39,7 @@ interface AuthContextType {
   updatePreviewFeatures: (enabled: boolean) => Promise<boolean>
   updateOrgOnlyMode: (enabled: boolean) => Promise<boolean>
   updateFulfillmentEnabled: (enabled: boolean) => Promise<boolean>
+  updateSharePersonalResources: (enabled: boolean) => Promise<boolean>
   organization: Organization | null
   orgMembership: OrgMembership | null
   refreshOrgContext: () => Promise<void>
@@ -421,6 +422,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }
 
+  const updateSharePersonalResources = async (enabled: boolean): Promise<boolean> => {
+    if (!user) return false
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ share_personal_resources: enabled })
+      .eq('id', user.id)
+
+    if (error) {
+      console.error('Error updating share personal resources:', error)
+      return false
+    }
+
+    setProfile(prev => prev ? { ...prev, share_personal_resources: enabled } : null)
+    return true
+  }
+
   const fetchUsersWithBlueprints = async (
     scope: MemberScope = 'all'
   ): Promise<UserWithBlueprints[]> => {
@@ -505,8 +523,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         fulfillmentEnabled: profile?.fulfillment_enabled ?? false,
         orgId: profile?.org_id ?? null,
         orgRole: orgMembership?.org_role ?? null,
+        orgVerified: !!orgMembership?.verified_at,
+        orgResourcesPublic: organization?.resources_public ?? false,
       }),
-    [profile, orgMembership?.org_role]
+    [profile, orgMembership?.org_role, orgMembership?.verified_at, organization?.resources_public]
   )
   const showMemberCollections = canUseFeature('member_directory', visibilityContext)
   const isSociallyHidden = visibilityContext.isSociallyHidden
@@ -532,6 +552,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         updatePreviewFeatures,
         updateOrgOnlyMode,
         updateFulfillmentEnabled,
+        updateSharePersonalResources,
         organization,
         orgMembership,
         refreshOrgContext,

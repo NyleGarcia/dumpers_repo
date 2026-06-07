@@ -5,7 +5,9 @@ import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
-import { ORG_ROLE_LABELS } from '../lib/org'
+import { canManageOrgPrivacy } from '../lib/featureAccess'
+import { isDumpersOrg, ORG_ROLE_LABELS, setOrgResourcesPublic } from '../lib/org'
+import OrgPicker from './OrgPicker'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   useBodyScrollLock()
@@ -18,6 +20,9 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updatePreviewFeatures,
     updateOrgOnlyMode,
     updateFulfillmentEnabled,
+    updateSharePersonalResources,
+    refreshOrgContext,
+    visibilityContext,
     signOut,
     isSuperAdmin,
     isOfficerOrAbove,
@@ -32,6 +37,12 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [savingPreview, setSavingPreview] = useState(false)
   const [savingOrgOnly, setSavingOrgOnly] = useState(false)
   const [savingFulfillment, setSavingFulfillment] = useState(false)
+  const [resourcesPublic, setResourcesPublic] = useState(organization?.resources_public ?? false)
+  const [savingResourcesPublic, setSavingResourcesPublic] = useState(false)
+  const [sharePersonalResources, setSharePersonalResources] = useState(
+    profile?.share_personal_resources ?? false
+  )
+  const [savingSharePersonal, setSavingSharePersonal] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -49,7 +60,17 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     profile?.preview_features_enabled,
     profile?.org_only_mode,
     profile?.fulfillment_enabled,
+    organization?.resources_public,
+    profile?.share_personal_resources,
   ])
+
+  useEffect(() => {
+    setResourcesPublic(organization?.resources_public ?? false)
+  }, [organization?.resources_public])
+
+  useEffect(() => {
+    setSharePersonalResources(profile?.share_personal_resources ?? false)
+  }, [profile?.share_personal_resources])
 
   const handleSaveRsi = async () => {
     setSavingRsi(true)
@@ -130,6 +151,45 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setSavingFulfillment(false)
   }
 
+  const handleResourcesPublicChange = async (enabled: boolean) => {
+    const previous = resourcesPublic
+    setResourcesPublic(enabled)
+    setSavingResourcesPublic(true)
+    setMessage(null)
+
+    const result = await setOrgResourcesPublic(enabled)
+
+    if (result.error) {
+      setResourcesPublic(previous)
+      setMessage({ type: 'error', text: result.error })
+    } else {
+      await refreshOrgContext()
+    }
+
+    setSavingResourcesPublic(false)
+  }
+
+  const handleSharePersonalResourcesChange = async (enabled: boolean) => {
+    const previous = sharePersonalResources
+    setSharePersonalResources(enabled)
+    setSavingSharePersonal(true)
+    setMessage(null)
+
+    const success = await updateSharePersonalResources(enabled)
+
+    if (!success) {
+      setSharePersonalResources(previous)
+      setMessage({ type: 'error', text: 'Failed to update personal resource sharing.' })
+    }
+
+    setSavingSharePersonal(false)
+  }
+
+  const handleOrgJoined = async () => {
+    await refreshOrgContext()
+    setMessage({ type: 'success', text: 'Organization joined. Await officer verification to unlock org stock.' })
+  }
+
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'DELETE') return
 
@@ -200,6 +260,15 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             </button>
           </SettingsSection>
 
+          {!organization && (
+            <SettingsSection
+              title="Organization"
+              description="Join one organization on the site"
+            >
+              <OrgPicker onJoined={handleOrgJoined} />
+            </SettingsSection>
+          )}
+
           {organization && (
             <SettingsSection
               title="Organization"
@@ -230,12 +299,52 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                     {orgMembership?.verified_at ? 'Verified org mate' : 'Pending verification'}
                   </span>
                 </div>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm text-slate-400">Org stock visibility</span>
+                  <span className="text-xs text-slate-400">
+                    {organization.resources_public
+                      ? 'Other orgs can view shared org stock'
+                      : 'Org stock visible to your org only'}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500">
+                  Personal resources are never visible across orgs. Same-org mates only see yours if
+                  you opt in below (Dumpers members are always visible to each other after verify).
+                </p>
                 {!orgMembership?.verified_at && (
-                  <p className="text-xs text-slate-500 pt-1">
-                    An officer will verify your RSI org affiliation after checking Spectrum.
+                  <p className="text-xs text-amber-300/80 pt-1">
+                    Org stock is hidden until an officer verifies your membership.
                   </p>
                 )}
               </div>
+
+              {canManageOrgPrivacy(visibilityContext) && (
+                isDumpersOrg(organization) ? (
+                  <p className="text-sm text-slate-400 bg-slate-800/40 border border-slate-700 rounded-lg px-3 py-2">
+                    Dumpers Repo shared org stock is always public to other orgs. Verified Dumpers
+                    members can always see each other&apos;s personal stock — never visible outside
+                    Dumpers.
+                  </p>
+                ) : (
+                  <SettingsToggle
+                    label="Public org stock"
+                    description="When on, members of other organizations can view your org's shared stock (not anyone's personal inventory)."
+                    checked={resourcesPublic}
+                    onChange={handleResourcesPublicChange}
+                    saving={savingResourcesPublic}
+                  />
+                )
+              )}
+
+              {!isDumpersOrg(organization) && (
+                <SettingsToggle
+                  label="Share my personal resources"
+                  description="Let other verified members of your org see your personal stock. Never visible to other orgs or non-members."
+                  checked={sharePersonalResources}
+                  onChange={handleSharePersonalResourcesChange}
+                  saving={savingSharePersonal}
+                />
+              )}
 
               <SettingsToggle
                 label="Org-only views"

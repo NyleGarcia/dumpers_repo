@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
+import { useAuth } from '../contexts/AuthContext'
 import {
   fetchCustomOrders,
   fetchFulfillments,
@@ -14,6 +15,7 @@ import {
 } from '../lib/operations'
 
 export default function FulfillmentRoute() {
+  const { user, profile } = useAuth()
   const { labelMap } = useResourceCatalog({ syncOnLoad: true })
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [inventory, setInventory] = useState<ResourceInventoryRow[]>([])
@@ -25,12 +27,17 @@ export default function FulfillmentRoute() {
   const [submitting, setSubmitting] = useState(false)
 
   const loadData = useCallback(async () => {
+    if (!user || !profile?.org_id) {
+      setLoading(false)
+      return
+    }
+
     setLoading(true)
     setError(null)
 
     const [ordersResult, inventoryResult, fulfillmentsResult] = await Promise.all([
       fetchCustomOrders(),
-      fetchInventory(),
+      fetchInventory({ scope: 'org', userId: user.id, orgId: profile.org_id }),
       fetchFulfillments(),
     ])
 
@@ -42,7 +49,7 @@ export default function FulfillmentRoute() {
     setInventory(inventoryResult.data)
     setFulfillments(fulfillmentsResult.data)
     setLoading(false)
-  }, [])
+  }, [user, profile?.org_id])
 
   useEffect(() => {
     void loadData()
@@ -102,7 +109,7 @@ export default function FulfillmentRoute() {
   return (
     <FeaturePageLayout
       title="Fulfillment"
-      subtitle="Complete custom orders and deduct resources from org inventory"
+      subtitle="Complete custom orders and deduct resources from org stock"
       badge="Super-admin preview"
       actions={
         <Link
