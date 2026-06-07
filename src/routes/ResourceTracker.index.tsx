@@ -6,7 +6,7 @@ import { canManageOrgInventory, canUseFeature } from '../lib/featureAccess'
 import { adjustInventoryQuantity, setInventoryQuantity, type InventoryScope } from '../lib/operations'
 
 export default function ResourceTrackerRoute() {
-  const { user, profile, organization, visibilityContext } = useAuth()
+  const { user, profile, organization, visibilityContext, isSuperAdmin } = useAuth()
   const canViewOrg = canUseFeature('org_resources', visibilityContext)
   const canEditOrg = canManageOrgInventory(visibilityContext)
 
@@ -36,8 +36,9 @@ export default function ResourceTrackerRoute() {
     loading,
     error,
     refresh,
+    syncFromBlueprints,
   } = useResourceCatalog({
-    syncOnLoad: true,
+    enableCatalogSync: isSuperAdmin,
     includeInactive: showInactive,
     withInventory: true,
     inventoryContext,
@@ -89,12 +90,14 @@ export default function ResourceTrackerRoute() {
           : `${organization?.name ?? 'Organization'} shared stock`
       }
       actions={
-        <button
-          onClick={() => void refresh()}
-          className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
-        >
-          Sync & refresh
-        </button>
+        isSuperAdmin ? (
+          <button
+            onClick={() => void syncFromBlueprints()}
+            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
+          >
+            Sync from blueprints
+          </button>
+        ) : undefined
       }
     >
       {profile?.org_id && !visibilityContext.orgVerified && (
@@ -150,7 +153,7 @@ export default function ResourceTrackerRoute() {
         </div>
       )}
 
-      {syncResult && (
+      {isSuperAdmin && syncResult && (
         <div className="mb-4 p-3 rounded-lg bg-purple-900/20 border border-purple-500/30 text-purple-200 text-sm">
           Catalog synced from blueprints: {syncResult.totalActive} active
           {syncResult.added > 0 && ` · ${syncResult.added} new`}
@@ -196,7 +199,7 @@ export default function ResourceTrackerRoute() {
       {loading ? (
         <div className="text-center py-16">
           <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
-          <p className="text-slate-400 mt-4">Syncing resources from blueprints...</p>
+          <p className="text-slate-400 mt-4">Loading resources...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -302,10 +305,13 @@ export default function ResourceTrackerRoute() {
         </div>
       )}
 
-      <p className="text-slate-500 text-xs mt-6">
-        Resources are extracted automatically from <code>Blueprints.json</code> on sync. Update the
-        blueprint file and click Sync & refresh to pick up new requirements.
-      </p>
+      {isSuperAdmin && (
+        <p className="text-slate-500 text-xs mt-6">
+          Resource types come from <code>Blueprints.json</code>. After you update that file, use{' '}
+          <strong className="text-slate-400">Sync from blueprints</strong> to import new
+          requirements into the catalog.
+        </p>
+      )}
     </FeaturePageLayout>
   )
 }

@@ -9,6 +9,7 @@ import {
 } from '../lib/featureAccess'
 import { removeTargetBlueprint } from '../lib/targetList'
 import {
+  ensureDumpersMembership,
   fetchOrgMembership,
   fetchOrganization,
   type MemberScope,
@@ -208,7 +209,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setIsBanned(false)
-    const profileData = await fetchProfile(sessionUser.id)
+    let profileData = await fetchProfile(sessionUser.id)
+
+    if (profileData && !profileData.org_id) {
+      await ensureDumpersMembership()
+      profileData = await fetchProfile(sessionUser.id)
+    }
+
     setProfile(profileData)
     await refreshOrgContext(profileData)
 

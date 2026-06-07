@@ -13,7 +13,8 @@ import {
 } from '../lib/operations'
 
 interface UseResourceCatalogOptions {
-  syncOnLoad?: boolean
+  /** Super-admin only: import blueprint_resources from Blueprints.json */
+  enableCatalogSync?: boolean
   includeInactive?: boolean
   withInventory?: boolean
   inventoryContext?: InventoryContext | null
@@ -21,7 +22,7 @@ interface UseResourceCatalogOptions {
 
 export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
   const {
-    syncOnLoad = true,
+    enableCatalogSync = false,
     includeInactive = false,
     withInventory = false,
     inventoryContext = null,
@@ -80,26 +81,27 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
   }, [buildInventoryContext, withInventory, includeInactive])
 
   const refresh = useCallback(async () => {
-    if (!blueprints) return
-
-    if (syncOnLoad) {
-      setError(null)
-      const syncResponse = await syncBlueprintResourceCatalog(blueprints)
-      if (syncResponse.error) {
-        setError(syncResponse.error)
-        return
-      }
-      setSyncResult(syncResponse.result ?? null)
-      hasSyncedRef.current = true
-    }
-
     await loadCatalog()
-  }, [blueprints, syncOnLoad, loadCatalog])
+  }, [loadCatalog])
+
+  const syncFromBlueprints = useCallback(async () => {
+    if (!blueprints || !enableCatalogSync) return
+
+    setError(null)
+    const syncResponse = await syncBlueprintResourceCatalog(blueprints)
+    if (syncResponse.error) {
+      setError(syncResponse.error)
+      return
+    }
+    setSyncResult(syncResponse.result ?? null)
+    hasSyncedRef.current = true
+    await loadCatalog()
+  }, [blueprints, enableCatalogSync, loadCatalog])
 
   useAsyncEffect(async ({ cancelled }) => {
-    if (!blueprints) return
+    if (enableCatalogSync && !blueprints) return
 
-    if (syncOnLoad && !hasSyncedRef.current) {
+    if (enableCatalogSync && !hasSyncedRef.current) {
       const syncResponse = await syncBlueprintResourceCatalog(blueprints)
       if (cancelled) return
       if (syncResponse.error) {
@@ -113,7 +115,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
 
     if (cancelled) return
     await loadCatalog()
-  }, [blueprints, syncOnLoad, inventoryScope, inventoryUserId, inventoryOrgId, withInventory, includeInactive])
+  }, [blueprints, enableCatalogSync, inventoryScope, inventoryUserId, inventoryOrgId, withInventory, includeInactive])
 
   return {
     catalog,
@@ -123,5 +125,6 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     loading,
     error,
     refresh,
+    syncFromBlueprints,
   }
 }

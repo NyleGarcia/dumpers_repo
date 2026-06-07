@@ -16,7 +16,7 @@ import {
 
 export default function FulfillmentRoute() {
   const { user, profile } = useAuth()
-  const { labelMap } = useResourceCatalog({ syncOnLoad: true })
+  const { labelMap } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [inventory, setInventory] = useState<ResourceInventoryRow[]>([])
   const [fulfillments, setFulfillments] = useState<OrderFulfillment[]>([])

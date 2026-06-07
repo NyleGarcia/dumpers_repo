@@ -27,7 +27,7 @@ interface DraftLineItem {
 
 export default function CustomOrdersRoute() {
   const { user, profile } = useAuth()
-  const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog({ syncOnLoad: true })
+  const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

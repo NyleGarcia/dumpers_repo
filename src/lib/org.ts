@@ -54,6 +54,13 @@ export async function joinDumpersOrganization(): Promise<{ error?: string }> {
   return {}
 }
 
+/** Ensures the signed-in user is in verified Dumpers org (signup backfill / legacy accounts). */
+export async function ensureDumpersMembership(): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('ensure_dumpers_membership')
+  if (error) return { error: error.message }
+  return {}
+}
+
 export async function setOrgResourcesPublic(isPublic: boolean): Promise<{ error?: string }> {
   const { error } = await supabase.rpc('set_org_resources_public', { p_public: isPublic })
   if (error) return { error: error.message }
