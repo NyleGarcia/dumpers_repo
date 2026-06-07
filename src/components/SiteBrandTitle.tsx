@@ -1,10 +1,11 @@
 import React from 'react'
 import { SITE_BRAND_FONT, SITE_BRAND_REPO_GRADIENT } from '../config/site'
 
-type SiteBrandTitleSize = 'hero' | 'page'
+type SiteBrandTitleSize = 'hero' | 'page' | 'compact'
 
 interface SiteBrandTitleProps {
   size?: SiteBrandTitleSize
+  layout?: 'stacked' | 'inline'
   align?: 'center' | 'left'
   slogan?: string
   subtitle?: React.ReactNode
@@ -14,6 +15,7 @@ interface SiteBrandTitleProps {
 const titleSizeClasses: Record<SiteBrandTitleSize, string> = {
   hero: 'text-4xl md:text-5xl lg:text-6xl',
   page: 'text-3xl md:text-4xl lg:text-5xl',
+  compact: 'text-base sm:text-lg',
 }
 
 const sloganSizeClasses: Record<SiteBrandTitleSize, string> = {
@@ -33,6 +35,7 @@ const repoLineStyle = {
 
 export default function SiteBrandTitle({
   size = 'page',
+  layout = 'inline',
   align = 'center',
   slogan,
   subtitle,
@@ -40,15 +43,18 @@ export default function SiteBrandTitle({
 }: SiteBrandTitleProps) {
   const alignClass = align === 'center' ? 'text-center' : 'text-left'
   const titleSize = titleSizeClasses[size]
+  const isStacked = layout === 'stacked'
 
   return (
     <div className={`${alignClass} ${className}`}>
-      <h1 className={`font-black uppercase tracking-wide leading-none ${titleSize}`}>
-        <span className="block text-white" style={brandLineStyle}>
+      <h1
+        className={`font-black uppercase tracking-wide ${isStacked ? 'leading-none' : 'leading-tight'} ${titleSize}`}
+      >
+        <span className={`text-white ${isStacked ? 'block' : ''}`} style={brandLineStyle}>
           Dumper&apos;s
         </span>
-        <span className="block" style={repoLineStyle}>
-          Repo
+        <span className={isStacked ? 'block' : ''} style={repoLineStyle}>
+          {isStacked ? 'Repo' : ' Repo'}
         </span>
       </h1>
       {slogan && (

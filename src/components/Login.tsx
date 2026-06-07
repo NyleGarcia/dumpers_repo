@@ -17,10 +17,10 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex items-center justify-center p-4">
+    <div className="site-page-bg min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="mb-8">
-          <SiteBrandTitle size="hero" slogan={SITE_SLOGAN} />
+          <SiteBrandTitle size="hero" layout="stacked" slogan={SITE_SLOGAN} />
         </div>
 
         <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 shadow-2xl">

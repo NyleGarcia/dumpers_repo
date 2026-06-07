@@ -1,7 +1,6 @@
 import React from 'react'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
-import SiteBrandTitle from '../components/SiteBrandTitle'
 import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
@@ -428,7 +427,7 @@ export default function BlueprintsRoute() {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto"></div>
+          <div className="w-16 h-16 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin mx-auto"></div>
           <p className="text-slate-400 text-lg font-medium">Loading blueprints...</p>
         </div>
       </div>
@@ -479,31 +478,27 @@ export default function BlueprintsRoute() {
   const hasSubFilters = showVehicleSizes || showArmorWeights || showArmorSlots || showSubTypes
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-2 sm:p-4 overflow-x-hidden">
-      {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-slate-700 shadow-lg mb-6">
-        <div className="max-w-screen-xl mx-auto px-4 py-4 space-y-3">
-          <SiteBrandTitle
-            size="page"
-            subtitle={
-              <p className="hidden sm:block text-slate-500">
-                Comprehensive Crafting Database & Mission Rewards Tracker
-                <span className="mx-2">•</span>
-                <span>LIVE {blueprintDataVersion}</span>
-                <span className="mx-2">•</span>
-                <span className="text-green-400">{Object.keys(acquiredBlueprints).length} acquired</span>
-              </p>
-            }
-          />
+    <div className="site-shell py-4 sm:py-6 overflow-x-hidden">
+      <div className="space-y-3 mb-6 pb-5 border-b border-slate-800/80">
+        <div className="text-center">
+          <h1 className="site-page-title">Blueprints</h1>
+          <p className="site-page-subtitle mt-2 normal-case tracking-normal">
+            Comprehensive Crafting Database & Mission Rewards Tracker
+          </p>
+          <p className="hidden sm:block text-slate-500 text-sm mt-2">
+            <span>LIVE {blueprintDataVersion}</span>
+            <span className="mx-2">•</span>
+            <span className="text-green-400">{Object.keys(acquiredBlueprints).length} acquired</span>
+          </p>
+        </div>
 
-          {/* Search Bar, Rewards Toggle, and User Dropdown */}
-          <div className="flex gap-1.5 sm:gap-2">
+        <div className="flex gap-1.5 sm:gap-2">
             <input
               type="text"
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 px-3 py-1.5 text-sm bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all"
+              className="site-input flex-1 px-3 py-1.5 text-sm"
             />
             <button
               onClick={() => setShowOnlyRewards(!showOnlyRewards)}
@@ -520,7 +515,7 @@ export default function BlueprintsRoute() {
                 <select
                   value={selectedUserId}
                   onChange={(e) => setSelectedUserId(e.target.value)}
-                  className="px-2 py-1.5 text-sm bg-slate-900/70 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all min-w-[100px] sm:min-w-[140px]"
+                  className="site-input px-2 py-1.5 text-sm min-w-[100px] sm:min-w-[140px]"
                 >
                   <option value="all">Everyone</option>
                   {usersWithBlueprints.map(u => (
@@ -552,7 +547,7 @@ export default function BlueprintsRoute() {
                   disabled={count === 0}
                   className={`px-2.5 py-1 lg:px-3 lg:py-1.5 xl:px-4 xl:py-2 rounded-md text-xs lg:text-sm xl:text-base font-medium transition-all ${
                     selectedMainCategory === cat
-                      ? 'bg-red-600 text-white shadow-lg shadow-red-500/30'
+                      ? 'site-btn-accent shadow-lg'
                       : count === 0
                         ? 'bg-slate-800/50 text-slate-600 border border-slate-700 cursor-not-allowed'
                         : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
@@ -688,11 +683,9 @@ export default function BlueprintsRoute() {
               <span> (filtered from {baseFilteredBlueprints.length})</span>
             )}
           </div>
-        </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className="max-w-screen-xl mx-auto">
+      <section className="mt-4">
         {filteredBlueprints.length === 0 ? (
           <div className="text-center py-24 bg-slate-900/30 rounded-3xl border-2 border-dashed border-slate-700">
             <div className="text-6xl mb-4 animate-bounce">🔍</div>
@@ -731,7 +724,7 @@ export default function BlueprintsRoute() {
             ))}
           </div>
         )}
-      </main>
+      </section>
 
       {/* Blueprint Details Modal */}
       {selectedBlueprint && (
