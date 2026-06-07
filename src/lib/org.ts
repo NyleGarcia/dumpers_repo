@@ -66,26 +66,98 @@ interface MyOrgContextPayload {
   membership?: OrgMembership
 }
 
+function parseMyOrgContextPayload(data: unknown): MyOrgContextPayload | null {
+  if (!data) return null
+
+  let raw: unknown = data
+  if (typeof raw === 'string') {
+    try {
+      raw = JSON.parse(raw)
+    } catch {
+      return null
+    }
+  }
+
+  if (typeof raw !== 'object' || raw === null) return null
+  return raw as MyOrgContextPayload
+}
+
+async function loadOrgContextFromTables(userId: string): Promise<{
+  organization: Organization | null
+  membership: OrgMembership | null
+}> {
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('org_id')
+    .eq('id', userId)
+    .maybeSingle()
+
+  if (profileError || !profile?.org_id) {
+    return { organization: null, membership: null }
+  }
+
+  const [organization, membership] = await Promise.all([
+    fetchOrganization(profile.org_id),
+    fetchOrgMembership(userId, profile.org_id),
+  ])
+
+  return { organization, membership }
+}
+
 /** Repairs Dumpers membership server-side and returns org context (bypasses RLS edge cases). */
 export async function fetchMyOrgContext(): Promise<{
   organization: Organization | null
   membership: OrgMembership | null
   error?: string
 }> {
-  const { data, error } = await supabase.rpc('get_my_org_context')
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser()
 
-  if (error) {
-    return { organization: null, membership: null, error: error.message }
+  if (userError) {
+    return { organization: null, membership: null, error: userError.message }
   }
 
-  if (!data) {
-    return { organization: null, membership: null, error: 'Organization context not found' }
+  if (!user) {
+    return { organization: null, membership: null, error: 'Not signed in' }
   }
 
-  const payload = data as MyOrgContextPayload
+  const readRpc = async () => {
+    const { data, error } = await supabase.rpc('get_my_org_context')
+    if (error) return { payload: null as MyOrgContextPayload | null, error: error.message }
+    return { payload: parseMyOrgContextPayload(data), error: null as string | null }
+  }
+
+  let { payload, error: rpcError } = await readRpc()
+
+  if (!payload?.organization || !payload?.membership) {
+    const repair = await ensureDumpersMembership()
+    if (repair.error) {
+      return { organization: null, membership: null, error: repair.error }
+    }
+
+    ;({ payload, error: rpcError } = await readRpc())
+  }
+
+  if (payload?.organization && payload?.membership) {
+    return {
+      organization: payload.organization,
+      membership: payload.membership,
+    }
+  }
+
+  const fromTables = await loadOrgContextFromTables(user.id)
+  if (fromTables.organization && fromTables.membership) {
+    return fromTables
+  }
+
   return {
-    organization: payload.organization ?? null,
-    membership: payload.membership ?? null,
+    organization: null,
+    membership: null,
+    error:
+      rpcError ??
+      'Organization context not found after repair (check profile.org_id and org_memberships)',
   }
 }
 

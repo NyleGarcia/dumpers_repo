@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { deleteAccount } from '../lib/supabase'
 import SettingsSection from './settings/SettingsSection'
@@ -49,7 +49,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [orgSetupLoading, setOrgSetupLoading] = useState(false)
   const [orgSetupError, setOrgSetupError] = useState<string | null>(null)
-  const orgSetupRanRef = useRef(false)
 
   const hasOrgAffiliation = !!(organization || profile?.org_id)
 
@@ -65,9 +64,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   }
 
   useEffect(() => {
-    if (!profile?.id || organization || orgSetupRanRef.current) return
-
-    orgSetupRanRef.current = true
+    if (!profile?.id || organization) return
     void runOrgSetup()
   }, [profile?.id, organization, reloadProfile])
 
