@@ -5,10 +5,11 @@ import { getResourceLabel } from '../lib/blueprintResources'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useAuth } from '../contexts/AuthContext'
 import {
+  completeOrderCraft,
   fetchCustomOrders,
   fetchFulfillments,
   fetchInventory,
-  fulfillCustomOrder,
+  startCustomOrderWork,
   type CustomOrder,
   type OrderFulfillment,
   type ResourceInventoryRow,
@@ -40,7 +41,7 @@ export default function FulfillmentRoute() {
 
     const [ordersResult, inventoryResult, fulfillmentsResult] = await Promise.all([
       fetchCustomOrders(),
-      fetchInventory({ scope: 'org', userId, orgId }),
+      fetchInventory({ scope: 'personal', userId, orgId }),
       fetchFulfillments(),
     ])
 
@@ -66,12 +67,17 @@ export default function FulfillmentRoute() {
     return map
   }, [inventory])
 
-  const fulfillableOrders = useMemo(
-    () => orders.filter((o) => o.status === 'pending' || o.status === 'in_progress'),
-    [orders]
+  const myAssignedOrders = useMemo(
+    () =>
+      orders.filter(
+        (o) =>
+          o.assignee_id === userId &&
+          ['accepted', 'in_progress'].includes(o.status)
+      ),
+    [orders, userId]
   )
 
-  const selectedOrder = fulfillableOrders.find((o) => o.id === selectedOrderId) ?? null
+  const selectedOrder = myAssignedOrders.find((o) => o.id === selectedOrderId) ?? null
 
   const stockCheck = useMemo(() => {
     if (!selectedOrder?.items) return { canFulfill: false, shortages: [] as string[] }
@@ -87,15 +93,31 @@ export default function FulfillmentRoute() {
     }
 
     return { canFulfill: shortages.length === 0, shortages }
-  }, [selectedOrder, quantityByKey])
+  }, [selectedOrder, quantityByKey, labelMap])
 
-  const handleFulfill = async () => {
+  const handleStartWork = async (orderId: string) => {
+    setSubmitting(true)
+    setError(null)
+
+    const result = await startCustomOrderWork(orderId)
+
+    setSubmitting(false)
+
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+
+    await loadData()
+  }
+
+  const handleCompleteCraft = async () => {
     if (!selectedOrder) return
 
     setSubmitting(true)
     setError(null)
 
-    const result = await fulfillCustomOrder(selectedOrder.id, notes.trim() || undefined)
+    const result = await completeOrderCraft(selectedOrder.id, notes.trim() || undefined)
 
     setSubmitting(false)
 
@@ -112,8 +134,8 @@ export default function FulfillmentRoute() {
   return (
     <FeaturePageLayout
       title="Fulfillment"
-      subtitle="Complete custom orders and deduct resources from org stock"
-      badge="Super-admin preview"
+      subtitle="Craft assigned orders — resources deduct from your personal stock when complete"
+      badge="Preview"
       actions={
         <Link
           to="/orders"
@@ -129,6 +151,14 @@ export default function FulfillmentRoute() {
         </div>
       )}
 
+      <p className="mb-4 text-slate-500 text-sm">
+        Accept orders on Custom Orders only if you own the blueprint and have enough resources in{' '}
+        <Link to="/resources" className="text-red-400 hover:text-red-300">
+          My Resources
+        </Link>
+        . Completing craft deducts from your personal inventory and notifies the requester.
+      </p>
+
       {loading ? (
         <div className="text-center py-16">
           <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
@@ -136,10 +166,10 @@ export default function FulfillmentRoute() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <section>
-            <h2 className="text-white font-medium mb-3">Ready to fulfill</h2>
-            {fulfillableOrders.length === 0 ? (
+            <h2 className="text-white font-medium mb-3">My assigned orders</h2>
+            {myAssignedOrders.length === 0 ? (
               <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                No open orders. Create one in{' '}
+                No orders assigned to you. Accept a pending order on{' '}
                 <Link to="/orders" className="text-red-400 hover:text-red-300">
                   Custom Orders
                 </Link>
@@ -147,7 +177,7 @@ export default function FulfillmentRoute() {
               </div>
             ) : (
               <div className="space-y-2">
-                {fulfillableOrders.map((order) => {
+                {myAssignedOrders.map((order) => {
                   const isSelected = selectedOrderId === order.id
                   const shortages = (order.items ?? []).filter((item) => {
                     const available = quantityByKey[item.resource_key] ?? 0
@@ -174,11 +204,11 @@ export default function FulfillmentRoute() {
                               : 'bg-green-950/50 text-green-300 border-green-500/30'
                           }`}
                         >
-                          {shortages.length > 0 ? 'Short stock' : 'Ready'}
+                          {shortages.length > 0 ? 'Short stock' : 'Stock OK'}
                         </span>
                       </div>
                       <p className="text-slate-500 text-xs mt-1">
-                        {order.status.replace('_', ' ')} · {(order.items ?? []).length} line items
+                        {order.status.replace(/_/g, ' ')} · {(order.items ?? []).length} line items
                       </p>
                     </button>
                   )
@@ -203,7 +233,7 @@ export default function FulfillmentRoute() {
                           {getResourceLabel(item.resource_key, labelMap)}
                         </span>
                         <span className={enough ? 'text-green-400' : 'text-red-400'}>
-                          {item.quantity} needed · {available} in stock
+                          {item.quantity} needed · {available} in My Resources
                         </span>
                       </div>
                     )
@@ -214,27 +244,42 @@ export default function FulfillmentRoute() {
                   <p className="text-red-300 text-xs">
                     Short: {stockCheck.shortages.join(', ')}. Add stock in{' '}
                     <Link to="/resources" className="text-red-200 underline">
-                      Resource Tracker
+                      Resource Tracker → My Resources
                     </Link>
                     .
                   </p>
                 )}
 
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Fulfillment notes (optional)"
-                  rows={2}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-                />
+                {selectedOrder.status === 'accepted' && (
+                  <button
+                    type="button"
+                    onClick={() => void handleStartWork(selectedOrder.id)}
+                    disabled={submitting}
+                    className="w-full py-2 bg-blue-700 hover:bg-blue-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+                  >
+                    {submitting ? 'Starting...' : 'Start work'}
+                  </button>
+                )}
 
-                <button
-                  onClick={() => void handleFulfill()}
-                  disabled={!stockCheck.canFulfill || submitting}
-                  className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium"
-                >
-                  {submitting ? 'Fulfilling...' : 'Fulfill order & deduct inventory'}
-                </button>
+                {(selectedOrder.status === 'accepted' || selectedOrder.status === 'in_progress') && (
+                  <>
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Craft notes (optional)"
+                      rows={2}
+                      className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                    />
+
+                    <button
+                      onClick={() => void handleCompleteCraft()}
+                      disabled={!stockCheck.canFulfill || submitting}
+                      className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium"
+                    >
+                      {submitting ? 'Completing...' : 'Complete craft & mark ready for pickup'}
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </section>
@@ -257,6 +302,7 @@ export default function FulfillmentRoute() {
                     </p>
                     <p className="text-slate-500 text-xs mt-1">
                       {new Date(entry.created_at).toLocaleString()}
+                      {entry.order?.status && ` · ${entry.order.status.replace(/_/g, ' ')}`}
                     </p>
                     {entry.notes && (
                       <p className="text-slate-400 text-sm mt-2">{entry.notes}</p>

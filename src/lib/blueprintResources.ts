@@ -5,6 +5,7 @@ export interface BlueprintRequirementOption {
 }
 
 export interface BlueprintSlot {
+  requiredCount?: number
   options?: BlueprintRequirementOption[]
 }
 
@@ -61,4 +62,40 @@ export function getResourceLabel(
   labelMap: Record<string, string>
 ): string {
   return labelMap[resourceKey] ?? resourceKey
+}
+
+export interface BlueprintOrderLineItem {
+  resourceKey: string
+  label: string
+  quantity: number
+}
+
+/** Derive resource line items from blueprint slots × order quantity. */
+export function extractOrderLineItemsFromBlueprint(
+  blueprint: BlueprintWithSlots,
+  orderQuantity: number
+): BlueprintOrderLineItem[] {
+  const qty = Math.max(1, orderQuantity)
+  const totals = new Map<string, BlueprintOrderLineItem>()
+
+  for (const slot of blueprint.slots ?? []) {
+    const slotCount = slot.requiredCount ?? 1
+    for (const option of slot.options ?? []) {
+      const label = option.resourceName || option.entityName
+      if (!label) continue
+
+      const resourceKey = slugifyResourceName(label)
+      if (!resourceKey) continue
+
+      const addQty = slotCount * qty
+      const existing = totals.get(resourceKey)
+      if (existing) {
+        existing.quantity += addQty
+      } else {
+        totals.set(resourceKey, { resourceKey, label, quantity: addQty })
+      }
+    }
+  }
+
+  return [...totals.values()].sort((a, b) => a.label.localeCompare(b.label))
 }

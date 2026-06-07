@@ -5,7 +5,14 @@ import {
   type ExtractedBlueprintResource,
 } from './blueprintResources'
 
-export type CustomOrderStatus = 'pending' | 'in_progress' | 'fulfilled' | 'cancelled'
+export type CustomOrderStatus =
+  | 'pending'
+  | 'accepted'
+  | 'in_progress'
+  | 'ready_for_pickup'
+  | 'fulfilled'
+  | 'completed'
+  | 'cancelled'
 
 export interface BlueprintResourceRow {
   resource_key: string
@@ -49,6 +56,11 @@ export interface CustomOrder {
   title: string
   notes: string | null
   status: CustomOrderStatus
+  blueprint_id: string | null
+  min_quality: number
+  quantity: number
+  assignee_id: string | null
+  accepted_at: string | null
   created_at: string
   updated_at: string
   items?: CustomOrderItem[]
@@ -57,6 +69,22 @@ export interface CustomOrder {
     display_name: string | null
     email: string | null
   }
+  assignee?: {
+    rsi_handle: string | null
+    display_name: string | null
+    email: string | null
+  }
+}
+
+export interface UserNotification {
+  id: string
+  user_id: string
+  type: string
+  title: string
+  body: string | null
+  payload: Record<string, unknown>
+  read_at: string | null
+  created_at: string
 }
 
 export interface OrderFulfillment {
@@ -336,7 +364,8 @@ export async function fetchCustomOrders(): Promise<{
     .select(`
       *,
       items:custom_order_items(*),
-      requester:profiles!custom_orders_requester_id_fkey(rsi_handle, display_name, email)
+      requester:profiles!custom_orders_requester_id_fkey(rsi_handle, display_name, email),
+      assignee:profiles!custom_orders_assignee_id_fkey(rsi_handle, display_name, email)
     `)
     .order('created_at', { ascending: false })
 
@@ -348,6 +377,9 @@ export async function createCustomOrder(input: {
   requesterId: string
   title: string
   notes?: string
+  blueprintId?: string | null
+  minQuality?: number
+  quantity?: number
   items: { resourceKey: string; quantity: number }[]
 }): Promise<{ data?: CustomOrder; error?: string }> {
   const { data: order, error: orderError } = await supabase
@@ -356,6 +388,9 @@ export async function createCustomOrder(input: {
       requester_id: input.requesterId,
       title: input.title.trim(),
       notes: input.notes?.trim() || null,
+      blueprint_id: input.blueprintId ?? null,
+      min_quality: input.minQuality ?? 500,
+      quantity: input.quantity ?? 1,
       status: 'pending',
     })
     .select()
@@ -396,17 +431,84 @@ export async function updateCustomOrderStatus(
   return {}
 }
 
-export async function fulfillCustomOrder(
+export async function acceptCustomOrder(orderId: string): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('accept_custom_order', { p_order_id: orderId })
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function startCustomOrderWork(orderId: string): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('start_custom_order_work', { p_order_id: orderId })
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function completeOrderCraft(
   orderId: string,
   notes?: string
 ): Promise<{ fulfillmentId?: string; error?: string }> {
-  const { data, error } = await supabase.rpc('fulfill_custom_order', {
+  const { data, error } = await supabase.rpc('complete_order_craft', {
     p_order_id: orderId,
     p_notes: notes ?? null,
   })
 
   if (error) return { error: error.message }
   return { fulfillmentId: data as string }
+}
+
+export async function confirmOrderPickup(orderId: string): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('confirm_order_pickup', { p_order_id: orderId })
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function fetchUserNotifications(): Promise<{
+  data: UserNotification[]
+  error?: string
+}> {
+  const { data, error } = await supabase
+    .from('user_notifications')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(50)
+
+  if (error) return { data: [], error: error.message }
+  return { data: (data ?? []) as UserNotification[] }
+}
+
+export async function markNotificationRead(notificationId: string): Promise<{ error?: string }> {
+  const { error } = await supabase
+    .from('user_notifications')
+    .update({ read_at: new Date().toISOString() })
+    .eq('id', notificationId)
+
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function markAllNotificationsRead(): Promise<{ error?: string }> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Not signed in' }
+
+  const { error } = await supabase
+    .from('user_notifications')
+    .update({ read_at: new Date().toISOString() })
+    .eq('user_id', user.id)
+    .is('read_at', null)
+
+  if (error) return { error: error.message }
+  return {}
+}
+
+/** @deprecated Use completeOrderCraft — kept for back-compat with fulfill_custom_order RPC */
+export async function fulfillCustomOrder(
+  orderId: string,
+  notes?: string
+): Promise<{ fulfillmentId?: string; error?: string }> {
+  return completeOrderCraft(orderId, notes)
 }
 
 export async function fetchFulfillments(): Promise<{
