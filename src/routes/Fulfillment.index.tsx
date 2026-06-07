@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
+import OrderRatingModal from '../components/OrderRatingModal'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
@@ -13,7 +14,9 @@ import {
 import { formatResourceQuantity } from '../lib/resourceQuantity'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useAuth } from '../contexts/AuthContext'
+import { canFulfillerArchive } from '../lib/orderArchive'
 import {
+  archiveCustomOrderWithRating,
   completeOrderCraft,
   fetchCustomOrders,
   fetchFulfillments,
@@ -23,6 +26,7 @@ import {
   type OrderFulfillment,
   type ResourceInventoryRow,
 } from '../lib/operations'
+import { displayNameFromFields } from '../lib/supabase'
 
 export default function FulfillmentRoute() {
   const { user, siteOrg } = useAuth()
@@ -35,6 +39,8 @@ export default function FulfillmentRoute() {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [archiveOrder, setArchiveOrder] = useState<CustomOrder | null>(null)
+  const [archiving, setArchiving] = useState(false)
 
   const userId = user?.id
   const orgId = siteOrg?.id ?? null
@@ -85,6 +91,33 @@ export default function FulfillmentRoute() {
       ),
     [orders, userId]
   )
+
+  const myFinishedOrders = useMemo(
+    () =>
+      orders.filter(
+        (o) =>
+          o.assignee_id === userId &&
+          (o.status === 'ready_for_pickup' || o.status === 'completed') &&
+          !o.fulfiller_archived_at
+      ),
+    [orders, userId]
+  )
+
+  const handleArchiveConfirm = async (stars: number, comment?: string) => {
+    if (!archiveOrder) return
+
+    setArchiving(true)
+    const result = await archiveCustomOrderWithRating(archiveOrder.id, stars, comment)
+    setArchiving(false)
+
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+
+    setArchiveOrder(null)
+    await loadData()
+  }
 
   const selectedOrder = myAssignedOrders.find((o) => o.id === selectedOrderId) ?? null
 
@@ -344,6 +377,58 @@ export default function FulfillmentRoute() {
           </section>
 
           <section>
+            <h2 className="text-white font-medium mb-3">Finished orders</h2>
+            {myFinishedOrders.length === 0 ? (
+              <div className="p-6 mb-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                No orders waiting on pickup or archive yet.
+              </div>
+            ) : (
+              <div className="space-y-2 mb-6">
+                {myFinishedOrders.map((order) => {
+                  const totalDfp = orderTotalDfp(order)
+                  const canArchive = canFulfillerArchive(order, userId)
+
+                  return (
+                    <div
+                      key={order.id}
+                      className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-white text-sm font-medium">{order.title}</p>
+                          <p className="text-slate-500 text-xs mt-1">
+                            {order.status.replace(/_/g, ' ')}
+                            {order.requester &&
+                              ` · Customer: ${displayNameFromFields(order.requester)}`}
+                            {totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                          </p>
+                          {order.status === 'ready_for_pickup' && (
+                            <p className="text-cyan-300/80 text-xs mt-2">
+                              Waiting for customer pickup confirmation.
+                            </p>
+                          )}
+                          {order.status === 'completed' && (
+                            <p className="text-green-300/80 text-xs mt-2">
+                              Pickup confirmed — archive and rate the customer when you are done.
+                            </p>
+                          )}
+                        </div>
+                        {canArchive && (
+                          <button
+                            type="button"
+                            onClick={() => setArchiveOrder(order)}
+                            className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded shrink-0"
+                          >
+                            Archive
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
             <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
             {fulfillments.length === 0 ? (
               <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
@@ -387,6 +472,17 @@ export default function FulfillmentRoute() {
             )}
           </section>
         </div>
+      )}
+
+      {archiveOrder && (
+        <OrderRatingModal
+          target="customer"
+          rateeName={displayNameFromFields(archiveOrder.requester)}
+          orderTitle={archiveOrder.title}
+          onConfirm={(stars, comment) => void handleArchiveConfirm(stars, comment)}
+          onCancel={() => setArchiveOrder(null)}
+          confirming={archiving}
+        />
       )}
     </FeaturePageLayout>
   )

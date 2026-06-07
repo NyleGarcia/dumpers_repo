@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
+import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
@@ -17,7 +18,17 @@ import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
 import {
+  canCustomerArchive,
+  canFulfillerArchive,
+  isArchivedForUser,
+  isCompletedStageOrder,
+  isOpenOrder,
+  orderMatchesTab,
+  type OrderListTab,
+} from '../lib/orderArchive'
+import {
   acceptCustomOrder,
+  archiveCustomOrderWithRating,
   confirmOrderPickup,
   fetchCustomOrders,
   fetchInventory,
@@ -38,8 +49,15 @@ const STATUS_STYLES: Record<string, string> = {
   ready_for_pickup: 'bg-cyan-950/50 text-cyan-300 border-cyan-500/30',
   fulfilled: 'bg-green-950/50 text-green-300 border-green-500/30',
   completed: 'bg-green-950/50 text-green-300 border-green-500/30',
+  archived: 'bg-slate-800/80 text-slate-400 border-slate-600',
   cancelled: 'bg-slate-800 text-slate-400 border-slate-600',
 }
+
+const LIST_TABS: { id: OrderListTab; label: string }[] = [
+  { id: 'active', label: 'Active' },
+  { id: 'completed', label: 'Completed' },
+  { id: 'archive', label: 'Archive' },
+]
 
 const OPEN_STATUSES: CustomOrderStatus[] = [
   'pending',
@@ -80,6 +98,14 @@ export default function CustomOrdersRoute() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [listTab, setListTab] = useState<OrderListTab>('active')
+  const [ratingModal, setRatingModal] = useState<{
+    orderId: string
+    target: OrderRatingTarget
+    rateeName: string
+    orderTitle: string
+  } | null>(null)
+  const [archiving, setArchiving] = useState(false)
 
   const loadOrders = useCallback(async () => {
     setLoading(true)
@@ -135,6 +161,7 @@ export default function CustomOrdersRoute() {
       setError(result.error)
       return
     }
+    setListTab('completed')
     await loadOrders()
   }
 
@@ -166,7 +193,65 @@ export default function CustomOrdersRoute() {
     await loadOrders()
   }
 
-  const openOrders = orders.filter((o) => OPEN_STATUSES.includes(o.status))
+  const openArchiveModal = (
+    order: CustomOrder,
+    target: OrderRatingTarget,
+    rateeFields?: { rsi_handle: string | null; display_name: string | null; email: string | null } | null,
+    rateeId?: string | null
+  ) => {
+    setRatingModal({
+      orderId: order.id,
+      target,
+      rateeName: getDisplayName(
+        profileFromOrderFields(rateeId ?? '', rateeFields)
+      ),
+      orderTitle: order.title,
+    })
+  }
+
+  const handleArchiveConfirm = async (stars: number, comment?: string) => {
+    if (!ratingModal) return
+
+    setArchiving(true)
+    const result = await archiveCustomOrderWithRating(ratingModal.orderId, stars, comment)
+    setArchiving(false)
+
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+
+    setRatingModal(null)
+    setListTab('archive')
+    await loadOrders()
+  }
+
+  const userId = user?.id
+  const visibleOrders = useMemo(
+    () =>
+      orders.filter(
+        (o) => o.status !== 'cancelled' && orderMatchesTab(o, listTab, userId)
+      ),
+    [orders, listTab, userId]
+  )
+
+  const openOrderCount = useMemo(
+    () => orders.filter((o) => o.status !== 'cancelled' && isOpenOrder(o) && !isArchivedForUser(o, userId)).length,
+    [orders, userId]
+  )
+
+  const completedOrderCount = useMemo(
+    () =>
+      orders.filter(
+        (o) =>
+          o.status !== 'cancelled' &&
+          isCompletedStageOrder(o) &&
+          !isArchivedForUser(o, userId)
+      ).length,
+    [orders, userId]
+  )
+
+  const totalOrderCount = openOrderCount + completedOrderCount
   const unreadCount = notifications.filter((n) => !n.read_at).length
 
   return (
@@ -249,15 +334,46 @@ export default function CustomOrdersRoute() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">Open orders</p>
-          <p className="text-2xl font-bold text-amber-300 mt-1">{openOrders.length}</p>
+          <p className="text-2xl font-bold text-amber-300 mt-1">{openOrderCount}</p>
+        </div>
+        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+          <p className="text-slate-500 text-xs uppercase tracking-wide">Completed orders</p>
+          <p className="text-2xl font-bold text-cyan-300 mt-1">{completedOrderCount}</p>
+          <p className="text-slate-500 text-[10px] mt-1">Ready for pickup or awaiting archive</p>
         </div>
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">Total orders</p>
-          <p className="text-2xl font-bold text-white mt-1">{orders.length}</p>
+          <p className="text-2xl font-bold text-white mt-1">{totalOrderCount}</p>
         </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        {LIST_TABS.map((tab) => {
+          const count = orders.filter(
+            (o) => o.status !== 'cancelled' && orderMatchesTab(o, tab.id, userId)
+          ).length
+
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setListTab(tab.id)}
+              className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
+                listTab === tab.id
+                  ? 'bg-red-950/50 text-red-200 border-red-500/40'
+                  : 'bg-slate-900/60 text-slate-400 border-slate-700 hover:border-slate-600'
+              }`}
+            >
+              {tab.label}
+              {count > 0 && (
+                <span className="ml-1.5 text-xs opacity-80">({count})</span>
+              )}
+            </button>
+          )
+        })}
       </div>
 
       {showForm && user?.id && (
@@ -284,13 +400,18 @@ export default function CustomOrdersRoute() {
         <div className="text-center py-16">
           <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
         </div>
-      ) : orders.length === 0 ? (
+      ) : visibleOrders.length === 0 ? (
         <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
-          <p className="text-slate-400">No orders yet. Create a blueprint-linked request to test.</p>
+          <p className="text-slate-400">
+            {listTab === 'active' && 'No open orders.'}
+            {listTab === 'completed' &&
+              'No completed orders. Finished crafts appear here when ready for pickup.'}
+            {listTab === 'archive' && 'No archived orders yet.'}
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
-          {orders.map((order) => {
+          {visibleOrders.map((order) => {
             const isOwn = order.requester_id === user?.id
             const isAssignee = order.assignee_id === user?.id
             const acceptBlockers = getAcceptBlockers(order)
@@ -404,6 +525,31 @@ export default function CustomOrdersRoute() {
                           Confirm pickup
                         </button>
                       )}
+                      {canCustomerArchive(order, userId) && (
+                        <button
+                          onClick={() =>
+                            openArchiveModal(order, 'fulfiller', order.assignee, order.assignee_id)
+                          }
+                          className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded"
+                        >
+                          Archive
+                        </button>
+                      )}
+                      {canFulfillerArchive(order, userId) && (
+                        <button
+                          onClick={() =>
+                            openArchiveModal(
+                              order,
+                              'customer',
+                              order.requester,
+                              order.requester_id
+                            )
+                          }
+                          className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded"
+                        >
+                          Archive
+                        </button>
+                      )}
                       {isAssignee &&
                         (order.status === 'accepted' || order.status === 'in_progress') && (
                           <Link
@@ -451,6 +597,17 @@ export default function CustomOrdersRoute() {
             )
           })}
         </div>
+      )}
+
+      {ratingModal && (
+        <OrderRatingModal
+          target={ratingModal.target}
+          rateeName={ratingModal.rateeName}
+          orderTitle={ratingModal.orderTitle}
+          onConfirm={(stars, comment) => void handleArchiveConfirm(stars, comment)}
+          onCancel={() => setRatingModal(null)}
+          confirming={archiving}
+        />
       )}
     </FeaturePageLayout>
   )

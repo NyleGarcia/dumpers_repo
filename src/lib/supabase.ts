@@ -32,6 +32,13 @@ export function getDisplayName(profile: Profile | null): string {
   return profile.rsi_handle || profile.display_name || profile.email || 'Unknown'
 }
 
+export function displayNameFromFields(
+  fields?: { rsi_handle: string | null; display_name: string | null; email: string | null } | null
+): string {
+  if (!fields) return 'Unknown'
+  return fields.rsi_handle || fields.display_name || fields.email || 'Unknown'
+}
+
 export interface AcquiredBlueprint {
   id: number
   user_id: string

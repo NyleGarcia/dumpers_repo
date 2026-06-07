@@ -13,6 +13,7 @@ export type CustomOrderStatus =
   | 'ready_for_pickup'
   | 'fulfilled'
   | 'completed'
+  | 'archived'
   | 'cancelled'
 
 export interface BlueprintResourceRow {
@@ -84,6 +85,8 @@ export interface CustomOrder {
   total_dfp_auec: number
   assignee_id: string | null
   accepted_at: string | null
+  requester_archived_at: string | null
+  fulfiller_archived_at: string | null
   created_at: string
   updated_at: string
   items?: CustomOrderItem[]
@@ -555,6 +558,21 @@ export async function completeOrderCraft(
 
 export async function confirmOrderPickup(orderId: string): Promise<{ error?: string }> {
   const { error } = await supabase.rpc('confirm_order_pickup', { p_order_id: orderId })
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function archiveCustomOrderWithRating(
+  orderId: string,
+  stars: number,
+  comment?: string
+): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('archive_custom_order_with_rating', {
+    p_order_id: orderId,
+    p_stars: stars,
+    p_comment: comment ?? null,
+  })
+
   if (error) return { error: error.message }
   return {}
 }
