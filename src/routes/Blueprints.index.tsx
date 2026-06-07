@@ -215,10 +215,13 @@ export default function BlueprintsRoute() {
       // Filter by vehicle size if selected
       if (selectedSize && !bp.categoryName.includes(selectedSize)) return
       
-      // Filter by armor weight if selected
+      // Filter by armor weight if selected - only applies to combat armor (which has weights)
+      // Non-combat armor (explorer, etc.) doesn't have weights, so show them regardless of weight filter
       if (selectedArmorWeight && selectedMainCategory === 'FPS Armour') {
         const weight = getArmorWeight(bp)
-        if (weight !== selectedArmorWeight) return
+        // If this armor has a weight, it must match the selected weight
+        // If it has no weight (template armor), include it anyway
+        if (weight && weight !== selectedArmorWeight) return
       }
       
       const sub = getSubType(bp)
@@ -241,10 +244,13 @@ export default function BlueprintsRoute() {
         
         if (selectedSize && !bp.categoryName.includes(selectedSize)) return false
         
-        // Filter by armor weight for FPS Armour
+        // Filter by armor weight for FPS Armour - only applies to combat armor that has weights
+        // Non-combat armor (explorer, etc.) doesn't have weights, so show them regardless
         if (selectedArmorWeight && selectedMainCategory === 'FPS Armour') {
           const weight = getArmorWeight(bp)
-          if (weight !== selectedArmorWeight) return false
+          // If this armor has a weight, it must match the selected weight
+          // If it has no weight (template armor), include it anyway
+          if (weight && weight !== selectedArmorWeight) return false
         }
         
         if (selectedSubCategory) {
