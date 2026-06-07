@@ -229,9 +229,57 @@ export default function BlueprintsRoute() {
     return { subTypes, sizes, armorWeights, armorSlots, mainCounts }
   }, [baseFilteredBlueprints])
 
+  // Filtered counts for armor that respect current selections
+  const filteredArmorCounts = React.useMemo(() => {
+    if (selectedMainCategory !== 'FPS Armour') return { weights: {}, slots: {}, types: {} }
+    
+    const weights = {}
+    const slots = {}
+    const types = {}
+    
+    baseFilteredBlueprints.forEach(bp => {
+      if (!bp.categoryName) return
+      
+      const validCategories = MAIN_CATEGORY_GROUPS['FPS Armour'] || []
+      if (!validCategories.includes(bp.categoryName)) return
+      
+      const weight = getArmorWeight(bp)
+      const slot = getArmorSlot(bp)
+      const type = getSubType(bp)
+      
+      // For weight counts: filter by selected slot and type
+      const matchesSlotForWeight = !selectedArmorSlot || slot === selectedArmorSlot
+      const matchesTypeForWeight = !selectedSubCategory || type === selectedSubCategory
+      if (matchesSlotForWeight && matchesTypeForWeight && weight) {
+        weights[weight] = (weights[weight] || 0) + 1
+      }
+      
+      // For slot counts: filter by selected weight and type
+      const matchesWeightForSlot = !selectedArmorWeight || weight === selectedArmorWeight
+      const matchesTypeForSlot = !selectedSubCategory || type === selectedSubCategory
+      if (matchesWeightForSlot && matchesTypeForSlot && slot) {
+        slots[slot] = (slots[slot] || 0) + 1
+      }
+      
+      // For type counts: filter by selected weight and slot
+      const matchesWeightForType = !selectedArmorWeight || weight === selectedArmorWeight
+      const matchesSlotForType = !selectedArmorSlot || slot === selectedArmorSlot
+      if (matchesWeightForType && matchesSlotForType && type) {
+        types[type] = (types[type] || 0) + 1
+      }
+    })
+    
+    return { weights, slots, types }
+  }, [baseFilteredBlueprints, selectedMainCategory, selectedArmorWeight, selectedArmorSlot, selectedSubCategory])
+
   // Subcategory counts filtered by selected size (for Vehicle categories) or armor weight/slot (for FPS Armour)
   const filteredSubTypeCounts = React.useMemo(() => {
     if (!selectedMainCategory) return {}
+    
+    // For FPS Armour, use the pre-calculated filtered type counts
+    if (selectedMainCategory === 'FPS Armour') {
+      return filteredArmorCounts.types
+    }
     
     const counts = {}
     baseFilteredBlueprints.forEach(bp => {
@@ -243,18 +291,6 @@ export default function BlueprintsRoute() {
       // Filter by vehicle size if selected
       if (selectedSize && !bp.categoryName.includes(selectedSize)) return
       
-      // Filter by armor weight if selected
-      if (selectedArmorWeight && selectedMainCategory === 'FPS Armour') {
-        const weight = getArmorWeight(bp)
-        if (weight !== selectedArmorWeight) return
-      }
-      
-      // Filter by armor slot if selected
-      if (selectedArmorSlot && selectedMainCategory === 'FPS Armour') {
-        const slot = getArmorSlot(bp)
-        if (slot !== selectedArmorSlot) return
-      }
-      
       const sub = getSubType(bp)
       if (sub) {
         counts[sub] = (counts[sub] || 0) + 1
@@ -262,7 +298,7 @@ export default function BlueprintsRoute() {
     })
     
     return counts
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, selectedArmorWeight, selectedArmorSlot])
+  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, filteredArmorCounts])
 
   // Final filtered blueprints (applies category filters on top of base, sorted A-Z)
   const filteredBlueprints = React.useMemo(() => {
@@ -337,8 +373,18 @@ export default function BlueprintsRoute() {
   }
 
   const currentSizes = selectedMainCategory ? categoryData.sizes[selectedMainCategory] || {} : {}
-  const currentArmorWeights = selectedMainCategory === 'FPS Armour' ? categoryData.armorWeights || {} : {}
-  const currentArmorSlots = selectedMainCategory === 'FPS Armour' ? categoryData.armorSlots || {} : {}
+  // For armor weights: show all possible weights but with filtered counts
+  const allArmorWeights = selectedMainCategory === 'FPS Armour' ? categoryData.armorWeights || {} : {}
+  const currentArmorWeights = Object.keys(allArmorWeights).reduce((acc, key) => {
+    acc[key] = filteredArmorCounts.weights[key] || 0
+    return acc
+  }, {})
+  // For armor slots: show all possible slots but with filtered counts
+  const allArmorSlots = selectedMainCategory === 'FPS Armour' ? categoryData.armorSlots || {} : {}
+  const currentArmorSlots = Object.keys(allArmorSlots).reduce((acc, key) => {
+    acc[key] = filteredArmorCounts.slots[key] || 0
+    return acc
+  }, {})
   // Get all subtypes for the category (unfiltered) to ensure we always show all type buttons
   const allSubTypes = selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {}
   // Always use filteredSubTypeCounts for the actual counts - it respects size/weight/slot filters when active
@@ -346,7 +392,7 @@ export default function BlueprintsRoute() {
     acc[key] = filteredSubTypeCounts[key] || 0
     return acc
   }, {})
-  const hasSubFilters = Object.keys(allSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(currentArmorWeights).length > 0 || Object.keys(currentArmorSlots).length > 0
+  const hasSubFilters = Object.keys(allSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(allArmorWeights).length > 0 || Object.keys(allArmorSlots).length > 0
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-2 sm:p-4 overflow-x-hidden">
