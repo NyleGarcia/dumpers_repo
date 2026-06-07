@@ -4,7 +4,8 @@ import BlueprintsRoute from './Blueprints.index'
 import ResourceTrackerRoute from './ResourceTracker.index'
 import CustomOrdersRoute from './CustomOrders.index'
 import FulfillmentRoute from './Fulfillment.index'
-import { requirePreviewAccess } from '../lib/routeGuards'
+import TargetsRoute from './Targets.index'
+import { requireFeature } from '../lib/routeGuards'
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -16,29 +17,37 @@ const indexRoute = createRoute({
   component: BlueprintsRoute,
 })
 
+const targetsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/targets',
+  component: TargetsRoute,
+  beforeLoad: requireFeature('target_bp_list'),
+})
+
 const resourceTrackerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/resources',
   component: ResourceTrackerRoute,
-  beforeLoad: requirePreviewAccess(),
+  beforeLoad: requireFeature('resource_tracker'),
 })
 
 const customOrdersRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/orders',
   component: CustomOrdersRoute,
-  beforeLoad: requirePreviewAccess(),
+  beforeLoad: requireFeature('custom_orders'),
 })
 
 const fulfillmentRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/fulfillment',
   component: FulfillmentRoute,
-  beforeLoad: requirePreviewAccess(),
+  beforeLoad: requireFeature('fulfillment'),
 })
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
+  targetsRoute,
   resourceTrackerRoute,
   customOrdersRoute,
   fulfillmentRoute,

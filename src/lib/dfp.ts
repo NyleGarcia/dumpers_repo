@@ -1,11 +1,17 @@
 import {
   DFP_ASSUMED_QUALITY,
   DFP_BASE_PER_001_cSCU,
+  DFP_CRAFT_PREMIUM,
   DFP_DEFAULT_MODIFIER,
   DFP_QUALITY_TIERS,
   DFP_RARITY_MODIFIERS,
   DFP_RESOURCE_ALIASES,
   DFP_SCALE_FACTOR,
+  DFP_SHIP_SUBCATEGORY_MODIFIERS,
+  DFP_TYPE_MODIFIERS,
+  type DfpProductType,
+  type DfpSizeKey,
+  type DfpSubcategoryModifier,
 } from '../config/dfp'
 
 const MIN_SCU = 0.001
@@ -20,11 +26,18 @@ export interface DfpLineItem {
 }
 
 export interface DfpResult {
+  /** Material subtotal before type modifier */
+  materialTotal: number
+  /** Category / subcategory multiplier applied to material total */
+  typeModifier: number
+  typeKey: string
   total: number
   lines: DfpLineItem[]
 }
 
 export interface BlueprintDfpInput {
+  categoryName?: string
+  subCategoryName?: string
   slots?: {
     requiredCount?: number
     options?: {
@@ -72,6 +85,64 @@ export function baseValueForScu(quality: number, scu: number): number {
   return per001 * (effectiveScu / MIN_SCU) * DFP_SCALE_FACTOR
 }
 
+const SIZE_FROM_CATEGORY = /S(\d+)/i
+
+export function extractComponentSize(categoryName?: string): DfpSizeKey | null {
+  if (!categoryName) return null
+  const match = categoryName.match(SIZE_FROM_CATEGORY)
+  if (!match) return null
+  return `S${match[1]}` as DfpSizeKey
+}
+
+export function resolveDfpProductType(blueprint: BlueprintDfpInput): DfpProductType {
+  const category = blueprint.categoryName ?? ''
+
+  if (category === 'FPSArmours') return 'armor'
+  if (category === 'FPSWeapons') return 'fps_weapon'
+  if (category === 'Ammo') return 'ammo'
+  if (category === 'MissionItem') return 'mission_item'
+  if (category.startsWith('Veh. Comp.')) return 'ship_component'
+  if (category.startsWith('Veh. Weapons')) return 'vehicle_weapon'
+  return 'other'
+}
+
+function resolveSubcategoryModifier(
+  entry: DfpSubcategoryModifier | undefined,
+  size: DfpSizeKey | null,
+): number | null {
+  if (entry == null) return null
+  if (typeof entry === 'number') return entry
+
+  if (size && entry[size] != null) return entry[size]!
+  if (entry.default != null) return entry.default
+  return null
+}
+
+export function resolveDfpTypeKey(blueprint: BlueprintDfpInput): string {
+  const productType = resolveDfpProductType(blueprint)
+  if (productType !== 'ship_component') return productType
+
+  const sub = blueprint.subCategoryName ?? 'default'
+  const size = extractComponentSize(blueprint.categoryName)
+  return size ? `ship_component:${sub}:${size}` : `ship_component:${sub}`
+}
+
+export function getDfpTypeModifier(blueprint: BlueprintDfpInput): number {
+  const productType = resolveDfpProductType(blueprint)
+
+  if (productType !== 'ship_component') {
+    return (DFP_TYPE_MODIFIERS[productType] ?? DFP_TYPE_MODIFIERS.other) * DFP_CRAFT_PREMIUM
+  }
+
+  const sub = blueprint.subCategoryName ?? 'default'
+  const size = extractComponentSize(blueprint.categoryName)
+  const entry = DFP_SHIP_SUBCATEGORY_MODIFIERS[sub] ?? DFP_SHIP_SUBCATEGORY_MODIFIERS.default
+  const fallback = resolveSubcategoryModifier(DFP_SHIP_SUBCATEGORY_MODIFIERS.default, size) ?? 0.85
+  const modifier = resolveSubcategoryModifier(entry, size) ?? fallback
+
+  return modifier * DFP_CRAFT_PREMIUM
+}
+
 export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {
   const lines: DfpLineItem[] = []
 
@@ -101,8 +172,12 @@ export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {
     }
   }
 
-  const total = lines.reduce((sum, line) => sum + line.lineTotal, 0)
-  return { total, lines }
+  const materialTotal = lines.reduce((sum, line) => sum + line.lineTotal, 0)
+  const typeModifier = getDfpTypeModifier(blueprint)
+  const typeKey = resolveDfpTypeKey(blueprint)
+  const total = Math.round(materialTotal * typeModifier)
+
+  return { materialTotal, typeModifier, typeKey, total, lines }
 }
 
 export function formatDfpValue(value: number): string {

@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import { supabase, Profile, getDisplayName, type UserRole } from '../lib/supabase'
 import { roleAtLeast } from '../lib/roles'
+import {
+  buildVisibilityContext,
+  canUseFeature,
+  type FeatureId,
+  type VisibilityContext,
+} from '../lib/featureAccess'
 import type { User, Session } from '@supabase/supabase-js'
 
 export interface UserWithBlueprints {
@@ -30,11 +36,14 @@ interface AuthContextType {
   isSuperAdmin: boolean
   isPending: boolean
   isGhostMode: boolean
+  isSociallyHidden: boolean
   canModifyBlueprints: boolean
   showMemberCollections: boolean
   isApproved: boolean
   canAccess: (minRole: UserRole) => boolean
   canAccessPreviewFeatures: boolean
+  visibilityContext: VisibilityContext
+  canUseFeature: (featureId: FeatureId) => boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -406,12 +415,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isPending = profile?.role === 'pending'
   const isGhostMode = profile?.ghost_mode ?? false
   const canModifyBlueprints = !!profile && profile.role !== 'pending'
-  const showMemberCollections = canModifyBlueprints && !isGhostMode
   const isApproved = canModifyBlueprints
+  const visibilityContext = useMemo(
+    () =>
+      buildVisibilityContext({
+        role: profile?.role ?? null,
+        ghostMode: profile?.ghost_mode ?? false,
+        previewFeaturesEnabled: profile?.preview_features_enabled ?? false,
+        orgOnlyMode: profile?.org_only_mode ?? false,
+        fulfillmentEnabled: profile?.fulfillment_enabled ?? false,
+        orgId: profile?.org_id ?? null,
+      }),
+    [profile]
+  )
+  const showMemberCollections = canUseFeature('member_directory', visibilityContext)
+  const isSociallyHidden = visibilityContext.isSociallyHidden
   const canAccess = (minRole: UserRole) => roleAtLeast(profile?.role, minRole)
-  const canAccessPreviewFeatures =
-    isSuperAdmin ||
-    (profile?.role === 'officer' && (profile.preview_features_enabled ?? false))
+  const canAccessPreviewFeatures = visibilityContext.canAccessPreviewFeatures
+  const checkFeature = (featureId: FeatureId) => canUseFeature(featureId, visibilityContext)
   const displayName = getDisplayName(profile)
 
   return (
@@ -436,11 +457,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isSuperAdmin,
         isPending,
         isGhostMode,
+        isSociallyHidden,
         canModifyBlueprints,
         showMemberCollections,
         isApproved,
         canAccess,
         canAccessPreviewFeatures,
+        visibilityContext,
+        canUseFeature: checkFeature,
       }}
     >
       {children}

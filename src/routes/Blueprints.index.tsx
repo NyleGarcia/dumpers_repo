@@ -2,6 +2,7 @@ import React from 'react'
 import { useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import { useAuth } from '../contexts/AuthContext'
+import { useTargetList } from '../hooks/useTargetList'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -168,8 +169,11 @@ export default function BlueprintsRoute() {
     isPending,
     fetchUsersWithBlueprints,
     fetchUserBlueprints,
-    user
+    user,
+    isApproved,
   } = useAuth()
+
+  const { isOnTargetList, toggleTarget } = useTargetList()
   
   const [searchTerm, setSearchTerm] = React.useState('')
   const [selectedMainCategory, setSelectedMainCategory] = React.useState(null)
@@ -734,14 +738,28 @@ export default function BlueprintsRoute() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-white">{selectedBlueprint.blueprintName}</h2>
-                <button 
-                  onClick={() => setSelectedBlueprint(null)}
-                  className="text-slate-400 hover:text-white text-2xl leading-none"
-                >
-                  ×
-                </button>
+              <div className="flex justify-between items-start gap-3 mb-4">
+                <h2 className="text-2xl font-bold text-white flex-1">{selectedBlueprint.blueprintName}</h2>
+                <div className="flex items-center gap-2 shrink-0">
+                  {isApproved && !isViewingOther && (
+                    <button
+                      onClick={() => void toggleTarget(selectedBlueprint.file)}
+                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
+                        isOnTargetList(selectedBlueprint.file)
+                          ? 'bg-amber-900/40 text-amber-300 border-amber-500/50 hover:bg-amber-900/60'
+                          : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-amber-500/40 hover:text-amber-300'
+                      }`}
+                    >
+                      {isOnTargetList(selectedBlueprint.file) ? '★ On Target List' : '+ Target List'}
+                    </button>
+                  )}
+                  <button 
+                    onClick={() => setSelectedBlueprint(null)}
+                    className="text-slate-400 hover:text-white text-2xl leading-none"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
               
               <div className="space-y-4">

@@ -3,6 +3,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from '../routes/root'
 import { useAuth } from '../contexts/AuthContext'
 import { roleAtLeast } from '../lib/roles'
+import { buildVisibilityContext } from '../lib/featureAccess'
 import type { UserRole } from '../lib/supabase'
 
 const router = createRouter({
@@ -13,6 +14,8 @@ const router = createRouter({
       profile: null,
       canAccess: () => false,
       canAccessPreviewFeatures: false,
+      visibilityContext: buildVisibilityContext({}),
+      canUseFeature: () => false,
     },
   },
 })
@@ -24,7 +27,13 @@ declare module '@tanstack/react-router' {
 }
 
 export default function RouterApp() {
-  const { loading, profile, canAccessPreviewFeatures } = useAuth()
+  const {
+    loading,
+    profile,
+    canAccessPreviewFeatures,
+    visibilityContext,
+    canUseFeature,
+  } = useAuth()
 
   const canAccess = (minRole: UserRole) => roleAtLeast(profile?.role, minRole)
 
@@ -37,6 +46,8 @@ export default function RouterApp() {
           profile,
           canAccess,
           canAccessPreviewFeatures,
+          visibilityContext,
+          canUseFeature,
         },
       }}
     />

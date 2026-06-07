@@ -1,4 +1,10 @@
 import type { UserRole } from '../lib/supabase'
+import {
+  canUseFeature,
+  passesGhostNavGate,
+  type FeatureId,
+  type VisibilityContext,
+} from '../lib/featureAccess'
 
 export type NavBadge = 'preview'
 
@@ -6,52 +12,83 @@ export interface AppNavItem {
   id: string
   label: string
   path: string
+  featureId?: FeatureId
   minRole?: UserRole
   access?: 'preview'
   badge?: NavBadge
+  /** Ghost Mode users only see items with ghostAllowed !== false */
+  ghostAllowed?: boolean
 }
 
 export const APP_NAV_ITEMS: AppNavItem[] = [
-  { id: 'blueprints', label: 'Blueprints', path: '/', minRole: 'member' },
+  {
+    id: 'blueprints',
+    label: 'Blueprints',
+    path: '/',
+    featureId: 'blueprints_browse',
+    minRole: 'member',
+    ghostAllowed: true,
+  },
+  {
+    id: 'targets',
+    label: 'Target BP List',
+    path: '/targets',
+    featureId: 'target_bp_list',
+    minRole: 'member',
+    ghostAllowed: true,
+  },
   {
     id: 'resource-tracker',
     label: 'Resource Tracker',
     path: '/resources',
+    featureId: 'resource_tracker',
     access: 'preview',
     badge: 'preview',
+    ghostAllowed: false,
   },
   {
     id: 'custom-orders',
     label: 'Custom Orders',
     path: '/orders',
+    featureId: 'custom_orders',
     access: 'preview',
     badge: 'preview',
+    ghostAllowed: false,
   },
   {
     id: 'fulfillment',
     label: 'Fulfillment',
     path: '/fulfillment',
+    featureId: 'fulfillment',
     access: 'preview',
     badge: 'preview',
+    ghostAllowed: false,
   },
 ]
 
 export function canSeeNavItem(
   item: AppNavItem,
-  canAccess: (minRole: UserRole) => boolean,
-  canAccessPreviewFeatures: boolean
+  ctx: VisibilityContext,
+  canAccess: (minRole: UserRole) => boolean
 ): boolean {
-  if (item.access === 'preview') return canAccessPreviewFeatures
+  if (!passesGhostNavGate(item.ghostAllowed, ctx)) return false
+
+  if (item.featureId) {
+    return canUseFeature(item.featureId, ctx)
+  }
+
+  if (item.access === 'preview') {
+    return ctx.canAccessPreviewFeatures && !ctx.ghostMode
+  }
+
   return canAccess(item.minRole ?? 'member')
 }
 
 export function getVisibleNavItems(
-  canAccess: (minRole: UserRole) => boolean,
-  canAccessPreviewFeatures: boolean
+  ctx: VisibilityContext,
+  canAccess: (minRole: UserRole) => boolean
 ): AppNavItem[] {
-  return APP_NAV_ITEMS.filter((item) =>
-    canSeeNavItem(item, canAccess, canAccessPreviewFeatures)
-  )
+  return APP_NAV_ITEMS.filter((item) => canSeeNavItem(item, ctx, canAccess))
 }
 
 export function getNavItemByPath(path: string): AppNavItem | undefined {

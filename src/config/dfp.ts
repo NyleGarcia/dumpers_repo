@@ -1,4 +1,7 @@
-export const DFP_VERSION = '1.0.0-scale0.1'
+export const DFP_VERSION = '1.1.0-type-modifiers'
+
+/** Applied after material total — keeps DFP at or above NPC shop for crafted goods. */
+export const DFP_CRAFT_PREMIUM = 1.02
 
 /** Global calibration — spec may need ÷10 on base values */
 export const DFP_SCALE_FACTOR = 0.1
@@ -69,4 +72,38 @@ export const DFP_RESOURCE_ALIASES: Record<string, string> = {
   Quantanium: 'Quantainium',
   Carinite: 'Caranite',
   Pressurized_Ice: 'Pressurized Ice',
+}
+
+export type DfpProductType = 'armor' | 'fps_weapon' | 'ammo' | 'vehicle_weapon' | 'ship_component' | 'mission_item' | 'other'
+
+export type DfpSizeKey = 'default' | 'S0' | 'S1' | 'S2' | 'S3' | 'S4' | 'S5' | 'S6'
+
+export type DfpSubcategoryModifier = number | Partial<Record<DfpSizeKey, number>>
+
+/**
+ * Post-material multipliers by product type.
+ * Calibrated vs NPC shop prices (UEX ~4.8) — targets at or slightly above shop
+ * to reflect blueprint acquisition, mining, and quality RNG.
+ */
+export const DFP_TYPE_MODIFIERS: Record<Exclude<DfpProductType, 'ship_component'>, number> = {
+  armor: 0.2,
+  fps_weapon: 0.5,
+  ammo: 0.12,
+  vehicle_weapon: 0.45,
+  mission_item: 1,
+  other: 0.35,
+}
+
+/** Ship component subcategory modifiers; size keys override `default` when present. */
+export const DFP_SHIP_SUBCATEGORY_MODIFIERS: Record<string, DfpSubcategoryModifier> = {
+  quantumdrive: { default: 0.4, S0: 0.55, S1: 0.52, S2: 0.28, S3: 0.24, S4: 0.22 },
+  mininglaser: 2.2,
+  radar: { default: 0.3, S0: 0.35, S1: 0.4, S2: 0.32, S3: 0.25, S4: 0.22 },
+  cooler: { default: 1.8, S0: 1.1, S1: 2.1, S2: 2, S3: 1.8, S4: 1.6 },
+  powerplant: { default: 0.85, S0: 2.1, S1: 1.2, S2: 0.75, S3: 0.6, S4: 0.55 },
+  shield: { default: 0.9, S0: 1, S1: 0.95, S2: 0.9, S3: 0.85, S4: 0.8 },
+  salvage: 1.8,
+  tractorbeam: 1.5,
+  refuelling: 0.5,
+  default: 0.85,
 }
