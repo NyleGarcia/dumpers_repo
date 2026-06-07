@@ -420,15 +420,15 @@ export default function BlueprintsRoute() {
                           selectedSize === size
                             ? 'bg-blue-600 text-white'
                             : count === 0
-                              ? 'bg-slate-800/30 text-slate-600 border border-slate-700 cursor-not-allowed'
-                              : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 border border-slate-600'
+                              ? 'bg-blue-950/30 text-blue-800 border border-blue-900/50 cursor-not-allowed'
+                              : 'bg-blue-950/50 text-blue-400 hover:bg-blue-900/50 border border-blue-800/50'
                         }`}
                       >
                         {size}<span className="opacity-70 ml-0.5">({count})</span>
                       </button>
                     )
                   })}
-                  <span className="text-slate-600 self-center text-xs hidden lg:inline">|</span>
+                  <span className="text-slate-500 self-center text-sm hidden lg:inline">+</span>
                 </>
               )}
               
@@ -450,15 +450,15 @@ export default function BlueprintsRoute() {
                           selectedArmorWeight === weight
                             ? 'bg-blue-600 text-white'
                             : count === 0
-                              ? 'bg-slate-800/30 text-slate-600 border border-slate-700 cursor-not-allowed'
-                              : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 border border-slate-600'
+                              ? 'bg-blue-950/30 text-blue-800 border border-blue-900/50 cursor-not-allowed'
+                              : 'bg-blue-950/50 text-blue-400 hover:bg-blue-900/50 border border-blue-800/50'
                         }`}
                       >
                         {displayName}<span className="opacity-70 ml-0.5">({count})</span>
                       </button>
                     )
                   })}
-                  <span className="text-slate-600 self-center text-xs hidden lg:inline">|</span>
+                  <span className="text-slate-500 self-center text-sm hidden lg:inline">+</span>
                 </>
               )}
               
@@ -474,8 +474,8 @@ export default function BlueprintsRoute() {
                       selectedSubCategory === sub
                         ? 'bg-orange-600 text-white'
                         : count === 0
-                          ? 'bg-slate-800/30 text-slate-600 border border-slate-700 cursor-not-allowed'
-                          : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 border border-slate-600'
+                          ? 'bg-orange-950/30 text-orange-800 border border-orange-900/50 cursor-not-allowed'
+                          : 'bg-orange-950/50 text-orange-400 hover:bg-orange-900/50 border border-orange-800/50'
                     }`}
                   >
                     {formatSubType(sub)}<span className="opacity-70 ml-0.5">({count})</span>
