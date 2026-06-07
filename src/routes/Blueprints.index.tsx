@@ -201,9 +201,11 @@ export default function BlueprintsRoute() {
     return { subTypes, sizes, armorWeights, mainCounts }
   }, [baseFilteredBlueprints])
 
-  // Subcategory counts filtered by selected size (for Vehicle categories)
+  // Subcategory counts filtered by selected size (for Vehicle categories) or armor weight (for FPS Armour)
   const filteredSubTypeCounts = React.useMemo(() => {
-    if (!selectedMainCategory || !selectedSize) return categoryData.subTypes[selectedMainCategory] || {}
+    // If no size or armor weight selected, return unfiltered counts
+    if (!selectedMainCategory) return {}
+    if (!selectedSize && !selectedArmorWeight) return categoryData.subTypes[selectedMainCategory] || {}
     
     const counts = {}
     baseFilteredBlueprints.forEach(bp => {
@@ -211,7 +213,15 @@ export default function BlueprintsRoute() {
       
       const validCategories = MAIN_CATEGORY_GROUPS[selectedMainCategory] || []
       if (!validCategories.includes(bp.categoryName)) return
-      if (!bp.categoryName.includes(selectedSize)) return
+      
+      // Filter by vehicle size if selected
+      if (selectedSize && !bp.categoryName.includes(selectedSize)) return
+      
+      // Filter by armor weight if selected
+      if (selectedArmorWeight && selectedMainCategory === 'FPS Armour') {
+        const weight = getArmorWeight(bp)
+        if (weight !== selectedArmorWeight) return
+      }
       
       const sub = getSubType(bp)
       if (sub) {
@@ -220,7 +230,7 @@ export default function BlueprintsRoute() {
     })
     
     return counts
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, categoryData.subTypes])
+  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, selectedArmorWeight, categoryData.subTypes])
 
   // Final filtered blueprints (applies category filters on top of base, sorted A-Z)
   const filteredBlueprints = React.useMemo(() => {
@@ -288,7 +298,7 @@ export default function BlueprintsRoute() {
 
   const currentSizes = selectedMainCategory ? categoryData.sizes[selectedMainCategory] || {} : {}
   const currentArmorWeights = selectedMainCategory === 'FPS Armour' ? categoryData.armorWeights || {} : {}
-  const currentSubTypes = selectedSize ? filteredSubTypeCounts : (selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {})
+  const currentSubTypes = (selectedSize || selectedArmorWeight) ? filteredSubTypeCounts : (selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {})
   const hasSubFilters = Object.keys(currentSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(currentArmorWeights).length > 0
 
   return (
