@@ -203,9 +203,7 @@ export default function BlueprintsRoute() {
 
   // Subcategory counts filtered by selected size (for Vehicle categories) or armor weight (for FPS Armour)
   const filteredSubTypeCounts = React.useMemo(() => {
-    // If no size or armor weight selected, return unfiltered counts
     if (!selectedMainCategory) return {}
-    if (!selectedSize && !selectedArmorWeight) return categoryData.subTypes[selectedMainCategory] || {}
     
     const counts = {}
     baseFilteredBlueprints.forEach(bp => {
@@ -230,7 +228,7 @@ export default function BlueprintsRoute() {
     })
     
     return counts
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, selectedArmorWeight, categoryData.subTypes])
+  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, selectedArmorWeight])
 
   // Final filtered blueprints (applies category filters on top of base, sorted A-Z)
   const filteredBlueprints = React.useMemo(() => {
@@ -298,12 +296,11 @@ export default function BlueprintsRoute() {
 
   const currentSizes = selectedMainCategory ? categoryData.sizes[selectedMainCategory] || {} : {}
   const currentArmorWeights = selectedMainCategory === 'FPS Armour' ? categoryData.armorWeights || {} : {}
-  // Get all subtypes for the category, but use filtered counts when a size/weight filter is active
+  // Get all subtypes for the category (unfiltered) to ensure we always show all type buttons
   const allSubTypes = selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {}
-  const currentSubTypeCounts = (selectedSize || selectedArmorWeight) ? filteredSubTypeCounts : allSubTypes
-  // Merge all subtypes with filtered counts (show all subtypes, some may have 0 count)
+  // Always use filteredSubTypeCounts for the actual counts - it respects size/weight filters when active
   const currentSubTypes = Object.keys(allSubTypes).reduce((acc, key) => {
-    acc[key] = currentSubTypeCounts[key] || 0
+    acc[key] = filteredSubTypeCounts[key] || 0
     return acc
   }, {})
   const hasSubFilters = Object.keys(allSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(currentArmorWeights).length > 0
