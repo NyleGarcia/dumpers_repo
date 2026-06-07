@@ -1,8 +1,8 @@
 export const SITE_BRAND_FONT = "'Orbitron', sans-serif" as const
 export const SITE_BRAND_REPO_GRADIENT =
   'linear-gradient(90deg, #ea580c 0%, #f97316 45%, #facc15 100%)' as const
-/** DR monogram — same mark as the left side of og-image.png */
-export const SITE_BRAND_LOGO = '/favicon.png' as const
+/** Raster favicon for browser tabs; header uses inline SVG in SiteBrandMark. */
+export const SITE_BRAND_LOGO = '/favicon.svg' as const
 export const SITE_OG_IMAGE_PATH = '/og-image.png' as const
 
 export const SITE_URL = 'https://www.dumpers-repo.com' as const
