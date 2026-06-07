@@ -7,6 +7,7 @@ import {
   type FeatureId,
   type VisibilityContext,
 } from '../lib/featureAccess'
+import { removeTargetBlueprint } from '../lib/targetList'
 import type { User, Session } from '@supabase/supabase-js'
 
 export interface UserWithBlueprints {
@@ -293,6 +294,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ...prev,
           [blueprintId]: true,
         }))
+        await removeTargetBlueprint(user.id, blueprintId)
       }
     }
   }

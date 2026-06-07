@@ -10,7 +10,7 @@ import {
 } from '../lib/targetList'
 
 export function useTargetList() {
-  const { user, profile, isApproved } = useAuth()
+  const { user, profile, isApproved, acquiredBlueprints } = useAuth()
   const [targetIds, setTargetIds] = useState<Record<string, boolean>>({})
   const [missionPrefs, setMissionPrefs] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
@@ -33,10 +33,19 @@ export function useTargetList() {
         fetchMissionPrefs(user.id),
       ])
 
+      const staleAcquired = ids.filter((id) => acquiredBlueprints[id])
+      if (staleAcquired.length > 0) {
+        await Promise.all(
+          staleAcquired.map((id) => removeTargetBlueprint(user.id, id))
+        )
+      }
+
       const map: Record<string, boolean> = {}
-      ids.forEach((id) => {
-        map[id] = true
-      })
+      ids
+        .filter((id) => !acquiredBlueprints[id])
+        .forEach((id) => {
+          map[id] = true
+        })
       setTargetIds(map)
       setMissionPrefs(prefs)
     } catch (e) {
@@ -44,15 +53,38 @@ export function useTargetList() {
     } finally {
       setLoading(false)
     }
-  }, [user, isApproved])
+  }, [user, isApproved, acquiredBlueprints])
 
   useEffect(() => {
     void refresh()
   }, [refresh])
 
+  useEffect(() => {
+    if (!user || !isApproved) return
+
+    const acquiredOnTarget = Object.keys(targetIds).filter((id) => acquiredBlueprints[id])
+    if (acquiredOnTarget.length === 0) return
+
+    void (async () => {
+      await Promise.all(
+        acquiredOnTarget.map((id) => removeTargetBlueprint(user.id, id))
+      )
+      setTargetIds((prev) => {
+        const next = { ...prev }
+        for (const id of acquiredOnTarget) delete next[id]
+        return next
+      })
+    })()
+  }, [acquiredBlueprints, targetIds, user, isApproved])
+
   const toggleTarget = useCallback(
     async (blueprintId: string) => {
       if (!user || !isApproved) return false
+
+      if (acquiredBlueprints[blueprintId]) {
+        setError('This blueprint is already in your pool and cannot be on the target list.')
+        return false
+      }
 
       const isOnList = !!targetIds[blueprintId]
 
@@ -78,7 +110,7 @@ export function useTargetList() {
 
       return true
     },
-    [user, isApproved, targetIds, profile?.org_id]
+    [user, isApproved, targetIds, profile?.org_id, acquiredBlueprints]
   )
 
   const toggleMissionPref = useCallback(

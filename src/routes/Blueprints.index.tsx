@@ -741,7 +741,7 @@ export default function BlueprintsRoute() {
               <div className="flex justify-between items-start gap-3 mb-4">
                 <h2 className="text-2xl font-bold text-white flex-1">{selectedBlueprint.blueprintName}</h2>
                 <div className="flex items-center gap-2 shrink-0">
-                  {isApproved && !isViewingOther && (
+                  {isApproved && !isViewingOther && !acquiredBlueprints[selectedBlueprint.file] && (
                     <button
                       onClick={() => void toggleTarget(selectedBlueprint.file)}
                       className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${

@@ -28,11 +28,6 @@ export default function TargetsRoute() {
     return blueprints.filter((bp) => targetIds[bp.file])
   }, [blueprints, targetIds])
 
-  const acquiredTargetCount = useMemo(
-    () => targetBlueprintRecords.filter((bp) => acquiredSet.has(bp.file)).length,
-    [targetBlueprintRecords, acquiredSet]
-  )
-
   const missionGroups = useMemo(
     () =>
       buildMissionList(
@@ -65,7 +60,7 @@ export default function TargetsRoute() {
   return (
     <FeaturePageLayout
       title="Target BP List"
-      subtitle="Missions stay on your list while any linked target blueprint is not yet acquired"
+      subtitle="Only blueprints you still need — acquired targets drop off automatically"
       actions={
         <button
           onClick={() => void refresh()}
@@ -86,17 +81,10 @@ export default function TargetsRoute() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Target blueprints</p>
+          <p className="text-slate-500 text-xs uppercase tracking-wide">Still needed</p>
           <p className="text-2xl font-bold text-white mt-1">{targetCount}</p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Acquired</p>
-          <p className="text-2xl font-bold text-green-400 mt-1">
-            {acquiredTargetCount}
-            <span className="text-slate-500 text-base font-normal"> / {targetCount}</span>
-          </p>
         </div>
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">Active missions</p>
@@ -110,7 +98,7 @@ export default function TargetsRoute() {
         <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
           <p className="text-slate-400 text-lg mb-2">No target blueprints yet</p>
           <p className="text-slate-500 text-sm">
-            Open a blueprint on the catalog and use <strong className="text-amber-400">Add to Target List</strong>.
+            Open an un-acquired blueprint and use <strong className="text-amber-400">+ Target List</strong>.
           </p>
         </div>
       ) : (
@@ -169,24 +157,15 @@ export default function TargetsRoute() {
           <section>
             <h2 className="text-lg font-semibold text-white mb-3">Your targets</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {targetBlueprintRecords.map((bp) => {
-                const acquired = acquiredSet.has(bp.file)
-                return (
+              {targetBlueprintRecords.map((bp) => (
                   <div
                     key={bp.file}
-                    className={`flex items-center justify-between gap-2 p-3 rounded-xl border ${
-                      acquired
-                        ? 'bg-green-950/20 border-green-500/30'
-                        : 'bg-slate-900/50 border-slate-700'
-                    }`}
+                    className="flex items-center justify-between gap-2 p-3 rounded-xl border bg-slate-900/50 border-slate-700"
                   >
                     <div className="min-w-0">
-                      <p className={`text-sm font-medium truncate ${acquired ? 'text-green-300' : 'text-white'}`}>
+                      <p className="text-sm font-medium truncate text-white">
                         {bp.blueprintName}
                       </p>
-                      {acquired && (
-                        <p className="text-xs text-green-500/80 mt-0.5">Acquired</p>
-                      )}
                     </div>
                     <button
                       onClick={() => void toggleTarget(bp.file)}
@@ -195,8 +174,7 @@ export default function TargetsRoute() {
                       Remove
                     </button>
                   </div>
-                )
-              })}
+              ))}
             </div>
           </section>
         </div>
