@@ -48,17 +48,18 @@ const formatSubType = (sub) => {
 
 const getArmorWeight = (bp) => {
   const parts = bp.file.split('\\')
-  for (let i = 0; i < parts.length - 1; i++) {
-    if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
-      const sub = parts[i + 1]?.replace('$', '')
-      if (sub === 'combat' && parts[i + 2]) {
-        const weight = parts[i + 2].toLowerCase()
-        if (['light', 'medium', 'heavy', 'superheavy'].includes(weight)) {
-          return weight
-        }
-      }
-    }
-  }
+  const filename = parts[parts.length - 1]?.toLowerCase() || ''
+  
+  // Check if this is FPS armor
+  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
+  if (!isArmor) return null
+  
+  // Extract weight from filename (works for both combat and template armor)
+  if (filename.includes('_superheavy_') || filename.includes('_superheavy.')) return 'superheavy'
+  if (filename.includes('_heavy_') || filename.includes('_heavy.')) return 'heavy'
+  if (filename.includes('_medium_') || filename.includes('_medium.')) return 'medium'
+  if (filename.includes('_light_') || filename.includes('_light.')) return 'light'
+  
   return null
 }
 
