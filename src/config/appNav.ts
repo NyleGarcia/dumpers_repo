@@ -42,8 +42,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     label: 'Resource Tracker',
     path: '/resources',
     featureId: 'resource_tracker',
-    access: 'preview',
-    badge: 'preview',
     minRole: 'member',
     ghostAllowed: false,
   },
@@ -52,8 +50,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     label: 'Custom Orders',
     path: '/orders',
     featureId: 'custom_orders',
-    access: 'preview',
-    badge: 'preview',
     ghostAllowed: false,
   },
   {
@@ -61,8 +57,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     label: 'Fulfillment',
     path: '/fulfillment',
     featureId: 'fulfillment',
-    access: 'preview',
-    badge: 'preview',
     ghostAllowed: false,
   },
 ]

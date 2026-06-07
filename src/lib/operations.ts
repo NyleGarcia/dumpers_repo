@@ -1,5 +1,6 @@
 import type { MemberReputationRow } from './reputation'
 import { supabase } from './supabase'
+import { EXTRA_CATALOG_RESOURCE_KEYS, EXTRA_CATALOG_RESOURCES } from '../config/extraResources'
 import {
   extractBlueprintResources,
   type BlueprintWithSlots,
@@ -169,7 +170,10 @@ export interface CustomOrderResourceInput {
 export async function syncBlueprintResourceCatalog(
   blueprints: BlueprintWithSlots[]
 ): Promise<{ result?: ResourceCatalogSyncResult; error?: string }> {
-  const extracted = extractBlueprintResources(blueprints)
+  const extracted: ExtractedBlueprintResource[] = [
+    ...extractBlueprintResources(blueprints),
+    ...EXTRA_CATALOG_RESOURCES,
+  ]
   const activeKeys = new Set(extracted.map((r) => r.resourceKey))
   const now = new Date().toISOString()
 
@@ -194,7 +198,12 @@ export async function syncBlueprintResourceCatalog(
   if (fetchError) return { error: fetchError.message }
 
   const toDeactivate = (existing ?? [])
-    .filter((row) => row.is_active && !activeKeys.has(row.resource_key))
+    .filter(
+      (row) =>
+        row.is_active &&
+        !activeKeys.has(row.resource_key) &&
+        !EXTRA_CATALOG_RESOURCE_KEYS.has(row.resource_key)
+    )
     .map((row) => row.resource_key)
 
   if (toDeactivate.length > 0) {
@@ -205,8 +214,6 @@ export async function syncBlueprintResourceCatalog(
 
     if (deactivateError) return { error: deactivateError.message }
   }
-
-  // Inventory rows are seeded per user/org when the tracker loads scoped inventory.
 
   const priorKeys = new Set((existing ?? []).map((row) => row.resource_key))
   const added = extracted.filter((r) => !priorKeys.has(r.resourceKey)).length
@@ -246,9 +253,9 @@ export async function fetchResourceCatalog(options?: {
 export async function fetchPersonalInventoryCards(
   ctx: InventoryContext,
   options?: { includeInactive?: boolean }
-): Promise<{ data: PersonalInventoryCard[]; error?: string }> {
+): Promise<{ data: PersonalInventoryCard[]; lineKeys: string[]; error?: string }> {
   if (ctx.scope !== 'personal') {
-    return { data: [], error: 'Personal inventory only' }
+    return { data: [], lineKeys: [], error: 'Personal inventory only' }
   }
 
   const [catalogResult, inventoryResult] = await Promise.all([
@@ -256,12 +263,17 @@ export async function fetchPersonalInventoryCards(
     fetchInventory(ctx),
   ])
 
-  if (catalogResult.error) return { data: [], error: catalogResult.error }
-  if (inventoryResult.error) return { data: [], error: inventoryResult.error }
+  if (catalogResult.error) return { data: [], lineKeys: [], error: catalogResult.error }
+  if (inventoryResult.error) return { data: [], lineKeys: [], error: inventoryResult.error }
 
   const catalogByKey = new Map(catalogResult.data.map((r) => [r.resource_key, r]))
 
+  const lineKeys = inventoryResult.data.map(
+    (row) => `${row.resource_key}::${row.quality}`
+  )
+
   const data = inventoryResult.data
+    .filter((row) => Number(row.quantity) > 0)
     .map((row) => {
       const catalog = catalogByKey.get(row.resource_key)
       return {
@@ -279,7 +291,7 @@ export async function fetchPersonalInventoryCards(
       return a.quality - b.quality
     })
 
-  return { data }
+  return { data, lineKeys }
 }
 
 export async function fetchResourceCatalogWithInventory(

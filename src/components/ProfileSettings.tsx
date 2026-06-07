@@ -235,22 +235,13 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
 
           {isOfficerOrAbove && (
             <SettingsSection
-              title="Officer Tools"
-              description="Access in-development features while testing"
+              title="Org Features"
+              description="Live tools for every approved member"
             >
-              {isSuperAdmin ? (
-                <p className="text-sm text-slate-400">
-                  Feature Preview is always enabled for super-admins.
-                </p>
-              ) : (
-                <SettingsToggle
-                  label="Feature Preview"
-                  description="Show preview navigation for Resource Tracker, Custom Orders, Fulfillment, and future tools."
-                  checked={previewFeatures}
-                  onChange={handlePreviewFeaturesChange}
-                  saving={savingPreview}
-                />
-              )}
+              <p className="text-sm text-slate-400">
+                Resource Tracker, Custom Orders, and Fulfillment are available to all approved
+                members — no preview toggle required.
+              </p>
             </SettingsSection>
           )}
 

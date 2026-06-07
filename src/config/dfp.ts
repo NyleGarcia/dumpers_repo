@@ -11,8 +11,17 @@ export const DFP_ASSUMED_QUALITY = 500
 /** Internal DFP math tiers (50-point steps for base value lookup). */
 export const DFP_QUALITY_TIERS = [500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000] as const
 
-/** Order UI: min quality picks in 100-point steps (org convention). */
-export const ORDER_QUALITY_TIERS = [500, 600, 700, 800, 900, 1000] as const
+/** Q0 = store-bought; Q10–Q1000 = mined/refined in 10-point steps. */
+export const STOCK_QUALITY_TIERS: readonly number[] = [
+  0,
+  ...Array.from({ length: 100 }, (_, i) => (i + 1) * 10),
+]
+
+/** Min quality on buy orders (non-ammo). Same tiers as personal stock cards. */
+export const ORDER_QUALITY_TIERS = STOCK_QUALITY_TIERS
+
+/** Default picker value for crafted goods and refined stock. */
+export const DEFAULT_STOCK_QUALITY = 500
 
 /** Stored on ammo blueprint order lines — no customer min quality requirement. */
 export const AMMO_ORDER_MIN_QUALITY = 0
@@ -45,6 +54,8 @@ export const DFP_RARITY_MODIFIERS: Record<string, number> = {
   Steel: 14,
   Ouratite: 16,
   'Ships (Scrap/Salvage Parts)': 18,
+  RMC: 18,
+  'Construction Material': 18,
   'HexaPolyMesh Coating (HPMC)': 20,
   Tungsten: 22,
   Titanium: 24,
@@ -79,6 +90,8 @@ export const DFP_RESOURCE_ALIASES: Record<string, string> = {
   Quantanium: 'Quantainium',
   Carinite: 'Caranite',
   Pressurized_Ice: 'Pressurized Ice',
+  rmc: 'RMC',
+  construction_material: 'Construction Material',
 }
 
 export type DfpProductType = 'armor' | 'fps_weapon' | 'ammo' | 'vehicle_weapon' | 'ship_component' | 'mission_item' | 'other'

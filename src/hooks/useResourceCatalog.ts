@@ -36,6 +36,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
 
   const [catalog, setCatalog] = useState<BlueprintResourceRow[]>([])
   const [catalogWithInventory, setCatalogWithInventory] = useState<ResourceCatalogEntry[]>([])
+  const [personalLineKeys, setPersonalLineKeys] = useState<string[]>([])
   const [syncResult, setSyncResult] = useState<ResourceCatalogSyncResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -72,6 +73,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
       if (ctx.scope === 'personal') {
         const cardsResult = await fetchPersonalInventoryCards(ctx, { includeInactive })
         if (cardsResult.error && !catalogResult.error) setError(cardsResult.error)
+        setPersonalLineKeys(cardsResult.lineKeys)
         setCatalogWithInventory(
           cardsResult.data.map((card) => ({
             resource_key: card.resource_key,
@@ -83,6 +85,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
           }))
         )
       } else {
+        setPersonalLineKeys([])
         const { data, error: fetchError } = await fetchResourceCatalogWithInventory(ctx, {
           includeInactive,
         })
@@ -94,6 +97,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
       if (fetchError) setError(fetchError)
       setCatalog(data)
       setCatalogWithInventory([])
+      setPersonalLineKeys([])
     }
 
     setLoading(false)
@@ -139,6 +143,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
   return {
     catalog,
     catalogWithInventory,
+    personalLineKeys,
     labelMap,
     syncResult,
     loading,

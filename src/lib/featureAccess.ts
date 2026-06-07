@@ -47,8 +47,7 @@ export function buildVisibilityContext(input: BuildVisibilityContextInput): Visi
   const isOfficerOrAbove = role === 'officer' || isSuperAdmin
   const isPending = role === 'pending'
   const isApproved = !!role && role !== 'pending'
-  const canAccessPreviewFeatures =
-    isSuperAdmin || (role === 'officer' && previewFeaturesEnabled)
+  const canAccessPreviewFeatures = isApproved && !ghostMode
 
   return {
     role,
@@ -86,13 +85,13 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.canAccessPreviewFeatures && !ctx.ghostMode
 
     case 'resource_tracker':
-      return ctx.canAccessPreviewFeatures && !ctx.ghostMode
+      return ctx.isApproved && !ctx.ghostMode
 
     case 'custom_orders':
-      return ctx.canAccessPreviewFeatures && !ctx.ghostMode
+      return ctx.isApproved && !ctx.ghostMode
 
     case 'fulfillment':
-      return ctx.canAccessPreviewFeatures && !ctx.ghostMode
+      return ctx.isApproved && !ctx.ghostMode
 
     case 'target_bp_list':
       return ctx.isApproved

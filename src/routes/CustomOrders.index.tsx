@@ -262,7 +262,6 @@ export default function CustomOrdersRoute() {
     <FeaturePageLayout
       title="Custom Orders"
       subtitle={SITE_SLOGAN}
-      badge="Preview"
       actions={
         <>
           <Link

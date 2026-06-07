@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
-import { ORDER_QUALITY_TIERS } from '../config/dfp'
+import { DEFAULT_STOCK_QUALITY, ORDER_QUALITY_TIERS } from '../config/dfp'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
@@ -59,10 +59,10 @@ export default function ResourceBuyOrderPanel({
   const [mode, setMode] = useState<'blueprint' | 'resource'>('blueprint')
   const [bpSearch, setBpSearch] = useState('')
   const [selectedBlueprintId, setSelectedBlueprintId] = useState('')
-  const [bpQuality, setBpQuality] = useState(String(ORDER_QUALITY_TIERS[0]))
+  const [bpQuality, setBpQuality] = useState(String(DEFAULT_STOCK_QUALITY))
   const [bpQty, setBpQty] = useState('1')
   const [resourceKey, setResourceKey] = useState('')
-  const [resQuality, setResQuality] = useState(String(ORDER_QUALITY_TIERS[0]))
+  const [resQuality, setResQuality] = useState(String(DEFAULT_STOCK_QUALITY))
   const [resQty, setResQty] = useState('1')
   const [notes, setNotes] = useState('')
   const [minFulfillerRep, setMinFulfillerRep] = useState('')
@@ -135,7 +135,7 @@ export default function ResourceBuyOrderPanel({
   const addBlueprint = () => {
     if (!selectedBlueprint?.file) return
     const qty = Math.max(1, Number(bpQty) || 1)
-    const selectedQuality = Number(bpQuality) || ORDER_QUALITY_TIERS[0]
+    const selectedQuality = Number(bpQuality) || DEFAULT_STOCK_QUALITY
     const pricing = pricingForBlueprintLine(selectedBlueprint, selectedQuality, qty)
     setBpCart((prev) => [
       ...prev,

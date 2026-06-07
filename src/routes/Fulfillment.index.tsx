@@ -248,7 +248,6 @@ export default function FulfillmentRoute() {
     <FeaturePageLayout
       title="Fulfillment"
       subtitle={SITE_SLOGAN}
-      badge="Preview"
       actions={
         <Link
           to="/orders"

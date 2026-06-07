@@ -3,7 +3,7 @@ import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import { useBlueprintData } from './blueprints'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
-import { ORDER_QUALITY_TIERS } from '../config/dfp'
+import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import { SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
@@ -59,6 +59,7 @@ export default function ResourceTrackerRoute() {
   const {
     catalog,
     catalogWithInventory,
+    personalLineKeys,
     labelMap,
     syncResult,
     loading,
@@ -74,15 +75,7 @@ export default function ResourceTrackerRoute() {
 
   const stockCards = catalogWithInventory
 
-  const existingLineKeys = useMemo(
-    () =>
-      new Set(
-        stockCards
-          .filter((card) => card.quality != null)
-          .map((card) => inventoryLineKey(card.resource_key, card.quality!))
-      ),
-    [stockCards]
-  )
+  const existingLineKeys = useMemo(() => new Set(personalLineKeys), [personalLineKeys])
 
   const filteredCards = stockCards.filter((card) => {
     const matchesSearch =
@@ -305,7 +298,7 @@ export default function ResourceTrackerRoute() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
               {filteredCards.map((card) => {
-                const quality = card.quality ?? ORDER_QUALITY_TIERS[0]
+                const quality = card.quality ?? DEFAULT_STOCK_QUALITY
                 const lineKey = inventoryLineKey(card.resource_key, quality)
                 const isEditing = editingKey === lineKey
 

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { ORDER_QUALITY_TIERS } from '../config/dfp'
+import { DEFAULT_STOCK_QUALITY, STOCK_QUALITY_TIERS } from '../config/dfp'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { addPersonalInventoryLine, type BlueprintResourceRow } from '../lib/operations'
 import {
@@ -29,7 +29,7 @@ export default function PersonalStockAddPanel({
 }: PersonalStockAddPanelProps) {
   const [search, setSearch] = useState('')
   const [resourceKey, setResourceKey] = useState('')
-  const [quality, setQuality] = useState(String(ORDER_QUALITY_TIERS[0]))
+  const [quality, setQuality] = useState(String(DEFAULT_STOCK_QUALITY))
   const [quantity, setQuantity] = useState('0')
   const [submitting, setSubmitting] = useState(false)
 
@@ -87,8 +87,8 @@ export default function PersonalStockAddPanel({
       <div>
         <h2 className="text-white font-medium text-sm">Add material stock</h2>
         <p className="text-slate-500 text-xs mt-1">
-          Create a card per resource and quality tier (e.g. Q500 copper, Q700 copper). Use the buttons
-          on each card to adjust as you refine in-game.
+          Create a card per resource and quality tier — Q0 for store-bought, Q10–Q1000 for mined/refined
+          (e.g. Q0 copper, Q500 copper, Q700 copper). Use the buttons on each card to adjust in-game.
         </p>
       </div>
 
@@ -120,7 +120,7 @@ export default function PersonalStockAddPanel({
           className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
           aria-label="Quality tier"
         >
-          {ORDER_QUALITY_TIERS.map((tier) => (
+          {STOCK_QUALITY_TIERS.map((tier) => (
             <option key={tier} value={tier}>
               Q{tier}
             </option>
