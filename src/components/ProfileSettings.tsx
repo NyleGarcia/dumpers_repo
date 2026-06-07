@@ -5,16 +5,33 @@ import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import { ORG_ROLE_LABELS } from '../lib/org'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   useBodyScrollLock()
-  const { profile, updateRsiHandle, updateGhostMode, updatePreviewFeatures, signOut, isSuperAdmin, isOfficerOrAbove } = useAuth()
+  const {
+    profile,
+    organization,
+    orgMembership,
+    updateRsiHandle,
+    updateGhostMode,
+    updatePreviewFeatures,
+    updateOrgOnlyMode,
+    updateFulfillmentEnabled,
+    signOut,
+    isSuperAdmin,
+    isOfficerOrAbove,
+  } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
   const [previewFeatures, setPreviewFeatures] = useState(profile?.preview_features_enabled ?? false)
+  const [orgOnlyMode, setOrgOnlyMode] = useState(profile?.org_only_mode ?? false)
+  const [fulfillmentEnabled, setFulfillmentEnabled] = useState(profile?.fulfillment_enabled ?? false)
   const [savingRsi, setSavingRsi] = useState(false)
   const [savingGhost, setSavingGhost] = useState(false)
   const [savingPreview, setSavingPreview] = useState(false)
+  const [savingOrgOnly, setSavingOrgOnly] = useState(false)
+  const [savingFulfillment, setSavingFulfillment] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -24,7 +41,15 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setRsiHandle(profile?.rsi_handle || '')
     setGhostMode(profile?.ghost_mode ?? false)
     setPreviewFeatures(profile?.preview_features_enabled ?? false)
-  }, [profile?.rsi_handle, profile?.ghost_mode, profile?.preview_features_enabled])
+    setOrgOnlyMode(profile?.org_only_mode ?? false)
+    setFulfillmentEnabled(profile?.fulfillment_enabled ?? false)
+  }, [
+    profile?.rsi_handle,
+    profile?.ghost_mode,
+    profile?.preview_features_enabled,
+    profile?.org_only_mode,
+    profile?.fulfillment_enabled,
+  ])
 
   const handleSaveRsi = async () => {
     setSavingRsi(true)
@@ -73,6 +98,38 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setSavingPreview(false)
   }
 
+  const handleOrgOnlyModeChange = async (enabled: boolean) => {
+    const previous = orgOnlyMode
+    setOrgOnlyMode(enabled)
+    setSavingOrgOnly(true)
+    setMessage(null)
+
+    const success = await updateOrgOnlyMode(enabled)
+
+    if (!success) {
+      setOrgOnlyMode(previous)
+      setMessage({ type: 'error', text: 'Failed to update Org-only mode.' })
+    }
+
+    setSavingOrgOnly(false)
+  }
+
+  const handleFulfillmentEnabledChange = async (enabled: boolean) => {
+    const previous = fulfillmentEnabled
+    setFulfillmentEnabled(enabled)
+    setSavingFulfillment(true)
+    setMessage(null)
+
+    const success = await updateFulfillmentEnabled(enabled)
+
+    if (!success) {
+      setFulfillmentEnabled(previous)
+      setMessage({ type: 'error', text: 'Failed to update fulfillment setting.' })
+    }
+
+    setSavingFulfillment(false)
+  }
+
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'DELETE') return
 
@@ -97,7 +154,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
         <div className="flex items-center justify-between p-4 border-b border-slate-700 shrink-0">
           <div>
             <h2 className="text-xl font-bold text-white">Settings</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Profile, privacy, and account</p>
+            <p className="text-xs text-slate-500 mt-0.5">Profile, org, privacy, and account</p>
           </div>
           <button
             onClick={onClose}
@@ -142,6 +199,61 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               {savingRsi ? 'Saving...' : 'Save RSI Handle'}
             </button>
           </SettingsSection>
+
+          {organization && (
+            <SettingsSection
+              title="Organization"
+              description="Your org affiliation and org-scoped preferences"
+            >
+              <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-3 space-y-2">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm text-slate-400">Org</span>
+                  <span className="text-sm font-medium text-white">{organization.name}</span>
+                </div>
+                {orgMembership && (
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm text-slate-400">Org role</span>
+                    <span className="text-sm font-medium text-purple-300">
+                      {ORG_ROLE_LABELS[orgMembership.org_role]}
+                    </span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm text-slate-400">Verification</span>
+                  <span
+                    className={`text-xs font-semibold px-2 py-0.5 rounded ${
+                      orgMembership?.verified_at
+                        ? 'bg-green-900/40 text-green-400 border border-green-500/30'
+                        : 'bg-amber-900/30 text-amber-300 border border-amber-500/30'
+                    }`}
+                  >
+                    {orgMembership?.verified_at ? 'Verified org mate' : 'Pending verification'}
+                  </span>
+                </div>
+                {!orgMembership?.verified_at && (
+                  <p className="text-xs text-slate-500 pt-1">
+                    An officer will verify your RSI org affiliation after checking Spectrum.
+                  </p>
+                )}
+              </div>
+
+              <SettingsToggle
+                label="Org-only views"
+                description="Default member lists and data views to your organization instead of all site members."
+                checked={orgOnlyMode}
+                onChange={handleOrgOnlyModeChange}
+                saving={savingOrgOnly}
+              />
+
+              <SettingsToggle
+                label="Fulfillment volunteer"
+                description="Opt in to accept and fulfill custom orders when fulfillment launches for members."
+                checked={fulfillmentEnabled}
+                onChange={handleFulfillmentEnabledChange}
+                saving={savingFulfillment}
+              />
+            </SettingsSection>
+          )}
 
           <SettingsSection
             title="Privacy"

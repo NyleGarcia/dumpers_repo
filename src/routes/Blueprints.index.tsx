@@ -4,6 +4,11 @@ import BlueprintCard from '../components/BlueprintCard'
 import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import {
+  readMemberScope,
+  writeMemberScope,
+  type MemberScope,
+} from '../lib/org'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -172,6 +177,7 @@ export default function BlueprintsRoute() {
     fetchUserBlueprints,
     user,
     isApproved,
+    profile,
   } = useAuth()
 
   const { isOnTargetList, toggleTarget } = useTargetList()
@@ -186,6 +192,9 @@ export default function BlueprintsRoute() {
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
   useBodyScrollLock(!!selectedBlueprint)
 
+  const [memberScope, setMemberScope] = React.useState<MemberScope>(() =>
+    readMemberScope(profile?.org_only_mode ? 'org' : 'all')
+  )
   const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
   const [selectedUserId, setSelectedUserId] = React.useState('all')
   const [viewedUserBlueprints, setViewedUserBlueprints] = React.useState({})
@@ -194,8 +203,14 @@ export default function BlueprintsRoute() {
   const { data: blueprints, isLoading } = useBlueprintData()
 
   const refreshUsersList = React.useCallback(() => {
-    fetchUsersWithBlueprints().then(setUsersWithBlueprints)
-  }, [fetchUsersWithBlueprints])
+    fetchUsersWithBlueprints(memberScope).then(setUsersWithBlueprints)
+  }, [fetchUsersWithBlueprints, memberScope])
+
+  const handleMemberScopeChange = (scope: MemberScope) => {
+    setMemberScope(scope)
+    writeMemberScope(scope)
+    setSelectedUserId('all')
+  }
 
   React.useEffect(() => {
     if (showMemberCollections) {
@@ -205,6 +220,12 @@ export default function BlueprintsRoute() {
       setSelectedUserId('all')
     }
   }, [refreshUsersList, myAcquiredBlueprints, showMemberCollections])
+
+  React.useEffect(() => {
+    if (selectedUserId !== 'all' && !usersWithBlueprints.some((u) => u.id === selectedUserId)) {
+      setSelectedUserId('all')
+    }
+  }, [usersWithBlueprints, selectedUserId])
 
   React.useEffect(() => {
     if (selectedUserId === 'all' || selectedUserId === user?.id) {
@@ -517,18 +538,29 @@ export default function BlueprintsRoute() {
               ★ Rewards
             </button>
             {showMemberCollections && (
-              <select
-                value={selectedUserId}
-                onChange={(e) => setSelectedUserId(e.target.value)}
-                className="px-2 py-1.5 text-sm bg-slate-900/70 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all min-w-[100px] sm:min-w-[140px]"
-              >
-                <option value="all">All</option>
-                {usersWithBlueprints.map(u => (
-                  <option key={u.id} value={u.id}>
-                    {u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
-                  </option>
-                ))}
-              </select>
+              <>
+                <select
+                  value={memberScope}
+                  onChange={(e) => handleMemberScopeChange(e.target.value as MemberScope)}
+                  className="px-2 py-1.5 text-sm bg-slate-900/70 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all min-w-[72px]"
+                  title="Member list scope"
+                >
+                  <option value="all">All</option>
+                  <option value="org">Org</option>
+                </select>
+                <select
+                  value={selectedUserId}
+                  onChange={(e) => setSelectedUserId(e.target.value)}
+                  className="px-2 py-1.5 text-sm bg-slate-900/70 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all min-w-[100px] sm:min-w-[140px]"
+                >
+                  <option value="all">Everyone</option>
+                  {usersWithBlueprints.map(u => (
+                    <option key={u.id} value={u.id}>
+                      {u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
+                    </option>
+                  ))}
+                </select>
+              </>
             )}
           </div>
           

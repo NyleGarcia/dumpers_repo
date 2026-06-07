@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { supabase, Profile, UserRole, BannedUser, banUser, unbanUser, getDisplayName } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import {
+  ensureDefaultOrgMembership,
+  fetchOrgMembershipsForUsers,
+  revokeOrgVerification,
+  verifyOrgMember,
+  type OrgMembership,
+} from '../lib/org'
 
 type TabType = 'pending' | 'members' | 'officers' | 'banned'
 
@@ -16,6 +23,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
   const [banTarget, setBanTarget] = useState<Profile | null>(null)
   const [banReason, setBanReason] = useState('')
   const [unbanTarget, setUnbanTarget] = useState<BannedUser | null>(null)
+  const [orgMemberships, setOrgMemberships] = useState<Record<string, OrgMembership>>({})
 
   useEffect(() => {
     if (activeTab === 'banned') {
@@ -41,8 +49,23 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
 
     if (error) {
       console.error('Error fetching users:', error)
+      setOrgMemberships({})
     } else {
-      setUsers(data || [])
+      const rows = data || []
+      setUsers(rows)
+
+      if (
+        currentUser?.org_id &&
+        (activeTab === 'members' || activeTab === 'officers')
+      ) {
+        const orgUserIds = rows
+          .filter((u) => u.org_id === currentUser.org_id)
+          .map((u) => u.id)
+        const memberships = await fetchOrgMembershipsForUsers(orgUserIds, currentUser.org_id)
+        setOrgMemberships(memberships)
+      } else {
+        setOrgMemberships({})
+      }
     }
     setLoading(false)
   }
@@ -82,6 +105,29 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     if (error) {
       console.error('Error updating role:', error)
       alert('Failed to update user role')
+      setActionLoading(null)
+      return
+    }
+
+    if (newRole === 'member' || newRole === 'officer') {
+      const orgResult = await ensureDefaultOrgMembership(userId)
+      if (orgResult.error) {
+        console.error('Error assigning org membership:', orgResult.error)
+      }
+    }
+
+    fetchUsers()
+    setActionLoading(null)
+  }
+
+  const handleVerifyOrgMember = async (userId: string, verify: boolean) => {
+    setActionLoading(userId)
+    const result = verify
+      ? await verifyOrgMember(userId)
+      : await revokeOrgVerification(userId)
+
+    if (result.error) {
+      alert(result.error)
     } else {
       fetchUsers()
     }
@@ -282,9 +328,22 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                           </span>
                         )}
                       </p>
+                      {currentUser?.org_id && user.org_id === currentUser.org_id && orgMemberships[user.id] && (
+                        <p className="text-xs mt-1">
+                          <span
+                            className={`px-1.5 py-0.5 rounded ${
+                              orgMemberships[user.id].verified_at
+                                ? 'bg-green-900/40 text-green-400'
+                                : 'bg-amber-900/30 text-amber-300'
+                            }`}
+                          >
+                            {orgMemberships[user.id].verified_at ? 'Org verified' : 'Org unverified'}
+                          </span>
+                        </p>
+                      )}
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2 justify-end">
                       {activeTab === 'pending' && (
                         <button
                           onClick={() => updateUserRole(user.id, 'member')}
@@ -314,6 +373,30 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                           {actionLoading === user.id ? '...' : 'Demote'}
                         </button>
                       )}
+
+                      {isOfficerOrAbove &&
+                        currentUser?.org_id &&
+                        user.org_id === currentUser.org_id &&
+                        orgMemberships[user.id] &&
+                        (activeTab === 'members' || activeTab === 'officers') && (
+                          orgMemberships[user.id].verified_at ? (
+                            <button
+                              onClick={() => void handleVerifyOrgMember(user.id, false)}
+                              disabled={actionLoading === user.id}
+                              className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                            >
+                              Revoke verify
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => void handleVerifyOrgMember(user.id, true)}
+                              disabled={actionLoading === user.id}
+                              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                            >
+                              Verify org
+                            </button>
+                          )
+                        )}
 
                       {canBan(user) && (
                         <button
