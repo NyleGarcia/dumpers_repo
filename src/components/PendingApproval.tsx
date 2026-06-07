@@ -1,4 +1,5 @@
 import React from 'react'
+import SiteBrandTitle from './SiteBrandTitle'
 import { SITE_COPYRIGHT } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -8,18 +9,8 @@ export default function PendingApproval() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 
-            className="text-4xl md:text-5xl font-black tracking-wider uppercase mb-4"
-            style={{ 
-              fontFamily: "'Orbitron', sans-serif",
-              background: 'linear-gradient(135deg, #ef4444 0%, #f97316 25%, #eab308 50%, #f97316 75%, #ef4444 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            Dumper's Repo
-          </h1>
+        <div className="mb-8">
+          <SiteBrandTitle size="hero" />
         </div>
 
         <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 shadow-2xl">

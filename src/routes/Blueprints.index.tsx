@@ -1,6 +1,7 @@
 import React from 'react'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
+import SiteBrandTitle from '../components/SiteBrandTitle'
 import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
@@ -482,28 +483,18 @@ export default function BlueprintsRoute() {
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-slate-700 shadow-lg mb-6">
         <div className="max-w-screen-xl mx-auto px-4 py-4 space-y-3">
-          <div className="text-center space-y-1">
-            <h1 
-              className="text-3xl md:text-4xl lg:text-5xl font-black tracking-wider uppercase"
-              style={{ 
-                fontFamily: "'Orbitron', sans-serif",
-                background: 'linear-gradient(135deg, #ef4444 0%, #f97316 25%, #eab308 50%, #f97316 75%, #ef4444 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                textShadow: '0 0 40px rgba(239, 68, 68, 0.5), 0 0 80px rgba(249, 115, 22, 0.3)',
-                filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5))'
-              }}
-            >
-              Dumper's Repo
-            </h1>
-            <p className="text-slate-500 text-sm hidden sm:block">
-              Comprehensive Crafting Database & Mission Rewards Tracker
-              <span className="mx-2">•</span>
-              <span>LIVE {blueprintDataVersion}</span>
-              <span className="mx-2">•</span>
-              <span className="text-green-400">{Object.keys(acquiredBlueprints).length} acquired</span>
-            </p>
-          </div>
+          <SiteBrandTitle
+            size="page"
+            subtitle={
+              <p className="hidden sm:block text-slate-500">
+                Comprehensive Crafting Database & Mission Rewards Tracker
+                <span className="mx-2">•</span>
+                <span>LIVE {blueprintDataVersion}</span>
+                <span className="mx-2">•</span>
+                <span className="text-green-400">{Object.keys(acquiredBlueprints).length} acquired</span>
+              </p>
+            }
+          />
 
           {/* Search Bar, Rewards Toggle, and User Dropdown */}
           <div className="flex gap-1.5 sm:gap-2">
