@@ -52,7 +52,7 @@ export default function AppChrome({
           </div>
           <AppNavTabs items={navItems} className="hidden lg:flex flex-1 justify-center px-2 min-h-9 items-center" />
           <div className="ml-auto flex items-center gap-2 shrink-0">
-            {!isPending && <AppNotificationBell />}
+            <AppNotificationBell disabled={isPending} />
             <AppUserMenu
               displayName={displayName}
               profile={profile}

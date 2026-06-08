@@ -1,65 +1,58 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import {
-  deleteAllUserNotifications,
-  deleteUserNotification,
-  fetchUserNotifications,
-  type UserNotification,
-} from '../../lib/operations'
+import React, { useEffect, useState } from 'react'
+import { deleteAllUserNotifications, deleteUserNotification } from '../../lib/operations'
+import { useNotificationInbox } from '../../hooks/useNotificationInbox'
 
-const POLL_MS = 30_000
+interface AppNotificationBellProps {
+  disabled?: boolean
+}
 
-export default function AppNotificationBell() {
+export default function AppNotificationBell({ disabled = false }: AppNotificationBellProps) {
   const [open, setOpen] = useState(false)
-  const [notifications, setNotifications] = useState<UserNotification[]>([])
   const [loading, setLoading] = useState(false)
-
-  const refresh = useCallback(async () => {
-    const result = await fetchUserNotifications()
-    if (!result.error) setNotifications(result.data)
-  }, [])
+  const { notifications, unreadCount, refresh, clearAll, removeOne } = useNotificationInbox(disabled)
 
   useEffect(() => {
-    void refresh()
-    const timer = window.setInterval(() => void refresh(), POLL_MS)
-    return () => window.clearInterval(timer)
-  }, [refresh])
-
-  useEffect(() => {
-    if (open) void refresh()
-  }, [open, refresh])
+    if (open && !disabled) void refresh()
+  }, [open, disabled, refresh])
 
   const close = () => setOpen(false)
-  const unreadCount = notifications.length
 
   const handleDismiss = async (notificationId: string) => {
     const result = await deleteUserNotification(notificationId)
-    if (!result.error) {
-      setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
-    }
+    if (!result.error) removeOne(notificationId)
   }
 
   const handleDismissAll = async () => {
     setLoading(true)
     const result = await deleteAllUserNotifications()
     setLoading(false)
-    if (!result.error) setNotifications([])
+    if (!result.error) clearAll()
   }
+
+  const triggerClass = disabled
+    ? 'border-slate-700/80 bg-slate-900/50 opacity-50 cursor-not-allowed shadow-md'
+    : 'border-slate-600 bg-slate-800/90 hover:bg-slate-700 transition-colors shadow-md'
 
   return (
     <div className="relative shrink-0">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        disabled={disabled}
+        onClick={() => {
+          if (!disabled) setOpen(!open)
+        }}
         aria-label={
-          unreadCount > 0
-            ? `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`
-            : 'Notifications'
+          disabled
+            ? 'Notifications unavailable until account is approved'
+            : unreadCount > 0
+              ? `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`
+              : 'Notifications'
         }
         aria-expanded={open}
-        className="relative flex items-center justify-center w-9 h-9 rounded-lg border border-slate-600 bg-slate-800/90 hover:bg-slate-700 transition-colors shadow-md"
+        className={`relative flex items-center justify-center w-9 h-9 rounded-lg border ${triggerClass}`}
       >
         <svg
-          className="w-5 h-5 text-slate-300"
+          className={`w-5 h-5 ${disabled ? 'text-slate-500' : 'text-slate-300'}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -72,7 +65,7 @@ export default function AppNotificationBell() {
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
           />
         </svg>
-        {unreadCount > 0 && (
+        {!disabled && unreadCount > 0 && (
           <span
             className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-slate-800"
             aria-hidden
@@ -80,7 +73,7 @@ export default function AppNotificationBell() {
         )}
       </button>
 
-      {open && (
+      {open && !disabled && (
         <>
           <div className="fixed inset-0 z-[55]" onClick={close} />
           <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-slate-800 rounded-xl shadow-xl z-[60] overflow-hidden border border-slate-700">
