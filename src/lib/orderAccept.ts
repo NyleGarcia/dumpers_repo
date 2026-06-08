@@ -1,15 +1,9 @@
-import { getResourceLabel } from './blueprintResources'
-import type { FulfillmentItemRow } from './orderFulfillment'
 import type { CustomOrder } from './operations'
 import { resolveOrderBlueprintLines } from './orderPricing'
-import { formatResourceQuantity } from './resourceQuantity'
 
-export function getOrderAcceptBlockers(input: {
+export function getOrderBlueprintAcceptBlockers(input: {
   order: CustomOrder
-  fulfillmentItems: FulfillmentItemRow[]
   acquiredBlueprints: Record<string, boolean>
-  personalStock: Record<string, number>
-  labelMap: Record<string, string>
 }): string[] {
   const blockers: string[] = []
 
@@ -19,15 +13,15 @@ export function getOrderAcceptBlockers(input: {
     }
   }
 
-  for (const item of input.fulfillmentItems) {
-    const have = input.personalStock[item.resourceKey] ?? 0
-    const need = item.quantity
-    if (have < need) {
-      blockers.push(
-        `Need ${getResourceLabel(item.resourceKey, input.labelMap)} × ${formatResourceQuantity(need)} SCU (have ${formatResourceQuantity(have)} SCU)`
-      )
-    }
-  }
-
   return blockers
 }
+
+export function fulfillerHasAllOrderBlueprints(
+  order: CustomOrder,
+  acquiredBlueprints: Record<string, boolean>
+): boolean {
+  return getOrderBlueprintAcceptBlockers({ order, acquiredBlueprints }).length === 0
+}
+
+/** Blueprint ownership only — stock is checked at craft completion, not accept. */
+export const getOrderAcceptBlockers = getOrderBlueprintAcceptBlockers

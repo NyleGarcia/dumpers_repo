@@ -15,6 +15,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updatePreviewFeatures,
     updateFulfillmentEnabled,
     updateSharePersonalResources,
+    updateCraftDeductInventory,
     signOut,
     isSuperAdmin,
     isOfficerOrAbove,
@@ -30,7 +31,11 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [sharePersonalResources, setSharePersonalResources] = useState(
     profile?.share_personal_resources ?? false
   )
+  const [craftDeductInventory, setCraftDeductInventory] = useState(
+    profile?.craft_deduct_inventory ?? false
+  )
   const [savingSharePersonal, setSavingSharePersonal] = useState(false)
+  const [savingCraftDeduct, setSavingCraftDeduct] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -42,12 +47,14 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setPreviewFeatures(profile?.preview_features_enabled ?? false)
     setFulfillmentEnabled(profile?.fulfillment_enabled ?? false)
     setSharePersonalResources(profile?.share_personal_resources ?? false)
+    setCraftDeductInventory(profile?.craft_deduct_inventory ?? false)
   }, [
     profile?.rsi_handle,
     profile?.ghost_mode,
     profile?.preview_features_enabled,
     profile?.fulfillment_enabled,
     profile?.share_personal_resources,
+    profile?.craft_deduct_inventory,
   ])
 
   const handleSaveRsi = async () => {
@@ -127,6 +134,22 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingSharePersonal(false)
+  }
+
+  const handleCraftDeductInventoryChange = async (enabled: boolean) => {
+    const previous = craftDeductInventory
+    setCraftDeductInventory(enabled)
+    setSavingCraftDeduct(true)
+    setMessage(null)
+
+    const success = await updateCraftDeductInventory(enabled)
+
+    if (!success) {
+      setCraftDeductInventory(previous)
+      setMessage({ type: 'error', text: 'Failed to update craft inventory setting.' })
+    }
+
+    setSavingCraftDeduct(false)
   }
 
   const handleDeleteAccount = async () => {
@@ -217,6 +240,14 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               checked={fulfillmentEnabled}
               onChange={handleFulfillmentEnabledChange}
               saving={savingFulfillment}
+            />
+
+            <SettingsToggle
+              label="Deduct inventory on craft complete"
+              description="When on, completing a fulfillment craft requires enough stock in My Resources and deducts materials automatically. Off by default."
+              checked={craftDeductInventory}
+              onChange={handleCraftDeductInventoryChange}
+              saving={savingCraftDeduct}
             />
           </SettingsSection>
 

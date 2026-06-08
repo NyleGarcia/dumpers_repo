@@ -811,6 +811,7 @@ export async function fetchUserNotifications(): Promise<{
   const { data, error } = await supabase
     .from('user_notifications')
     .select('*')
+    .is('read_at', null)
     .order('created_at', { ascending: false })
     .limit(50)
 
@@ -818,17 +819,16 @@ export async function fetchUserNotifications(): Promise<{
   return { data: (data ?? []) as UserNotification[] }
 }
 
-export async function markNotificationRead(notificationId: string): Promise<{ error?: string }> {
-  const { error } = await supabase
-    .from('user_notifications')
-    .update({ read_at: new Date().toISOString() })
-    .eq('id', notificationId)
+/** Dismiss a notification — deletes the row (no read history kept). */
+export async function deleteUserNotification(notificationId: string): Promise<{ error?: string }> {
+  const { error } = await supabase.from('user_notifications').delete().eq('id', notificationId)
 
   if (error) return { error: error.message }
   return {}
 }
 
-export async function markAllNotificationsRead(): Promise<{ error?: string }> {
+/** Dismiss all unread notifications — deletes rows (no read history kept). */
+export async function deleteAllUserNotifications(): Promise<{ error?: string }> {
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -837,7 +837,7 @@ export async function markAllNotificationsRead(): Promise<{ error?: string }> {
 
   const { error } = await supabase
     .from('user_notifications')
-    .update({ read_at: new Date().toISOString() })
+    .delete()
     .eq('user_id', user.id)
     .is('read_at', null)
 

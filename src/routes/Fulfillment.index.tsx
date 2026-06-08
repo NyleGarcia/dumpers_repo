@@ -11,7 +11,10 @@ import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice } from '../lib/dfp'
 import { buildStockTotalsByResource } from '../lib/inventoryStock'
-import { getOrderAcceptBlockers } from '../lib/orderAccept'
+import {
+  fulfillerHasAllOrderBlueprints,
+  getOrderAcceptBlockers,
+} from '../lib/orderAccept'
 import { canFulfillerArchive } from '../lib/orderArchive'
 import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
 import { orderTotalDfp, resolveOrderFulfillmentItems } from '../lib/orderPricing'
@@ -44,7 +47,8 @@ import {
 import { displayNameFromFields } from '../lib/supabase'
 
 export default function FulfillmentRoute() {
-  const { user, siteOrg, acquiredBlueprints } = useAuth()
+  const { user, profile, siteOrg, acquiredBlueprints } = useAuth()
+  const craftDeductInventory = profile?.craft_deduct_inventory ?? false
   const { data: blueprints = [] } = useBlueprintData()
   const { labelMap } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
@@ -58,6 +62,7 @@ export default function FulfillmentRoute() {
   const [submitting, setSubmitting] = useState(false)
   const [acceptingOrderId, setAcceptingOrderId] = useState<string | null>(null)
   const [minBuyerRepFilter, setMinBuyerRepFilter] = useState('')
+  const [onlyMyBlueprintOrders, setOnlyMyBlueprintOrders] = useState(false)
   const [archiveOrder, setArchiveOrder] = useState<CustomOrder | null>(null)
   const [archiving, setArchiving] = useState(false)
 
@@ -135,8 +140,6 @@ export default function FulfillmentRoute() {
     [reputations, userId]
   )
 
-  const personalStock = useMemo(() => buildStockTotalsByResource(inventory), [inventory])
-
   const pendingOrders = useMemo(() => {
     const minFilter = minBuyerRepFilter ? Number(minBuyerRepFilter) : null
 
@@ -149,6 +152,13 @@ export default function FulfillmentRoute() {
       return true
     })
   }, [orders, userId, minBuyerRepFilter, reputations])
+
+  const visiblePendingOrders = useMemo(() => {
+    if (!onlyMyBlueprintOrders) return pendingOrders
+    return pendingOrders.filter((order) =>
+      fulfillerHasAllOrderBlueprints(order, acquiredBlueprints)
+    )
+  }, [pendingOrders, onlyMyBlueprintOrders, acquiredBlueprints])
 
   const myBuyingOrders = useMemo(
     () =>
@@ -206,7 +216,9 @@ export default function FulfillmentRoute() {
   )
 
   const stockCheck = useMemo(() => {
-    if (!selectedOrder) return { canFulfill: false, shortages: [] as string[] }
+    if (!selectedOrder || !craftDeductInventory) {
+      return { canFulfill: true, shortages: [] as string[] }
+    }
 
     const shortages: string[] = []
     for (const item of selectedFulfillmentItems) {
@@ -219,7 +231,7 @@ export default function FulfillmentRoute() {
     }
 
     return { canFulfill: shortages.length === 0, shortages }
-  }, [selectedOrder, selectedFulfillmentItems, quantityByKey, labelMap])
+  }, [selectedOrder, selectedFulfillmentItems, quantityByKey, labelMap, craftDeductInventory])
 
   const handleAccept = async (orderId: string) => {
     const order = orders.find((o) => o.id === orderId)
@@ -335,13 +347,12 @@ export default function FulfillmentRoute() {
       )}
 
       <p className="mb-4 text-slate-500 text-sm">
-        Browse pending orders here with buyer reputation before accepting. You need the blueprint
-        and enough stock in{' '}
-        <Link to="/resources" className="text-red-400 hover:text-red-300">
-          My Resources
-        </Link>
-        . Ratings show as <span className="text-slate-400 italic">Pending</span> until a member has
-        5 completed orders or fulfillments.
+        Browse pending orders here with buyer reputation before accepting. You need every required
+        blueprint to accept. Enable{' '}
+        <span className="text-slate-300">Deduct inventory on craft complete</span> in Settings if
+        you want My Resources checked and deducted when you finish a craft. Ratings show as{' '}
+        <span className="text-slate-400 italic">Pending</span> until a member has 5 completed
+        orders or fulfillments.
       </p>
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -356,42 +367,50 @@ export default function FulfillmentRoute() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <section className="space-y-6">
             <div>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+              <div className="flex flex-col gap-3 mb-3">
                 <h2 className="text-white font-medium">Available orders</h2>
-                <label className="flex items-center gap-2 text-xs text-slate-400">
-                  <span className="shrink-0">Min buyer rep</span>
-                  <select
-                    value={minBuyerRepFilter}
-                    onChange={(e) => setMinBuyerRepFilter(e.target.value)}
-                    className="px-2 py-1 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-                  >
-                    <option value="">All buyers</option>
-                    {REPUTATION_STAR_OPTIONS.map((tier) => (
-                      <option key={tier} value={tier}>
-                        {tier}+
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={onlyMyBlueprintOrders}
+                      onChange={(e) => setOnlyMyBlueprintOrders(e.target.checked)}
+                      className="rounded border-slate-500 bg-slate-800 text-purple-500 focus:ring-purple-500/40"
+                    />
+                    <span>Only orders with my blueprints</span>
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-slate-400">
+                    <span className="shrink-0">Min buyer rep</span>
+                    <select
+                      value={minBuyerRepFilter}
+                      onChange={(e) => setMinBuyerRepFilter(e.target.value)}
+                      className="px-2 py-1 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                    >
+                      <option value="">All buyers</option>
+                      {REPUTATION_STAR_OPTIONS.map((tier) => (
+                        <option key={tier} value={tier}>
+                          {tier}+
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
               </div>
               <p className="text-slate-500 text-xs mb-3">
                 Buyers without 5 completed orders always appear — they cannot be filtered out.
               </p>
-              {pendingOrders.length === 0 ? (
+              {visiblePendingOrders.length === 0 ? (
                 <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
                   No pending orders match your filters.
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {pendingOrders.map((order) => {
+                  {visiblePendingOrders.map((order) => {
                     const totalDfp = orderTotalDfp(order)
                     const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
                     const acceptBlockers = getOrderAcceptBlockers({
                       order,
-                      fulfillmentItems: fulfillmentItemsForOrder(order),
                       acquiredBlueprints,
-                      personalStock,
-                      labelMap,
                     })
                     const meetsMinRep = fulfillerMeetsOrderMinRep(
                       myFulfillerRep,
@@ -464,10 +483,12 @@ export default function FulfillmentRoute() {
                   const isSelected = selectedOrderId === order.id
                   const totalDfp = orderTotalDfp(order)
                   const orderItems = fulfillmentItemsForOrder(order)
-                  const shortages = orderItems.filter((item) => {
-                    const available = quantityByKey[item.resourceKey] ?? 0
-                    return available < item.quantity
-                  })
+                  const shortages = craftDeductInventory
+                    ? orderItems.filter((item) => {
+                        const available = quantityByKey[item.resourceKey] ?? 0
+                        return available < item.quantity
+                      })
+                    : []
 
                   return (
                     <button
@@ -482,15 +503,17 @@ export default function FulfillmentRoute() {
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-white font-medium">{order.title}</span>
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded border ${
-                            shortages.length > 0
-                              ? 'bg-red-950/50 text-red-300 border-red-500/30'
-                              : 'bg-green-950/50 text-green-300 border-green-500/30'
-                          }`}
-                        >
-                          {shortages.length > 0 ? 'Short stock' : 'Stock OK'}
-                        </span>
+                        {craftDeductInventory && (
+                          <span
+                            className={`text-xs px-2 py-0.5 rounded border ${
+                              shortages.length > 0
+                                ? 'bg-red-950/50 text-red-300 border-red-500/30'
+                                : 'bg-green-950/50 text-green-300 border-green-500/30'
+                            }`}
+                          >
+                            {shortages.length > 0 ? 'Short stock' : 'Stock OK'}
+                          </span>
+                        )}
                       </div>
                       <p className="text-slate-500 text-xs mt-1">
                         {order.status.replace(/_/g, ' ')}
@@ -544,29 +567,49 @@ export default function FulfillmentRoute() {
 
                 <OrderRequestLines order={selectedOrder} />
 
-                <div className="space-y-2">
-                  {selectedFulfillmentItems.map((item) => {
-                    const available = quantityByKey[item.resourceKey] ?? 0
-                    const enough = available >= item.quantity
+                {selectedFulfillmentItems.length > 0 && (
+                  <div className="space-y-2">
+                    {craftDeductInventory && (
+                      <p className="text-slate-500 text-xs">
+                        Inventory deduction is on — stock is checked from My Resources.
+                      </p>
+                    )}
+                    {selectedFulfillmentItems.map((item) => {
+                      const available = quantityByKey[item.resourceKey] ?? 0
+                      const enough = available >= item.quantity
 
-                    return (
-                      <div
-                        key={item.resourceKey}
-                        className="flex items-center justify-between text-sm bg-slate-800/50 rounded-lg px-3 py-2"
-                      >
-                        <span className="text-slate-300">
-                          {getResourceLabel(item.resourceKey, labelMap)}
-                        </span>
-                        <span className={`tabular-nums ${enough ? 'text-green-400' : 'text-red-400'}`}>
-                          {formatResourceQuantity(item.quantity)} SCU needed ·{' '}
-                          {formatResourceQuantity(available)} SCU in My Resources
-                        </span>
-                      </div>
-                    )
-                  })}
-                </div>
+                      return (
+                        <div
+                          key={item.resourceKey}
+                          className="flex items-center justify-between text-sm bg-slate-800/50 rounded-lg px-3 py-2"
+                        >
+                          <span className="text-slate-300">
+                            {getResourceLabel(item.resourceKey, labelMap)}
+                          </span>
+                          <span
+                            className={`tabular-nums ${
+                              craftDeductInventory
+                                ? enough
+                                  ? 'text-green-400'
+                                  : 'text-red-400'
+                                : 'text-slate-400'
+                            }`}
+                          >
+                            {formatResourceQuantity(item.quantity)} SCU
+                            {craftDeductInventory && (
+                              <>
+                                {' '}
+                                needed · {formatResourceQuantity(available)} SCU in My Resources
+                              </>
+                            )}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
 
-                {!stockCheck.canFulfill && (
+                {craftDeductInventory && !stockCheck.canFulfill && (
                   <p className="text-red-300 text-xs">
                     Short: {stockCheck.shortages.join(', ')}. Add stock in{' '}
                     <Link to="/resources" className="text-red-200 underline">
@@ -608,7 +651,7 @@ export default function FulfillmentRoute() {
 
                     <button
                       onClick={() => void handleCompleteCraft()}
-                      disabled={!stockCheck.canFulfill || submitting}
+                      disabled={(craftDeductInventory && !stockCheck.canFulfill) || submitting}
                       className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium"
                     >
                       {submitting ? 'Completing...' : 'Complete craft & mark ready for pickup'}

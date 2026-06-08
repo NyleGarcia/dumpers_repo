@@ -31,13 +31,9 @@ import {
   deleteCustomOrderRequester,
   fetchCustomOrders,
   fetchMemberReputations,
-  fetchUserNotifications,
-  markAllNotificationsRead,
-  markNotificationRead,
   updateCustomOrderStatus,
   type CustomOrder,
   type CustomOrderStatus,
-  type UserNotification,
 } from '../lib/operations'
 import { getDisplayName } from '../lib/supabase'
 
@@ -84,6 +80,7 @@ function profileFromOrderFields(
     preview_features_enabled: false,
     fulfillment_enabled: false,
     share_personal_resources: false,
+    craft_deduct_inventory: false,
   }
 }
 
@@ -92,7 +89,6 @@ export default function CustomOrdersRoute() {
   const { data: blueprints = [] } = useBlueprintData()
   const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
-  const [notifications, setNotifications] = useState<UserNotification[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
@@ -110,14 +106,11 @@ export default function CustomOrdersRoute() {
   const loadOrders = useCallback(async () => {
     setLoading(true)
     setError(null)
-    const [ordersResult, notificationsResult] = await Promise.all([
-      fetchCustomOrders(user?.id ? { requesterId: user.id } : undefined),
-      fetchUserNotifications(),
-    ])
+    const ordersResult = await fetchCustomOrders(
+      user?.id ? { requesterId: user.id } : undefined
+    )
     if (ordersResult.error) setError(ordersResult.error)
-    if (notificationsResult.error) setError(notificationsResult.error)
     setOrders(ordersResult.data)
-    setNotifications(notificationsResult.data)
 
     if (user?.id) {
       const repResult = await fetchMemberReputations([user.id])
@@ -167,16 +160,6 @@ export default function CustomOrdersRoute() {
       return
     }
     setListTab('completed')
-    await loadOrders()
-  }
-
-  const handleMarkRead = async (notificationId: string) => {
-    await markNotificationRead(notificationId)
-    await loadOrders()
-  }
-
-  const handleMarkAllRead = async () => {
-    await markAllNotificationsRead()
     await loadOrders()
   }
 
@@ -251,7 +234,6 @@ export default function CustomOrdersRoute() {
   )
 
   const totalOrderCount = openOrderCount + completedOrderCount
-  const unreadCount = notifications.filter((n) => !n.read_at).length
 
   return (
     <FeaturePageLayout
@@ -280,58 +262,6 @@ export default function CustomOrdersRoute() {
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
           {error}
-        </div>
-      )}
-
-      {notifications.length > 0 && (
-        <div className="mb-6 bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <div className="flex items-center justify-between gap-3 mb-3">
-            <h2 className="text-white font-medium text-sm">
-              Notifications
-              {unreadCount > 0 && (
-                <span className="ml-2 px-1.5 py-0.5 text-xs rounded bg-red-600/80 text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </h2>
-            {unreadCount > 0 && (
-              <button
-                type="button"
-                onClick={() => void handleMarkAllRead()}
-                className="text-xs text-slate-400 hover:text-white"
-              >
-                Mark all read
-              </button>
-            )}
-          </div>
-          <ul className="space-y-2 max-h-40 overflow-y-auto">
-            {notifications.slice(0, 8).map((n) => (
-              <li
-                key={n.id}
-                className={`text-sm rounded-lg px-3 py-2 border ${
-                  n.read_at
-                    ? 'border-slate-800 text-slate-500'
-                    : 'border-purple-500/30 bg-purple-950/20 text-slate-200'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="font-medium">{n.title}</p>
-                    {n.body && <p className="text-xs mt-0.5 opacity-80">{n.body}</p>}
-                  </div>
-                  {!n.read_at && (
-                    <button
-                      type="button"
-                      onClick={() => void handleMarkRead(n.id)}
-                      className="text-xs text-purple-300 shrink-0"
-                    >
-                      Read
-                    </button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
       )}
 

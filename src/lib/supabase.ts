@@ -25,6 +25,7 @@ export interface Profile {
   preview_features_enabled: boolean
   fulfillment_enabled: boolean
   share_personal_resources: boolean
+  craft_deduct_inventory: boolean
 }
 
 export function getDisplayName(profile: Profile | null): string {

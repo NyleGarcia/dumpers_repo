@@ -33,6 +33,7 @@ interface AuthContextType {
   updatePreviewFeatures: (enabled: boolean) => Promise<boolean>
   updateFulfillmentEnabled: (enabled: boolean) => Promise<boolean>
   updateSharePersonalResources: (enabled: boolean) => Promise<boolean>
+  updateCraftDeductInventory: (enabled: boolean) => Promise<boolean>
   siteOrg: SiteOrg | null
   fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
@@ -416,6 +417,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
+  const updateCraftDeductInventory = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser) return false
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ craft_deduct_inventory: enabled })
+      .eq('id', activeUser.id)
+
+    if (error) {
+      console.error('Error updating craft deduct inventory:', error)
+      return false
+    }
+
+    setProfile(prev => prev ? { ...prev, craft_deduct_inventory: enabled } : null)
+    return true
+  }, [])
+
   const fetchUsersWithBlueprints = useCallback(async (): Promise<UserWithBlueprints[]> => {
     const { data: blueprintCounts, error: countError } = await supabase
       .from('acquired_blueprints')
@@ -530,6 +549,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updatePreviewFeatures,
       updateFulfillmentEnabled,
       updateSharePersonalResources,
+      updateCraftDeductInventory,
       siteOrg,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
@@ -562,6 +582,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updatePreviewFeatures,
       updateFulfillmentEnabled,
       updateSharePersonalResources,
+      updateCraftDeductInventory,
       siteOrg,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,

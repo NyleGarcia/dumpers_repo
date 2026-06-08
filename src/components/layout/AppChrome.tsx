@@ -6,6 +6,7 @@ import { SITE_COPYRIGHT } from '../../config/site'
 import type { AppNavItem } from '../../config/appNav'
 import type { Profile } from '../../lib/supabase'
 import AppNavTabs from './AppNavTabs'
+import AppNotificationBell from './AppNotificationBell'
 import AppUserMenu from './AppUserMenu'
 
 interface AppChromeProps {
@@ -50,18 +51,21 @@ export default function AppChrome({
             <SiteBrandTitle size="compact" layout="inline" align="left" subtle />
           </div>
           <AppNavTabs items={navItems} className="hidden lg:flex flex-1 justify-center px-2 min-h-9 items-center" />
-          <AppUserMenu
-            displayName={displayName}
-            profile={profile}
-            isPending={isPending}
-            isGhostMode={isGhostMode}
-            navItems={navItems}
-            showSettingsButton={showSettingsButton}
-            showAdminPanelButton={showAdminPanelButton}
-            onOpenSettings={onOpenSettings}
-            onOpenAdmin={onOpenAdmin}
-            onSignOut={onSignOut}
-          />
+          <div className="ml-auto flex items-center gap-2 shrink-0">
+            {!isPending && <AppNotificationBell />}
+            <AppUserMenu
+              displayName={displayName}
+              profile={profile}
+              isPending={isPending}
+              isGhostMode={isGhostMode}
+              navItems={navItems}
+              showSettingsButton={showSettingsButton}
+              showAdminPanelButton={showAdminPanelButton}
+              onOpenSettings={onOpenSettings}
+              onOpenAdmin={onOpenAdmin}
+              onSignOut={onSignOut}
+            />
+          </div>
         </div>
         <div className="lg:hidden border-t border-slate-800/70 h-11 flex items-center">
           <AppNavTabs items={navItems} className="site-shell overflow-x-auto min-h-9 items-center" />
