@@ -11,7 +11,7 @@ const SCU_SCALE = 10 ** RESOURCE_QUANTITY_DECIMALS
 export function lockQuantityInput(raw: string): string {
   if (raw === '') return ''
 
-  let cleaned = raw.replace(/[^\d.]/g, '')
+  const cleaned = raw.replace(/[^\d.]/g, '')
   const dotIdx = cleaned.indexOf('.')
   if (dotIdx === -1) return cleaned
 
