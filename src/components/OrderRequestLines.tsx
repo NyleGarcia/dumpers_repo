@@ -6,6 +6,7 @@ import {
 } from '../lib/dfp'
 import {
   buildOrderTitle,
+  orderBlueprintCraftCount,
   resolveOrderBlueprintLines,
   resolveOrderResourceLines,
 } from '../lib/orderPricing'
@@ -18,9 +19,10 @@ interface OrderRequestLinesProps {
 }
 
 export function orderKindLabel(order: CustomOrder): string {
-  const bpCount = resolveOrderBlueprintLines(order).length
-  const resCount = resolveOrderResourceLines(order).length
-  return buildOrderTitle(bpCount, resCount)
+  return buildOrderTitle(
+    orderBlueprintCraftCount(order),
+    resolveOrderResourceLines(order).length
+  )
 }
 
 export default function OrderRequestLines({ order, showDfp = true }: OrderRequestLinesProps) {

@@ -12,6 +12,7 @@ import { formatDfpRequiredPrice } from '../lib/dfp'
 import { SITE_SLOGAN } from '../config/site'
 import { canRequesterModifyOrder } from '../lib/orderEdit'
 import { orderTotalDfp } from '../lib/orderPricing'
+import { formatResourceQuantity } from '../lib/resourceQuantity'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
@@ -552,7 +553,8 @@ export default function CustomOrdersRoute() {
                         key={item.id}
                         className="px-2 py-1 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
                       >
-                        {getResourceLabel(item.resource_key, labelMap)} × {item.quantity}
+                        {getResourceLabel(item.resource_key, labelMap)} ×{' '}
+                        {formatResourceQuantity(Number(item.quantity))} SCU
                       </span>
                     ))}
                   </div>

@@ -31,11 +31,8 @@ import {
   type BlueprintResourceRow,
   type CustomOrder,
 } from '../lib/operations'
-import {
-  formatResourceQuantity,
-  parseResourceQuantity,
-  RESOURCE_QUANTITY_STEP,
-} from '../lib/resourceQuantity'
+import ResourceQuantityInput from './ResourceQuantityInput'
+import { formatResourceQuantity, parseResourceQuantity } from '../lib/resourceQuantity'
 
 interface CartBlueprintLine extends OrderBlueprintLine {
   cartKey: string
@@ -214,7 +211,10 @@ export default function ResourceBuyOrderPanel({
     onError?.('')
 
     const payload = {
-      title: buildOrderTitle(bpCart.length, resCart.length),
+      title: buildOrderTitle(
+        bpCart.reduce((sum, line) => sum + line.quantity, 0),
+        resCart.length
+      ),
       notes,
       totalDfpAuec: cartTotalDfp,
       minFulfillerReputation: minFulfillerRep ? Number(minFulfillerRep) : null,
@@ -388,14 +388,11 @@ export default function ResourceBuyOrderPanel({
                   ))}
                 </select>
               )}
-              <input
-                type="number"
-                min={RESOURCE_QUANTITY_STEP}
-                step={RESOURCE_QUANTITY_STEP}
+              <ResourceQuantityInput
                 value={resQty}
-                onChange={(e) => setResQty(e.target.value)}
+                onValueChange={setResQty}
                 placeholder="SCU"
-                className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
               />
               <button
                 type="button"

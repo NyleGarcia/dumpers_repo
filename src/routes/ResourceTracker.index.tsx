@@ -10,11 +10,11 @@ import { canUseFeature } from '../lib/featureAccess'
 import { inventoryLineKey } from '../lib/inventoryStock'
 import { adjustInventoryQuantity, setInventoryQuantity } from '../lib/operations'
 import type { InventoryScope } from '../lib/operations'
+import ResourceQuantityInput from '../components/ResourceQuantityInput'
 import {
+  addResourceQuantities,
   formatResourceQuantity,
   parseResourceQuantity,
-  RESOURCE_QUANTITY_STEP,
-  roundResourceQuantity,
 } from '../lib/resourceQuantity'
 
 const ADJUST_STEPS = [0.001, 0.01, 0.1, 1] as const
@@ -81,8 +81,9 @@ export default function ResourceTrackerRoute() {
 
   const cardCount = stockCards.length
   const inStockCount = stockCards.filter((c) => c.quantity > 0).length
-  const totalQty = roundResourceQuantity(
-    stockCards.reduce((sum, c) => sum + c.quantity, 0)
+  const totalQty = stockCards.reduce(
+    (sum, c) => addResourceQuantities(sum, c.quantity),
+    0
   )
 
   const handleAdjust = async (resourceKey: string, quality: number, delta: number) => {
@@ -301,12 +302,9 @@ export default function ResourceTrackerRoute() {
                 <div className="mt-4 flex items-center gap-2 flex-wrap">
                   {isEditing && !readOnly ? (
                     <>
-                      <input
-                        type="number"
-                        min="0"
-                        step={RESOURCE_QUANTITY_STEP}
+                      <ResourceQuantityInput
                         value={editValue}
-                        onChange={(e) => setEditValue(e.target.value)}
+                        onValueChange={setEditValue}
                         className="w-28 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm tabular-nums"
                       />
                       <span className="text-slate-500 text-xs">SCU</span>

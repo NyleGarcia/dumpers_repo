@@ -8,12 +8,15 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { SITE_SLOGAN } from '../config/site'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
-import { getResourceLabel } from '../lib/blueprintResources'
+import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice } from '../lib/dfp'
 import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import { getOrderAcceptBlockers } from '../lib/orderAccept'
 import { canFulfillerArchive } from '../lib/orderArchive'
-import { orderTotalDfp } from '../lib/orderPricing'
+import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
+import { orderTotalDfp, resolveOrderFulfillmentItems } from '../lib/orderPricing'
+import { formatResourceQuantity } from '../lib/resourceQuantity'
+import { useBlueprintData } from './blueprints'
 import {
   buyerReputationFromRow,
   fulfillerMeetsOrderMinRep,
@@ -28,6 +31,7 @@ import {
   abandonCustomOrderFulfillment,
   archiveCustomOrderWithRating,
   completeOrderCraft,
+  replaceCustomOrderFulfillmentItems,
   fetchCustomOrders,
   fetchFulfillments,
   fetchInventory,
@@ -41,6 +45,7 @@ import { displayNameFromFields } from '../lib/supabase'
 
 export default function FulfillmentRoute() {
   const { user, siteOrg, acquiredBlueprints } = useAuth()
+  const { data: blueprints = [] } = useBlueprintData()
   const { labelMap } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [inventory, setInventory] = useState<ResourceInventoryRow[]>([])
@@ -102,6 +107,28 @@ export default function FulfillmentRoute() {
   }, [loadData])
 
   const quantityByKey = useMemo(() => buildStockTotalsByResource(inventory), [inventory])
+
+  const blueprintById = useMemo(() => {
+    const map = new Map<string, BlueprintWithSlots>()
+    blueprints.forEach((bp) => {
+      if (bp.file) map.set(bp.file, bp)
+    })
+    return map
+  }, [blueprints])
+
+  const fulfillmentItemsForOrder = useCallback(
+    (order: CustomOrder) => resolveOrderFulfillmentItems(order, blueprintById),
+    [blueprintById]
+  )
+
+  const syncFulfillmentItems = useCallback(
+    async (order: CustomOrder) => {
+      const computed = fulfillmentItemsForOrder(order)
+      if (fulfillmentItemsMatch(order.items, computed)) return {}
+      return replaceCustomOrderFulfillmentItems(order.id, computed)
+    },
+    [fulfillmentItemsForOrder]
+  )
 
   const myFulfillerRep = useMemo(
     () => fulfillerReputationFromRow(userId ? reputations[userId] : undefined),
@@ -173,25 +200,40 @@ export default function FulfillmentRoute() {
 
   const selectedOrder = myAssignedOrders.find((o) => o.id === selectedOrderId) ?? null
 
+  const selectedFulfillmentItems = useMemo(
+    () => (selectedOrder ? fulfillmentItemsForOrder(selectedOrder) : []),
+    [selectedOrder, fulfillmentItemsForOrder]
+  )
+
   const stockCheck = useMemo(() => {
-    if (!selectedOrder?.items) return { canFulfill: false, shortages: [] as string[] }
+    if (!selectedOrder) return { canFulfill: false, shortages: [] as string[] }
 
     const shortages: string[] = []
-    for (const item of selectedOrder.items) {
-      const available = quantityByKey[item.resource_key] ?? 0
-      if (available < Number(item.quantity)) {
+    for (const item of selectedFulfillmentItems) {
+      const available = quantityByKey[item.resourceKey] ?? 0
+      if (available < item.quantity) {
         shortages.push(
-          `${getResourceLabel(item.resource_key, labelMap)} (need ${item.quantity}, have ${available})`
+          `${getResourceLabel(item.resourceKey, labelMap)} (need ${formatResourceQuantity(item.quantity)} SCU, have ${formatResourceQuantity(available)} SCU)`
         )
       }
     }
 
     return { canFulfill: shortages.length === 0, shortages }
-  }, [selectedOrder, quantityByKey, labelMap])
+  }, [selectedOrder, selectedFulfillmentItems, quantityByKey, labelMap])
 
   const handleAccept = async (orderId: string) => {
+    const order = orders.find((o) => o.id === orderId)
+    if (!order) return
+
     setAcceptingOrderId(orderId)
     setError(null)
+
+    const syncResult = await syncFulfillmentItems(order)
+    if (syncResult.error) {
+      setAcceptingOrderId(null)
+      setError(syncResult.error)
+      return
+    }
 
     const result = await acceptCustomOrder(orderId)
 
@@ -251,6 +293,13 @@ export default function FulfillmentRoute() {
 
     setSubmitting(true)
     setError(null)
+
+    const syncResult = await syncFulfillmentItems(selectedOrder)
+    if (syncResult.error) {
+      setSubmitting(false)
+      setError(syncResult.error)
+      return
+    }
 
     const result = await completeOrderCraft(selectedOrder.id, notes.trim() || undefined)
 
@@ -339,6 +388,7 @@ export default function FulfillmentRoute() {
                     const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
                     const acceptBlockers = getOrderAcceptBlockers({
                       order,
+                      fulfillmentItems: fulfillmentItemsForOrder(order),
                       acquiredBlueprints,
                       personalStock,
                       labelMap,
@@ -413,9 +463,10 @@ export default function FulfillmentRoute() {
                 {myAssignedOrders.map((order) => {
                   const isSelected = selectedOrderId === order.id
                   const totalDfp = orderTotalDfp(order)
-                  const shortages = (order.items ?? []).filter((item) => {
-                    const available = quantityByKey[item.resource_key] ?? 0
-                    return available < Number(item.quantity)
+                  const orderItems = fulfillmentItemsForOrder(order)
+                  const shortages = orderItems.filter((item) => {
+                    const available = quantityByKey[item.resourceKey] ?? 0
+                    return available < item.quantity
                   })
 
                   return (
@@ -494,20 +545,21 @@ export default function FulfillmentRoute() {
                 <OrderRequestLines order={selectedOrder} />
 
                 <div className="space-y-2">
-                  {(selectedOrder.items ?? []).map((item) => {
-                    const available = quantityByKey[item.resource_key] ?? 0
-                    const enough = available >= Number(item.quantity)
+                  {selectedFulfillmentItems.map((item) => {
+                    const available = quantityByKey[item.resourceKey] ?? 0
+                    const enough = available >= item.quantity
 
                     return (
                       <div
-                        key={item.id}
+                        key={item.resourceKey}
                         className="flex items-center justify-between text-sm bg-slate-800/50 rounded-lg px-3 py-2"
                       >
                         <span className="text-slate-300">
-                          {getResourceLabel(item.resource_key, labelMap)}
+                          {getResourceLabel(item.resourceKey, labelMap)}
                         </span>
-                        <span className={enough ? 'text-green-400' : 'text-red-400'}>
-                          {item.quantity} needed · {available} in My Resources
+                        <span className={`tabular-nums ${enough ? 'text-green-400' : 'text-red-400'}`}>
+                          {formatResourceQuantity(item.quantity)} SCU needed ·{' '}
+                          {formatResourceQuantity(available)} SCU in My Resources
                         </span>
                       </div>
                     )
@@ -703,7 +755,8 @@ export default function FulfillmentRoute() {
                             key={`${entry.id}-${idx}`}
                             className="px-2 py-0.5 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
                           >
-                            {getResourceLabel(item.resource_key, labelMap)} −{item.quantity}
+                            {getResourceLabel(item.resource_key, labelMap)} −
+                            {formatResourceQuantity(Number(item.quantity))} SCU
                           </span>
                         ))}
                       </div>

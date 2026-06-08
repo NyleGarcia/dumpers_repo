@@ -3,11 +3,8 @@ import { SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import { DEFAULT_STOCK_QUALITY, stockQualityTiersForResource } from '../config/dfp'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { addPersonalInventoryLine, type BlueprintResourceRow } from '../lib/operations'
-import {
-  formatResourceQuantity,
-  parseResourceQuantity,
-  RESOURCE_QUANTITY_STEP,
-} from '../lib/resourceQuantity'
+import ResourceQuantityInput from './ResourceQuantityInput'
+import { formatResourceQuantity, parseResourceQuantity } from '../lib/resourceQuantity'
 
 interface PersonalStockAddPanelProps {
   userId: string
@@ -146,12 +143,9 @@ export default function PersonalStockAddPanel({
           </select>
         )}
 
-        <input
-          type="number"
-          min={RESOURCE_QUANTITY_STEP}
-          step={RESOURCE_QUANTITY_STEP}
+        <ResourceQuantityInput
           value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
+          onValueChange={setQuantity}
           placeholder="SCU"
           className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
         />

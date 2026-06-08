@@ -6,7 +6,12 @@ import {
   type BlueprintWithSlots,
   type ExtractedBlueprintResource,
 } from './blueprintResources'
-import { roundResourceQuantity } from './resourceQuantity'
+import {
+  addResourceQuantities,
+  fromMilliScu,
+  normalizeResourceQuantity,
+  toMilliScu,
+} from './resourceQuantity'
 
 export type CustomOrderStatus =
   | 'pending'
@@ -280,7 +285,7 @@ export async function fetchPersonalInventoryCards(
         id: row.id,
         resource_key: row.resource_key,
         quality: row.quality,
-        quantity: Number(row.quantity),
+        quantity: normalizeResourceQuantity(Number(row.quantity)),
         label: catalog?.label ?? row.resource_key,
         is_active: catalog?.is_active ?? true,
       }
@@ -334,7 +339,7 @@ export async function fetchResourceCatalogWithInventory(
         label: catalog?.label ?? row.resource_key,
         is_active: catalog?.is_active ?? true,
         synced_at: catalog?.synced_at ?? '',
-        quantity: Number(row.quantity),
+        quantity: normalizeResourceQuantity(Number(row.quantity)),
       }
     })
     .sort((a, b) => a.label.localeCompare(b.label))
@@ -356,7 +361,7 @@ export async function fetchInventory(ctx: InventoryContext): Promise<{
         id: row.resource_key,
         resource_key: row.resource_key,
         quality: 0,
-        quantity: Number(row.quantity),
+        quantity: normalizeResourceQuantity(Number(row.quantity)),
         updated_at: '',
         updated_by: null,
         org_id: ctx.orgId,
@@ -384,7 +389,7 @@ export async function addPersonalInventoryLine(input: {
   quality: number
   quantityScu: number
 }): Promise<{ error?: string }> {
-  const qty = roundResourceQuantity(Math.max(0.001, input.quantityScu))
+  const qty = normalizeResourceQuantity(Math.max(0.001, input.quantityScu))
   const now = new Date().toISOString()
 
   const { data: existing, error: fetchError } = await supabase
@@ -398,7 +403,7 @@ export async function addPersonalInventoryLine(input: {
   if (fetchError) return { error: fetchError.message }
 
   if (existing) {
-    const nextQty = roundResourceQuantity(Number(existing.quantity) + qty)
+    const nextQty = addResourceQuantities(Number(existing.quantity), qty)
     const { error } = await supabase
       .from('personal_resource_inventory')
       .update({ quantity: nextQty, updated_at: now })
@@ -442,7 +447,8 @@ export async function adjustInventoryQuantity(
   if (fetchError) return { error: fetchError.message }
   if (!current) return { error: 'Stock card not found — add it first' }
 
-  const nextQty = roundResourceQuantity(Math.max(0, Number(current.quantity) + delta))
+  const nextMilli = Math.max(0, toMilliScu(Number(current.quantity)) + toMilliScu(delta))
+  const nextQty = fromMilliScu(nextMilli)
   const now = new Date().toISOString()
 
   if (nextQty <= 0) {
@@ -473,7 +479,7 @@ export async function setInventoryQuantity(
     return { error: 'Org Total is read-only — update My Resources instead' }
   }
 
-  const nextQty = roundResourceQuantity(Math.max(0, quantity))
+  const nextQty = normalizeResourceQuantity(Math.max(0, quantity))
   const now = new Date().toISOString()
 
   const { data: current, error: fetchError } = await supabase
@@ -598,7 +604,7 @@ export async function createCustomOrder(input: {
         resource_key: line.resourceKey,
         resource_label: line.resourceLabel,
         min_quality: line.minQuality,
-        quantity_scu: roundResourceQuantity(line.quantityScu),
+        quantity_scu: normalizeResourceQuantity(line.quantityScu),
         unit_dfp_auec: Math.round(line.unitDfpAuec),
         line_dfp_auec: Math.round(line.lineDfpAuec),
         sort_order: index,
@@ -669,7 +675,7 @@ export async function updateCustomOrderRequester(input: {
       resource_key: line.resourceKey,
       resource_label: line.resourceLabel,
       min_quality: line.minQuality,
-      quantity_scu: roundResourceQuantity(line.quantityScu),
+      quantity_scu: normalizeResourceQuantity(line.quantityScu),
       unit_dfp_auec: Math.round(line.unitDfpAuec),
       line_dfp_auec: Math.round(line.lineDfpAuec),
       sort_order: index,
@@ -713,6 +719,21 @@ export async function updateCustomOrderStatus(
     .update({ status, updated_at: new Date().toISOString() })
     .eq('id', orderId)
 
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function replaceCustomOrderFulfillmentItems(
+  orderId: string,
+  items: { resourceKey: string; quantity: number }[]
+): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('replace_custom_order_fulfillment_items', {
+    p_order_id: orderId,
+    p_items: items.map((item) => ({
+      resource_key: item.resourceKey,
+      quantity: normalizeResourceQuantity(item.quantity),
+    })),
+  })
   if (error) return { error: error.message }
   return {}
 }

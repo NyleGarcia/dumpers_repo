@@ -11,7 +11,7 @@ import type {
   CustomOrderBlueprint,
   CustomOrderResourceLine,
 } from './operations'
-import { roundResourceQuantity } from './resourceQuantity'
+import { fromMilliScu, normalizeResourceQuantity, toMilliScu } from './resourceQuantity'
 
 export interface OrderBlueprintLine {
   blueprintId: string
@@ -95,7 +95,7 @@ export function pricingForResourceLine(
   minQuality: number,
   quantityScu: number
 ): { unitDfpAuec: number; lineDfpAuec: number; orderMinQuality: number } {
-  const qty = roundResourceQuantity(Math.max(RESOURCE_MIN_SCU, quantityScu))
+  const qty = normalizeResourceQuantity(Math.max(RESOURCE_MIN_SCU, quantityScu))
   const orderMinQuality = orderMinQualityForResource(resourceKey, resourceLabel, minQuality)
   const lineDfpAuec = calculateMaterialDfpPrice(resourceLabel, orderMinQuality, qty)
   const unitDfpAuec = qty > 0 ? Math.round(lineDfpAuec / qty) : lineDfpAuec
@@ -112,7 +112,7 @@ export function resolveOrderResourceLines(order: CustomOrder): OrderResourceLine
         resourceKey: row.resource_key,
         resourceLabel: row.resource_label,
         minQuality: row.min_quality,
-        quantityScu: Number(row.quantity_scu),
+        quantityScu: normalizeResourceQuantity(Number(row.quantity_scu)),
         unitDfpAuec: Number(row.unit_dfp_auec),
         lineDfpAuec: Number(row.line_dfp_auec),
       }))
@@ -127,19 +127,49 @@ export function buildOrderFulfillmentItems(input: {
   const totals = new Map<string, number>()
 
   for (const item of extractOrderLineItemsFromBlueprints(input.blueprintLines)) {
-    totals.set(item.resourceKey, (totals.get(item.resourceKey) ?? 0) + item.quantity)
+    totals.set(item.resourceKey, (totals.get(item.resourceKey) ?? 0) + toMilliScu(item.quantity))
   }
 
   for (const line of input.resourceLines) {
     totals.set(
       line.resourceKey,
-      roundResourceQuantity((totals.get(line.resourceKey) ?? 0) + line.quantityScu)
+      (totals.get(line.resourceKey) ?? 0) + toMilliScu(line.quantityScu)
     )
   }
 
   return [...totals.entries()]
-    .map(([resourceKey, quantity]) => ({ resourceKey, quantity }))
+    .map(([resourceKey, milli]) => ({
+      resourceKey,
+      quantity: fromMilliScu(milli),
+    }))
+    .filter((row) => row.quantity > 0)
     .sort((a, b) => a.resourceKey.localeCompare(b.resourceKey))
+}
+
+export function orderBlueprintCraftCount(order: CustomOrder): number {
+  return resolveOrderBlueprintLines(order).reduce((sum, line) => sum + line.quantity, 0)
+}
+
+/** Recompute fulfillment SCU from stored order lines + blueprint catalog. */
+export function resolveOrderFulfillmentItems(
+  order: CustomOrder,
+  blueprintById: Map<string, BlueprintWithSlots>
+): { resourceKey: string; quantity: number }[] {
+  const blueprintLines = resolveOrderBlueprintLines(order)
+  const resourceLines = resolveOrderResourceLines(order)
+
+  return buildOrderFulfillmentItems({
+    blueprintLines: blueprintLines
+      .map((line) => {
+        const blueprint = blueprintById.get(line.blueprintId)
+        return blueprint ? { blueprint, quantity: line.quantity } : null
+      })
+      .filter((row): row is { blueprint: BlueprintWithSlots; quantity: number } => row != null),
+    resourceLines: resourceLines.map((line) => ({
+      resourceKey: line.resourceKey,
+      quantityScu: line.quantityScu,
+    })),
+  })
 }
 
 export function orderBlueprintIds(order: CustomOrder): string[] {
@@ -155,15 +185,16 @@ export function orderTotalDfp(order: CustomOrder): number {
   return bp + res
 }
 
+/** Title uses total crafts requested, not number of cart lines. */
 export function buildOrderTitle(
-  blueprintCount: number,
-  resourceCount: number
+  totalBlueprintCrafts: number,
+  resourceLineCount: number
 ): string {
-  if (blueprintCount > 0 && resourceCount > 0) {
-    return `${blueprintCount} blueprint + ${resourceCount} resource order`
+  if (totalBlueprintCrafts > 0 && resourceLineCount > 0) {
+    return `${totalBlueprintCrafts} blueprint + ${resourceLineCount} resource order`
   }
-  if (blueprintCount === 1) return 'Blueprint order'
-  if (blueprintCount > 1) return `${blueprintCount} blueprint order`
-  if (resourceCount === 1) return 'Resource order'
-  return `${resourceCount} resource order`
+  if (totalBlueprintCrafts === 1) return 'Blueprint order'
+  if (totalBlueprintCrafts > 1) return `${totalBlueprintCrafts} blueprint order`
+  if (resourceLineCount === 1) return 'Resource order'
+  return `${resourceLineCount} resource order`
 }
