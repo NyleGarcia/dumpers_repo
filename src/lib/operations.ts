@@ -505,11 +505,14 @@ export async function setInventoryQuantity(
   return {}
 }
 
-export async function fetchCustomOrders(): Promise<{
+export async function fetchCustomOrders(options?: {
+  /** Custom Orders page — only orders this member placed */
+  requesterId?: string
+}): Promise<{
   data: CustomOrder[]
   error?: string
 }> {
-  const { data, error } = await supabase
+  let query = supabase
     .from('custom_orders')
     .select(`
       *,
@@ -519,7 +522,12 @@ export async function fetchCustomOrders(): Promise<{
       requester:profiles!custom_orders_requester_id_fkey(rsi_handle, display_name, email),
       assignee:profiles!custom_orders_assignee_id_fkey(rsi_handle, display_name, email)
     `)
-    .order('created_at', { ascending: false })
+
+  if (options?.requesterId) {
+    query = query.eq('requester_id', options.requesterId)
+  }
+
+  const { data, error } = await query.order('created_at', { ascending: false })
 
   if (error) return { data: [], error: error.message }
   return { data: (data ?? []) as CustomOrder[] }

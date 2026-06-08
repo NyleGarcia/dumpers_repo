@@ -359,7 +359,11 @@ export default function FulfillmentRoute() {
                               </p>
                             )}
                             {acceptBlockers.length > 0 && (
-                              <p className="text-amber-400/80 text-xs">{acceptBlockers.join(' · ')}</p>
+                              <ul className="text-amber-400/80 text-xs space-y-0.5 max-w-full break-words">
+                                {acceptBlockers.map((blocker) => (
+                                  <li key={blocker}>{blocker}</li>
+                                ))}
+                              </ul>
                             )}
                           </div>
                           <button
@@ -460,6 +464,7 @@ export default function FulfillmentRoute() {
                   <AuecTransferLimitNotice
                     totalAuec={orderTotalDfp(selectedOrder)}
                     context="fulfiller"
+                    compact
                   />
                 )}
 

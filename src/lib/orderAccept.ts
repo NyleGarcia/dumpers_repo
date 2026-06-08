@@ -1,6 +1,6 @@
 import { getResourceLabel } from './blueprintResources'
 import type { CustomOrder } from './operations'
-import { orderBlueprintIds } from './orderPricing'
+import { resolveOrderBlueprintLines } from './orderPricing'
 
 export function getOrderAcceptBlockers(input: {
   order: CustomOrder
@@ -10,9 +10,9 @@ export function getOrderAcceptBlockers(input: {
 }): string[] {
   const blockers: string[] = []
 
-  for (const bpId of orderBlueprintIds(input.order)) {
-    if (!input.acquiredBlueprints[bpId]) {
-      blockers.push(`Missing blueprint: ${bpId}`)
+  for (const line of resolveOrderBlueprintLines(input.order)) {
+    if (!input.acquiredBlueprints[line.blueprintId]) {
+      blockers.push(`Missing blueprint: ${line.blueprintTitle}`)
     }
   }
 

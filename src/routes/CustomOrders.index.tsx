@@ -13,9 +13,7 @@ import {
   formatDfpRequiredPrice,
   formatResourceOrderQualityLabel,
 } from '../lib/dfp'
-import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import { SITE_SLOGAN } from '../config/site'
-import { getOrderAcceptBlockers } from '../lib/orderAccept'
 import {
   orderTotalDfp,
   resolveOrderBlueprintLines,
@@ -27,7 +25,6 @@ import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
 import {
   canCustomerArchive,
-  canFulfillerArchive,
   isArchivedForUser,
   isCompletedStageOrder,
   isOpenOrder,
@@ -43,7 +40,6 @@ import {
   archiveCustomOrderWithRating,
   confirmOrderPickup,
   fetchCustomOrders,
-  fetchInventory,
   fetchMemberReputations,
   fetchUserNotifications,
   markAllNotificationsRead,
@@ -102,8 +98,7 @@ function profileFromOrderFields(
 }
 
 export default function CustomOrdersRoute() {
-  const { user, profile, acquiredBlueprints, siteOrg } = useAuth()
-  const [personalStock, setPersonalStock] = useState<Record<string, number>>({})
+  const { user, profile } = useAuth()
   const { data: blueprints = [] } = useBlueprintData()
   const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
@@ -124,22 +119,14 @@ export default function CustomOrdersRoute() {
   const loadOrders = useCallback(async () => {
     setLoading(true)
     setError(null)
-    const inventoryPromise =
-      user?.id && siteOrg?.id
-        ? fetchInventory({ scope: 'personal', userId: user.id, orgId: siteOrg.id })
-        : Promise.resolve({ data: [] as { resource_key: string; quantity: number }[] })
-
-    const [ordersResult, notificationsResult, inventoryResult] = await Promise.all([
-      fetchCustomOrders(),
+    const [ordersResult, notificationsResult] = await Promise.all([
+      fetchCustomOrders(user?.id ? { requesterId: user.id } : undefined),
       fetchUserNotifications(),
-      inventoryPromise,
     ])
     if (ordersResult.error) setError(ordersResult.error)
     if (notificationsResult.error) setError(notificationsResult.error)
     setOrders(ordersResult.data)
     setNotifications(notificationsResult.data)
-
-    setPersonalStock(buildStockTotalsByResource(inventoryResult.data ?? []))
 
     if (user?.id) {
       const repResult = await fetchMemberReputations([user.id])
@@ -150,7 +137,7 @@ export default function CustomOrdersRoute() {
     }
 
     setLoading(false)
-  }, [user?.id, siteOrg?.id])
+  }, [user?.id])
 
   useEffect(() => {
     void loadOrders()
@@ -174,14 +161,6 @@ export default function CustomOrdersRoute() {
     setListTab('completed')
     await loadOrders()
   }
-
-  const getAcceptBlockers = (order: CustomOrder): string[] =>
-    getOrderAcceptBlockers({
-      order,
-      acquiredBlueprints,
-      personalStock,
-      labelMap,
-    })
 
   const handleMarkRead = async (notificationId: string) => {
     await markNotificationRead(notificationId)
@@ -236,28 +215,36 @@ export default function CustomOrdersRoute() {
     [myReputation]
   )
 
+  const myOrders = useMemo(
+    () => (userId ? orders.filter((o) => o.requester_id === userId) : []),
+    [orders, userId]
+  )
+
   const visibleOrders = useMemo(
     () =>
-      orders.filter(
+      myOrders.filter(
         (o) => o.status !== 'cancelled' && orderMatchesTab(o, listTab, userId)
       ),
-    [orders, listTab, userId]
+    [myOrders, listTab, userId]
   )
 
   const openOrderCount = useMemo(
-    () => orders.filter((o) => o.status !== 'cancelled' && isOpenOrder(o) && !isArchivedForUser(o, userId)).length,
-    [orders, userId]
+    () =>
+      myOrders.filter(
+        (o) => o.status !== 'cancelled' && isOpenOrder(o) && !isArchivedForUser(o, userId)
+      ).length,
+    [myOrders, userId]
   )
 
   const completedOrderCount = useMemo(
     () =>
-      orders.filter(
+      myOrders.filter(
         (o) =>
           o.status !== 'cancelled' &&
           isCompletedStageOrder(o) &&
           !isArchivedForUser(o, userId)
       ).length,
-    [orders, userId]
+    [myOrders, userId]
   )
 
   const totalOrderCount = openOrderCount + completedOrderCount
@@ -427,10 +414,6 @@ export default function CustomOrdersRoute() {
       ) : (
         <div className="space-y-3">
           {visibleOrders.map((order) => {
-            const isOwn = order.requester_id === user?.id
-            const isAssignee = order.assignee_id === user?.id
-            const acceptBlockers =
-              order.status === 'pending' && !isOwn ? getAcceptBlockers(order) : []
             const totalDfp = orderTotalDfp(order)
             const blueprintLines = resolveOrderBlueprintLines(order)
             const resourceLines = resolveOrderResourceLines(order)
@@ -463,9 +446,7 @@ export default function CustomOrdersRoute() {
                       )}
                     </div>
                     <p className="text-slate-500 text-xs mt-1">
-                      Requested by{' '}
-                      {getDisplayName(profileFromOrderFields(order.requester_id, order.requester))}{' '}
-                      · {new Date(order.created_at).toLocaleString()}
+                      Placed {new Date(order.created_at).toLocaleString()}
                     </p>
                     {order.assignee && (
                       <p className="text-emerald-400/80 text-xs mt-1">
@@ -479,10 +460,7 @@ export default function CustomOrdersRoute() {
 
                     {exceedsSingleTransferLimit(totalDfp) && (
                       <div className="mt-3">
-                        <AuecTransferLimitNotice
-                          totalAuec={totalDfp}
-                          context={isOwn ? 'customer' : 'fulfiller'}
-                        />
+                        <AuecTransferLimitNotice totalAuec={totalDfp} context="customer" compact />
                       </div>
                     )}
 
@@ -531,15 +509,7 @@ export default function CustomOrdersRoute() {
 
                   <div className="flex flex-col items-end gap-1">
                     <div className="flex gap-2 flex-wrap justify-end">
-                      {order.status === 'pending' && !isOwn && (
-                        <Link
-                          to="/fulfillment"
-                          className="px-2 py-1 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded"
-                        >
-                          Accept on Fulfillment →
-                        </Link>
-                      )}
-                      {order.status === 'ready_for_pickup' && isOwn && (
+                      {order.status === 'ready_for_pickup' && (
                         <button
                           onClick={() => void handleConfirmPickup(order.id)}
                           className="px-2 py-1 text-xs bg-cyan-950/50 text-cyan-300 border border-cyan-500/30 rounded"
@@ -557,31 +527,7 @@ export default function CustomOrdersRoute() {
                           Archive
                         </button>
                       )}
-                      {canFulfillerArchive(order, userId) && (
-                        <button
-                          onClick={() =>
-                            openArchiveModal(
-                              order,
-                              'customer',
-                              order.requester,
-                              order.requester_id
-                            )
-                          }
-                          className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded"
-                        >
-                          Archive
-                        </button>
-                      )}
-                      {isAssignee &&
-                        (order.status === 'accepted' || order.status === 'in_progress') && (
-                          <Link
-                            to="/fulfillment"
-                            className="px-2 py-1 text-xs bg-purple-950/50 text-purple-300 border border-purple-500/30 rounded"
-                          >
-                            Open fulfillment →
-                          </Link>
-                        )}
-                      {OPEN_STATUSES.includes(order.status) && (isOwn || isAssignee) && (
+                      {OPEN_STATUSES.includes(order.status) && (
                         <button
                           onClick={() => void handleStatusChange(order.id, 'cancelled')}
                           className="px-2 py-1 text-xs bg-slate-800 text-slate-400 border border-slate-600 rounded"
@@ -590,16 +536,6 @@ export default function CustomOrdersRoute() {
                         </button>
                       )}
                     </div>
-                    {order.status === 'pending' && !isOwn && totalDfp > 0 && (
-                      <p className="text-amber-300/90 text-xs max-w-xs text-right">
-                        Customer expects {formatDfpRequiredPrice(totalDfp)}
-                      </p>
-                    )}
-                    {order.status === 'pending' && !isOwn && acceptBlockers.length > 0 && (
-                      <p className="text-amber-400/80 text-xs max-w-xs text-right">
-                        {acceptBlockers.join(' · ')}
-                      </p>
-                    )}
                   </div>
                 </div>
 
