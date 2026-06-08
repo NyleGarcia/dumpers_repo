@@ -6,6 +6,7 @@ import Login from './Login'
 import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
 import ProfileSettings from './ProfileSettings'
+import DbActionsModal from './DbActionsModal'
 import AppChrome from './layout/AppChrome'
 
 export default function Layout() {
@@ -21,12 +22,15 @@ export default function Layout() {
     canAccess,
     visibilityContext,
     canUseFeature,
+    isSuperAdmin,
   } = useAuth()
   const navItems = getVisibleNavItems(visibilityContext, canAccess)
   const showAdminPanelButton = canUseFeature('admin_panel')
   const showSettingsButton = canUseFeature('settings')
+  const showDbActionsButton = isSuperAdmin
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showProfileSettings, setShowProfileSettings] = useState(false)
+  const [showDbActions, setShowDbActions] = useState(false)
 
   if (loading) {
     return (
@@ -56,8 +60,10 @@ export default function Layout() {
         isPending={isPending}
         isGhostMode={isGhostMode}
         showSettingsButton={showSettingsButton}
+        showDbActionsButton={showDbActionsButton}
         showAdminPanelButton={showAdminPanelButton}
         onOpenSettings={() => setShowProfileSettings(true)}
+        onOpenDbActions={() => setShowDbActions(true)}
         onOpenAdmin={() => setShowAdminPanel(true)}
         onSignOut={signOut}
       >
@@ -66,6 +72,7 @@ export default function Layout() {
 
       {showAdminPanel && <AdminPanel onClose={() => setShowAdminPanel(false)} />}
       {showProfileSettings && <ProfileSettings onClose={() => setShowProfileSettings(false)} />}
+      {showDbActions && <DbActionsModal onClose={() => setShowDbActions(false)} />}
     </>
   )
 }

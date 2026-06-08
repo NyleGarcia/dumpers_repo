@@ -8,7 +8,7 @@ export const SITE_OG_IMAGE_PATH = '/og-image.png' as const
 export const SITE_URL = 'https://www.dumpers-repo.com' as const
 export const SITE_TITLE = "Dumper's Repo — Buy. Craft. Sell." as const
 export const SITE_DESCRIPTION =
-  "Dumper's Repo — Buy. Craft. Sell. Org blueprint tracking, custom orders, and fulfillment for Star Citizen." as const
+  "Dumper's Repo — Buy. Craft. Sell. Blueprint tracking, custom orders, and fulfillment for Star Citizen." as const
 export const SITE_OG_IMAGE = `${SITE_URL}${SITE_OG_IMAGE_PATH}` as const
 export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const
 export const SITE_COPYRIGHT =

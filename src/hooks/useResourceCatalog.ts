@@ -32,7 +32,6 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
 
   const inventoryScope = inventoryContext?.scope
   const inventoryUserId = inventoryContext?.userId
-  const inventoryOrgId = inventoryContext?.orgId ?? null
 
   const [catalog, setCatalog] = useState<BlueprintResourceRow[]>([])
   const [catalogWithInventory, setCatalogWithInventory] = useState<ResourceCatalogEntry[]>([])
@@ -50,9 +49,8 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     return {
       scope: inventoryScope,
       userId: inventoryUserId,
-      orgId: inventoryOrgId,
     }
-  }, [withInventory, inventoryUserId, inventoryScope, inventoryOrgId])
+  }, [withInventory, inventoryUserId, inventoryScope])
 
   const loadCatalog = useCallback(async () => {
     const ctx = buildInventoryContext()
@@ -139,7 +137,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
 
     if (cancelled) return
     await loadCatalog()
-  }, [blueprints, enableCatalogSync, inventoryScope, inventoryUserId, inventoryOrgId, withInventory, includeInactive])
+  }, [blueprints, enableCatalogSync, inventoryScope, inventoryUserId, withInventory, includeInactive])
 
   return {
     catalog,

@@ -47,7 +47,7 @@ import {
 import { displayNameFromFields } from '../lib/supabase'
 
 export default function FulfillmentRoute() {
-  const { user, profile, siteOrg, acquiredBlueprints } = useAuth()
+  const { user, profile, acquiredBlueprints } = useAuth()
   const craftDeductInventory = profile?.craft_deduct_inventory ?? false
   const { data: blueprints = [] } = useBlueprintData()
   const { labelMap } = useResourceCatalog()
@@ -67,10 +67,9 @@ export default function FulfillmentRoute() {
   const [archiving, setArchiving] = useState(false)
 
   const userId = user?.id
-  const orgId = siteOrg?.id ?? null
 
   const loadData = useCallback(async () => {
-    if (!userId || !orgId) {
+    if (!userId) {
       setLoading(false)
       return
     }
@@ -80,7 +79,7 @@ export default function FulfillmentRoute() {
 
     const [ordersResult, inventoryResult, fulfillmentsResult] = await Promise.all([
       fetchCustomOrders(),
-      fetchInventory({ scope: 'personal', userId, orgId }),
+      fetchInventory({ scope: 'personal', userId }),
       fetchFulfillments(),
     ])
 
@@ -105,7 +104,7 @@ export default function FulfillmentRoute() {
     setReputations(repResult.data)
 
     setLoading(false)
-  }, [userId, orgId])
+  }, [userId])
 
   useEffect(() => {
     void loadData()

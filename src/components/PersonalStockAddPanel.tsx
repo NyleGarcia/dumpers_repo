@@ -8,7 +8,6 @@ import { formatResourceQuantity, parseResourceQuantity } from '../lib/resourceQu
 
 interface PersonalStockAddPanelProps {
   userId: string
-  orgId: string | null
   catalog: BlueprintResourceRow[]
   labelMap: Record<string, string>
   existingKeys: Set<string>
@@ -18,7 +17,6 @@ interface PersonalStockAddPanelProps {
 
 export default function PersonalStockAddPanel({
   userId,
-  orgId,
   catalog,
   labelMap,
   existingKeys,
@@ -74,7 +72,6 @@ export default function PersonalStockAddPanel({
 
     const result = await addPersonalInventoryLine({
       userId,
-      orgId,
       resourceKey,
       quality: Number(quality),
       quantityScu: qty,

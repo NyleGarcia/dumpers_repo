@@ -23,8 +23,6 @@ export interface Profile {
   approved_by: string | null
   ghost_mode: boolean
   preview_features_enabled: boolean
-  fulfillment_enabled: boolean
-  share_personal_resources: boolean
   craft_deduct_inventory: boolean
 }
 

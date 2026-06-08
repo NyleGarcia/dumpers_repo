@@ -12,16 +12,12 @@ export type FeatureId =
   | 'custom_orders'
   | 'fulfillment'
   | 'target_bp_list'
-  | 'org_resources'
-  | 'org_orders'
-  | 'fulfillment_provider'
+  | 'site_total'
 
 export interface VisibilityContext {
   role: UserRole | null
   ghostMode: boolean
   previewFeaturesEnabled: boolean
-  fulfillmentEnabled: boolean
-  siteOrgId: string | null
   isSuperAdmin: boolean
   isOfficerOrAbove: boolean
   isApproved: boolean
@@ -35,8 +31,6 @@ export interface BuildVisibilityContextInput {
   role?: UserRole | null
   ghostMode?: boolean
   previewFeaturesEnabled?: boolean
-  fulfillmentEnabled?: boolean
-  siteOrgId?: string | null
 }
 
 export function buildVisibilityContext(input: BuildVisibilityContextInput): VisibilityContext {
@@ -53,8 +47,6 @@ export function buildVisibilityContext(input: BuildVisibilityContextInput): Visi
     role,
     ghostMode,
     previewFeaturesEnabled,
-    fulfillmentEnabled: input.fulfillmentEnabled ?? false,
-    siteOrgId: input.siteOrgId ?? null,
     isSuperAdmin,
     isOfficerOrAbove,
     isApproved,
@@ -96,18 +88,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
     case 'target_bp_list':
       return ctx.isApproved
 
-    case 'org_resources':
-      return ctx.isApproved && !ctx.ghostMode && !!ctx.siteOrgId
-
-    case 'org_orders':
-      return ctx.isApproved && !ctx.ghostMode && !!ctx.siteOrgId
-
-    case 'fulfillment_provider':
-      return (
-        ctx.isApproved &&
-        !ctx.ghostMode &&
-        (ctx.fulfillmentEnabled || ctx.isOfficerOrAbove)
-      )
+    case 'site_total':
+      return ctx.isApproved && !ctx.ghostMode
 
     default:
       return false
@@ -121,10 +103,6 @@ export function passesGhostNavGate(
 ): boolean {
   if (!ctx.ghostMode) return true
   return ghostAllowed !== false
-}
-
-export function canManageOrgInventory(ctx: VisibilityContext): boolean {
-  return ctx.isOfficerOrAbove
 }
 
 export function roleMeetsMin(role: UserRole | null | undefined, minRole: UserRole): boolean {

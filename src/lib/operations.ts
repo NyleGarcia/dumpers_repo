@@ -30,12 +30,11 @@ export interface BlueprintResourceRow {
   synced_at: string
 }
 
-export type InventoryScope = 'personal' | 'org'
+export type InventoryScope = 'personal' | 'site'
 
 export interface InventoryContext {
   scope: InventoryScope
   userId: string
-  orgId: string | null
 }
 
 export interface ResourceInventoryRow {
@@ -46,7 +45,6 @@ export interface ResourceInventoryRow {
   updated_at: string
   updated_by: string | null
   user_id?: string
-  org_id?: string
 }
 
 export interface ResourceCatalogEntry extends BlueprintResourceRow {
@@ -351,8 +349,8 @@ export async function fetchInventory(ctx: InventoryContext): Promise<{
   data: ResourceInventoryRow[]
   error?: string
 }> {
-  if (ctx.scope === 'org') {
-    const { data, error } = await supabase.rpc('get_org_total_inventory')
+  if (ctx.scope === 'site') {
+    const { data, error } = await supabase.rpc('get_site_total_inventory')
 
     if (error) return { data: [], error: error.message }
 
@@ -364,7 +362,6 @@ export async function fetchInventory(ctx: InventoryContext): Promise<{
         quantity: normalizeResourceQuantity(Number(row.quantity)),
         updated_at: '',
         updated_by: null,
-        org_id: ctx.orgId,
       })
     )
 
@@ -384,7 +381,6 @@ export async function fetchInventory(ctx: InventoryContext): Promise<{
 
 export async function addPersonalInventoryLine(input: {
   userId: string
-  orgId: string | null
   resourceKey: string
   quality: number
   quantityScu: number
@@ -415,7 +411,6 @@ export async function addPersonalInventoryLine(input: {
 
   const { error } = await supabase.from('personal_resource_inventory').insert({
     user_id: input.userId,
-    org_id: input.orgId,
     resource_key: input.resourceKey,
     quality: input.quality,
     quantity: qty,
@@ -432,8 +427,8 @@ export async function adjustInventoryQuantity(
   quality: number,
   delta: number
 ): Promise<{ error?: string }> {
-  if (ctx.scope === 'org') {
-    return { error: 'Org Total is read-only — update My Resources instead' }
+  if (ctx.scope === 'site') {
+    return { error: 'Site Total is read-only — update My Resources instead' }
   }
 
   const { data: current, error: fetchError } = await supabase
@@ -475,8 +470,8 @@ export async function setInventoryQuantity(
   quality: number,
   quantity: number
 ): Promise<{ error?: string }> {
-  if (ctx.scope === 'org') {
-    return { error: 'Org Total is read-only — update My Resources instead' }
+  if (ctx.scope === 'site') {
+    return { error: 'Site Total is read-only — update My Resources instead' }
   }
 
   const nextQty = normalizeResourceQuantity(Math.max(0, quantity))
@@ -868,6 +863,13 @@ export async function fetchFulfillments(): Promise<{
 
   if (error) return { data: [], error: error.message }
   return { data: (data ?? []) as OrderFulfillment[] }
+}
+
+export async function wipeResourceTracker(): Promise<{ deletedCount?: number; error?: string }> {
+  const { data, error } = await supabase.rpc('admin_wipe_resource_tracker')
+
+  if (error) return { error: error.message }
+  return { deletedCount: Number(data ?? 0) }
 }
 
 export type { ExtractedBlueprintResource }

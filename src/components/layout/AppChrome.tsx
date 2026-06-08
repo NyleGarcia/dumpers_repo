@@ -17,8 +17,10 @@ interface AppChromeProps {
   isPending: boolean
   isGhostMode: boolean
   showSettingsButton: boolean
+  showDbActionsButton: boolean
   showAdminPanelButton: boolean
   onOpenSettings: () => void
+  onOpenDbActions: () => void
   onOpenAdmin: () => void
   onSignOut: () => void
 }
@@ -31,8 +33,10 @@ export default function AppChrome({
   isPending,
   isGhostMode,
   showSettingsButton,
+  showDbActionsButton,
   showAdminPanelButton,
   onOpenSettings,
+  onOpenDbActions,
   onOpenAdmin,
   onSignOut,
 }: AppChromeProps) {
@@ -44,14 +48,14 @@ export default function AppChrome({
 
   return (
     <div className="site-page-bg min-h-screen flex flex-col">
-      <header className="site-app-header fixed top-0 inset-x-0 z-50">
-        <div className="site-shell h-14 flex items-center gap-3">
+      <header className="site-app-header fixed top-0 inset-x-0 z-50 overflow-visible">
+        <div className="site-shell h-14 flex items-center gap-3 min-w-0">
           <SiteBrandMark size="md" />
           <div className="hidden sm:block border-l border-slate-700/70 pl-3 min-w-0">
             <SiteBrandTitle size="compact" layout="inline" align="left" subtle />
           </div>
           <AppNavTabs items={navItems} className="hidden lg:flex flex-1 justify-center px-2 min-h-9 items-center" />
-          <div className="ml-auto flex items-center gap-2 shrink-0">
+          <div className="ml-auto flex items-center gap-2 shrink-0 min-w-0">
             <AppNotificationBell disabled={isPending} />
             <AppUserMenu
               displayName={displayName}
@@ -60,8 +64,10 @@ export default function AppChrome({
               isGhostMode={isGhostMode}
               navItems={navItems}
               showSettingsButton={showSettingsButton}
+              showDbActionsButton={showDbActionsButton}
               showAdminPanelButton={showAdminPanelButton}
               onOpenSettings={onOpenSettings}
+              onOpenDbActions={onOpenDbActions}
               onOpenAdmin={onOpenAdmin}
               onSignOut={onSignOut}
             />

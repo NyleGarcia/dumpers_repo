@@ -13,8 +13,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updateRsiHandle,
     updateGhostMode,
     updatePreviewFeatures,
-    updateFulfillmentEnabled,
-    updateSharePersonalResources,
     updateCraftDeductInventory,
     signOut,
     isSuperAdmin,
@@ -23,18 +21,12 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
   const [previewFeatures, setPreviewFeatures] = useState(profile?.preview_features_enabled ?? false)
-  const [fulfillmentEnabled, setFulfillmentEnabled] = useState(profile?.fulfillment_enabled ?? false)
   const [savingRsi, setSavingRsi] = useState(false)
   const [savingGhost, setSavingGhost] = useState(false)
   const [savingPreview, setSavingPreview] = useState(false)
-  const [savingFulfillment, setSavingFulfillment] = useState(false)
-  const [sharePersonalResources, setSharePersonalResources] = useState(
-    profile?.share_personal_resources ?? false
-  )
   const [craftDeductInventory, setCraftDeductInventory] = useState(
     profile?.craft_deduct_inventory ?? false
   )
-  const [savingSharePersonal, setSavingSharePersonal] = useState(false)
   const [savingCraftDeduct, setSavingCraftDeduct] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -45,15 +37,11 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setRsiHandle(profile?.rsi_handle || '')
     setGhostMode(profile?.ghost_mode ?? false)
     setPreviewFeatures(profile?.preview_features_enabled ?? false)
-    setFulfillmentEnabled(profile?.fulfillment_enabled ?? false)
-    setSharePersonalResources(profile?.share_personal_resources ?? false)
     setCraftDeductInventory(profile?.craft_deduct_inventory ?? false)
   }, [
     profile?.rsi_handle,
     profile?.ghost_mode,
     profile?.preview_features_enabled,
-    profile?.fulfillment_enabled,
-    profile?.share_personal_resources,
     profile?.craft_deduct_inventory,
   ])
 
@@ -102,38 +90,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingPreview(false)
-  }
-
-  const handleFulfillmentEnabledChange = async (enabled: boolean) => {
-    const previous = fulfillmentEnabled
-    setFulfillmentEnabled(enabled)
-    setSavingFulfillment(true)
-    setMessage(null)
-
-    const success = await updateFulfillmentEnabled(enabled)
-
-    if (!success) {
-      setFulfillmentEnabled(previous)
-      setMessage({ type: 'error', text: 'Failed to update fulfillment setting.' })
-    }
-
-    setSavingFulfillment(false)
-  }
-
-  const handleSharePersonalResourcesChange = async (enabled: boolean) => {
-    const previous = sharePersonalResources
-    setSharePersonalResources(enabled)
-    setSavingSharePersonal(true)
-    setMessage(null)
-
-    const success = await updateSharePersonalResources(enabled)
-
-    if (!success) {
-      setSharePersonalResources(previous)
-      setMessage({ type: 'error', text: 'Failed to update personal resource sharing.' })
-    }
-
-    setSavingSharePersonal(false)
   }
 
   const handleCraftDeductInventoryChange = async (enabled: boolean) => {
@@ -224,24 +180,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
 
           <SettingsSection
             title="Resources"
-            description="Control who can see your personal stock"
+            description="Fulfillment and inventory preferences"
           >
-            <SettingsToggle
-              label="Share my personal resources"
-              description="When on, other approved members can view your personal resource inventory. Off by default."
-              checked={sharePersonalResources}
-              onChange={handleSharePersonalResourcesChange}
-              saving={savingSharePersonal}
-            />
-
-            <SettingsToggle
-              label="Fulfillment volunteer"
-              description="Opt in to accept and fulfill custom orders when fulfillment launches for members."
-              checked={fulfillmentEnabled}
-              onChange={handleFulfillmentEnabledChange}
-              saving={savingFulfillment}
-            />
-
             <SettingsToggle
               label="Deduct inventory on craft complete"
               description="When on, completing a fulfillment craft requires enough stock in My Resources and deducts materials automatically. Off by default."
@@ -266,13 +206,16 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
 
           {isOfficerOrAbove && (
             <SettingsSection
-              title="Org Features"
-              description="Live tools for every approved member"
+              title="Feature Preview"
+              description="Officer-only experimental toggles"
             >
-              <p className="text-sm text-slate-400">
-                Resource Tracker, Custom Orders, and Fulfillment are available to all approved
-                members — no preview toggle required.
-              </p>
+              <SettingsToggle
+                label="Preview features"
+                description="Enable experimental UI and tools before they ship to all members."
+                checked={previewFeatures}
+                onChange={handlePreviewFeaturesChange}
+                saving={savingPreview}
+              />
             </SettingsSection>
           )}
 

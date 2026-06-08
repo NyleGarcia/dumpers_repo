@@ -30,8 +30,8 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
   }
 
   const triggerClass = disabled
-    ? 'border-slate-700/80 bg-slate-900/50 opacity-50 cursor-not-allowed shadow-md'
-    : 'border-slate-600 bg-slate-800/90 hover:bg-slate-700 transition-colors shadow-md'
+    ? 'border-slate-700/80 bg-slate-900/50 opacity-50 cursor-not-allowed'
+    : 'border-slate-600 bg-slate-800/90 hover:bg-slate-700 transition-colors'
 
   return (
     <div className="relative shrink-0">
@@ -49,10 +49,10 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
               : 'Notifications'
         }
         aria-expanded={open}
-        className={`relative flex items-center justify-center w-9 h-9 rounded-lg border ${triggerClass}`}
+        className={`relative flex items-center justify-center px-2 py-1 rounded-lg border backdrop-blur shadow-md ${triggerClass}`}
       >
         <svg
-          className={`w-5 h-5 ${disabled ? 'text-slate-500' : 'text-slate-300'}`}
+          className={`w-6 h-6 ${disabled ? 'text-slate-500' : 'text-slate-300'}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

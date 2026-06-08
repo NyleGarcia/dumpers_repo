@@ -78,8 +78,6 @@ function profileFromOrderFields(
     approved_by: null,
     ghost_mode: false,
     preview_features_enabled: false,
-    fulfillment_enabled: false,
-    share_personal_resources: false,
     craft_deduct_inventory: false,
   }
 }

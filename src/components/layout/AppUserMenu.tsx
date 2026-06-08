@@ -10,8 +10,10 @@ interface AppUserMenuProps {
   isGhostMode: boolean
   navItems: AppNavItem[]
   showSettingsButton: boolean
+  showDbActionsButton: boolean
   showAdminPanelButton: boolean
   onOpenSettings: () => void
+  onOpenDbActions: () => void
   onOpenAdmin: () => void
   onSignOut: () => void
 }
@@ -23,8 +25,10 @@ export default function AppUserMenu({
   isGhostMode,
   navItems,
   showSettingsButton,
+  showDbActionsButton,
   showAdminPanelButton,
   onOpenSettings,
+  onOpenDbActions,
   onOpenAdmin,
   onSignOut,
 }: AppUserMenuProps) {
@@ -162,6 +166,19 @@ export default function AppUserMenu({
                 className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
               >
                 Settings
+              </button>
+            )}
+
+            {showDbActionsButton && (
+              <button
+                type="button"
+                onClick={() => {
+                  close()
+                  onOpenDbActions()
+                }}
+                className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+              >
+                DB Actions
               </button>
             )}
 

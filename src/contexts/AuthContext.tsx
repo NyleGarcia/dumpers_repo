@@ -8,7 +8,6 @@ import {
   type VisibilityContext,
 } from '../lib/featureAccess'
 import { removeTargetBlueprint } from '../lib/targetList'
-import { fetchSiteOrg, type SiteOrg } from '../lib/org'
 import type { User, Session } from '@supabase/supabase-js'
 
 export interface UserWithBlueprints {
@@ -31,10 +30,7 @@ interface AuthContextType {
   updateRsiHandle: (handle: string) => Promise<boolean>
   updateGhostMode: (enabled: boolean) => Promise<boolean>
   updatePreviewFeatures: (enabled: boolean) => Promise<boolean>
-  updateFulfillmentEnabled: (enabled: boolean) => Promise<boolean>
-  updateSharePersonalResources: (enabled: boolean) => Promise<boolean>
   updateCraftDeductInventory: (enabled: boolean) => Promise<boolean>
-  siteOrg: SiteOrg | null
   fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   displayName: string
@@ -62,7 +58,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isBanned, setIsBanned] = useState(false)
   const isBannedRef = useRef(false)
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
-  const [siteOrg, setSiteOrg] = useState<SiteOrg | null>(null)
 
   useEffect(() => {
     isBannedRef.current = isBanned
@@ -174,12 +169,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const profileRef = useRef(profile)
   profileRef.current = profile
 
-  const loadSiteOrg = useCallback(async () => {
-    const org = await fetchSiteOrg()
-    setSiteOrg(org)
-    return org
-  }, [])
-
   const loadUserData = useCallback(async (sessionUser: User, isSignIn = false) => {
     const banned = await checkBanned(sessionUser.id, sessionUser.email)
     if (banned) {
@@ -191,7 +180,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const profileData = await fetchProfile(sessionUser.id)
 
     setProfile(profileData)
-    await loadSiteOrg()
 
     if (!profileData) {
       const stillBanned = await checkBanned(sessionUser.id, sessionUser.email)
@@ -207,11 +195,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const acquired = await fetchAcquiredBlueprints(sessionUser.id)
     setAcquiredBlueprints(acquired)
-  }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints, loadSiteOrg])
+  }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints])
 
   useEffect(() => {
-    void loadSiteOrg()
-
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
@@ -236,7 +222,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })
 
     return () => subscription.unsubscribe()
-  }, [loadUserData, loadSiteOrg])
+  }, [loadUserData])
 
   useEffect(() => {
     const onFocus = async () => {
@@ -251,12 +237,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const profileData = await fetchProfile(session.user.id)
       if (profileData) setProfile(profileData)
-      await loadSiteOrg()
     }
 
     window.addEventListener('focus', onFocus)
     return () => window.removeEventListener('focus', onFocus)
-  }, [checkBanned, handleBannedUser, fetchProfile, loadSiteOrg])
+  }, [checkBanned, handleBannedUser, fetchProfile])
 
   const userRef = useRef(user)
   userRef.current = user
@@ -381,42 +366,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
-  const updateFulfillmentEnabled = useCallback(async (enabled: boolean): Promise<boolean> => {
-    const activeUser = userRef.current
-    if (!activeUser) return false
-
-    const { error } = await supabase
-      .from('profiles')
-      .update({ fulfillment_enabled: enabled })
-      .eq('id', activeUser.id)
-
-    if (error) {
-      console.error('Error updating fulfillment enabled:', error)
-      return false
-    }
-
-    setProfile(prev => prev ? { ...prev, fulfillment_enabled: enabled } : null)
-    return true
-  }, [])
-
-  const updateSharePersonalResources = useCallback(async (enabled: boolean): Promise<boolean> => {
-    const activeUser = userRef.current
-    if (!activeUser) return false
-
-    const { error } = await supabase
-      .from('profiles')
-      .update({ share_personal_resources: enabled })
-      .eq('id', activeUser.id)
-
-    if (error) {
-      console.error('Error updating share personal resources:', error)
-      return false
-    }
-
-    setProfile(prev => prev ? { ...prev, share_personal_resources: enabled } : null)
-    return true
-  }, [])
-
   const updateCraftDeductInventory = useCallback(async (enabled: boolean): Promise<boolean> => {
     const activeUser = userRef.current
     if (!activeUser) return false
@@ -509,15 +458,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         role: profile?.role ?? null,
         ghostMode: profile?.ghost_mode ?? false,
         previewFeaturesEnabled: profile?.preview_features_enabled ?? false,
-        fulfillmentEnabled: profile?.fulfillment_enabled ?? false,
-        siteOrgId: siteOrg?.id ?? null,
       }),
     [
       profile?.role,
       profile?.ghost_mode,
       profile?.preview_features_enabled,
-      profile?.fulfillment_enabled,
-      siteOrg?.id,
     ]
   )
   const showMemberCollections = canUseFeature('member_directory', visibilityContext)
@@ -547,10 +492,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateRsiHandle,
       updateGhostMode,
       updatePreviewFeatures,
-      updateFulfillmentEnabled,
-      updateSharePersonalResources,
       updateCraftDeductInventory,
-      siteOrg,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       displayName,
@@ -580,10 +522,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateRsiHandle,
       updateGhostMode,
       updatePreviewFeatures,
-      updateFulfillmentEnabled,
-      updateSharePersonalResources,
       updateCraftDeductInventory,
-      siteOrg,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       displayName,

@@ -20,15 +20,15 @@ import {
 const ADJUST_STEPS = [0.001, 0.01, 0.1, 1] as const
 
 export default function ResourceTrackerRoute() {
-  const { user, siteOrg, visibilityContext, isSuperAdmin, isGhostMode } = useAuth()
-  const canViewOrgTotal =
-    !isGhostMode && canUseFeature('org_resources', visibilityContext)
+  const { user, visibilityContext, isSuperAdmin, isGhostMode } = useAuth()
+  const canViewSiteTotal =
+    !isGhostMode && canUseFeature('site_total', visibilityContext)
 
   const [activeTab, setActiveTab] = useState<InventoryScope>('personal')
   const [stockError, setStockError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isGhostMode && activeTab === 'org') setActiveTab('personal')
+    if (isGhostMode && activeTab === 'site') setActiveTab('personal')
   }, [isGhostMode, activeTab])
 
   const [search, setSearch] = useState('')
@@ -41,11 +41,10 @@ export default function ResourceTrackerRoute() {
     return {
       scope: activeTab,
       userId: user.id,
-      orgId: siteOrg?.id ?? null,
     }
-  }, [user?.id, siteOrg?.id, activeTab])
+  }, [user?.id, activeTab])
 
-  const readOnly = activeTab === 'org'
+  const readOnly = activeTab === 'site'
   const isPersonalTab = activeTab === 'personal'
 
   const {
@@ -114,7 +113,7 @@ export default function ResourceTrackerRoute() {
     await refresh()
   }
 
-  const tabLabel = activeTab === 'personal' ? 'My stock cards' : 'Org Total'
+  const tabLabel = activeTab === 'personal' ? 'My stock cards' : 'Site Total'
 
   return (
     <FeaturePageLayout
@@ -144,17 +143,17 @@ export default function ResourceTrackerRoute() {
         >
           My Resources
         </button>
-        {canViewOrgTotal && (
+        {canViewSiteTotal && (
           <button
             type="button"
-            onClick={() => setActiveTab('org')}
+            onClick={() => setActiveTab('site')}
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              activeTab === 'org'
+              activeTab === 'site'
                 ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
                 : 'text-slate-400 hover:text-white hover:bg-slate-800'
             }`}
           >
-            Org Total
+            Site Total
           </button>
         )}
       </div>
@@ -163,7 +162,6 @@ export default function ResourceTrackerRoute() {
         {isPersonalTab && user?.id ? (
           <PersonalStockAddPanel
             userId={user.id}
-            orgId={siteOrg?.id ?? null}
             catalog={catalog}
             labelMap={labelMap}
             existingKeys={existingLineKeys}
@@ -172,8 +170,9 @@ export default function ResourceTrackerRoute() {
           />
         ) : readOnly ? (
           <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
-            Org Total is a read-only aggregate ledger — summed from every approved member&apos;s My
-            Resources. Update your own quantities under My Resources.
+            Site Total is a read-only rollup — summed from every approved member&apos;s My
+            Resources (excluding ghost and banned accounts). Update your own quantities under My
+            Resources.
           </div>
         ) : null}
       </div>
@@ -181,9 +180,9 @@ export default function ResourceTrackerRoute() {
       {(error || stockError) && (
         <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
           {stockError ?? error}
-          {(stockError ?? error)?.includes('relation') && (
+          {(stockError ?? error)?.includes('get_site_total_inventory') && (
             <p className="mt-2 text-red-200/80">
-              Run pending Supabase migrations (030 for quality-tier stock) first.
+              Run pending Supabase migrations (038 for site totals) first.
             </p>
           )}
         </div>
@@ -221,7 +220,7 @@ export default function ResourceTrackerRoute() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={
-            isPersonalTab ? 'Search your stock cards...' : 'Search org totals...'
+            isPersonalTab ? 'Search your stock cards...' : 'Search site totals...'
           }
           className="flex-1 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20"
         />
@@ -247,7 +246,7 @@ export default function ResourceTrackerRoute() {
           <p className="text-slate-400">
             {isPersonalTab
               ? 'No stock cards yet. Use Add material stock above to create your first Q-tier entry.'
-              : 'No org-wide stock recorded yet.'}
+              : 'No site-wide stock recorded yet.'}
           </p>
         </div>
       ) : (
@@ -272,7 +271,7 @@ export default function ResourceTrackerRoute() {
                       {card.is_active
                         ? isPersonalTab
                           ? `Q${quality} · SCU on hand`
-                          : 'SCU org-wide total'
+                          : 'SCU site-wide total'
                         : 'Retired — no longer in blueprints'}
                     </p>
                   </div>
