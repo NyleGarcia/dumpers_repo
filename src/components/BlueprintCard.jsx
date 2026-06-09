@@ -166,7 +166,7 @@ export default function BlueprintCard({
   return (
     <div
       onClick={() => onClick(blueprint)}
-      className={`group relative bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-5 cursor-pointer hover:shadow-xl transition-all duration-200 overflow-hidden min-h-[140px] ${
+      className={`group relative min-w-0 max-w-full bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-all duration-200 overflow-hidden min-h-0 sm:min-h-[120px] ${
         isAcquired 
           ? 'border-green-500/50 ring-1 ring-green-500/20' 
           : 'border-slate-700 hover:border-red-500/30'
@@ -232,7 +232,7 @@ export default function BlueprintCard({
                     return name ? (
                       <span 
                         key={`${slotIdx}-${optIdx}`} 
-                        className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs border whitespace-nowrap ${
+                        className={`inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words ${
                           opt.type === 'item' 
                             ? 'bg-purple-950/30 text-purple-400 border-purple-500/20' 
                             : 'bg-red-950/30 text-red-400 border-red-500/20'

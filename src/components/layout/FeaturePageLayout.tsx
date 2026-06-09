@@ -4,6 +4,7 @@ interface FeaturePageLayoutProps {
   title: string
   subtitle?: string
   badge?: string
+  meta?: React.ReactNode
   actions?: React.ReactNode
   children: React.ReactNode
 }
@@ -12,11 +13,12 @@ export default function FeaturePageLayout({
   title,
   subtitle,
   badge,
+  meta,
   actions,
   children,
 }: FeaturePageLayoutProps) {
   return (
-    <main className="site-shell py-6">
+    <main className="site-shell py-6 min-w-0 w-full overflow-x-hidden">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 pb-5 border-b border-slate-800/80">
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -28,6 +30,7 @@ export default function FeaturePageLayout({
             )}
           </div>
           {subtitle && <p className="site-page-subtitle">{subtitle}</p>}
+          {meta && <div className="text-slate-500 text-xs sm:text-sm mt-1">{meta}</div>}
         </div>
         {actions && <div className="flex items-center gap-2 flex-wrap shrink-0">{actions}</div>}
       </div>

@@ -47,6 +47,7 @@ export default function SiteBrandTitle({
   const alignClass = align === 'center' ? 'text-center' : 'text-left'
   const titleSize = titleSizeClasses[size]
   const isStacked = layout === 'stacked'
+  const truncate = className.includes('truncate')
   const repoStyle = subtle
     ? {
         fontFamily: SITE_BRAND_FONT,
@@ -57,9 +58,9 @@ export default function SiteBrandTitle({
     : repoLineStyle
 
   return (
-    <div className={`${alignClass} ${className}`}>
+    <div className={`${alignClass} min-w-0 ${truncate ? 'overflow-hidden' : ''} ${className}`}>
       <h1
-        className={`font-black uppercase tracking-wide ${isStacked ? 'leading-none' : 'leading-tight'} ${titleSize}`}
+        className={`font-black uppercase tracking-wide ${isStacked ? 'leading-none' : 'leading-tight'} ${titleSize} ${truncate ? 'truncate whitespace-nowrap' : ''}`}
       >
         <span className={`text-white ${isStacked ? 'block' : ''}`} style={brandLineStyle}>
           Dumper&apos;s

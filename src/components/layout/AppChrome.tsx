@@ -50,20 +50,21 @@ export default function AppChrome({
   return (
     <div className="site-page-bg min-h-screen flex flex-col">
       <header className="site-app-header fixed top-0 inset-x-0 z-50 overflow-visible">
-        <div className="site-shell h-14 flex items-center gap-3 min-w-0">
-          <SiteBrandMark size="md" />
-          <div className="hidden sm:block border-l border-slate-700/70 pl-3 min-w-0">
-            <SiteBrandTitle size="compact" layout="inline" align="left" subtle />
+        <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+            <SiteBrandMark size="md" />
+            <div className="min-w-0 border-l border-slate-700/70 pl-2 sm:pl-3 overflow-hidden">
+              <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
+            </div>
           </div>
-          <AppNavTabs items={navItems} className="hidden lg:flex flex-1 justify-center px-2 min-h-9 items-center" />
-          <div className="ml-auto flex items-center gap-2 shrink-0 min-w-0">
+          <AppNavTabs items={navItems} className="hidden lg:flex flex-1 justify-center px-2 min-h-9 items-center min-w-0" />
+          <div className="flex items-center gap-2 shrink-0">
             <AppNotificationBell disabled={isPending} />
             <AppUserMenu
               displayName={displayName}
               profile={profile}
               isPending={isPending}
               isGhostMode={isGhostMode}
-              navItems={navItems}
               showSettingsButton={showSettingsButton}
               showDbActionsButton={showDbActionsButton}
               showAdminPanelButton={showAdminPanelButton}
@@ -74,8 +75,8 @@ export default function AppChrome({
             />
           </div>
         </div>
-        <div className="lg:hidden border-t border-slate-800/70 h-11 flex items-center">
-          <AppNavTabs items={navItems} className="site-shell overflow-x-auto min-h-9 items-center" />
+        <div className="lg:hidden border-t border-slate-800/70 h-11 flex items-center w-full min-w-0">
+          <AppNavTabs items={navItems} className="site-shell w-full max-w-full overflow-x-auto min-h-9 items-center" />
         </div>
       </header>
 

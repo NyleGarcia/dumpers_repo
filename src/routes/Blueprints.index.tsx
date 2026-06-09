@@ -1,6 +1,7 @@
 import React from 'react'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
+import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
@@ -478,66 +479,62 @@ export default function BlueprintsRoute() {
   const hasSubFilters = showVehicleSizes || showArmorWeights || showArmorSlots || showSubTypes
 
   return (
-    <div className="site-shell py-6 overflow-x-hidden">
-      <div className="space-y-3 mb-6 pb-5 border-b border-slate-800/80">
-        <div className="text-center">
-          <h1 className="site-page-title">Blueprints</h1>
-          <p className="site-page-subtitle mt-2 normal-case tracking-normal">
-            Comprehensive Crafting Database & Mission Rewards Tracker
-          </p>
-          <p className="hidden sm:block text-slate-500 text-sm mt-2">
-            <span>LIVE {blueprintDataVersion}</span>
-            <span className="mx-2">•</span>
-            <span className="text-green-400">{Object.keys(acquiredBlueprints).length} acquired</span>
-          </p>
+    <FeaturePageLayout
+      title="Blueprints"
+      subtitle="Comprehensive Crafting Database & Mission Rewards Tracker"
+      meta={
+        <>
+          <span>LIVE {blueprintDataVersion}</span>
+          <span className="mx-2">•</span>
+          <span className="text-green-400">{Object.keys(acquiredBlueprints).length} acquired</span>
+        </>
+      }
+    >
+      <div className="space-y-3 mb-6 w-full min-w-0">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="site-input flex-1 min-w-0 basis-full sm:basis-0 sm:min-w-[8rem] px-3 py-1.5 text-sm"
+          />
+          <button
+            onClick={() => setShowOnlyRewards(!showOnlyRewards)}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap shrink-0 ${
+              showOnlyRewards
+                ? 'bg-amber-600 text-white'
+                : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 border border-slate-600'
+            }`}
+          >
+            ★ Rewards
+          </button>
+          {showMemberCollections && (
+            <select
+              value={selectedUserId}
+              onChange={(e) => setSelectedUserId(e.target.value)}
+              className="site-input w-full sm:w-auto sm:max-w-[10rem] px-2 py-1.5 text-sm min-w-0"
+            >
+              <option value="all">Everyone</option>
+              {usersWithBlueprints.map(u => (
+                <option key={u.id} value={u.id}>
+                  {u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
-        <div className="flex gap-1.5 sm:gap-2">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="site-input flex-1 px-3 py-1.5 text-sm"
-            />
-            <button
-              onClick={() => setShowOnlyRewards(!showOnlyRewards)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
-                showOnlyRewards
-                  ? 'bg-amber-600 text-white'
-                  : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 border border-slate-600'
-              }`}
-            >
-              ★ Rewards
-            </button>
-            {showMemberCollections && (
-              <>
-                <select
-                  value={selectedUserId}
-                  onChange={(e) => setSelectedUserId(e.target.value)}
-                  className="site-input px-2 py-1.5 text-sm min-w-[100px] sm:min-w-[140px]"
-                >
-                  <option value="all">Everyone</option>
-                  {usersWithBlueprints.map(u => (
-                    <option key={u.id} value={u.id}>
-                      {u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
-                    </option>
-                  ))}
-                </select>
-              </>
-            )}
+        {isViewingOther && (
+          <div className="text-xs text-amber-400 bg-amber-900/20 border border-amber-500/30 rounded py-1 px-2">
+            Viewing {usersWithBlueprints.find(u => u.id === selectedUserId)?.rsi_handle ||
+                     usersWithBlueprints.find(u => u.id === selectedUserId)?.display_name || 'user'}&apos;s collection
+            {loadingUserBlueprints && ' (loading...)'}
           </div>
-          
-          {isViewingOther && (
-            <div className="text-center text-xs text-amber-400 bg-amber-900/20 border border-amber-500/30 rounded py-1 px-2">
-              Viewing {usersWithBlueprints.find(u => u.id === selectedUserId)?.rsi_handle || 
-                       usersWithBlueprints.find(u => u.id === selectedUserId)?.display_name || 'user'}'s collection
-              {loadingUserBlueprints && ' (loading...)'}
-            </div>
-          )}
+        )}
 
-          {/* Main Category Tags */}
-          <div className="flex flex-wrap gap-1.5 lg:gap-2 justify-center">
+        {/* Main Category Tags */}
+        <div className="flex flex-wrap gap-1.5 lg:gap-2">
             {Object.keys(MAIN_CATEGORY_GROUPS).map(cat => {
               const count = categoryData.mainCounts[cat] || 0
               return (
@@ -545,7 +542,7 @@ export default function BlueprintsRoute() {
                   key={cat}
                   onClick={() => handleMainCategoryClick(cat)}
                   disabled={count === 0}
-                  className={`px-2.5 py-1 lg:px-3 lg:py-1.5 xl:px-4 xl:py-2 rounded-md text-xs lg:text-sm xl:text-base font-medium transition-all ${
+                  className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all ${
                     selectedMainCategory === cat
                       ? 'site-btn-accent shadow-lg'
                       : count === 0
@@ -563,7 +560,7 @@ export default function BlueprintsRoute() {
 
           {/* Sub-Category Tags (shown when main category selected) */}
           {hasSubFilters && (
-            <div className="flex flex-wrap gap-1.5 lg:gap-2 justify-center pt-2 border-t border-slate-700/50">
+            <div className="flex flex-wrap gap-1.5 lg:gap-2 pt-2 border-t border-slate-700/50">
               {/* Size filters for Vehicle categories */}
               {showVehicleSizes && (
                 <>
@@ -577,7 +574,7 @@ export default function BlueprintsRoute() {
                           setSelectedSubCategory(null)
                         }}
                         disabled={count === 0}
-                        className={`px-2 py-0.5 lg:px-2.5 lg:py-1 xl:px-3 rounded text-[11px] lg:text-xs xl:text-sm font-medium transition-all ${
+                        className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all ${
                           selectedSize === size
                             ? 'bg-blue-600 text-white'
                             : count === 0
@@ -607,7 +604,7 @@ export default function BlueprintsRoute() {
                           setSelectedSubCategory(null)
                         }}
                         disabled={count === 0}
-                        className={`px-2 py-0.5 lg:px-2.5 lg:py-1 xl:px-3 rounded text-[11px] lg:text-xs xl:text-sm font-medium transition-all ${
+                        className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all ${
                           selectedArmorWeight === weight
                             ? 'bg-blue-600 text-white'
                             : count === 0
@@ -637,7 +634,7 @@ export default function BlueprintsRoute() {
                           setSelectedSubCategory(null)
                         }}
                         disabled={count === 0}
-                        className={`px-2 py-0.5 lg:px-2.5 lg:py-1 xl:px-3 rounded text-[11px] lg:text-xs xl:text-sm font-medium transition-all ${
+                        className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all ${
                           selectedArmorSlot === slot
                             ? 'bg-green-600 text-white'
                             : count === 0
@@ -661,7 +658,7 @@ export default function BlueprintsRoute() {
                     key={sub}
                     onClick={() => setSelectedSubCategory(selectedSubCategory === sub ? null : sub)}
                     disabled={count === 0}
-                    className={`px-2 py-0.5 lg:px-2.5 lg:py-1 xl:px-3 rounded text-[11px] lg:text-xs xl:text-sm font-medium transition-all ${
+                    className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all ${
                       selectedSubCategory === sub
                         ? 'bg-orange-600 text-white'
                         : count === 0
@@ -676,16 +673,16 @@ export default function BlueprintsRoute() {
             </div>
           )}
 
-          {/* Results count */}
-          <div className="text-center text-slate-500 text-sm">
-            Showing {filteredBlueprints.length} blueprints
-            {(selectedMainCategory || selectedSubCategory || selectedSize) && (
-              <span> (filtered from {baseFilteredBlueprints.length})</span>
-            )}
-          </div>
+        {/* Results count */}
+        <div className="text-slate-500 text-sm">
+          Showing {filteredBlueprints.length} blueprints
+          {(selectedMainCategory || selectedSubCategory || selectedSize) && (
+            <span> (filtered from {baseFilteredBlueprints.length})</span>
+          )}
+        </div>
       </div>
 
-      <section className="mt-4">
+      <section className="mt-4 w-full min-w-0">
         {filteredBlueprints.length === 0 ? (
           <div className="text-center py-24 bg-slate-900/30 rounded-3xl border-2 border-dashed border-slate-700">
             <div className="text-6xl mb-4 animate-bounce">🔍</div>
@@ -707,7 +704,7 @@ export default function BlueprintsRoute() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full min-w-0">
             {filteredBlueprints.map(bp => (
               <BlueprintCard 
                 key={bp.file} 
@@ -833,6 +830,6 @@ export default function BlueprintsRoute() {
           </div>
         </div>
       )}
-    </div>
+    </FeaturePageLayout>
   )
 }

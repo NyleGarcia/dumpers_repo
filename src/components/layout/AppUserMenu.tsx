@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { Link, useRouterState } from '@tanstack/react-router'
-import type { AppNavItem } from '../../config/appNav'
 import type { Profile } from '../../lib/supabase'
 
 interface AppUserMenuProps {
@@ -8,7 +6,6 @@ interface AppUserMenuProps {
   profile: Profile | null
   isPending: boolean
   isGhostMode: boolean
-  navItems: AppNavItem[]
   showSettingsButton: boolean
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
@@ -23,7 +20,6 @@ export default function AppUserMenu({
   profile,
   isPending,
   isGhostMode,
-  navItems,
   showSettingsButton,
   showDbActionsButton,
   showAdminPanelButton,
@@ -33,7 +29,6 @@ export default function AppUserMenu({
   onSignOut,
 }: AppUserMenuProps) {
   const [open, setOpen] = useState(false)
-  const pathname = useRouterState({ select: (s) => s.location.pathname })
   const close = () => setOpen(false)
 
   if (isPending) {
@@ -98,7 +93,7 @@ export default function AppUserMenu({
         <>
           <div className="fixed inset-0 z-[55]" onClick={close} />
           <div
-            className={`absolute right-0 top-full mt-2 w-56 bg-slate-800 rounded-xl shadow-xl z-[60] overflow-hidden ${
+            className={`absolute right-0 top-full mt-2 w-56 bg-slate-800 rounded-xl shadow-xl z-[60] max-h-[min(70dvh,24rem)] overflow-y-auto overscroll-contain ${
               isGhostMode ? 'border border-purple-500/30' : 'border border-slate-700'
             }`}
           >
@@ -129,29 +124,6 @@ export default function AppUserMenu({
                           : 'Member'}
                     </span>
                   </p>
-                </>
-              )}
-            </div>
-
-            <div className="lg:hidden">
-              {navItems.length > 0 && (
-                <>
-                  <div className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-                    Navigation
-                  </div>
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.id}
-                      to={item.path}
-                      onClick={close}
-                      className={`w-full px-4 py-2 text-left transition-colors flex items-center justify-between gap-2 ${
-                        pathname === item.path ? 'bg-orange-950/40 text-orange-200' : 'text-slate-300 hover:bg-slate-700'
-                      }`}
-                    >
-                      <span>{item.label}</span>
-                    </Link>
-                  ))}
-                  <div className="border-t border-slate-700" />
                 </>
               )}
             </div>
