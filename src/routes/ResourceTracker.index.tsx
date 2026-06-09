@@ -20,6 +20,7 @@ import {
   addResourceQuantities,
   adjustStepsForResource,
   formatQuantityForResource,
+  formatResourceQuantity,
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
 
