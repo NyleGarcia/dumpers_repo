@@ -1,129 +1,14 @@
 import { resourceChipClassName } from '../config/resourceTypes'
 import { slugifyResourceName } from '../lib/blueprintResources'
+import {
+  formatTaxonomyLabel,
+  getArmorSlot,
+  getArmorWeight,
+  getBlueprintSubType,
+} from '../lib/blueprintTaxonomy'
+import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
 import { calculateBlueprintDfp, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
 import { useAuth } from '../contexts/AuthContext'
-
-const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
-
-const getFpsWeaponTypeFromFilename = (filename) => {
-  const fn = (filename || '').toLowerCase()
-  for (const type of FPS_WEAPON_TYPE_OPTIONS) {
-    if (fn.includes(`_${type}_`) || fn.includes(`_${type}.`)) return type
-  }
-  return null
-}
-
-const getSubType = (bp) => {
-  const parts = bp.file.split('\\')
-  const filename = parts[parts.length - 1] || ''
-  
-  for (let i = 0; i < parts.length - 1; i++) {
-    if (parts[i] === 'vehiclegear' && parts[i + 1] === 'weapons') {
-      let next = parts[i + 2]?.replace('$', '')
-      if (next === 'templates' && parts[i + 3]) next = parts[i + 3]
-      return next || null
-    }
-    if (parts[i] === 'weapons' && parts[i - 1] === 'fpsgear') {
-      let sub = parts[i + 1]?.replace('$', '')
-      if (sub === 'templates') {
-        return getFpsWeaponTypeFromFilename(filename)
-      }
-      return sub
-    }
-    if (parts[i] === 'ammo' && parts[i - 1] === 'fpsgear') {
-      const fromFilename = getFpsWeaponTypeFromFilename(filename)
-      if (fromFilename) return fromFilename
-      const folderType = parts[i + 1]?.replace('$', '')
-      if (FPS_WEAPON_TYPE_OPTIONS.includes(folderType)) return folderType
-      return null
-    }
-    if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
-      let sub = parts[i + 1]?.replace('$', '')
-      if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
-      // Combat armor shows as "standard" type - weight is shown separately
-      if (sub === 'combat') return 'standard'
-      // For flightsuit: helmets are "standard" type, bodies are "flightsuit" type
-      if (sub === 'flightsuit') {
-        if (filename.includes('_helmet')) return 'standard'
-        return 'flightsuit'
-      }
-      return sub
-    }
-    if (parts[i] === 'vehiclegear' && parts[i + 1] !== 'weapons') {
-      return parts[i + 1]?.replace('$', '')
-    }
-  }
-  return null
-}
-
-const formatSubType = (sub) => {
-  if (!sub) return null
-  return sub.charAt(0).toUpperCase() + sub.slice(1)
-}
-
-const getArmorWeightFromPath = (parts) => {
-  const armourIdx = parts.indexOf('armour')
-  if (armourIdx < 0) return null
-  for (let i = armourIdx + 1; i < parts.length - 1; i++) {
-    const segment = parts[i]?.toLowerCase()
-    if (['superheavy', 'heavy', 'medium', 'light'].includes(segment)) return segment
-  }
-  return null
-}
-
-const isFlightArmor = (parts, filename, blueprintName = '') => {
-  if (parts.some(p => p.toLowerCase() === 'flightsuit')) return true
-  if (parts.some(p => p.toLowerCase() === 'racer')) return true
-  if (filename.includes('flightsuit')) return true
-  const name = (blueprintName || '').toLowerCase()
-  if (name.includes('flight') || name.includes('racing')) return true
-  return false
-}
-
-const getArmorWeight = (bp) => {
-  const parts = bp.file.split('\\')
-  const filename = parts[parts.length - 1]?.toLowerCase() || ''
-  
-  // Check if this is FPS armor
-  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
-  if (!isArmor) return null
-  
-  // Flight suits, racing gear, and flight/racing helmets
-  if (isFlightArmor(parts, filename, bp.blueprintName)) return 'flight'
-  
-  // Extract weight from filename (works for both combat and template armor)
-  if (filename.includes('_superheavy_') || filename.includes('_superheavy.')) return 'superheavy'
-  if (filename.includes('_heavy_') || filename.includes('_heavy.')) return 'heavy'
-  if (filename.includes('_medium_') || filename.includes('_medium.')) return 'medium'
-  if (filename.includes('_light_') || filename.includes('_light.')) return 'light'
-  
-  // Fallback: weight from folder path (e.g. combat\light\bp_craft_gys_jacket_01_01_01.json)
-  const fromPath = getArmorWeightFromPath(parts)
-  if (fromPath) return fromPath
-
-  // Undersuits are the lightest base layer
-  if (parts.some(p => p.toLowerCase() === 'undersuit')) return 'light'
-  
-  return null
-}
-
-const getArmorSlot = (bp) => {
-  const parts = bp.file.split('\\')
-  const filename = parts[parts.length - 1]?.toLowerCase() || ''
-  
-  // Check if this is FPS armor
-  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
-  if (!isArmor) return null
-  
-  // Extract slot from filename
-  if (filename.includes('_helmet')) return 'helmet'
-  if (filename.includes('_arms')) return 'arms'
-  if (filename.includes('_core') || filename.includes('_jacket')) return 'core'
-  if (filename.includes('_legs') || filename.includes('_pants')) return 'legs'
-  if (filename.includes('_backpack') || filename.includes('backpack_')) return 'backpack'
-  
-  return null
-}
 
 export default function BlueprintCard({
   blueprint,
@@ -145,12 +30,13 @@ export default function BlueprintCard({
   if (!blueprint.file || !blueprint.blueprintName) return null
 
   const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
-  const subType = getSubType(blueprint)
+  const subType = getBlueprintSubType(blueprint)
   const armorWeight = getArmorWeight(blueprint)
   const armorSlot = getArmorSlot(blueprint)
   const dfp = calculateBlueprintDfp(blueprint)
   const dfpLabel = formatDfpLabel(dfp.total)
   const dfpBreakdown = formatCraftDfpBreakdown(dfp)
+  const specLine = formatBlueprintSpecLine(blueprint)
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation()
@@ -198,9 +84,9 @@ export default function BlueprintCard({
                 {dfpLabel}
                 <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
               </span>
-              {(dfp.acquisitionPremium > 0 || dfp.craftLaborPremium > 0) && (
-                <p className="text-[9px] text-slate-500 leading-tight mt-0.5 truncate" title={dfpBreakdown}>
-                  {dfpBreakdown}
+              {specLine && (
+                <p className="text-[9px] text-slate-500 leading-tight mt-0.5 truncate">
+                  {specLine}
                 </p>
               )}
             </div>
@@ -285,17 +171,17 @@ export default function BlueprintCard({
                       )}
                       {armorWeight && (
                         <span className="px-1.5 py-0.5 bg-blue-950/50 text-blue-400 rounded text-[10px] border border-blue-500/30">
-                          {armorWeight === 'superheavy' ? 'Super Heavy' : formatSubType(armorWeight)}
+                          {formatTaxonomyLabel(armorWeight)}
                         </span>
                       )}
                       {armorSlot && (
                         <span className="px-1.5 py-0.5 bg-green-950/50 text-green-400 rounded text-[10px] border border-green-500/30">
-                          {formatSubType(armorSlot)}
+                          {formatTaxonomyLabel(armorSlot)}
                         </span>
                       )}
                       {subType && (
                         <span className="px-1.5 py-0.5 bg-orange-950/50 text-orange-400 rounded text-[10px] border border-orange-500/30">
-                          {formatSubType(subType)}
+                          {formatTaxonomyLabel(subType)}
                         </span>
                       )}
                     </div>
