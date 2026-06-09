@@ -1,6 +1,6 @@
 import { resourceChipClassName } from '../config/resourceTypes'
 import { slugifyResourceName } from '../lib/blueprintResources'
-import { calculateBlueprintDfp, formatDfpLabel } from '../lib/dfp'
+import { calculateBlueprintDfp, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
 import { useAuth } from '../contexts/AuthContext'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
@@ -150,6 +150,7 @@ export default function BlueprintCard({
   const armorSlot = getArmorSlot(blueprint)
   const dfp = calculateBlueprintDfp(blueprint)
   const dfpLabel = formatDfpLabel(dfp.total)
+  const dfpBreakdown = formatCraftDfpBreakdown(dfp)
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation()
@@ -189,13 +190,20 @@ export default function BlueprintCard({
       <div className="relative z-10">
         <div className="flex items-start justify-between gap-2 mb-2">
           {dfpDisplayEnabled ? (
-            <span
-              className="text-xs font-semibold text-amber-400/90 tabular-nums shrink-0"
-              title="Dumpers Fair-Value Price at 500 quality"
-            >
-              {dfpLabel}
-              <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
-            </span>
+            <div className="shrink-0 text-right max-w-[55%]">
+              <span
+                className="text-xs font-semibold text-amber-400/90 tabular-nums"
+                title={dfpBreakdown}
+              >
+                {dfpLabel}
+                <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
+              </span>
+              {(dfp.acquisitionPremium > 0 || dfp.craftLaborPremium > 0) && (
+                <p className="text-[9px] text-slate-500 leading-tight mt-0.5 truncate" title={dfpBreakdown}>
+                  {dfpBreakdown}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="shrink-0" />
           )}

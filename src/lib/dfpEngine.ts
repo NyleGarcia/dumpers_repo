@@ -4,6 +4,8 @@ export interface DfpEngineApi {
   calculateMaterialDfpPrice: (resourceName: string, minQuality: number, scuQuantity: number) => number
   calculateBlueprintDfp: (blueprint: unknown) => {
     materialTotal: number
+    acquisitionPremium?: number
+    craftLaborPremium?: number
     typeModifier: number
     total: number
     lines: unknown[]
@@ -14,6 +16,8 @@ export interface DfpEngineApi {
     craftQuantity?: number,
   ) => {
     materialTotal: number
+    acquisitionPremium?: number
+    craftLaborPremium?: number
     typeModifier: number
     total: number
     lines: unknown[]

@@ -5,6 +5,7 @@ import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import { build } from 'esbuild'
+import { generateAcquisitionPremiums } from './generate-acquisition-premiums.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
 const outJs = path.join(root, 'public', 'dfp-engine.js')
@@ -13,6 +14,8 @@ const entry = path.join(root, 'dfp-engine', 'formula.ts')
 
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const version = pkg.dfpEngineVersion ?? '1.1.0-type-modifiers'
+
+generateAcquisitionPremiums()
 
 await build({
   entryPoints: [entry],

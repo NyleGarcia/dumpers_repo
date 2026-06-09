@@ -2,7 +2,7 @@
   "name": "dumpers-repo",
   "private": true,
   "version": "1.0.0",
-  "dfpEngineVersion": "1.2.0-uex-anchors",
+  "dfpEngineVersion": "1.3.0-acquisition",
   "license": "LicenseRef-Dumpers-Repo-Franchise",
   "type": "module",
   "scripts": {

@@ -16,6 +16,8 @@ export interface DfpLineItem {
 
 export interface DfpResult {
   materialTotal: number
+  acquisitionPremium: number
+  craftLaborPremium: number
   typeModifier: number
   typeKey: string
   total: number
@@ -23,6 +25,7 @@ export interface DfpResult {
 }
 
 export interface BlueprintDfpInput {
+  file?: string
   categoryName?: string
   subCategoryName?: string
   slots?: {
@@ -103,24 +106,61 @@ export function calculateMaterialDfpLine(
   }
 }
 
+function normalizeDfpResult(
+  raw: {
+    materialTotal: number
+    acquisitionPremium?: number
+    craftLaborPremium?: number
+    typeModifier: number
+    total: number
+    lines: unknown[]
+  },
+  blueprint: BlueprintDfpInput,
+  craftQuantity = 1
+): DfpResult {
+  const qty = Math.max(1, craftQuantity)
+  const acquisitionPremium = Math.round((raw.acquisitionPremium ?? 0) * qty)
+  const craftLaborPremium = Math.round((raw.craftLaborPremium ?? 0) * qty)
+  return {
+    materialTotal: Math.round(raw.materialTotal * qty),
+    acquisitionPremium,
+    craftLaborPremium,
+    typeModifier: raw.typeModifier,
+    typeKey: resolveDfpTypeKey(blueprint),
+    total: Math.round(raw.materialTotal * qty) + acquisitionPremium + craftLaborPremium,
+    lines: raw.lines as DfpLineItem[],
+  }
+}
+
 export function calculateBlueprintDfpForOrder(
   blueprint: BlueprintDfpInput,
   orderMinQuality: number,
   craftQuantity = 1
 ): DfpResult {
   const raw = getDfpEngine().calculateBlueprintDfpForOrder(blueprint, orderMinQuality, craftQuantity)
-  return {
-    ...raw,
-    typeKey: resolveDfpTypeKey(blueprint),
-    lines: raw.lines as DfpLineItem[],
+  if (raw.acquisitionPremium != null || raw.craftLaborPremium != null) {
+    return {
+      materialTotal: raw.materialTotal,
+      acquisitionPremium: raw.acquisitionPremium ?? 0,
+      craftLaborPremium: raw.craftLaborPremium ?? 0,
+      typeModifier: raw.typeModifier,
+      typeKey: resolveDfpTypeKey(blueprint),
+      total: raw.total,
+      lines: raw.lines as DfpLineItem[],
+    }
   }
+  return normalizeDfpResult(raw, blueprint, craftQuantity)
 }
 
 export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {
   const raw = getDfpEngine().calculateBlueprintDfp(blueprint)
   return {
-    ...raw,
+    materialTotal: raw.materialTotal,
+    acquisitionPremium: raw.acquisitionPremium ?? 0,
+    craftLaborPremium: raw.craftLaborPremium ?? 0,
+    typeModifier: raw.typeModifier,
     typeKey: resolveDfpTypeKey(blueprint),
+    total: raw.total,
     lines: raw.lines as DfpLineItem[],
   }
 }
@@ -140,6 +180,18 @@ export function formatDfpLabel(value: number): string {
   const formatted = formatDfpValue(value)
   if (formatted === '—') return 'DFP —'
   return `DFP ${formatted}`
+}
+
+export function formatCraftDfpBreakdown(result: DfpResult): string {
+  const parts = [`Materials ${formatDfpValue(result.materialTotal)}`]
+  if (result.acquisitionPremium > 0) {
+    parts.push(`Acquire ${formatDfpValue(result.acquisitionPremium)}`)
+  }
+  if (result.craftLaborPremium > 0) {
+    parts.push(`Labor ${formatDfpValue(result.craftLaborPremium)}`)
+  }
+  parts.push(`= ${formatDfpValue(result.total)}`)
+  return parts.join(' + ')
 }
 
 export function formatDfpAuec(value: number): string {

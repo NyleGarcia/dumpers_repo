@@ -3,9 +3,13 @@
  * Do not import this file from application code; use src/lib/dfp.ts instead.
  *
  * Pricing anchors: UEX 15d averages (Jun 2026). Ores/gems use kiosk Sell; salvage uses kiosk Buy +10%.
+ * Craft total = materials + acquisition premium (rep grind) + small labor factor.
  */
 
+import { getAcquisitionPremium } from './acquisition-premiums.generated'
+
 const MIN_SCU = 0.001
+const CRAFT_LABOR_FACTOR = 0.08
 const DFP_CRAFT_PREMIUM = 1.02
 const DFP_ASSUMED_QUALITY = 500
 const DFP_QUALITY_TIERS = [500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000]
@@ -200,6 +204,7 @@ export function calculateMaterialDfpPrice(
 }
 
 export function calculateBlueprintDfp(blueprint: {
+  file?: string
   categoryName?: string
   subCategoryName?: string
   slots?: {
@@ -246,9 +251,17 @@ export function calculateBlueprintDfp(blueprint: {
   }
 
   const materialTotal = lines.reduce((sum, line) => sum + line.lineTotal, 0)
-  const typeModifier = getDfpTypeModifier(blueprint)
-  const total = Math.round(materialTotal * typeModifier)
-  return { materialTotal, typeModifier, total, lines }
+  const acquisitionPremium = getAcquisitionPremium(blueprint.file)
+  const craftLaborPremium = Math.round(materialTotal * CRAFT_LABOR_FACTOR)
+  const total = materialTotal + acquisitionPremium + craftLaborPremium
+  return {
+    materialTotal,
+    acquisitionPremium,
+    craftLaborPremium,
+    typeModifier: 1,
+    total,
+    lines,
+  }
 }
 
 export function calculateBlueprintDfpForOrder(
@@ -259,6 +272,7 @@ export function calculateBlueprintDfpForOrder(
   const quality = resolveQuality(orderMinQuality)
   const qty = Math.max(1, craftQuantity)
   const adjusted = {
+    file: blueprint.file,
     categoryName: blueprint.categoryName,
     subCategoryName: blueprint.subCategoryName,
     slots: (blueprint.slots ?? []).map((slot) => ({
@@ -268,7 +282,13 @@ export function calculateBlueprintDfpForOrder(
   }
   const unitResult = calculateBlueprintDfp(adjusted)
   const total = Math.round(unitResult.total * qty)
-  return { ...unitResult, total }
+  return {
+    ...unitResult,
+    materialTotal: Math.round(unitResult.materialTotal * qty),
+    acquisitionPremium: Math.round(unitResult.acquisitionPremium * qty),
+    craftLaborPremium: Math.round(unitResult.craftLaborPremium * qty),
+    total,
+  }
 }
 
 export function isAmmoBlueprint(blueprint: { categoryName?: string }): boolean {
