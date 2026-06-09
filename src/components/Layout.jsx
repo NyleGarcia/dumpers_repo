@@ -23,7 +23,6 @@ export default function Layout() {
     visibilityContext,
     canUseFeature,
     isSuperAdmin,
-    dfpDisplayEnabled,
   } = useAuth()
   const navItems = getVisibleNavItems(visibilityContext, canAccess)
   const showAdminPanelButton = canUseFeature('admin_panel')
@@ -67,7 +66,6 @@ export default function Layout() {
         onOpenDbActions={() => setShowDbActions(true)}
         onOpenAdmin={() => setShowAdminPanel(true)}
         onSignOut={signOut}
-        dfpDisplayEnabled={dfpDisplayEnabled}
       >
         <Outlet />
       </AppChrome>

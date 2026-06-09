@@ -26,5 +26,6 @@ export const DFP_OFFICIAL_HOSTS = ['dumpers-repo.com', 'www.dumpers-repo.com'] a
 export const DFP_CANONICAL_BASE_URL =
   'https://raw.githubusercontent.com/Sinedrone-Sentinel/dumpers_repo/main/public' as const
 
+/** Shown site-wide via AppChrome footer when DFP display is disabled (see DfpOptOutFooter). */
 export const DFP_OPT_OUT_NOTICE =
   'This franchise has opted out of using/displaying Dumpers Fair-Value Pricing (DFP).' as const
