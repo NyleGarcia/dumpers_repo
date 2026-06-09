@@ -74,9 +74,9 @@ export default function BlueprintCard({
       }`}
     >
       <div className="relative z-10">
-        <div className="flex items-start justify-between gap-2 mb-2">
+        <div className="flex items-start justify-between gap-2 mb-1">
           {dfpDisplayEnabled ? (
-            <div className="shrink-0 text-right max-w-[55%]">
+            <div className="shrink-0 text-left min-w-0">
               <span
                 className="text-xs font-semibold text-amber-400/90 tabular-nums"
                 title={dfpBreakdown}
@@ -84,11 +84,6 @@ export default function BlueprintCard({
                 {dfpLabel}
                 <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
               </span>
-              {specLine && (
-                <p className="text-[9px] text-slate-500 leading-tight mt-0.5 truncate">
-                  {specLine}
-                </p>
-              )}
             </div>
           ) : (
             <span className="shrink-0" />
@@ -113,12 +108,19 @@ export default function BlueprintCard({
           </button>
         </div>
 
-        <h3
-          className="font-bold text-white line-clamp-3 flex-1 min-w-0 mb-3 text-sm leading-snug"
-          title={blueprint.blueprintName}
-        >
-          {blueprint.blueprintName}
-        </h3>
+        <div className="mb-3 min-w-0 text-left">
+          <h3
+            className="font-bold text-white line-clamp-3 text-sm leading-snug"
+            title={blueprint.blueprintName}
+          >
+            {blueprint.blueprintName}
+          </h3>
+          {specLine && (
+            <p className="text-xs text-slate-400 leading-snug mt-0.5 truncate">
+              {specLine}
+            </p>
+          )}
+        </div>
 
         <div className="space-y-2 text-sm">
           {hasRequirements ? (
