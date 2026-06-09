@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0-acquisition",
-  "sha256": "b1b55a6f79a50442caa9fb9d6e3ffb182774e9063a81677d2b3b68dd5e342bcb",
+  "version": "1.3.3-ore-shop-anchor",
+  "sha256": "070b1fb45e590252e77cf62cf983dfd155e293d070a3c9508cac44bdb472f579",
   "module": "dfp-engine.js"
 }

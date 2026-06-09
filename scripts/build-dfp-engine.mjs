@@ -6,6 +6,7 @@ import path from 'path'
 import crypto from 'crypto'
 import { build } from 'esbuild'
 import { generateAcquisitionPremiums } from './generate-acquisition-premiums.mjs'
+import { generateComponentMetadata } from './generate-component-metadata.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
 const outJs = path.join(root, 'public', 'dfp-engine.js')
@@ -16,6 +17,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const version = pkg.dfpEngineVersion ?? '1.1.0-type-modifiers'
 
 generateAcquisitionPremiums()
+await generateComponentMetadata()
 
 await build({
   entryPoints: [entry],

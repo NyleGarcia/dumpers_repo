@@ -4,11 +4,18 @@
  *
  * Pricing anchors: UEX 15d averages (Jun 2026). Ores/gems use kiosk Sell; salvage uses kiosk Buy +10%.
  * Craft total = materials + acquisition premium (rep grind) + small labor factor.
+ * Ore-only ship components: ore lines × class/grade retail factor (wiki metadata) to anchor Q500 near shop buy.
  */
 
 import { getAcquisitionPremium } from './acquisition-premiums.generated'
+import { getOreRetailFactor } from './component-retail'
 
 const MIN_SCU = 0.001
+/**
+ * Gems in craft recipes: fraction of UEX kiosk Sell (not liquidation value).
+ * Calibrated so Q500 materials+labor ≈ in-game shop buy for store-sold items (e.g. 5CA Akura ~70k).
+ */
+const CRAFT_GEM_FACTOR = 0.00375
 const CRAFT_LABOR_FACTOR = 0.08
 const DFP_CRAFT_PREMIUM = 1.02
 const DFP_ASSUMED_QUALITY = 500
@@ -189,7 +196,14 @@ export function calculateMaterialDfpPrice(
     return Math.round(perScu * scu)
   }
 
-  if (kind === 'gem' || kind === 'shop_special' || kind === 'harvest') {
+  if (kind === 'gem') {
+    const perUnit = DFP_Q500_PER_UNIT[resolved] ?? 10_000
+    const units = Math.max(1, Math.round(amount))
+    const scale = qualityScale(minQuality, kind)
+    return Math.round(perUnit * CRAFT_GEM_FACTOR * scale * units)
+  }
+
+  if (kind === 'shop_special' || kind === 'harvest') {
     const perUnit = DFP_Q500_PER_UNIT[resolved] ?? 10_000
     const units = Math.max(1, Math.round(amount))
     const scale = qualityScale(minQuality, kind)
@@ -205,6 +219,7 @@ export function calculateMaterialDfpPrice(
 
 export function calculateBlueprintDfp(blueprint: {
   file?: string
+  internalName?: string
   categoryName?: string
   subCategoryName?: string
   slots?: {
@@ -227,6 +242,8 @@ export function calculateBlueprintDfp(blueprint: {
     lineTotal: number
   }[] = []
 
+  const oreRetailFactor = getOreRetailFactor(blueprint)
+
   for (const slot of blueprint.slots ?? []) {
     const slotCount = slot.requiredCount ?? 1
     for (const option of slot.options ?? []) {
@@ -238,7 +255,10 @@ export function calculateBlueprintDfp(blueprint: {
       const amount = wholeUnit
         ? slotCount * optQty
         : (option.standardCargoUnits ?? MIN_SCU) * slotCount * optQty
-      const lineTotal = calculateMaterialDfpPrice(resource, quality, amount)
+      let lineTotal = calculateMaterialDfpPrice(resource, quality, amount)
+      if (oreRetailFactor !== 1 && resolveResourceKind(resource) === 'ore') {
+        lineTotal = Math.round(lineTotal * oreRetailFactor)
+      }
       lines.push({
         resource,
         quality,
@@ -250,7 +270,9 @@ export function calculateBlueprintDfp(blueprint: {
     }
   }
 
-  const materialTotal = lines.reduce((sum, line) => sum + line.lineTotal, 0)
+  const rawMaterialTotal = lines.reduce((sum, line) => sum + line.lineTotal, 0)
+  const typeModifier = getDfpTypeModifier(blueprint)
+  const materialTotal = Math.round(rawMaterialTotal * typeModifier)
   const acquisitionPremium = getAcquisitionPremium(blueprint.file)
   const craftLaborPremium = Math.round(materialTotal * CRAFT_LABOR_FACTOR)
   const total = materialTotal + acquisitionPremium + craftLaborPremium
@@ -258,7 +280,7 @@ export function calculateBlueprintDfp(blueprint: {
     materialTotal,
     acquisitionPremium,
     craftLaborPremium,
-    typeModifier: 1,
+    typeModifier,
     total,
     lines,
   }
