@@ -26,7 +26,7 @@ ALL of the following:
 3. **Dumpers Fair-Value Pricing (DFP)** — DFP is a proprietary formula and
    trade secret of Michael Linzenmeyer. You must use the official DFP engine
    loaded from the canonical URL published by the licensor (currently
-   https://www.dumpers-repo.com/dfp-engine.js and dfp-version.json). You
+   dumpers-repo.com or raw.githubusercontent.com/Sinedrone-Sentinel/dumpers_repo public DFP files). You
    may not tamper with, reverse-engineer for reuse, replace, circumvent, or
    self-host an alternate DFP engine in production.
 

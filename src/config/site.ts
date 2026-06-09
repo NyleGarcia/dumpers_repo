@@ -16,8 +16,15 @@ export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const
 export const SITE_COPYRIGHT =
   '© 2026 Black Star - All Blueprints Subject to Change Every Patch' as const
 
-/** Canonical host for proprietary DFP engine (franchises must use this in production). */
-export const DFP_CANONICAL_BASE_URL = 'https://www.dumpers-repo.com' as const
+/** Official deployment hostnames — load DFP same-origin (avoids apex/www CORS issues). */
+export const DFP_OFFICIAL_HOSTS = ['dumpers-repo.com', 'www.dumpers-repo.com'] as const
+
+/**
+ * Canonical DFP base for franchise forks (cross-origin).
+ * raw.githubusercontent.com serves ACAO:* so forks can fetch the engine.
+ */
+export const DFP_CANONICAL_BASE_URL =
+  'https://raw.githubusercontent.com/Sinedrone-Sentinel/dumpers_repo/main/public' as const
 
 export const DFP_OPT_OUT_NOTICE =
   'This franchise has opted out of using/displaying Dumpers Fair-Value Pricing (DFP).' as const
