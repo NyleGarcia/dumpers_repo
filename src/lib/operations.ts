@@ -443,7 +443,9 @@ export async function adjustInventoryQuantity(
   if (fetchError) return { error: fetchError.message }
   if (!current) return { error: 'Stock card not found — add it first' }
 
-  const nextMilli = Math.max(0, toMilliScu(Number(current.quantity)) + toMilliScu(delta))
+  const currentMilli = toMilliScu(Number(current.quantity))
+  const deltaMilli = delta < 0 ? -toMilliScu(Math.abs(delta)) : toMilliScu(delta)
+  const nextMilli = Math.max(0, currentMilli + deltaMilli)
   const nextQty = fromMilliScu(nextMilli)
   const now = new Date().toISOString()
 
