@@ -5690,11 +5690,12 @@
       "missionTypeKey": "hockrowagency_jorrit_dossier_project_hyperion",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 1,
       "missionGiver": "Hockrow Agency",
-      "giverSlug": "hockrowagency"
+      "giverSlug": "hockrowagency",
+      "_inferred": true
     },
     "hockrowagency|jorrit dossier: updated seismic data": {
       "sccrafterLabel": "Hockrowagency: Jorrit Dossier: Updated Seismic Data",
@@ -5702,11 +5703,12 @@
       "missionTypeKey": "hockrowagency_jorrit_dossier_updated_seismic_data",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 1,
       "missionGiver": "Hockrow Agency",
-      "giverSlug": "hockrowagency"
+      "giverSlug": "hockrowagency",
+      "_inferred": true
     },
     "bitzeros|data transfer": {
       "sccrafterLabel": "Bitzeros: Data Transfer",
@@ -5798,11 +5800,12 @@
       "missionTypeKey": "hockrowagency_jorrit_dossier_updated_energy_anomaly_data",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 1,
       "missionGiver": "Hockrow Agency",
-      "giverSlug": "hockrowagency"
+      "giverSlug": "hockrowagency",
+      "_inferred": true
     },
     "hockrowagency|jorrit dossier: updated security data": {
       "sccrafterLabel": "Hockrowagency: Jorrit Dossier: Updated Security Data",
@@ -5810,11 +5813,12 @@
       "missionTypeKey": "hockrowagency_jorrit_dossier_updated_security_data",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 1,
       "missionGiver": "Hockrow Agency",
-      "giverSlug": "hockrowagency"
+      "giverSlug": "hockrowagency",
+      "_inferred": true
     },
     "hockrowagency|jorrit dossier: updated power usage data": {
       "sccrafterLabel": "Hockrowagency: Jorrit Dossier: Updated Power Usage Data",
@@ -5822,11 +5826,12 @@
       "missionTypeKey": "hockrowagency_jorrit_dossier_updated_power_usage_data",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 1,
       "missionGiver": "Hockrow Agency",
-      "giverSlug": "hockrowagency"
+      "giverSlug": "hockrowagency",
+      "_inferred": true
     },
     "citizensforprosperity|assistance needed at [location]": {
       "sccrafterLabel": "Citizensforprosperity: Assistance needed at ~mission(Location)",
@@ -6314,11 +6319,12 @@
       "missionTypeKey": "wikelo_suit_up_take_off",
       "repMin": 10,
       "repMax": 10,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 1,
       "missionGiver": "Wikelo",
-      "giverSlug": "wikelo"
+      "giverSlug": "wikelo",
+      "_inferred": true
     },
     "foxwellenforcement|yellow level contract: limiting potential threat": {
       "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -6398,11 +6404,12 @@
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_ship_under_attack",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 2,
       "missionGiver": "Foxwell Enforcement",
-      "giverSlug": "foxwellenforcement"
+      "giverSlug": "foxwellenforcement",
+      "_inferred": true
     },
     "foxwellenforcement|red level contract: ship under attack": {
       "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Ship Under Attack",
@@ -6410,11 +6417,12 @@
       "missionTypeKey": "foxwellenforcement_red_level_contract_ship_under_attack",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 5800,
+      "minStandingName": "Sr. Contractor",
       "variantCount": 2,
       "missionGiver": "Foxwell Enforcement",
-      "giverSlug": "foxwellenforcement"
+      "giverSlug": "foxwellenforcement",
+      "_inferred": true
     },
     "foxwellenforcement|still looking for work?": {
       "sccrafterLabel": "Foxwellenforcement: Still Looking for Work?",
@@ -6554,11 +6562,12 @@
       "missionTypeKey": "foxwellenforcement_red_level_contract_clear_pafs_recover_cargo_and_deliver_to_olp",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 5800,
+      "minStandingName": "Sr. Contractor",
       "variantCount": 1,
       "missionGiver": "Foxwell Enforcement",
-      "giverSlug": "foxwellenforcement"
+      "giverSlug": "foxwellenforcement",
+      "_inferred": true
     },
     "foxwellenforcement|red level contract: recoup stolen cargo haul": {
       "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Recoup Stolen Cargo Haul",
@@ -6566,11 +6575,12 @@
       "missionTypeKey": "foxwellenforcement_red_level_contract_recoup_stolen_cargo_haul",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 5800,
+      "minStandingName": "Sr. Contractor",
       "variantCount": 1,
       "missionGiver": "Foxwell Enforcement",
-      "giverSlug": "foxwellenforcement"
+      "giverSlug": "foxwellenforcement",
+      "_inferred": true
     },
     "foxwellenforcement|red level contract: retrieve cargo haul": {
       "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Retrieve Cargo Haul",
@@ -6578,11 +6588,12 @@
       "missionTypeKey": "foxwellenforcement_red_level_contract_retrieve_cargo_haul",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 5800,
+      "minStandingName": "Sr. Contractor",
       "variantCount": 1,
       "missionGiver": "Foxwell Enforcement",
-      "giverSlug": "foxwellenforcement"
+      "giverSlug": "foxwellenforcement",
+      "_inferred": true
     },
     "wikelo|your best shot": {
       "sccrafterLabel": "Wikelo: Your Best Shot",
@@ -6590,11 +6601,12 @@
       "missionTypeKey": "wikelo_your_best_shot",
       "repMin": 10,
       "repMax": 10,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 1,
       "missionGiver": "Wikelo",
-      "giverSlug": "wikelo"
+      "giverSlug": "wikelo",
+      "_inferred": true
     },
     "wikelo|extra special wolf": {
       "sccrafterLabel": "Wikelo: Extra Special Wolf",
@@ -6602,11 +6614,12 @@
       "missionTypeKey": "wikelo_extra_special_wolf",
       "repMin": null,
       "repMax": null,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 1,
       "missionGiver": "Wikelo",
-      "giverSlug": "wikelo"
+      "giverSlug": "wikelo",
+      "_inferred": true
     },
     "headhunters|keep [location] safe": {
       "sccrafterLabel": "Headhunters: Keep ~mission(Location) Safe",
@@ -6614,11 +6627,12 @@
       "missionTypeKey": "headhunters_keep_loc_safe",
       "repMin": 100,
       "repMax": 100,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 4,
       "missionGiver": "Headhunters",
-      "giverSlug": "headhunters"
+      "giverSlug": "headhunters",
+      "_inferred": true
     },
     "headhunters|provide protection at [location]": {
       "sccrafterLabel": "Headhunters: Provide Protection at ~mission(Location)",
@@ -6626,11 +6640,12 @@
       "missionTypeKey": "headhunters_provide_protection_at_loc",
       "repMin": 100,
       "repMax": 100,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 3,
       "missionGiver": "Headhunters",
-      "giverSlug": "headhunters"
+      "giverSlug": "headhunters",
+      "_inferred": true
     },
     "headhunters|secure [location] from upstarts": {
       "sccrafterLabel": "Headhunters: Secure ~mission(Location) from Upstarts",
@@ -6638,11 +6653,12 @@
       "missionTypeKey": "headhunters_secure_loc_from_upstarts",
       "repMin": 150,
       "repMax": 2000,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 2,
       "missionGiver": "Headhunters",
-      "giverSlug": "headhunters"
+      "giverSlug": "headhunters",
+      "_inferred": true
     },
     "headhunters|stop rival attack at [location]": {
       "sccrafterLabel": "Headhunters: Stop Rival Attack at ~mission(Location)",
@@ -6650,11 +6666,12 @@
       "missionTypeKey": "headhunters_stop_rival_attack_at_loc",
       "repMin": 200,
       "repMax": 200,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 3,
       "missionGiver": "Headhunters",
-      "giverSlug": "headhunters"
+      "giverSlug": "headhunters",
+      "_inferred": true
     },
     "headhunters|defend [location] from mercs": {
       "sccrafterLabel": "Headhunters: Defend ~mission(Location) From Mercs",
@@ -6662,11 +6679,12 @@
       "missionTypeKey": "headhunters_defend_loc_from_mercs",
       "repMin": 250,
       "repMax": 250,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 2,
       "missionGiver": "Headhunters",
-      "giverSlug": "headhunters"
+      "giverSlug": "headhunters",
+      "_inferred": true
     },
     "headhunters|guard [location] from rivals": {
       "sccrafterLabel": "Headhunters: Guard ~mission(Location) From Rivals",
@@ -6674,11 +6692,12 @@
       "missionTypeKey": "headhunters_guard_loc_from_rivals",
       "repMin": 300,
       "repMax": 300,
-      "minReputation": null,
-      "minStandingName": null,
+      "minReputation": 0,
+      "minStandingName": "Neutral",
       "variantCount": 2,
       "missionGiver": "Headhunters",
-      "giverSlug": "headhunters"
+      "giverSlug": "headhunters",
+      "_inferred": true
     },
     "headhunters|wanna be a headhunter?": {
       "sccrafterLabel": "Headhunters: Wanna be a Headhunter?",
@@ -8860,8 +8879,8 @@
       "wikiKey": "BP_CRAFT_volt_sniper_energy_01_mag",
       "wikiUuid": "7ba122fe-2879-47f5-a424-c5f9a21c516a",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 2,
       "matchedMissionCount": 2,
       "unmatchedMissionCount": 0,
@@ -8884,7 +8903,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\ammo\\laser\\bp_craft_klwe_pistol_energy_01_mag.json": {
       "blueprintName": "Arclight Pistol Battery (30 cap)",
@@ -9441,8 +9461,8 @@
       "wikiKey": "BP_CRAFT_volt_lmg_energy_01_mag",
       "wikiUuid": "94a6c979-60c2-4598-9005-db9fe2caa71e",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -9474,7 +9494,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\ammo\\laser\\bp_craft_volt_pistol_energy_01_mag.json": {
       "blueprintName": "Pulse Laser Pistol Battery (60 Cap)",
@@ -18623,8 +18644,8 @@
       "wikiKey": "BP_CRAFT_omc_utility_heavy_arms_01_01_01",
       "wikiUuid": "6940a96b-b26e-4547-b302-3cef3ec273ee",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18638,15 +18659,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_arms_01_01_04.json": {
       "blueprintName": "Corbel Arms Halcyon",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_arms_01_01_04",
       "wikiUuid": "aa836492-91d5-4123-a5cd-6eb7268d09e0",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18660,15 +18682,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_arms_01_01_16.json": {
       "blueprintName": "Corbel Arms Mire",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_arms_01_01_16",
       "wikiUuid": "487add1d-5f94-46b2-a16d-7aef94ab9e55",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18682,15 +18705,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_arms_01_01_17.json": {
       "blueprintName": "Corbel Arms Patina",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_arms_01_01_17",
       "wikiUuid": "bcb21a22-affa-4f10-940e-3d5b2f2975b7",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18704,15 +18728,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_core_01_01_01.json": {
       "blueprintName": "Corbel Core Smolder",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_core_01_01_01",
       "wikiUuid": "d4bcbab1-b2e8-432d-9427-9a471eef2aa9",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18726,15 +18751,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_core_01_01_04.json": {
       "blueprintName": "Corbel Core Halcyon",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_core_01_01_04",
       "wikiUuid": "9d6aafae-5ada-40ae-9fc5-9b42bc79d234",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18748,15 +18774,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_core_01_01_16.json": {
       "blueprintName": "Corbel Core Mire",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_core_01_01_16",
       "wikiUuid": "69170346-2356-4f88-a168-36b66da6c9e0",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18770,15 +18797,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_core_01_01_17.json": {
       "blueprintName": "Corbel Core Patina",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_core_01_01_17",
       "wikiUuid": "d0bf04b4-299c-4265-a5f2-4b6e64d094fb",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18792,15 +18820,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_helmet_01_01_01.json": {
       "blueprintName": "Corbel Helmet Smolder",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_helmet_01_01_01",
       "wikiUuid": "3f68723c-a32c-4b03-b300-14fec1dc025d",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18814,15 +18843,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_helmet_01_01_04.json": {
       "blueprintName": "Corbel Helmet Halcyon",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_helmet_01_01_04",
       "wikiUuid": "407ccdd7-d6f4-4b87-9d9d-8397095aa541",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18836,15 +18866,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_helmet_01_01_16.json": {
       "blueprintName": "Corbel Helmet Mire",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_helmet_01_01_16",
       "wikiUuid": "3b768354-178c-49ca-bc83-40a06e055bf4",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18858,15 +18889,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_helmet_01_01_17.json": {
       "blueprintName": "Corbel Helmet Patina",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_helmet_01_01_17",
       "wikiUuid": "dddbeeca-201d-4817-9632-1ac252c2ba3c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18880,15 +18912,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_legs_01_01_01.json": {
       "blueprintName": "Corbel Legs Smolder",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_legs_01_01_01",
       "wikiUuid": "42af157a-aa29-4784-88f6-374984d4c4cd",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18902,15 +18935,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_legs_01_01_04.json": {
       "blueprintName": "Corbel Legs Halcyon",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_legs_01_01_04",
       "wikiUuid": "23e786cf-de89-41f2-903d-9d0ac80c5b8d",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18924,15 +18958,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_legs_01_01_16.json": {
       "blueprintName": "Corbel Legs Mire",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_legs_01_01_16",
       "wikiUuid": "ff1f92c2-04d7-43ab-95ce-9dbf2fc51a97",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18946,15 +18981,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_legs_01_01_17.json": {
       "blueprintName": "Corbel Legs Patina",
       "wikiKey": "BP_CRAFT_omc_utility_heavy_legs_01_01_17",
       "wikiUuid": "af90f16c-fb9b-4ff2-a322-2d884dc069a9",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -18968,7 +19004,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_qrt_utility_heavy_arms_01_01_01.json": {
       "blueprintName": "Palatino Arms",
@@ -20089,8 +20126,8 @@
       "wikiKey": "BP_CRAFT_clda_env_heavy_backpack_01_02_01",
       "wikiUuid": "17429bd8-bc49-4b73-9844-ed820f65f153",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -20104,15 +20141,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\environment\\heavy\\bp_craft_clda_env_heavy_backpack_01_02_04.json": {
       "blueprintName": "Novikov Backpack Halcyon",
       "wikiKey": "BP_CRAFT_clda_env_heavy_backpack_01_02_04",
       "wikiUuid": "cabc040d-fd20-4bc6-a882-ed1c590c5fe8",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -20126,15 +20164,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\environment\\heavy\\bp_craft_clda_env_heavy_backpack_01_02_16.json": {
       "blueprintName": "Novikov Backpack Mire",
       "wikiKey": "BP_CRAFT_clda_env_heavy_backpack_01_02_16",
       "wikiUuid": "88c45b48-86e0-4b74-96a8-b567a55fb6f9",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -20148,15 +20187,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\environment\\heavy\\bp_craft_clda_env_heavy_backpack_01_02_17.json": {
       "blueprintName": "Novikov Backpack Patina",
       "wikiKey": "BP_CRAFT_clda_env_heavy_backpack_01_02_17",
       "wikiUuid": "c307d42e-24ad-4001-a3df-aa7fc3a604f9",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -20170,7 +20210,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\environment\\heavy\\bp_craft_clda_utility_heavy_helmet_01_01_01.json": {
       "blueprintName": "Pembroke Helmet",
@@ -20648,8 +20689,8 @@
       "wikiKey": "BP_CRAFT_vgl_flightsuit_01_02_01",
       "wikiUuid": "51094096-711d-4779-a1c1-cda936211a1b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -20663,15 +20704,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\flightsuit\\bp_craft_vgl_flightsuit_helmet_01_02_01.json": {
       "blueprintName": "Tailwind Flight Helmet Dominion Camo",
       "wikiKey": "BP_CRAFT_vgl_flightsuit_helmet_01_02_01",
       "wikiUuid": "ffaa61a2-1c00-4f0a-a855-a06855f9ce6b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -20685,7 +20727,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\flightsuit\\bp_craft_vgl_flightsuit_helmet_01_03_01.json": {
       "blueprintName": "Tailwind Flight Helmet Big Bite",
@@ -25588,8 +25631,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_light_arms_01_01_01",
       "wikiUuid": "e17d42b5-71f1-40cb-b545-fa95baea8653",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25603,15 +25646,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_arms_01_01_02.json": {
       "blueprintName": "Geist Armor Arms Rogue",
       "wikiKey": "BP_CRAFT_kap_combat_light_arms_01_01_02",
       "wikiUuid": "8248912d-7803-4ef8-b338-632a0d488515",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25625,15 +25669,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_arms_01_01_10.json": {
       "blueprintName": "Geist Armor Arms Whiteout",
       "wikiKey": "BP_CRAFT_kap_combat_light_arms_01_01_10",
       "wikiUuid": "82d57708-0949-44b6-9362-ac73617c9e0f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 2,
       "matchedMissionCount": 2,
       "unmatchedMissionCount": 0,
@@ -25656,15 +25701,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_arms_01_01_15.json": {
       "blueprintName": "Geist Armor Arms Desert",
       "wikiKey": "BP_CRAFT_kap_combat_light_arms_01_01_15",
       "wikiUuid": "73206738-149b-490d-b012-26f2e8c14e7b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25678,15 +25724,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_arms_01_01_16.json": {
       "blueprintName": "Geist Armor Arms Forest",
       "wikiKey": "BP_CRAFT_kap_combat_light_arms_01_01_16",
       "wikiUuid": "c80bb01c-67f4-4675-b986-f1834e20b1e1",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25700,15 +25747,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_arms_02_01_01.json": {
       "blueprintName": "Geist Armor Arms ASD Edition",
       "wikiKey": "BP_CRAFT_kap_combat_light_arms_02_01_01",
       "wikiUuid": "3175fcf7-70c1-4a4a-964e-50bca2cfe3a8",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25722,15 +25770,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_core_01_01_01.json": {
       "blueprintName": "Geist Armor Core",
       "wikiKey": "BP_CRAFT_kap_combat_light_core_01_01_01",
       "wikiUuid": "2d626cac-783d-482f-b9d3-d4fdb3574c6a",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25744,15 +25793,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_core_01_01_02.json": {
       "blueprintName": "Geist Armor Core Rogue",
       "wikiKey": "BP_CRAFT_kap_combat_light_core_01_01_02",
       "wikiUuid": "2d49c896-d52f-4ee9-bb11-4f2fed816b9e",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25766,15 +25816,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_core_01_01_10.json": {
       "blueprintName": "Geist Armor Core Whiteout",
       "wikiKey": "BP_CRAFT_kap_combat_light_core_01_01_10",
       "wikiUuid": "abc676cc-7608-4a59-8f02-15686b13d813",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 2,
       "matchedMissionCount": 2,
       "unmatchedMissionCount": 0,
@@ -25797,15 +25848,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_core_01_01_15.json": {
       "blueprintName": "Geist Armor Core Desert",
       "wikiKey": "BP_CRAFT_kap_combat_light_core_01_01_15",
       "wikiUuid": "f4ad03d5-e6c8-4d44-9c9a-3a5650d5fc42",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25819,15 +25871,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_core_01_01_16.json": {
       "blueprintName": "Geist Armor Core Forest",
       "wikiKey": "BP_CRAFT_kap_combat_light_core_01_01_16",
       "wikiUuid": "6eee0eeb-7ea8-4b8d-b433-7dd288770f9e",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25841,15 +25894,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_core_02_01_01.json": {
       "blueprintName": "Geist Armor Core ASD Edition",
       "wikiKey": "BP_CRAFT_kap_combat_light_core_02_01_01",
       "wikiUuid": "1b32bedf-274f-4cb2-a599-749b6b631d2e",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25863,15 +25917,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_helmet_01_01_01.json": {
       "blueprintName": "Geist Armor Helmet",
       "wikiKey": "BP_CRAFT_kap_combat_light_helmet_01_01_01",
       "wikiUuid": "9ad2c193-7246-4a14-a79d-642e0854fb13",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25885,15 +25940,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_helmet_01_01_02.json": {
       "blueprintName": "Geist Armor Helmet Rogue",
       "wikiKey": "BP_CRAFT_kap_combat_light_helmet_01_01_02",
       "wikiUuid": "1ad75caa-7580-482b-a432-1b31d5c47c90",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25907,15 +25963,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_helmet_01_01_10.json": {
       "blueprintName": "Geist Armor Helmet Whiteout",
       "wikiKey": "BP_CRAFT_kap_combat_light_helmet_01_01_10",
       "wikiUuid": "aceefa85-206b-4bc5-a7cd-3202b2474e6c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 2,
       "matchedMissionCount": 2,
       "unmatchedMissionCount": 0,
@@ -25938,15 +25995,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_helmet_01_01_15.json": {
       "blueprintName": "Geist Armor Helmet Desert",
       "wikiKey": "BP_CRAFT_kap_combat_light_helmet_01_01_15",
       "wikiUuid": "2017fa82-1eab-412d-b9cf-7bf8d0e14ed5",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25960,15 +26018,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_helmet_01_01_16.json": {
       "blueprintName": "Geist Armor Helmet Forest",
       "wikiKey": "BP_CRAFT_kap_combat_light_helmet_01_01_16",
       "wikiUuid": "996096f0-f0a0-4eaa-9b8d-f123d3924219",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -25982,15 +26041,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_helmet_02_01_01.json": {
       "blueprintName": "Geist Armor Helmet ASD Edition",
       "wikiKey": "BP_CRAFT_kap_combat_light_helmet_02_01_01",
       "wikiUuid": "be0b78da-0014-4264-889a-3d008aa00bc1",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -26004,15 +26064,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_legs_01_01_01.json": {
       "blueprintName": "Geist Armor Legs",
       "wikiKey": "BP_CRAFT_kap_combat_light_legs_01_01_01",
       "wikiUuid": "73ded5e4-44c7-4eb0-a293-87a0e785b1da",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -26026,15 +26087,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_legs_01_01_02.json": {
       "blueprintName": "Geist Armor Legs Rogue",
       "wikiKey": "BP_CRAFT_kap_combat_light_legs_01_01_02",
       "wikiUuid": "9708d3fc-084b-49f0-962b-bc210768cbc0",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -26048,15 +26110,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_legs_01_01_10.json": {
       "blueprintName": "Geist Armor Legs Whiteout",
       "wikiKey": "BP_CRAFT_kap_combat_light_legs_01_01_10",
       "wikiUuid": "e1b7cbc7-9a68-4d4a-bcdb-e4d03863637b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 2,
       "matchedMissionCount": 2,
       "unmatchedMissionCount": 0,
@@ -26079,15 +26142,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_legs_01_01_15.json": {
       "blueprintName": "Geist Armor Legs Desert",
       "wikiKey": "BP_CRAFT_kap_combat_light_legs_01_01_15",
       "wikiUuid": "018bf78d-bc6c-4194-a204-a1230e1aab89",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -26101,15 +26165,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_legs_01_01_16.json": {
       "blueprintName": "Geist Armor Legs Forest",
       "wikiKey": "BP_CRAFT_kap_combat_light_legs_01_01_16",
       "wikiUuid": "bdbb6663-e386-4cc9-bccb-466d63d05701",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -26123,15 +26188,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_legs_02_01_01.json": {
       "blueprintName": "Geist Armor Legs ASD Edition",
       "wikiKey": "BP_CRAFT_kap_combat_light_legs_02_01_01",
       "wikiUuid": "81d8b2da-0d15-447d-ad48-c21f85644627",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -26145,7 +26211,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\medium\\bp_craft_qrt_specialist_medium_arms_01_01_01.json": {
       "blueprintName": "Artimex Arms",
@@ -27544,8 +27611,8 @@
       "wikiKey": "BP_CRAFT_volt_lmg_energy_01",
       "wikiUuid": "408fbaaf-41b0-4059-9ca8-08cfbe9f84e3",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -27559,15 +27626,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\lmg\\bp_craft_volt_lmg_energy_01_tint01.json": {
       "blueprintName": "Fresnel Molten Energy LMG",
       "wikiKey": "BP_CRAFT_volt_lmg_energy_01_tint01",
       "wikiUuid": "b0b3fdea-eb1a-46e8-bdf8-9662f0e7c997",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -27581,15 +27649,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\lmg\\bp_craft_volt_lmg_energy_01_tint02.json": {
       "blueprintName": "Fresnel Icebox Energy LMG",
       "wikiKey": "BP_CRAFT_volt_lmg_energy_01_tint02",
       "wikiUuid": "4e5cfca9-312e-4ef0-93fd-0cd01dcad86b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -27603,15 +27672,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\lmg\\bp_craft_volt_lmg_energy_01_tint03.json": {
       "blueprintName": "Fresnel Rockfall Energy LMG",
       "wikiKey": "BP_CRAFT_volt_lmg_energy_01_tint03",
       "wikiUuid": "f4257ce3-9afa-4694-a707-aade876dc75c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -27625,7 +27695,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\pistol\\bp_craft_gmni_pistol_ballistic_01.json": {
       "blueprintName": "LH86 Pistol",
@@ -29553,8 +29624,8 @@
       "wikiKey": "BP_CRAFT_none_rifle_multi_01_collector01",
       "wikiUuid": "f2bd99fe-904b-4b23-9aa4-8aa6ae2c530f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -29568,7 +29639,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\rifle\\bp_craft_volt_rifle_energy_01.json": {
       "blueprintName": "Parallax Energy Assault Rifle",
@@ -32694,8 +32766,8 @@
       "wikiKey": "BP_CRAFT_volt_sniper_energy_01",
       "wikiUuid": "807fac7d-6b86-413b-b279-29a3a07337b2",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -32709,15 +32781,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\sniper\\bp_craft_volt_sniper_energy_01_tint01.json": {
       "blueprintName": "Zenith Darkwave Laser Sniper Rifle",
       "wikiKey": "BP_CRAFT_volt_sniper_energy_01_tint01",
       "wikiUuid": "d7b36a9b-cf60-49a4-b822-a6271e8a7323",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -32731,15 +32804,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\sniper\\bp_craft_volt_sniper_energy_01_tint02.json": {
       "blueprintName": "Zenith Landslide Laser Sniper Rifle",
       "wikiKey": "BP_CRAFT_volt_sniper_energy_01_tint02",
       "wikiUuid": "202ed065-69ba-4b16-945c-0856cefce789",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -32753,15 +32827,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\sniper\\bp_craft_volt_sniper_energy_01_tint03.json": {
       "blueprintName": "Zenith Thunderstrike Laser Sniper Rifle",
       "wikiKey": "BP_CRAFT_volt_sniper_energy_01_tint03",
       "wikiUuid": "55f51eb4-b71e-4048-8dcf-039bc5034be5",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -32775,15 +32850,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\missionitems\\bp_craft_carryable_2h_cy_collectormaterial_001.json": {
       "blueprintName": "Metamaterial Test #146",
       "wikiKey": "BP_CRAFT_Carryable_2H_CY_CollectorMaterial_001",
       "wikiUuid": "c9c67e69-063a-4d28-a156-d5809776ee22",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -32797,7 +32873,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s01_glacier_scitem.json": {
       "blueprintName": "Glacier",
@@ -32894,8 +32971,8 @@
       "wikiKey": "BP_CRAFT_COOL_JSPN_S00_CryoStarSL_SCItem",
       "wikiUuid": "a1b5c9ef-be2e-4077-ba67-4a3028970c49",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -32954,7 +33031,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s00_froststarsl_scitem.json": {
       "blueprintName": "Frost-Star SL",
@@ -32980,8 +33058,8 @@
       "wikiKey": "BP_CRAFT_COOL_JSPN_S00_WinterStarSL_SCItem",
       "wikiUuid": "f6c07dae-cca0-4abd-adc9-e1c6b6acfca1",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33040,15 +33118,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s01_cryostar_scitem.json": {
       "blueprintName": "Cryo-Star",
       "wikiKey": "BP_CRAFT_COOL_JSPN_S01_CryoStar_SCItem",
       "wikiUuid": "1239aec1-9d22-4fd8-a694-2eee52243aad",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33107,7 +33186,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s01_froststar_scitem.json": {
       "blueprintName": "Frost-Star",
@@ -33133,8 +33213,8 @@
       "wikiKey": "BP_CRAFT_COOL_JSPN_S01_WinterStar_SCItem",
       "wikiUuid": "0c113b8f-0bff-4b62-adf1-64c31786c85b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33193,15 +33273,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s02_cryostarex_scitem.json": {
       "blueprintName": "Cryo-Star EX",
       "wikiKey": "BP_CRAFT_COOL_JSPN_S02_CryoStarEX_SCItem",
       "wikiUuid": "787f5cf3-cb9f-4811-b991-475b09d2d039",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33260,7 +33341,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s02_froststarex_scitem.json": {
       "blueprintName": "Frost-Star EX",
@@ -33286,8 +33368,8 @@
       "wikiKey": "BP_CRAFT_COOL_JSPN_S02_WinterStarEX_SCItem",
       "wikiUuid": "7be41934-c13b-41a0-be05-5b8dab42cf23",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33346,15 +33428,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s03_cryostarxl_scitem.json": {
       "blueprintName": "Cryo-Star XL",
       "wikiKey": "BP_CRAFT_COOL_JSPN_S03_CryoStarXL_SCItem",
       "wikiUuid": "95fc7cad-58d5-4bc4-b643-c0633c6f2b0e",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33413,7 +33496,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s03_froststarxl_scitem.json": {
       "blueprintName": "Frost-Star XL",
@@ -33439,8 +33523,8 @@
       "wikiKey": "BP_CRAFT_COOL_JSPN_S03_WinterStarXL_SCItem",
       "wikiUuid": "8efd4e68-449f-48f2-a6d3-fda82c575e61",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33499,7 +33583,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s01_arcticstorm_scitem.json": {
       "blueprintName": "ArcticStorm",
@@ -33525,8 +33610,8 @@
       "wikiKey": "BP_CRAFT_COOL_LPLT_S01_BlastChill_SCItem",
       "wikiUuid": "1414bc9f-2a10-440d-86b0-91c85cfaa28d",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33585,15 +33670,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s01_flashfreeze_scitem.json": {
       "blueprintName": "FlashFreeze",
       "wikiKey": "BP_CRAFT_COOL_LPLT_S01_FlashFreeze_SCItem",
       "wikiUuid": "b19e0018-91e7-4f53-9d87-4c083131b851",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33652,7 +33738,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s02_coldsnap_scitem.json": {
       "blueprintName": "ColdSnap",
@@ -33678,8 +33765,8 @@
       "wikiKey": "BP_CRAFT_COOL_LPLT_S02_FullFrost_SCItem",
       "wikiUuid": "571b10ba-8033-4d00-b767-3f2edde7e9e3",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33738,15 +33825,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s02_whiteout_scitem.json": {
       "blueprintName": "WhiteOut",
       "wikiKey": "BP_CRAFT_COOL_LPLT_S02_WhiteOut_SCItem",
       "wikiUuid": "770ba210-bb7e-4b88-a7d8-2f132fa4bc0f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33805,15 +33893,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s03_coldsurge_scitem.json": {
       "blueprintName": "ColdSurge",
       "wikiKey": "BP_CRAFT_COOL_LPLT_S03_ColdSurge_SCItem",
       "wikiUuid": "6ec023c3-d739-40bf-899e-4a3e66520263",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33872,15 +33961,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s03_frostbite_scitem.json": {
       "blueprintName": "FrostBite",
       "wikiKey": "BP_CRAFT_COOL_LPLT_S03_FrostBite_SCItem",
       "wikiUuid": "abdb3c60-cdc5-4bd5-bbcc-55da792bc584",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -33939,7 +34029,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s03_frostburn_scitem.json": {
       "blueprintName": "FrostBurn",
@@ -34710,8 +34801,8 @@
       "wikiKey": "BP_CRAFT_COOL_WCPR_S00_Kelvid_SCItem",
       "wikiUuid": "7f553855-0712-42cc-8d2a-1bc301b63ea4",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -34770,7 +34861,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s00_tepilo_scitem.json": {
       "blueprintName": "Tepilo",
@@ -34815,8 +34907,8 @@
       "wikiKey": "BP_CRAFT_COOL_WCPR_S01_Endo_SCItem",
       "wikiUuid": "f24ec6ba-88fe-44a9-ae11-996385696c8f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -34875,7 +34967,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s01_gelid_scitem.json": {
       "blueprintName": "Gelid",
@@ -34939,8 +35032,8 @@
       "wikiKey": "BP_CRAFT_COOL_WCPR_S02_Taiga_SCItem",
       "wikiUuid": "524a5e92-3b86-459f-ac0f-cc4fb96d7577",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -34999,7 +35092,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s03_draug_scitem.json": {
       "blueprintName": "Draug",
@@ -35857,8 +35951,8 @@
       "wikiKey": "BP_CRAFT_POWR_AEGS_S02_Bolide_SCItem",
       "wikiUuid": "8601e542-8c86-4504-981f-aaf24f3b5fd2",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -35872,7 +35966,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s02_quadracellmt_scitem.json": {
       "blueprintName": "QuadraCell MT",
@@ -35893,8 +35988,8 @@
       "wikiKey": "BP_CRAFT_POWR_AEGS_S03_Fulgur_SCItem",
       "wikiUuid": "de7df91f-a1fd-4996-865f-1ae782dd6ec5",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -35908,7 +36003,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s03_quadracellmx_scitem.json": {
       "blueprintName": "QuadraCell MX",
@@ -35929,8 +36025,8 @@
       "wikiKey": "BP_CRAFT_POWR_AMRS_S01_DynaFlux_SCItem",
       "wikiUuid": "6f79231c-4c4b-4e8d-a5aa-9a7b8687b926",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 1,
       "unmatchedMissionCount": 0,
@@ -35944,7 +36040,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s01_js300_scitem.json": {
       "blueprintName": "JS-300",
@@ -36124,8 +36221,8 @@
       "wikiKey": "BP_CRAFT_POWR_LPLT_S00_DuraJet_SCItem",
       "wikiUuid": "7a18b345-06c7-40be-b0ac-b7177307ab21",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -36184,7 +36281,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s00_ionwave_scitem.json": {
       "blueprintName": "IonWave",
@@ -36267,8 +36365,8 @@
       "wikiKey": "BP_CRAFT_POWR_LPLT_S01_ZapJet_SCItem",
       "wikiUuid": "8d09eac2-30e7-4787-b9d0-0ddf270c7dbd",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -36327,7 +36425,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s02_fullforce_scitem.json": {
       "blueprintName": "FullForce",
@@ -36372,8 +36471,8 @@
       "wikiKey": "BP_CRAFT_POWR_LPLT_S02_SparkJet_SCItem",
       "wikiUuid": "0ffe0e5a-e31a-4605-a7cc-1685b25a8047",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -36432,7 +36531,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s03_fullforcepro_scitem.json": {
       "blueprintName": "FullForce Pro",
@@ -36477,8 +36577,8 @@
       "wikiKey": "BP_CRAFT_POWR_LPLT_S03_SparkJetPro_SCItem",
       "wikiUuid": "eecd464e-a8b5-4925-bc37-c80213bf3db6",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -36537,7 +36637,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s01_lightblossom_scitem.json": {
       "blueprintName": "LightBlossom",
@@ -36582,8 +36683,8 @@
       "wikiKey": "BP_CRAFT_POWR_SASU_S01_WhiteRose_SCItem",
       "wikiUuid": "ea73da29-d597-4930-91ac-846310561bb0",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -36642,7 +36743,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s02_daybreak_scitem.json": {
       "blueprintName": "FullForce",
@@ -36668,8 +36770,8 @@
       "wikiKey": "BP_CRAFT_POWR_SASU_S02_Lotus_SCItem",
       "wikiUuid": "683c5b10-5dc3-48ee-aeb0-d830e0d398c0",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -36728,7 +36830,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s02_radiance_scitem.json": {
       "blueprintName": "Radiance",
@@ -36792,8 +36895,8 @@
       "wikiKey": "BP_CRAFT_POWR_SASU_S03_TigerLilly_SCItem",
       "wikiUuid": "d2bf9a84-e5fb-4172-8d18-b7a83e8c080f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -36852,7 +36955,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_tydt_s01_deltamax_scitem.json": {
       "blueprintName": "DeltaMax",
@@ -38051,8 +38155,8 @@
       "wikiKey": "BP_CRAFT_RADR_GRNP_S01_Tige",
       "wikiUuid": "2d85096b-c04e-4771-8f4b-dc16e6ae28a8",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 6,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 3,
@@ -38089,15 +38193,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s01_v80111.json": {
       "blueprintName": "V801-11",
       "wikiKey": "BP_CRAFT_RADR_GRNP_S01_V80111",
       "wikiUuid": "32267728-2647-485c-a565-cbe7e9e46a15",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -38129,15 +38234,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s02_vb80112.json": {
       "blueprintName": "V801-12",
       "wikiKey": "BP_CRAFT_RADR_GRNP_S02_VB80112",
       "wikiUuid": "a1125420-1e6a-4d09-97a7-0b4540605ea4",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -38169,15 +38275,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s02_vigilance.json": {
       "blueprintName": "Vigilance",
       "wikiKey": "BP_CRAFT_RADR_GRNP_S02_Vigilance",
       "wikiUuid": "30c41150-6f82-45b2-82f2-8c5d38648755",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -38209,15 +38316,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s03_devoue.json": {
       "blueprintName": "Devoue",
       "wikiKey": "BP_CRAFT_RADR_GRNP_S03_Devoue",
       "wikiUuid": "f7140bab-c85f-48e5-bb03-a4d560130545",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -38249,15 +38357,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s03_v880.json": {
       "blueprintName": "V880",
       "wikiKey": "BP_CRAFT_RADR_GRNP_S03_V880",
       "wikiUuid": "4f494fdb-d489-4b51-9f0a-c148e7d9f6b9",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -38289,7 +38398,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\refuelling\\nozzle\\bp_craft_nozzle_fuelgiver_grin_nozzlefast.json": {
       "blueprintName": "Norfield",
@@ -39413,8 +39523,8 @@
       "wikiKey": "BP_CRAFT_SHLD_BEHR_S01_5SA_SCItem",
       "wikiUuid": "f2a77836-bceb-4f71-b0ff-7aef96f8cb4c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -39473,15 +39583,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s01_6sa_scitem.json": {
       "blueprintName": "6SA 'Arbiter'",
       "wikiKey": "BP_CRAFT_SHLD_BEHR_S01_6SA_SCItem",
       "wikiUuid": "87f0679a-3060-4763-a17a-9e35badea273",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -39540,7 +39651,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s01_7sa_scitem.json": {
       "blueprintName": "7SA 'Concord'",
@@ -39566,8 +39678,8 @@
       "wikiKey": "BP_CRAFT_SHLD_BEHR_S02_5MA_SCItem",
       "wikiUuid": "6a4393b4-b7fe-4913-85bc-dc803dc73acb",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -39626,15 +39738,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s02_6ma_scitem.json": {
       "blueprintName": "6MA 'Kozane'",
       "wikiKey": "BP_CRAFT_SHLD_BEHR_S02_6MA_SCItem",
       "wikiUuid": "fd9e81f2-c772-4292-95cd-0eec3ba6d0fa",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -39693,7 +39806,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s02_7ma_scitem.json": {
       "blueprintName": "7MA 'Lorica'",
@@ -39719,8 +39833,8 @@
       "wikiKey": "BP_CRAFT_SHLD_BEHR_S03_5CA_SCItem",
       "wikiUuid": "6f72bc54-ddc6-4a08-b68e-0b8506cd43a8",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -39779,15 +39893,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s03_6ca_scitem.json": {
       "blueprintName": "6CA 'Bila'",
       "wikiKey": "BP_CRAFT_SHLD_BEHR_S03_6CA_SCItem",
       "wikiUuid": "cd86dd07-2425-4cd2-81c4-88e62499c113",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -39846,7 +39961,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s03_7ca_scitem.json": {
       "blueprintName": "7CA 'Nargun'",
@@ -39958,8 +40074,8 @@
       "wikiKey": "BP_CRAFT_SHLD_SECO_S00_PIN_SCItem",
       "wikiUuid": "1e547029-e7c1-4d0f-8937-84fff8f669ac",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -40018,15 +40134,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s01_hex_scitem.json": {
       "blueprintName": "HEX",
       "wikiKey": "BP_CRAFT_SHLD_SECO_S01_HEX_SCItem",
       "wikiUuid": "e50d5650-673d-4358-b7db-9f5ffa6fc534",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -40085,7 +40202,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s01_ink_scitem.json": {
       "blueprintName": "INK",
@@ -40111,8 +40229,8 @@
       "wikiKey": "BP_CRAFT_SHLD_SECO_S01_WEB_SCItem",
       "wikiUuid": "b1ec2ffa-d1f5-4318-8c27-4d7442873443",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -40171,15 +40289,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s02_bloc_scitem.json": {
       "blueprintName": "BLOC",
       "wikiKey": "BP_CRAFT_SHLD_SECO_S02_BLOC_SCItem",
       "wikiUuid": "0a34a002-dd03-41df-b7d8-935f98fbb03d",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -40238,7 +40357,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s02_rpel_scitem.json": {
       "blueprintName": "RPEL",
@@ -40264,8 +40384,8 @@
       "wikiKey": "BP_CRAFT_SHLD_SECO_S02_STOP_SCItem",
       "wikiUuid": "6033839c-deb5-42b6-9cab-74ffb711ae44",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -40324,15 +40444,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s03_armor_scitem.json": {
       "blueprintName": "6CA 'Bila'",
       "wikiKey": "BP_CRAFT_SHLD_SECO_S03_ARMOR_SCItem",
       "wikiUuid": "a80d62fb-6742-408b-9328-0d833511f4c1",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -40391,15 +40512,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s03_guard_scitem.json": {
       "blueprintName": "GUARD",
       "wikiKey": "BP_CRAFT_SHLD_SECO_S03_GUARD_SCItem",
       "wikiUuid": "89800887-d53c-4519-a5c2-45e551b889b4",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 6,
       "unmatchedMissionCount": 0,
@@ -40458,7 +40580,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s03_haven_scitem.json": {
       "blueprintName": "HAVEN",
@@ -41376,8 +41499,8 @@
       "wikiKey": "BP_CRAFT_GATS_BallisticCannon_S1",
       "wikiUuid": "511c22a9-7ba1-487b-b768-1b14d2ddbf2f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -41409,15 +41532,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_gats_ballisticcannon_s2.json": {
       "blueprintName": "Tarantula GT-870 Mark 2 Cannon",
       "wikiKey": "BP_CRAFT_GATS_BallisticCannon_S2",
       "wikiUuid": "4ac17f62-86b3-453c-adf0-b52fcf1ebf6c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -41449,15 +41573,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_gats_ballisticcannon_s3.json": {
       "blueprintName": "Tarantula GT-870 Mark 3 Cannon",
       "wikiKey": "BP_CRAFT_GATS_BallisticCannon_S3",
       "wikiUuid": "6851a453-e5c5-4d29-82d5-c233f04d92db",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -41489,7 +41614,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_kbar_ballisticcannon_s1.json": {
       "blueprintName": "9-Series Longsword Cannon",
@@ -41939,8 +42065,8 @@
       "wikiKey": "BP_CRAFT_BEHR_BallisticGatling_S4",
       "wikiUuid": "1727fc8f-e31c-4d66-9670-084aadb15955",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -41972,15 +42098,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_behr_ballisticgatling_s5.json": {
       "blueprintName": "AD5B Ballistic Gatling",
       "wikiKey": "BP_CRAFT_BEHR_BallisticGatling_S5",
       "wikiUuid": "ba842720-ad32-4d53-8f56-992bacb1fc45",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -42012,15 +42139,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_behr_ballisticgatling_s6.json": {
       "blueprintName": "AD6B Ballistic Gatling",
       "wikiKey": "BP_CRAFT_BEHR_BallisticGatling_S6",
       "wikiUuid": "ac3dc178-0b5d-4a73-9ad6-6ce05e9c2620",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -42052,15 +42180,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_gats_ballisticgatling_s1.json": {
       "blueprintName": "YellowJacket GT-210 Gatling",
       "wikiKey": "BP_CRAFT_GATS_BallisticGatling_S1",
       "wikiUuid": "d9999ce7-5565-4d8a-b31c-3a833b159756",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -42092,15 +42221,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_gats_ballisticgatling_s2.json": {
       "blueprintName": "Scorpion GT-215 Gatling",
       "wikiKey": "BP_CRAFT_GATS_BallisticGatling_S2",
       "wikiUuid": "7ebefb45-b494-4d2c-9ae0-06360079c727",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -42132,15 +42262,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_gats_ballisticgatling_s3.json": {
       "blueprintName": "Mantis GT-220 Gatling",
       "wikiKey": "BP_CRAFT_GATS_BallisticGatling_S3",
       "wikiUuid": "1b6eb647-f144-4643-9d8d-ec76bf5c985f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -42172,7 +42303,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_krig_ballisticgatling_s2.json": {
       "blueprintName": "Tigerstrike T-19P",
@@ -42703,8 +42835,8 @@
       "wikiKey": "BP_CRAFT_BEHR_BallisticRepeater_S1",
       "wikiUuid": "87fff41b-b925-4fdf-b819-22eeb7be6406",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -42736,15 +42868,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\repeater\\bp_craft_behr_ballisticrepeater_s2.json": {
       "blueprintName": "SW16BR2 “Sawbuck” Repeater",
       "wikiKey": "BP_CRAFT_BEHR_BallisticRepeater_S2",
       "wikiUuid": "c2605bfa-f7ad-4ee5-bdf0-66b3e6a95cdc",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -42776,15 +42909,16 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\repeater\\bp_craft_behr_ballisticrepeater_s3.json": {
       "blueprintName": "SW16BR3 “Shredder” Repeater",
       "wikiKey": "BP_CRAFT_BEHR_BallisticRepeater_S3",
       "wikiUuid": "f311c57f-f1ae-4ca1-b4dc-7b516f475f9c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 3,
       "unmatchedMissionCount": 0,
@@ -42816,7 +42950,8 @@
           "minReputation": null,
           "minStandingName": null
         }
-      ]
+      ],
+      "_unlockInferred": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\scatter\\bp_craft_apar_ballisticscattergun_s1.json": {
       "blueprintName": "Havoc Scattergun",
@@ -44865,5 +45000,32 @@
         }
       ]
     }
+  },
+  "scunpackedEnrichment": {
+    "enrichedAt": "2026-06-09T23:09:17.385Z",
+    "contractsIndexed": 1000,
+    "missionsEnriched": 0,
+    "missionsNotFound": 14,
+    "blueprintsUpdated": 0
+  },
+  "repInference": {
+    "inferredAt": "2026-06-09T23:11:09.104Z",
+    "missionsInferred": 19,
+    "blueprintsUpdated": 59,
+    "patterns": {
+      "yellow": {
+        "minReputation": 0,
+        "standingName": "Neutral"
+      },
+      "orange": {
+        "minReputation": 2200,
+        "standingName": "Contractor"
+      },
+      "red": {
+        "minReputation": 5800,
+        "standingName": "Sr. Contractor"
+      }
+    },
+    "hockrowInferred": 5
   }
 }
