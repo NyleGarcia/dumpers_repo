@@ -41,7 +41,7 @@ export function getBlueprintSubType(bp: BlueprintTaxonomyInput): string | null {
       return next || null
     }
     if (parts[i] === 'weapons' && parts[i - 1] === 'fpsgear') {
-      let sub = parts[i + 1]?.replace('$', '')
+      const sub = parts[i + 1]?.replace('$', '')
       if (sub === 'templates') {
         return getFpsWeaponTypeFromFilename(filename)
       }
