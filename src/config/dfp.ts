@@ -1,7 +1,8 @@
 import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from './extraResources'
+import { isHarvestResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.1.0-type-modifiers'
+export const DFP_VERSION = '1.2.0-uex-anchors'
 
 /** Q0 = store-bought; Q100–Q1000 = mined/refined in 100-point steps. */
 export const STOCK_QUALITY_TIERS: readonly number[] = [
@@ -17,7 +18,9 @@ export function stockQualityTiersForResource(
   resourceKey: string,
   _label?: string
 ): readonly number[] {
-  if (isSalvageResource(resourceKey)) return [SALVAGE_ORDER_MIN_QUALITY]
+  if (isSalvageResource(resourceKey) || isHarvestResource(resourceKey)) {
+    return [SALVAGE_ORDER_MIN_QUALITY]
+  }
   return STOCK_QUALITY_TIERS
 }
 
@@ -26,6 +29,8 @@ export function orderMinQualityForResource(
   _label: string,
   selectedQuality: number
 ): number {
-  if (isSalvageResource(resourceKey)) return SALVAGE_ORDER_MIN_QUALITY
+  if (isSalvageResource(resourceKey) || isHarvestResource(resourceKey)) {
+    return SALVAGE_ORDER_MIN_QUALITY
+  }
   return selectedQuality
 }

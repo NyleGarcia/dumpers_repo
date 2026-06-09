@@ -1,4 +1,6 @@
 import React from 'react'
+import { resourceLabelClassName } from '../config/resourceTypes'
+import { slugifyResourceName } from '../lib/blueprintResources'
 import AppModal from './layout/AppModal'
 
 interface BlueprintRecord {
@@ -28,6 +30,8 @@ interface BlueprintDetailsModalProps {
   isApproved: boolean
   isAcquired: boolean
   isOnTarget: boolean
+  effectiveIsOrderable?: boolean
+  canAddToTargetList?: boolean
 }
 
 export default function BlueprintDetailsModal({
@@ -37,6 +41,8 @@ export default function BlueprintDetailsModal({
   isApproved,
   isAcquired,
   isOnTarget,
+  effectiveIsOrderable = false,
+  canAddToTargetList = false,
 }: BlueprintDetailsModalProps) {
   return (
     <AppModal
@@ -53,8 +59,10 @@ export default function BlueprintDetailsModal({
           {subTypeLabel && (
             <span className="px-2.5 py-1 bg-slate-800 rounded-lg text-slate-300">{subTypeLabel}</span>
           )}
-          {blueprint.isReward === true && (
+          {effectiveIsOrderable ? (
             <span className="px-2.5 py-1 bg-amber-900/50 text-amber-400 rounded-lg">★ Reward</span>
+          ) : (
+            <span className="px-2.5 py-1 bg-slate-800 text-slate-400 rounded-lg">🔶 Standard</span>
           )}
         </div>
 
@@ -78,22 +86,24 @@ export default function BlueprintDetailsModal({
                   </div>
                   {slot.options && slot.options.length > 0 && (
                     <div className="space-y-1">
-                      {slot.options.map((opt, optIdx) => (
-                        <div key={optIdx} className="flex justify-between gap-2 text-sm min-w-0">
-                          <span
-                            className={`min-w-0 break-words ${
-                              opt.type === 'item' ? 'text-purple-400' : 'text-red-400'
-                            }`}
-                          >
-                            {opt.resourceName || opt.entityName || 'Unknown'}
-                          </span>
-                          {(opt.standardCargoUnits ?? 0) > 0 ? (
-                            <span className="text-slate-500 shrink-0">{opt.standardCargoUnits} SCU</span>
-                          ) : (opt.quantity ?? 0) > 0 ? (
-                            <span className="text-slate-500 shrink-0">×{opt.quantity}</span>
-                          ) : null}
-                        </div>
-                      ))}
+                      {slot.options.map((opt, optIdx) => {
+                        const name = opt.resourceName || opt.entityName || 'Unknown'
+                        const resourceKey = slugifyResourceName(name)
+                        const isItem = opt.type === 'item'
+                        const labelClass = isItem
+                          ? 'text-purple-400'
+                          : resourceLabelClassName(resourceKey)
+                        return (
+                          <div key={optIdx} className="flex justify-between gap-2 text-sm min-w-0">
+                            <span className={`min-w-0 break-words ${labelClass}`}>{name}</span>
+                            {(opt.standardCargoUnits ?? 0) > 0 ? (
+                              <span className="text-slate-500 shrink-0">{opt.standardCargoUnits} SCU</span>
+                            ) : (opt.quantity ?? 0) > 0 ? (
+                              <span className="text-slate-500 shrink-0">×{opt.quantity}</span>
+                            ) : null}
+                          </div>
+                        )
+                      })}
                     </div>
                   )}
                 </div>
@@ -122,6 +132,10 @@ export default function BlueprintDetailsModal({
                 This blueprint is on your Target BP List. Open{' '}
                 <strong className="text-amber-300/90">Target BP List</strong> from the menu to see grouped
                 missions, toggle them on/off, and track progress.
+              </p>
+            ) : !canAddToTargetList ? (
+              <p className="text-sm text-slate-400">
+                This blueprint cannot be added to your Target BP List (no reward missions to track).
               </p>
             ) : (
               <p className="text-sm text-slate-400">

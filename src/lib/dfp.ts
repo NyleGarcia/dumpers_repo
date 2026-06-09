@@ -1,4 +1,5 @@
 import { isSalvageResource } from '../config/extraResources'
+import { isHarvestResource } from '../config/resourceTypes'
 import { AMMO_ORDER_MIN_QUALITY } from '../config/dfp'
 import { getDfpEngine } from './dfpEngine'
 
@@ -52,6 +53,7 @@ export function formatResourceOrderQualityLabel(
   minQuality: number
 ): string {
   if (isSalvageResource(resourceKey)) return 'Q0 (salvage)'
+  if (isHarvestResource(resourceKey)) return 'Harvest'
   return `Q${minQuality}`
 }
 

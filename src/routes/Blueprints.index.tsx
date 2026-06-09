@@ -4,8 +4,13 @@ import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
+import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
+import {
+  canAddBlueprintToTargetList,
+  resolveIsOrderable,
+} from '../lib/blueprintOrderable'
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
 const getFpsWeaponTypeFromFilename = (filename) => {
@@ -173,9 +178,11 @@ export default function BlueprintsRoute() {
     fetchUserBlueprints,
     user,
     isApproved,
+    isSuperAdmin,
   } = useAuth()
 
-  const { isOnTargetList, toggleTarget } = useTargetList()
+  const { overridesMap, setOrderable } = useBlueprintOrderOverrides()
+  const { isOnTargetList, toggleTarget } = useTargetList(overridesMap)
   
   const [searchTerm, setSearchTerm] = React.useState('')
   const [selectedMainCategory, setSelectedMainCategory] = React.useState(null)
@@ -235,14 +242,14 @@ export default function BlueprintsRoute() {
       if (!bp.blueprintName || !bp.file) return false
       
       const matchesSearch = searchTerm === '' || bp.blueprintName.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesReward = !showOnlyRewards || bp.isReward === true
+      const matchesReward = !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
       
       // When viewing a specific user (not "all"), only show their acquired blueprints
       const matchesUserFilter = selectedUserId === 'all' || acquiredBlueprints[bp.file]
       
       return matchesSearch && matchesReward && matchesUserFilter
     })
-  }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, acquiredBlueprints])
+  }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, acquiredBlueprints, overridesMap])
 
   // Category data with counts based on current global filters
   const categoryData = React.useMemo(() => {
@@ -704,20 +711,36 @@ export default function BlueprintsRoute() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full min-w-0">
-            {filteredBlueprints.map(bp => (
-              <BlueprintCard 
-                key={bp.file} 
-                blueprint={bp} 
-                onClick={() => setSelectedBlueprint(bp)}
-                isAcquired={!!acquiredBlueprints[bp.file]}
-                onToggleAcquired={() => toggleAcquired(bp.file)}
-                canModify={canModifyBlueprints && !isViewingOther}
-                isPending={isPending}
-                showTargetControl={isApproved && !isViewingOther && !acquiredBlueprints[bp.file]}
-                isOnTargetList={isOnTargetList(bp.file)}
-                onToggleTarget={() => toggleTarget(bp.file)}
-              />
-            ))}
+            {filteredBlueprints.map(bp => {
+              const effectiveIsOrderable = resolveIsOrderable(bp, overridesMap)
+              const catalogReward = bp.isReward === true
+              const canTarget =
+                isApproved &&
+                !isViewingOther &&
+                !acquiredBlueprints[bp.file] &&
+                canAddBlueprintToTargetList(bp, overridesMap)
+
+              return (
+                <BlueprintCard
+                  key={bp.file}
+                  blueprint={bp}
+                  onClick={() => setSelectedBlueprint(bp)}
+                  isAcquired={!!acquiredBlueprints[bp.file]}
+                  onToggleAcquired={() => toggleAcquired(bp.file)}
+                  canModify={canModifyBlueprints && !isViewingOther}
+                  isPending={isPending}
+                  showTargetControl={canTarget}
+                  isOnTargetList={isOnTargetList(bp.file)}
+                  onToggleTarget={() => toggleTarget(bp.file)}
+                  effectiveIsOrderable={effectiveIsOrderable}
+                  catalogIsReward={catalogReward}
+                  isSuperAdmin={isSuperAdmin && !isViewingOther}
+                  onToggleOrderable={(next) =>
+                    void setOrderable(bp.file, next, catalogReward)
+                  }
+                />
+              )
+            })}
           </div>
         )}
       </section>
@@ -730,6 +753,8 @@ export default function BlueprintsRoute() {
           isApproved={isApproved}
           isAcquired={!!acquiredBlueprints[selectedBlueprint.file]}
           isOnTarget={isOnTargetList(selectedBlueprint.file)}
+          effectiveIsOrderable={resolveIsOrderable(selectedBlueprint, overridesMap)}
+          canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}
         />
       )}
     </FeaturePageLayout>

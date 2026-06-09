@@ -1,33 +1,65 @@
 /**
  * Proprietary DFP formula — built into public/dfp-engine.js for canonical hosting.
  * Do not import this file from application code; use src/lib/dfp.ts instead.
+ *
+ * Pricing anchors: UEX 15d averages (Jun 2026). Ores/gems use kiosk Sell; salvage uses kiosk Buy +10%.
  */
 
 const MIN_SCU = 0.001
 const DFP_CRAFT_PREMIUM = 1.02
-const DFP_SCALE_FACTOR = 0.1
 const DFP_ASSUMED_QUALITY = 500
 const DFP_QUALITY_TIERS = [500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000]
-const DFP_DEFAULT_MODIFIER = 2
+const CARANITE_EFFORT_FACTOR = 1.35
+const CARANITE_BASE_Q500 = 280_000
 
 const DFP_BASE_PER_001_cSCU: Record<number, number> = {
   500: 50, 550: 80, 600: 126, 650: 200, 700: 314, 750: 500, 800: 800,
   850: 1254, 900: 2000, 950: 4750, 1000: 5000,
 }
 
-const DFP_RARITY_MODIFIERS: Record<string, number> = {
-  Aluminum: 2, Copper: 4, Tin: 6, Silicon: 8, Quartz: 10, Corundum: 12, Steel: 14,
-  Ouratite: 16, 'Ships (Scrap/Salvage Parts)': 18, RMC: 18, 'Construction Material': 18,
-  'HexaPolyMesh Coating (HPMC)': 20, Tungsten: 22, Titanium: 24, Diamond: 26, Iodine: 28,
-  Beryl: 30, Cobalt: 32, Laranite: 34, Agricium: 36, Bexalite: 38, Taranite: 40, Borase: 42,
-  Gold: 44, Hephaestanite: 46, Atlassium: 48, Stileron: 50, Osmium: 52, Lindinium: 54,
-  Caranite: 56, Savryllium: 58, Quantainium: 60, Aslarite: 62, Dolivine: 64, Aphorite: 66,
-  Hadanite: 68, Janalite: 70,
+const DFP_RESOURCE_ALIASES: Record<string, string> = {
+  Savrilium: 'Savryllium',
+  Quantanium: 'Quantainium',
+  Carinite: 'Caranite',
+  Pressurized_Ice: 'Pressurized Ice',
+  rmc: 'RMC',
+  construction_material: 'Construction Material',
 }
 
-const DFP_RESOURCE_ALIASES: Record<string, string> = {
-  Savrilium: 'Savryllium', Quantanium: 'Quantainium', Carinite: 'Caranite',
-  Pressurized_Ice: 'Pressurized Ice', rmc: 'RMC', construction_material: 'Construction Material',
+const GEM_NAMES = new Set([
+  'Aphorite', 'Beradom', 'Caranite', 'Dolivine', 'Feynmaline', 'Glacosite',
+  'Hadanite', 'Janalite', 'Sadaryx',
+])
+
+const HARVEST_NAMES = new Set(['Yormandi Eye'])
+
+const SHOP_SPECIAL_NAMES = new Set(['Saldynium (Ore)'])
+
+const SALVAGE_NAMES = new Set(['RMC', 'Construction Material'])
+
+/** UEX Sell avg per SCU @ ~Q500 — ores */
+const DFP_Q500_PER_SCU: Record<string, number> = {
+  Aluminum: 3672, Iron: 3421, Copper: 3758, Tin: 3953, Silicon: 2443, Quartz: 4423,
+  Corundum: 3642, 'Pressurized Ice': 5209, Hephaestanite: 4606, Agricium: 9505,
+  Titanium: 8212, Tungsten: 10468, Beryl: 19643, Laranite: 8578, Bexalite: 29045,
+  Taranite: 24290, Borase: 27453, Gold: 30473, Ouratite: 45661, Torite: 7454,
+  Lindinium: 44483, Savryllium: 113400, Quantainium: 141447, Aslarite: 4842,
+  Stileron: 127143, Riccite: 65750,
+}
+
+/** UEX Buy avg per SCU + 10% org premium — salvage (Q0 only) */
+const DFP_Q500_SALVAGE_PER_SCU: Record<string, number> = {
+  RMC: 9060,
+  'Construction Material': 10403,
+}
+
+/** UEX Sell avg per whole unit @ ~Q500 — kiosk gems + special items */
+const DFP_Q500_PER_UNIT: Record<string, number> = {
+  Dolivine: 146897, Aphorite: 101207, Hadanite: 543154, Janalite: 1581176,
+  Beradom: 147789, Feynmaline: 345888, Glacosite: 99667, Sadaryx: 500000,
+  Caranite: Math.round(CARANITE_BASE_Q500 * CARANITE_EFFORT_FACTOR),
+  'Saldynium (Ore)': 34_000_000,
+  'Yormandi Eye': 20_000_000,
 }
 
 const DFP_TYPE_MODIFIERS: Record<string, number> = {
@@ -43,6 +75,8 @@ const DFP_SHIP_SUBCATEGORY_MODIFIERS: Record<string, number | Record<string, num
   shield: { default: 0.9, S0: 1, S1: 0.95, S2: 0.9, S3: 0.85, S4: 0.8 },
   salvage: 1.8, tractorbeam: 1.5, refuelling: 0.5, default: 0.85,
 }
+
+type ResourceKind = 'ore' | 'gem' | 'harvest' | 'shop_special' | 'salvage'
 
 function clampQuality(quality: number): number {
   if (quality <= DFP_QUALITY_TIERS[0]) return DFP_QUALITY_TIERS[0]
@@ -66,15 +100,34 @@ function resolveDfpResourceKey(name: string): string {
   return DFP_RESOURCE_ALIASES[name] ?? name
 }
 
-function getRarityModifier(resourceName: string): number {
-  return DFP_RARITY_MODIFIERS[resolveDfpResourceKey(resourceName)] ?? DFP_DEFAULT_MODIFIER
+function resolveResourceKind(resourceName: string): ResourceKind {
+  const key = resolveDfpResourceKey(resourceName)
+  if (SALVAGE_NAMES.has(key)) return 'salvage'
+  if (HARVEST_NAMES.has(key)) return 'harvest'
+  if (SHOP_SPECIAL_NAMES.has(key)) return 'shop_special'
+  if (GEM_NAMES.has(key)) return 'gem'
+  return 'ore'
 }
 
-function baseValueForScu(quality: number, scu: number): number {
+function qualityScale(quality: number, kind: ResourceKind): number {
+  if (kind === 'salvage' || kind === 'harvest') return 1
   const tier = clampQuality(quality)
-  const per001 = DFP_BASE_PER_001_cSCU[tier] ?? DFP_BASE_PER_001_cSCU[DFP_ASSUMED_QUALITY]
-  const effectiveScu = Math.max(scu, MIN_SCU)
-  return per001 * (effectiveScu / MIN_SCU) * DFP_SCALE_FACTOR
+  const base500 = DFP_BASE_PER_001_cSCU[500]
+  const baseTier = DFP_BASE_PER_001_cSCU[tier] ?? base500
+  return baseTier / base500
+}
+
+function isWholeUnitBlueprintOption(option: {
+  standardCargoUnits?: number
+  quantity?: number
+  resourceName?: string
+  entityName?: string
+}): boolean {
+  const name = option.resourceName || option.entityName
+  if (!name) return false
+  const kind = resolveResourceKind(name)
+  if (kind === 'gem' || kind === 'harvest' || kind === 'shop_special') return true
+  return (option.standardCargoUnits ?? 0) <= 0 && (option.quantity ?? 0) > 0
 }
 
 function extractComponentSize(categoryName?: string): string | null {
@@ -121,13 +174,29 @@ function getDfpTypeModifier(blueprint: { categoryName?: string; subCategoryName?
 export function calculateMaterialDfpPrice(
   resourceName: string,
   minQuality: number,
-  scuQuantity: number,
+  amount: number,
 ): number {
+  const resolved = resolveDfpResourceKey(resourceName)
+  const kind = resolveResourceKind(resourceName)
+
+  if (kind === 'salvage') {
+    const perScu = DFP_Q500_SALVAGE_PER_SCU[resolved] ?? 9000
+    const scu = Math.max(amount, MIN_SCU)
+    return Math.round(perScu * scu)
+  }
+
+  if (kind === 'gem' || kind === 'shop_special' || kind === 'harvest') {
+    const perUnit = DFP_Q500_PER_UNIT[resolved] ?? 10_000
+    const units = Math.max(1, Math.round(amount))
+    const scale = qualityScale(minQuality, kind)
+    return Math.round(perUnit * scale * units)
+  }
+
+  const perScu = DFP_Q500_PER_SCU[resolved] ?? 5000
   const quality = resolveQuality(minQuality)
-  const scu = Math.max(scuQuantity, MIN_SCU)
-  const base = baseValueForScu(quality, scu)
-  const modifier = getRarityModifier(resourceName)
-  return Math.round(base * modifier)
+  const scu = Math.max(amount, MIN_SCU)
+  const scale = qualityScale(quality, kind)
+  return Math.round(perScu * scale * scu)
 }
 
 export function calculateBlueprintDfp(blueprint: {
@@ -159,13 +228,20 @@ export function calculateBlueprintDfp(blueprint: {
       const resource = option.resourceName || option.entityName
       if (!resource) continue
       const quality = resolveQuality(option.minQuality)
-      const units = option.standardCargoUnits ?? MIN_SCU
       const optQty = option.quantity ?? 1
-      const scu = units * slotCount * optQty
-      const base = baseValueForScu(quality, scu)
-      const modifier = getRarityModifier(resource)
-      const lineTotal = base * modifier
-      lines.push({ resource, quality, scu, baseValue: base, modifier, lineTotal })
+      const wholeUnit = isWholeUnitBlueprintOption(option)
+      const amount = wholeUnit
+        ? slotCount * optQty
+        : (option.standardCargoUnits ?? MIN_SCU) * slotCount * optQty
+      const lineTotal = calculateMaterialDfpPrice(resource, quality, amount)
+      lines.push({
+        resource,
+        quality,
+        scu: amount,
+        baseValue: lineTotal,
+        modifier: 1,
+        lineTotal,
+      })
     }
   }
 

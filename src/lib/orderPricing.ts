@@ -11,7 +11,13 @@ import type {
   CustomOrderBlueprint,
   CustomOrderResourceLine,
 } from './operations'
-import { fromMilliScu, normalizeResourceQuantity, toMilliScu } from './resourceQuantity'
+import { isWholeUnitResource } from '../config/resourceTypes'
+import {
+  fromMilliScu,
+  normalizeQuantityForResource,
+  normalizeResourceQuantity,
+  toMilliScu,
+} from './resourceQuantity'
 
 export interface OrderBlueprintLine {
   blueprintId: string
@@ -95,7 +101,8 @@ export function pricingForResourceLine(
   minQuality: number,
   quantityScu: number
 ): { unitDfpAuec: number; lineDfpAuec: number; orderMinQuality: number } {
-  const qty = normalizeResourceQuantity(Math.max(RESOURCE_MIN_SCU, quantityScu))
+  const minAmount = isWholeUnitResource(resourceKey) ? 1 : RESOURCE_MIN_SCU
+  const qty = normalizeQuantityForResource(resourceKey, Math.max(minAmount, quantityScu))
   const orderMinQuality = orderMinQualityForResource(resourceKey, resourceLabel, minQuality)
   const lineDfpAuec = calculateMaterialDfpPrice(resourceLabel, orderMinQuality, qty)
   const unitDfpAuec = qty > 0 ? Math.round(lineDfpAuec / qty) : lineDfpAuec
@@ -127,20 +134,39 @@ export function buildOrderFulfillmentItems(input: {
   const totals = new Map<string, number>()
 
   for (const item of extractOrderLineItemsFromBlueprints(input.blueprintLines)) {
-    totals.set(item.resourceKey, (totals.get(item.resourceKey) ?? 0) + toMilliScu(item.quantity))
+    if (isWholeUnitResource(item.resourceKey)) {
+      totals.set(
+        item.resourceKey,
+        (totals.get(item.resourceKey) ?? 0) + Math.trunc(item.quantity)
+      )
+    } else {
+      totals.set(
+        item.resourceKey,
+        (totals.get(item.resourceKey) ?? 0) + toMilliScu(item.quantity)
+      )
+    }
   }
 
   for (const line of input.resourceLines) {
-    totals.set(
-      line.resourceKey,
-      (totals.get(line.resourceKey) ?? 0) + toMilliScu(line.quantityScu)
-    )
+    if (isWholeUnitResource(line.resourceKey)) {
+      totals.set(
+        line.resourceKey,
+        (totals.get(line.resourceKey) ?? 0) + Math.trunc(line.quantityScu)
+      )
+    } else {
+      totals.set(
+        line.resourceKey,
+        (totals.get(line.resourceKey) ?? 0) + toMilliScu(line.quantityScu)
+      )
+    }
   }
 
   return [...totals.entries()]
-    .map(([resourceKey, milli]) => ({
+    .map(([resourceKey, amount]) => ({
       resourceKey,
-      quantity: fromMilliScu(milli),
+      quantity: isWholeUnitResource(resourceKey)
+        ? Math.trunc(amount)
+        : fromMilliScu(amount),
     }))
     .filter((row) => row.quantity > 0)
     .sort((a, b) => a.resourceKey.localeCompare(b.resourceKey))

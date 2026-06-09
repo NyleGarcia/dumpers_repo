@@ -1,3 +1,4 @@
+import { isWholeUnitResource } from '../config/resourceTypes'
 import { fromMilliScu, toMilliScu } from './resourceQuantity'
 
 export interface BlueprintRequirementOption {
@@ -76,22 +77,26 @@ export interface BlueprintOrderLineItem {
   quantity: number
 }
 
-function milliScuPerCraftForOption(
+function quantityPerCraftForOption(
   option: BlueprintRequirementOption,
-  slotCount: number
+  slotCount: number,
+  resourceKey: string
 ): number {
-  const units = option.standardCargoUnits ?? 0
   const optQty = option.quantity ?? 1
-  return toMilliScu(units) * slotCount * optQty
+  if (isWholeUnitResource(resourceKey)) {
+    return slotCount * optQty
+  }
+  const units = option.standardCargoUnits ?? 0
+  return fromMilliScu(toMilliScu(units) * slotCount * optQty)
 }
 
-/** Derive SCU resource requirements from blueprint slots × craft quantity. */
+/** Derive resource requirements from blueprint slots × craft quantity. */
 export function extractOrderLineItemsFromBlueprint(
   blueprint: BlueprintWithSlots,
   orderQuantity: number
 ): BlueprintOrderLineItem[] {
   const craftQty = Math.max(1, orderQuantity)
-  const totals = new Map<string, { resourceKey: string; label: string; milli: number }>()
+  const totals = new Map<string, { resourceKey: string; label: string; amount: number }>()
 
   for (const slot of blueprint.slots ?? []) {
     const slotCount = slot.requiredCount ?? 1
@@ -104,14 +109,14 @@ export function extractOrderLineItemsFromBlueprint(
       const resourceKey = slugifyResourceName(label)
       if (!resourceKey) continue
 
-      const addMilli = milliScuPerCraftForOption(option, slotCount) * craftQty
-      if (addMilli <= 0) continue
+      const add = quantityPerCraftForOption(option, slotCount, resourceKey) * craftQty
+      if (add <= 0) continue
 
       const existing = totals.get(resourceKey)
       if (existing) {
-        existing.milli += addMilli
+        existing.amount += add
       } else {
-        totals.set(resourceKey, { resourceKey, label, milli: addMilli })
+        totals.set(resourceKey, { resourceKey, label, amount: add })
       }
     }
   }
@@ -120,7 +125,7 @@ export function extractOrderLineItemsFromBlueprint(
     .map((row) => ({
       resourceKey: row.resourceKey,
       label: row.label,
-      quantity: fromMilliScu(row.milli),
+      quantity: isWholeUnitResource(row.resourceKey) ? Math.trunc(row.amount) : row.amount,
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
 }
@@ -129,19 +134,18 @@ export function extractOrderLineItemsFromBlueprint(
 export function extractOrderLineItemsFromBlueprints(
   lines: { blueprint: BlueprintWithSlots; quantity: number }[]
 ): BlueprintOrderLineItem[] {
-  const totals = new Map<string, { resourceKey: string; label: string; milli: number }>()
+  const totals = new Map<string, { resourceKey: string; label: string; amount: number }>()
 
   for (const { blueprint, quantity } of lines) {
     for (const item of extractOrderLineItemsFromBlueprint(blueprint, quantity)) {
-      const addMilli = toMilliScu(item.quantity)
       const existing = totals.get(item.resourceKey)
       if (existing) {
-        existing.milli += addMilli
+        existing.amount += item.quantity
       } else {
         totals.set(item.resourceKey, {
           resourceKey: item.resourceKey,
           label: item.label,
-          milli: addMilli,
+          amount: item.quantity,
         })
       }
     }
@@ -151,7 +155,7 @@ export function extractOrderLineItemsFromBlueprints(
     .map((row) => ({
       resourceKey: row.resourceKey,
       label: row.label,
-      quantity: fromMilliScu(row.milli),
+      quantity: isWholeUnitResource(row.resourceKey) ? Math.trunc(row.amount) : row.amount,
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
 }

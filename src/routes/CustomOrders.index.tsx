@@ -12,10 +12,13 @@ import { formatDfpRequiredPrice } from '../lib/dfp'
 import { SITE_SLOGAN } from '../config/site'
 import { canRequesterModifyOrder } from '../lib/orderEdit'
 import { orderTotalDfp } from '../lib/orderPricing'
-import { formatResourceQuantity } from '../lib/resourceQuantity'
+import { resourceChipClassName } from '../config/resourceTypes'
+import { formatQuantityForResource } from '../lib/resourceQuantity'
+import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
+import { filterOrderableBlueprints } from '../lib/blueprintOrderable'
 import {
   canCustomerArchive,
   isArchivedForUser,
@@ -85,6 +88,11 @@ function profileFromOrderFields(
 export default function CustomOrdersRoute() {
   const { user, profile, dfpDisplayEnabled } = useAuth()
   const { data: blueprints = [] } = useBlueprintData()
+  const { overridesMap } = useBlueprintOrderOverrides()
+  const orderableBlueprints = useMemo(
+    () => filterOrderableBlueprints(blueprints, overridesMap),
+    [blueprints, overridesMap]
+  )
   const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [loading, setLoading] = useState(true)
@@ -319,9 +327,10 @@ export default function CustomOrdersRoute() {
           </p>
           <ResourceBuyOrderPanel
             userId={user.id}
-            blueprints={blueprints}
+            blueprints={orderableBlueprints}
             catalog={catalog}
             labelMap={labelMap}
+            orderOverridesMap={overridesMap}
             onError={setError}
             onSubmitted={() => {
               setShowForm(false)
@@ -339,9 +348,10 @@ export default function CustomOrdersRoute() {
           </p>
           <ResourceBuyOrderPanel
             userId={user.id}
-            blueprints={blueprints}
+            blueprints={orderableBlueprints}
             catalog={catalog}
             labelMap={labelMap}
+            orderOverridesMap={overridesMap}
             editOrder={orders.find((o) => o.id === editingOrderId) ?? null}
             onCancelEdit={() => setEditingOrderId(null)}
             onError={setError}
@@ -479,10 +489,10 @@ export default function CustomOrdersRoute() {
                     {order.items.map((item) => (
                       <span
                         key={item.id}
-                        className="px-2 py-1 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
+                        className={`px-2 py-1 text-xs rounded border ${resourceChipClassName(item.resource_key)}`}
                       >
                         {getResourceLabel(item.resource_key, labelMap)} ×{' '}
-                        {formatResourceQuantity(Number(item.quantity))} SCU
+                        {formatQuantityForResource(item.resource_key, Number(item.quantity))}
                       </span>
                     ))}
                   </div>

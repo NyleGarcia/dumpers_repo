@@ -1,3 +1,5 @@
+import { resourceChipClassName } from '../config/resourceTypes'
+import { slugifyResourceName } from '../lib/blueprintResources'
 import { calculateBlueprintDfp, formatDfpLabel } from '../lib/dfp'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -133,6 +135,10 @@ export default function BlueprintCard({
   showTargetControl = false,
   isOnTargetList = false,
   onToggleTarget,
+  effectiveIsOrderable = false,
+  catalogIsReward = false,
+  isSuperAdmin = false,
+  onToggleOrderable,
 }) {
   const { dfpDisplayEnabled } = useAuth()
 
@@ -159,8 +165,16 @@ export default function BlueprintCard({
     }
   }
 
+  const handleOrderableToggle = (e) => {
+    e.stopPropagation()
+    if (isSuperAdmin && onToggleOrderable) {
+      onToggleOrderable(!effectiveIsOrderable)
+    }
+  }
+
+  const hasOverride = isSuperAdmin && effectiveIsOrderable !== catalogIsReward
   const hasCategoryTags = !!(blueprint.categoryName || subType || armorWeight || armorSlot)
-  const hasRewardLabel = typeof blueprint.isReward === 'boolean'
+  const hasRewardLabel = typeof blueprint.isReward === 'boolean' || isSuperAdmin
   const showFooter = showTargetControl || hasCategoryTags || hasRewardLabel
 
   return (
@@ -229,18 +243,18 @@ export default function BlueprintCard({
                 {blueprint.slots.flatMap((slot, slotIdx) => 
                   (slot.options || []).map((opt, optIdx) => {
                     const name = opt.resourceName || opt.entityName
-                    return name ? (
+                    if (!name) return null
+                    const chipClass = opt.type === 'item'
+                      ? 'bg-purple-950/30 text-purple-400 border-purple-500/20'
+                      : resourceChipClassName(slugifyResourceName(name))
+                    return (
                       <span 
                         key={`${slotIdx}-${optIdx}`} 
-                        className={`inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words ${
-                          opt.type === 'item' 
-                            ? 'bg-purple-950/30 text-purple-400 border-purple-500/20' 
-                            : 'bg-red-950/30 text-red-400 border-red-500/20'
-                        }`}
+                        className={`inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words ${chipClass}`}
                       >
                         {name}{opt.quantity > 1 ? ` ×${opt.quantity}` : ''}
                       </span>
-                    ) : null
+                    )
                   })
                 ).slice(0, 6)}
                 {blueprint.slots.flatMap(s => s.options || []).filter(o => o.resourceName || o.entityName).length > 6 && (
@@ -279,7 +293,31 @@ export default function BlueprintCard({
                     </div>
                   )}
                   {hasRewardLabel && (
-                    <span className="text-xs text-slate-500">{blueprint.isReward ? '★ Reward Blueprint' : '🔶 Standard'}</span>
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <span className="text-xs text-slate-500">
+                        {effectiveIsOrderable ? '★ Reward Blueprint' : '🔶 Standard'}
+                      </span>
+                      {hasOverride && (
+                        <span className="text-[10px] text-slate-600">
+                          (catalog: {catalogIsReward ? 'Reward' : 'Standard'})
+                        </span>
+                      )}
+                      {isSuperAdmin && (
+                        <label
+                          className="inline-flex items-center gap-1 text-[10px] text-purple-300/90 cursor-pointer select-none"
+                          onClick={handleOrderableToggle}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={effectiveIsOrderable}
+                            onChange={handleOrderableToggle}
+                            onClick={(e) => e.stopPropagation()}
+                            className="rounded border-slate-600 bg-slate-800 text-purple-500 focus:ring-purple-500/40"
+                          />
+                          Orderable
+                        </label>
+                      )}
+                    </div>
                   )}
                 </div>
                 {showTargetControl && (

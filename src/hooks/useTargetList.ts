@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useLatestRef } from './useLatestRef'
 import { useAuth } from '../contexts/AuthContext'
 import { missionKey } from '../lib/missions'
+import { canAddBlueprintToTargetListById } from '../lib/blueprintOrderable'
 import {
   addTargetBlueprint,
   fetchMissionPrefs,
@@ -10,7 +11,7 @@ import {
   setMissionIncluded,
 } from '../lib/targetList'
 
-export function useTargetList() {
+export function useTargetList(overridesMap: Record<string, boolean> = {}) {
   const { user, isApproved, acquiredBlueprints } = useAuth()
   const [targetIds, setTargetIds] = useState<Record<string, boolean>>({})
   const [missionPrefs, setMissionPrefs] = useState<Record<string, boolean>>({})
@@ -106,6 +107,13 @@ export function useTargetList() {
           return next
         })
       } else {
+        if (!canAddBlueprintToTargetListById(blueprintId, overridesMap)) {
+          setError(
+            'This blueprint cannot be added to your target list (not orderable and no reward missions).'
+          )
+          return false
+        }
+
         const result = await addTargetBlueprint(user.id, blueprintId)
         if (result.error) {
           setError(result.error)
@@ -116,7 +124,7 @@ export function useTargetList() {
 
       return true
     },
-    [user, isApproved, targetIds, acquiredBlueprints]
+    [user, isApproved, targetIds, acquiredBlueprints, overridesMap]
   )
 
   const setMissionOnChecklist = useCallback(

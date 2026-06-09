@@ -1,6 +1,9 @@
-/** Game-aligned SCU precision — everything locked to 3 decimal places max. */
+import { isWholeUnitResource } from '../config/resourceTypes'
+
+/** Game-aligned SCU precision — ores/salvage locked to 3 decimal places max. */
 export const RESOURCE_QUANTITY_DECIMALS = 3
 export const RESOURCE_QUANTITY_STEP = 0.001
+export const GEM_QUANTITY_STEP = 1
 
 const SCU_SCALE = 10 ** RESOURCE_QUANTITY_DECIMALS
 
@@ -81,4 +84,51 @@ export function formatResourceQuantity(value: number): string {
   return fromMilliScu(toMilliScu(value))
     .toFixed(RESOURCE_QUANTITY_DECIMALS)
     .replace(/\.?0+$/, '')
+}
+
+/** Gems and harvest items — whole integers only. */
+export function lockGemQuantityInput(raw: string): string {
+  return raw.replace(/\D/g, '')
+}
+
+export function parseGemQuantity(input: string): number | null {
+  const locked = lockGemQuantityInput(input.trim())
+  if (!locked) return null
+  const value = Number(locked)
+  if (!Number.isFinite(value) || value < 1) return null
+  return Math.trunc(value)
+}
+
+export function normalizeGemQuantity(value: number): number {
+  if (!Number.isFinite(value) || value < 1) return 1
+  return Math.trunc(value)
+}
+
+export function formatGemQuantity(value: number): string {
+  if (!Number.isFinite(value) || value < 1) return '1'
+  return String(Math.trunc(value))
+}
+
+export function quantityStepForResource(resourceKey: string): number {
+  return isWholeUnitResource(resourceKey) ? GEM_QUANTITY_STEP : RESOURCE_QUANTITY_STEP
+}
+
+export function adjustStepsForResource(resourceKey: string): readonly number[] {
+  return isWholeUnitResource(resourceKey) ? [1] : [0.001, 0.01, 0.1, 1]
+}
+
+export function parseQuantityForResource(resourceKey: string, input: string): number | null {
+  return isWholeUnitResource(resourceKey) ? parseGemQuantity(input) : parseResourceQuantity(input)
+}
+
+export function normalizeQuantityForResource(resourceKey: string, value: number): number {
+  return isWholeUnitResource(resourceKey) ? normalizeGemQuantity(value) : normalizeResourceQuantity(value)
+}
+
+export function formatQuantityForResource(resourceKey: string, value: number): string {
+  return isWholeUnitResource(resourceKey) ? formatGemQuantity(value) : formatResourceQuantity(value)
+}
+
+export function lockQuantityInputForResource(resourceKey: string, raw: string): string {
+  return isWholeUnitResource(resourceKey) ? lockGemQuantityInput(raw) : lockQuantityInput(raw)
 }

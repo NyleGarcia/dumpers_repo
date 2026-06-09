@@ -3,6 +3,11 @@ import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { isSalvageResource } from '../config/extraResources'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
+import {
+  isHarvestResource,
+  resourceLabelClassName,
+  resourceQuantityUnitLabel,
+} from '../config/resourceTypes'
 import { SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
@@ -13,11 +18,10 @@ import type { InventoryScope } from '../lib/operations'
 import ResourceQuantityInput from '../components/ResourceQuantityInput'
 import {
   addResourceQuantities,
-  formatResourceQuantity,
-  parseResourceQuantity,
+  adjustStepsForResource,
+  formatQuantityForResource,
+  parseQuantityForResource,
 } from '../lib/resourceQuantity'
-
-const ADJUST_STEPS = [0.001, 0.01, 0.1, 1] as const
 
 export default function ResourceTrackerRoute() {
   const { user, visibilityContext, isSuperAdmin, isGhostMode } = useAuth()
@@ -98,7 +102,7 @@ export default function ResourceTrackerRoute() {
 
   const handleSaveEdit = async (resourceKey: string, quality: number) => {
     if (!inventoryContext || readOnly) return
-    const qty = parseResourceQuantity(editValue)
+    const qty = parseQuantityForResource(resourceKey, editValue)
     if (qty == null) return
 
     const result = await setInventoryQuantity(inventoryContext, resourceKey, quality, qty)
@@ -254,6 +258,9 @@ export default function ResourceTrackerRoute() {
           {filteredCards.map((card) => {
             const quality = card.quality ?? DEFAULT_STOCK_QUALITY
             const isSalvage = isSalvageResource(card.resource_key)
+            const isHarvest = isHarvestResource(card.resource_key)
+            const qtyUnit = resourceQuantityUnitLabel(card.resource_key)
+            const adjustSteps = adjustStepsForResource(card.resource_key)
             const lineKey = inventoryLineKey(card.resource_key, quality)
             const isEditing = editingKey === lineKey
 
@@ -266,12 +273,14 @@ export default function ResourceTrackerRoute() {
               >
                 <div className="flex items-start justify-between gap-2 min-w-0">
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-white font-medium truncate">{card.label}</h3>
+                    <h3 className={`font-medium truncate ${resourceLabelClassName(card.resource_key)}`}>
+                      {card.label}
+                    </h3>
                     <p className="text-slate-500 text-xs mt-0.5">
                       {card.is_active
                         ? isPersonalTab
-                          ? `Q${quality} · SCU on hand`
-                          : 'SCU site-wide total'
+                          ? `${isSalvage ? 'Q0 (salvage)' : isHarvest ? 'Harvest' : `Q${quality}`} · ${qtyUnit} on hand`
+                          : `${qtyUnit} site-wide total`
                         : 'Retired — no longer in blueprints'}
                     </p>
                   </div>
@@ -284,7 +293,7 @@ export default function ResourceTrackerRoute() {
                       }`}
                       aria-hidden={!isPersonalTab}
                     >
-                      {isSalvage ? 'Q0 (salvage)' : `Q${quality}`}
+                      {isSalvage ? 'Q0 (salvage)' : isHarvest ? 'Harvest' : `Q${quality}`}
                     </span>
                     <span
                       className={`px-2 py-0.5 rounded text-xs border ${
@@ -302,11 +311,12 @@ export default function ResourceTrackerRoute() {
                   {isEditing && !readOnly ? (
                     <>
                       <ResourceQuantityInput
+                        resourceKey={card.resource_key}
                         value={editValue}
                         onValueChange={setEditValue}
                         className="w-28 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm tabular-nums"
                       />
-                      <span className="text-slate-500 text-xs">SCU</span>
+                      <span className="text-slate-500 text-xs">{qtyUnit}</span>
                       <button
                         onClick={() => void handleSaveEdit(card.resource_key, quality)}
                         className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded"
@@ -326,14 +336,14 @@ export default function ResourceTrackerRoute() {
                   ) : (
                     <>
                       <span className="text-2xl font-bold text-white tabular-nums">
-                        {formatResourceQuantity(card.quantity)}
+                        {formatQuantityForResource(card.resource_key, card.quantity)}
                       </span>
-                      <span className="text-slate-500 text-sm">SCU</span>
+                      <span className="text-slate-500 text-sm">{qtyUnit}</span>
                       {!readOnly && (
                         <button
                           onClick={() => {
                             setEditingKey(lineKey)
-                            setEditValue(formatResourceQuantity(card.quantity))
+                            setEditValue(formatQuantityForResource(card.resource_key, card.quantity))
                           }}
                           className="text-xs text-slate-400 hover:text-white ml-1"
                         >
@@ -347,7 +357,7 @@ export default function ResourceTrackerRoute() {
                 <div className="mt-3 min-h-[6.75rem]">
                   {card.is_active && !readOnly && (
                     <div className="grid grid-cols-2 gap-1.5 min-w-0">
-                      {ADJUST_STEPS.map((step) => (
+                      {adjustSteps.map((step) => (
                         <div key={step} className="flex gap-1 min-w-0">
                           <button
                             onClick={() =>

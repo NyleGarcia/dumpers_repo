@@ -10,7 +10,8 @@ import {
   resolveOrderBlueprintLines,
   resolveOrderResourceLines,
 } from '../lib/orderPricing'
-import { formatResourceQuantity } from '../lib/resourceQuantity'
+import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
+import { formatQuantityForResource } from '../lib/resourceQuantity'
 import type { CustomOrder } from '../lib/operations'
 
 interface OrderRequestLinesProps {
@@ -66,8 +67,11 @@ export default function OrderRequestLines({ order, showDfp = true }: OrderReques
             key={`${order.id}-res-${line.resourceKey}-${line.minQuality}-${line.quantityScu}`}
             className="text-slate-400 text-xs flex flex-wrap gap-x-1.5"
           >
-            <span className="text-slate-300">{line.resourceLabel}</span>
-            <span>· {formatResourceQuantity(line.quantityScu)} SCU</span>
+            <span className={resourceLabelClassName(line.resourceKey)}>{line.resourceLabel}</span>
+            <span>
+              · {formatQuantityForResource(line.resourceKey, line.quantityScu)}{' '}
+              {resourceQuantityUnitLabel(line.resourceKey)}
+            </span>
             <span>
               ·{' '}
               {formatResourceOrderQualityLabel(

@@ -2,7 +2,7 @@
   "name": "dumpers-repo",
   "private": true,
   "version": "1.0.0",
-  "dfpEngineVersion": "1.1.0-type-modifiers",
+  "dfpEngineVersion": "1.2.0-uex-anchors",
   "license": "LicenseRef-Dumpers-Repo-Franchise",
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "lint": "eslint src",
     "fetch-blueprints": "node scripts/fetch-blueprints.mjs",
+    "enrich-blueprints": "node scripts/enrich-blueprint-acquisition.mjs",
     "validate-blueprints": "node scripts/validate-blueprints.mjs"
   },
   "dependencies": {

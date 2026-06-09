@@ -1,3 +1,5 @@
+import { getMissionRepInfo } from './missionAcquisition'
+
 export interface RewardMission {
   mission: string
   chance?: number
@@ -17,6 +19,11 @@ export interface MissionListEntry {
   linkedBlueprintIds: string[]
   linkedBlueprintNames: string[]
   unacquiredBlueprintIds: string[]
+  repMin?: number | null
+  repMax?: number | null
+  minReputation?: number | null
+  minStandingName?: string | null
+  dropChance?: number | null
 }
 
 export interface MissionGiverGroup {
@@ -55,14 +62,14 @@ export function buildMissionList(
       const key = missionKey(mission)
       let entry = missionMap.get(key)
       if (!entry) {
-        entry = {
+        entry = attachMissionRep({
           missionKey: key,
           mission,
           giver: parseMissionGiver(mission),
           linkedBlueprintIds: [],
           linkedBlueprintNames: [],
           unacquiredBlueprintIds: [],
-        }
+        }, reward.chance)
         missionMap.set(key, entry)
       }
 
@@ -106,6 +113,26 @@ export interface TargetBlueprintMissionOption {
   missionKey: string
   mission: string
   giver: string
+  repMin?: number | null
+  repMax?: number | null
+  minReputation?: number | null
+  minStandingName?: string | null
+  dropChance?: number | null
+}
+
+function attachMissionRep<T extends { mission: string }>(
+  entry: T,
+  dropChance?: number | null
+): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance'> {
+  const rep = getMissionRepInfo(entry.mission)
+  return {
+    ...entry,
+    repMin: rep.repMin,
+    repMax: rep.repMax,
+    minReputation: rep.minReputation,
+    minStandingName: rep.minStandingName,
+    dropChance: dropChance ?? null,
+  }
 }
 
 export function getMissionsForBlueprint(
@@ -125,11 +152,16 @@ export function getMissionsForBlueprint(
     if (seen.has(key)) continue
     seen.add(key)
 
-    options.push({
-      missionKey: key,
-      mission,
-      giver: parseMissionGiver(mission),
-    })
+    options.push(
+      attachMissionRep(
+        {
+          missionKey: key,
+          mission,
+          giver: parseMissionGiver(mission),
+        },
+        reward.chance
+      )
+    )
   }
 
   return options.sort((a, b) => a.mission.localeCompare(b.mission))

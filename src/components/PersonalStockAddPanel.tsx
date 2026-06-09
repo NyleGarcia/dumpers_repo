@@ -1,10 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import { DEFAULT_STOCK_QUALITY, stockQualityTiersForResource } from '../config/dfp'
+import {
+  isHarvestResource,
+  resourceLabelClassName,
+  resourceQuantityUnitLabel,
+} from '../config/resourceTypes'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { addPersonalInventoryLine, type BlueprintResourceRow } from '../lib/operations'
 import ResourceQuantityInput from './ResourceQuantityInput'
-import { formatResourceQuantity, parseResourceQuantity } from '../lib/resourceQuantity'
+import {
+  formatQuantityForResource,
+  parseQuantityForResource,
+} from '../lib/resourceQuantity'
 
 interface PersonalStockAddPanelProps {
   userId: string
@@ -52,6 +60,8 @@ export default function PersonalStockAddPanel({
     [resourceKey, selectedLabel]
   )
   const selectedIsSalvage = qualityTiers.length === 1 && qualityTiers[0] === SALVAGE_ORDER_MIN_QUALITY
+  const selectedIsHarvest = resourceKey ? isHarvestResource(resourceKey) : false
+  const qtyUnit = resourceKey ? resourceQuantityUnitLabel(resourceKey) : 'SCU'
 
   useEffect(() => {
     if (selectedIsSalvage) setQuality(String(SALVAGE_ORDER_MIN_QUALITY))
@@ -61,7 +71,7 @@ export default function PersonalStockAddPanel({
   const lineExists = lineKey ? existingKeys.has(lineKey) : false
 
   const handleAdd = async () => {
-    const qty = parseResourceQuantity(quantity)
+    const qty = parseQuantityForResource(resourceKey, quantity)
     if (!resourceKey || qty == null || qty <= 0) {
       onError?.('Pick a resource, quality tier, and quantity greater than 0')
       return
@@ -141,16 +151,25 @@ export default function PersonalStockAddPanel({
         )}
 
         <ResourceQuantityInput
+          resourceKey={resourceKey || undefined}
           value={quantity}
           onValueChange={setQuantity}
-          placeholder="SCU"
+          placeholder={qtyUnit}
           className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
         />
       </div>
 
       {resourceKey && (
         <p className="text-slate-400 text-xs">
-          {selectedLabel} · {selectedIsSalvage ? 'Q0 (salvage)' : `Q${quality}`}
+          <span className={resourceKey ? resourceLabelClassName(resourceKey) : ''}>
+            {selectedLabel}
+          </span>{' '}
+          ·{' '}
+          {selectedIsSalvage
+            ? 'Q0 (salvage)'
+            : selectedIsHarvest
+              ? 'Harvest'
+              : `Q${quality}`}
           {lineExists
             ? ' — adds to your existing card'
             : ' — creates a new card'}
@@ -166,7 +185,7 @@ export default function PersonalStockAddPanel({
         {submitting
           ? 'Adding...'
           : lineExists
-            ? `Add ${formatResourceQuantity(parseResourceQuantity(quantity) ?? 0)} SCU to card`
+            ? `Add ${formatQuantityForResource(resourceKey, parseQuantityForResource(resourceKey, quantity) ?? 0)} ${qtyUnit} to card`
             : 'Create stock card'}
       </button>
     </div>

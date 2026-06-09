@@ -2,8 +2,85 @@ import React, { useMemo } from 'react'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
+import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
+import { resolveIsOrderable } from '../lib/blueprintOrderable'
 import { buildMissionList, getMissionsForBlueprint } from '../lib/missions'
+import {
+  formatBlueprintUnlockBadge,
+  formatRepReward,
+  formatStandingRequirement,
+  getBlueprintUnlockInfo,
+} from '../lib/missionAcquisition'
+
+function formatDropChance(chance: number | null | undefined): string | null {
+  if (chance == null || chance >= 1) return null
+  return `${Math.round(chance * 100)}% BP drop`
+}
+
+function MissionMetaLine({
+  repMin,
+  repMax,
+  minStandingName,
+  minReputation,
+  dropChance,
+  unlockMinReputation,
+  unlockStandingName,
+}: {
+  repMin?: number | null
+  repMax?: number | null
+  minStandingName?: string | null
+  minReputation?: number | null
+  dropChance?: number | null
+  unlockMinReputation?: number | null
+  unlockStandingName?: string | null
+}) {
+  const repText = formatRepReward(repMin ?? null, repMax ?? null)
+  const requiresText = formatStandingRequirement(minStandingName ?? null, minReputation ?? null)
+  const dropText = formatDropChance(dropChance)
+  const showRequires =
+    requiresText &&
+    (unlockMinReputation == null ||
+      unlockStandingName == null ||
+      minReputation !== unlockMinReputation ||
+      minStandingName !== unlockStandingName)
+
+  if (!repText && !showRequires && !dropText) {
+    return <p className="text-[10px] text-slate-600 mt-0.5">Rep data unavailable</p>
+  }
+
+  return (
+    <p className="text-[10px] text-slate-500 mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5">
+      {repText && <span className="text-emerald-400/90">{repText}</span>}
+      {showRequires && <span>Requires: {requiresText}</span>}
+      {dropText && <span className="text-amber-400/80">{dropText}</span>}
+    </p>
+  )
+}
+
+function BlueprintUnlockBadge({
+  blueprintId,
+  isReward,
+}: {
+  blueprintId: string
+  isReward?: boolean
+}) {
+  const info = getBlueprintUnlockInfo(blueprintId)
+  const label = formatBlueprintUnlockBadge(blueprintId, isReward)
+  const known = info.unlockMinReputation != null || info.isAvailableByDefault
+
+  return (
+    <span
+      className={`inline-block text-[10px] font-medium px-1.5 py-0.5 rounded border ${
+        known
+          ? 'text-purple-300 border-purple-500/40 bg-purple-950/30'
+          : 'text-slate-500 border-slate-600/40 bg-slate-900/40'
+      }`}
+    >
+      {label}
+    </span>
+  )
+}
 
 function MissionChecklistGroups({
   groups,
@@ -37,6 +114,13 @@ function MissionChecklistGroups({
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-slate-200">{mission.mission}</p>
+                    <MissionMetaLine
+                      repMin={mission.repMin}
+                      repMax={mission.repMax}
+                      minStandingName={mission.minStandingName}
+                      minReputation={mission.minReputation}
+                      dropChance={mission.dropChance}
+                    />
                     <p className="text-xs text-slate-500 mt-1">
                       Waiting on: {mission.unacquiredBlueprintIds.length} blueprint
                       {mission.unacquiredBlueprintIds.length === 1 ? '' : 's'}
@@ -62,6 +146,7 @@ function MissionChecklistGroups({
 export default function TargetsRoute() {
   const { acquiredBlueprints, isApproved } = useAuth()
   const { data: blueprints = [] } = useBlueprintData()
+  const { overridesMap } = useBlueprintOrderOverrides()
   const {
     targetIds,
     missionPrefs,
@@ -74,7 +159,7 @@ export default function TargetsRoute() {
     isMissionOnChecklist,
     targetCount,
     refresh,
-  } = useTargetList()
+  } = useTargetList(overridesMap)
 
   const acquiredSet = useMemo(
     () => new Set(Object.keys(acquiredBlueprints).filter((k) => acquiredBlueprints[k])),
@@ -173,6 +258,7 @@ export default function TargetsRoute() {
                   acquiredSet
                 )
                 const addableMissions = missions.filter((m) => !isMissionOnChecklist(m.missionKey))
+                const unlockInfo = getBlueprintUnlockInfo(bp.file)
 
                 return (
                   <div
@@ -180,7 +266,15 @@ export default function TargetsRoute() {
                     className="bg-slate-900/50 border border-slate-700 rounded-xl overflow-hidden"
                   >
                     <div className="px-3 py-2.5 bg-slate-800/80 border-b border-slate-700 flex items-start justify-between gap-2">
-                      <p className="text-sm font-semibold text-white leading-snug">{bp.blueprintName}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-white leading-snug">{bp.blueprintName}</p>
+                        <div className="mt-1">
+                          <BlueprintUnlockBadge
+                            blueprintId={bp.file}
+                            isReward={resolveIsOrderable(bp, overridesMap)}
+                          />
+                        </div>
+                      </div>
                       <div className="flex flex-col items-end gap-1 shrink-0">
                         {addableMissions.length > 0 && (
                           <button
@@ -227,6 +321,15 @@ export default function TargetsRoute() {
                                 }
                               >
                                 <p className="text-xs text-slate-300 leading-snug">{m.mission}</p>
+                                <MissionMetaLine
+                                  repMin={m.repMin}
+                                  repMax={m.repMax}
+                                  minStandingName={m.minStandingName}
+                                  minReputation={m.minReputation}
+                                  dropChance={m.dropChance}
+                                  unlockMinReputation={unlockInfo.unlockMinReputation}
+                                  unlockStandingName={unlockInfo.unlockStandingName}
+                                />
                               </button>
                             </li>
                           )

@@ -6,6 +6,7 @@ import {
   type BlueprintWithSlots,
   type ExtractedBlueprintResource,
 } from './blueprintResources'
+import { validateOrderBlueprintIds } from './blueprintOrderable'
 import {
   addResourceQuantities,
   fromMilliScu,
@@ -543,9 +544,18 @@ export async function createCustomOrder(input: {
   blueprints: CustomOrderBlueprintInput[]
   resources: CustomOrderResourceInput[]
   items: { resourceKey: string; quantity: number }[]
+  orderOverridesMap?: Record<string, boolean>
 }): Promise<{ data?: CustomOrder; error?: string }> {
   if (input.blueprints.length === 0 && input.resources.length === 0) {
     return { error: 'Add at least one blueprint or resource to the order' }
+  }
+
+  const orderCheck = validateOrderBlueprintIds(
+    input.blueprints.map((bp) => bp.blueprintId),
+    input.orderOverridesMap ?? {}
+  )
+  if (!orderCheck.ok) {
+    return { error: 'This blueprint is not available for orders' }
   }
 
   const firstBp = input.blueprints[0]
@@ -639,9 +649,18 @@ export async function updateCustomOrderRequester(input: {
   blueprints: CustomOrderBlueprintInput[]
   resources: CustomOrderResourceInput[]
   items: { resourceKey: string; quantity: number }[]
+  orderOverridesMap?: Record<string, boolean>
 }): Promise<{ error?: string }> {
   if (input.blueprints.length === 0 && input.resources.length === 0) {
     return { error: 'Add at least one blueprint or resource to the order' }
+  }
+
+  const orderCheck = validateOrderBlueprintIds(
+    input.blueprints.map((bp) => bp.blueprintId),
+    input.orderOverridesMap ?? {}
+  )
+  if (!orderCheck.ok) {
+    return { error: 'This blueprint is not available for orders' }
   }
 
   const firstBp = input.blueprints[0]

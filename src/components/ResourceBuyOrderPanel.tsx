@@ -4,6 +4,11 @@ import { Link } from '@tanstack/react-router'
 import BlueprintTypeahead from './BlueprintTypeahead'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
 import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
+import {
+  isHarvestResource,
+  resourceLabelClassName,
+  resourceQuantityUnitLabel,
+} from '../config/resourceTypes'
 import { DEFAULT_STOCK_QUALITY, ORDER_QUALITY_TIERS } from '../config/dfp'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
@@ -16,6 +21,7 @@ import {
   formatResourceOrderQualityLabel,
   isAmmoBlueprint,
 } from '../lib/dfp'
+import { canAddBlueprintToOrder } from '../lib/blueprintOrderable'
 import {
   buildOrderFulfillmentItems,
   buildOrderTitle,
@@ -33,7 +39,11 @@ import {
   type CustomOrder,
 } from '../lib/operations'
 import ResourceQuantityInput from './ResourceQuantityInput'
-import { formatResourceQuantity, parseResourceQuantity } from '../lib/resourceQuantity'
+import { resourceChipClassName } from '../config/resourceTypes'
+import {
+  formatQuantityForResource,
+  parseQuantityForResource,
+} from '../lib/resourceQuantity'
 
 interface CartBlueprintLine extends OrderBlueprintLine {
   cartKey: string
@@ -48,6 +58,7 @@ interface ResourceBuyOrderPanelProps {
   blueprints: BlueprintWithSlots[]
   catalog: BlueprintResourceRow[]
   labelMap: Record<string, string>
+  orderOverridesMap?: Record<string, boolean>
   editOrder?: CustomOrder | null
   onCancelEdit?: () => void
   onSubmitted?: () => void
@@ -63,6 +74,7 @@ export default function ResourceBuyOrderPanel({
   blueprints,
   catalog,
   labelMap,
+  orderOverridesMap = {},
   editOrder,
   onCancelEdit,
   onSubmitted,
@@ -125,10 +137,20 @@ export default function ResourceBuyOrderPanel({
 
   const selectedBlueprint = blueprintById.get(selectedBlueprintId) ?? null
   const selectedIsAmmo = selectedBlueprint ? isAmmoBlueprint(selectedBlueprint) : false
+  const selectedCanOrder = selectedBlueprint
+    ? canAddBlueprintToOrder(selectedBlueprint, orderOverridesMap)
+    : false
   const selectedResource = activeCatalog.find((r) => r.resource_key === resourceKey)
   const selectedResIsSalvage = selectedResource
     ? isSalvageResource(selectedResource.resource_key)
     : false
+  const selectedResIsHarvest = selectedResource
+    ? isHarvestResource(selectedResource.resource_key)
+    : false
+  const selectedResQtyUnit = selectedResource
+    ? resourceQuantityUnitLabel(selectedResource.resource_key)
+    : 'SCU'
+  const selectedResNoQuality = selectedResIsSalvage || selectedResIsHarvest
 
   const cartTotalDfp = useMemo(
     () =>
@@ -158,11 +180,15 @@ export default function ResourceBuyOrderPanel({
   }, [activeCatalog, resourceKey])
 
   useEffect(() => {
-    if (selectedResIsSalvage) setResQuality(String(SALVAGE_ORDER_MIN_QUALITY))
-  }, [resourceKey, selectedResIsSalvage])
+    if (selectedResNoQuality) setResQuality(String(SALVAGE_ORDER_MIN_QUALITY))
+  }, [resourceKey, selectedResNoQuality])
 
   const addBlueprint = () => {
     if (!selectedBlueprint?.file) return
+    if (!canAddBlueprintToOrder(selectedBlueprint, orderOverridesMap)) {
+      onError?.('This blueprint is not available for orders')
+      return
+    }
     const qty = Math.max(1, Number(bpQty) || 1)
     const selectedQuality = Number(bpQuality) || DEFAULT_STOCK_QUALITY
     const pricing = pricingForBlueprintLine(selectedBlueprint, selectedQuality, qty)
@@ -183,7 +209,7 @@ export default function ResourceBuyOrderPanel({
 
   const addResource = () => {
     if (!selectedResource) return
-    const qty = parseResourceQuantity(resQty)
+    const qty = parseQuantityForResource(selectedResource.resource_key, resQty)
     if (qty == null || qty <= 0) return
     const pricing = pricingForResourceLine(
       selectedResource.resource_key,
@@ -243,8 +269,16 @@ export default function ResourceBuyOrderPanel({
     }
 
     const result = isEditing
-      ? await updateCustomOrderRequester({ orderId: editOrder!.id, ...payload })
-      : await createCustomOrder({ requesterId: userId, ...payload })
+      ? await updateCustomOrderRequester({
+          orderId: editOrder!.id,
+          ...payload,
+          orderOverridesMap,
+        })
+      : await createCustomOrder({
+          requesterId: userId,
+          ...payload,
+          orderOverridesMap,
+        })
 
     setSubmitting(false)
     setShowTransferModal(false)
@@ -349,7 +383,8 @@ export default function ResourceBuyOrderPanel({
                   <button
                     type="button"
                     onClick={addBlueprint}
-                    className="py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
+                    disabled={!selectedCanOrder}
+                    className="py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg text-sm"
                   >
                     Add
                   </button>
@@ -375,8 +410,13 @@ export default function ResourceBuyOrderPanel({
                 Salvage — always Q0. No quality tier on RMC or construction material.
               </p>
             )}
-            <div className={`grid gap-2 ${selectedResIsSalvage ? 'grid-cols-2' : 'grid-cols-3'}`}>
-              {!selectedResIsSalvage && (
+            {selectedResIsHarvest && (
+              <p className="text-slate-400 text-xs">
+                Harvest item — whole units only. Priced by farm effort, not quality tier.
+              </p>
+            )}
+            <div className={`grid gap-2 ${selectedResNoQuality ? 'grid-cols-2' : 'grid-cols-3'}`}>
+              {!selectedResNoQuality && (
                 <select
                   value={resQuality}
                   onChange={(e) => setResQuality(e.target.value)}
@@ -391,9 +431,10 @@ export default function ResourceBuyOrderPanel({
                 </select>
               )}
               <ResourceQuantityInput
+                resourceKey={selectedResource?.resource_key}
                 value={resQty}
                 onValueChange={setResQty}
-                placeholder="SCU"
+                placeholder={selectedResQtyUnit}
                 className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
               />
               <button
@@ -405,7 +446,9 @@ export default function ResourceBuyOrderPanel({
                 Add
               </button>
             </div>
-            {dfpDisplayEnabled && selectedResource && parseResourceQuantity(resQty) != null && (
+            {dfpDisplayEnabled &&
+              selectedResource &&
+              parseQuantityForResource(selectedResource.resource_key, resQty) != null && (
               <p className="text-amber-200/90 text-xs">
                 Material DFP:{' '}
                 {formatDfpLabel(
@@ -413,7 +456,7 @@ export default function ResourceBuyOrderPanel({
                     selectedResource.resource_key,
                     selectedResource.label,
                     Number(resQuality) || DEFAULT_STOCK_QUALITY,
-                    parseResourceQuantity(resQty)!
+                    parseQuantityForResource(selectedResource.resource_key, resQty)!
                   ).lineDfpAuec
                 )}
               </p>
@@ -451,7 +494,11 @@ export default function ResourceBuyOrderPanel({
                   className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40"
                 >
                   <span className="text-white">
-                    {line.resourceLabel} · {formatResourceQuantity(line.quantityScu)} SCU ·{' '}
+                    <span className={resourceLabelClassName(line.resourceKey)}>
+                      {line.resourceLabel}
+                    </span>{' '}
+                    · {formatQuantityForResource(line.resourceKey, line.quantityScu)}{' '}
+                    {resourceQuantityUnitLabel(line.resourceKey)} ·{' '}
                     {formatResourceOrderQualityLabel(
                       line.resourceKey,
                       line.resourceLabel,
@@ -524,10 +571,10 @@ export default function ResourceBuyOrderPanel({
             {fulfillmentPreview.map((item) => (
               <span
                 key={item.resourceKey}
-                className="px-2 py-1 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
+                className={`px-2 py-1 text-xs rounded border ${resourceChipClassName(item.resourceKey)}`}
               >
                 {getResourceLabel(item.resourceKey, labelMap)} ×{' '}
-                {formatResourceQuantity(item.quantity)}
+                {formatQuantityForResource(item.resourceKey, item.quantity)}
               </span>
             ))}
           </div>

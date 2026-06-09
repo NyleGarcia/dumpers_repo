@@ -18,7 +18,8 @@ import {
 import { canFulfillerArchive } from '../lib/orderArchive'
 import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
 import { orderTotalDfp, resolveOrderFulfillmentItems } from '../lib/orderPricing'
-import { formatResourceQuantity } from '../lib/resourceQuantity'
+import { resourceQuantityUnitLabel } from '../config/resourceTypes'
+import { formatQuantityForResource } from '../lib/resourceQuantity'
 import { useBlueprintData } from './blueprints'
 import {
   buyerReputationFromRow,
@@ -224,7 +225,7 @@ export default function FulfillmentRoute() {
       const available = quantityByKey[item.resourceKey] ?? 0
       if (available < item.quantity) {
         shortages.push(
-          `${getResourceLabel(item.resourceKey, labelMap)} (need ${formatResourceQuantity(item.quantity)} SCU, have ${formatResourceQuantity(available)} SCU)`
+          `${getResourceLabel(item.resourceKey, labelMap)} (need ${formatQuantityForResource(item.resourceKey, item.quantity)} ${resourceQuantityUnitLabel(item.resourceKey)}, have ${formatQuantityForResource(item.resourceKey, available)} ${resourceQuantityUnitLabel(item.resourceKey)})`
         )
       }
     }
@@ -594,11 +595,13 @@ export default function FulfillmentRoute() {
                                 : 'text-slate-400'
                             }`}
                           >
-                            {formatResourceQuantity(item.quantity)} SCU
+                            {formatQuantityForResource(item.resourceKey, item.quantity)}{' '}
+                            {resourceQuantityUnitLabel(item.resourceKey)}
                             {craftDeductInventory && (
                               <>
                                 {' '}
-                                needed · {formatResourceQuantity(available)} SCU in My Resources
+                                needed · {formatQuantityForResource(item.resourceKey, available)}{' '}
+                                {resourceQuantityUnitLabel(item.resourceKey)} in My Resources
                               </>
                             )}
                           </span>
@@ -799,7 +802,8 @@ export default function FulfillmentRoute() {
                             className="px-2 py-0.5 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
                           >
                             {getResourceLabel(item.resource_key, labelMap)} −
-                            {formatResourceQuantity(Number(item.quantity))} SCU
+                            {formatQuantityForResource(item.resource_key, Number(item.quantity))}{' '}
+                            {resourceQuantityUnitLabel(item.resource_key)}
                           </span>
                         ))}
                       </div>
