@@ -18,13 +18,13 @@ export default function SettingsToggle({
   saving = false,
 }: SettingsToggleProps) {
   return (
-    <label className={`flex items-start gap-3 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
+    <label className={`relative flex items-start gap-3 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
       <input
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         disabled={disabled || saving}
-        className="sr-only peer"
+        className="absolute opacity-0 w-0 h-0 peer"
       />
       <div
         className="mt-0.5 shrink-0 w-10 h-5 rounded-full bg-slate-700 border border-slate-600 transition-colors relative
