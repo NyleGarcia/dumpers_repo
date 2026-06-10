@@ -1,0 +1,261 @@
+{
+  "extractedAt": "2026-06-10T01:36:18.544Z",
+  "source": "StarStrings by MrKraken",
+  "stats": {
+    "totalMissions": 707,
+    "missionsWithStanding": 246,
+    "missionsWithBlueprints": 287,
+    "missionsWithRep": 687,
+    "uniqueBlueprints": 83,
+    "enrichedMissions": 0,
+    "enrichedBlueprints": 104
+  },
+  "standingLevels": {
+    "neutral": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "jr. contractor": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "jr contractor": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "junior contractor": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "contractor": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "sr. contractor": {
+      "minReputation": 5800,
+      "standingName": "Sr. Contractor"
+    },
+    "sr contractor": {
+      "minReputation": 5800,
+      "standingName": "Sr. Contractor"
+    },
+    "senior contractor": {
+      "minReputation": 5800,
+      "standingName": "Sr. Contractor"
+    },
+    "veteran contractor": {
+      "minReputation": 15000,
+      "standingName": "Veteran Contractor"
+    },
+    "head contractor": {
+      "minReputation": 38000,
+      "standingName": "Head Contractor"
+    }
+  },
+  "blueprintStandingMap": {
+    "r97 shotgun- monde arms- monde core- monde legs- monde helmet- monde arms hiro- monde core hiro- monde legs hiro- monde helmet hiro- r97 shotgun magazine (18 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "pulse laser pistol- pulse \"blacklist\" pistol- pulse \"rouge\" pistol- quartz energy smg- quartz \"deadfall\" energy smg- quartz \"black op\" energy smg- quartz \"lumen\" energy smg- quartz energy smg battery (45 cap)- pulse laser pistol battery (60 cap)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "colossus (quantum drive)- huracan (quantum drive)- agni (quantum drive)- defiant (powerplant)- endurance (powerplant)- sedulity (powerplant)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "fs-9 lmg- br-2 shotgun- gallant rifle- adp arms woodland- adp core- adp legs woodland- balor hch helmet- adp-mk4 arms woodland- adp-mk4 legs woodland- adp-mk4 core woodland- adp-mk4 helmet woodland- fs-9 magazine (75 cap)- br-2 shotgun magazine (12 cap)- gallant rifle battery (45 cap)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "charlie- fs-9 lmg- br-2 shotgun- gallant rifle- adp arms woodland- adp core- adp legs woodland- balor hch helmet- adp-mk4 arms woodland- adp-mk4 legs woodland- adp-mk4 core woodland- adp-mk4 helmet woodland- fs-9 magazine (75 cap)- br-2 shotgun magazine (12 cap)- gallant rifle battery (45 cap)[regional variants] example locations: pyro v, cluster mnk-833, fairo- p6-lr sniper rifle- a03 sniper rifle- cbh-3 helmet base- pab-1 arms woodland- pab-1 core woodland- pab-1 legs woodland- truedef-pro arms base- truedef-pro core base- argus helmet base- truedef-pro legs base- a03 sniper rifle magazine (15 cap)- p6-lr magazine (8 cap)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "p6-lr sniper rifle- a03 sniper rifle- cbh-3 helmet base- pab-1 arms woodland- pab-1 core woodland- pab-1 legs woodland- truedef-pro arms base- truedef-pro core base- argus helmet base- truedef-pro legs base- a03 sniper rifle magazine (15 cap)- p6-lr magazine (8 cap)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "karna rifle- artimex arms- artimex core- artimex legs- artimex helmet- karna rifle battery (35 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "cook, rab-mat, cluster hjs-232- karna \"brimstone\" rifle- artimex core lodestone- artimex arms lodestone- artimex legs lodestone- artimex helmet lodestone- karna rifle battery (35 cap)[regional variants] example locations: rat's nest, orbituary clinic, rab-alpha- karna rifle- artimex arms- artimex core- artimex legs- artimex helmet- karna rifle battery (35 cap)[regional variants] example locations: rab-victory, pyro v, gaslight clinic- karna rifle- artimex core canuto- artimex arms canuto- artimex legs canuto- artimex helmet canuto- karna rifle battery (35 cap)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "karna rifle- artimex core canuto- artimex arms canuto- artimex legs canuto- artimex helmet canuto- karna rifle battery (35 cap)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "karna \"fate\" rifle- artimex core (modified)- artimex arms (modified)- karna rifle battery (35 cap)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "karna \"brimstone\" rifle- artimex core lodestone- artimex arms lodestone- artimex legs lodestone- artimex helmet lodestone- karna rifle battery (35 cap)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "p8-sc smg- c54 smg- s71 rifle- orc-mkx arms woodland- orc-mkx legs woodland- orc-mkx core woodland- orc-mkx helmet woodland- orc-mkv arms woodland- orc-mkv legs woodland- orc-mkv core woodland- g-2 helmet woodland- p8-sc smg magazine (45 cap)- c54 smg magazine (50 cap)- s71 rifle magazine (30 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "shimmer (shield)- obscura (shield)- m3a cannon- m4a cannon- m5a cannon": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "fierell cascade (powerplant)- ultraflux (powerplant)- megaflux (powerplant)- c-788 cannon- tigerstrike t-19p- revenant gatling- draugar gatling": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "soniclite (powerplant)- cirrus (powerplant)- lightstrike i cannon- lightstrike ii cannon- lightstrike iii cannon": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "antium helmet jet- antium core maroon- antium legs maroon- antium helmet maroon- antium helmet moss camo- antium arms moss camo- antium core moss camo- antium legs moss camo": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "parallax energy assault rifle- antium arms- antium core- antium legs- antium helmet- parallax rifle battery (80 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "parallax \"sunstone\" energy assault rifle- antium arms jet- antium core jet- antium legs jet- parallax rifle battery (80 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "parallax \"shock trooper\" energy assault rifle- antium arms storm- antium core storm- antium legs storm- antium helmet storm- parallax rifle battery (80 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "parallax \"sanguine\" energy assault rifle- antium arms sand- antium core sand- antium legs sand- antium helmet sand- parallax rifle battery (80 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "lumin v smg- arrowhead sniper rifle- aves arms- aves core- aves legs- aves helmet- aves shrike core- aves shrike arms- aves shrike legs- aves shrike helmet- lumin v smg battery (45 cap)- arrowhead sniper rifle battery (16 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "pulse \"rouge\" pistol- testudo arms combustion- testudo core combustion- testudo legs combustion- testudo helmet combustion- pulse laser pistol battery (60 cap)- testudo backpack combustion": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "quartz \"lumen\" energy smg- testudo arms nightveil- testudo core nightveil- testudo legs nightveil- testudo helmet nightveil- quartz \"deadfall\" energy smg- testudo arms turfwar- testudo core turfwar- testudo legs turfwar- testudo helmet turfwar- quartz energy smg battery (45 cap)- testudo backpack turfwar- testudo backpack nightveil": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "custodian smg- custodian \"midnight\" smg- custodian \"scorched\" smg- arden-sl arms- arden-sl core- arden-sl legs- arden-sl helmet- custodian smg magazine (60 cap)[regional variants] example locations: hurston, arccorp, microtech- lumin v smg- inquisitor core black- inquisitor arms black- inquisitor legs black- morningstar helmet icefall- inquisitor core grey- inquisitor arms grey- inquisitor legs grey- lumin v smg battery (45 cap)[regional variants] example locations: nyx ii, nyx i, nyx system- r97 \"kismet\" shotgun- r97 \"righteous\" shotgun- monde arms delta camo- monde legs delta camo- monde core delta camo- monde helmet delta camo- monde helmet hemlock camo- monde legs hemlock camo- monde core hemlock camo- monde arms hemlock camo- r97 shotgun magazine (18 cap)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "atzkav sniper rifle- atzkav \"igniter\" sniper rifle- atzkav \"mirage\" sniper rifle- calico arms tactical- calico core tactical- calico legs tactical- calico helmet tactical- atzkav sniper rifle battery (8 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "925, rab-alpha, rab-tung- atzkav sniper rifle- atzkav \"igniter\" sniper rifle- atzkav \"mirage\" sniper rifle- calico arms tactical- calico core tactical- calico legs tactical- calico helmet tactical- atzkav sniper rifle battery (8 cap)[regional variants] example locations: ruin clinic, cluster dlo-486, rab-mat- yubarev pistol- yubarev \"mirage\" pistol- yubarev \"igniter\" pistol- dustup arms tactical- dustup core tactical- dustup legs tactical- dustup helmet tactical- yubarev pistol battery (10 cap)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "yubarev pistol- yubarev \"mirage\" pistol- yubarev \"igniter\" pistol- dustup arms tactical- dustup core tactical- dustup legs tactical- dustup helmet tactical- yubarev pistol battery (10 cap)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "560, patch city, patch city clinic- atzkav sniper rifle- atzkav \"igniter\" sniper rifle- atzkav \"mirage\" sniper rifle- calico arms tactical- calico core tactical- calico legs tactical- calico helmet tactical- atzkav sniper rifle battery (8 cap)[regional variants] example locations: ignis, rab-mat, rab-echo- yubarev pistol- yubarev \"mirage\" pistol- yubarev \"igniter\" pistol- dustup arms tactical- dustup core tactical- dustup legs tactical- dustup helmet tactical- yubarev pistol battery (10 cap)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "ravager-212 twin shotgun- ripper \"sunblock\" smg- dust devil armor arms- dust devil armor core- dust devil armor legs- manticore helmet- ravager-212 twin shotgun magazine (16 cap)- deadrig shotgun magazine (8 cap)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "scalpel sniper rifle- coda pistol- coda \"nighthawk\" pistol- coda \"big boss\" pistol- morozov-sh arms- morozov-sh core- morozov-sh legs- morozov-sh helmet- scalpel sniper rifle magazine (12 cap)- coda pistol magazine (6 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "devastator shotgun- devastator \"warhawk\" shotgun- devastator \"midnight\" shotgun- morozov-sh core thule- morozov-sh arms thule- morozov-sh legs thule- morozov-sh helmet thule- devastator shotgun battery (12 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "roth, rab-ignition- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: rat's nest, rab-charlie, starlight service station- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: adir, cluster fsn-704, rab-helio- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: rab-mat, rab-cook, terminus- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "102, rab-bravo, rab-roth- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: bloom, rab-charlie, rat's nest clinic- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: ignis, vuur, adir- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: ruin clinic, rab-lynx, rab-ion- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "tung, rab-kilo, monox- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: orbituary clinic, rab-york, rab-charlie- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: pyro iv, adir, rab-delta- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: rab-cook, rab-ion, ruin station- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "november, rab-foxtrot- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: orbituary, rat's nest clinic, rab-ultra- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: gaslight, cluster kke-717, rab-helio- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: cluster emm-567, rab-cook, terminus- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "tung, checkmate clinic, rab-foxtrot- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: rab-gulf, orbituary clinic, starlight service station- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: rab-point, gaslight, pyro iv- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: terminus, rab-cook, cluster dlo-486- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "alpha, checkmate- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: rat's nest, cluster bgr-560, rab-bravo- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: vuur, adir, fairo- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: ruin clinic, rab-ultra, cluster dlo-486- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "alpha, rab-kilo- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: rat's nest, orbituary clinic, rab-gulf- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: pyro iv, cluster wdh-387, ignis- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: rab-mat, ruin station, rab-lynx- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "roth, patch city, rab-november- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: starlight clinic, rab-bravo, rab-ultra- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: rab-over, rab-quagmire, ignis- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: cluster emm-567, rab-lynx, terminus- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "foxtrot, monox- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: rab-york, rab-gulf, bloom- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: pyro v, rab-quagmire, adir- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: rab-ultra, terminus, cluster emm-567- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "november, cluster nbd-102- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: rab-whiskey, starlight service station, cluster caj-445- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: ignis, rab-zeta, cluster fsn-704- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: rab-ultra, cluster hjs-232, rab-lynx- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "bravo, rab-roth- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: cluster caj-445, orbituary, rab-ultra- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: rab-victory, cluster yka-011, cluster fsn-704- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: rab-lynx, ruin clinic, cluster mnk-833- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    },
+    "foxtrot, pyro i, rab-november- 9-series longsword cannon- 10-series greatsword cannon- 11-series broadsword cannon- sledge i mass driver cannon- strife mass driver cannon- sledge ii mass driver cannon- sledge iii mass driver cannon[regional variants] example locations: rab-bravo, bloom, cluster jwy-925- heatsafe (cooler)- heatsink (cooler)- dominance-1 scattergun- dominance-2 scattergun- dominance-3 scattergun[regional variants] example locations: adir, rab-quagmire, rab-sierra- vaporblock (cooler)- icebox (cooler)- nn-13 cannon- nn-14 cannon- nn-15 cannon[regional variants] example locations: terminus, cluster hjs-232, cluster emm-567- snowblind (cooler)- nightfall (cooler)- m6a cannon- m7a cannon- m8a cannon- singe cannon (s1)- singe cannon (s2)- singe cannon (s3)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "trawler scraper module (salvage mod)- abrade scraper module (salvage mod)- cinch scraper module (salvage mod)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "farstat-1-3, checkmate clinic- arclight \"herrero\" pistol- arclight \"desert shadow\" pistol- pembroke exploration suit- pembroke helmet- novikov exploration suit- novikov helmet- arclight pistol battery (30 cap)[regional variants] example locations: magda, hurston, ita- arclight \"midnight\" pistol- strata arms- strata core- strata legs- strata helmet shooting star- arclight pistol battery (30 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "arclight \"midnight\" pistol- strata arms- strata core- strata legs- strata helmet shooting star- arclight pistol battery (30 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "arclight \"herrero\" pistol- arclight \"desert shadow\" pistol- pembroke exploration suit- pembroke helmet- novikov exploration suit- novikov helmet- arclight pistol battery (30 cap)": {
+      "minReputation": 0,
+      "standingName": "Neutral"
+    },
+    "arclight \"stormfall\" pistol- arclight pistol- venture arms base- venture core base- venture legs base- horizon helmet base- arclight pistol battery (30 cap)[regional variants] example locations: cellin, daymar, yela- arclight \"nightstalker\" pistol- aril arms- aril core- aril legs- aril helmet- arclight \"warhawk\" pistol- arclight pistol battery (30 cap)[regional variants] example locations: nyx system, daymar, nyx- arbor mhv mining laser (mining laser)- s00 hofstede (mining laser)- lawson mining laser (mining laser)- s0 helix (mining laser)- surveyor-go (radar)- surveyor-lite (radar)- surveyor (radar)- surveyor-max (radar)[regional variants] example locations: nyx iii, nyx, nyx ii- pitman mining laser (mining laser)- hofstede-s1 mining laser (mining laser)- klein-s1 mining laser (mining laser)- helix i mining laser (mining laser)- impact i mining laser (mining laser)- arbor mh1 mining laser (mining laser)- lancet mh1 mining laser (mining laser)- broadspec-go (radar)- broadspec (radar)- broadspec-max (radar)[regional variants] example locations: crusader, cellin, daymar- arbor mh2 mining laser (mining laser)- lancet mh2 mining laser (mining laser)- hofstede-s2 mining laser (mining laser)- klein-s2 mining laser (mining laser)- helix ii mining laser (mining laser)- impact ii mining laser (mining laser)- fullspec-go (radar)- fullspec (radar)- fullspec-max (radar)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "arclight \"stormfall\" pistol- arclight pistol- venture arms base- venture core base- venture legs base- horizon helmet base- arclight pistol battery (30 cap)[regional variants] example locations: arial, hurston, ita- arclight \"nightstalker\" pistol- aril arms- aril core- aril legs- aril helmet- arclight \"warhawk\" pistol- arclight pistol battery (30 cap)[regional variants] example locations: aberdeen, terminus, magda- arbor mhv mining laser (mining laser)- s00 hofstede (mining laser)- lawson mining laser (mining laser)- s0 helix (mining laser)- surveyor-go (radar)- surveyor-lite (radar)- surveyor (radar)- surveyor-max (radar)[regional variants] example locations: pyro i, hurston, arial- pitman mining laser (mining laser)- hofstede-s1 mining laser (mining laser)- klein-s1 mining laser (mining laser)- helix i mining laser (mining laser)- impact i mining laser (mining laser)- arbor mh1 mining laser (mining laser)- lancet mh1 mining laser (mining laser)- broadspec-go (radar)- broadspec (radar)- broadspec-max (radar)[regional variants] example locations: pyro i, pyro, aberdeen- arbor mh2 mining laser (mining laser)- lancet mh2 mining laser (mining laser)- hofstede-s2 mining laser (mining laser)- klein-s2 mining laser (mining laser)- helix ii mining laser (mining laser)- impact ii mining laser (mining laser)- fullspec-go (radar)- fullspec (radar)- fullspec-max (radar)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "arclight \"stormfall\" pistol- arclight pistol- venture arms base- venture core base- venture legs base- horizon helmet base- arclight pistol battery (30 cap)[regional variants] example locations: crusader, microtech, nyx- arclight \"nightstalker\" pistol- aril arms- aril core- aril legs- aril helmet- arclight \"warhawk\" pistol- arclight pistol battery (30 cap)[regional variants] example locations: stanton system, crusader, microtech- arbor mhv mining laser (mining laser)- s00 hofstede (mining laser)- lawson mining laser (mining laser)- s0 helix (mining laser)- surveyor-go (radar)- surveyor-lite (radar)- surveyor (radar)- surveyor-max (radar)[regional variants] example locations: stanton system, nyx, arccorp- pitman mining laser (mining laser)- hofstede-s1 mining laser (mining laser)- klein-s1 mining laser (mining laser)- helix i mining laser (mining laser)- impact i mining laser (mining laser)- arbor mh1 mining laser (mining laser)- lancet mh1 mining laser (mining laser)- broadspec-go (radar)- broadspec (radar)- broadspec-max (radar)[regional variants] example locations: stanton system, hurston, nyx- arbor mh2 mining laser (mining laser)- lancet mh2 mining laser (mining laser)- hofstede-s2 mining laser (mining laser)- klein-s2 mining laser (mining laser)- helix ii mining laser (mining laser)- impact ii mining laser (mining laser)- fullspec-go (radar)- fullspec (radar)- fullspec-max (radar)": {
+      "minReputation": 2200,
+      "standingName": "Contractor"
+    },
+    "bp_craft_nozzle_fuelgiver_grin_nozzlefast (fuel nozzle)- marlin (fuel nozzle)- lindstrom (fuel nozzle)- bp_craft_nozzle_fuelgiver_grin_nozzleverysecure (fuel nozzle)- bp_craft_nozzle_fuelgiver_misc_nozzlestandard (fuel nozzle)- bendix (fuel nozzle)- torrez (fuel nozzle)- ezra (fuel nozzle)": {
+      "minReputation": 800,
+      "standingName": "Jr. Contractor"
+    }
+  }
+}

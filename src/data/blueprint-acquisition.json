@@ -8911,8 +8911,8 @@
       "wikiKey": "BP_CRAFT_klwe_pistol_energy_01_mag",
       "wikiUuid": "743efa96-8a73-40a7-ae6a-0890f34a3731",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 127,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 67,
@@ -8984,7 +8984,8 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\ammo\\laser\\bp_craft_klwe_rifle_energy_01_mag.json": {
       "blueprintName": "Gallant Rifle Battery (45 cap)",
@@ -9447,14 +9448,15 @@
       "wikiKey": "BP_CRAFT_ksar_smg_energy_01_mag",
       "wikiUuid": "c447b13a-2a5a-4183-8f30-d8073ed5ebaa",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Nyx"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\ammo\\laser\\bp_craft_volt_lmg_energy_01_mag.json": {
       "blueprintName": "Fresnel Energy LMG Battery (165 Cap)",
@@ -9502,8 +9504,8 @@
       "wikiKey": "BP_CRAFT_volt_pistol_energy_01_mag",
       "wikiUuid": "58f2fe15-955e-4725-8b5f-7a5249186966",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 12,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 10,
@@ -9518,15 +9520,16 @@
         "Intersec: Retrieve Additional Smuggler Intel",
         "Intersec: Recover Vanduul Corpses",
         "Intersec: Recover Vanduul Tech"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\ammo\\laser\\bp_craft_volt_smg_energy_01_mag.json": {
       "blueprintName": "Quartz Energy SMG Battery (45 cap)",
       "wikiKey": "BP_CRAFT_volt_smg_energy_01_mag",
       "wikiUuid": "eed8ab0d-ad9c-41e2-996f-14cdd263e100",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 8,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 6,
@@ -9537,7 +9540,8 @@
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground",
         "Intersec: Retrieve Additional Smuggler Intel"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\ammo\\plasma\\bp_craft_ksar_rifle_energy_01_mag.json": {
       "blueprintName": "Karna Rifle Battery (35 cap)",
@@ -12006,8 +12010,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_heavy_arms_02_04_01",
       "wikiUuid": "4db9360f-dd3e-4aff-8ada-f79897951cae",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 11,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -12016,7 +12020,8 @@
         "Deadsaints: Getting Our Gear Back",
         "Shubin: QV Breaker Station Mining Rights (Exclusive)",
         "Shubin: QV Breaker Station Mining Rights (Shared)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\heavy\\bp_craft_kap_combat_heavy_arms_02_05_01.json": {
       "blueprintName": "Monde Arms Daimyo",
@@ -12085,8 +12090,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_heavy_arms_02_07_01",
       "wikiUuid": "c14689b3-71ba-4386-be4a-9ed558d97d4b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 11,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -12095,7 +12100,8 @@
         "Deadsaints: Getting Our Gear Back",
         "Shubin: QV Breaker Station Mining Rights (Exclusive)",
         "Shubin: QV Breaker Station Mining Rights (Shared)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\heavy\\bp_craft_kap_combat_heavy_arms_02_08_01.json": {
       "blueprintName": "Monde Arms Hiro",
@@ -12442,8 +12448,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_heavy_core_02_04_01",
       "wikiUuid": "c52b8f11-6bdb-49df-ac05-87c3b8fd48be",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 11,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -12452,7 +12458,8 @@
         "Deadsaints: Getting Our Gear Back",
         "Shubin: QV Breaker Station Mining Rights (Exclusive)",
         "Shubin: QV Breaker Station Mining Rights (Shared)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\heavy\\bp_craft_kap_combat_heavy_core_02_05_01.json": {
       "blueprintName": "Monde Core Daimyo",
@@ -12521,8 +12528,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_heavy_core_02_07_01",
       "wikiUuid": "19bf2ec3-f114-4f27-982f-5236b35fe8c7",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 11,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -12531,7 +12538,8 @@
         "Deadsaints: Getting Our Gear Back",
         "Shubin: QV Breaker Station Mining Rights (Exclusive)",
         "Shubin: QV Breaker Station Mining Rights (Shared)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\heavy\\bp_craft_kap_combat_heavy_core_02_08_01.json": {
       "blueprintName": "Monde Core Hiro",
@@ -12878,8 +12886,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_heavy_helmet_02_04_01",
       "wikiUuid": "e4a0800f-6c5f-4d88-8328-bff2ab46dd34",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 11,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -12888,7 +12896,8 @@
         "Deadsaints: Getting Our Gear Back",
         "Shubin: QV Breaker Station Mining Rights (Exclusive)",
         "Shubin: QV Breaker Station Mining Rights (Shared)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\heavy\\bp_craft_kap_combat_heavy_helmet_02_05_01.json": {
       "blueprintName": "Monde Helmet Daimyo",
@@ -12957,8 +12966,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_heavy_helmet_02_07_01",
       "wikiUuid": "fc095af7-3ced-4533-970a-007788ca8274",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 11,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -12967,7 +12976,8 @@
         "Deadsaints: Getting Our Gear Back",
         "Shubin: QV Breaker Station Mining Rights (Exclusive)",
         "Shubin: QV Breaker Station Mining Rights (Shared)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\heavy\\bp_craft_kap_combat_heavy_helmet_02_08_01.json": {
       "blueprintName": "Monde Helmet Hiro",
@@ -13314,8 +13324,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_heavy_legs_02_04_01",
       "wikiUuid": "1eff502e-f190-4906-b974-32c117eb1971",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 11,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -13324,7 +13334,8 @@
         "Deadsaints: Getting Our Gear Back",
         "Shubin: QV Breaker Station Mining Rights (Exclusive)",
         "Shubin: QV Breaker Station Mining Rights (Shared)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\heavy\\bp_craft_kap_combat_heavy_legs_02_05_01.json": {
       "blueprintName": "Monde Legs Daimyo",
@@ -13393,8 +13404,8 @@
       "wikiKey": "BP_CRAFT_kap_combat_heavy_legs_02_07_01",
       "wikiUuid": "f43c9684-1a3a-4783-9469-4a61fe0ccc98",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 11,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -13403,7 +13414,8 @@
         "Deadsaints: Getting Our Gear Back",
         "Shubin: QV Breaker Station Mining Rights (Exclusive)",
         "Shubin: QV Breaker Station Mining Rights (Shared)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\heavy\\bp_craft_kap_combat_heavy_legs_02_08_01.json": {
       "blueprintName": "Monde Legs Hiro",
@@ -17219,22 +17231,23 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_arms_01_01_01",
       "wikiUuid": "d62c3e24-0b9a-4de9-8590-b22189fe030a",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Intersec: Retrieve Additional Smuggler Intel"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_arms_01_01_02.json": {
       "blueprintName": "Testudo Arms Combustion",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_arms_01_01_02",
       "wikiUuid": "db80f6c7-d423-43f9-8e1b-5479154a5446",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 5,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 5,
@@ -17244,15 +17257,16 @@
         "Intersec: Protect Vital Asset",
         "Intersec: Pilot Under Fire From Vanduul",
         "Intersec: Handle Vanduul Attack on Ship"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_arms_01_01_10.json": {
       "blueprintName": "Testudo Arms Nightveil",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_arms_01_01_10",
       "wikiUuid": "afd1907d-fdaa-454e-85b0-2d240df18e98",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17260,7 +17274,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_arms_01_01_15.json": {
       "blueprintName": "Testudo Arms Earthshake",
@@ -17282,8 +17297,8 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_arms_01_01_16",
       "wikiUuid": "bdba2cf6-6aac-44a4-a265-8f0bb977df34",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17291,7 +17306,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_arms_01_02_01.json": {
       "blueprintName": "Testudo Arms Purgatory Camo",
@@ -17326,22 +17342,23 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_backpack_01_01_01",
       "wikiUuid": "0dd198ba-20ab-4119-88bb-d7d2deaa147a",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Intersec: Retrieve Additional Smuggler Intel"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_backpack_01_01_02.json": {
       "blueprintName": "Testudo Backpack Combustion",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_backpack_01_01_02",
       "wikiUuid": "b60850f6-0aeb-4b3c-8104-49baa4a61aa7",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 5,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 5,
@@ -17351,15 +17368,16 @@
         "Intersec: Protect Vital Asset",
         "Intersec: Pilot Under Fire From Vanduul",
         "Intersec: Handle Vanduul Attack on Ship"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_backpack_01_01_10.json": {
       "blueprintName": "Testudo Backpack Nightveil",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_backpack_01_01_10",
       "wikiUuid": "d6a9f8c5-c859-48ae-9e68-163307e53100",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17367,7 +17385,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_backpack_01_01_15.json": {
       "blueprintName": "Testudo Backpack Earthshake",
@@ -17389,8 +17408,8 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_backpack_01_01_16",
       "wikiUuid": "cd7f1e71-fa55-4c5a-b794-1ca570561620",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17398,7 +17417,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_backpack_01_02_01.json": {
       "blueprintName": "Testudo Backpack Purgatory Camo",
@@ -17419,22 +17439,23 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_core_01_01_01",
       "wikiUuid": "82b03018-62d2-412e-b8c3-2471605e76fe",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Intersec: Retrieve Additional Smuggler Intel"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_core_01_01_02.json": {
       "blueprintName": "Testudo Core Combustion",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_core_01_01_02",
       "wikiUuid": "c1b8649b-0189-4b88-ac32-6c4f0ae90530",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 5,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 5,
@@ -17444,15 +17465,16 @@
         "Intersec: Protect Vital Asset",
         "Intersec: Pilot Under Fire From Vanduul",
         "Intersec: Handle Vanduul Attack on Ship"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_core_01_01_10.json": {
       "blueprintName": "Testudo Core Nightveil",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_core_01_01_10",
       "wikiUuid": "1c9bbc0c-843f-47c9-8f11-73ac3ad8db62",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17460,7 +17482,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_core_01_01_15.json": {
       "blueprintName": "Testudo Core Earthshake",
@@ -17482,8 +17505,8 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_core_01_01_16",
       "wikiUuid": "7bbbfb57-16a8-49d7-9ae3-cc1381fadf08",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17491,7 +17514,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_core_01_02_01.json": {
       "blueprintName": "Testudo Core Purgatory Camo",
@@ -17526,22 +17550,23 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_helmet_01_01_01",
       "wikiUuid": "f561bc08-cb5e-46c4-8441-111710560c68",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Intersec: Retrieve Additional Smuggler Intel"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_helmet_01_01_02.json": {
       "blueprintName": "Testudo Helmet Combustion",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_helmet_01_01_02",
       "wikiUuid": "5e5eb75b-e32e-450e-9ac3-c2f659c063ee",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 5,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 5,
@@ -17551,15 +17576,16 @@
         "Intersec: Protect Vital Asset",
         "Intersec: Pilot Under Fire From Vanduul",
         "Intersec: Handle Vanduul Attack on Ship"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_helmet_01_01_10.json": {
       "blueprintName": "Testudo Helmet Nightveil",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_helmet_01_01_10",
       "wikiUuid": "9fd63c83-089a-4914-91da-9f705517aee2",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17567,7 +17593,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_helmet_01_01_15.json": {
       "blueprintName": "Testudo Helmet Earthshake",
@@ -17589,8 +17616,8 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_helmet_01_01_16",
       "wikiUuid": "c1d12ada-3d8f-4248-a86a-20fa6a4f82c1",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17598,7 +17625,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_helmet_01_02_01.json": {
       "blueprintName": "Testudo Helmet Purgatory Camo",
@@ -17633,22 +17661,23 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_legs_01_01_01",
       "wikiUuid": "af5b9b3b-2b13-4ff7-8b2f-8d251a4fa272",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 1,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Intersec: Retrieve Additional Smuggler Intel"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_legs_01_01_02.json": {
       "blueprintName": "Testudo Legs Combustion",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_legs_01_01_02",
       "wikiUuid": "2bd88b63-f035-4d7d-992d-3bceafaacd29",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 5,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 5,
@@ -17658,15 +17687,16 @@
         "Intersec: Protect Vital Asset",
         "Intersec: Pilot Under Fire From Vanduul",
         "Intersec: Handle Vanduul Attack on Ship"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_legs_01_01_10.json": {
       "blueprintName": "Testudo Legs Nightveil",
       "wikiKey": "BP_CRAFT_qrt_combat_medium_legs_01_01_10",
       "wikiUuid": "2864d252-0e9f-461f-b81e-9c9eadb6a5a2",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17674,7 +17704,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_legs_01_01_15.json": {
       "blueprintName": "Testudo Legs Earthshake",
@@ -17696,8 +17727,8 @@
       "wikiKey": "BP_CRAFT_qrt_combat_medium_legs_01_01_16",
       "wikiUuid": "a62a4480-1c78-4418-b972-49eae09e9877",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 3,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -17705,7 +17736,8 @@
         "Intersec: Patrol Dangerous Sector",
         "Intersec: Patrol to Prevent Possible Attack",
         "Intersec: Patrol Vanduul Hunting Ground"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\combat\\medium\\bp_craft_qrt_combat_medium_legs_01_02_01.json": {
       "blueprintName": "Testudo Legs Purgatory Camo",
@@ -18476,8 +18508,8 @@
       "wikiKey": "BP_CRAFT_rsi_deckcrew_armor_light_helmet_01_01_01",
       "wikiUuid": "23451667-daed-476c-9eb8-b25e174929d6",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 56,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 29,
@@ -18511,15 +18543,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\cosmonaut\\light\\bp_craft_rsi_explorer_armor_light_arms_01_01_01.json": {
       "blueprintName": "Venture Arms",
       "wikiKey": "BP_CRAFT_rsi_explorer_armor_light_arms_01_01_01",
       "wikiUuid": "dabddb4f-e559-4991-ba80-95a3a70a1fef",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 56,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 29,
@@ -18553,15 +18586,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\cosmonaut\\light\\bp_craft_rsi_explorer_armor_light_core_01_01_01.json": {
       "blueprintName": "Venture Core",
       "wikiKey": "BP_CRAFT_rsi_explorer_armor_light_core_01_01_01",
       "wikiUuid": "1b1c4e5e-2a8b-4180-9857-1fe1b3322093",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 56,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 29,
@@ -18595,15 +18629,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\cosmonaut\\light\\bp_craft_rsi_explorer_armor_light_legs_01_01_01.json": {
       "blueprintName": "Venture Legs",
       "wikiKey": "BP_CRAFT_rsi_explorer_armor_light_legs_01_01_01",
       "wikiUuid": "f1b95cd0-5dde-4b32-9efb-dd87f2aa5567",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 56,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 29,
@@ -18637,7 +18672,8 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\engineer\\heavy\\bp_craft_omc_utility_heavy_arms_01_01_01.json": {
       "blueprintName": "Corbel Arms Smolder",
@@ -20088,8 +20124,8 @@
       "wikiKey": "BP_CRAFT_clda_env_armor_heavy_helmet_01_01_01",
       "wikiUuid": "d8ae387f-2e16-4080-b737-7fa301789573",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 6,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 6,
@@ -20100,15 +20136,16 @@
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\environment\\heavy\\bp_craft_clda_env_armor_heavy_suit_01_01_01.json": {
       "blueprintName": "Novikov Exploration Suit",
       "wikiKey": "BP_CRAFT_clda_env_armor_heavy_suit_01_01_01",
       "wikiUuid": "07332cfa-dc4d-4bf8-a9bf-032a0ae40e31",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 6,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 6,
@@ -20119,7 +20156,8 @@
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\environment\\heavy\\bp_craft_clda_env_heavy_backpack_01_02_01.json": {
       "blueprintName": "Novikov Backpack Smolder",
@@ -20218,8 +20256,8 @@
       "wikiKey": "BP_CRAFT_clda_utility_heavy_helmet_01_01_01",
       "wikiUuid": "40515a7b-6dd8-48e2-8b69-1afc0938b140",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 6,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 6,
@@ -20230,7 +20268,8 @@
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\environment\\heavy\\bp_craft_clda_utility_heavy_helmet_03_01_01.json": {
       "blueprintName": "Siebe Helmet",
@@ -20251,8 +20290,8 @@
       "wikiKey": "BP_CRAFT_clda_utility_heavy_suit_01_01_01",
       "wikiUuid": "7e181fa5-d8a6-4877-89b7-40c04c03d4a1",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 6,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 6,
@@ -20263,7 +20302,8 @@
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\explorer\\heavy\\bp_craft_ksar_armor_heavy_helmet_01_01_01.json": {
       "blueprintName": "Manticore Helmet",
@@ -25175,154 +25215,165 @@
       "wikiKey": "BP_CRAFT_rrs_specialist_light_arms_01_01_01",
       "wikiUuid": "18346364-4137-4abd-8fa7-b3d223aa3408",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Nyx"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\light\\bp_craft_rrs_specialist_light_core_01_01_01.json": {
       "blueprintName": "Arden-SL Core",
       "wikiKey": "BP_CRAFT_rrs_specialist_light_core_01_01_01",
       "wikiUuid": "419cb122-24f3-4d62-9fb5-4f0431958eaf",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Nyx"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\light\\bp_craft_rrs_specialist_light_helmet_01_01_01.json": {
       "blueprintName": "Arden-SL Helmet",
       "wikiKey": "BP_CRAFT_rrs_specialist_light_helmet_01_01_01",
       "wikiUuid": "34a54dbc-e45b-482b-a448-07e5f494ee4b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Nyx"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\light\\bp_craft_rrs_specialist_light_legs_01_01_01.json": {
       "blueprintName": "Arden-SL Legs",
       "wikiKey": "BP_CRAFT_rrs_specialist_light_legs_01_01_01",
       "wikiUuid": "e874d6df-2aee-4a43-91b4-cd77283cca7f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Nyx"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\medium\\bp_craft_outlaw_legacy_armor_medium_arms_01_01_11.json": {
       "blueprintName": "Inquisitor Arms Grey",
       "wikiKey": "BP_CRAFT_outlaw_legacy_armor_medium_arms_01_01_11",
       "wikiUuid": "cc19d747-8a42-44a2-95f9-b643e8a97026",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Stanton"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\medium\\bp_craft_outlaw_legacy_armor_medium_arms_01_01_12.json": {
       "blueprintName": "Inquisitor Arms Black",
       "wikiKey": "BP_CRAFT_outlaw_legacy_armor_medium_arms_01_01_12",
       "wikiUuid": "55e30d7e-527d-48c2-a991-faccd8000c66",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Stanton"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\medium\\bp_craft_outlaw_legacy_armor_medium_core_01_01_11.json": {
       "blueprintName": "Inquisitor Core Grey",
       "wikiKey": "BP_CRAFT_outlaw_legacy_armor_medium_core_01_01_11",
       "wikiUuid": "3fe2d83c-9490-44cf-8e66-0a8b2b9846c6",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Stanton"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\medium\\bp_craft_outlaw_legacy_armor_medium_core_01_01_12.json": {
       "blueprintName": "Inquisitor Core Black",
       "wikiKey": "BP_CRAFT_outlaw_legacy_armor_medium_core_01_01_12",
       "wikiUuid": "02703156-1d36-4aa8-913b-579ce01077e5",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Stanton"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\medium\\bp_craft_outlaw_legacy_armor_medium_legs_01_01_11.json": {
       "blueprintName": "Inquisitor Legs Grey",
       "wikiKey": "BP_CRAFT_outlaw_legacy_armor_medium_legs_01_01_11",
       "wikiUuid": "351a1860-0ff7-491a-a1b4-339fc99283ce",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Stanton"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\medium\\bp_craft_outlaw_legacy_armor_medium_legs_01_01_12.json": {
       "blueprintName": "Inquisitor Legs Black",
       "wikiKey": "BP_CRAFT_outlaw_legacy_armor_medium_legs_01_01_12",
       "wikiUuid": "23716f0d-967f-446a-b27d-c25062acde29",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Stanton"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\hunter\\medium\\bp_craft_outlaw_legacy_medium_armor_helmet_01_02_01.json": {
       "blueprintName": "Morningstar Helmet Icefall",
       "wikiKey": "BP_CRAFT_outlaw_legacy_medium_armor_helmet_01_02_01",
       "wikiUuid": "43b31eb9-4ca1-4df3-90f9-4accce8aadf9",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Stanton"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\medic\\bp_craft_vgl_utility_light_arms_01_04_01.json": {
       "blueprintName": "Chiron Arms Purgatory Camo",
@@ -25385,8 +25436,8 @@
       "wikiKey": "BP_CRAFT_fta_medium_helmet_01_01_01",
       "wikiUuid": "ba1fb9d7-b959-4f17-b7e0-90b892eaf501",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 10,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 7,
@@ -25398,15 +25449,16 @@
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\miner\\medium\\bp_craft_grin_utility_medium_arms_02_01_01.json": {
       "blueprintName": "Strata Arms",
       "wikiKey": "BP_CRAFT_grin_utility_medium_arms_02_01_01",
       "wikiUuid": "a5bd7711-4266-4712-bab3-0e439660748c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 10,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 7,
@@ -25418,15 +25470,16 @@
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\miner\\medium\\bp_craft_grin_utility_medium_core_02_01_01.json": {
       "blueprintName": "Strata Core",
       "wikiKey": "BP_CRAFT_grin_utility_medium_core_02_01_01",
       "wikiUuid": "a15468da-4d68-4f8b-a611-fa4829a70b73",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 10,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 7,
@@ -25438,15 +25491,16 @@
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\miner\\medium\\bp_craft_grin_utility_medium_legs_02_01_01.json": {
       "blueprintName": "Strata Legs",
       "wikiKey": "BP_CRAFT_grin_utility_medium_legs_02_01_01",
       "wikiUuid": "b0a52afc-765d-43e4-b3a4-98eafc71925a",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 10,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 7,
@@ -25458,7 +25512,8 @@
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: Lrg. Purchase Order: Hand Mined Materials",
         "Shubin: XL Purchase Order: Hand Mined Materials"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\radiation\\heavy\\bp_craft_clda_utility_heavy_suit_03_01_01.json": {
       "blueprintName": "Stirling Exploration Suit",
@@ -25479,8 +25534,8 @@
       "wikiKey": "BP_CRAFT_grin_utility_medium_arms_01_01_01",
       "wikiUuid": "6ec1ec0a-7865-4317-bc78-131a958c2300",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 55,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 25,
@@ -25510,15 +25565,16 @@
         "Shubin: Special Purchase Order: Mined Materials",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\salvager\\medium\\bp_craft_grin_utility_medium_core_01_01_01.json": {
       "blueprintName": "Aril Core",
       "wikiKey": "BP_CRAFT_grin_utility_medium_core_01_01_01",
       "wikiUuid": "5aa839d6-93ce-4919-a039-a3f15fb7a331",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 55,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 25,
@@ -25548,15 +25604,16 @@
         "Shubin: Special Purchase Order: Mined Materials",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\salvager\\medium\\bp_craft_grin_utility_medium_helmet_01_01_01.json": {
       "blueprintName": "Aril Helmet",
       "wikiKey": "BP_CRAFT_grin_utility_medium_helmet_01_01_01",
       "wikiUuid": "ffdede8d-4029-45d4-ae6e-582190efd062",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 55,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 25,
@@ -25586,15 +25643,16 @@
         "Shubin: Special Purchase Order: Mined Materials",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\salvager\\medium\\bp_craft_grin_utility_medium_legs_01_01_01.json": {
       "blueprintName": "Aril Legs",
       "wikiKey": "BP_CRAFT_grin_utility_medium_legs_01_01_01",
       "wikiUuid": "63ac18b1-83bd-4ec7-8580-b91e021a002b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 55,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 25,
@@ -25624,7 +25682,8 @@
         "Shubin: Special Purchase Order: Mined Materials",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\armour\\stealth\\light\\bp_craft_kap_combat_light_arms_01_01_01.json": {
       "blueprintName": "Geist Armor Arms",
@@ -27717,8 +27776,8 @@
       "wikiKey": "BP_CRAFT_klwe_pistol_energy_01",
       "wikiUuid": "84c3ded1-19f0-43bb-bd49-ceb517e7264b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 56,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 29,
@@ -27752,7 +27811,8 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\pistol\\bp_craft_klwe_pistol_energy_01_black01.json": {
       "blueprintName": "Arclight Midnight Pistol",
@@ -28962,8 +29022,8 @@
       "wikiKey": "BP_CRAFT_volt_pistol_energy_01",
       "wikiUuid": "f9de8917-a3a2-4471-974e-123b49910271",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 6,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -28972,7 +29032,8 @@
         "Rayari: Vital Resources Needed For Research",
         "Intersec: Recover Vanduul Corpses",
         "Intersec: Recover Vanduul Tech"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\pistol\\bp_craft_volt_pistol_energy_01_tint01.json": {
       "blueprintName": "Pulse Blacklist Pistol",
@@ -31202,14 +31263,15 @@
       "wikiKey": "BP_CRAFT_ksar_smg_energy_01",
       "wikiUuid": "41cf01a5-1600-4017-b0a8-62344627803c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 4,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 1,
       "unmatchedMissions": [
         "Bitzeros: Bleeding Edge Tech Nyx"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\smg\\bp_craft_ksar_smg_energy_01_black01.json": {
       "blueprintName": "Custodian Midnight SMG",
@@ -31293,8 +31355,8 @@
       "wikiKey": "BP_CRAFT_volt_smg_energy_01",
       "wikiUuid": "656bcd59-44ca-4812-a5f2-f1d2ec305571",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 800,
+      "unlockStandingName": "Jr. Contractor",
       "unlockingMissionsCount": 5,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 3,
@@ -31302,7 +31364,8 @@
         "Rayari: Need Resource for Research (Carinite, Saldynium, Jaclium)",
         "Rayari: Vital Resources Needed For Research",
         "Intersec: Retrieve Additional Smuggler Intel"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\fpsgear\\weapons\\smg\\bp_craft_volt_smg_energy_01_tint01.json": {
       "blueprintName": "Quartz Deadfall Energy SMG",
@@ -35100,8 +35163,8 @@
       "wikiKey": "BP_CRAFT_COOL_WCPR_S03_Draug_SCItem",
       "wikiUuid": "b74f7d57-dd8f-4295-a01d-794f899e4f40",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 6,
@@ -35112,7 +35175,8 @@
         "Foxwellenforcement: Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "Foxwellenforcement: Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "Foxwellenforcement: Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s03_elsen_scitem.json": {
       "blueprintName": "Elsen",
@@ -35157,8 +35221,8 @@
       "wikiKey": "BP_CRAFT_Mining_Laser_DRAK_Golem_S1",
       "wikiUuid": "bfb86b0e-d262-450f-a6ad-396ead48c40a",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -35204,15 +35268,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_arbor_s0.json": {
       "blueprintName": "Arbor MHV Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_GRIN_Arbor_S0",
       "wikiUuid": "93dbf337-be86-4c3b-80ba-015955b8b9b8",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 54,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 31,
@@ -35248,15 +35313,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_arbor_s1.json": {
       "blueprintName": "Arbor MH1 Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_GRIN_Arbor_S1",
       "wikiUuid": "3a4ba1b4-a688-4c5a-ba88-e82929d384b0",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -35302,15 +35368,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_arbor_s2.json": {
       "blueprintName": "Arbor MH2 Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_GRIN_Arbor_S2",
       "wikiUuid": "e8e41bb2-0fd2-47a3-99ea-5dbe2abe4b92",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -35333,15 +35400,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_lancet_s1.json": {
       "blueprintName": "Lancet MH1 Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_GRIN_Lancet_S1",
       "wikiUuid": "9105536e-507d-49c8-8d90-b6d778d95ce0",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -35387,15 +35455,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_lancet_s2.json": {
       "blueprintName": "Lancet MH2 Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_GRIN_Lancet_S2",
       "wikiUuid": "959c2d65-301a-4b8c-88f1-d72c617cd405",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -35418,15 +35487,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_hofstede_s0.json": {
       "blueprintName": "S00 Hofstede",
       "wikiKey": "BP_CRAFT_Mining_Laser_SHIN_Hofstede_S0",
       "wikiUuid": "35f1121b-c021-4230-b68d-93e2cd578320",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 54,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 31,
@@ -35462,15 +35532,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_hofstede_s1.json": {
       "blueprintName": "Hofstede-S1 Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_SHIN_Hofstede_S1",
       "wikiUuid": "ccbb801a-ad5e-4e15-a842-ad315f43dd4e",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -35516,15 +35587,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_hofstede_s2.json": {
       "blueprintName": "Hofstede-S2 Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_SHIN_Hofstede_S2",
       "wikiUuid": "0b6cf9a1-ef55-47ee-ab8d-c734d4f3b073",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -35547,15 +35619,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_klein_s0.json": {
       "blueprintName": "Lawson Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_SHIN_Klein_S0",
       "wikiUuid": "1cc19fca-84a3-4e7f-8084-350e7bb31d42",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 54,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 31,
@@ -35591,15 +35664,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_klein_s1.json": {
       "blueprintName": "Klein-S1 Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_SHIN_Klein_S1",
       "wikiUuid": "04f1af4c-e8ed-4b99-8413-61622bdfcb30",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -35645,15 +35719,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_klein_s2.json": {
       "blueprintName": "Klein-S2 Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_SHIN_Klein_S2",
       "wikiUuid": "6da71823-7178-4110-b8ff-79e9b22e11fa",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -35676,15 +35751,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_helix_s0.json": {
       "blueprintName": "S0 Helix",
       "wikiKey": "BP_CRAFT_Mining_Laser_THCN_Helix_S0",
       "wikiUuid": "7a37ef95-bc0f-4a3b-93a2-05b9f160ee31",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 54,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 31,
@@ -35720,15 +35796,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_helix_s1.json": {
       "blueprintName": "Helix I Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_THCN_Helix_S1",
       "wikiUuid": "7ba597a6-b5c2-4513-b38c-62acd4cb138e",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -35774,15 +35851,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_helix_s2.json": {
       "blueprintName": "Helix II Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_THCN_Helix_S2",
       "wikiUuid": "18f54363-88cd-420a-9ab3-979256db55a2",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -35805,15 +35883,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_impact_s1.json": {
       "blueprintName": "Impact I Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_THCN_Impact_S1",
       "wikiUuid": "20789dfa-a83c-4e00-8c43-e5828d65dfdd",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -35859,15 +35938,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_impact_s2.json": {
       "blueprintName": "Impact II Mining Laser",
       "wikiKey": "BP_CRAFT_Mining_Laser_THCN_Impact_S2",
       "wikiUuid": "46c4b9c1-b7a8-423d-af4a-2e32b199bc02",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -35890,7 +35970,8 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s01_fierellcascade_scitem.json": {
       "blueprintName": "Fierell Cascade",
@@ -36170,8 +36251,8 @@
       "wikiKey": "BP_CRAFT_POWR_JUST_S00_Defiant_SCItem",
       "wikiUuid": "3aad9a44-5f8c-44d0-b3a4-80f55602fade",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 26,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -36180,15 +36261,16 @@
         "Ftl: ENTRY LVL. COURIER NEEDED IN NYX",
         "Ftl: ENTRY LVL. COURIER NEEDED IN STANTON",
         "Ftl: JR. LVL. COURIER NEEDED IN STANTON"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s01_endurance_scitem.json": {
       "blueprintName": "Defiant",
       "wikiKey": "BP_CRAFT_POWR_JUST_S01_Endurance_SCItem",
       "wikiUuid": "bf79619f-f10b-4f57-bd79-59f308e85e0f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 26,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -36197,15 +36279,16 @@
         "Ftl: ENTRY LVL. COURIER NEEDED IN NYX",
         "Ftl: ENTRY LVL. COURIER NEEDED IN STANTON",
         "Ftl: JR. LVL. COURIER NEEDED IN STANTON"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s02_sedulity_scitem.json": {
       "blueprintName": "Sedulity",
       "wikiKey": "BP_CRAFT_POWR_JUST_S02_Sedulity_SCItem",
       "wikiUuid": "319ae36a-601c-47d5-b165-c71e9a624654",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 26,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -36214,7 +36297,8 @@
         "Ftl: ENTRY LVL. COURIER NEEDED IN NYX",
         "Ftl: ENTRY LVL. COURIER NEEDED IN STANTON",
         "Ftl: JR. LVL. COURIER NEEDED IN STANTON"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s00_durajet_scitem.json": {
       "blueprintName": "DuraJet",
@@ -37293,8 +37377,8 @@
       "wikiKey": "BP_CRAFT_QDRV_JUST_S01_Colossus_SCItem",
       "wikiUuid": "6ba5fce8-fac4-42f3-8606-0185b2823ee2",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 26,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -37303,7 +37387,8 @@
         "Ftl: ENTRY LVL. COURIER NEEDED IN NYX",
         "Ftl: ENTRY LVL. COURIER NEEDED IN STANTON",
         "Ftl: JR. LVL. COURIER NEEDED IN STANTON"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_raco_s01_spectre_scitem.json": {
       "blueprintName": "Spectre",
@@ -37438,8 +37523,8 @@
       "wikiKey": "BP_CRAFT_QDRV_JUST_S02_Huracan_SCItem",
       "wikiUuid": "126749c2-1e22-4e39-9c79-e04b7761bb3e",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 26,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -37448,7 +37533,8 @@
         "Ftl: ENTRY LVL. COURIER NEEDED IN NYX",
         "Ftl: ENTRY LVL. COURIER NEEDED IN STANTON",
         "Ftl: JR. LVL. COURIER NEEDED IN STANTON"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_raco_s02_bolt_scitem.json": {
       "blueprintName": "Bolt",
@@ -37583,8 +37669,8 @@
       "wikiKey": "BP_CRAFT_QDRV_JUST_S03_Agni_SCItem",
       "wikiUuid": "c8e37bc7-6bd5-4225-a823-8975e46765e2",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 26,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 4,
@@ -37593,7 +37679,8 @@
         "Ftl: ENTRY LVL. COURIER NEEDED IN NYX",
         "Ftl: ENTRY LVL. COURIER NEEDED IN STANTON",
         "Ftl: JR. LVL. COURIER NEEDED IN STANTON"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_wetk_s03_balandin_scitem.json": {
       "blueprintName": "Balandin",
@@ -37638,8 +37725,8 @@
       "wikiKey": "BP_CRAFT_RADR_CHCO_S00_BroadSpecGo",
       "wikiUuid": "b9380740-dc8d-41f5-b402-819d40230fba",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -37685,15 +37772,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s00_fullspecgo.json": {
       "blueprintName": "FullSpec-Go",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S00_FullSpecGo",
       "wikiUuid": "2bd502c9-cb83-4505-855e-0788b38325c9",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -37716,15 +37804,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s00_surveyorgo.json": {
       "blueprintName": "Surveyor-Go",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S00_SurveyorGo",
       "wikiUuid": "b2bb2f91-d5de-4ea0-882d-013032f8a655",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 54,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 31,
@@ -37760,15 +37849,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s01_surveyorlite.json": {
       "blueprintName": "Surveyor-Lite",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S01_SurveyorLite",
       "wikiUuid": "86654362-5907-4139-a706-8ba6dcfd207f",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 54,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 31,
@@ -37804,15 +37894,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s02_broadspec_lite.json": {
       "blueprintName": "BroadSpec",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S02_BroadSpec_Lite",
       "wikiUuid": "42097046-f08d-4202-aee0-5b5921ccacb9",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -37858,15 +37949,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s02_fullspec.json": {
       "blueprintName": "FullSpec",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S02_FullSpec",
       "wikiUuid": "ba0b2f00-7790-4bbf-ae83-2fafceb32d4b",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -37889,15 +37981,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s02_surveyor.json": {
       "blueprintName": "Surveyor",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S02_Surveyor",
       "wikiUuid": "47f1994d-373b-4ade-b03e-c62f1eaa3538",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 54,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 31,
@@ -37933,15 +38026,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s03_broudspec.json": {
       "blueprintName": "BroadSpec",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S03_BroudSpec",
       "wikiUuid": "394c971b-2056-4c5b-9503-0c6efbe595ff",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -37987,15 +38081,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s03_fullspecmax.json": {
       "blueprintName": "FullSpec-Max",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S03_FullSpecMax",
       "wikiUuid": "e239f19b-e846-411d-ac57-b877a7d30d76",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 40,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 18,
@@ -38018,15 +38113,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s03_surveyormax.json": {
       "blueprintName": "Surveyor-Max",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S03_SurveyorMax",
       "wikiUuid": "81f42807-1595-4dde-b88c-dc2578e8bf99",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 54,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 31,
@@ -38062,15 +38158,16 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s04_broadspecmax.json": {
       "blueprintName": "BroadSpec-Max",
       "wikiKey": "BP_CRAFT_RADR_CHCO_S04_BroadSpecMax",
       "wikiUuid": "2c09e00e-2250-479d-bbcd-713b1a411ce1",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 2200,
+      "unlockStandingName": "Contractor",
       "unlockingMissionsCount": 97,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 41,
@@ -38116,7 +38213,8 @@
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore",
         "Shubin: Mjr. Purchase Order: Ship Mined Ore"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s00_sens.json": {
       "blueprintName": "Sens",
@@ -38894,8 +38992,8 @@
       "wikiKey": "BP_CRAFT_Salvage_Modifier_Scraper_Large",
       "wikiUuid": "4e834db6-9b0e-461a-8465-ec90847bd7e5",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 30,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 12,
@@ -38912,15 +39010,16 @@
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\salvage\\bp_craft_salvage_modifier_scraper_medium.json": {
       "blueprintName": "Abrade Scraper Module",
       "wikiKey": "BP_CRAFT_Salvage_Modifier_Scraper_Medium",
       "wikiUuid": "22782818-beab-4e09-90c4-306c17192c06",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 30,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 12,
@@ -38937,15 +39036,16 @@
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\salvage\\bp_craft_salvage_modifier_scraper_salvation_medium.json": {
       "blueprintName": "Cinch Scraper Module",
       "wikiKey": "BP_CRAFT_Salvage_Modifier_Scraper_Salvation_Medium",
       "wikiUuid": "f35d8068-b232-43d5-a8bb-744a1295c79c",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 30,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 12,
@@ -38962,15 +39062,16 @@
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\salvage\\bp_craft_salvage_modifier_scraper_salvation_small.json": {
       "blueprintName": "Cinch Scraper Module",
       "wikiKey": "BP_CRAFT_Salvage_Modifier_Scraper_Salvation_Small",
       "wikiUuid": "b4160c11-75f9-4699-8aab-7b21abf75bc6",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 30,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 12,
@@ -38987,15 +39088,16 @@
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\salvage\\bp_craft_salvage_modifier_scraper_small.json": {
       "blueprintName": "Cinch Scraper Module",
       "wikiKey": "BP_CRAFT_Salvage_Modifier_Scraper_Small",
       "wikiUuid": "57a536c1-cd88-4b2c-8fab-5b871fffa458",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 30,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 12,
@@ -39012,7 +39114,8 @@
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "Adagio: Salvager Needed (Lrg. Special Order of RMC / UCM / Components)"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s01_mirage_scitem.json": {
       "blueprintName": "Mirage",
@@ -40210,8 +40313,8 @@
       "wikiKey": "BP_CRAFT_SHLD_SECO_S01_INK_SCItem",
       "wikiUuid": "d7566e60-ddc7-48a3-9288-d830b2fdb80d",
       "isAvailableByDefault": false,
-      "unlockMinReputation": null,
-      "unlockStandingName": null,
+      "unlockMinReputation": 0,
+      "unlockStandingName": "Neutral",
       "unlockingMissionsCount": 7,
       "matchedMissionCount": 0,
       "unmatchedMissionCount": 6,
@@ -40222,7 +40325,8 @@
         "Foxwellenforcement: Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "Foxwellenforcement: Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "Foxwellenforcement: Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees"
-      ]
+      ],
+      "_starstringsEnriched": true
     },
     "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s01_web_scitem.json": {
       "blueprintName": "WEB",
@@ -45027,5 +45131,11 @@
       }
     },
     "hockrowInferred": 5
+  },
+  "starstringsEnrichment": {
+    "enrichedAt": "2026-06-10T01:36:18.554Z",
+    "source": "StarStrings by MrKraken",
+    "missionsEnriched": 0,
+    "blueprintsEnriched": 104
   }
 }
