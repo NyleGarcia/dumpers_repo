@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { deleteAllUserNotifications, deleteUserNotification } from '../../lib/operations'
 import { useNotificationInbox } from '../../hooks/useNotificationInbox'
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 
 interface AppNotificationBellProps {
   disabled?: boolean
@@ -10,6 +11,8 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const { notifications, unreadCount, refresh, clearAll, removeOne } = useNotificationInbox(disabled)
+
+  useBodyScrollLock(open && !disabled)
 
   useEffect(() => {
     if (open && !disabled) void refresh()

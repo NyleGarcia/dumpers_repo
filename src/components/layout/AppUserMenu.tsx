@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import type { Profile } from '../../lib/supabase'
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 
 interface AppUserMenuProps {
   displayName: string
@@ -30,6 +31,8 @@ export default function AppUserMenu({
 }: AppUserMenuProps) {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
+
+  useBodyScrollLock(open)
 
   if (isPending) {
     return (

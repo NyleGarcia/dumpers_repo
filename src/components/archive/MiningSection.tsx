@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { useMiningData, type MiningData } from '../../hooks/useArchiveData'
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 
 const RARITY_ORDER = ['legendary', 'epic', 'rare', 'uncommon', 'common', 'handMineable']
 
@@ -423,6 +424,8 @@ function LocationCard({ location, ores }: { location: string; ores: MiningData[]
 }
 
 function LocationModal({ location, ores, onClose }: { location: string; ores: MiningData[]; onClose: () => void }) {
+  useBodyScrollLock(true)
+  
   const system = LOCATION_SYSTEMS[location]
   const systemColor = system ? SYSTEM_COLORS[system] : 'text-slate-400'
   

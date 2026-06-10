@@ -99,10 +99,7 @@ export default function Layout() {
       {showProfileSettings && <ProfileSettings onClose={() => setShowProfileSettings(false)} />}
       {showDbActions && <DbActionsModal onClose={() => setShowDbActions(false)} />}
       {showWelcomeModal && (
-        <WelcomeModal
-          onClose={() => setShowWelcomeModal(false)}
-          onOpenSettings={() => setShowProfileSettings(true)}
-        />
+        <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
       )}
     </>
   )
