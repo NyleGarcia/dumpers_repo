@@ -78,7 +78,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.isApproved
 
     case 'site_total':
-      return ctx.isApproved && !ctx.ghostMode
+      return ctx.isOfficerOrAbove && !ctx.ghostMode
 
     default:
       return false
