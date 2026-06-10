@@ -23,7 +23,7 @@ function slugifyGiver(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]/g, '')
 }
 
-function parseSccrafterMission(label: string): { giverSlug: string; title: string } {
+function parseMissionLabel(label: string): { giverSlug: string; title: string } {
   const colon = label.indexOf(':')
   if (colon <= 0) return { giverSlug: '', title: label.trim() }
   return {
@@ -64,7 +64,7 @@ export function normalizeMissionTitle(title: string): string {
 }
 
 export function missionLookupKey(missionLabel: string): string {
-  const { giverSlug, title } = parseSccrafterMission(missionLabel)
+  const { giverSlug, title } = parseMissionLabel(missionLabel)
   return `${giverSlug}|${normalizeMissionTitle(title)}`
 }
 

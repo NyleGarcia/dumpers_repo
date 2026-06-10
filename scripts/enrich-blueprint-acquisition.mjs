@@ -1,5 +1,5 @@
 /**
- * Enrich sccrafter Blueprints.json with Star Citizen Wiki acquisition data:
+ * Enrich Blueprints.json with Star Citizen Wiki acquisition data:
  * faction rep ladders, per-mission min_standing + reputation_amount, blueprint unlock tiers.
  *
  * API: https://api.star-citizen.wiki (60 req/min — rate-limited below)
@@ -55,7 +55,7 @@ function slugifyGiver(name) {
   return name.toLowerCase().replace(/[^a-z0-9]/g, '')
 }
 
-function parseSccrafterMission(label) {
+function parseMissionLabel(label) {
   const colon = label.indexOf(':')
   if (colon <= 0) return { giverSlug: '', title: label.trim() }
   return {
@@ -108,7 +108,7 @@ function missionTypeKey(giverSlug, title) {
 }
 
 function labelLookupKey(label) {
-  const { giverSlug, title } = parseSccrafterMission(label)
+  const { giverSlug, title } = parseMissionLabel(label)
   return missionLookupKey(giverSlug, title)
 }
 
@@ -280,7 +280,7 @@ async function main() {
       }, variants[0])
 
       missionsByLabel[lookupKey] = {
-        sccrafterLabel: label,
+        sourceLabel: label,
         lookupKey,
         missionTypeKey: typeKey,
         repMin: rep.min,

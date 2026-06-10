@@ -1,5 +1,5 @@
 {
-  "_comment": "Maps SCCrafters mission giver names to canonical faction slugs",
+  "_comment": "Maps mission giver names to canonical faction slugs",
   "_updated": "2026-06-09",
   
   "aliases": {

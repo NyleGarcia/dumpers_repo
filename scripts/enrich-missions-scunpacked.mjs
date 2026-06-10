@@ -203,20 +203,20 @@ async function main() {
         
         enrichmentLog.push({
           key,
-          label: mission.sccrafterLabel,
+          label: mission.sourceLabel,
           matched: best.title,
           minReputation: mission.minReputation,
           minStandingName: mission.minStandingName,
         })
         
-        console.log(`  ✓ ${mission.missionGiver}: ${mission.sccrafterLabel?.split(':')[1]?.trim() || key}`)
+        console.log(`  ✓ ${mission.missionGiver}: ${mission.sourceLabel?.split(':')[1]?.trim() || key}`)
         console.log(`    → ${best.minStanding.Name} (${best.minStanding.MinReputation} rep)`)
       }
     } else {
       notFound++
       enrichmentLog.push({
         key,
-        label: mission.sccrafterLabel,
+        label: mission.sourceLabel,
         matched: null,
         error: 'No matching contract found in scunpacked-data',
       })

@@ -92,7 +92,7 @@ async function main() {
   
   console.log(`Found ${missionsNeedingRep.length} missions without rep data in our system:\n`)
   missionsNeedingRep.forEach(m => {
-    console.log(`  - ${m.missionGiver}: ${m.sccrafterLabel?.split(':')[1]?.trim() || m.key}`)
+    console.log(`  - ${m.missionGiver}: ${m.sourceLabel?.split(':')[1]?.trim() || m.key}`)
   })
   
   // Fetch factions data from scunpacked-data

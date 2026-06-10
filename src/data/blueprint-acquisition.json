@@ -4677,7 +4677,7 @@
   },
   "missionsByLabel": {
     "citizensforprosperity|clear outlaw data center": {
-      "sccrafterLabel": "Citizensforprosperity: Clear Outlaw Data Center",
+      "sourceLabel": "Citizensforprosperity: Clear Outlaw Data Center",
       "lookupKey": "citizensforprosperity|clear outlaw data center",
       "missionTypeKey": "citizensforprosperity_clear_outlaw_data_center",
       "repMin": 75,
@@ -4689,7 +4689,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|destroy headhunter stolen data": {
-      "sccrafterLabel": "Citizensforprosperity: Destroy Headhunter Stolen Data",
+      "sourceLabel": "Citizensforprosperity: Destroy Headhunter Stolen Data",
       "lookupKey": "citizensforprosperity|destroy headhunter stolen data",
       "missionTypeKey": "citizensforprosperity_destroy_headhunter_stolen_data",
       "repMin": 75,
@@ -4701,7 +4701,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|take outlaws at [location] offline": {
-      "sccrafterLabel": "Citizensforprosperity: Take Outlaws at ~mission(Location) Offline",
+      "sourceLabel": "Citizensforprosperity: Take Outlaws at ~mission(Location) Offline",
       "lookupKey": "citizensforprosperity|take outlaws at [location] offline",
       "missionTypeKey": "citizensforprosperity_take_outlaws_at_loc_offline",
       "repMin": 150,
@@ -4713,7 +4713,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|limit outlaw operational capacity": {
-      "sccrafterLabel": "Citizensforprosperity: Limit Outlaw Operational Capacity",
+      "sourceLabel": "Citizensforprosperity: Limit Outlaw Operational Capacity",
       "lookupKey": "citizensforprosperity|limit outlaw operational capacity",
       "missionTypeKey": "citizensforprosperity_limit_outlaw_operational_capacity",
       "repMin": 150,
@@ -4725,7 +4725,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|destroy outlaw data servers": {
-      "sccrafterLabel": "Citizensforprosperity: Destroy Outlaw Data Servers",
+      "sourceLabel": "Citizensforprosperity: Destroy Outlaw Data Servers",
       "lookupKey": "citizensforprosperity|destroy outlaw data servers",
       "missionTypeKey": "citizensforprosperity_destroy_outlaw_data_servers",
       "repMin": 150,
@@ -4737,7 +4737,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|disable outlaw stronghold at [location]": {
-      "sccrafterLabel": "Citizensforprosperity: Disable Outlaw Stronghold at ~mission(Location)",
+      "sourceLabel": "Citizensforprosperity: Disable Outlaw Stronghold at ~mission(Location)",
       "lookupKey": "citizensforprosperity|disable outlaw stronghold at [location]",
       "missionTypeKey": "citizensforprosperity_disable_outlaw_stronghold_at_loc",
       "repMin": 25,
@@ -4749,7 +4749,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|eliminate fuel stores": {
-      "sccrafterLabel": "Citizensforprosperity: Eliminate Fuel Stores",
+      "sourceLabel": "Citizensforprosperity: Eliminate Fuel Stores",
       "lookupKey": "citizensforprosperity|eliminate fuel stores",
       "missionTypeKey": "citizensforprosperity_eliminate_fuel_stores",
       "repMin": 200,
@@ -4761,7 +4761,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|halt narcotics operation": {
-      "sccrafterLabel": "Citizensforprosperity: Halt Narcotics Operation",
+      "sourceLabel": "Citizensforprosperity: Halt Narcotics Operation",
       "lookupKey": "citizensforprosperity|halt narcotics operation",
       "missionTypeKey": "citizensforprosperity_halt_narcotics_operation",
       "repMin": 150,
@@ -4773,7 +4773,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|wipe headhunter data servers": {
-      "sccrafterLabel": "Citizensforprosperity: Wipe Headhunter Data Servers",
+      "sourceLabel": "Citizensforprosperity: Wipe Headhunter Data Servers",
       "lookupKey": "citizensforprosperity|wipe headhunter data servers",
       "missionTypeKey": "citizensforprosperity_wipe_headhunter_data_servers",
       "repMin": 75,
@@ -4785,7 +4785,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|destroy xenothreat data servers": {
-      "sccrafterLabel": "Citizensforprosperity: Destroy XenoThreat Data Servers",
+      "sourceLabel": "Citizensforprosperity: Destroy XenoThreat Data Servers",
       "lookupKey": "citizensforprosperity|destroy xenothreat data servers",
       "missionTypeKey": "citizensforprosperity_destroy_xenothreat_data_servers",
       "repMin": 300,
@@ -4797,7 +4797,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|destroy xenothreat logistic data": {
-      "sccrafterLabel": "Citizensforprosperity: Destroy XenoThreat Logistic Data",
+      "sourceLabel": "Citizensforprosperity: Destroy XenoThreat Logistic Data",
       "lookupKey": "citizensforprosperity|destroy xenothreat logistic data",
       "missionTypeKey": "citizensforprosperity_destroy_xenothreat_logistic_data",
       "repMin": 75,
@@ -4809,7 +4809,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|reduce outlaw's operational readiness": {
-      "sccrafterLabel": "Citizensforprosperity: Reduce Outlaw's Operational Readiness",
+      "sourceLabel": "Citizensforprosperity: Reduce Outlaw's Operational Readiness",
       "lookupKey": "citizensforprosperity|reduce outlaw's operational readiness",
       "missionTypeKey": "citizensforprosperity_reduce_outlaw_s_operational_readiness",
       "repMin": 300,
@@ -4821,7 +4821,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|assistance needed against xenothreat raid": {
-      "sccrafterLabel": "Citizensforprosperity: Assistance Needed Against XenoThreat Raid",
+      "sourceLabel": "Citizensforprosperity: Assistance Needed Against XenoThreat Raid",
       "lookupKey": "citizensforprosperity|assistance needed against xenothreat raid",
       "missionTypeKey": "citizensforprosperity_assistance_needed_against_xenothreat_raid",
       "repMin": 3200,
@@ -4833,7 +4833,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "bountyhuntersguild|verified bounty: [target]": {
-      "sccrafterLabel": "Bountyhuntersguild: Verified Bounty: ~mission(TargetName) at QV Breaker Station",
+      "sourceLabel": "Bountyhuntersguild: Verified Bounty: ~mission(TargetName) at QV Breaker Station",
       "lookupKey": "bountyhuntersguild|verified bounty: [target]",
       "missionTypeKey": "bountyhuntersguild_verified_bounty_target",
       "repMin": 50,
@@ -4845,7 +4845,7 @@
       "giverSlug": "bountyhuntersguild"
     },
     "citizensforprosperity|intercepted supply run": {
-      "sccrafterLabel": "Citizensforprosperity: Intercepted Supply Run",
+      "sourceLabel": "Citizensforprosperity: Intercepted Supply Run",
       "lookupKey": "citizensforprosperity|intercepted supply run",
       "missionTypeKey": "citizensforprosperity_intercepted_supply_run",
       "repMin": 100,
@@ -4857,7 +4857,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|recovering valuable supplies": {
-      "sccrafterLabel": "Citizensforprosperity: Recovering Valuable Supplies",
+      "sourceLabel": "Citizensforprosperity: Recovering Valuable Supplies",
       "lookupKey": "citizensforprosperity|recovering valuable supplies",
       "missionTypeKey": "citizensforprosperity_recovering_valuable_supplies",
       "repMin": 150,
@@ -4869,7 +4869,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|crucial supplies need retrieving": {
-      "sccrafterLabel": "Citizensforprosperity: Crucial Supplies Need Retrieving",
+      "sourceLabel": "Citizensforprosperity: Crucial Supplies Need Retrieving",
       "lookupKey": "citizensforprosperity|crucial supplies need retrieving",
       "missionTypeKey": "citizensforprosperity_crucial_supplies_need_retrieving",
       "repMin": 200,
@@ -4881,7 +4881,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|cargo shipment must be completed": {
-      "sccrafterLabel": "Citizensforprosperity: Cargo Shipment Must Be Completed",
+      "sourceLabel": "Citizensforprosperity: Cargo Shipment Must Be Completed",
       "lookupKey": "citizensforprosperity|cargo shipment must be completed",
       "missionTypeKey": "citizensforprosperity_cargo_shipment_must_be_completed",
       "repMin": 200,
@@ -4893,7 +4893,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|special recovery operation": {
-      "sccrafterLabel": "Citizensforprosperity: Special Recovery Operation",
+      "sourceLabel": "Citizensforprosperity: Special Recovery Operation",
       "lookupKey": "citizensforprosperity|special recovery operation",
       "missionTypeKey": "citizensforprosperity_special_recovery_operation",
       "repMin": 300,
@@ -4905,7 +4905,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|take headhunter stronghold offline": {
-      "sccrafterLabel": "Citizensforprosperity: Take Headhunter Stronghold Offline",
+      "sourceLabel": "Citizensforprosperity: Take Headhunter Stronghold Offline",
       "lookupKey": "citizensforprosperity|take headhunter stronghold offline",
       "missionTypeKey": "citizensforprosperity_take_headhunter_stronghold_offline",
       "repMin": 75,
@@ -4917,7 +4917,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|eradicate all traces of headhunter data": {
-      "sccrafterLabel": "Citizensforprosperity: Eradicate All Traces of Headhunter Data",
+      "sourceLabel": "Citizensforprosperity: Eradicate All Traces of Headhunter Data",
       "lookupKey": "citizensforprosperity|eradicate all traces of headhunter data",
       "missionTypeKey": "citizensforprosperity_eradicate_all_traces_of_headhunter_data",
       "repMin": 1500,
@@ -4929,7 +4929,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "headhunters|kill the king": {
-      "sccrafterLabel": "Headhunters: Kill the king",
+      "sourceLabel": "Headhunters: Kill the king",
       "lookupKey": "headhunters|kill the king",
       "missionTypeKey": "headhunters_kill_the_king",
       "repMin": 50,
@@ -4941,7 +4941,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|need someone taken out": {
-      "sccrafterLabel": "Headhunters: Need someone taken out",
+      "sourceLabel": "Headhunters: Need someone taken out",
       "lookupKey": "headhunters|need someone taken out",
       "missionTypeKey": "headhunters_need_someone_taken_out",
       "repMin": 25,
@@ -4953,7 +4953,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|need a cfp taken down": {
-      "sccrafterLabel": "Headhunters: Need a CFP taken down",
+      "sourceLabel": "Headhunters: Need a CFP taken down",
       "lookupKey": "headhunters|need a cfp taken down",
       "missionTypeKey": "headhunters_need_a_cfp_taken_down",
       "repMin": 75,
@@ -4965,7 +4965,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|green light on [target]": {
-      "sccrafterLabel": "Headhunters: Green light on ~mission(TargetName|Last)",
+      "sourceLabel": "Headhunters: Green light on ~mission(TargetName|Last)",
       "lookupKey": "headhunters|green light on [target]",
       "missionTypeKey": "headhunters_green_light_on_target",
       "repMin": 100,
@@ -4977,7 +4977,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|hit [enemy] at [location]": {
-      "sccrafterLabel": "Headhunters: Hit XenoThreat at ~mission(Location)",
+      "sourceLabel": "Headhunters: Hit XenoThreat at ~mission(Location)",
       "lookupKey": "headhunters|hit [enemy] at [location]",
       "missionTypeKey": "headhunters_hit_enemy_at_loc",
       "repMin": 200,
@@ -4989,7 +4989,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|head of the snake": {
-      "sccrafterLabel": "Headhunters: Head of the snake",
+      "sourceLabel": "Headhunters: Head of the snake",
       "lookupKey": "headhunters|head of the snake",
       "missionTypeKey": "headhunters_head_of_the_snake",
       "repMin": 1200,
@@ -5001,7 +5001,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|need a scalpel at [location]": {
-      "sccrafterLabel": "Headhunters: Need a scalpel at Carver's",
+      "sourceLabel": "Headhunters: Need a scalpel at Carver's",
       "lookupKey": "headhunters|need a scalpel at [location]",
       "missionTypeKey": "headhunters_need_a_scalpel_at_loc",
       "repMin": 1200,
@@ -5013,7 +5013,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|need a hit on the riviera": {
-      "sccrafterLabel": "Headhunters: Need a hit on the Riviera",
+      "sourceLabel": "Headhunters: Need a hit on the Riviera",
       "lookupKey": "headhunters|need a hit on the riviera",
       "missionTypeKey": "headhunters_need_a_hit_on_the_riviera",
       "repMin": 600,
@@ -5025,7 +5025,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|shot in the chaos": {
-      "sccrafterLabel": "Headhunters: Shot in the chaos",
+      "sourceLabel": "Headhunters: Shot in the chaos",
       "lookupKey": "headhunters|shot in the chaos",
       "missionTypeKey": "headhunters_shot_in_the_chaos",
       "repMin": 50,
@@ -5037,7 +5037,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|wanted: [target]": {
-      "sccrafterLabel": "Headhunters: Wanted: ~mission(TargetName)",
+      "sourceLabel": "Headhunters: Wanted: ~mission(TargetName)",
       "lookupKey": "headhunters|wanted: [target]",
       "missionTypeKey": "headhunters_wanted_target",
       "repMin": 600,
@@ -5049,7 +5049,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|xenothreat lieutenant needs some killing": {
-      "sccrafterLabel": "Headhunters: XenoThreat Lieutenant needs some killing",
+      "sourceLabel": "Headhunters: XenoThreat Lieutenant needs some killing",
       "lookupKey": "headhunters|xenothreat lieutenant needs some killing",
       "missionTypeKey": "headhunters_xenothreat_lieutenant_needs_some_killing",
       "repMin": 75,
@@ -5061,7 +5061,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|deep space hit": {
-      "sccrafterLabel": "Headhunters: Deep space hit",
+      "sourceLabel": "Headhunters: Deep space hit",
       "lookupKey": "headhunters|deep space hit",
       "missionTypeKey": "headhunters_deep_space_hit",
       "repMin": 50,
@@ -5073,7 +5073,7 @@
       "giverSlug": "headhunters"
     },
     "vaughn|they will be missed": {
-      "sccrafterLabel": "Vaughn: They Will Be Missed",
+      "sourceLabel": "Vaughn: They Will Be Missed",
       "lookupKey": "vaughn|they will be missed",
       "missionTypeKey": "vaughn_they_will_be_missed",
       "repMin": 4000,
@@ -5085,7 +5085,7 @@
       "giverSlug": "vaughn"
     },
     "vaughn|all things come to an end": {
-      "sccrafterLabel": "Vaughn: All Things Come To An End",
+      "sourceLabel": "Vaughn: All Things Come To An End",
       "lookupKey": "vaughn|all things come to an end",
       "missionTypeKey": "vaughn_all_things_come_to_an_end",
       "repMin": 1000,
@@ -5097,7 +5097,7 @@
       "giverSlug": "vaughn"
     },
     "vaughn|a challenging contract": {
-      "sccrafterLabel": "Vaughn: A Challenging Contract",
+      "sourceLabel": "Vaughn: A Challenging Contract",
       "lookupKey": "vaughn|a challenging contract",
       "missionTypeKey": "vaughn_a_challenging_contract",
       "repMin": 1000,
@@ -5109,7 +5109,7 @@
       "giverSlug": "vaughn"
     },
     "headhunters|need a hitter": {
-      "sccrafterLabel": "Headhunters: Need a hitter",
+      "sourceLabel": "Headhunters: Need a hitter",
       "lookupKey": "headhunters|need a hitter",
       "missionTypeKey": "headhunters_need_a_hitter",
       "repMin": 50,
@@ -5121,7 +5121,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|death and cargo": {
-      "sccrafterLabel": "Headhunters: Death and cargo",
+      "sourceLabel": "Headhunters: Death and cargo",
       "lookupKey": "headhunters|death and cargo",
       "missionTypeKey": "headhunters_death_and_cargo",
       "repMin": 150,
@@ -5133,7 +5133,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|a tricky tricky task": {
-      "sccrafterLabel": "Headhunters: A tricky tricky task",
+      "sourceLabel": "Headhunters: A tricky tricky task",
       "lookupKey": "headhunters|a tricky tricky task",
       "missionTypeKey": "headhunters_a_tricky_tricky_task",
       "repMin": 300,
@@ -5145,7 +5145,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|reputation management": {
-      "sccrafterLabel": "Headhunters: Reputation Management",
+      "sourceLabel": "Headhunters: Reputation Management",
       "lookupKey": "headhunters|reputation management",
       "missionTypeKey": "headhunters_reputation_management",
       "repMin": 25,
@@ -5157,7 +5157,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|looking for a little revenge": {
-      "sccrafterLabel": "Headhunters: Looking for a little revenge",
+      "sourceLabel": "Headhunters: Looking for a little revenge",
       "lookupKey": "headhunters|looking for a little revenge",
       "missionTypeKey": "headhunters_looking_for_a_little_revenge",
       "repMin": 100,
@@ -5169,7 +5169,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|back up needed at [location]": {
-      "sccrafterLabel": "Headhunters: Back up needed at outpost",
+      "sourceLabel": "Headhunters: Back up needed at outpost",
       "lookupKey": "headhunters|back up needed at [location]",
       "missionTypeKey": "headhunters_back_up_needed_at_loc",
       "repMin": 200,
@@ -5181,7 +5181,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|time to roll on cfp": {
-      "sccrafterLabel": "Headhunters: Time to roll on CFP",
+      "sourceLabel": "Headhunters: Time to roll on CFP",
       "lookupKey": "headhunters|time to roll on cfp",
       "missionTypeKey": "headhunters_time_to_roll_on_cfp",
       "repMin": 400,
@@ -5193,7 +5193,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|go on the warpath": {
-      "sccrafterLabel": "Headhunters: Go on the warpath",
+      "sourceLabel": "Headhunters: Go on the warpath",
       "lookupKey": "headhunters|go on the warpath",
       "missionTypeKey": "headhunters_go_on_the_warpath",
       "repMin": 400,
@@ -5205,7 +5205,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|hit on xenothreat command": {
-      "sccrafterLabel": "Headhunters: Hit on XenoThreat command",
+      "sourceLabel": "Headhunters: Hit on XenoThreat command",
       "lookupKey": "headhunters|hit on xenothreat command",
       "missionTypeKey": "headhunters_hit_on_xenothreat_command",
       "repMin": 400,
@@ -5217,7 +5217,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|a swift reprisal": {
-      "sccrafterLabel": "Headhunters: A Swift Reprisal",
+      "sourceLabel": "Headhunters: A Swift Reprisal",
       "lookupKey": "headhunters|a swift reprisal",
       "missionTypeKey": "headhunters_a_swift_reprisal",
       "repMin": 50,
@@ -5229,7 +5229,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|block xenothreat expansion": {
-      "sccrafterLabel": "Headhunters: Block XenoThreat Expansion",
+      "sourceLabel": "Headhunters: Block XenoThreat Expansion",
       "lookupKey": "headhunters|block xenothreat expansion",
       "missionTypeKey": "headhunters_block_xenothreat_expansion",
       "repMin": 200,
@@ -5241,7 +5241,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|the yard's under attack": {
-      "sccrafterLabel": "Headhunters: The Yard's under attack",
+      "sourceLabel": "Headhunters: The Yard's under attack",
       "lookupKey": "headhunters|the yard's under attack",
       "missionTypeKey": "headhunters_the_yard_s_under_attack",
       "repMin": 150,
@@ -5253,7 +5253,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|don't let windfall fall": {
-      "sccrafterLabel": "Headhunters: Don't let Windfall Fall",
+      "sourceLabel": "Headhunters: Don't let Windfall Fall",
       "lookupKey": "headhunters|don't let windfall fall",
       "missionTypeKey": "headhunters_don_t_let_windfall_fall",
       "repMin": 150,
@@ -5265,7 +5265,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|take back carvers ridge": {
-      "sccrafterLabel": "Headhunters: Take back Carvers Ridge",
+      "sourceLabel": "Headhunters: Take back Carvers Ridge",
       "lookupKey": "headhunters|take back carvers ridge",
       "missionTypeKey": "headhunters_take_back_carvers_ridge",
       "repMin": 150,
@@ -5277,7 +5277,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|halt xenothreat expansion": {
-      "sccrafterLabel": "Headhunters: Halt XenoThreat Expansion",
+      "sourceLabel": "Headhunters: Halt XenoThreat Expansion",
       "lookupKey": "headhunters|halt xenothreat expansion",
       "missionTypeKey": "headhunters_halt_xenothreat_expansion",
       "repMin": 150,
@@ -5289,7 +5289,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|[location] has been greenlit": {
-      "sccrafterLabel": "Headhunters: ~mission(Location) has been greenlit",
+      "sourceLabel": "Headhunters: ~mission(Location) has been greenlit",
       "lookupKey": "headhunters|[location] has been greenlit",
       "missionTypeKey": "headhunters_loc_has_been_greenlit",
       "repMin": 150,
@@ -5301,7 +5301,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|hitting a cfp site": {
-      "sccrafterLabel": "Headhunters: Hitting a CFP site",
+      "sourceLabel": "Headhunters: Hitting a CFP site",
       "lookupKey": "headhunters|hitting a cfp site",
       "missionTypeKey": "headhunters_hitting_a_cfp_site",
       "repMin": 50,
@@ -5313,7 +5313,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|turf war": {
-      "sccrafterLabel": "Headhunters: Turf War",
+      "sourceLabel": "Headhunters: Turf War",
       "lookupKey": "headhunters|turf war",
       "missionTypeKey": "headhunters_turf_war",
       "repMin": 200,
@@ -5325,7 +5325,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|deal with [enemy] at [location]": {
-      "sccrafterLabel": "Headhunters: Deal with Kopions at ~mission(Location)",
+      "sourceLabel": "Headhunters: Deal with Kopions at ~mission(Location)",
       "lookupKey": "headhunters|deal with [enemy] at [location]",
       "missionTypeKey": "headhunters_deal_with_enemy_at_loc",
       "repMin": 50,
@@ -5337,7 +5337,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|kill [enemy] at [location]": {
-      "sccrafterLabel": "Headhunters: Kill Kopions at ~mission(Location)",
+      "sourceLabel": "Headhunters: Kill Kopions at ~mission(Location)",
       "lookupKey": "headhunters|kill [enemy] at [location]",
       "missionTypeKey": "headhunters_kill_enemy_at_loc",
       "repMin": 150,
@@ -5349,7 +5349,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|butcher [enemy] at [location]": {
-      "sccrafterLabel": "Headhunters: Butcher Kopion Pack at ~mission(Location)",
+      "sourceLabel": "Headhunters: Butcher Kopion Pack at ~mission(Location)",
       "lookupKey": "headhunters|butcher [enemy] at [location]",
       "missionTypeKey": "headhunters_butcher_enemy_at_loc",
       "repMin": 200,
@@ -5361,7 +5361,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|taking out some xenothreat trash": {
-      "sccrafterLabel": "Headhunters: Taking out some XenoThreat trash",
+      "sourceLabel": "Headhunters: Taking out some XenoThreat trash",
       "lookupKey": "headhunters|taking out some xenothreat trash",
       "missionTypeKey": "headhunters_taking_out_some_xenothreat_trash",
       "repMin": 150,
@@ -5373,7 +5373,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|a little retaliation": {
-      "sccrafterLabel": "Headhunters: A little retaliation",
+      "sourceLabel": "Headhunters: A little retaliation",
       "lookupKey": "headhunters|a little retaliation",
       "missionTypeKey": "headhunters_a_little_retaliation",
       "repMin": 300,
@@ -5385,7 +5385,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|driving cfp out": {
-      "sccrafterLabel": "Headhunters: Driving CFP out",
+      "sourceLabel": "Headhunters: Driving CFP out",
       "lookupKey": "headhunters|driving cfp out",
       "missionTypeKey": "headhunters_driving_cfp_out",
       "repMin": 150,
@@ -5397,7 +5397,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|sweep and clear some cfp haunts": {
-      "sccrafterLabel": "Headhunters: Sweep and clear some CFP haunts",
+      "sourceLabel": "Headhunters: Sweep and clear some CFP haunts",
       "lookupKey": "headhunters|sweep and clear some cfp haunts",
       "missionTypeKey": "headhunters_sweep_and_clear_some_cfp_haunts",
       "repMin": 300,
@@ -5409,7 +5409,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|hit a cfp complex": {
-      "sccrafterLabel": "Headhunters: Hit a CFP Complex",
+      "sourceLabel": "Headhunters: Hit a CFP Complex",
       "lookupKey": "headhunters|hit a cfp complex",
       "missionTypeKey": "headhunters_hit_a_cfp_complex",
       "repMin": 300,
@@ -5421,7 +5421,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|taking xenothreat turf": {
-      "sccrafterLabel": "Headhunters: Taking XenoThreat Turf",
+      "sourceLabel": "Headhunters: Taking XenoThreat Turf",
       "lookupKey": "headhunters|taking xenothreat turf",
       "missionTypeKey": "headhunters_taking_xenothreat_turf",
       "repMin": 300,
@@ -5433,7 +5433,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|taking down a xenothreat hideout": {
-      "sccrafterLabel": "Headhunters: Taking down a XenoThreat Hideout",
+      "sourceLabel": "Headhunters: Taking down a XenoThreat Hideout",
       "lookupKey": "headhunters|taking down a xenothreat hideout",
       "missionTypeKey": "headhunters_taking_down_a_xenothreat_hideout",
       "repMin": 400,
@@ -5445,7 +5445,7 @@
       "giverSlug": "headhunters"
     },
     "foxwellenforcement|yellow level contract: clear shipjacking group": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Clear Shipjacking Group",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Clear Shipjacking Group",
       "lookupKey": "foxwellenforcement|yellow level contract: clear shipjacking group",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_clear_shipjacking_group",
       "repMin": 100,
@@ -5457,7 +5457,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: neutralize shipjacking gang": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Neutralize Shipjacking Gang",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Neutralize Shipjacking Gang",
       "lookupKey": "foxwellenforcement|yellow level contract: neutralize shipjacking gang",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_neutralize_shipjacking_gang",
       "repMin": 100,
@@ -5469,7 +5469,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: destroy outlaw threat": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Destroy Outlaw Threat",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Destroy Outlaw Threat",
       "lookupKey": "foxwellenforcement|orange level contract: destroy outlaw threat",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_destroy_outlaw_threat",
       "repMin": 150,
@@ -5481,7 +5481,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: take out criminal fleet": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Take Out Criminal Fleet",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Take Out Criminal Fleet",
       "lookupKey": "foxwellenforcement|orange level contract: take out criminal fleet",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_take_out_criminal_fleet",
       "repMin": 200,
@@ -5493,7 +5493,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: ambush an amateur": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Ambush An Amateur",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Ambush An Amateur",
       "lookupKey": "foxwellenforcement|yellow level contract: ambush an amateur",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_ambush_an_amateur",
       "repMin": 100,
@@ -5505,7 +5505,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: surprise strike": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Surprise Strike",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Surprise Strike",
       "lookupKey": "foxwellenforcement|yellow level contract: surprise strike",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_surprise_strike",
       "repMin": 100,
@@ -5517,7 +5517,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: spring a trap": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Spring a Trap",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Spring a Trap",
       "lookupKey": "foxwellenforcement|orange level contract: spring a trap",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_spring_a_trap",
       "repMin": 150,
@@ -5529,7 +5529,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: return the favor": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Return the Favor",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Return the Favor",
       "lookupKey": "foxwellenforcement|orange level contract: return the favor",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_return_the_favor",
       "repMin": 200,
@@ -5541,7 +5541,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|red level contract: ambush attack squad": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Ambush Attack Squad",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Ambush Attack Squad",
       "lookupKey": "foxwellenforcement|red level contract: ambush attack squad",
       "missionTypeKey": "foxwellenforcement_red_level_contract_ambush_attack_squad",
       "repMin": 250,
@@ -5553,7 +5553,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|red level contract: surprise attack": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Surprise Attack",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Surprise Attack",
       "lookupKey": "foxwellenforcement|red level contract: surprise attack",
       "missionTypeKey": "foxwellenforcement_red_level_contract_surprise_attack",
       "repMin": 300,
@@ -5565,7 +5565,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: stand up to aggressors": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Stand Up to Aggressors",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Stand Up to Aggressors",
       "lookupKey": "foxwellenforcement|yellow level contract: stand up to aggressors",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_stand_up_to_aggressors",
       "repMin": 100,
@@ -5577,7 +5577,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: ship protection needed": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Ship Protection Needed",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Ship Protection Needed",
       "lookupKey": "foxwellenforcement|orange level contract: ship protection needed",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_ship_protection_needed",
       "repMin": 150,
@@ -5589,7 +5589,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: protect our client’s interests": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Protect Our Client’s Interests",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Protect Our Client’s Interests",
       "lookupKey": "foxwellenforcement|orange level contract: protect our client’s interests",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_protect_our_client_s_interests",
       "repMin": 200,
@@ -5601,7 +5601,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|red level contract: support vip clients": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Support VIP Clients",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Support VIP Clients",
       "lookupKey": "foxwellenforcement|red level contract: support vip clients",
       "missionTypeKey": "foxwellenforcement_red_level_contract_support_vip_clients",
       "repMin": 300,
@@ -5613,7 +5613,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: routine patrol": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Routine Patrol",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Routine Patrol",
       "lookupKey": "foxwellenforcement|yellow level contract: routine patrol",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_routine_patrol",
       "repMin": 100,
@@ -5625,7 +5625,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: security sweep": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Security Sweep",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Security Sweep",
       "lookupKey": "foxwellenforcement|yellow level contract: security sweep",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_security_sweep",
       "repMin": 100,
@@ -5637,7 +5637,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: security patrol": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Security Patrol",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Security Patrol",
       "lookupKey": "foxwellenforcement|orange level contract: security patrol",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_security_patrol",
       "repMin": 150,
@@ -5649,7 +5649,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: potential security threat": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Potential Security Threat",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Potential Security Threat",
       "lookupKey": "foxwellenforcement|orange level contract: potential security threat",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_potential_security_threat",
       "repMin": 200,
@@ -5661,7 +5661,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|red level contract: high-risk security patrol": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: High-Risk Security Patrol",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: High-Risk Security Patrol",
       "lookupKey": "foxwellenforcement|red level contract: high-risk security patrol",
       "missionTypeKey": "foxwellenforcement_red_level_contract_high_risk_security_patrol",
       "repMin": 250,
@@ -5673,7 +5673,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|red level contract: secure threatened space": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Secure Threatened Space",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Secure Threatened Space",
       "lookupKey": "foxwellenforcement|red level contract: secure threatened space",
       "missionTypeKey": "foxwellenforcement_red_level_contract_secure_threatened_space",
       "repMin": 300,
@@ -5685,7 +5685,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "hockrowagency|jorrit dossier: project hyperion": {
-      "sccrafterLabel": "Hockrowagency: Jorrit Dossier: Project Hyperion",
+      "sourceLabel": "Hockrowagency: Jorrit Dossier: Project Hyperion",
       "lookupKey": "hockrowagency|jorrit dossier: project hyperion",
       "missionTypeKey": "hockrowagency_jorrit_dossier_project_hyperion",
       "repMin": null,
@@ -5698,7 +5698,7 @@
       "_inferred": true
     },
     "hockrowagency|jorrit dossier: updated seismic data": {
-      "sccrafterLabel": "Hockrowagency: Jorrit Dossier: Updated Seismic Data",
+      "sourceLabel": "Hockrowagency: Jorrit Dossier: Updated Seismic Data",
       "lookupKey": "hockrowagency|jorrit dossier: updated seismic data",
       "missionTypeKey": "hockrowagency_jorrit_dossier_updated_seismic_data",
       "repMin": null,
@@ -5711,7 +5711,7 @@
       "_inferred": true
     },
     "bitzeros|data transfer": {
-      "sccrafterLabel": "Bitzeros: Data Transfer",
+      "sourceLabel": "Bitzeros: Data Transfer",
       "lookupKey": "bitzeros|data transfer",
       "missionTypeKey": "bitzeros_data_transfer",
       "repMin": 100,
@@ -5723,7 +5723,7 @@
       "giverSlug": "bitzeros"
     },
     "bitzeros|pick up, put down": {
-      "sccrafterLabel": "Bitzeros: Pick Up, Put Down",
+      "sourceLabel": "Bitzeros: Pick Up, Put Down",
       "lookupKey": "bitzeros|pick up, put down",
       "missionTypeKey": "bitzeros_pick_up_put_down",
       "repMin": 100,
@@ -5735,7 +5735,7 @@
       "giverSlug": "bitzeros"
     },
     "bitzeros|getting to the bottom of it": {
-      "sccrafterLabel": "Bitzeros: Getting To the Bottom of It",
+      "sourceLabel": "Bitzeros: Getting To the Bottom of It",
       "lookupKey": "bitzeros|getting to the bottom of it",
       "missionTypeKey": "bitzeros_getting_to_the_bottom_of_it",
       "repMin": 100,
@@ -5747,7 +5747,7 @@
       "giverSlug": "bitzeros"
     },
     "bitzeros|too smart for our own good": {
-      "sccrafterLabel": "Bitzeros: Too Smart For Our Own Good",
+      "sourceLabel": "Bitzeros: Too Smart For Our Own Good",
       "lookupKey": "bitzeros|too smart for our own good",
       "missionTypeKey": "bitzeros_too_smart_for_our_own_good",
       "repMin": 150,
@@ -5759,7 +5759,7 @@
       "giverSlug": "bitzeros"
     },
     "bitzeros|legendary info?": {
-      "sccrafterLabel": "Bitzeros: Legendary Info?",
+      "sourceLabel": "Bitzeros: Legendary Info?",
       "lookupKey": "bitzeros|legendary info?",
       "missionTypeKey": "bitzeros_legendary_info",
       "repMin": 200,
@@ -5771,7 +5771,7 @@
       "giverSlug": "bitzeros"
     },
     "bitzeros|our version of the truth": {
-      "sccrafterLabel": "Bitzeros: Our Version of The Truth",
+      "sourceLabel": "Bitzeros: Our Version of The Truth",
       "lookupKey": "bitzeros|our version of the truth",
       "missionTypeKey": "bitzeros_our_version_of_the_truth",
       "repMin": 250,
@@ -5783,7 +5783,7 @@
       "giverSlug": "bitzeros"
     },
     "bitzeros|bad at [location]": {
-      "sccrafterLabel": "Bitzeros: Bad at Goodbyes",
+      "sourceLabel": "Bitzeros: Bad at Goodbyes",
       "lookupKey": "bitzeros|bad at [location]",
       "missionTypeKey": "bitzeros_bad_at_loc",
       "repMin": 300,
@@ -5795,7 +5795,7 @@
       "giverSlug": "bitzeros"
     },
     "hockrowagency|jorrit dossier: updated energy anomaly data": {
-      "sccrafterLabel": "Hockrowagency: Jorrit Dossier: Updated Energy Anomaly Data",
+      "sourceLabel": "Hockrowagency: Jorrit Dossier: Updated Energy Anomaly Data",
       "lookupKey": "hockrowagency|jorrit dossier: updated energy anomaly data",
       "missionTypeKey": "hockrowagency_jorrit_dossier_updated_energy_anomaly_data",
       "repMin": null,
@@ -5808,7 +5808,7 @@
       "_inferred": true
     },
     "hockrowagency|jorrit dossier: updated security data": {
-      "sccrafterLabel": "Hockrowagency: Jorrit Dossier: Updated Security Data",
+      "sourceLabel": "Hockrowagency: Jorrit Dossier: Updated Security Data",
       "lookupKey": "hockrowagency|jorrit dossier: updated security data",
       "missionTypeKey": "hockrowagency_jorrit_dossier_updated_security_data",
       "repMin": null,
@@ -5821,7 +5821,7 @@
       "_inferred": true
     },
     "hockrowagency|jorrit dossier: updated power usage data": {
-      "sccrafterLabel": "Hockrowagency: Jorrit Dossier: Updated Power Usage Data",
+      "sourceLabel": "Hockrowagency: Jorrit Dossier: Updated Power Usage Data",
       "lookupKey": "hockrowagency|jorrit dossier: updated power usage data",
       "missionTypeKey": "hockrowagency_jorrit_dossier_updated_power_usage_data",
       "repMin": null,
@@ -5834,7 +5834,7 @@
       "_inferred": true
     },
     "citizensforprosperity|assistance needed at [location]": {
-      "sccrafterLabel": "Citizensforprosperity: Assistance needed at ~mission(Location)",
+      "sourceLabel": "Citizensforprosperity: Assistance needed at ~mission(Location)",
       "lookupKey": "citizensforprosperity|assistance needed at [location]",
       "missionTypeKey": "citizensforprosperity_assistance_needed_at_loc",
       "repMin": 25,
@@ -5846,7 +5846,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|defend [location] from outlaws": {
-      "sccrafterLabel": "Citizensforprosperity: Defend ~mission(Location) from Outlaws",
+      "sourceLabel": "Citizensforprosperity: Defend ~mission(Location) from Outlaws",
       "lookupKey": "citizensforprosperity|defend [location] from outlaws",
       "missionTypeKey": "citizensforprosperity_defend_loc_from_outlaws",
       "repMin": 200,
@@ -5858,7 +5858,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|call for help: [location]": {
-      "sccrafterLabel": "Citizensforprosperity: Call for Help: ~mission(Location)",
+      "sourceLabel": "Citizensforprosperity: Call for Help: ~mission(Location)",
       "lookupKey": "citizensforprosperity|call for help: [location]",
       "missionTypeKey": "citizensforprosperity_call_for_help_loc",
       "repMin": 100,
@@ -5870,7 +5870,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|reclaim headhunter outpost": {
-      "sccrafterLabel": "Citizensforprosperity: Reclaim Headhunter Outpost",
+      "sourceLabel": "Citizensforprosperity: Reclaim Headhunter Outpost",
       "lookupKey": "citizensforprosperity|reclaim headhunter outpost",
       "missionTypeKey": "citizensforprosperity_reclaim_headhunter_outpost",
       "repMin": 100,
@@ -5882,7 +5882,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|reclaim xenothreat outpost": {
-      "sccrafterLabel": "Citizensforprosperity: Reclaim XenoThreat Outpost",
+      "sourceLabel": "Citizensforprosperity: Reclaim XenoThreat Outpost",
       "lookupKey": "citizensforprosperity|reclaim xenothreat outpost",
       "missionTypeKey": "citizensforprosperity_reclaim_xenothreat_outpost",
       "repMin": 200,
@@ -5894,7 +5894,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|defenders needed against headhunters": {
-      "sccrafterLabel": "Citizensforprosperity: Defenders needed against Headhunters",
+      "sourceLabel": "Citizensforprosperity: Defenders needed against Headhunters",
       "lookupKey": "citizensforprosperity|defenders needed against headhunters",
       "missionTypeKey": "citizensforprosperity_defenders_needed_against_headhunters",
       "repMin": 100,
@@ -5906,7 +5906,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|protecting outpost from xenothreat": {
-      "sccrafterLabel": "Citizensforprosperity: Protecting outpost from XenoThreat",
+      "sourceLabel": "Citizensforprosperity: Protecting outpost from XenoThreat",
       "lookupKey": "citizensforprosperity|protecting outpost from xenothreat",
       "missionTypeKey": "citizensforprosperity_protecting_outpost_from_xenothreat",
       "repMin": 200,
@@ -5918,7 +5918,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|attack on cfp outpost": {
-      "sccrafterLabel": "Citizensforprosperity: Attack on CFP outpost",
+      "sourceLabel": "Citizensforprosperity: Attack on CFP outpost",
       "lookupKey": "citizensforprosperity|attack on cfp outpost",
       "missionTypeKey": "citizensforprosperity_attack_on_cfp_outpost",
       "repMin": 25,
@@ -5930,7 +5930,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|headhunter attack on [location]": {
-      "sccrafterLabel": "Citizensforprosperity: Headhunter attack on ~mission(Location)",
+      "sourceLabel": "Citizensforprosperity: Headhunter attack on ~mission(Location)",
       "lookupKey": "citizensforprosperity|headhunter attack on [location]",
       "missionTypeKey": "citizensforprosperity_headhunter_attack_on_loc",
       "repMin": 200,
@@ -5942,7 +5942,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|protect [location] from xenothreat incursion": {
-      "sccrafterLabel": "Citizensforprosperity: Protect ~mission(Location) from XenoThreat Incursion",
+      "sourceLabel": "Citizensforprosperity: Protect ~mission(Location) from XenoThreat Incursion",
       "lookupKey": "citizensforprosperity|protect [location] from xenothreat incursion",
       "missionTypeKey": "citizensforprosperity_protect_loc_from_xenothreat_incursion",
       "repMin": 300,
@@ -5954,7 +5954,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|protect [location] from xenothreat attack": {
-      "sccrafterLabel": "Citizensforprosperity: Protect ~mission(Location) from XenoThreat Attack",
+      "sourceLabel": "Citizensforprosperity: Protect ~mission(Location) from XenoThreat Attack",
       "lookupKey": "citizensforprosperity|protect [location] from xenothreat attack",
       "missionTypeKey": "citizensforprosperity_protect_loc_from_xenothreat_attack",
       "repMin": 300,
@@ -5966,7 +5966,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|alert: [location] under attack": {
-      "sccrafterLabel": "Citizensforprosperity: Alert: ~mission(Location) under attack",
+      "sourceLabel": "Citizensforprosperity: Alert: ~mission(Location) under attack",
       "lookupKey": "citizensforprosperity|alert: [location] under attack",
       "missionTypeKey": "citizensforprosperity_alert_loc_under_attack",
       "repMin": 300,
@@ -5978,7 +5978,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|outlaw attack at [location]": {
-      "sccrafterLabel": "Citizensforprosperity: Outlaw attack at ~mission(Location)",
+      "sourceLabel": "Citizensforprosperity: Outlaw attack at ~mission(Location)",
       "lookupKey": "citizensforprosperity|outlaw attack at [location]",
       "missionTypeKey": "citizensforprosperity_outlaw_attack_at_loc",
       "repMin": 300,
@@ -5990,7 +5990,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|need multiple cfp outposts retaken": {
-      "sccrafterLabel": "Citizensforprosperity: Need multiple CFP outposts retaken",
+      "sourceLabel": "Citizensforprosperity: Need multiple CFP outposts retaken",
       "lookupKey": "citizensforprosperity|need multiple cfp outposts retaken",
       "missionTypeKey": "citizensforprosperity_need_multiple_cfp_outposts_retaken",
       "repMin": 300,
@@ -6002,7 +6002,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|taking back from the headhunters": {
-      "sccrafterLabel": "Citizensforprosperity: Taking back from the Headhunters",
+      "sourceLabel": "Citizensforprosperity: Taking back from the Headhunters",
       "lookupKey": "citizensforprosperity|taking back from the headhunters",
       "missionTypeKey": "citizensforprosperity_taking_back_from_the_headhunters",
       "repMin": 300,
@@ -6014,7 +6014,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|retaking outposts from headhunters": {
-      "sccrafterLabel": "Citizensforprosperity: Retaking Outposts from Headhunters",
+      "sourceLabel": "Citizensforprosperity: Retaking Outposts from Headhunters",
       "lookupKey": "citizensforprosperity|retaking outposts from headhunters",
       "missionTypeKey": "citizensforprosperity_retaking_outposts_from_headhunters",
       "repMin": 300,
@@ -6026,7 +6026,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|reclaiming clusters from headhunters": {
-      "sccrafterLabel": "Citizensforprosperity: Reclaiming Clusters from Headhunters",
+      "sourceLabel": "Citizensforprosperity: Reclaiming Clusters from Headhunters",
       "lookupKey": "citizensforprosperity|reclaiming clusters from headhunters",
       "missionTypeKey": "citizensforprosperity_reclaiming_clusters_from_headhunters",
       "repMin": 300,
@@ -6038,7 +6038,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|reclaiming outposts from xenothreat": {
-      "sccrafterLabel": "Citizensforprosperity: Reclaiming Outposts from XenoThreat",
+      "sourceLabel": "Citizensforprosperity: Reclaiming Outposts from XenoThreat",
       "lookupKey": "citizensforprosperity|reclaiming outposts from xenothreat",
       "missionTypeKey": "citizensforprosperity_reclaiming_outposts_from_xenothreat",
       "repMin": 400,
@@ -6050,7 +6050,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|campaign to reclaim xenothreat outposts": {
-      "sccrafterLabel": "Citizensforprosperity: Campaign to reclaim XenoThreat outposts",
+      "sourceLabel": "Citizensforprosperity: Campaign to reclaim XenoThreat outposts",
       "lookupKey": "citizensforprosperity|campaign to reclaim xenothreat outposts",
       "missionTypeKey": "citizensforprosperity_campaign_to_reclaim_xenothreat_outposts",
       "repMin": 400,
@@ -6062,7 +6062,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|[location] needs help": {
-      "sccrafterLabel": "Citizensforprosperity: ~mission(Location|Address) needs help",
+      "sourceLabel": "Citizensforprosperity: ~mission(Location|Address) needs help",
       "lookupKey": "citizensforprosperity|[location] needs help",
       "missionTypeKey": "citizensforprosperity_loc_needs_help",
       "repMin": 800,
@@ -6074,7 +6074,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "headhunters|plug a traitor": {
-      "sccrafterLabel": "Headhunters: Plug a traitor",
+      "sourceLabel": "Headhunters: Plug a traitor",
       "lookupKey": "headhunters|plug a traitor",
       "missionTypeKey": "headhunters_plug_a_traitor",
       "repMin": 100,
@@ -6086,7 +6086,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|drop a xenothreat": {
-      "sccrafterLabel": "Headhunters: Drop a XenoThreat",
+      "sourceLabel": "Headhunters: Drop a XenoThreat",
       "lookupKey": "headhunters|drop a xenothreat",
       "missionTypeKey": "headhunters_drop_a_xenothreat",
       "repMin": 400,
@@ -6098,7 +6098,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|paid target in cfp": {
-      "sccrafterLabel": "Headhunters: Paid Target in CFP",
+      "sourceLabel": "Headhunters: Paid Target in CFP",
       "lookupKey": "headhunters|paid target in cfp",
       "missionTypeKey": "headhunters_paid_target_in_cfp",
       "repMin": 1200,
@@ -6110,7 +6110,7 @@
       "giverSlug": "headhunters"
     },
     "highpointwildernessspecialists|reduce valakkar breaker station population": {
-      "sccrafterLabel": "Highpointwildernessspecialists: Reduce Valakkar Breaker Station Population",
+      "sourceLabel": "Highpointwildernessspecialists: Reduce Valakkar Breaker Station Population",
       "lookupKey": "highpointwildernessspecialists|reduce valakkar breaker station population",
       "missionTypeKey": "highpointwildernessspecialists_reduce_valakkar_breaker_station_population",
       "repMin": 100,
@@ -6122,7 +6122,7 @@
       "giverSlug": "highpointwildernessspecialists"
     },
     "bountyhuntersguild|high-risk bounty: [target] at [location]": {
-      "sccrafterLabel": "Bountyhuntersguild: High-Risk Bounty: ~mission(TargetName) at QV Breaker Station",
+      "sourceLabel": "Bountyhuntersguild: High-Risk Bounty: ~mission(TargetName) at QV Breaker Station",
       "lookupKey": "bountyhuntersguild|high-risk bounty: [target] at [location]",
       "missionTypeKey": "bountyhuntersguild_high_risk_bounty_target_at_loc",
       "repMin": 250,
@@ -6134,7 +6134,7 @@
       "giverSlug": "bountyhuntersguild"
     },
     "citizensforprosperity|pilot in distress": {
-      "sccrafterLabel": "Citizensforprosperity: Pilot in Distress",
+      "sourceLabel": "Citizensforprosperity: Pilot in Distress",
       "lookupKey": "citizensforprosperity|pilot in distress",
       "missionTypeKey": "citizensforprosperity_pilot_in_distress",
       "repMin": 100,
@@ -6146,7 +6146,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|pilot seeking combat support": {
-      "sccrafterLabel": "Citizensforprosperity: Pilot Seeking Combat Support",
+      "sourceLabel": "Citizensforprosperity: Pilot Seeking Combat Support",
       "lookupKey": "citizensforprosperity|pilot seeking combat support",
       "missionTypeKey": "citizensforprosperity_pilot_seeking_combat_support",
       "repMin": 100,
@@ -6158,7 +6158,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|ship needs emergency assistance": {
-      "sccrafterLabel": "Citizensforprosperity: Ship Needs Emergency Assistance",
+      "sourceLabel": "Citizensforprosperity: Ship Needs Emergency Assistance",
       "lookupKey": "citizensforprosperity|ship needs emergency assistance",
       "missionTypeKey": "citizensforprosperity_ship_needs_emergency_assistance",
       "repMin": 150,
@@ -6170,7 +6170,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|convoy caught in brutal attack": {
-      "sccrafterLabel": "Citizensforprosperity: Convoy Caught in Brutal Attack",
+      "sourceLabel": "Citizensforprosperity: Convoy Caught in Brutal Attack",
       "lookupKey": "citizensforprosperity|convoy caught in brutal attack",
       "missionTypeKey": "citizensforprosperity_convoy_caught_in_brutal_attack",
       "repMin": 200,
@@ -6182,7 +6182,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|respond to distress beacon": {
-      "sccrafterLabel": "Citizensforprosperity: Respond to Distress Beacon",
+      "sourceLabel": "Citizensforprosperity: Respond to Distress Beacon",
       "lookupKey": "citizensforprosperity|respond to distress beacon",
       "missionTypeKey": "citizensforprosperity_respond_to_distress_beacon",
       "repMin": 250,
@@ -6194,7 +6194,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "citizensforprosperity|come to aid of convoy": {
-      "sccrafterLabel": "Citizensforprosperity: Come to Aid of Convoy",
+      "sourceLabel": "Citizensforprosperity: Come to Aid of Convoy",
       "lookupKey": "citizensforprosperity|come to aid of convoy",
       "missionTypeKey": "citizensforprosperity_come_to_aid_of_convoy",
       "repMin": 300,
@@ -6206,7 +6206,7 @@
       "giverSlug": "citizensforprosperity"
     },
     "eckhartsecurity|save ship": {
-      "sccrafterLabel": "Eckhartsecurity: Save Ship",
+      "sourceLabel": "Eckhartsecurity: Save Ship",
       "lookupKey": "eckhartsecurity|save ship",
       "missionTypeKey": "eckhartsecurity_save_ship",
       "repMin": 100,
@@ -6218,7 +6218,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|support client under attack": {
-      "sccrafterLabel": "Eckhartsecurity: Support Client Under Attack",
+      "sourceLabel": "Eckhartsecurity: Support Client Under Attack",
       "lookupKey": "eckhartsecurity|support client under attack",
       "missionTypeKey": "eckhartsecurity_support_client_under_attack",
       "repMin": 100,
@@ -6230,7 +6230,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|stop attack on high-profile client": {
-      "sccrafterLabel": "Eckhartsecurity: Stop Attack on High-Profile Client",
+      "sourceLabel": "Eckhartsecurity: Stop Attack on High-Profile Client",
       "lookupKey": "eckhartsecurity|stop attack on high-profile client",
       "missionTypeKey": "eckhartsecurity_stop_attack_on_high_profile_client",
       "repMin": 150,
@@ -6242,7 +6242,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|high-risk ship encounter": {
-      "sccrafterLabel": "Eckhartsecurity: High-Risk Ship Encounter",
+      "sourceLabel": "Eckhartsecurity: High-Risk Ship Encounter",
       "lookupKey": "eckhartsecurity|high-risk ship encounter",
       "missionTypeKey": "eckhartsecurity_high_risk_ship_encounter",
       "repMin": 200,
@@ -6254,7 +6254,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|stop deadly ship attack": {
-      "sccrafterLabel": "Eckhartsecurity: Stop Deadly Ship Attack",
+      "sourceLabel": "Eckhartsecurity: Stop Deadly Ship Attack",
       "lookupKey": "eckhartsecurity|stop deadly ship attack",
       "missionTypeKey": "eckhartsecurity_stop_deadly_ship_attack",
       "repMin": 250,
@@ -6266,7 +6266,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|extremely dangerous defense": {
-      "sccrafterLabel": "Eckhartsecurity: Extremely Dangerous Defense",
+      "sourceLabel": "Eckhartsecurity: Extremely Dangerous Defense",
       "lookupKey": "eckhartsecurity|extremely dangerous defense",
       "missionTypeKey": "eckhartsecurity_extremely_dangerous_defense",
       "repMin": 300,
@@ -6278,7 +6278,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "vaughn|a well deserved break": {
-      "sccrafterLabel": "Vaughn: A Well Deserved Break",
+      "sourceLabel": "Vaughn: A Well Deserved Break",
       "lookupKey": "vaughn|a well deserved break",
       "missionTypeKey": "vaughn_a_well_deserved_break",
       "repMin": 150,
@@ -6290,7 +6290,7 @@
       "giverSlug": "vaughn"
     },
     "vaughn|end of a salamander": {
-      "sccrafterLabel": "Vaughn: End of a Salamander",
+      "sourceLabel": "Vaughn: End of a Salamander",
       "lookupKey": "vaughn|end of a salamander",
       "missionTypeKey": "vaughn_end_of_a_salamander",
       "repMin": 4000,
@@ -6302,7 +6302,7 @@
       "giverSlug": "vaughn"
     },
     "headhunters|need a death at [location]": {
-      "sccrafterLabel": "Headhunters: Need a death at ~mission(Location)",
+      "sourceLabel": "Headhunters: Need a death at ~mission(Location)",
       "lookupKey": "headhunters|need a death at [location]",
       "missionTypeKey": "headhunters_need_a_death_at_loc",
       "repMin": 300,
@@ -6314,7 +6314,7 @@
       "giverSlug": "headhunters"
     },
     "wikelo|suit up take off": {
-      "sccrafterLabel": "Wikelo: Suit Up Take Off",
+      "sourceLabel": "Wikelo: Suit Up Take Off",
       "lookupKey": "wikelo|suit up take off",
       "missionTypeKey": "wikelo_suit_up_take_off",
       "repMin": 10,
@@ -6327,7 +6327,7 @@
       "_inferred": true
     },
     "foxwellenforcement|yellow level contract: limiting potential threat": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Limiting Potential Threat",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Limiting Potential Threat",
       "lookupKey": "foxwellenforcement|yellow level contract: limiting potential threat",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_limiting_potential_threat",
       "repMin": 100,
@@ -6339,7 +6339,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: disrupt operations": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Disrupt Operations",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Disrupt Operations",
       "lookupKey": "foxwellenforcement|yellow level contract: disrupt operations",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_disrupt_operations",
       "repMin": 100,
@@ -6351,7 +6351,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: take out fuel supplies": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Take Out Fuel Supplies",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Take Out Fuel Supplies",
       "lookupKey": "foxwellenforcement|orange level contract: take out fuel supplies",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_take_out_fuel_supplies",
       "repMin": 150,
@@ -6363,7 +6363,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|orange level contract: destroy outlaw infrastructure": {
-      "sccrafterLabel": "Foxwellenforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
+      "sourceLabel": "Foxwellenforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
       "lookupKey": "foxwellenforcement|orange level contract: destroy outlaw infrastructure",
       "missionTypeKey": "foxwellenforcement_orange_level_contract_destroy_outlaw_infrastructure",
       "repMin": 200,
@@ -6375,7 +6375,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|red level contract: fuel container demolition": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Fuel Container Demolition",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Fuel Container Demolition",
       "lookupKey": "foxwellenforcement|red level contract: fuel container demolition",
       "missionTypeKey": "foxwellenforcement_red_level_contract_fuel_container_demolition",
       "repMin": 250,
@@ -6387,7 +6387,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|red level contract: destroy outlaw infrastructure": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Destroy Outlaw Infrastructure",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Destroy Outlaw Infrastructure",
       "lookupKey": "foxwellenforcement|red level contract: destroy outlaw infrastructure",
       "missionTypeKey": "foxwellenforcement_red_level_contract_destroy_outlaw_infrastructure",
       "repMin": 300,
@@ -6399,7 +6399,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: ship under attack": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Ship Under Attack",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Ship Under Attack",
       "lookupKey": "foxwellenforcement|yellow level contract: ship under attack",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_ship_under_attack",
       "repMin": null,
@@ -6412,7 +6412,7 @@
       "_inferred": true
     },
     "foxwellenforcement|red level contract: ship under attack": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Ship Under Attack",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Ship Under Attack",
       "lookupKey": "foxwellenforcement|red level contract: ship under attack",
       "missionTypeKey": "foxwellenforcement_red_level_contract_ship_under_attack",
       "repMin": null,
@@ -6425,7 +6425,7 @@
       "_inferred": true
     },
     "foxwellenforcement|still looking for work?": {
-      "sccrafterLabel": "Foxwellenforcement: Still Looking for Work?",
+      "sourceLabel": "Foxwellenforcement: Still Looking for Work?",
       "lookupKey": "foxwellenforcement|still looking for work?",
       "missionTypeKey": "foxwellenforcement_still_looking_for_work",
       "repMin": 500,
@@ -6437,7 +6437,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|help protect site": {
-      "sccrafterLabel": "Foxwellenforcement: Help Protect Site",
+      "sourceLabel": "Foxwellenforcement: Help Protect Site",
       "lookupKey": "foxwellenforcement|help protect site",
       "missionTypeKey": "foxwellenforcement_help_protect_site",
       "repMin": 500,
@@ -6449,7 +6449,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|carefully clear site": {
-      "sccrafterLabel": "Foxwellenforcement: Carefully Clear Site",
+      "sourceLabel": "Foxwellenforcement: Carefully Clear Site",
       "lookupKey": "foxwellenforcement|carefully clear site",
       "missionTypeKey": "foxwellenforcement_carefully_clear_site",
       "repMin": 500,
@@ -6461,7 +6461,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|sweep and clear location": {
-      "sccrafterLabel": "Foxwellenforcement: Sweep and Clear Location",
+      "sourceLabel": "Foxwellenforcement: Sweep and Clear Location",
       "lookupKey": "foxwellenforcement|sweep and clear location",
       "missionTypeKey": "foxwellenforcement_sweep_and_clear_location",
       "repMin": 500,
@@ -6473,7 +6473,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|track down [target]": {
-      "sccrafterLabel": "Foxwellenforcement: Track Down ~mission(TargetName)",
+      "sourceLabel": "Foxwellenforcement: Track Down ~mission(TargetName)",
       "lookupKey": "foxwellenforcement|track down [target]",
       "missionTypeKey": "foxwellenforcement_track_down_target",
       "repMin": 500,
@@ -6485,7 +6485,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|precision strike on [target]": {
-      "sccrafterLabel": "Foxwellenforcement: Precision Strike on ~mission(TargetName)",
+      "sourceLabel": "Foxwellenforcement: Precision Strike on ~mission(TargetName)",
       "lookupKey": "foxwellenforcement|precision strike on [target]",
       "missionTypeKey": "foxwellenforcement_precision_strike_on_target",
       "repMin": 1000,
@@ -6497,7 +6497,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|knock out new drug op": {
-      "sccrafterLabel": "Foxwellenforcement: Knock Out New Drug Op",
+      "sourceLabel": "Foxwellenforcement: Knock Out New Drug Op",
       "lookupKey": "foxwellenforcement|knock out new drug op",
       "missionTypeKey": "foxwellenforcement_knock_out_new_drug_op",
       "repMin": 500,
@@ -6509,7 +6509,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|destroy illegal drugs": {
-      "sccrafterLabel": "Foxwellenforcement: Destroy Illegal Drugs",
+      "sourceLabel": "Foxwellenforcement: Destroy Illegal Drugs",
       "lookupKey": "foxwellenforcement|destroy illegal drugs",
       "missionTypeKey": "foxwellenforcement_destroy_illegal_drugs",
       "repMin": 500,
@@ -6521,7 +6521,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|destroy dangerous drugs": {
-      "sccrafterLabel": "Foxwellenforcement: Destroy Dangerous Drugs",
+      "sourceLabel": "Foxwellenforcement: Destroy Dangerous Drugs",
       "lookupKey": "foxwellenforcement|destroy dangerous drugs",
       "missionTypeKey": "foxwellenforcement_destroy_dangerous_drugs",
       "repMin": 500,
@@ -6533,7 +6533,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: clear out paf": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Clear Out PAF",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Clear Out PAF",
       "lookupKey": "foxwellenforcement|yellow level contract: clear out paf",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_clear_out_paf",
       "repMin": 500,
@@ -6545,7 +6545,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|yellow level contract: merc work": {
-      "sccrafterLabel": "Foxwellenforcement: Yellow Level Contract: Merc Work",
+      "sourceLabel": "Foxwellenforcement: Yellow Level Contract: Merc Work",
       "lookupKey": "foxwellenforcement|yellow level contract: merc work",
       "missionTypeKey": "foxwellenforcement_yellow_level_contract_merc_work",
       "repMin": 500,
@@ -6557,7 +6557,7 @@
       "giverSlug": "foxwellenforcement"
     },
     "foxwellenforcement|red level contract: clear pafs, recover cargo, and deliver to olp": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
       "lookupKey": "foxwellenforcement|red level contract: clear pafs, recover cargo, and deliver to olp",
       "missionTypeKey": "foxwellenforcement_red_level_contract_clear_pafs_recover_cargo_and_deliver_to_olp",
       "repMin": null,
@@ -6570,7 +6570,7 @@
       "_inferred": true
     },
     "foxwellenforcement|red level contract: recoup stolen cargo haul": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Recoup Stolen Cargo Haul",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Recoup Stolen Cargo Haul",
       "lookupKey": "foxwellenforcement|red level contract: recoup stolen cargo haul",
       "missionTypeKey": "foxwellenforcement_red_level_contract_recoup_stolen_cargo_haul",
       "repMin": null,
@@ -6583,7 +6583,7 @@
       "_inferred": true
     },
     "foxwellenforcement|red level contract: retrieve cargo haul": {
-      "sccrafterLabel": "Foxwellenforcement: Red Level Contract: Retrieve Cargo Haul",
+      "sourceLabel": "Foxwellenforcement: Red Level Contract: Retrieve Cargo Haul",
       "lookupKey": "foxwellenforcement|red level contract: retrieve cargo haul",
       "missionTypeKey": "foxwellenforcement_red_level_contract_retrieve_cargo_haul",
       "repMin": null,
@@ -6596,7 +6596,7 @@
       "_inferred": true
     },
     "wikelo|your best shot": {
-      "sccrafterLabel": "Wikelo: Your Best Shot",
+      "sourceLabel": "Wikelo: Your Best Shot",
       "lookupKey": "wikelo|your best shot",
       "missionTypeKey": "wikelo_your_best_shot",
       "repMin": 10,
@@ -6609,7 +6609,7 @@
       "_inferred": true
     },
     "wikelo|extra special wolf": {
-      "sccrafterLabel": "Wikelo: Extra Special Wolf",
+      "sourceLabel": "Wikelo: Extra Special Wolf",
       "lookupKey": "wikelo|extra special wolf",
       "missionTypeKey": "wikelo_extra_special_wolf",
       "repMin": null,
@@ -6622,7 +6622,7 @@
       "_inferred": true
     },
     "headhunters|keep [location] safe": {
-      "sccrafterLabel": "Headhunters: Keep ~mission(Location) Safe",
+      "sourceLabel": "Headhunters: Keep ~mission(Location) Safe",
       "lookupKey": "headhunters|keep [location] safe",
       "missionTypeKey": "headhunters_keep_loc_safe",
       "repMin": 100,
@@ -6635,7 +6635,7 @@
       "_inferred": true
     },
     "headhunters|provide protection at [location]": {
-      "sccrafterLabel": "Headhunters: Provide Protection at ~mission(Location)",
+      "sourceLabel": "Headhunters: Provide Protection at ~mission(Location)",
       "lookupKey": "headhunters|provide protection at [location]",
       "missionTypeKey": "headhunters_provide_protection_at_loc",
       "repMin": 100,
@@ -6648,7 +6648,7 @@
       "_inferred": true
     },
     "headhunters|secure [location] from upstarts": {
-      "sccrafterLabel": "Headhunters: Secure ~mission(Location) from Upstarts",
+      "sourceLabel": "Headhunters: Secure ~mission(Location) from Upstarts",
       "lookupKey": "headhunters|secure [location] from upstarts",
       "missionTypeKey": "headhunters_secure_loc_from_upstarts",
       "repMin": 150,
@@ -6661,7 +6661,7 @@
       "_inferred": true
     },
     "headhunters|stop rival attack at [location]": {
-      "sccrafterLabel": "Headhunters: Stop Rival Attack at ~mission(Location)",
+      "sourceLabel": "Headhunters: Stop Rival Attack at ~mission(Location)",
       "lookupKey": "headhunters|stop rival attack at [location]",
       "missionTypeKey": "headhunters_stop_rival_attack_at_loc",
       "repMin": 200,
@@ -6674,7 +6674,7 @@
       "_inferred": true
     },
     "headhunters|defend [location] from mercs": {
-      "sccrafterLabel": "Headhunters: Defend ~mission(Location) From Mercs",
+      "sourceLabel": "Headhunters: Defend ~mission(Location) From Mercs",
       "lookupKey": "headhunters|defend [location] from mercs",
       "missionTypeKey": "headhunters_defend_loc_from_mercs",
       "repMin": 250,
@@ -6687,7 +6687,7 @@
       "_inferred": true
     },
     "headhunters|guard [location] from rivals": {
-      "sccrafterLabel": "Headhunters: Guard ~mission(Location) From Rivals",
+      "sourceLabel": "Headhunters: Guard ~mission(Location) From Rivals",
       "lookupKey": "headhunters|guard [location] from rivals",
       "missionTypeKey": "headhunters_guard_loc_from_rivals",
       "repMin": 300,
@@ -6700,7 +6700,7 @@
       "_inferred": true
     },
     "headhunters|wanna be a headhunter?": {
-      "sccrafterLabel": "Headhunters: Wanna be a Headhunter?",
+      "sourceLabel": "Headhunters: Wanna be a Headhunter?",
       "lookupKey": "headhunters|wanna be a headhunter?",
       "missionTypeKey": "headhunters_wanna_be_a_headhunter",
       "repMin": 50,
@@ -6712,7 +6712,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|[target] needs stomping": {
-      "sccrafterLabel": "Headhunters: ~mission(TargetName) needs stomping",
+      "sourceLabel": "Headhunters: ~mission(TargetName) needs stomping",
       "lookupKey": "headhunters|[target] needs stomping",
       "missionTypeKey": "headhunters_target_needs_stomping",
       "repMin": 50,
@@ -6724,7 +6724,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|simple hit": {
-      "sccrafterLabel": "Headhunters: Simple Hit",
+      "sourceLabel": "Headhunters: Simple Hit",
       "lookupKey": "headhunters|simple hit",
       "missionTypeKey": "headhunters_simple_hit",
       "repMin": 75,
@@ -6736,7 +6736,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|treat yourself to a fight": {
-      "sccrafterLabel": "Headhunters: Treat yourself to a fight",
+      "sourceLabel": "Headhunters: Treat yourself to a fight",
       "lookupKey": "headhunters|treat yourself to a fight",
       "missionTypeKey": "headhunters_treat_yourself_to_a_fight",
       "repMin": 300,
@@ -6748,7 +6748,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|hit a cfp ship": {
-      "sccrafterLabel": "Headhunters: Hit a CFP Ship",
+      "sourceLabel": "Headhunters: Hit a CFP Ship",
       "lookupKey": "headhunters|hit a cfp ship",
       "missionTypeKey": "headhunters_hit_a_cfp_ship",
       "repMin": 300,
@@ -6760,7 +6760,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|kill order": {
-      "sccrafterLabel": "Headhunters: Kill Order",
+      "sourceLabel": "Headhunters: Kill Order",
       "lookupKey": "headhunters|kill order",
       "missionTypeKey": "headhunters_kill_order",
       "repMin": 600,
@@ -6772,7 +6772,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|primo target": {
-      "sccrafterLabel": "Headhunters: Primo Target",
+      "sourceLabel": "Headhunters: Primo Target",
       "lookupKey": "headhunters|primo target",
       "missionTypeKey": "headhunters_primo_target",
       "repMin": 1200,
@@ -6784,7 +6784,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|ghost some xenotrash": {
-      "sccrafterLabel": "Headhunters: Ghost some XenoTrash",
+      "sourceLabel": "Headhunters: Ghost some XenoTrash",
       "lookupKey": "headhunters|ghost some xenotrash",
       "missionTypeKey": "headhunters_ghost_some_xenotrash",
       "repMin": 3200,
@@ -6796,7 +6796,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|target takedown for a fast track in": {
-      "sccrafterLabel": "Headhunters: Target takedown for a fast track in",
+      "sourceLabel": "Headhunters: Target takedown for a fast track in",
       "lookupKey": "headhunters|target takedown for a fast track in",
       "missionTypeKey": "headhunters_target_takedown_for_a_fast_track_in",
       "repMin": 50,
@@ -6808,7 +6808,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|target at [location]": {
-      "sccrafterLabel": "Headhunters: Target at ~mission(Location)",
+      "sourceLabel": "Headhunters: Target at ~mission(Location)",
       "lookupKey": "headhunters|target at [location]",
       "missionTypeKey": "headhunters_target_at_loc",
       "repMin": 50,
@@ -6820,7 +6820,7 @@
       "giverSlug": "headhunters"
     },
     "headhunters|crash some ships": {
-      "sccrafterLabel": "Headhunters: Crash some ships",
+      "sourceLabel": "Headhunters: Crash some ships",
       "lookupKey": "headhunters|crash some ships",
       "missionTypeKey": "headhunters_crash_some_ships",
       "repMin": 300,
@@ -6832,7 +6832,7 @@
       "giverSlug": "headhunters"
     },
     "eckhartsecurity|deal with [target] and support forces": {
-      "sccrafterLabel": "Eckhartsecurity: Deal with ~mission(TargetName) and Support Forces",
+      "sourceLabel": "Eckhartsecurity: Deal with ~mission(TargetName) and Support Forces",
       "lookupKey": "eckhartsecurity|deal with [target] and support forces",
       "missionTypeKey": "eckhartsecurity_deal_with_target_and_support_forces",
       "repMin": 500,
@@ -6844,7 +6844,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|high-risk bounty: [target]": {
-      "sccrafterLabel": "Eckhartsecurity: High-Risk Bounty: ~mission(TargetName)",
+      "sourceLabel": "Eckhartsecurity: High-Risk Bounty: ~mission(TargetName)",
       "lookupKey": "eckhartsecurity|high-risk bounty: [target]",
       "missionTypeKey": "eckhartsecurity_high_risk_bounty_target",
       "repMin": 500,
@@ -6856,7 +6856,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|launch surprise attack": {
-      "sccrafterLabel": "Eckhartsecurity: Launch Surprise Attack",
+      "sourceLabel": "Eckhartsecurity: Launch Surprise Attack",
       "lookupKey": "eckhartsecurity|launch surprise attack",
       "missionTypeKey": "eckhartsecurity_launch_surprise_attack",
       "repMin": 150,
@@ -6868,7 +6868,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|tricky ambush": {
-      "sccrafterLabel": "Eckhartsecurity: Tricky Ambush",
+      "sourceLabel": "Eckhartsecurity: Tricky Ambush",
       "lookupKey": "eckhartsecurity|tricky ambush",
       "missionTypeKey": "eckhartsecurity_tricky_ambush",
       "repMin": 200,
@@ -6880,7 +6880,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|dangerous ambush": {
-      "sccrafterLabel": "Eckhartsecurity: Dangerous Ambush",
+      "sourceLabel": "Eckhartsecurity: Dangerous Ambush",
       "lookupKey": "eckhartsecurity|dangerous ambush",
       "missionTypeKey": "eckhartsecurity_dangerous_ambush",
       "repMin": 250,
@@ -6892,7 +6892,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|highly dangerous ambush": {
-      "sccrafterLabel": "Eckhartsecurity: Highly Dangerous Ambush",
+      "sourceLabel": "Eckhartsecurity: Highly Dangerous Ambush",
       "lookupKey": "eckhartsecurity|highly dangerous ambush",
       "missionTypeKey": "eckhartsecurity_highly_dangerous_ambush",
       "repMin": 300,
@@ -6904,7 +6904,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|new opportunity - ambush strike": {
-      "sccrafterLabel": "Eckhartsecurity: New Opportunity - Ambush Strike",
+      "sourceLabel": "Eckhartsecurity: New Opportunity - Ambush Strike",
       "lookupKey": "eckhartsecurity|new opportunity - ambush strike",
       "missionTypeKey": "eckhartsecurity_new_opportunity_ambush_strike",
       "repMin": 100,
@@ -6916,7 +6916,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|settle a score": {
-      "sccrafterLabel": "Eckhartsecurity: Settle a Score",
+      "sourceLabel": "Eckhartsecurity: Settle a Score",
       "lookupKey": "eckhartsecurity|settle a score",
       "missionTypeKey": "eckhartsecurity_settle_a_score",
       "repMin": 100,
@@ -6928,7 +6928,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|time to teach a lesson": {
-      "sccrafterLabel": "Eckhartsecurity: Time to Teach a Lesson",
+      "sourceLabel": "Eckhartsecurity: Time to Teach a Lesson",
       "lookupKey": "eckhartsecurity|time to teach a lesson",
       "missionTypeKey": "eckhartsecurity_time_to_teach_a_lesson",
       "repMin": 100,
@@ -6940,7 +6940,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "lingfamilyhauling|cargo hauling opportunity with ling hauling": {
-      "sccrafterLabel": "Lingfamilyhauling: Cargo Hauling Opportunity with Ling Hauling",
+      "sourceLabel": "Lingfamilyhauling: Cargo Hauling Opportunity with Ling Hauling",
       "lookupKey": "lingfamilyhauling|cargo hauling opportunity with ling hauling",
       "missionTypeKey": "lingfamilyhauling_cargo_hauling_opportunity_with_ling_hauling",
       "repMin": 100,
@@ -6952,7 +6952,7 @@
       "giverSlug": "lingfamilyhauling"
     },
     "unitedwayfarersclub|urgent fleet refuel": {
-      "sccrafterLabel": "Unitedwayfarersclub: URGENT FLEET REFUEL",
+      "sourceLabel": "Unitedwayfarersclub: URGENT FLEET REFUEL",
       "lookupKey": "unitedwayfarersclub|urgent fleet refuel",
       "missionTypeKey": "unitedwayfarersclub_urgent_fleet_refuel",
       "repMin": 50,
@@ -6964,7 +6964,7 @@
       "giverSlug": "unitedwayfarersclub"
     },
     "eckhartsecurity|vip client needs protection": {
-      "sccrafterLabel": "Eckhartsecurity: VIP Client Needs Protection",
+      "sourceLabel": "Eckhartsecurity: VIP Client Needs Protection",
       "lookupKey": "eckhartsecurity|vip client needs protection",
       "missionTypeKey": "eckhartsecurity_vip_client_needs_protection",
       "repMin": 200,
@@ -6976,7 +6976,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|protection detail needed. high risk.": {
-      "sccrafterLabel": "Eckhartsecurity: Protection Detail Needed. High Risk.",
+      "sourceLabel": "Eckhartsecurity: Protection Detail Needed. High Risk.",
       "lookupKey": "eckhartsecurity|protection detail needed. high risk.",
       "missionTypeKey": "eckhartsecurity_protection_detail_needed_high_risk",
       "repMin": 250,
@@ -6988,7 +6988,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|top tier operator needed": {
-      "sccrafterLabel": "Eckhartsecurity: Top Tier Operator Needed",
+      "sourceLabel": "Eckhartsecurity: Top Tier Operator Needed",
       "lookupKey": "eckhartsecurity|top tier operator needed",
       "missionTypeKey": "eckhartsecurity_top_tier_operator_needed",
       "repMin": 300,
@@ -7000,7 +7000,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|low risk protection detail": {
-      "sccrafterLabel": "Eckhartsecurity: Low Risk Protection Detail",
+      "sourceLabel": "Eckhartsecurity: Low Risk Protection Detail",
       "lookupKey": "eckhartsecurity|low risk protection detail",
       "missionTypeKey": "eckhartsecurity_low_risk_protection_detail",
       "repMin": 100,
@@ -7012,7 +7012,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|executive protection detail": {
-      "sccrafterLabel": "Eckhartsecurity: Executive Protection Detail",
+      "sourceLabel": "Eckhartsecurity: Executive Protection Detail",
       "lookupKey": "eckhartsecurity|executive protection detail",
       "missionTypeKey": "eckhartsecurity_executive_protection_detail",
       "repMin": 100,
@@ -7024,7 +7024,7 @@
       "giverSlug": "eckhartsecurity"
     },
     "eckhartsecurity|experienced protection detail needed": {
-      "sccrafterLabel": "Eckhartsecurity: Experienced Protection Detail Needed",
+      "sourceLabel": "Eckhartsecurity: Experienced Protection Detail Needed",
       "lookupKey": "eckhartsecurity|experienced protection detail needed",
       "missionTypeKey": "eckhartsecurity_experienced_protection_detail_needed",
       "repMin": 150,

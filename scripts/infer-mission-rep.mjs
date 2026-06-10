@@ -94,7 +94,7 @@ async function main() {
       continue
     }
     
-    const title = mission.sccrafterLabel || key.split('|')[1] || ''
+    const title = mission.sourceLabel || key.split('|')[1] || ''
     const giverSlug = mission.giverSlug || key.split('|')[0] || ''
     
     const inference = inferRepFromTitle(title, giverSlug)
@@ -107,7 +107,7 @@ async function main() {
       
       inferenceLog.push({
         key,
-        label: mission.sccrafterLabel,
+        label: mission.sourceLabel,
         giver: mission.missionGiver,
         inferred: inference,
       })
@@ -170,7 +170,7 @@ async function main() {
   if (stillUnknown.length > 0) {
     console.log(`\nRemaining unknowns: ${stillUnknown.length}`)
     stillUnknown.slice(0, 10).forEach(([k, m]) => {
-      console.log(`  - ${m.missionGiver}: ${m.sccrafterLabel?.split(':').slice(-1)[0]?.trim() || k}`)
+      console.log(`  - ${m.missionGiver}: ${m.sourceLabel?.split(':').slice(-1)[0]?.trim() || k}`)
     })
   }
 }
