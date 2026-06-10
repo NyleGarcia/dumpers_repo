@@ -8,6 +8,7 @@ import AppModal from './layout/AppModal'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const {
+    user,
     profile,
     updateRsiHandle,
     updateGhostMode,
@@ -35,6 +36,44 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [hasActiveOrders, setHasActiveOrders] = useState(false)
+  const [checkingOrders, setCheckingOrders] = useState(true)
+
+  const hasRsiHandle = !!(profile?.rsi_handle && profile.rsi_handle.trim())
+
+  // Check if user has active orders (as buyer or fulfiller)
+  useEffect(() => {
+    if (!user?.id) {
+      setCheckingOrders(false)
+      return
+    }
+
+    const checkActiveOrders = async () => {
+      try {
+        // Check for active orders as requester
+        const { count: requesterCount } = await supabase
+          .from('custom_orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('requester_id', user.id)
+          .in('status', ['pending', 'accepted', 'in_progress'])
+
+        // Check for active orders as assignee/fulfiller
+        const { count: assigneeCount } = await supabase
+          .from('custom_orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('assignee_id', user.id)
+          .in('status', ['accepted', 'in_progress'])
+
+        setHasActiveOrders((requesterCount ?? 0) > 0 || (assigneeCount ?? 0) > 0)
+      } catch {
+        // If query fails, assume no active orders
+        setHasActiveOrders(false)
+      }
+      setCheckingOrders(false)
+    }
+
+    checkActiveOrders()
+  }, [user?.id])
 
   // Load welcome modal setting for super-admin
   useEffect(() => {
@@ -200,40 +239,51 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
 
           <SettingsSection
             title="Profile"
-            description="How you appear to other members"
+            description="How you appear to other players"
           >
             <SettingsField
               label="RSI Handle"
-              hint="Shown instead of your Google name across the app."
+              hint={
+                hasActiveOrders && hasRsiHandle
+                  ? "You have active orders — clear them before changing your handle."
+                  : "Required for Custom Orders and Fulfillment features."
+              }
             >
               <input
                 type="text"
                 value={rsiHandle}
                 onChange={(e) => setRsiHandle(e.target.value)}
                 placeholder="Enter your RSI handle..."
-                className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 transition-all text-sm"
+                disabled={hasActiveOrders && hasRsiHandle}
+                className={`w-full px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none transition-all text-sm ${
+                  hasActiveOrders && hasRsiHandle
+                    ? 'border-slate-700 opacity-60 cursor-not-allowed'
+                    : 'border-slate-600 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
+                }`}
               />
             </SettingsField>
             <button
               onClick={handleSaveRsi}
-              disabled={savingRsi}
-              className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+              disabled={savingRsi || (hasActiveOrders && hasRsiHandle)}
+              className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {savingRsi ? 'Saving...' : 'Save RSI Handle'}
+              {savingRsi ? 'Saving...' : hasActiveOrders && hasRsiHandle ? 'Active orders — cannot change' : 'Save RSI Handle'}
             </button>
-          </SettingsSection>
 
-          <SettingsSection
-            title="Resources"
-            description="Fulfillment and inventory preferences"
-          >
-            <SettingsToggle
-              label="Deduct inventory on craft complete"
-              description="When on, completing a fulfillment craft requires enough stock in My Resources and deducts materials automatically. Off by default."
-              checked={craftDeductInventory}
-              onChange={handleCraftDeductInventoryChange}
-              saving={savingCraftDeduct}
-            />
+            <div className="mt-4 pt-4 border-t border-slate-700/50">
+              <SettingsToggle
+                label="Deduct inventory on craft complete"
+                description={
+                  hasRsiHandle
+                    ? "When on, completing a fulfillment craft requires enough stock in My Resources and deducts materials automatically."
+                    : "Set your RSI Handle above to enable this feature."
+                }
+                checked={craftDeductInventory}
+                onChange={handleCraftDeductInventoryChange}
+                saving={savingCraftDeduct}
+                disabled={!hasRsiHandle}
+              />
+            </div>
           </SettingsSection>
 
           <SettingsSection
