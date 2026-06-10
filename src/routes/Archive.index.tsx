@@ -63,61 +63,59 @@ export default function ArchivePage() {
   }
 
   return (
-    <div className="site-shell py-6 flex flex-col min-h-[calc(100vh-8rem)] overflow-x-hidden">
+    <div className="site-shell py-6 min-h-[calc(100vh-8rem)]">
       {/* Page header */}
       <header className="mb-6">
         <h1 className="site-page-title">{sectionTitle}</h1>
         <p className="site-page-subtitle">Star Citizen Reference Data</p>
       </header>
 
-      {/* Main layout: sidebar + content */}
-      <div className="flex-1 flex gap-6">
-        {/* Sidebar toggle for mobile */}
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden fixed bottom-4 left-4 z-30 p-3 bg-orange-600 text-white rounded-full shadow-lg shadow-orange-500/25 hover:bg-orange-500 transition-colors"
-          aria-label={sidebarOpen ? 'Hide navigation' : 'Show navigation'}
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {sidebarOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
+      {/* Sidebar toggle for mobile */}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="lg:hidden fixed bottom-4 left-4 z-30 p-3 bg-orange-600 text-white rounded-full shadow-lg shadow-orange-500/25 hover:bg-orange-500 transition-colors"
+        aria-label={sidebarOpen ? 'Hide navigation' : 'Show navigation'}
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {sidebarOpen ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          )}
+        </svg>
+      </button>
 
-        {/* Tree navigation sidebar - fixed width */}
-        <aside
-          className={`
-            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-            fixed lg:relative inset-y-0 left-0 z-20 lg:z-auto
-            w-64 lg:w-[220px] flex-shrink-0
-            bg-slate-900/98 lg:bg-transparent
-            border-r border-slate-800/80 lg:border-0
-            pt-20 lg:pt-0 pb-4 lg:pb-0
-            transition-transform lg:transition-none
-          `}
-        >
-          <ArchiveTreeNav currentSection={currentSection} onSelectSection={setSection} />
-        </aside>
+      {/* Backdrop for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-10 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
-        {/* Backdrop for mobile */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black/50 z-10 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-            aria-hidden="true"
-          />
-        )}
+      {/* SIDEBAR - Completely independent, sticky on desktop */}
+      <aside
+        className={`
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          fixed lg:fixed inset-y-0 left-0 z-20
+          w-64 lg:w-[220px]
+          bg-slate-900 lg:bg-slate-900/95
+          border-r border-slate-800/80
+          pt-20 lg:pt-28 pb-4
+          transition-transform lg:transition-none
+          lg:top-0 lg:h-screen
+        `}
+      >
+        <ArchiveTreeNav currentSection={currentSection} onSelectSection={setSection} />
+      </aside>
 
-        {/* Main content area - flex-1 with overflow hidden to prevent content affecting width */}
-        <main className="flex-1 min-w-0 overflow-hidden">
-          <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px] overflow-x-auto">
-            {renderSection()}
-          </div>
-        </main>
-      </div>
+      {/* CONTENT - Has left margin to account for fixed sidebar on desktop */}
+      <main className="lg:ml-[244px]">
+        <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
+          {renderSection()}
+        </div>
+      </main>
     </div>
   )
 }
