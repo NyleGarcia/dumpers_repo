@@ -94,28 +94,33 @@ export default function ArchivePage() {
         />
       )}
 
-      {/* SIDEBAR - Completely independent, sticky on desktop */}
-      <aside
-        className={`
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          fixed lg:fixed inset-y-0 left-0 z-20
-          w-64 lg:w-[220px]
-          bg-slate-900 lg:bg-slate-900/95
-          border-r border-slate-800/80
-          pt-20 lg:pt-28 pb-4
-          transition-transform lg:transition-none
-          lg:top-0 lg:h-screen
-        `}
-      >
-        <ArchiveTreeNav currentSection={currentSection} onSelectSection={setSection} />
-      </aside>
+      {/* Main layout container */}
+      <div className="flex gap-6">
+        {/* SIDEBAR - Sticky on desktop, fixed on mobile */}
+        <aside
+          className={`
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+            fixed lg:sticky inset-y-0 lg:inset-y-auto left-0 lg:left-auto
+            lg:top-20 lg:self-start
+            z-20 lg:z-auto
+            w-64 lg:w-[220px] lg:flex-shrink-0
+            bg-slate-900 lg:bg-transparent
+            border-r lg:border-0 border-slate-800/80
+            pt-20 lg:pt-0 pb-4 lg:pb-0
+            transition-transform lg:transition-none
+            lg:h-auto
+          `}
+        >
+          <ArchiveTreeNav currentSection={currentSection} onSelectSection={setSection} />
+        </aside>
 
-      {/* CONTENT - Has left margin to account for fixed sidebar on desktop */}
-      <main className="lg:ml-[244px]">
-        <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
-          {renderSection()}
-        </div>
-      </main>
+        {/* CONTENT - Takes remaining space */}
+        <main className="flex-1 min-w-0">
+          <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
+            {renderSection()}
+          </div>
+        </main>
+      </div>
     </div>
   )
 }
