@@ -15,13 +15,17 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
   const [step, setStep] = useState(0)
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [saving, setSaving] = useState(false)
+  const [validating, setValidating] = useState(false)
+  const [validationError, setValidationError] = useState<string | null>(null)
 
   const totalSteps = 3
+  const isVerified = profile?.rsi_handle_verified ?? false
 
   const handleSaveHandle = async () => {
     if (!user?.id || !rsiHandle.trim()) return
     
     setSaving(true)
+    setValidationError(null)
     const { error } = await supabase
       .from('profiles')
       .update({ rsi_handle: rsiHandle.trim() })
@@ -31,6 +35,53 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
       await refreshProfile()
     }
     setSaving(false)
+  }
+
+  const handleValidateHandle = async () => {
+    if (!rsiHandle.trim()) {
+      setValidationError('Enter an RSI handle first.')
+      return
+    }
+
+    setValidating(true)
+    setValidationError(null)
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        setValidationError('Not authenticated')
+        setValidating(false)
+        return
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/validate-rsi-handle`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ handle: rsiHandle.trim() })
+        }
+      )
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        setValidationError(result.error || 'Validation failed')
+      } else if (!result.valid) {
+        setValidationError(result.error || 'RSI Handle not found')
+      } else if (result.verified) {
+        await refreshProfile()
+      } else {
+        setValidationError(result.error || 'Verification failed')
+      }
+    } catch {
+      setValidationError('Network error during validation')
+    }
+
+    setValidating(false)
   }
 
   const handleFinish = async () => {
@@ -104,7 +155,17 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
 
           {step === 1 && (
             <div className="space-y-4">
-              <h3 className="text-white font-medium">Set Your RSI Handle</h3>
+              <h3 className="text-white font-medium flex items-center gap-2">
+                Set Your RSI Handle
+                {isVerified && (
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-cyan-900/50 border border-cyan-500/30 rounded text-[10px] text-cyan-400 font-semibold">
+                    <span className="italic">RSI</span>
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                )}
+              </h3>
               <p className="text-sm text-slate-400 leading-relaxed">
                 Your RSI handle helps other players identify you when coordinating trades and crafting.
               </p>
@@ -122,29 +183,64 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
               </div>
               <div className="mt-4">
                 <label className="block text-sm text-slate-300 mb-2">RSI Handle</label>
-                <input
-                  type="text"
-                  value={rsiHandle}
-                  onChange={(e) => setRsiHandle(e.target.value)}
-                  placeholder="Your Star Citizen username"
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/30"
-                />
-                {rsiHandle.trim() && rsiHandle !== profile?.rsi_handle && (
-                  <button
-                    onClick={handleSaveHandle}
-                    disabled={saving}
-                    className="mt-3 px-4 py-2 text-sm bg-orange-600 hover:bg-orange-500 disabled:opacity-50 text-white rounded-lg transition-colors"
-                  >
-                    {saving ? 'Saving...' : 'Save Handle'}
-                  </button>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={rsiHandle}
+                    onChange={(e) => setRsiHandle(e.target.value)}
+                    placeholder="Your Star Citizen username"
+                    disabled={isVerified}
+                    className={`flex-1 px-3 py-2 bg-slate-800 border rounded-lg text-white placeholder:text-slate-500 focus:outline-none transition-all ${
+                      isVerified
+                        ? 'border-slate-700 opacity-60 cursor-not-allowed'
+                        : 'border-slate-700 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/30'
+                    }`}
+                  />
+                  {!isVerified && (
+                    <button
+                      onClick={handleValidateHandle}
+                      disabled={validating || !rsiHandle.trim()}
+                      className="shrink-0 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Validate against RSI website"
+                    >
+                      {validating ? (
+                        <span className="flex items-center gap-1.5">
+                          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                        </span>
+                      ) : 'Validate'}
+                    </button>
+                  )}
+                </div>
+                
+                {validationError && (
+                  <p className="mt-2 text-xs text-red-400 flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {validationError}
+                  </p>
                 )}
-                {rsiHandle === profile?.rsi_handle && profile?.rsi_handle && (
-                  <p className="mt-2 text-xs text-green-400 flex items-center gap-1">
+                
+                {isVerified && (
+                  <p className="mt-2 text-xs text-cyan-400 flex items-center gap-1">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Saved
+                    Verified on RSI
                   </p>
+                )}
+                
+                {!isVerified && rsiHandle.trim() && !validationError && (
+                  <button
+                    onClick={handleSaveHandle}
+                    disabled={saving || rsiHandle === profile?.rsi_handle}
+                    className="mt-3 px-4 py-2 text-sm bg-slate-600 hover:bg-slate-500 disabled:opacity-50 text-white rounded-lg transition-colors"
+                  >
+                    {saving ? 'Saving...' : rsiHandle === profile?.rsi_handle ? 'Saved (not verified)' : 'Save Without Verification'}
+                  </button>
                 )}
               </div>
               <p className="text-xs text-slate-500 mt-2">
