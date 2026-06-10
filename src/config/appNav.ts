@@ -15,6 +15,8 @@ export interface AppNavItem {
   minRole?: UserRole
   /** Ghost Mode users only see items with ghostAllowed !== false */
   ghostAllowed?: boolean
+  /** Nested child items (for expandable menus) */
+  children?: AppNavItem[]
 }
 
 export interface NavGroup {
@@ -74,6 +76,14 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     icon: 'archive',
     minRole: 'member',
     ghostAllowed: true,
+    children: [
+      { id: 'archive-welcome', label: 'Overview', path: '/archive', icon: 'home' },
+      { id: 'archive-mining', label: 'Mining Guide', path: '/archive?section=mining', icon: 'mining' },
+      { id: 'archive-components', label: 'Components', path: '/archive?section=components', icon: 'components' },
+      { id: 'archive-ordnance', label: 'Ordnance', path: '/archive?section=ordnance', icon: 'ordnance' },
+      { id: 'archive-factions', label: 'Factions', path: '/archive?section=factions', icon: 'factions' },
+      { id: 'archive-general', label: 'General Info', path: '/archive?section=general', icon: 'info' },
+    ],
   },
 ]
 
