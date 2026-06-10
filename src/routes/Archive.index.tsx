@@ -63,7 +63,7 @@ export default function ArchivePage() {
   }
 
   return (
-    <div className="site-shell py-6 flex flex-col min-h-[calc(100vh-8rem)]">
+    <div className="site-shell py-6 flex flex-col min-h-[calc(100vh-8rem)] overflow-x-hidden">
       {/* Page header */}
       <header className="mb-6">
         <h1 className="site-page-title">{sectionTitle}</h1>
