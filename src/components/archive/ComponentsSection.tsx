@@ -70,19 +70,31 @@ export default function ComponentsSection() {
   const hasFilters = searchTerm || selectedType || selectedManufacturer || selectedSize !== null || selectedGrade
 
   if (loading) {
-    return <LoadingState />
+    return (
+      <div className="w-full">
+        <LoadingState />
+      </div>
+    )
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={refetch} />
+    return (
+      <div className="w-full">
+        <ErrorState message={error} onRetry={refetch} />
+      </div>
+    )
   }
 
   if (!data || data.length === 0) {
-    return <EmptyState />
+    return (
+      <div className="w-full">
+        <EmptyState />
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       {/* Search */}
       <div className="relative">
         <input

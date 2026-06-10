@@ -184,19 +184,31 @@ export default function MiningSection() {
   }, [allLocations, locationOresMap, searchTerm])
 
   if (loading) {
-    return <LoadingState />
+    return (
+      <div className="w-full">
+        <LoadingState />
+      </div>
+    )
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={refetch} />
+    return (
+      <div className="w-full">
+        <ErrorState message={error} onRetry={refetch} />
+      </div>
+    )
   }
 
   if (!data || data.length === 0) {
-    return <EmptyState />
+    return (
+      <div className="w-full">
+        <EmptyState />
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       {/* View mode toggle */}
       <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
         <button

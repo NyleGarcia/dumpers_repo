@@ -71,19 +71,31 @@ export default function OrdnanceSection() {
   const hasFilters = searchTerm || selectedGuidance || selectedSize !== null || showTorpedoesOnly
 
   if (loading) {
-    return <LoadingState />
+    return (
+      <div className="w-full">
+        <LoadingState />
+      </div>
+    )
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={refetch} />
+    return (
+      <div className="w-full">
+        <ErrorState message={error} onRetry={refetch} />
+      </div>
+    )
   }
 
   if (!data || data.length === 0) {
-    return <EmptyState />
+    return (
+      <div className="w-full">
+        <EmptyState />
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 text-center">
