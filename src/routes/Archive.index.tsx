@@ -71,7 +71,7 @@ export default function ArchivePage() {
       </header>
 
       {/* Main layout: sidebar + content */}
-      <div className="flex-1 flex gap-6">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6">
         {/* Sidebar toggle for mobile */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -87,12 +87,12 @@ export default function ArchivePage() {
           </svg>
         </button>
 
-        {/* Tree navigation sidebar */}
+        {/* Tree navigation sidebar - fixed width column */}
         <aside
           className={`
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-            fixed lg:relative inset-y-0 left-0 z-20 lg:z-auto
-            w-64 lg:w-56 shrink-0 
+            fixed lg:static inset-y-0 left-0 z-20 lg:z-auto
+            w-64 lg:w-auto
             bg-slate-900/98 lg:bg-transparent
             border-r border-slate-800/80 lg:border-0
             pt-20 lg:pt-0 pb-4 lg:pb-0
@@ -111,8 +111,8 @@ export default function ArchivePage() {
           />
         )}
 
-        {/* Main content area */}
-        <main className="flex-1 min-w-0">
+        {/* Main content area - takes remaining space */}
+        <main className="min-w-0">
           <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
             {renderSection()}
           </div>
