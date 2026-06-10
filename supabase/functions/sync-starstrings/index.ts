@@ -12,8 +12,7 @@ const corsHeaders = {
 
 // GitHub repo info for StarStrings
 const GITHUB_OWNER = 'RealMrKraken'
-const GITHUB_REPO = 'StarStrings'
-const RELEASE_TAG = 'latest'
+const GITHUB_REPO = 'StarStrings-master'
 
 interface MiningOre {
   ore_name: string
@@ -323,20 +322,32 @@ serve(async (req) => {
       .update({ sync_status: 'syncing', sync_error: null, updated_at: new Date().toISOString() })
       .eq('id', 1)
 
-    // Fetch latest release info from GitHub
-    const releaseUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/tags/${RELEASE_TAG}`
-    const releaseRes = await fetch(releaseUrl, {
-      headers: { 'User-Agent': 'DumpersRepo-Sync' }
-    })
-
-    if (!releaseRes.ok) {
-      throw new Error(`Failed to fetch release info: ${releaseRes.status}`)
+    // Try to fetch latest release info from GitHub (for version tracking)
+    let version = 'unknown'
+    const releaseUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`
+    try {
+      const releaseRes = await fetch(releaseUrl, {
+        headers: { 'User-Agent': 'DumpersRepo-Sync' }
+      })
+      if (releaseRes.ok) {
+        const releaseData = await releaseRes.json()
+        version = releaseData.name || releaseData.tag_name || 'unknown'
+      } else {
+        // No releases - try to get latest commit instead
+        const commitUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/commits/master`
+        const commitRes = await fetch(commitUrl, {
+          headers: { 'User-Agent': 'DumpersRepo-Sync' }
+        })
+        if (commitRes.ok) {
+          const commitData = await commitRes.json()
+          version = `commit-${commitData.sha?.substring(0, 7) || 'unknown'}`
+        }
+      }
+    } catch (e) {
+      console.log('Could not fetch version info:', e)
     }
 
-    const releaseData = await releaseRes.json()
-    const version = releaseData.name || releaseData.tag_name
-
-    // Find the raw file URLs (we'll fetch individual files from the repo)
+    // Fetch raw files from master branch
     const rawBaseUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/master`
 
     // Fetch the INI files
