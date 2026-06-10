@@ -62,7 +62,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
       {/* Backdrop overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 transition-opacity"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] transition-opacity"
           aria-hidden="true"
         />
       )}
@@ -72,7 +72,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
         ref={sidebarRef}
         className={`
           fixed top-0 left-0 h-full w-64 bg-slate-900 border-r border-slate-700 
-          shadow-2xl z-50 transform transition-transform duration-200 ease-out
+          shadow-2xl z-[80] transform transition-transform duration-200 ease-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
