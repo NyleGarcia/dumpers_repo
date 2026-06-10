@@ -113,7 +113,7 @@ export default function ArchivePage() {
 
         {/* Main content area */}
         <main className="flex-1 min-w-0">
-          <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6">
+          <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
             {renderSection()}
           </div>
         </main>
