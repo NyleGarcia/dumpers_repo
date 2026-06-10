@@ -10,10 +10,17 @@ export interface AppNavItem {
   id: string
   label: string
   path: string
+  icon?: string
   featureId?: FeatureId
   minRole?: UserRole
   /** Ghost Mode users only see items with ghostAllowed !== false */
   ghostAllowed?: boolean
+}
+
+export interface NavGroup {
+  id: string
+  label: string
+  items: AppNavItem[]
 }
 
 export const APP_NAV_ITEMS: AppNavItem[] = [
@@ -21,6 +28,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     id: 'blueprints',
     label: 'Blueprints',
     path: '/',
+    icon: 'blueprints',
     featureId: 'blueprints_browse',
     minRole: 'member',
     ghostAllowed: true,
@@ -29,6 +37,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     id: 'targets',
     label: 'Target BP List',
     path: '/targets',
+    icon: 'target',
     featureId: 'target_bp_list',
     minRole: 'member',
     ghostAllowed: true,
@@ -37,6 +46,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     id: 'resource-tracker',
     label: 'Resource Tracker',
     path: '/resources',
+    icon: 'resources',
     featureId: 'resource_tracker',
     minRole: 'member',
     ghostAllowed: false,
@@ -45,6 +55,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     id: 'custom-orders',
     label: 'Custom Orders',
     path: '/orders',
+    icon: 'orders',
     featureId: 'custom_orders',
     ghostAllowed: false,
   },
@@ -52,8 +63,36 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     id: 'fulfillment',
     label: 'Fulfillment',
     path: '/fulfillment',
+    icon: 'fulfillment',
     featureId: 'fulfillment',
     ghostAllowed: false,
+  },
+  {
+    id: 'archive',
+    label: 'Info Archive',
+    path: '/archive',
+    icon: 'archive',
+    minRole: 'member',
+    ghostAllowed: true,
+  },
+]
+
+/** Navigation group definitions for sidebar */
+export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
+  {
+    id: 'core',
+    label: 'Core',
+    itemIds: ['blueprints', 'targets', 'resource-tracker'],
+  },
+  {
+    id: 'tools',
+    label: 'Tools',
+    itemIds: ['custom-orders', 'fulfillment'],
+  },
+  {
+    id: 'reference',
+    label: 'Reference',
+    itemIds: ['archive'],
   },
 ]
 
@@ -76,6 +115,24 @@ export function getVisibleNavItems(
   canAccess: (minRole: UserRole) => boolean
 ): AppNavItem[] {
   return APP_NAV_ITEMS.filter((item) => canSeeNavItem(item, ctx, canAccess))
+}
+
+/** Get grouped navigation items for sidebar display */
+export function getVisibleNavGroups(
+  ctx: VisibilityContext,
+  canAccess: (minRole: UserRole) => boolean
+): NavGroup[] {
+  const visibleItems = getVisibleNavItems(ctx, canAccess)
+  const visibleIds = new Set(visibleItems.map((i) => i.id))
+
+  return NAV_GROUPS.map((group) => ({
+    id: group.id,
+    label: group.label,
+    items: group.itemIds
+      .filter((id) => visibleIds.has(id))
+      .map((id) => visibleItems.find((i) => i.id === id)!)
+      .filter(Boolean),
+  })).filter((g) => g.items.length > 0)
 }
 
 export function getNavItemByPath(path: string): AppNavItem | undefined {

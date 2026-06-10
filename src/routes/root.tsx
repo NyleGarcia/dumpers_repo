@@ -6,6 +6,7 @@ import ResourceTrackerRoute from './ResourceTracker.index'
 import CustomOrdersRoute from './CustomOrders.index'
 import FulfillmentRoute from './Fulfillment.index'
 import TargetsRoute from './Targets.index'
+import ArchiveRoute from './Archive.index'
 import { requireFeature } from '../lib/routeGuards'
 
 const rootRoute = createRootRoute({
@@ -48,12 +49,19 @@ const fulfillmentRoute = createRoute({
   beforeLoad: requireFeature('fulfillment'),
 })
 
+const archiveRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/archive',
+  component: ArchiveRoute,
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   targetsRoute,
   resourceTrackerRoute,
   customOrdersRoute,
   fulfillmentRoute,
+  archiveRoute,
 ])
 
 export default routeTree

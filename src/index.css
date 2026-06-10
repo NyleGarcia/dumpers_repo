@@ -17,15 +17,14 @@
     @apply backdrop-blur-xl bg-slate-900/95 border-b border-orange-500/20 shadow-lg shadow-orange-950/20;
   }
 
-  /* h-14 top row; + h-11 mobile nav row below lg */
-  .site-main-offset {
-    padding-top: 6.25rem;
+  /* h-14 header height */
+  .site-header-offset {
+    padding-top: 3.5rem;
   }
 
-  @media (min-width: 1024px) {
-    .site-main-offset {
-      padding-top: 3.5rem;
-    }
+  /* Legacy offset for any remaining usage */
+  .site-main-offset {
+    padding-top: 3.5rem;
   }
 
   .site-shell {

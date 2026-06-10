@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Outlet } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
-import { getVisibleNavItems } from '../config/appNav'
+import { getVisibleNavGroups } from '../config/appNav'
 import Login from './Login'
 import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
@@ -24,7 +24,7 @@ export default function Layout() {
     canUseFeature,
     isSuperAdmin,
   } = useAuth()
-  const navItems = getVisibleNavItems(visibilityContext, canAccess)
+  const navGroups = getVisibleNavGroups(visibilityContext, canAccess)
   const showAdminPanelButton = canUseFeature('admin_panel')
   const showSettingsButton = canUseFeature('settings')
   const showDbActionsButton = isSuperAdmin
@@ -54,7 +54,7 @@ export default function Layout() {
   return (
     <>
       <AppChrome
-        navItems={navItems}
+        navGroups={navGroups}
         displayName={displayName}
         profile={profile}
         isPending={isPending}
