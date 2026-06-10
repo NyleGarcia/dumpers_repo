@@ -94,9 +94,9 @@ const PAGE_GUIDES = [
     details: [
       'Log quantities and quality levels of resources you\'ve collected',
       'Quality ranges from 500 (base) to 1000 (perfect) — higher quality = exponentially higher value',
-      'DFP (Dumper\'s Fair Price) calculates fair market values automatically',
+      'DFP automatically calculates fair market values for your resources',
       'See your total inventory value at a glance',
-      'Officers can view "Site Total" to see combined org inventory',
+      'Perfect for tracking what you have available for crafting or trading',
     ],
     relatesTo: ['Blueprints', 'Mining Guide'],
   },
@@ -402,7 +402,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             <h4 className="text-sm font-medium text-slate-300">Data Sources</h4>
             <p className="text-xs text-slate-500 mt-1">
               Information is sourced from MrKraken's StarStrings community data, the Star Citizen Wiki API,
-              and scunpacked game files. Data is synchronized periodically by site administrators.
+              and scunpacked game files. Data is synchronized periodically to stay current with game updates.
             </p>
           </div>
         </div>
