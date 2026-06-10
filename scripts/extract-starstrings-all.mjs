@@ -60,6 +60,11 @@ function extractMiningData() {
       const [orePart, locationsPart] = trimmed.split(' - ')
       if (orePart && locationsPart) {
         const oreName = orePart.trim()
+        // Skip notes/comments that aren't actual ores
+        const lowerName = oreName.toLowerCase()
+        if (lowerName.includes('note') || lowerName.includes('mrkraken') || lowerName.startsWith('*')) {
+          continue
+        }
         const locations = locationsPart.split(',').map(l => l.trim()).filter(Boolean)
         
         rarityTiers[currentTier].push({

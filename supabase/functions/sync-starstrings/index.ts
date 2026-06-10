@@ -144,8 +144,14 @@ function parseMiningData(content: string): MiningOre[] {
     else if (currentRarity && trimmed.includes(' - ')) {
       const [orePart, locationsPart] = trimmed.split(' - ')
       if (orePart && locationsPart) {
+        const oreName = orePart.trim()
+        // Skip notes/comments that aren't actual ores
+        const lowerName = oreName.toLowerCase()
+        if (lowerName.includes('note') || lowerName.includes('mrkraken') || lowerName.startsWith('*')) {
+          continue
+        }
         ores.push({
-          ore_name: orePart.trim(),
+          ore_name: oreName,
           rarity: currentRarity,
           locations: locationsPart.split(',').map(l => l.trim()).filter(Boolean)
         })
