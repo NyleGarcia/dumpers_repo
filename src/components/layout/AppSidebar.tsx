@@ -67,13 +67,13 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
         />
       )}
 
-      {/* Sidebar panel - positioned below header, grows from top-left */}
+      {/* Sidebar panel - slides in from left, positioned below header */}
       <div
         ref={sidebarRef}
         className={`
-          fixed top-14 left-4 w-64 max-h-[calc(100vh-4.5rem)] bg-slate-900 border border-slate-700 
-          rounded-xl shadow-2xl z-[80] origin-top-left transition-all duration-200 ease-out overflow-hidden
-          ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}
+          fixed top-14 left-0 w-64 max-h-[calc(100vh-4.5rem)] bg-slate-900 border border-slate-700 
+          rounded-r-xl shadow-2xl z-[80] transition-transform duration-200 ease-out overflow-hidden
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
         {/* Sidebar header */}
