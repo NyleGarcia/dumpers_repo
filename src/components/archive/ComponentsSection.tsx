@@ -248,8 +248,7 @@ function EmptyState() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       </div>
-      <p className="text-slate-400">No component data available.</p>
-      <p className="text-sm text-slate-500 mt-1">Ask a super-admin to sync the StarStrings data.</p>
+      <p className="text-slate-400">No component data available yet.</p>
     </div>
   )
 }

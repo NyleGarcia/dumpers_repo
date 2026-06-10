@@ -200,8 +200,7 @@ function EmptyState() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
         </svg>
       </div>
-      <p className="text-slate-400">No mining data available.</p>
-      <p className="text-sm text-slate-500 mt-1">Ask a super-admin to sync the StarStrings data.</p>
+      <p className="text-slate-400">No mining data available yet.</p>
     </div>
   )
 }

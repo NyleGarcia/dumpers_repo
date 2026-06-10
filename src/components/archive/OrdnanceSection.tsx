@@ -271,8 +271,7 @@ function EmptyState() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       </div>
-      <p className="text-slate-400">No ordnance data available.</p>
-      <p className="text-sm text-slate-500 mt-1">Ask a super-admin to sync the StarStrings data.</p>
+      <p className="text-slate-400">No ordnance data available yet.</p>
     </div>
   )
 }
