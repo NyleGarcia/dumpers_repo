@@ -1,11 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SiteBrandTitle from './SiteBrandTitle'
 import { SITE_COPYRIGHT, SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
+import { supabase } from '../lib/supabase'
 
 export default function Login() {
   const { signInWithGoogle, loading } = useAuth()
-  const [error, setError] = React.useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [autoApproveEnabled, setAutoApproveEnabled] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    const fetchAutoApprove = async () => {
+      const { data, error } = await supabase.rpc('get_auto_approve_enabled')
+      if (!error && data !== null) {
+        setAutoApproveEnabled(data)
+      } else {
+        setAutoApproveEnabled(false)
+      }
+    }
+    fetchAutoApprove()
+  }, [])
 
   const handleLogin = async () => {
     try {
@@ -64,9 +78,11 @@ export default function Login() {
               {loading ? 'Signing in...' : 'Sign in with Google'}
             </button>
 
-            <div className="text-center text-slate-500 text-xs">
-              <p>New accounts require approval from an officer.</p>
-            </div>
+            {autoApproveEnabled === false && (
+              <div className="text-center text-slate-500 text-xs">
+                <p>New accounts require approval from an officer.</p>
+              </div>
+            )}
           </div>
         </div>
 

@@ -39,6 +39,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 9. `044_auto_approve_setting.sql` — auto-approve new signups toggle
 10. `045_remove_preview_features.sql` — opens preview-gated features to all members
 11. `046_starstrings_data.sql` — StarStrings data tables (mining, components, ordnance, blueprints)
+12. `047_public_auto_approve_read.sql` — public read access for auto-approve status (login page display)
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 
