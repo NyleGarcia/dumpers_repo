@@ -118,33 +118,39 @@ function MissionChecklistGroups({
             <h3 className="text-sm font-semibold text-purple-300">{group.giver}</h3>
           </div>
           <ul className="divide-y divide-slate-800">
-            {group.missions.map((mission) => (
-              <li key={mission.missionKey} className="px-4 py-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-slate-200">{mission.mission}</p>
-                    <MissionMetaLine
-                      repMin={mission.repMin}
-                      repMax={mission.repMax}
-                      minStandingName={mission.minStandingName}
-                      minReputation={mission.minReputation}
-                      dropChance={mission.dropChance}
-                    />
-                    <p className="text-xs text-slate-500 mt-1">
-                      Waiting on: {mission.unacquiredBlueprintIds.length} blueprint
-                      {mission.unacquiredBlueprintIds.length === 1 ? '' : 's'}
-                    </p>
+            {group.missions.map((mission) => {
+              const hasKnownRepLevel = mission.minReputation != null || mission.minStandingName != null
+              return (
+                <li
+                  key={mission.missionKey}
+                  className={`px-4 py-3 ${hasKnownRepLevel ? 'bg-amber-900/20' : ''}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-slate-200">{mission.mission}</p>
+                      <MissionMetaLine
+                        repMin={mission.repMin}
+                        repMax={mission.repMax}
+                        minStandingName={mission.minStandingName}
+                        minReputation={mission.minReputation}
+                        dropChance={mission.dropChance}
+                      />
+                      <p className="text-xs text-slate-500 mt-1">
+                        Waiting on: {mission.unacquiredBlueprintIds.length} blueprint
+                        {mission.unacquiredBlueprintIds.length === 1 ? '' : 's'}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => void onRemove(mission.mission)}
+                      className="shrink-0 px-2 py-1 text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg hover:bg-red-950/30 transition-colors"
+                    >
+                      Remove
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => void onRemove(mission.mission)}
-                    className="shrink-0 px-2 py-1 text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg hover:bg-red-950/30 transition-colors"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </li>
-            ))}
+                </li>
+              )
+            })}
           </ul>
         </div>
       ))}
@@ -196,7 +202,9 @@ export default function TargetsRoute() {
   )
 
   const targetBlueprintRecords = useMemo(() => {
-    return blueprints.filter((bp) => targetIds[bp.file])
+    return blueprints
+      .filter((bp) => targetIds[bp.file])
+      .sort((a, b) => (a.blueprintName ?? '').localeCompare(b.blueprintName ?? ''))
   }, [blueprints, targetIds])
 
   const missionGroups = useMemo(
@@ -332,6 +340,7 @@ export default function TargetsRoute() {
                       <ul className="divide-y divide-slate-800/80">
                         {missions.map((m) => {
                           const onChecklist = isMissionOnChecklist(m.missionKey)
+                          const hasKnownRepLevel = m.minReputation != null || m.minStandingName != null
                           return (
                             <li key={m.missionKey}>
                               <button
@@ -341,7 +350,9 @@ export default function TargetsRoute() {
                                 className={`w-full text-left px-3 py-2.5 transition-colors ${
                                   onChecklist
                                     ? 'opacity-40 cursor-not-allowed bg-slate-950/20'
-                                    : 'hover:bg-slate-800/50 cursor-pointer'
+                                    : hasKnownRepLevel
+                                      ? 'bg-amber-900/20 hover:bg-amber-800/30 cursor-pointer'
+                                      : 'hover:bg-slate-800/50 cursor-pointer'
                                 }`}
                                 title={
                                   onChecklist
