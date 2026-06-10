@@ -17,6 +17,8 @@ export interface Profile {
   display_name: string | null
   avatar_url: string | null
   rsi_handle: string | null
+  rsi_handle_verified: boolean
+  rsi_handle_verified_at: string | null
   role: UserRole
   created_at: string
   approved_at: string | null

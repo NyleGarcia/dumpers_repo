@@ -35,6 +35,11 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [syncStatus, setSyncStatus] = useState<StarstringsSyncStatus | null>(null)
   const [syncing, setSyncing] = useState(false)
 
+  // RSI Handle verification removal state
+  const [rsiHandleToRevoke, setRsiHandleToRevoke] = useState('')
+  const [alsoBanUser, setAlsoBanUser] = useState(false)
+  const [revoking, setRevoking] = useState(false)
+
   // Fetch sync statuses on mount
   useEffect(() => {
     const fetchSyncStatuses = async () => {
@@ -167,6 +172,41 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
     setConfirmText('')
   }
 
+  const handleRevokeVerification = async () => {
+    if (!rsiHandleToRevoke.trim()) return
+
+    setRevoking(true)
+    setMessage(null)
+
+    try {
+      const rpcName = alsoBanUser ? 'remove_rsi_verification_and_ban' : 'remove_rsi_verification'
+      const params = alsoBanUser 
+        ? { p_handle: rsiHandleToRevoke.trim(), p_reason: 'RSI Handle verification revoked by super-admin' }
+        : { p_handle: rsiHandleToRevoke.trim() }
+
+      const { data, error } = await supabase.rpc(rpcName, params)
+
+      if (error) {
+        setMessage({ type: 'error', text: error.message })
+      } else if (!data?.success) {
+        setMessage({ type: 'error', text: data?.error || 'Failed to revoke verification' })
+      } else {
+        const action = alsoBanUser ? 'revoked and banned' : 'revoked'
+        const userName = data.display_name || data.banned_user || rsiHandleToRevoke
+        setMessage({ 
+          type: 'success', 
+          text: `Verification ${action} for ${userName}` 
+        })
+        setRsiHandleToRevoke('')
+        setAlsoBanUser(false)
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Network error during revocation' })
+    }
+
+    setRevoking(false)
+  }
+
   return (
     <AppModal
       title="DB Actions"
@@ -259,6 +299,44 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               {syncing ? 'Syncing...' : 'Sync Now'}
             </button>
           </div>
+        </div>
+
+        {/* RSI Handle Verification Revoke */}
+        <div className="p-3 sm:p-4 rounded-xl border border-amber-500/30 bg-amber-950/20 space-y-3">
+          <div>
+            <h3 className="text-white font-medium text-sm">Revoke RSI Handle Verification</h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Remove verification badge from a user's RSI Handle. Optionally ban them at the same time.
+            </p>
+          </div>
+          <input
+            type="text"
+            value={rsiHandleToRevoke}
+            onChange={(e) => setRsiHandleToRevoke(e.target.value)}
+            placeholder="Enter RSI Handle to revoke..."
+            className="w-full px-3 py-2 bg-slate-800 border border-amber-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 text-sm"
+          />
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={alsoBanUser}
+              onChange={(e) => setAlsoBanUser(e.target.checked)}
+              className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-red-500 focus:ring-red-500/20"
+            />
+            <span className="text-sm text-red-400">Also ban this user</span>
+          </label>
+          <button
+            type="button"
+            onClick={() => void handleRevokeVerification()}
+            disabled={revoking || !rsiHandleToRevoke.trim()}
+            className={`w-full px-4 py-2.5 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 ${
+              alsoBanUser 
+                ? 'bg-red-600 hover:bg-red-700' 
+                : 'bg-amber-600 hover:bg-amber-700'
+            }`}
+          >
+            {revoking ? 'Processing...' : alsoBanUser ? 'Revoke & Ban' : 'Revoke Verification'}
+          </button>
         </div>
 
         {/* Resource Tracker Wipe */}

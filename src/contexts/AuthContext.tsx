@@ -14,6 +14,7 @@ export interface UserWithBlueprints {
   id: string
   display_name: string | null
   rsi_handle: string | null
+  rsi_handle_verified: boolean
   blueprint_count: number
 }
 
@@ -32,6 +33,7 @@ interface AuthContextType {
   updateCraftDeductInventory: (enabled: boolean) => Promise<boolean>
   fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
+  refreshProfile: () => Promise<void>
   displayName: string
   isOfficerOrAbove: boolean
   isSuperAdmin: boolean
@@ -121,6 +123,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     return data as Profile
   }, [])
+
+  const refreshProfile = useCallback(async () => {
+    if (!user?.id) return
+    const profileData = await fetchProfile(user.id)
+    if (profileData) setProfile(profileData)
+  }, [user?.id, fetchProfile])
 
   const fetchSiteSettings = useCallback(async () => {
     const { data, error } = await supabase
@@ -440,7 +448,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const profileQuery = supabase
       .from('profiles')
-      .select('id, display_name, rsi_handle, role')
+      .select('id, display_name, rsi_handle, rsi_handle_verified, role')
       .in('id', userIdsWithBlueprints)
       .neq('role', 'pending')
       .eq('ghost_mode', false)
@@ -456,6 +464,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       id: p.id,
       display_name: p.display_name,
       rsi_handle: p.rsi_handle,
+      rsi_handle_verified: p.rsi_handle_verified ?? false,
       blueprint_count: userCounts[p.id] || 0
     })).sort((a, b) => {
       const nameA = a.rsi_handle || a.display_name || ''
@@ -527,6 +536,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateCraftDeductInventory,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
+      refreshProfile,
       displayName,
       isOfficerOrAbove,
       isSuperAdmin,
@@ -559,6 +569,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateCraftDeductInventory,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
+      refreshProfile,
       displayName,
       isOfficerOrAbove,
       isSuperAdmin,

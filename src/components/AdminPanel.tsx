@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { supabase, Profile, UserRole, BannedUser, banUser, unbanUser, getDisplayName } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
+import RsiVerifiedBadge from './RsiVerifiedBadge'
 type TabType = 'pending' | 'members' | 'officers' | 'banned'
 
 export default function AdminPanel({ onClose }: { onClose: () => void }) {
@@ -252,10 +253,11 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                     )}
 
                     <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium truncate">
-                        {getDisplayName(user)}
+                      <p className="text-white font-medium truncate flex items-center gap-1.5">
+                        <span>{getDisplayName(user)}</span>
+                        {user.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
                         {user.id === currentUser?.id && (
-                          <span className="ml-2 text-xs text-slate-500">(you)</span>
+                          <span className="text-xs text-slate-500">(you)</span>
                         )}
                       </p>
                       {user.rsi_handle && (

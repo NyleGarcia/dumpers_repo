@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import type { Profile } from '../../lib/supabase'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
+import RsiVerifiedBadge from '../RsiVerifiedBadge'
 
 interface AppUserMenuProps {
   displayName: string
@@ -101,7 +102,10 @@ export default function AppUserMenu({
             }`}
           >
             <div className="p-3 border-b border-slate-700">
-              <p className="text-white font-medium truncate">{displayName}</p>
+              <p className="text-white font-medium truncate flex items-center gap-1.5">
+                <span>{displayName}</span>
+                {profile?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
+              </p>
               {isGhostMode ? (
                 <p className="text-purple-300/80 text-xs mt-1">Hidden from member lists. Personal tracking only.</p>
               ) : (

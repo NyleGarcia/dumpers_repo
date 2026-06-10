@@ -42,6 +42,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 12. `047_public_auto_approve_read.sql` — public read access for auto-approve status (login page display)
 13. `048_blueprints_sync.sql` — Blueprint sync tables for sccrafter.com data
 14. `049_welcome_modal.sql` — Welcome modal onboarding (has_seen_welcome, always_show settings)
+15. `050_rsi_handle_verification.sql` — RSI Handle verification system (validated against RSI website)
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 
@@ -63,6 +64,7 @@ supabase functions deploy unban-user
 supabase functions deploy delete-account
 supabase functions deploy sync-blueprints
 supabase functions deploy sync-starstrings
+supabase functions deploy validate-rsi-handle
 ```
 
 **Function descriptions:**
@@ -70,6 +72,7 @@ supabase functions deploy sync-starstrings
 - `delete-account` — User self-service account deletion
 - `sync-blueprints` — Fetches latest blueprint catalog from sccrafter.com (crafting recipes, mission rewards)
 - `sync-starstrings` — Fetches latest game data from MrKraken's StarStrings GitHub repo (mining locations, components, ordnance, blueprint pools)
+- `validate-rsi-handle` — Validates RSI Handles against robertsspaceindustries.com and marks them as verified
 
 These functions use `SUPABASE_SERVICE_ROLE_KEY` which is automatically available in the Edge Functions environment. **Do not** expose this key in frontend code.
 

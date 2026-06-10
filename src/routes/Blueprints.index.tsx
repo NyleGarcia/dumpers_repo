@@ -3,6 +3,7 @@ import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import RsiVerifiedBadge from '../components/RsiVerifiedBadge'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
@@ -524,20 +525,23 @@ export default function BlueprintsRoute() {
               <option value="all">Everyone</option>
               {usersWithBlueprints.map(u => (
                 <option key={u.id} value={u.id}>
-                  {u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
+                  {u.rsi_handle_verified ? '✓ ' : ''}{u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
                 </option>
               ))}
             </select>
           )}
         </div>
 
-        {isViewingOther && (
-          <div className="text-xs text-amber-400 bg-amber-900/20 border border-amber-500/30 rounded py-1 px-2">
-            Viewing {usersWithBlueprints.find(u => u.id === selectedUserId)?.rsi_handle ||
-                     usersWithBlueprints.find(u => u.id === selectedUserId)?.display_name || 'user'}&apos;s collection
-            {loadingUserBlueprints && ' (loading...)'}
-          </div>
-        )}
+        {isViewingOther && (() => {
+          const viewedUser = usersWithBlueprints.find(u => u.id === selectedUserId)
+          return (
+            <div className="text-xs text-amber-400 bg-amber-900/20 border border-amber-500/30 rounded py-1 px-2 flex items-center gap-1.5">
+              <span>Viewing {viewedUser?.rsi_handle || viewedUser?.display_name || 'user'}&apos;s collection</span>
+              {viewedUser?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
+              {loadingUserBlueprints && <span>(loading...)</span>}
+            </div>
+          )
+        })()}
 
         {/* Main Category Tags */}
         <div className="flex flex-wrap gap-1.5 lg:gap-2">

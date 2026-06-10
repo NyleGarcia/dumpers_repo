@@ -10,6 +10,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const {
     user,
     profile,
+    refreshProfile,
     updateRsiHandle,
     updateGhostMode,
     updateCraftDeductInventory,
@@ -23,6 +24,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
   const [savingRsi, setSavingRsi] = useState(false)
+  const [validatingRsi, setValidatingRsi] = useState(false)
   const [savingGhost, setSavingGhost] = useState(false)
   const [craftDeductInventory, setCraftDeductInventory] = useState(
     profile?.craft_deduct_inventory ?? false
@@ -40,6 +42,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [checkingOrders, setCheckingOrders] = useState(true)
 
   const hasRsiHandle = !!(profile?.rsi_handle && profile.rsi_handle.trim())
+  const isVerified = profile?.rsi_handle_verified ?? false
 
   // Check if user has active orders (as buyer or fulfiller)
   useEffect(() => {
@@ -108,12 +111,60 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     const success = await updateRsiHandle(rsiHandle)
 
     if (success) {
-      setMessage({ type: 'success', text: 'RSI handle saved.' })
+      setMessage({ type: 'success', text: 'RSI handle saved (not verified yet).' })
     } else {
       setMessage({ type: 'error', text: 'Failed to save RSI handle.' })
     }
 
     setSavingRsi(false)
+  }
+
+  const handleValidateRsi = async () => {
+    if (!rsiHandle.trim()) {
+      setMessage({ type: 'error', text: 'Enter an RSI handle first.' })
+      return
+    }
+
+    setValidatingRsi(true)
+    setMessage(null)
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        setMessage({ type: 'error', text: 'Not authenticated' })
+        setValidatingRsi(false)
+        return
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/validate-rsi-handle`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ handle: rsiHandle.trim() })
+        }
+      )
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        setMessage({ type: 'error', text: result.error || 'Validation failed' })
+      } else if (!result.valid) {
+        setMessage({ type: 'error', text: result.error || 'RSI Handle not found' })
+      } else if (result.verified) {
+        setMessage({ type: 'success', text: 'RSI Handle verified successfully!' })
+        refreshProfile()
+      } else {
+        setMessage({ type: 'error', text: result.error || 'Verification failed' })
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Network error during validation' })
+    }
+
+    setValidatingRsi(false)
   }
 
   const handleGhostModeChange = async (enabled: boolean) => {
@@ -242,33 +293,69 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             description="How you appear to other players"
           >
             <SettingsField
-              label="RSI Handle"
+              label={
+                <span className="flex items-center gap-2">
+                  RSI Handle
+                  {isVerified && (
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-cyan-900/50 border border-cyan-500/30 rounded text-[10px] text-cyan-400 font-semibold">
+                      <span className="italic">RSI</span>
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </span>
+                  )}
+                </span>
+              }
               hint={
                 hasActiveOrders && hasRsiHandle
                   ? "You have active orders — clear them before changing your handle."
-                  : "Required for Custom Orders and Fulfillment features."
+                  : isVerified
+                    ? `Verified on ${profile?.rsi_handle_verified_at ? new Date(profile.rsi_handle_verified_at).toLocaleDateString() : 'RSI'}`
+                    : "Verify your handle to display a verified badge."
               }
             >
-              <input
-                type="text"
-                value={rsiHandle}
-                onChange={(e) => setRsiHandle(e.target.value)}
-                placeholder="Enter your RSI handle..."
-                disabled={hasActiveOrders && hasRsiHandle}
-                className={`w-full px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none transition-all text-sm ${
-                  hasActiveOrders && hasRsiHandle
-                    ? 'border-slate-700 opacity-60 cursor-not-allowed'
-                    : 'border-slate-600 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
-                }`}
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={rsiHandle}
+                  onChange={(e) => setRsiHandle(e.target.value)}
+                  placeholder="Enter your RSI handle..."
+                  disabled={(hasActiveOrders && hasRsiHandle) || isVerified}
+                  className={`flex-1 px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none transition-all text-sm ${
+                    (hasActiveOrders && hasRsiHandle) || isVerified
+                      ? 'border-slate-700 opacity-60 cursor-not-allowed'
+                      : 'border-slate-600 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
+                  }`}
+                />
+                {!isVerified && (
+                  <button
+                    onClick={handleValidateRsi}
+                    disabled={validatingRsi || !rsiHandle.trim() || (hasActiveOrders && hasRsiHandle)}
+                    className="shrink-0 px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Validate against RSI website"
+                  >
+                    {validatingRsi ? (
+                      <span className="flex items-center gap-1.5">
+                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Validating
+                      </span>
+                    ) : 'Validate'}
+                  </button>
+                )}
+              </div>
             </SettingsField>
-            <button
-              onClick={handleSaveRsi}
-              disabled={savingRsi || (hasActiveOrders && hasRsiHandle)}
-              className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {savingRsi ? 'Saving...' : hasActiveOrders && hasRsiHandle ? 'Active orders — cannot change' : 'Save RSI Handle'}
-            </button>
+            {!isVerified && (
+              <button
+                onClick={handleSaveRsi}
+                disabled={savingRsi || (hasActiveOrders && hasRsiHandle)}
+                className="w-full px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {savingRsi ? 'Saving...' : hasActiveOrders && hasRsiHandle ? 'Active orders — cannot change' : 'Save Without Verification'}
+              </button>
+            )}
 
             <div className="mt-4 pt-4 border-t border-slate-700/50">
               <SettingsToggle
