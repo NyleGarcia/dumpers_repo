@@ -38,12 +38,13 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 8. `043_blueprint_order_overrides.sql` — blueprint orderable overrides
 9. `044_auto_approve_setting.sql` — auto-approve new signups toggle
 10. `045_remove_preview_features.sql` — opens preview-gated features to all members
+11. `046_starstrings_data.sql` — StarStrings data tables (mining, components, ordnance, blueprints)
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 
 ## 4. Deploy Edge Functions
 
-The app requires three Edge Functions for admin operations:
+The app requires these Edge Functions for admin operations:
 
 ```bash
 # Install Supabase CLI if needed
@@ -57,7 +58,13 @@ supabase link --project-ref YOUR_PROJECT_REF
 supabase functions deploy ban-user
 supabase functions deploy unban-user
 supabase functions deploy delete-account
+supabase functions deploy sync-starstrings
 ```
+
+**Function descriptions:**
+- `ban-user` / `unban-user` — Admin user management
+- `delete-account` — User self-service account deletion
+- `sync-starstrings` — Fetches latest game data from MrKraken's StarStrings GitHub repo (mining locations, components, ordnance, blueprint pools)
 
 These functions use `SUPABASE_SERVICE_ROLE_KEY` which is automatically available in the Edge Functions environment. **Do not** expose this key in frontend code.
 

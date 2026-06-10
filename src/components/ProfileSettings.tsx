@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { deleteAccount } from '../lib/supabase'
+import { deleteAccount, supabase } from '../lib/supabase'
 import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
 import AppModal from './layout/AppModal'
+
+interface StarstringsSyncStatus {
+  last_synced_at: string | null
+  source_version: string | null
+  sync_status: string
+  sync_error: string | null
+  mining_count: number
+  components_count: number
+  ordnance_count: number
+  blueprint_pools_count: number
+}
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const {
@@ -33,6 +44,10 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  
+  // StarStrings sync state
+  const [syncStatus, setSyncStatus] = useState<StarstringsSyncStatus | null>(null)
+  const [syncing, setSyncing] = useState(false)
 
   useEffect(() => {
     setRsiHandle(profile?.rsi_handle || '')
@@ -43,6 +58,66 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     profile?.ghost_mode,
     profile?.craft_deduct_inventory,
   ])
+
+  // Fetch StarStrings sync status for super-admins
+  useEffect(() => {
+    if (!isSuperAdmin) return
+    
+    const fetchSyncStatus = async () => {
+      const { data, error } = await supabase.rpc('get_starstrings_sync_status')
+      if (!error && data && data.length > 0) {
+        setSyncStatus(data[0])
+      }
+    }
+    
+    fetchSyncStatus()
+  }, [isSuperAdmin])
+
+  const handleStarstringsSync = async () => {
+    setSyncing(true)
+    setMessage(null)
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        setMessage({ type: 'error', text: 'Not authenticated' })
+        setSyncing(false)
+        return
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-starstrings`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        setMessage({ type: 'error', text: result.error || 'Sync failed' })
+      } else {
+        setMessage({ 
+          type: 'success', 
+          text: `Synced: ${result.counts.mining} ores, ${result.counts.components} components, ${result.counts.ordnance} ordnance, ${result.counts.blueprintPools} BP pools` 
+        })
+        
+        // Refresh sync status
+        const { data } = await supabase.rpc('get_starstrings_sync_status')
+        if (data && data.length > 0) {
+          setSyncStatus(data[0])
+        }
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Network error during sync' })
+    }
+
+    setSyncing(false)
+  }
 
   const handleSaveRsi = async () => {
     setSavingRsi(true)
@@ -232,6 +307,44 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 onChange={handleAutoApproveChange}
                 saving={savingAutoApprove}
               />
+            </SettingsSection>
+          )}
+
+          {isSuperAdmin && (
+            <SettingsSection
+              title="DB Actions"
+              description="Database synchronization and maintenance"
+            >
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white">Sync StarStrings Data</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Fetch latest mining, component, ordnance, and blueprint data from MrKraken's StarStrings GitHub repo.
+                    </p>
+                    {syncStatus && (
+                      <div className="mt-2 text-xs text-slate-500 space-y-0.5">
+                        {syncStatus.last_synced_at && (
+                          <p>Last synced: {new Date(syncStatus.last_synced_at).toLocaleString()}</p>
+                        )}
+                        {syncStatus.source_version && (
+                          <p>Version: {syncStatus.source_version}</p>
+                        )}
+                        <p className="text-slate-600">
+                          {syncStatus.mining_count} ores · {syncStatus.components_count} components · {syncStatus.ordnance_count} ordnance · {syncStatus.blueprint_pools_count} BP pools
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={handleStarstringsSync}
+                    disabled={syncing}
+                    className="shrink-0 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {syncing ? 'Syncing...' : 'Sync Now'}
+                  </button>
+                </div>
+              </div>
             </SettingsSection>
           )}
 
