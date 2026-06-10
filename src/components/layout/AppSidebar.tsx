@@ -62,7 +62,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
       {/* Backdrop overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 transition-opacity"
           aria-hidden="true"
         />
       )}
@@ -71,13 +71,13 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
       <div
         ref={sidebarRef}
         className={`
-          fixed top-0 left-0 h-full w-64 bg-slate-900/98 border-r border-orange-500/20 
-          shadow-2xl shadow-black/50 z-50 transform transition-transform duration-200 ease-out
+          fixed top-0 left-0 h-full w-64 bg-slate-900 border-r border-slate-700 
+          shadow-2xl z-50 transform transition-transform duration-200 ease-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
         {/* Sidebar header */}
-        <div className="h-14 flex items-center justify-between px-4 border-b border-slate-800/80">
+        <div className="h-14 flex items-center justify-between px-4 border-b border-slate-700">
           <span className="text-sm font-semibold text-orange-400 uppercase tracking-wider">Navigation</span>
           <button
             onClick={() => setIsOpen(false)}
