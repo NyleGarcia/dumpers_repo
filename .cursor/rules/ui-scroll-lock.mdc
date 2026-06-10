@@ -1,0 +1,45 @@
+---
+description: Lock body scroll when modals, dropdowns, and menus are open
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# Scroll Lock for Overlays
+
+When creating modals, dropdowns, menus, or any overlay UI that covers part of the screen:
+
+**Always lock body scroll** to prevent the main page from scrolling behind the overlay.
+
+## How to Implement
+
+Use the `useBodyScrollLock` hook:
+
+```tsx
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
+
+// For modals (always lock when mounted)
+function MyModal({ onClose }) {
+  useBodyScrollLock(true)
+  return <div className="fixed inset-0">...</div>
+}
+
+// For toggleable dropdowns (lock only when open)
+function MyDropdown() {
+  const [open, setOpen] = useState(false)
+  useBodyScrollLock(open)
+  return <div>...</div>
+}
+```
+
+## Components That Already Have Scroll Lock
+
+- `AppModal` - base modal component (has it built-in)
+- `AppSidebar` - hamburger menu
+- `WelcomeModal` - onboarding modal
+- `AppNotificationBell` - notification dropdown
+- `AppUserMenu` - user avatar dropdown
+- `LocationModal` in MiningSection
+
+## Don't Forget
+
+If you create ANY new component with `fixed inset-0` or similar overlay positioning, add scroll lock.

@@ -42,4 +42,4 @@ export const DFP_CANONICAL_BASE_URL =
 
 /** Shown site-wide via AppChrome footer when DFP display is disabled (see DfpOptOutFooter). */
 export const DFP_OPT_OUT_NOTICE =
-  'This franchise has opted out of using/displaying Dumpers Fair-Value Pricing (DFP).' as const
+  'This franchise has opted out of using/displaying Dumper\'s Fair-Value Price (DFP).' as const
