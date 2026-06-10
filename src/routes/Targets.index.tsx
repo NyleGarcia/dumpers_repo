@@ -68,16 +68,25 @@ function BlueprintUnlockBadge({
   const info = getBlueprintUnlockInfo(blueprintId)
   const label = formatBlueprintUnlockBadge(blueprintId, isReward)
   const known = info.unlockMinReputation != null || info.isAvailableByDefault
+  const showWarning = known && info.isInferred
 
   return (
     <span
-      className={`inline-block text-[10px] font-medium px-1.5 py-0.5 rounded border ${
+      className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded border ${
         known
           ? 'text-purple-300 border-purple-500/40 bg-purple-950/30'
           : 'text-slate-500 border-slate-600/40 bg-slate-900/40'
       }`}
     >
       {label}
+      {showWarning && (
+        <span
+          className="inline-flex items-center justify-center w-3.5 h-3.5 text-[8px] font-bold text-amber-900 bg-amber-400 rounded cursor-help"
+          title="This unlock level is estimated from community data and may not be 100% accurate"
+        >
+          !
+        </span>
+      )}
     </span>
   )
 }

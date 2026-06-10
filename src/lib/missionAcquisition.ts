@@ -17,6 +17,7 @@ export interface BlueprintUnlockInfo {
   matched: boolean
   matchedMissionCount: number
   unmatchedMissionCount: number
+  isInferred: boolean
 }
 
 function slugifyGiver(name: string): string {
@@ -83,6 +84,9 @@ type BlueprintAcquisition = {
   unlockStandingName: string | null
   matchedMissionCount?: number
   unmatchedMissionCount?: number
+  _inferred?: boolean
+  _unlockInferred?: boolean
+  _starstringsEnriched?: boolean
 }
 
 const missionsByLabel = acquisitionData.missionsByLabel as Record<string, MissionByLabel>
@@ -159,8 +163,11 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
       matched: false,
       matchedMissionCount: 0,
       unmatchedMissionCount: 0,
+      isInferred: false,
     }
   }
+
+  const isInferred = !!(entry._inferred || entry._unlockInferred || entry._starstringsEnriched)
 
   return {
     unlockMinReputation: entry.unlockMinReputation,
@@ -169,6 +176,7 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
     matched: true,
     matchedMissionCount: entry.matchedMissionCount ?? 0,
     unmatchedMissionCount: entry.unmatchedMissionCount ?? 0,
+    isInferred,
   }
 }
 
