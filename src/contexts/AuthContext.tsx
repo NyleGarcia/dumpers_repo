@@ -7,6 +7,7 @@ import {
   type FeatureId,
   type VisibilityContext,
 } from '../lib/featureAccess'
+import { readGuestPreviewSession, writeGuestPreviewSession } from '../lib/guestPreview'
 import { removeTargetBlueprint } from '../lib/targetList'
 import type { User, Session } from '@supabase/supabase-js'
 
@@ -38,8 +39,11 @@ interface AuthContextType {
   isOfficerOrAbove: boolean
   isSuperAdmin: boolean
   isPending: boolean
+  isGuestPreview: boolean
   isGhostMode: boolean
   isSociallyHidden: boolean
+  enterGuestPreview: () => void
+  exitGuestPreview: () => void
   canModifyBlueprints: boolean
   showMemberCollections: boolean
   isApproved: boolean
@@ -64,6 +68,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
   const [dfpDisplayEnabled, setDfpDisplayEnabled] = useState(true)
   const [autoApproveEnabled, setAutoApproveEnabled] = useState(false)
+  const [isGuestPreview, setIsGuestPreview] = useState(() => readGuestPreviewSession())
+
+  const enterGuestPreview = useCallback(() => {
+    writeGuestPreviewSession(true)
+    setIsGuestPreview(true)
+  }, [])
+
+  const exitGuestPreview = useCallback(() => {
+    writeGuestPreviewSession(false)
+    setIsGuestPreview(false)
+  }, [])
 
   useEffect(() => {
     isBannedRef.current = isBanned
@@ -283,6 +298,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   acquiredRef.current = acquiredBlueprints
 
   const signInWithGoogle = useCallback(async () => {
+    writeGuestPreviewSession(false)
+    setIsGuestPreview(false)
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -502,6 +520,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isSuperAdmin = profile?.role === 'super-admin'
   const isPending = profile?.role === 'pending'
   const isGhostMode = profile?.ghost_mode ?? false
+  const guestPreviewActive = !user && isGuestPreview
   const canModifyBlueprints = !!profile && profile.role !== 'pending'
   const isApproved = canModifyBlueprints
   const visibilityContext = useMemo(
@@ -509,12 +528,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       buildVisibilityContext({
         role: profile?.role ?? null,
         ghostMode: profile?.ghost_mode ?? false,
+        isGuestPreview: guestPreviewActive,
       }),
     [
       profile?.role,
       profile?.ghost_mode,
+      guestPreviewActive,
     ]
   )
+
+  useEffect(() => {
+    if (user) {
+      writeGuestPreviewSession(false)
+      setIsGuestPreview(false)
+    }
+  }, [user])
   const showMemberCollections = canUseFeature('member_directory', visibilityContext)
   const isSociallyHidden = visibilityContext.isSociallyHidden
   const canAccess = useCallback(
@@ -548,8 +576,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isOfficerOrAbove,
       isSuperAdmin,
       isPending,
+      isGuestPreview: guestPreviewActive,
       isGhostMode,
       isSociallyHidden,
+      enterGuestPreview,
+      exitGuestPreview,
       canModifyBlueprints,
       showMemberCollections,
       isApproved,
@@ -581,8 +612,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isOfficerOrAbove,
       isSuperAdmin,
       isPending,
+      guestPreviewActive,
       isGhostMode,
       isSociallyHidden,
+      enterGuestPreview,
+      exitGuestPreview,
       canModifyBlueprints,
       showMemberCollections,
       isApproved,

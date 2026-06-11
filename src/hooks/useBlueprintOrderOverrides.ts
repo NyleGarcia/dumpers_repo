@@ -4,7 +4,7 @@ import { catalogIsReward } from '../lib/blueprintOrderable'
 import { supabase } from '../lib/supabase'
 
 export function useBlueprintOrderOverrides() {
-  const { isSuperAdmin } = useAuth()
+  const { isSuperAdmin, isGuestPreview } = useAuth()
   const [overridesMap, setOverridesMap] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -12,6 +12,12 @@ export function useBlueprintOrderOverrides() {
   const refresh = useCallback(async () => {
     setLoading(true)
     setError(null)
+
+    if (isGuestPreview) {
+      setOverridesMap({})
+      setLoading(false)
+      return
+    }
 
     const { data, error: fetchError } = await supabase
       .from('blueprint_order_overrides')
@@ -30,7 +36,7 @@ export function useBlueprintOrderOverrides() {
     }
     setOverridesMap(map)
     setLoading(false)
-  }, [])
+  }, [isGuestPreview])
 
   useEffect(() => {
     void refresh()

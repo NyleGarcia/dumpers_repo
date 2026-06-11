@@ -3,6 +3,7 @@ import { roleAtLeast } from './roles'
 
 export type FeatureId =
   | 'blueprints_browse'
+  | 'archive_browse'
   | 'blueprints_acquire'
   | 'member_directory'
   | 'admin_panel'
@@ -18,6 +19,7 @@ export type FeatureId =
 export interface VisibilityContext {
   role: UserRole | null
   ghostMode: boolean
+  isGuestPreview: boolean
   isSuperAdmin: boolean
   isOfficerOrAbove: boolean
   isApproved: boolean
@@ -29,11 +31,13 @@ export interface VisibilityContext {
 export interface BuildVisibilityContextInput {
   role?: UserRole | null
   ghostMode?: boolean
+  isGuestPreview?: boolean
 }
 
 export function buildVisibilityContext(input: BuildVisibilityContextInput): VisibilityContext {
   const role = input.role ?? null
   const ghostMode = input.ghostMode ?? false
+  const isGuestPreview = input.isGuestPreview ?? false
   const isSuperAdmin = role === 'super-admin'
   const isOfficerOrAbove = role === 'officer' || isSuperAdmin
   const isPending = role === 'pending'
@@ -42,6 +46,7 @@ export function buildVisibilityContext(input: BuildVisibilityContextInput): Visi
   return {
     role,
     ghostMode,
+    isGuestPreview,
     isSuperAdmin,
     isOfficerOrAbove,
     isApproved,
@@ -51,8 +56,15 @@ export function buildVisibilityContext(input: BuildVisibilityContextInput): Visi
 }
 
 export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boolean {
+  if (ctx.isGuestPreview) {
+    return featureId === 'blueprints_browse' || featureId === 'archive_browse'
+  }
+
   switch (featureId) {
     case 'blueprints_browse':
+      return !!ctx.role
+
+    case 'archive_browse':
       return !!ctx.role
 
     case 'blueprints_acquire':

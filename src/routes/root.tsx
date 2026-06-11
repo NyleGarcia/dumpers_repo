@@ -54,6 +54,7 @@ const archiveRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/archive',
   component: ArchiveRoute,
+  beforeLoad: requireFeature('archive_browse'),
 })
 
 const supportDashboardRoute = createRoute({

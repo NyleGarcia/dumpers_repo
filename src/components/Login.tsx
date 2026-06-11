@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 
 export default function Login() {
-  const { signInWithGoogle, loading } = useAuth()
+  const { signInWithGoogle, loading, enterGuestPreview } = useAuth()
   const [error, setError] = useState<string | null>(null)
   const [autoApproveEnabled, setAutoApproveEnabled] = useState<boolean | null>(null)
 
@@ -83,6 +83,26 @@ export default function Login() {
                 <p>New accounts require approval from an officer.</p>
               </div>
             )}
+
+            <div className="relative py-2">
+              <div className="absolute inset-0 flex items-center" aria-hidden>
+                <div className="w-full border-t border-slate-700" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-slate-900/80 px-2 text-slate-500">or</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={enterGuestPreview}
+              className="w-full px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800/60 text-sm font-medium transition-all"
+            >
+              Browse the site without signing in
+            </button>
+            <p className="text-center text-slate-500 text-xs">
+              Read-only preview of blueprints and the information archive. No account required.
+            </p>
           </div>
         </div>
 

@@ -28,7 +28,11 @@ export default function Layout() {
     visibilityContext,
     canUseFeature,
     isSuperAdmin,
+    isGuestPreview,
+    exitGuestPreview,
+    signInWithGoogle,
   } = useAuth()
+  const [guestSigningIn, setGuestSigningIn] = React.useState(false)
   const navGroups = getVisibleNavGroups(visibilityContext, canAccess)
   const showAdminPanelButton = canUseFeature('admin_panel')
   const showSettingsButton = canUseFeature('settings')
@@ -40,9 +44,9 @@ export default function Layout() {
   const [showSupportModal, setShowSupportModal] = useState(false)
   const [welcomeChecked, setWelcomeChecked] = useState(false)
 
-  // Check if welcome modal should be shown for all approved users
+  // Welcome onboarding is member+ only — never for guests or pending users
   useEffect(() => {
-    if (!user || !isApproved || welcomeChecked) return
+    if (!user || !isApproved || isGuestPreview || welcomeChecked) return
 
     const checkWelcome = async () => {
       try {
@@ -59,7 +63,16 @@ export default function Layout() {
     }
 
     checkWelcome()
-  }, [user, isApproved, welcomeChecked])
+  }, [user, isApproved, isGuestPreview, welcomeChecked])
+
+  const handleGuestSignIn = async () => {
+    setGuestSigningIn(true)
+    try {
+      await signInWithGoogle()
+    } catch {
+      setGuestSigningIn(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -76,7 +89,7 @@ export default function Layout() {
     return <BannedAccount />
   }
 
-  if (!user) {
+  if (!user && !isGuestPreview) {
     return <Login />
   }
 
@@ -87,6 +100,7 @@ export default function Layout() {
         displayName={displayName}
         profile={profile}
         isPending={isPending}
+        isGuestPreview={isGuestPreview}
         isGhostMode={isGhostMode}
         isOfficerOrAbove={isOfficerOrAbove}
         isSuperAdmin={isSuperAdmin}
@@ -98,15 +112,22 @@ export default function Layout() {
         onOpenAdmin={() => setShowAdminPanel(true)}
         onOpenSupport={() => setShowSupportModal(true)}
         onSignOut={signOut}
+        onGuestSignIn={handleGuestSignIn}
+        onExitGuestPreview={exitGuestPreview}
+        guestSigningIn={guestSigningIn}
       >
         <Outlet />
       </AppChrome>
 
-      {showAdminPanel && <AdminPanel onClose={() => setShowAdminPanel(false)} />}
-      {showProfileSettings && <ProfileSettings onClose={() => setShowProfileSettings(false)} />}
-      {showDbActions && <DbActionsModal onClose={() => setShowDbActions(false)} />}
-      {showSupportModal && <SupportTicketsModal onClose={() => setShowSupportModal(false)} />}
-      {showWelcomeModal && (
+      {!isGuestPreview && showAdminPanel && <AdminPanel onClose={() => setShowAdminPanel(false)} />}
+      {!isGuestPreview && showProfileSettings && (
+        <ProfileSettings onClose={() => setShowProfileSettings(false)} />
+      )}
+      {!isGuestPreview && showDbActions && <DbActionsModal onClose={() => setShowDbActions(false)} />}
+      {!isGuestPreview && showSupportModal && (
+        <SupportTicketsModal onClose={() => setShowSupportModal(false)} />
+      )}
+      {!isGuestPreview && showWelcomeModal && (
         <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
       )}
     </>

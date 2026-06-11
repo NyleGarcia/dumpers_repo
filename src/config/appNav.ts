@@ -74,7 +74,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     label: 'Info Archive',
     path: '/archive',
     icon: 'archive',
-    minRole: 'member',
+    featureId: 'archive_browse',
     ghostAllowed: true,
     children: [
       { id: 'archive-welcome', label: 'Overview', path: '/archive', icon: 'home' },

@@ -9,6 +9,7 @@ import type { Profile } from '../../lib/supabase'
 import AppSidebar from './AppSidebar'
 import AppNotificationBell from './AppNotificationBell'
 import AppUserMenu from './AppUserMenu'
+import GuestPreviewBanner from './GuestPreviewBanner'
 
 interface AppChromeProps {
   children: React.ReactNode
@@ -16,6 +17,7 @@ interface AppChromeProps {
   displayName: string
   profile: Profile | null
   isPending: boolean
+  isGuestPreview: boolean
   isGhostMode: boolean
   isOfficerOrAbove: boolean
   isSuperAdmin: boolean
@@ -27,6 +29,9 @@ interface AppChromeProps {
   onOpenAdmin: () => void
   onOpenSupport: () => void
   onSignOut: () => void
+  onGuestSignIn: () => void
+  onExitGuestPreview: () => void
+  guestSigningIn?: boolean
 }
 
 export default function AppChrome({
@@ -35,6 +40,7 @@ export default function AppChrome({
   displayName,
   profile,
   isPending,
+  isGuestPreview,
   isGhostMode,
   isOfficerOrAbove,
   isSuperAdmin,
@@ -46,6 +52,9 @@ export default function AppChrome({
   onOpenAdmin,
   onOpenSupport,
   onSignOut,
+  onGuestSignIn,
+  onExitGuestPreview,
+  guestSigningIn = false,
 }: AppChromeProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
@@ -65,28 +74,50 @@ export default function AppChrome({
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <AppNotificationBell disabled={isPending} />
-            <AppUserMenu
-              displayName={displayName}
-              profile={profile}
-              isPending={isPending}
-              isGhostMode={isGhostMode}
-              isOfficerOrAbove={isOfficerOrAbove}
-              isSuperAdmin={isSuperAdmin}
-              showSettingsButton={showSettingsButton}
-              showDbActionsButton={showDbActionsButton}
-              showAdminPanelButton={showAdminPanelButton}
-              onOpenSettings={onOpenSettings}
-              onOpenDbActions={onOpenDbActions}
-              onOpenAdmin={onOpenAdmin}
-              onOpenSupport={onOpenSupport}
-              onSignOut={onSignOut}
-            />
+            {isGuestPreview ? (
+              <button
+                type="button"
+                onClick={onGuestSignIn}
+                disabled={guestSigningIn}
+                className="px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-medium transition-colors disabled:opacity-50"
+              >
+                {guestSigningIn ? 'Signing in...' : 'Sign in'}
+              </button>
+            ) : (
+              <>
+                <AppNotificationBell disabled={isPending} />
+                <AppUserMenu
+                  displayName={displayName}
+                  profile={profile}
+                  isPending={isPending}
+                  isGhostMode={isGhostMode}
+                  isOfficerOrAbove={isOfficerOrAbove}
+                  isSuperAdmin={isSuperAdmin}
+                  showSettingsButton={showSettingsButton}
+                  showDbActionsButton={showDbActionsButton}
+                  showAdminPanelButton={showAdminPanelButton}
+                  onOpenSettings={onOpenSettings}
+                  onOpenDbActions={onOpenDbActions}
+                  onOpenAdmin={onOpenAdmin}
+                  onOpenSupport={onOpenSupport}
+                  onSignOut={onSignOut}
+                />
+              </>
+            )}
           </div>
         </div>
       </header>
 
-      <div className="site-header-offset flex-1 flex flex-col">{children}</div>
+      <div className="site-header-offset flex-1 flex flex-col">
+        {isGuestPreview && (
+          <GuestPreviewBanner
+            onSignIn={onGuestSignIn}
+            onExit={onExitGuestPreview}
+            signingIn={guestSigningIn}
+          />
+        )}
+        {children}
+      </div>
 
       <footer className="site-footer site-shell mt-8 space-y-1">
         <p>{SITE_COPYRIGHT}</p>
