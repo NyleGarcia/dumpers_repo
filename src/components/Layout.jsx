@@ -19,6 +19,7 @@ export default function Layout() {
     isBanned,
     isPending,
     isGhostMode,
+    isApproved,
     signOut,
     displayName,
     canAccess,
@@ -36,15 +37,15 @@ export default function Layout() {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false)
   const [welcomeChecked, setWelcomeChecked] = useState(false)
 
-  // Check if welcome modal should be shown (super-admin only for now)
+  // Check if welcome modal should be shown for all approved users
   useEffect(() => {
-    if (!user || !isSuperAdmin || welcomeChecked) return
+    if (!user || !isApproved || welcomeChecked) return
 
     const checkWelcome = async () => {
       try {
         const { data } = await supabase.rpc('get_welcome_modal_status')
         if (data) {
-          // Show if: always_show is true OR hasn't seen it yet
+          // Show if: always_show is true (super-admin testing) OR user hasn't seen it yet
           const shouldShow = data.always_show || !data.has_seen
           setShowWelcomeModal(shouldShow)
         }
@@ -55,7 +56,7 @@ export default function Layout() {
     }
 
     checkWelcome()
-  }, [user, isSuperAdmin, welcomeChecked])
+  }, [user, isApproved, welcomeChecked])
 
   if (loading) {
     return (
