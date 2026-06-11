@@ -9,6 +9,7 @@ import TargetsRoute from './Targets.index'
 import ArchiveRoute from './Archive.index'
 import SupportDashboardRoute from './SupportDashboard.index'
 import GuestLockedRoute from './GuestLocked.index'
+import MiningTrackerRoute from './MiningTracker.index'
 import { requireFeature } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -22,6 +23,18 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: BlueprintsRoute,
+})
+
+const miningTrackerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/mining-tracker',
+  component: MiningTrackerRoute,
+  beforeLoad: requireFeature('mining_tracker'),
+  validateSearch: (search: Record<string, unknown>) => ({
+    ore: typeof search.ore === 'string' ? search.ore : undefined,
+    location: typeof search.location === 'string' ? search.location : undefined,
+    add: search.add === true || search.add === 'true' || search.add === '1',
+  }),
 })
 
 const targetsRoute = createRoute({
@@ -77,6 +90,7 @@ const guestLockedRoute = createRoute({
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
+  miningTrackerRoute,
   targetsRoute,
   resourceTrackerRoute,
   customOrdersRoute,

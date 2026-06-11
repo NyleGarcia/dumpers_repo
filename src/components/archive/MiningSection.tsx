@@ -1,121 +1,21 @@
 import React, { useState, useMemo } from 'react'
+import { Link } from '@tanstack/react-router'
 import { useMiningData, type MiningData } from '../../hooks/useArchiveData'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
+import TrackOreButton from '../TrackOreButton'
+import {
+  LOCATION_SYSTEMS,
+  MINING_RARITY_COLORS,
+  MINING_RARITY_LABELS,
+  MINING_RARITY_ORDER,
+  MINING_SYSTEM_COLORS,
+  ORE_SIGNATURES,
+} from '../../lib/miningConstants'
 
-const RARITY_ORDER = ['legendary', 'epic', 'rare', 'uncommon', 'common', 'handMineable']
-
-// Mining scanner signatures (RS n*) - base values for ore identification
-const ORE_SIGNATURES: Record<string, number> = {
-  'Quantainium': 3170,
-  'Stileron': 3185,
-  'Savrilium': 3200,
-  'Ouratite': 3370,
-  'Riccite': 3385,
-  'Lindinium': 3400,
-  'Beryl': 3540,
-  'Taranite': 3555,
-  'Borase': 3570,
-  'Gold': 3585,
-  'Bexalite': 3600,
-  'Laranite': 3825,
-  'Aslarite': 3840,
-  'Titanium': 3855,
-  'Tungsten': 3870,
-  'Agricium': 3885,
-  'Torite': 3900,
-  'Hephestanite': 4180,
-  'Tin': 4195,
-  'Quartz': 4210,
-  'Corundum': 4225,
-  'Copper': 4240,
-  'Silicon': 4255,
-  'Iron': 4270,
-  'Aluminium': 4285,
-  'Ice': 4300,
-}
-
-// Location to system mapping for context
-const LOCATION_SYSTEMS: Record<string, string> = {
-  // Stanton moons
-  'Aberdeen': 'Stanton',
-  'Arial': 'Stanton',
-  'Hurston': 'Stanton',
-  'Yela': 'Stanton',
-  'Yela Ring': 'Stanton',
-  'Daymar': 'Stanton',
-  'Cellin': 'Stanton',
-  'Wala': 'Stanton',
-  'Magda': 'Stanton',
-  'Clio': 'Stanton',
-  'Calliope': 'Stanton',
-  'Euterpe': 'Stanton',
-  'Lyria': 'Stanton',
-  // Stanton stations/belts
-  'Aaron Halo': 'Stanton',
-  'ARC-L1': 'Stanton',
-  'ARC-L2': 'Stanton',
-  'ARC-L3': 'Stanton',
-  'ARC-L4': 'Stanton',
-  'ARC-L5': 'Stanton',
-  'CRU-L1': 'Stanton',
-  'CRU-L2': 'Stanton',
-  'CRU-L3': 'Stanton',
-  'CRU-L4': 'Stanton',
-  'CRU-L5': 'Stanton',
-  'HUR-L1': 'Stanton',
-  'HUR-L2': 'Stanton',
-  'HUR-L3': 'Stanton',
-  'HUR-L4': 'Stanton',
-  'HUR-L5': 'Stanton',
-  'MIC-L1': 'Stanton',
-  'MIC-L2': 'Stanton',
-  'MIC-L3': 'Stanton',
-  'MIC-L4': 'Stanton',
-  'MIC-L5': 'Stanton',
-  // Pyro locations
-  'Adir': 'Pyro',
-  'Bloom': 'Pyro',
-  'Fairo': 'Pyro',
-  'Fuego': 'Pyro',
-  'Ignis': 'Pyro',
-  'Terminus': 'Pyro',
-  'Vatra': 'Pyro',
-  'Vuur': 'Pyro',
-  'Pyro IV': 'Pyro',
-  'Akiro Cluster': 'Pyro',
-  'Glaciem Ring': 'Pyro',
-  'Keeger Belt': 'Pyro',
-  'Pyro Asteroid Clusters': 'Pyro',
-  'All Pyro Planets': 'Pyro',
-  // Nyx locations
-  'QV Breaker Stations (Nyx)': 'Nyx',
-  // Generic
-  'Found in All Stanton Deposits': 'Stanton',
-}
-
-const SYSTEM_COLORS: Record<string, string> = {
-  'Stanton': 'text-blue-400',
-  'Pyro': 'text-orange-400',
-  'Nyx': 'text-purple-400',
-}
-
-const RARITY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  legendary: { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' },
-  epic: { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/30' },
-  rare: { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/30' },
-  uncommon: { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/30' },
-  common: { bg: 'bg-slate-500/10', text: 'text-slate-400', border: 'border-slate-500/30' },
-  handMineable: { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/30' },
-}
-
-const RARITY_LABELS: Record<string, string> = {
-  legendary: 'Legendary',
-  epic: 'Epic',
-  rare: 'Rare',
-  uncommon: 'Uncommon',
-  common: 'Common',
-  handMineable: 'Hand Mineable',
-}
+const RARITY_ORDER = MINING_RARITY_ORDER
+const RARITY_COLORS = MINING_RARITY_COLORS
+const RARITY_LABELS = MINING_RARITY_LABELS
+const SYSTEM_COLORS = MINING_SYSTEM_COLORS
 
 export default function MiningSection() {
   const { data, loading, error, refetch } = useMiningData()
@@ -211,6 +111,16 @@ export default function MiningSection() {
 
   return (
     <div className="w-full space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <p className="text-xs text-slate-500">
+          Star ores to add them to your{' '}
+          <Link to="/mining-tracker" className="text-orange-400 hover:text-orange-300">
+            Mining Tracker
+          </Link>{' '}
+          (saved locally in your browser).
+        </p>
+      </div>
+
       {/* View mode toggle */}
       <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
         <button
@@ -360,9 +270,12 @@ function OreCard({ item, onLocationClick }: { item: MiningData; onLocationClick:
             )}
           </div>
         </div>
-        <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
-          {item.locations.length} location{item.locations.length !== 1 ? 's' : ''}
-        </span>
+        <div className="flex items-center gap-2 shrink-0">
+          <TrackOreButton oreName={item.ore_name} rarity={item.rarity} compact />
+          <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
+            {item.locations.length} location{item.locations.length !== 1 ? 's' : ''}
+          </span>
+        </div>
       </div>
       <div className="mt-3 flex flex-wrap gap-1.5">
         {item.locations.map((location, idx) => {
@@ -474,14 +387,17 @@ function OreModal({ ore, onClose }: { ore: MiningData; onClose: () => void }) {
               )}
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-2">
+            <TrackOreButton oreName={ore.ore_name} rarity={ore.rarity} showTrackerLink />
+            <button
+              onClick={onClose}
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div className="p-4 overflow-y-auto max-h-[60vh]">
@@ -495,12 +411,20 @@ function OreModal({ ore, onClose }: { ore: MiningData; onClose: () => void }) {
               return (
                 <div
                   key={location}
-                  className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+                  className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 flex items-start justify-between gap-3"
                 >
-                  <span className="font-medium text-white">{location}</span>
-                  {system && (
-                    <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
-                  )}
+                  <div>
+                    <span className="font-medium text-white">{location}</span>
+                    {system && (
+                      <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
+                    )}
+                  </div>
+                  <TrackOreButton
+                    oreName={ore.ore_name}
+                    rarity={ore.rarity}
+                    location={location}
+                    compact
+                  />
                 </div>
               )
             })}
@@ -558,13 +482,21 @@ function LocationModal({ location, ores, onClose }: { location: string; ores: Mi
                   key={ore.id}
                   className={`p-3 rounded-lg ${colors.bg} border ${colors.border}`}
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <span className={`font-medium ${colors.text}`}>{ore.ore_name}</span>
-                    {signature && (
-                      <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-2 py-1 rounded">
-                        RS {signature}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2 shrink-0">
+                      <TrackOreButton
+                        oreName={ore.ore_name}
+                        rarity={ore.rarity}
+                        location={location}
+                        compact
+                      />
+                      {signature && (
+                        <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-2 py-1 rounded">
+                          RS {signature}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <span className="text-xs text-slate-500 uppercase">
                     {RARITY_LABELS[ore.rarity]}

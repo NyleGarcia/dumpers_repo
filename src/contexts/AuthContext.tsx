@@ -8,6 +8,7 @@ import {
   type VisibilityContext,
 } from '../lib/featureAccess'
 import { readGuestPreviewSession, writeGuestPreviewSession } from '../lib/guestPreview'
+import { GUEST_ACQUIRED_STORAGE_KEY } from '../lib/localGuestCache'
 import { removeTargetBlueprint } from '../lib/targetList'
 import type { User, Session } from '@supabase/supabase-js'
 
@@ -184,7 +185,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const migrateLocalStorage = useCallback(async (userId: string) => {
     if (typeof localStorage === 'undefined') return
 
-    const localData = localStorage.getItem('acquired_blueprints')
+    const localData = localStorage.getItem(GUEST_ACQUIRED_STORAGE_KEY)
     if (!localData) return
 
     try {
@@ -203,7 +204,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .upsert(inserts, { onConflict: 'user_id,blueprint_id' })
 
       if (!error) {
-        localStorage.removeItem('acquired_blueprints')
+        localStorage.removeItem(GUEST_ACQUIRED_STORAGE_KEY)
         console.log(`Migrated ${blueprintIds.length} blueprints to server`)
       }
     } catch (e) {
@@ -325,6 +326,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const toggleAcquired = useCallback(async (blueprintId: string) => {
     const activeUser = userRef.current
     const activeProfile = profileRef.current
+
     if (!activeUser || !activeProfile || activeProfile.role === 'pending') {
       console.warn('Cannot toggle: user not authenticated or pending')
       return
@@ -522,7 +524,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isGhostMode = profile?.ghost_mode ?? false
   const guestPreviewActive = !user && isGuestPreview
   const canModifyBlueprints = !!profile && profile.role !== 'pending'
-  const isApproved = canModifyBlueprints
+  const isApproved = !!profile && profile.role !== 'pending'
   const visibilityContext = useMemo(
     () =>
       buildVisibilityContext({

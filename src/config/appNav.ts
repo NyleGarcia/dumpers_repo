@@ -36,6 +36,15 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     ghostAllowed: true,
   },
   {
+    id: 'mining-tracker',
+    label: 'Mining Tracker',
+    path: '/mining-tracker',
+    icon: 'mining',
+    featureId: 'mining_tracker',
+    minRole: 'member',
+    ghostAllowed: true,
+  },
+  {
     id: 'targets',
     label: 'Target BP List',
     path: '/targets',
@@ -92,7 +101,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'core',
     label: 'Core',
-    itemIds: ['blueprints', 'targets', 'resource-tracker'],
+    itemIds: ['blueprints', 'mining-tracker', 'targets', 'resource-tracker'],
   },
   {
     id: 'tools',

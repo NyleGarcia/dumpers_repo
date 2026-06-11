@@ -15,6 +15,7 @@ export type FeatureId =
   | 'site_total'
   | 'support_tickets'
   | 'support_dashboard'
+  | 'mining_tracker'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -57,7 +58,11 @@ export function buildVisibilityContext(input: BuildVisibilityContextInput): Visi
 
 export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boolean {
   if (ctx.isGuestPreview) {
-    return featureId === 'blueprints_browse' || featureId === 'archive_browse'
+    return (
+      featureId === 'blueprints_browse' ||
+      featureId === 'archive_browse' ||
+      featureId === 'mining_tracker'
+    )
   }
 
   switch (featureId) {
@@ -99,6 +104,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'support_dashboard':
       return ctx.isOfficerOrAbove
+
+    case 'mining_tracker':
+      return !!ctx.role
 
     default:
       return false
