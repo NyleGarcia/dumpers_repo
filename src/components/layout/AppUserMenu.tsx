@@ -218,8 +218,8 @@ export default function AppUserMenu({
               </button>
             )}
 
-            {/* Officer-only section (not for super-admins - they have DB Actions) */}
-            {isOfficerOrAbove && !isSuperAdmin && (
+            {/* Support Dashboard for all officers and super-admins */}
+            {isOfficerOrAbove && (
               <>
                 <div className="border-t border-slate-700 my-1" />
                 <Link
@@ -229,6 +229,12 @@ export default function AppUserMenu({
                 >
                   Support Dashboard
                 </Link>
+              </>
+            )}
+
+            {/* Officer Tools (not for super-admins - they have DB Actions) */}
+            {isOfficerOrAbove && !isSuperAdmin && (
+              <>
                 <button
                   type="button"
                   onClick={() => setShowOfficerTools(!showOfficerTools)}
