@@ -6,6 +6,17 @@ export interface GuestFeatureCopy {
   details: string[]
 }
 
+/** Shared pitch for guest → member conversion screens */
+export const GUEST_MEMBERSHIP_PITCH = {
+  headline: 'Member accounts are free',
+  subhead: 'Full access to every member tool. No subscriptions. No paid tiers.',
+  bullets: [
+    'Completely free — sign in with Google',
+    'No subscriptions or recurring charges',
+    'Full member access once approved (officer review is for community safety, not payment)',
+  ],
+}
+
 export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCopy>> = {
   target_bp_list: {
     title: 'Target BP List',
@@ -52,8 +63,12 @@ export function getGuestFeatureCopy(featureId: FeatureId): GuestFeatureCopy {
   return (
     GUEST_LOCKED_FEATURE_COPY[featureId] ?? {
       title: 'Member Feature',
-      description: 'Sign in and get approved to access community tools on this site.',
-      details: ['Track your own blueprints and collections', 'Participate in orders and fulfillment'],
+      description: 'Sign in for a free member account with full access to community tools on this site.',
+      details: [
+        'Free account — no subscriptions or paid tiers',
+        'Track your own blueprints, targets, and resources',
+        'Participate in orders and fulfillment once approved',
+      ],
     }
   )
 }

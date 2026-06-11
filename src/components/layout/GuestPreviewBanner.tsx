@@ -9,8 +9,10 @@ export default function GuestPreviewBanner({ onExit }: GuestPreviewBannerProps) 
     <div className="bg-amber-950/60 border-b border-amber-500/30">
       <div className="site-shell py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm">
         <p className="text-amber-200/90">
-          You&apos;re browsing as a guest. Explore locked features from the menu to see what members
-          get — use Sign in above to unlock them.
+          You&apos;re browsing as a guest. Explore locked features from the menu — member accounts are{' '}
+          <strong className="text-amber-100 font-medium">free</strong> with{' '}
+          <strong className="text-amber-100 font-medium">full access</strong> (no subscriptions). Use
+          Sign in above to join.
         </p>
         <button
           type="button"
