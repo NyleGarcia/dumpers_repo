@@ -1,8 +1,9 @@
 -- RSI Handle Verification System
 -- Allows users to verify their RSI Handle by checking against robertsspaceindustries.com
 
--- Add verification columns to profiles
+-- Add verification columns to profiles (and updated_at if missing)
 ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now(),
   ADD COLUMN IF NOT EXISTS rsi_handle_verified boolean NOT NULL DEFAULT false,
   ADD COLUMN IF NOT EXISTS rsi_handle_verified_at timestamptz;
 
