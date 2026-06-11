@@ -260,6 +260,39 @@ export default function AppUserMenu({
               )}
             </div>
 
+            {isGhostMode && (
+              <div className="py-1">
+                <Link
+                  to="/"
+                  onClick={close}
+                  className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+                >
+                  Blueprints
+                </Link>
+                <Link
+                  to="/targets"
+                  onClick={close}
+                  className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+                >
+                  Target BP List
+                </Link>
+                <Link
+                  to="/resources"
+                  onClick={close}
+                  className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+                >
+                  Resource Tracker
+                </Link>
+                <Link
+                  to="/archive"
+                  onClick={close}
+                  className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+                >
+                  Info Archive
+                </Link>
+              </div>
+            )}
+
             {showSettingsButton && (
               <button
                 type="button"
@@ -273,7 +306,7 @@ export default function AppUserMenu({
               </button>
             )}
 
-            {showDbActionsButton && (
+            {!isGhostMode && showDbActionsButton && (
               <button
                 type="button"
                 onClick={() => {
@@ -286,7 +319,7 @@ export default function AppUserMenu({
               </button>
             )}
 
-            {showAdminPanelButton && (
+            {!isGhostMode && showAdminPanelButton && (
               <button
                 type="button"
                 onClick={() => {
@@ -300,7 +333,7 @@ export default function AppUserMenu({
             )}
 
             {/* Support Dashboard for all officers and super-admins */}
-            {isOfficerOrAbove && (
+            {!isGhostMode && isOfficerOrAbove && (
               <>
                 <div className="border-t border-slate-700 my-1" />
                 <Link
@@ -314,7 +347,7 @@ export default function AppUserMenu({
             )}
 
             {/* Officer Tools (not for super-admins - they have DB Actions) */}
-            {isOfficerOrAbove && !isSuperAdmin && (
+            {!isGhostMode && isOfficerOrAbove && !isSuperAdmin && (
               <>
                 <button
                   type="button"
@@ -439,7 +472,7 @@ export default function AppUserMenu({
             <div className="border-t border-slate-700 my-1" />
 
             {/* Support for members and officers (not super-admins) */}
-            {!isSuperAdmin && (
+            {!isGhostMode && !isSuperAdmin && (
               <button
                 type="button"
                 onClick={() => {

@@ -36,7 +36,7 @@ export default function Layout() {
   const navGroups = getVisibleNavGroups(visibilityContext, canAccess)
   const showAdminPanelButton = canUseFeature('admin_panel')
   const showSettingsButton = canUseFeature('settings')
-  const showDbActionsButton = isSuperAdmin
+  const showDbActionsButton = isSuperAdmin && !isGhostMode
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showProfileSettings, setShowProfileSettings] = useState(false)
   const [showDbActions, setShowDbActions] = useState(false)

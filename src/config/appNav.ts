@@ -51,7 +51,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     icon: 'resources',
     featureId: 'resource_tracker',
     minRole: 'member',
-    ghostAllowed: false,
+    ghostAllowed: true,
   },
   {
     id: 'custom-orders',

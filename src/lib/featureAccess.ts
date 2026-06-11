@@ -80,7 +80,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return !!ctx.role && ctx.role !== 'pending'
 
     case 'resource_tracker':
-      return ctx.isApproved && !ctx.ghostMode
+      return ctx.isApproved
 
     case 'custom_orders':
       return ctx.isApproved && !ctx.ghostMode
@@ -95,7 +95,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.isOfficerOrAbove && !ctx.ghostMode
 
     case 'support_tickets':
-      return ctx.isApproved
+      return ctx.isApproved && !ctx.ghostMode
 
     case 'support_dashboard':
       return ctx.isOfficerOrAbove

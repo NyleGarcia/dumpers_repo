@@ -10,6 +10,7 @@ import AppSidebar from './AppSidebar'
 import AppNotificationBell from './AppNotificationBell'
 import AppUserMenu from './AppUserMenu'
 import GuestPreviewBanner from './GuestPreviewBanner'
+import GhostModeBanner from './GhostModeBanner'
 
 interface AppChromeProps {
   children: React.ReactNode
@@ -85,7 +86,7 @@ export default function AppChrome({
               </button>
             ) : (
               <>
-                <AppNotificationBell disabled={isPending} />
+                <AppNotificationBell disabled={isPending || isGhostMode} />
                 <AppUserMenu
                   displayName={displayName}
                   profile={profile}
@@ -111,6 +112,9 @@ export default function AppChrome({
       <div className="site-header-offset flex-1 flex flex-col">
         {isGuestPreview && (
           <GuestPreviewBanner onExit={onExitGuestPreview} />
+        )}
+        {!isGuestPreview && isGhostMode && (
+          <GhostModeBanner onOpenSettings={onOpenSettings} />
         )}
         {children}
       </div>
