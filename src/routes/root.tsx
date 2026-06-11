@@ -8,7 +8,9 @@ import FulfillmentRoute from './Fulfillment.index'
 import TargetsRoute from './Targets.index'
 import ArchiveRoute from './Archive.index'
 import SupportDashboardRoute from './SupportDashboard.index'
+import GuestLockedRoute from './GuestLocked.index'
 import { requireFeature } from '../lib/routeGuards'
+import type { FeatureId } from '../lib/featureAccess'
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -64,6 +66,15 @@ const supportDashboardRoute = createRoute({
   beforeLoad: requireFeature('support_dashboard'),
 })
 
+const guestLockedRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/guest-locked',
+  component: GuestLockedRoute,
+  validateSearch: (search: Record<string, unknown>) => ({
+    feature: (search.feature as FeatureId | undefined) ?? 'custom_orders',
+  }),
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   targetsRoute,
@@ -72,6 +83,7 @@ export const routeTree = rootRoute.addChildren([
   fulfillmentRoute,
   archiveRoute,
   supportDashboardRoute,
+  guestLockedRoute,
 ])
 
 export default routeTree

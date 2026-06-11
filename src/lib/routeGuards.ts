@@ -27,6 +27,12 @@ export function requireFeature(featureId: FeatureId) {
     if (context.auth.loading) return
 
     if (!context.auth.canUseFeature(featureId)) {
+      if (context.auth.visibilityContext.isGuestPreview) {
+        throw redirect({
+          to: '/guest-locked',
+          search: { feature: featureId },
+        })
+      }
       throw redirect({ to: '/' })
     }
   }

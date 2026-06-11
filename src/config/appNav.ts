@@ -111,6 +111,9 @@ export function canSeeNavItem(
   ctx: VisibilityContext,
   canAccess: (minRole: UserRole) => boolean
 ): boolean {
+  // Guests see the full menu — locked items show a preview page when clicked
+  if (ctx.isGuestPreview) return true
+
   if (!passesGhostNavGate(item.ghostAllowed, ctx)) return false
 
   if (item.featureId) {
@@ -118,6 +121,20 @@ export function canSeeNavItem(
   }
 
   return canAccess(item.minRole ?? 'member')
+}
+
+export function isNavItemLocked(
+  item: AppNavItem,
+  ctx: VisibilityContext,
+  canAccess: (minRole: UserRole) => boolean
+): boolean {
+  if (!ctx.isGuestPreview) return false
+
+  if (item.featureId) {
+    return !canUseFeature(item.featureId, ctx)
+  }
+
+  return !canAccess(item.minRole ?? 'member')
 }
 
 export function getVisibleNavItems(

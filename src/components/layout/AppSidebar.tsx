@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
 import type { AppNavItem, NavGroup } from '../../config/appNav'
+import { isNavItemLocked } from '../../config/appNav'
+import { useAuth } from '../../contexts/AuthContext'
 
 interface AppSidebarProps {
   groups: NavGroup[]
@@ -8,6 +10,7 @@ interface AppSidebarProps {
 }
 
 export default function AppSidebar({ groups, className = '' }: AppSidebarProps) {
+  const { visibilityContext, canAccess } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
   const [userCollapsed, setUserCollapsed] = useState<Set<string>>(new Set())
@@ -140,6 +143,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
                     item={item} 
                     pathname={pathname}
                     search={search}
+                    isLocked={isNavItemLocked(item, visibilityContext, canAccess)}
                     isExpanded={expandedItems.has(item.id)}
                     isUserCollapsed={userCollapsed.has(item.id)}
                     onToggleExpand={() => toggleExpanded(item.id)}
@@ -159,13 +163,14 @@ interface SidebarNavItemProps {
   item: AppNavItem
   pathname: string
   search: string
+  isLocked: boolean
   isExpanded: boolean
   isUserCollapsed: boolean
   onToggleExpand: () => void
   onNavigate: () => void
 }
 
-function SidebarNavItem({ item, pathname, search, isExpanded, isUserCollapsed, onToggleExpand, onNavigate }: SidebarNavItemProps) {
+function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCollapsed, onToggleExpand, onNavigate }: SidebarNavItemProps) {
   const hasChildren = item.children && item.children.length > 0
   const fullPath = pathname + search
   
@@ -224,16 +229,20 @@ function SidebarNavItem({ item, pathname, search, isExpanded, isUserCollapsed, o
       <Link
         to={item.path}
         onClick={onNavigate}
+        title={isLocked ? 'Sign in to access this feature' : undefined}
         className={`
           flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
           ${isActive
             ? 'bg-orange-600/20 text-orange-200 border border-orange-500/40 shadow-sm shadow-orange-500/10'
-            : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent'
+            : isLocked
+              ? 'text-slate-500 hover:bg-slate-800/40 hover:text-slate-400 border border-dashed border-slate-700/60'
+              : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent'
           }
         `}
       >
-        {item.icon && <NavIcon name={item.icon} className="w-4 h-4 shrink-0" />}
-        <span>{item.label}</span>
+        {item.icon && <NavIcon name={item.icon} className={`w-4 h-4 shrink-0 ${isLocked ? 'opacity-50' : ''}`} />}
+        <span className="flex-1">{item.label}</span>
+        {isLocked && <LockIcon className="w-3.5 h-3.5 shrink-0 text-amber-500/80" />}
       </Link>
     </li>
   )
@@ -275,6 +284,19 @@ function ChildNavItem({ item, pathname, search, onNavigate }: ChildNavItemProps)
 interface NavIconProps {
   name: string
   className?: string
+}
+
+function LockIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+      />
+    </svg>
+  )
 }
 
 function NavIcon({ name, className = '' }: NavIconProps) {

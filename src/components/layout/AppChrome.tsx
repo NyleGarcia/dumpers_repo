@@ -110,11 +110,7 @@ export default function AppChrome({
 
       <div className="site-header-offset flex-1 flex flex-col">
         {isGuestPreview && (
-          <GuestPreviewBanner
-            onSignIn={onGuestSignIn}
-            onExit={onExitGuestPreview}
-            signingIn={guestSigningIn}
-          />
+          <GuestPreviewBanner onExit={onExitGuestPreview} />
         )}
         {children}
       </div>
