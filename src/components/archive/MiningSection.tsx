@@ -123,6 +123,7 @@ export default function MiningSection() {
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState<'ores' | 'locations'>('ores')
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null)
+  const [selectedOre, setSelectedOre] = useState<MiningData | null>(null)
 
   const groupedByRarity = useMemo(() => {
     if (!data) return {}
@@ -308,10 +309,11 @@ export default function MiningSection() {
             <p className="text-center text-slate-500 py-8">No matching locations found.</p>
           ) : (
             filteredLocations.map((location) => (
-              <LocationCard 
-                key={location} 
-                location={location} 
-                ores={locationOresMap[location] || []} 
+              <LocationCard
+                key={location}
+                location={location}
+                ores={locationOresMap[location] || []}
+                onOreClick={setSelectedOre}
               />
             ))
           )}
@@ -324,6 +326,14 @@ export default function MiningSection() {
           location={selectedLocation}
           ores={locationOresMap[selectedLocation] || []}
           onClose={() => setSelectedLocation(null)}
+        />
+      )}
+
+      {/* Ore detail modal */}
+      {selectedOre && (
+        <OreModal
+          ore={selectedOre}
+          onClose={() => setSelectedOre(null)}
         />
       )}
     </div>
@@ -376,7 +386,15 @@ function OreCard({ item, onLocationClick }: { item: MiningData; onLocationClick:
   )
 }
 
-function LocationCard({ location, ores }: { location: string; ores: MiningData[] }) {
+function LocationCard({
+  location,
+  ores,
+  onOreClick,
+}: {
+  location: string
+  ores: MiningData[]
+  onOreClick: (ore: MiningData) => void
+}) {
   const system = LOCATION_SYSTEMS[location]
   const systemColor = system ? SYSTEM_COLORS[system] : 'text-slate-400'
   
@@ -405,9 +423,11 @@ function LocationCard({ location, ores }: { location: string; ores: MiningData[]
           const colors = RARITY_COLORS[ore.rarity] || RARITY_COLORS.common
           const signature = ORE_SIGNATURES[ore.ore_name]
           return (
-            <span
+            <button
               key={ore.id}
-              className={`text-xs px-2 py-1 rounded ${colors.bg} ${colors.text} border ${colors.border}`}
+              type="button"
+              onClick={() => onOreClick(ore)}
+              className={`text-xs px-2 py-1 rounded ${colors.bg} ${colors.text} border ${colors.border} hover:brightness-125 transition-all cursor-pointer text-left`}
             >
               {ore.ore_name}
               {signature && (
@@ -415,9 +435,77 @@ function LocationCard({ location, ores }: { location: string; ores: MiningData[]
                   {signature}
                 </span>
               )}
-            </span>
+            </button>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+function OreModal({ ore, onClose }: { ore: MiningData; onClose: () => void }) {
+  useBodyScrollLock(true)
+
+  const colors = RARITY_COLORS[ore.rarity] || RARITY_COLORS.common
+  const signature = ORE_SIGNATURES[ore.ore_name]
+
+  const sortedLocations = [...ore.locations].sort((a, b) => {
+    const sysA = LOCATION_SYSTEMS[a] || 'Unknown'
+    const sysB = LOCATION_SYSTEMS[b] || 'Unknown'
+    if (sysA !== sysB) return sysA.localeCompare(sysB)
+    return a.localeCompare(b)
+  })
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl">
+        <div className="p-4 border-b border-slate-800 flex items-start justify-between gap-4">
+          <div>
+            <h2 className={`text-lg font-semibold ${colors.text}`}>{ore.ore_name}</h2>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="text-xs text-slate-500 uppercase tracking-wider">
+                {RARITY_LABELS[ore.rarity]}
+              </span>
+              {signature && (
+                <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded">
+                  RS {signature}
+                </span>
+              )}
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="p-4 overflow-y-auto max-h-[60vh]">
+          <p className="text-sm text-slate-400 mb-4">
+            Found at {ore.locations.length} location{ore.locations.length !== 1 ? 's' : ''}:
+          </p>
+          <div className="space-y-2">
+            {sortedLocations.map((location) => {
+              const system = LOCATION_SYSTEMS[location]
+              const systemColor = system ? SYSTEM_COLORS[system] : 'text-slate-400'
+              return (
+                <div
+                  key={location}
+                  className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+                >
+                  <span className="font-medium text-white">{location}</span>
+                  {system && (
+                    <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </div>
   )
