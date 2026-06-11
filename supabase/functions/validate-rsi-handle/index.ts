@@ -92,11 +92,27 @@ serve(async (req) => {
       redirect: 'follow'
     })
 
+    // Helper to clear unverified RSI handle
+    const clearUnverifiedHandle = async () => {
+      await supabase
+        .from('profiles')
+        .update({ 
+          rsi_handle: null, 
+          rsi_handle_verified: false, 
+          rsi_handle_verified_at: null,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+        .eq('rsi_handle_verified', false)
+    }
+
     // Check if we got a valid profile page or 404
     if (rsiResponse.status === 404) {
+      await clearUnverifiedHandle()
       return new Response(
         JSON.stringify({ 
-          valid: false, 
+          valid: false,
+          cleared: true,
           error: 'RSI Handle not found on robertsspaceindustries.com' 
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -105,9 +121,11 @@ serve(async (req) => {
 
     if (!rsiResponse.ok) {
       console.error(`RSI website returned status: ${rsiResponse.status}`)
+      await clearUnverifiedHandle()
       return new Response(
         JSON.stringify({ 
-          valid: false, 
+          valid: false,
+          cleared: true, 
           error: `Unable to verify handle (RSI returned ${rsiResponse.status})` 
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -128,9 +146,11 @@ serve(async (req) => {
                        pageContent.includes('Citizen not found')
 
     if (isNotFound || !isValidProfile) {
+      await clearUnverifiedHandle()
       return new Response(
         JSON.stringify({ 
           valid: false, 
+          cleared: true,
           error: 'RSI Handle not found on robertsspaceindustries.com' 
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

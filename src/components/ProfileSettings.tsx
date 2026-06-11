@@ -23,7 +23,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
-  const [savingRsi, setSavingRsi] = useState(false)
   const [validatingRsi, setValidatingRsi] = useState(false)
   const [savingGhost, setSavingGhost] = useState(false)
   const [craftDeductInventory, setCraftDeductInventory] = useState(
@@ -41,7 +40,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const [checkingOrders, setCheckingOrders] = useState(true)
 
-  const hasRsiHandle = !!(profile?.rsi_handle && profile.rsi_handle.trim())
   const isVerified = profile?.rsi_handle_verified ?? false
 
   // Check if user has active orders (as buyer or fulfiller)
@@ -104,21 +102,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     profile?.craft_deduct_inventory,
   ])
 
-  const handleSaveRsi = async () => {
-    setSavingRsi(true)
-    setMessage(null)
-
-    const success = await updateRsiHandle(rsiHandle)
-
-    if (success) {
-      setMessage({ type: 'success', text: 'RSI handle saved (not verified yet).' })
-    } else {
-      setMessage({ type: 'error', text: 'Failed to save RSI handle.' })
-    }
-
-    setSavingRsi(false)
-  }
-
   const handleValidateRsi = async () => {
     if (!rsiHandle.trim()) {
       setMessage({ type: 'error', text: 'Enter an RSI handle first.' })
@@ -153,7 +136,12 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
       if (!response.ok) {
         setMessage({ type: 'error', text: result.error || 'Validation failed' })
       } else if (!result.valid) {
+        // Validation failed - handle was cleared from DB
         setMessage({ type: 'error', text: result.error || 'RSI Handle not found' })
+        if (result.cleared) {
+          setRsiHandle('') // Clear local input
+          refreshProfile() // Sync with DB
+        }
       } else if (result.verified) {
         setMessage({ type: 'success', text: 'RSI Handle verified successfully!' })
         refreshProfile()
@@ -307,11 +295,11 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 </span>
               }
               hint={
-                hasActiveOrders && hasRsiHandle
+                hasActiveOrders && isVerified
                   ? "You have active orders — clear them before changing your handle."
                   : isVerified
                     ? `Verified on ${profile?.rsi_handle_verified_at ? new Date(profile.rsi_handle_verified_at).toLocaleDateString() : 'RSI'}`
-                    : "Verify your handle to display a verified badge."
+                    : "Validate your handle against RSI to save it."
               }
             >
               <div className="flex gap-2">
@@ -320,9 +308,9 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                   value={rsiHandle}
                   onChange={(e) => setRsiHandle(e.target.value)}
                   placeholder="Enter your RSI handle..."
-                  disabled={(hasActiveOrders && hasRsiHandle) || isVerified}
+                  disabled={(hasActiveOrders && isVerified) || isVerified}
                   className={`flex-1 px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none transition-all text-sm ${
-                    (hasActiveOrders && hasRsiHandle) || isVerified
+                    (hasActiveOrders && isVerified) || isVerified
                       ? 'border-slate-700 opacity-60 cursor-not-allowed'
                       : 'border-slate-600 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
                   }`}
@@ -330,7 +318,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 {!isVerified && (
                   <button
                     onClick={handleValidateRsi}
-                    disabled={validatingRsi || !rsiHandle.trim() || (hasActiveOrders && hasRsiHandle)}
+                    disabled={validatingRsi || !rsiHandle.trim()}
                     className="shrink-0 px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Validate against RSI website"
                   >
@@ -347,28 +335,19 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 )}
               </div>
             </SettingsField>
-            {!isVerified && (
-              <button
-                onClick={handleSaveRsi}
-                disabled={savingRsi || (hasActiveOrders && hasRsiHandle)}
-                className="w-full px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {savingRsi ? 'Saving...' : hasActiveOrders && hasRsiHandle ? 'Active orders — cannot change' : 'Save Without Verification'}
-              </button>
-            )}
 
             <div className="mt-4 pt-4 border-t border-slate-700/50">
               <SettingsToggle
                 label="Deduct inventory on craft complete"
                 description={
-                  hasRsiHandle
+                  isVerified
                     ? "When on, completing a fulfillment craft requires enough stock in My Resources and deducts materials automatically."
-                    : "Set your RSI Handle above to enable this feature."
+                    : "Validate your RSI Handle above to enable this feature."
                 }
                 checked={craftDeductInventory}
                 onChange={handleCraftDeductInventoryChange}
                 saving={savingCraftDeduct}
-                disabled={!hasRsiHandle}
+                disabled={!isVerified}
               />
             </div>
           </SettingsSection>

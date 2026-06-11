@@ -11,31 +11,14 @@ interface WelcomeModalProps {
 export default function WelcomeModal({ onClose }: WelcomeModalProps) {
   useBodyScrollLock(true)
   
-  const { user, profile, refreshProfile } = useAuth()
+  const { profile, refreshProfile } = useAuth()
   const [step, setStep] = useState(0)
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
-  const [saving, setSaving] = useState(false)
   const [validating, setValidating] = useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
 
   const totalSteps = 3
   const isVerified = profile?.rsi_handle_verified ?? false
-
-  const handleSaveHandle = async () => {
-    if (!user?.id || !rsiHandle.trim()) return
-    
-    setSaving(true)
-    setValidationError(null)
-    const { error } = await supabase
-      .from('profiles')
-      .update({ rsi_handle: rsiHandle.trim() })
-      .eq('id', user.id)
-    
-    if (!error) {
-      await refreshProfile()
-    }
-    setSaving(false)
-  }
 
   const handleValidateHandle = async () => {
     if (!rsiHandle.trim()) {
@@ -72,6 +55,10 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
         setValidationError(result.error || 'Validation failed')
       } else if (!result.valid) {
         setValidationError(result.error || 'RSI Handle not found')
+        if (result.cleared) {
+          setRsiHandle('') // Clear local input
+          await refreshProfile() // Sync with DB
+        }
       } else if (result.verified) {
         await refreshProfile()
       } else {
@@ -231,16 +218,6 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
                     </svg>
                     Verified on RSI
                   </p>
-                )}
-                
-                {!isVerified && rsiHandle.trim() && !validationError && (
-                  <button
-                    onClick={handleSaveHandle}
-                    disabled={saving || rsiHandle === profile?.rsi_handle}
-                    className="mt-3 px-4 py-2 text-sm bg-slate-600 hover:bg-slate-500 disabled:opacity-50 text-white rounded-lg transition-colors"
-                  >
-                    {saving ? 'Saving...' : rsiHandle === profile?.rsi_handle ? 'Saved (not verified)' : 'Save Without Verification'}
-                  </button>
                 )}
               </div>
               <p className="text-xs text-slate-500 mt-2">
