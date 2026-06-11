@@ -18,6 +18,7 @@ interface AppChromeProps {
   isPending: boolean
   isGhostMode: boolean
   isOfficerOrAbove: boolean
+  isSuperAdmin: boolean
   showSettingsButton: boolean
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
@@ -36,6 +37,7 @@ export default function AppChrome({
   isPending,
   isGhostMode,
   isOfficerOrAbove,
+  isSuperAdmin,
   showSettingsButton,
   showDbActionsButton,
   showAdminPanelButton,
@@ -70,6 +72,7 @@ export default function AppChrome({
               isPending={isPending}
               isGhostMode={isGhostMode}
               isOfficerOrAbove={isOfficerOrAbove}
+              isSuperAdmin={isSuperAdmin}
               showSettingsButton={showSettingsButton}
               showDbActionsButton={showDbActionsButton}
               showAdminPanelButton={showAdminPanelButton}

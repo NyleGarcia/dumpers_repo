@@ -10,6 +10,7 @@ interface AppUserMenuProps {
   isPending: boolean
   isGhostMode: boolean
   isOfficerOrAbove: boolean
+  isSuperAdmin: boolean
   showSettingsButton: boolean
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
@@ -26,6 +27,7 @@ export default function AppUserMenu({
   isPending,
   isGhostMode,
   isOfficerOrAbove,
+  isSuperAdmin,
   showSettingsButton,
   showDbActionsButton,
   showAdminPanelButton,
@@ -216,8 +218,8 @@ export default function AppUserMenu({
               </button>
             )}
 
-            {/* Officer-only section */}
-            {isOfficerOrAbove && (
+            {/* Officer-only section (not for super-admins - they have DB Actions) */}
+            {isOfficerOrAbove && !isSuperAdmin && (
               <>
                 <div className="border-t border-slate-700 my-1" />
                 <Link
@@ -292,17 +294,19 @@ export default function AppUserMenu({
 
             <div className="border-t border-slate-700 my-1" />
 
-            {/* Support for all members */}
-            <button
-              type="button"
-              onClick={() => {
-                close()
-                onOpenSupport()
-              }}
-              className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-            >
-              Support
-            </button>
+            {/* Support for members and officers (not super-admins) */}
+            {!isSuperAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  close()
+                  onOpenSupport()
+                }}
+                className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+              >
+                Support
+              </button>
+            )}
 
             <button
               type="button"

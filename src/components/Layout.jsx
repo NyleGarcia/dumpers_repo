@@ -89,6 +89,7 @@ export default function Layout() {
         isPending={isPending}
         isGhostMode={isGhostMode}
         isOfficerOrAbove={isOfficerOrAbove}
+        isSuperAdmin={isSuperAdmin}
         showSettingsButton={showSettingsButton}
         showDbActionsButton={showDbActionsButton}
         showAdminPanelButton={showAdminPanelButton}
