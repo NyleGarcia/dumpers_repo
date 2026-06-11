@@ -61,7 +61,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
     return (
       featureId === 'blueprints_browse' ||
       featureId === 'archive_browse' ||
-      featureId === 'mining_tracker'
+      featureId === 'mining_tracker' ||
+      featureId === 'target_bp_list'
     )
   }
 

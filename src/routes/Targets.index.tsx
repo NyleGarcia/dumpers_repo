@@ -159,7 +159,8 @@ function MissionChecklistGroups({
 }
 
 export default function TargetsRoute() {
-  const { acquiredBlueprints, isApproved } = useAuth()
+  const { acquiredBlueprints, isApproved, isGuestPreview, user } = useAuth()
+  const isGuest = isGuestPreview && !user
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
 
@@ -223,7 +224,7 @@ export default function TargetsRoute() {
 
   const activeMissionCount = missionGroups.reduce((sum, g) => sum + g.missions.length, 0)
 
-  if (!isApproved) {
+  if (!isApproved && !isGuest) {
     return (
       <FeaturePageLayout
         title="Target BP List"
@@ -249,6 +250,13 @@ export default function TargetsRoute() {
         </button>
       }
     >
+      {isGuest && (
+        <div className="mb-4 px-3 py-2 rounded-lg border border-amber-500/30 bg-amber-950/30 text-xs text-amber-200/90">
+          Guest mode: your target list saves in this browser only. Sign in with a free member account
+          to sync across devices and track acquired blueprints.
+        </div>
+      )}
+
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
           {error}

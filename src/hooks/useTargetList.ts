@@ -11,6 +11,11 @@ import {
   removeMissionPrefsByKeys,
   setMissionIncluded,
 } from '../lib/targetList'
+import {
+  readGuestTargetList,
+  writeGuestTargetIds,
+  writeGuestMissionPrefs,
+} from '../lib/localGuestCache'
 
 export type GetMissionKeysForBlueprint = (blueprintId: string) => string[]
 
@@ -18,7 +23,7 @@ export function useTargetList(
   overridesMap: Record<string, boolean> = {},
   getMissionKeysForBlueprint?: GetMissionKeysForBlueprint
 ) {
-  const { user, isApproved, acquiredBlueprints } = useAuth()
+  const { user, isApproved, acquiredBlueprints, isGuestPreview } = useAuth()
   const [targetIds, setTargetIds] = useState<Record<string, boolean>>({})
   const [missionPrefs, setMissionPrefs] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
@@ -26,7 +31,19 @@ export function useTargetList(
   const acquiredRef = useLatestRef(acquiredBlueprints)
   const getMissionKeysRef = useLatestRef(getMissionKeysForBlueprint)
 
+  // Guest mode: use localStorage
+  const isGuest = isGuestPreview && !user
+
   const refresh = useCallback(async () => {
+    // Guest mode: load from localStorage
+    if (isGuest) {
+      const { targetIds: guestTargets, missionPrefs: guestPrefs } = readGuestTargetList()
+      setTargetIds(guestTargets)
+      setMissionPrefs(guestPrefs)
+      setLoading(false)
+      return
+    }
+
     if (!user?.id || !isApproved) {
       setTargetIds({})
       setMissionPrefs({})
@@ -67,13 +84,15 @@ export function useTargetList(
     }
     // acquiredRef is intentionally omitted — stable ref to latest map without re-fetch loops
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, isApproved])
+  }, [user?.id, isApproved, isGuest])
 
   useEffect(() => {
     void refresh()
   }, [refresh])
 
   useEffect(() => {
+    // Skip acquired cleanup for guests (no acquired tracking)
+    if (isGuest) return
     if (!user?.id || !isApproved) return
 
     const acquiredOnTarget = Object.keys(targetIds).filter((id) => acquiredBlueprints[id])
@@ -113,10 +132,43 @@ export function useTargetList(
     })()
     // getMissionKeysRef is stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [acquiredBlueprints, targetIds, user?.id, isApproved])
+  }, [acquiredBlueprints, targetIds, user?.id, isApproved, isGuest])
 
   const toggleTarget = useCallback(
     async (blueprintId: string) => {
+      // Guest mode: localStorage only
+      if (isGuest) {
+        const isOnList = !!targetIds[blueprintId]
+
+        if (isOnList) {
+          const getMissionKeys = getMissionKeysRef.current
+          const missionKeysToRemove = getMissionKeys ? getMissionKeys(blueprintId) : []
+
+          const nextTargets = { ...targetIds }
+          delete nextTargets[blueprintId]
+          setTargetIds(nextTargets)
+          writeGuestTargetIds(nextTargets)
+
+          if (missionKeysToRemove.length > 0) {
+            const nextPrefs = { ...missionPrefs }
+            for (const key of missionKeysToRemove) delete nextPrefs[key]
+            setMissionPrefs(nextPrefs)
+            writeGuestMissionPrefs(nextPrefs)
+          }
+        } else {
+          if (!canAddBlueprintToTargetListById(blueprintId, overridesMap)) {
+            setError(
+              'This blueprint cannot be added to your target list (not orderable and no reward missions).'
+            )
+            return false
+          }
+          const nextTargets = { ...targetIds, [blueprintId]: true }
+          setTargetIds(nextTargets)
+          writeGuestTargetIds(nextTargets)
+        }
+        return true
+      }
+
       if (!user || !isApproved) return false
 
       if (acquiredBlueprints[blueprintId]) {
@@ -170,11 +222,20 @@ export function useTargetList(
     },
     // getMissionKeysRef is stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user, isApproved, targetIds, acquiredBlueprints, overridesMap]
+    [user, isApproved, targetIds, missionPrefs, acquiredBlueprints, overridesMap, isGuest]
   )
 
   const setMissionOnChecklist = useCallback(
     async (missionLabel: string, onChecklist: boolean) => {
+      // Guest mode: localStorage only
+      if (isGuest) {
+        const key = missionKey(missionLabel)
+        const nextPrefs = { ...missionPrefs, [key]: onChecklist }
+        setMissionPrefs(nextPrefs)
+        writeGuestMissionPrefs(nextPrefs)
+        return true
+      }
+
       if (!user || !isApproved) return false
 
       const result = await setMissionIncluded(user.id, missionLabel, onChecklist)
@@ -190,7 +251,7 @@ export function useTargetList(
 
       return true
     },
-    [user, isApproved]
+    [user, isApproved, isGuest, missionPrefs]
   )
 
   const addMissionToChecklist = useCallback(
@@ -205,10 +266,21 @@ export function useTargetList(
 
   const addAllMissionsToChecklist = useCallback(
     async (missionLabels: string[]) => {
-      if (!user || !isApproved) return false
-
       const toAdd = missionLabels.filter((label) => missionPrefs[missionKey(label)] !== true)
       if (toAdd.length === 0) return true
+
+      // Guest mode: localStorage only
+      if (isGuest) {
+        const nextPrefs = { ...missionPrefs }
+        for (const label of toAdd) {
+          nextPrefs[missionKey(label)] = true
+        }
+        setMissionPrefs(nextPrefs)
+        writeGuestMissionPrefs(nextPrefs)
+        return true
+      }
+
+      if (!user || !isApproved) return false
 
       const results = await Promise.all(
         toAdd.map((label) => setMissionIncluded(user.id, label, true))
@@ -229,7 +301,7 @@ export function useTargetList(
 
       return true
     },
-    [user, isApproved, missionPrefs]
+    [user, isApproved, missionPrefs, isGuest]
   )
 
   const isMissionOnChecklist = useCallback(
