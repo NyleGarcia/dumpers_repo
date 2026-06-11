@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import type { Profile } from '../../lib/supabase'
-import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
+import { supabase } from '../../lib/supabase'
 import RsiVerifiedBadge from '../RsiVerifiedBadge'
 
 interface AppUserMenuProps {
@@ -8,12 +9,14 @@ interface AppUserMenuProps {
   profile: Profile | null
   isPending: boolean
   isGhostMode: boolean
+  isOfficerOrAbove: boolean
   showSettingsButton: boolean
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
   onOpenSettings: () => void
   onOpenDbActions: () => void
   onOpenAdmin: () => void
+  onOpenSupport: () => void
   onSignOut: () => void
 }
 
@@ -22,18 +25,57 @@ export default function AppUserMenu({
   profile,
   isPending,
   isGhostMode,
+  isOfficerOrAbove,
   showSettingsButton,
   showDbActionsButton,
   showAdminPanelButton,
   onOpenSettings,
   onOpenDbActions,
   onOpenAdmin,
+  onOpenSupport,
   onSignOut,
 }: AppUserMenuProps) {
   const [open, setOpen] = useState(false)
-  const close = () => setOpen(false)
+  const [showOfficerTools, setShowOfficerTools] = useState(false)
+  const [rsiHandleToRevoke, setRsiHandleToRevoke] = useState('')
+  const [alsoBanUser, setAlsoBanUser] = useState(false)
+  const [processing, setProcessing] = useState(false)
+  const [toolMessage, setToolMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const close = () => {
+    setOpen(false)
+    setShowOfficerTools(false)
+    setToolMessage(null)
+  }
 
-  useBodyScrollLock(open)
+  const handleRevokeVerification = async () => {
+    if (!rsiHandleToRevoke.trim()) return
+    
+    setProcessing(true)
+    setToolMessage(null)
+    
+    try {
+      const rpcName = alsoBanUser ? 'remove_rsi_verification_and_ban' : 'officer_revoke_rsi_verification'
+      const { data, error } = await supabase.rpc(rpcName, {
+        p_handle: rsiHandleToRevoke.trim(),
+        ...(alsoBanUser && { p_reason: 'Officer action via support tools' }),
+      })
+      
+      if (error) throw error
+      
+      if (data?.success) {
+        const action = alsoBanUser ? 'revoked and banned' : 'revoked'
+        setToolMessage({ type: 'success', text: `RSI Handle verification ${action} for ${data.display_name || rsiHandleToRevoke}` })
+        setRsiHandleToRevoke('')
+        setAlsoBanUser(false)
+      } else {
+        setToolMessage({ type: 'error', text: data?.error || 'Failed to revoke verification' })
+      }
+    } catch (err) {
+      setToolMessage({ type: 'error', text: (err as Error).message })
+    }
+    
+    setProcessing(false)
+  }
 
   if (isPending) {
     return (
@@ -173,6 +215,94 @@ export default function AppUserMenu({
                 Admin Panel
               </button>
             )}
+
+            {/* Officer-only section */}
+            {isOfficerOrAbove && (
+              <>
+                <div className="border-t border-slate-700 my-1" />
+                <Link
+                  to="/support-dashboard"
+                  onClick={close}
+                  className="block w-full px-4 py-2 text-left text-blue-400 hover:bg-slate-700 transition-colors"
+                >
+                  Support Dashboard
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowOfficerTools(!showOfficerTools)}
+                  className="w-full px-4 py-2 text-left text-amber-400 hover:bg-slate-700 transition-colors flex items-center justify-between"
+                >
+                  <span>Officer Tools</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${showOfficerTools ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {showOfficerTools && (
+                  <div className="px-4 py-3 bg-slate-900/50 border-t border-slate-700 space-y-3">
+                    {toolMessage && (
+                      <div
+                        className={`p-2 rounded text-xs ${
+                          toolMessage.type === 'success'
+                            ? 'bg-green-900/50 text-green-400 border border-green-500/30'
+                            : 'bg-red-900/50 text-red-400 border border-red-500/30'
+                        }`}
+                      >
+                        {toolMessage.text}
+                      </div>
+                    )}
+                    <div>
+                      <label className="block text-xs text-slate-400 mb-1">Revoke RSI Handle</label>
+                      <input
+                        type="text"
+                        value={rsiHandleToRevoke}
+                        onChange={(e) => setRsiHandleToRevoke(e.target.value)}
+                        placeholder="Enter RSI Handle..."
+                        className="w-full px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
+                      />
+                    </div>
+                    <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={alsoBanUser}
+                        onChange={(e) => setAlsoBanUser(e.target.checked)}
+                        className="rounded border-slate-500 bg-slate-800 text-red-500 focus:ring-red-500/40"
+                      />
+                      <span className={alsoBanUser ? 'text-red-400' : ''}>Also ban this user</span>
+                    </label>
+                    <button
+                      onClick={handleRevokeVerification}
+                      disabled={processing || !rsiHandleToRevoke.trim()}
+                      className={`w-full px-3 py-1.5 text-sm font-medium rounded transition-colors disabled:opacity-50 ${
+                        alsoBanUser
+                          ? 'bg-red-600 hover:bg-red-700 text-white'
+                          : 'bg-amber-600 hover:bg-amber-700 text-white'
+                      }`}
+                    >
+                      {processing ? 'Processing...' : alsoBanUser ? 'Revoke & Ban' : 'Revoke Verification'}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+
+            <div className="border-t border-slate-700 my-1" />
+
+            {/* Support for all members */}
+            <button
+              type="button"
+              onClick={() => {
+                close()
+                onOpenSupport()
+              }}
+              className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+            >
+              Support
+            </button>
 
             <button
               type="button"

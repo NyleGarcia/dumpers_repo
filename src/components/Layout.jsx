@@ -9,6 +9,7 @@ import AdminPanel from './AdminPanel'
 import ProfileSettings from './ProfileSettings'
 import DbActionsModal from './DbActionsModal'
 import WelcomeModal from './WelcomeModal'
+import SupportTicketsModal from './SupportTicketsModal'
 import AppChrome from './layout/AppChrome'
 
 export default function Layout() {
@@ -20,6 +21,7 @@ export default function Layout() {
     isPending,
     isGhostMode,
     isApproved,
+    isOfficerOrAbove,
     signOut,
     displayName,
     canAccess,
@@ -35,6 +37,7 @@ export default function Layout() {
   const [showProfileSettings, setShowProfileSettings] = useState(false)
   const [showDbActions, setShowDbActions] = useState(false)
   const [showWelcomeModal, setShowWelcomeModal] = useState(false)
+  const [showSupportModal, setShowSupportModal] = useState(false)
   const [welcomeChecked, setWelcomeChecked] = useState(false)
 
   // Check if welcome modal should be shown for all approved users
@@ -85,12 +88,14 @@ export default function Layout() {
         profile={profile}
         isPending={isPending}
         isGhostMode={isGhostMode}
+        isOfficerOrAbove={isOfficerOrAbove}
         showSettingsButton={showSettingsButton}
         showDbActionsButton={showDbActionsButton}
         showAdminPanelButton={showAdminPanelButton}
         onOpenSettings={() => setShowProfileSettings(true)}
         onOpenDbActions={() => setShowDbActions(true)}
         onOpenAdmin={() => setShowAdminPanel(true)}
+        onOpenSupport={() => setShowSupportModal(true)}
         onSignOut={signOut}
       >
         <Outlet />
@@ -99,6 +104,7 @@ export default function Layout() {
       {showAdminPanel && <AdminPanel onClose={() => setShowAdminPanel(false)} />}
       {showProfileSettings && <ProfileSettings onClose={() => setShowProfileSettings(false)} />}
       {showDbActions && <DbActionsModal onClose={() => setShowDbActions(false)} />}
+      {showSupportModal && <SupportTicketsModal onClose={() => setShowSupportModal(false)} />}
       {showWelcomeModal && (
         <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
       )}

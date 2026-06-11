@@ -1,0 +1,65 @@
+---
+description: Keep Archive documentation in sync with feature changes
+alwaysApply: true
+---
+
+# Archive Documentation Maintenance
+
+When adding new features or modifying existing features, check and update the Information Archive accordingly.
+
+## What to Update
+
+The Archive documentation lives in:
+- `src/components/archive/ArchiveWelcome.tsx` - Main site guide with page explanations
+
+### When Adding a New Feature
+
+1. Add an entry to `PAGE_GUIDES` array in `ArchiveWelcome.tsx` if the feature is user-facing
+2. Include: `id`, `title`, `icon` (SVG), `description`, `details` array, and `relatesTo` array
+3. Keep descriptions focused on **what members can do**, not technical implementation
+
+### When Modifying Existing Features
+
+1. Update the relevant `PAGE_GUIDES` entry if user-facing behavior changed
+2. Update `details` bullet points to reflect new capabilities
+3. Update `relatesTo` if the feature now integrates with other pages
+
+## What NOT to Document
+
+The Archive is for **regular members**. Do not include:
+
+- Officer or super-admin-only features (dashboards, moderation tools)
+- Backend implementation details
+- Database schema or technical architecture
+- Internal admin workflows or controls
+- Debugging or developer information
+
+## Example Entry
+
+```tsx
+{
+  id: 'feature-name',
+  title: 'Feature Name',
+  icon: (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="..." />
+    </svg>
+  ),
+  description: 'One-line description of what users can do.',
+  details: [
+    'First thing users can do with this feature',
+    'Second capability or benefit',
+    'Any requirements (e.g., verified RSI Handle)',
+  ],
+  relatesTo: ['Other Page', 'Related Feature'],
+},
+```
+
+## Checklist
+
+Before completing a feature implementation, verify:
+
+- [ ] Is this feature visible to regular members?
+- [ ] If yes, is there a `PAGE_GUIDES` entry for it?
+- [ ] Does the entry accurately describe current behavior?
+- [ ] Are related features listed in `relatesTo`?

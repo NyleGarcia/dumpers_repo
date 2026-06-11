@@ -7,6 +7,7 @@ import CustomOrdersRoute from './CustomOrders.index'
 import FulfillmentRoute from './Fulfillment.index'
 import TargetsRoute from './Targets.index'
 import ArchiveRoute from './Archive.index'
+import SupportDashboardRoute from './SupportDashboard.index'
 import { requireFeature } from '../lib/routeGuards'
 
 const rootRoute = createRootRoute({
@@ -55,6 +56,13 @@ const archiveRoute = createRoute({
   component: ArchiveRoute,
 })
 
+const supportDashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/support-dashboard',
+  component: SupportDashboardRoute,
+  beforeLoad: requireFeature('support_dashboard'),
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   targetsRoute,
@@ -62,6 +70,7 @@ export const routeTree = rootRoute.addChildren([
   customOrdersRoute,
   fulfillmentRoute,
   archiveRoute,
+  supportDashboardRoute,
 ])
 
 export default routeTree

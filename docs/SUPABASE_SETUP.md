@@ -43,6 +43,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 13. `048_blueprints_sync.sql` — Blueprint sync tables for sccrafter.com data
 14. `049_welcome_modal.sql` — Welcome modal onboarding (has_seen_welcome, always_show settings)
 15. `050_rsi_handle_verification.sql` — RSI Handle verification system (validated against RSI website)
+16. `051_support_tickets.sql` — Support ticket system for member issue reporting (bug reports, member reports, RSI verification issues)
+17. `052_order_creation_notify.sql` — Notifies all members when a new custom order is created
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 

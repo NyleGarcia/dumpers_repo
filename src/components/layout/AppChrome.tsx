@@ -17,12 +17,14 @@ interface AppChromeProps {
   profile: Profile | null
   isPending: boolean
   isGhostMode: boolean
+  isOfficerOrAbove: boolean
   showSettingsButton: boolean
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
   onOpenSettings: () => void
   onOpenDbActions: () => void
   onOpenAdmin: () => void
+  onOpenSupport: () => void
   onSignOut: () => void
 }
 
@@ -33,12 +35,14 @@ export default function AppChrome({
   profile,
   isPending,
   isGhostMode,
+  isOfficerOrAbove,
   showSettingsButton,
   showDbActionsButton,
   showAdminPanelButton,
   onOpenSettings,
   onOpenDbActions,
   onOpenAdmin,
+  onOpenSupport,
   onSignOut,
 }: AppChromeProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
@@ -65,12 +69,14 @@ export default function AppChrome({
               profile={profile}
               isPending={isPending}
               isGhostMode={isGhostMode}
+              isOfficerOrAbove={isOfficerOrAbove}
               showSettingsButton={showSettingsButton}
               showDbActionsButton={showDbActionsButton}
               showAdminPanelButton={showAdminPanelButton}
               onOpenSettings={onOpenSettings}
               onOpenDbActions={onOpenDbActions}
               onOpenAdmin={onOpenAdmin}
+              onOpenSupport={onOpenSupport}
               onSignOut={onSignOut}
             />
           </div>

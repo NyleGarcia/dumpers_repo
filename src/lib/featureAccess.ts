@@ -12,6 +12,8 @@ export type FeatureId =
   | 'fulfillment'
   | 'target_bp_list'
   | 'site_total'
+  | 'support_tickets'
+  | 'support_dashboard'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -79,6 +81,12 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'site_total':
       return ctx.isOfficerOrAbove && !ctx.ghostMode
+
+    case 'support_tickets':
+      return ctx.isApproved
+
+    case 'support_dashboard':
+      return ctx.isOfficerOrAbove
 
     default:
       return false
