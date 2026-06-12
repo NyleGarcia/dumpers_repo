@@ -53,7 +53,7 @@ export function miningTrackerEntryId(oreName: string): string {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Guest Target BP List (localStorage)
+// Guest Mission Tracker (localStorage)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const GUEST_TARGET_LIST_STORAGE_KEY = 'dumpers_guest_target_list'

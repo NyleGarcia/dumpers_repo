@@ -274,7 +274,7 @@ export default function AppUserMenu({
                   onClick={close}
                   className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
                 >
-                  Target BP List
+                  Mission Tracker
                 </Link>
                 <Link
                   to="/resources"

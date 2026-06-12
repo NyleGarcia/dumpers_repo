@@ -37,7 +37,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
   },
   {
     id: 'targets',
-    label: 'Target BP List',
+    label: 'Mission Tracker',
     path: '/targets',
     icon: 'target',
     featureId: 'target_bp_list',

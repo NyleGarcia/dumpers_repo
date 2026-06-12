@@ -227,8 +227,8 @@ export default function TargetsRoute() {
   if (!isApproved && !isGuest) {
     return (
       <FeaturePageLayout
-        title="Target BP List"
-        subtitle="Your Blueprint Reward and Mission Tracker"
+        title="Mission Tracker"
+        subtitle="Track blueprints and the missions that reward them"
       >
         <div className="text-center py-16 text-slate-400">
           Available after your account is approved.
@@ -239,8 +239,8 @@ export default function TargetsRoute() {
 
   return (
     <FeaturePageLayout
-      title="Target BP List"
-      subtitle="Your Blueprint Reward and Mission Tracker"
+      title="Mission Tracker"
+      subtitle="Track blueprints and the missions that reward them"
       actions={
         <button
           onClick={() => void refresh()}

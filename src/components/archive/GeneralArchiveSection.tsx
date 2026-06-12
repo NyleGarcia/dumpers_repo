@@ -73,7 +73,7 @@ const EXTERNAL_LINKS: LinkItem[] = [
 const TIPS: { title: string; content: string }[] = [
   {
     title: 'Blueprint Rewards',
-    content: 'Blueprints are awarded from contracts at specific reputation levels. Check the Target BP List to track which blueprints you\'re working towards and the missions that can award them.',
+    content: 'Blueprints are awarded from contracts at specific reputation levels. Check Mission Tracker to track which blueprints you\'re working towards and the missions that can award them.',
   },
   {
     title: 'Resource Tracking',

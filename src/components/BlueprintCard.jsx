@@ -219,14 +219,14 @@ export default function BlueprintCard({
                 {showTargetControl && (
                   <button
                     onClick={handleTargetClick}
-                    className={`shrink-0 px-2 py-1 text-[10px] font-semibold rounded-md border transition-colors ${
+                    className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
                       isOnTargetList
-                        ? 'bg-amber-900/50 text-amber-300 border-amber-500/50 hover:bg-amber-900/70'
-                        : 'bg-slate-800/80 text-slate-400 border-slate-600 hover:border-amber-500/40 hover:text-amber-300'
+                        ? 'bg-orange-600/30 text-orange-300 hover:bg-orange-600/40'
+                        : 'bg-slate-700/50 text-slate-400 hover:bg-orange-600/20 hover:text-orange-300'
                     }`}
-                    title={isOnTargetList ? 'Remove from target list' : 'Add to target list'}
+                    title={isOnTargetList ? 'Remove from Mission Tracker' : 'Add to Mission Tracker'}
                   >
-                    {isOnTargetList ? '★ Target' : '+ Target'}
+                    {isOnTargetList ? 'Tracked' : 'Track'}
                   </button>
                 )}
               </div>

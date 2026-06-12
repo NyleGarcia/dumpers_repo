@@ -121,33 +121,33 @@ export default function BlueprintDetailsModal({
             </h3>
             {!isApproved ? (
               <p className="text-sm text-slate-400">
-                After your account is approved, add this blueprint to your Target BP List to track which
+                After your account is approved, add this blueprint to your Mission Tracker to track which
                 missions reward it.
               </p>
             ) : isAcquired ? (
               <p className="text-sm text-slate-400">
-                This blueprint is already in your pool. Reward missions are only tracked on your Target BP
-                List while you are still hunting a blueprint.
+                This blueprint is already in your pool. Reward missions are only tracked in Mission Tracker
+                while you are still hunting a blueprint.
               </p>
             ) : isOnTarget ? (
               <p className="text-sm text-slate-400">
-                This blueprint is on your Target BP List. Open{' '}
-                <strong className="text-amber-300/90">Target BP List</strong> from the menu to see grouped
+                This blueprint is tracked. Open{' '}
+                <strong className="text-amber-300/90">Mission Tracker</strong> from the menu to see grouped
                 missions, toggle them on/off, and track progress.
               </p>
             ) : !canAddToTargetList ? (
               <p className="text-sm text-slate-400">
-                This blueprint cannot be added to your Target BP List (no reward missions to track).
+                This blueprint cannot be tracked (no reward missions to track).
               </p>
             ) : (
               <div className="flex items-center gap-3">
                 <button
                   onClick={onToggleTarget}
-                  className="shrink-0 px-3 py-1.5 text-sm font-semibold rounded-lg bg-amber-600 hover:bg-amber-500 text-white transition-colors"
+                  className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-orange-600/30 text-orange-300 hover:bg-orange-600/40"
                 >
-                  + Target
+                  Track
                 </button>
-                <span className="text-sm text-slate-400">Click to add to Target BP List</span>
+                <span className="text-sm text-slate-400">Click to add to Mission Tracker</span>
               </div>
             )}
           </div>
