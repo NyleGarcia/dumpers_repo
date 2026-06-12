@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { fetchDisputeOrderId, resolveOrderDispute } from '../lib/operations'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
 
 type TicketCategory = 'bug_report' | 'member_report' | 'rsi_verification'
 type TicketStatus = 'open' | 'assigned' | 'pending_user' | 'resolved'
+type ResolvedBy = 'officer' | 'member' | null
 
 interface TicketDetail {
   id: string
@@ -19,6 +21,18 @@ interface TicketDetail {
   reported_user_name: string | null
   created_at: string
   updated_at: string
+  pending_rating: boolean
+  resolved_by: ResolvedBy
+  resolution_message: string | null
+  is_escalated: boolean
+  escalated_at: string | null
+  escalation_reason: string | null
+}
+
+interface TicketRating {
+  stars: number
+  comment: string | null
+  created_at: string
 }
 
 interface TicketMessage {
@@ -64,14 +78,19 @@ export default function SupportTicketThread({
   isOfficer,
   onDeleted,
 }: Props) {
+  const { isSuperAdmin } = useAuth()
   const [ticket, setTicket] = useState<TicketDetail | null>(null)
   const [messages, setMessages] = useState<TicketMessage[]>([])
+  const [rating, setRating] = useState<TicketRating | null>(null)
   const [loading, setLoading] = useState(true)
   const [newMessage, setNewMessage] = useState('')
   const [sending, setSending] = useState(false)
+  const [showResolveConfirm, setShowResolveConfirm] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [resolutionMessage, setResolutionMessage] = useState('')
   const [deleting, setDeleting] = useState(false)
+  const [resolving, setResolving] = useState(false)
+  const [memberResolving, setMemberResolving] = useState(false)
   const [status, setStatus] = useState<TicketStatus | ''>('')
   const [updatingStatus, setUpdatingStatus] = useState(false)
   const [disputeOrderId, setDisputeOrderId] = useState<string | null>(null)
@@ -89,6 +108,7 @@ export default function SupportTicketThread({
         setTicket(data.ticket)
         setMessages(data.messages || [])
         setStatus(data.ticket.status)
+        setRating(data.rating || null)
       }
     } catch (err) {
       console.error('Failed to load ticket:', err)
@@ -163,6 +183,69 @@ export default function SupportTicketThread({
   }
 
   const isSystemGenerated = ticket?.subject.startsWith('[System]') ?? false
+
+  // Officer resolves ticket (member will need to rate)
+  const handleOfficerResolve = async () => {
+    if (!resolutionMessage.trim()) return
+
+    setResolving(true)
+    try {
+      const { data, error } = await supabase.rpc('officer_resolve_ticket', {
+        p_ticket_id: ticketId,
+        p_resolution_message: resolutionMessage.trim(),
+      })
+      if (error) throw error
+      if (data?.success) {
+        onDeleted?.()
+        onBack()
+      }
+    } catch (err) {
+      console.error('Failed to resolve ticket:', err)
+    }
+    setResolving(false)
+    setShowResolveConfirm(false)
+    setResolutionMessage('')
+  }
+
+  // Member marks their own ticket as resolved
+  const handleMemberResolve = async () => {
+    setMemberResolving(true)
+    try {
+      const { data, error } = await supabase.rpc('member_resolve_ticket', {
+        p_ticket_id: ticketId,
+      })
+      if (error) throw error
+      if (data?.success) {
+        onBack()
+      }
+    } catch (err) {
+      console.error('Failed to mark as resolved:', err)
+    }
+    setMemberResolving(false)
+  }
+
+  // Super-admin resolves escalated ticket
+  const handleSuperAdminResolve = async () => {
+    if (!resolutionMessage.trim()) return
+
+    setResolving(true)
+    try {
+      const { data, error } = await supabase.rpc('super_admin_resolve_escalation', {
+        p_ticket_id: ticketId,
+        p_resolution_message: resolutionMessage.trim(),
+      })
+      if (error) throw error
+      if (data?.success) {
+        onDeleted?.()
+        onBack()
+      }
+    } catch (err) {
+      console.error('Failed to resolve escalation:', err)
+    }
+    setResolving(false)
+    setShowResolveConfirm(false)
+    setResolutionMessage('')
+  }
 
   const handleDelete = async () => {
     if (!resolutionMessage.trim()) return
@@ -298,8 +381,38 @@ export default function SupportTicketThread({
         </div>
       }
     >
+      {/* Escalation Info Banner (for super-admins viewing escalated tickets) */}
+      {ticket.is_escalated && isSuperAdmin && (
+        <div className="mb-4 p-4 bg-red-900/30 border border-red-500/40 rounded-lg">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-red-500/20 shrink-0">
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h4 className="text-red-300 font-medium">Escalated Ticket</h4>
+              <p className="text-sm text-red-200/70 mt-1">
+                Originally handled by <span className="text-red-300">{ticket.assignee_name}</span>
+              </p>
+              {rating && (
+                <p className="text-sm text-red-200/70 mt-1">
+                  Member rated: <span className="text-amber-400">{rating.stars} star{rating.stars !== 1 ? 's' : ''}</span>
+                  {rating.comment && <span className="text-slate-400"> &mdash; &quot;{rating.comment}&quot;</span>}
+                </p>
+              )}
+              {ticket.escalation_reason && (
+                <div className="mt-2 p-2 bg-slate-800/50 rounded text-sm text-slate-300">
+                  <span className="text-slate-500">Escalation reason:</span> {ticket.escalation_reason}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Officer Actions */}
-      {isOfficer && (
+      {isOfficer && !ticket.is_escalated && (
         <div className="flex items-center gap-3 mb-4 p-3 bg-slate-800/50 border border-slate-700 rounded-lg">
           {!ticket.assignee_id && (
             <button
@@ -317,8 +430,8 @@ export default function SupportTicketThread({
           <select
             value={status}
             onChange={(e) => handleStatusChange(e.target.value as TicketStatus)}
-            disabled={updatingStatus}
-            className="ml-auto px-2 py-1.5 bg-slate-700 border border-slate-600 rounded text-sm text-white focus:outline-none focus:border-red-500/50"
+            disabled={updatingStatus || ticket.pending_rating}
+            className="ml-auto px-2 py-1.5 bg-slate-700 border border-slate-600 rounded text-sm text-white focus:outline-none focus:border-red-500/50 disabled:opacity-50"
           >
             <option value="open">Open</option>
             <option value="assigned">Assigned</option>
@@ -342,11 +455,56 @@ export default function SupportTicketThread({
               </button>
             </>
           )}
+          {ticket.pending_rating ? (
+            <span className="px-3 py-1.5 bg-amber-600/20 border border-amber-500/30 text-amber-300 text-sm font-medium rounded-lg">
+              Awaiting member rating
+            </span>
+          ) : (
+            <button
+              onClick={() => setShowResolveConfirm(true)}
+              className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              Resolve Ticket
+            </button>
+          )}
+          {isSystemGenerated && (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              Dismiss
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Super-Admin Actions for Escalated Tickets */}
+      {ticket.is_escalated && isSuperAdmin && (
+        <div className="flex items-center gap-3 mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+          <span className="text-sm text-red-300">
+            Final resolution required
+          </span>
           <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
+            onClick={() => setShowResolveConfirm(true)}
+            className="ml-auto px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
-            Resolve & Delete
+            Resolve Escalation
+          </button>
+        </div>
+      )}
+
+      {/* Member Actions */}
+      {!isOfficer && ticket.assignee_id && !ticket.pending_rating && !ticket.is_escalated && (
+        <div className="flex items-center gap-3 mb-4 p-3 bg-slate-800/50 border border-slate-700 rounded-lg">
+          <span className="text-sm text-slate-400">
+            Issue resolved? You can mark this ticket as resolved.
+          </span>
+          <button
+            onClick={handleMemberResolve}
+            disabled={memberResolving}
+            className="ml-auto px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+          >
+            {memberResolving ? 'Marking...' : 'Mark as Resolved'}
           </button>
         </div>
       )}
@@ -407,82 +565,89 @@ export default function SupportTicketThread({
         </button>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Resolve Confirmation Modal (Officer or Super-Admin) */}
+      {showResolveConfirm && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[80]">
+          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-lg mx-4">
+            <h3 className="text-lg font-semibold text-white mb-2">
+              {ticket.is_escalated ? 'Resolve Escalated Ticket' : 'Resolve Ticket'}
+            </h3>
+            <p className="text-slate-400 text-sm mb-4">
+              {ticket.is_escalated
+                ? 'Enter a final resolution message for the member. This escalation will be closed permanently.'
+                : 'Enter a resolution message for the member. They will be asked to rate their support experience before the ticket is closed.'}
+            </p>
+            <textarea
+              value={resolutionMessage}
+              onChange={(e) => setResolutionMessage(e.target.value)}
+              placeholder="e.g., Your issue has been resolved. The RSI Handle was cleared and is now available for re-verification."
+              rows={3}
+              className="w-full px-3 py-2 mb-4 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 resize-none text-sm"
+            />
+            {!ticket.is_escalated && (
+              <p className="text-xs text-blue-400 mb-4">
+                The member will rate this interaction. If they rate below 3 stars, they may escalate to a super-admin.
+              </p>
+            )}
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setShowResolveConfirm(false)
+                  setResolutionMessage('')
+                }}
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={ticket.is_escalated ? handleSuperAdminResolve : handleOfficerResolve}
+                disabled={resolving || !resolutionMessage.trim()}
+                className={`px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors ${
+                  ticket.is_escalated
+                    ? 'bg-red-600 hover:bg-red-700'
+                    : 'bg-green-600 hover:bg-green-700'
+                }`}
+              >
+                {resolving ? 'Resolving...' : 'Resolve'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal (System-generated tickets only) */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[80]">
           <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-lg mx-4">
-            {isSystemGenerated ? (
-              <>
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Dismiss System Report
-                </h3>
-                <p className="text-slate-400 text-sm mb-4">
-                  This is an automated system-generated report. You can dismiss it if no action
-                  is required, or resolve it with a custom message if you took action.
-                </p>
-                <p className="text-xs text-slate-500 mb-4">
-                  This will <strong className="text-red-400">permanently delete</strong> the ticket
-                  and all messages. This action cannot be undone.
-                </p>
-                <div className="flex gap-3 justify-end">
-                  <button
-                    onClick={() => {
-                      setShowDeleteConfirm(false)
-                      setResolutionMessage('')
-                    }}
-                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleDismiss}
-                    disabled={deleting}
-                    className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
-                  >
-                    {deleting ? 'Dismissing...' : 'Dismiss Report'}
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Resolve & Delete Ticket
-                </h3>
-                <p className="text-slate-400 text-sm mb-4">
-                  Enter a resolution message for the member. This will be sent as a notification
-                  so they can see the outcome even after the ticket is deleted.
-                </p>
-                <textarea
-                  value={resolutionMessage}
-                  onChange={(e) => setResolutionMessage(e.target.value)}
-                  placeholder="e.g., Your issue has been resolved. The RSI Handle was cleared and is now available for re-verification."
-                  rows={3}
-                  className="w-full px-3 py-2 mb-4 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 resize-none text-sm"
-                />
-                <p className="text-xs text-slate-500 mb-4">
-                  This will <strong className="text-red-400">permanently delete</strong> the ticket
-                  and all messages. This action cannot be undone.
-                </p>
-                <div className="flex gap-3 justify-end">
-                  <button
-                    onClick={() => {
-                      setShowDeleteConfirm(false)
-                      setResolutionMessage('')
-                    }}
-                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    disabled={deleting || !resolutionMessage.trim()}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
-                  >
-                    {deleting ? 'Resolving...' : 'Resolve & Delete'}
-                  </button>
-                </div>
-              </>
-            )}
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Dismiss System Report
+            </h3>
+            <p className="text-slate-400 text-sm mb-4">
+              This is an automated system-generated report. You can dismiss it if no action
+              is required.
+            </p>
+            <p className="text-xs text-slate-500 mb-4">
+              This will <strong className="text-red-400">permanently delete</strong> the ticket
+              and all messages. This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setShowDeleteConfirm(false)
+                  setResolutionMessage('')
+                }}
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDismiss}
+                disabled={deleting}
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
+              >
+                {deleting ? 'Dismissing...' : 'Dismiss Report'}
+              </button>
+            </div>
           </div>
         </div>
       )}

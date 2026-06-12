@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
+import OfficerRatingModal from './OfficerRatingModal'
 import SupportTicketThread from './SupportTicketThread'
 
 type TicketCategory = 'bug_report' | 'member_report' | 'rsi_verification'
 type TicketStatus = 'open' | 'assigned' | 'pending_user' | 'resolved'
+type ResolvedBy = 'officer' | 'member' | null
 
 interface Ticket {
   id: string
@@ -16,6 +18,9 @@ interface Ticket {
   message_count: number
   last_message_at: string | null
   created_at: string
+  pending_rating: boolean
+  resolved_by: ResolvedBy
+  resolution_message: string | null
 }
 
 interface MemberOption {
@@ -55,6 +60,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null)
+  const [ratingTicket, setRatingTicket] = useState<Ticket | null>(null)
   
   // New ticket form
   const [category, setCategory] = useState<TicketCategory>('bug_report')
@@ -153,6 +159,34 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
     setSubmitting(false)
   }
 
+  const handleTicketClick = (ticket: Ticket) => {
+    if (ticket.pending_rating) {
+      setRatingTicket(ticket)
+    } else {
+      setSelectedTicketId(ticket.id)
+    }
+  }
+
+  // Show rating modal for pending rating tickets
+  if (ratingTicket) {
+    return (
+      <OfficerRatingModal
+        ticketId={ratingTicket.id}
+        ticketSubject={ratingTicket.subject}
+        resolvedBy={ratingTicket.resolved_by ?? 'officer'}
+        resolutionMessage={ratingTicket.resolution_message}
+        onClose={() => {
+          setRatingTicket(null)
+          loadTickets()
+        }}
+        onComplete={() => {
+          setRatingTicket(null)
+          loadTickets()
+        }}
+      />
+    )
+  }
+
   if (selectedTicketId) {
     return (
       <SupportTicketThread
@@ -239,17 +273,27 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
             tickets.map((ticket) => (
               <button
                 key={ticket.id}
-                onClick={() => setSelectedTicketId(ticket.id)}
-                className="w-full text-left p-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-xl transition-colors"
+                onClick={() => handleTicketClick(ticket)}
+                className={`w-full text-left p-4 border rounded-xl transition-colors ${
+                  ticket.pending_rating
+                    ? 'bg-amber-900/20 hover:bg-amber-900/30 border-amber-500/40 hover:border-amber-500/60'
+                    : 'bg-slate-800/50 hover:bg-slate-800 border-slate-700 hover:border-slate-600'
+                }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className={`px-2 py-0.5 text-xs font-medium rounded border ${STATUS_STYLES[ticket.status]}`}
-                      >
-                        {STATUS_LABELS[ticket.status]}
-                      </span>
+                      {ticket.pending_rating ? (
+                        <span className="px-2 py-0.5 text-xs font-medium rounded border bg-amber-600/30 text-amber-300 border-amber-500/50">
+                          Pending Your Rating
+                        </span>
+                      ) : (
+                        <span
+                          className={`px-2 py-0.5 text-xs font-medium rounded border ${STATUS_STYLES[ticket.status]}`}
+                        >
+                          {STATUS_LABELS[ticket.status]}
+                        </span>
+                      )}
                       <span className="text-xs text-slate-500">
                         {CATEGORY_LABELS[ticket.category]}
                       </span>
@@ -257,11 +301,16 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
                     <p className="text-white font-medium truncate">{ticket.subject}</p>
                     <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
                       <span>{ticket.message_count} messages</span>
-                      {ticket.assignee_name && <span>Assigned to {ticket.assignee_name}</span>}
+                      {ticket.assignee_name && <span>Handled by {ticket.assignee_name}</span>}
                     </div>
+                    {ticket.pending_rating && (
+                      <p className="mt-2 text-xs text-amber-300/80">
+                        Click to rate your support experience
+                      </p>
+                    )}
                   </div>
                   <svg
-                    className="w-5 h-5 text-slate-500 shrink-0"
+                    className={`w-5 h-5 shrink-0 ${ticket.pending_rating ? 'text-amber-400' : 'text-slate-500'}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

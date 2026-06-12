@@ -124,7 +124,7 @@ export default function MiningTrackerRoute() {
     <FeaturePageLayout
       title="Mining Tracker"
       subtitle="Cluster RS reference for ores you are hunting — base signature through 6×."
-      badge="Local only"
+      badge={isGuestPreview ? 'Local only' : undefined}
       meta={
         isGuestPreview ? (
           <span className="text-amber-400/90">

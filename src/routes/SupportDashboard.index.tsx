@@ -22,6 +22,36 @@ interface OfficerTicket {
   updated_at: string
 }
 
+interface EscalatedTicket {
+  id: string
+  category: TicketCategory
+  subject: string
+  status: TicketStatus
+  requester_name: string
+  requester_id: string
+  original_assignee_id: string | null
+  original_assignee_name: string
+  escalation_reason: string | null
+  escalated_at: string
+  rating_stars: number | null
+  rating_comment: string | null
+  message_count: number
+  created_at: string
+}
+
+interface OfficerPerformance {
+  officer_id: string
+  officer_name: string
+  total_ratings: number
+  avg_rating: number | null
+  stars_1: number
+  stars_2: number
+  stars_3: number
+  stars_4: number
+  stars_5: number
+  escalation_count: number
+}
+
 const CATEGORY_LABELS: Record<TicketCategory, string> = {
   bug_report: 'Bug Report',
   member_report: 'Member Report',
@@ -51,11 +81,14 @@ const STATUS_LABELS: Record<TicketStatus, string> = {
 export default function SupportDashboardRoute() {
   const { user, isOfficerOrAbove, isSuperAdmin } = useAuth()
   const [tickets, setTickets] = useState<OfficerTicket[]>([])
+  const [escalatedTickets, setEscalatedTickets] = useState<EscalatedTicket[]>([])
+  const [officerPerformance, setOfficerPerformance] = useState<OfficerPerformance[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null)
   const [categoryFilter, setCategoryFilter] = useState<TicketCategory | ''>('')
   const [statusFilter, setStatusFilter] = useState<TicketStatus | ''>('')
+  const [showPerformance, setShowPerformance] = useState(false)
 
   const loadTickets = useCallback(async () => {
     setLoading(true)
@@ -72,11 +105,37 @@ export default function SupportDashboardRoute() {
     setLoading(false)
   }, [])
 
+  const loadEscalatedTickets = useCallback(async () => {
+    if (!isSuperAdmin) return
+    try {
+      const { data, error: fetchError } = await supabase.rpc('get_escalated_tickets')
+      if (fetchError) throw fetchError
+      setEscalatedTickets(data || [])
+    } catch (err) {
+      console.error('Failed to load escalated tickets:', err)
+    }
+  }, [isSuperAdmin])
+
+  const loadOfficerPerformance = useCallback(async () => {
+    if (!isSuperAdmin) return
+    try {
+      const { data, error: fetchError } = await supabase.rpc('get_officer_performance')
+      if (fetchError) throw fetchError
+      setOfficerPerformance(data || [])
+    } catch (err) {
+      console.error('Failed to load officer performance:', err)
+    }
+  }, [isSuperAdmin])
+
   useEffect(() => {
     if (isOfficerOrAbove) {
       loadTickets()
     }
-  }, [isOfficerOrAbove, loadTickets])
+    if (isSuperAdmin) {
+      loadEscalatedTickets()
+      loadOfficerPerformance()
+    }
+  }, [isOfficerOrAbove, isSuperAdmin, loadTickets, loadEscalatedTickets, loadOfficerPerformance])
 
   const unassignedTickets = useMemo(() => {
     return tickets.filter((t) => {
@@ -129,6 +188,20 @@ export default function SupportDashboardRoute() {
     }
   }
 
+  const reloadAll = () => {
+    loadTickets()
+    if (isSuperAdmin) {
+      loadEscalatedTickets()
+      loadOfficerPerformance()
+    }
+  }
+
+  const renderStars = (count: number, filled: boolean) => (
+    <span className={filled ? 'text-amber-400' : 'text-slate-600'}>
+      {'★'.repeat(count)}
+    </span>
+  )
+
   if (!isOfficerOrAbove) {
     return (
       <FeaturePageLayout title="Support Dashboard" subtitle="Access Denied">
@@ -145,14 +218,14 @@ export default function SupportDashboardRoute() {
         ticketId={selectedTicketId}
         onBack={() => {
           setSelectedTicketId(null)
-          loadTickets()
+          reloadAll()
         }}
         onClose={() => {
           setSelectedTicketId(null)
-          loadTickets()
+          reloadAll()
         }}
         isOfficer={true}
-        onDeleted={() => loadTickets()}
+        onDeleted={() => reloadAll()}
       />
     )
   }
@@ -196,14 +269,161 @@ export default function SupportDashboardRoute() {
             ))}
           </select>
         </div>
+        {isSuperAdmin && (
+          <button
+            onClick={() => setShowPerformance(!showPerformance)}
+            className={`px-3 py-1.5 border rounded-lg text-sm transition-colors ${
+              showPerformance
+                ? 'bg-amber-600/20 border-amber-500/40 text-amber-300'
+                : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+            }`}
+          >
+            Officer Stats
+          </button>
+        )}
         <button
-          onClick={() => loadTickets()}
+          onClick={() => reloadAll()}
           disabled={loading}
           className="ml-auto px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-sm transition-colors disabled:opacity-50"
         >
           {loading ? 'Loading...' : 'Refresh'}
         </button>
       </div>
+
+      {/* Escalated Tickets Section - Super Admin Only */}
+      {isSuperAdmin && escalatedTickets.length > 0 && (
+        <section className="mb-6 p-4 bg-red-900/20 border border-red-500/40 rounded-xl">
+          <h2 className="text-red-300 font-semibold mb-4 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            Escalated Tickets
+            <span className="px-2 py-0.5 bg-red-600/30 text-red-300 text-xs font-medium rounded-full">
+              {escalatedTickets.length}
+            </span>
+          </h2>
+
+          <div className="space-y-3">
+            {escalatedTickets.map((ticket) => (
+              <button
+                key={ticket.id}
+                onClick={() => setSelectedTicketId(ticket.id)}
+                className="w-full text-left p-4 bg-slate-900/60 border border-red-500/30 rounded-xl hover:border-red-500/60 transition-colors"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className={`px-2 py-0.5 text-xs font-medium rounded border ${CATEGORY_STYLES[ticket.category]}`}>
+                        {CATEGORY_LABELS[ticket.category]}
+                      </span>
+                      {ticket.rating_stars && (
+                        <span className="px-2 py-0.5 text-xs font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/30">
+                          {ticket.rating_stars} star{ticket.rating_stars !== 1 ? 's' : ''}
+                        </span>
+                      )}
+                      <span className="text-xs text-slate-500">
+                        Escalated {formatDate(ticket.escalated_at)}
+                      </span>
+                    </div>
+                    <p className="text-white font-medium truncate">{ticket.subject}</p>
+                    <p className="text-sm text-slate-500 mt-1">
+                      From: <span className="text-slate-300">{ticket.requester_name}</span>
+                      {' · '}Originally handled by: <span className="text-amber-400">{ticket.original_assignee_name}</span>
+                    </p>
+                    {ticket.escalation_reason && (
+                      <p className="mt-2 text-sm text-red-300/80 bg-red-900/20 p-2 rounded">
+                        {ticket.escalation_reason}
+                      </p>
+                    )}
+                    {ticket.rating_comment && (
+                      <p className="mt-2 text-sm text-slate-400 italic">
+                        &quot;{ticket.rating_comment}&quot;
+                      </p>
+                    )}
+                  </div>
+                  <svg
+                    className="w-5 h-5 text-red-400 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Officer Performance Section - Super Admin Only */}
+      {isSuperAdmin && showPerformance && (
+        <section className="mb-6 p-4 bg-slate-900/60 border border-amber-500/30 rounded-xl">
+          <h2 className="text-amber-300 font-semibold mb-4 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Officer Performance
+          </h2>
+
+          {officerPerformance.length === 0 ? (
+            <p className="text-slate-400 text-sm text-center py-4">
+              No ratings recorded yet.
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-700">
+                    <th className="text-left py-2 px-3 text-slate-400 font-medium">Officer</th>
+                    <th className="text-center py-2 px-3 text-slate-400 font-medium">Avg Rating</th>
+                    <th className="text-center py-2 px-3 text-slate-400 font-medium">Total</th>
+                    <th className="text-center py-2 px-3 text-slate-400 font-medium">Distribution</th>
+                    <th className="text-center py-2 px-3 text-slate-400 font-medium">Escalations</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {officerPerformance.map((officer) => (
+                    <tr key={officer.officer_id} className="border-b border-slate-800 hover:bg-slate-800/50">
+                      <td className="py-3 px-3 text-white font-medium">{officer.officer_name}</td>
+                      <td className="py-3 px-3 text-center">
+                        {officer.avg_rating ? (
+                          <span className={`font-semibold ${
+                            officer.avg_rating >= 4 ? 'text-green-400' :
+                            officer.avg_rating >= 3 ? 'text-amber-400' :
+                            'text-red-400'
+                          }`}>
+                            {officer.avg_rating.toFixed(1)} {renderStars(Math.round(officer.avg_rating), true)}
+                          </span>
+                        ) : (
+                          <span className="text-slate-500">-</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-3 text-center text-slate-300">{officer.total_ratings}</td>
+                      <td className="py-3 px-3 text-center">
+                        <div className="flex justify-center gap-1 text-xs">
+                          <span className="px-1.5 py-0.5 rounded bg-red-900/40 text-red-300" title="1 star">{officer.stars_1}</span>
+                          <span className="px-1.5 py-0.5 rounded bg-orange-900/40 text-orange-300" title="2 stars">{officer.stars_2}</span>
+                          <span className="px-1.5 py-0.5 rounded bg-amber-900/40 text-amber-300" title="3 stars">{officer.stars_3}</span>
+                          <span className="px-1.5 py-0.5 rounded bg-lime-900/40 text-lime-300" title="4 stars">{officer.stars_4}</span>
+                          <span className="px-1.5 py-0.5 rounded bg-green-900/40 text-green-300" title="5 stars">{officer.stars_5}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 text-center">
+                        {officer.escalation_count > 0 ? (
+                          <span className="text-red-400 font-medium">{officer.escalation_count}</span>
+                        ) : (
+                          <span className="text-slate-500">0</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      )}
 
       {loading ? (
         <div className="text-center py-16">
