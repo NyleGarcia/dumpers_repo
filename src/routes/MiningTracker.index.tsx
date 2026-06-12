@@ -264,27 +264,26 @@ export default function MiningTrackerRoute() {
                   return (
                     <div
                       key={entry.id}
-                      className={`p-4 rounded-xl border w-48 ${colors.bg} ${colors.border}`}
+                      className={`p-4 rounded-xl border w-48 text-center relative ${colors.bg} ${colors.border}`}
                     >
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <div className="min-w-0">
-                          <span className={`text-lg font-semibold ${colors.text}`}>
-                            {entry.oreName}
-                          </span>
-                          <div className="text-xs text-slate-500 uppercase tracking-wider mt-0.5">
-                            {MINING_RARITY_LABELS[entry.rarity] ?? entry.rarity}
-                          </div>
+                      <button
+                        type="button"
+                        onClick={() => removeEntry(entry.id)}
+                        className="absolute top-2 right-2 p-1 text-slate-500 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-colors"
+                        title="Remove"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      <div className="mb-3">
+                        <span className={`text-lg font-semibold ${colors.text}`}>
+                          {entry.oreName}
+                        </span>
+                        <div className="text-xs text-slate-500 uppercase tracking-wider mt-0.5">
+                          {MINING_RARITY_LABELS[entry.rarity] ?? entry.rarity}
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => removeEntry(entry.id)}
-                          className="shrink-0 p-1.5 text-slate-500 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-colors"
-                          title="Remove"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
                       </div>
 
                       {multiples.length > 0 ? (
