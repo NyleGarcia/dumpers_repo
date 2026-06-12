@@ -52,7 +52,8 @@ import {
 import { displayNameFromFields } from '../lib/supabase'
 
 export default function FulfillmentRoute() {
-  const { user, profile, acquiredBlueprints, dfpDisplayEnabled } = useAuth()
+  const { user, profile, acquiredBlueprints, dfpDisplayEnabled, isGuestPreview } = useAuth()
+  const isGuest = !user && isGuestPreview
   const craftDeductInventory = profile?.craft_deduct_inventory ?? false
   const isRsiVerified = profile?.rsi_handle_verified ?? false
   const { data: blueprints = [] } = useBlueprintData()
@@ -72,6 +73,7 @@ export default function FulfillmentRoute() {
   const [archiveOrder, setArchiveOrder] = useState<CustomOrder | null>(null)
   const [archiving, setArchiving] = useState(false)
   const [orderLimits, setOrderLimits] = useState<UserOrderLimits | null>(null)
+  const [guestPendingCount, setGuestPendingCount] = useState<number | null>(null)
 
   const userId = user?.id
 
@@ -117,9 +119,27 @@ export default function FulfillmentRoute() {
     setLoading(false)
   }, [userId])
 
+  // Guest: load only the pending order count
+  const loadGuestData = useCallback(async () => {
+    setLoading(true)
+    const ordersResult = await fetchCustomOrders()
+    if (ordersResult.error) {
+      setError(ordersResult.error)
+      setLoading(false)
+      return
+    }
+    const pendingCount = ordersResult.data.filter((o) => o.status === 'pending').length
+    setGuestPendingCount(pendingCount)
+    setLoading(false)
+  }, [])
+
   useEffect(() => {
-    void loadData()
-  }, [loadData])
+    if (isGuest) {
+      void loadGuestData()
+    } else {
+      void loadData()
+    }
+  }, [isGuest, loadData, loadGuestData])
 
   const quantityByKey = useMemo(() => buildStockTotalsByResource(inventory), [inventory])
 
@@ -335,6 +355,52 @@ export default function FulfillmentRoute() {
     setSelectedOrderId(null)
     setNotes('')
     await loadData()
+  }
+
+  // Guest teaser view
+  if (isGuest) {
+    return (
+      <FeaturePageLayout title="Fulfillment" subtitle={SITE_SLOGAN}>
+        <div className="max-w-2xl mx-auto py-12 text-center">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/30 mb-6">
+            <svg className="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">Order Fulfillment</h2>
+          {loading ? (
+            <div className="text-slate-400 mb-4">Checking pending orders...</div>
+          ) : guestPendingCount !== null && guestPendingCount > 0 ? (
+            <div className="mb-4">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/30">
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <span className="text-green-300 font-medium">
+                  {guestPendingCount} order{guestPendingCount === 1 ? '' : 's'} waiting for fulfillment
+                </span>
+              </span>
+            </div>
+          ) : (
+            <p className="text-slate-400 mb-4">No pending orders right now.</p>
+          )}
+          <p className="text-slate-400 mb-6 max-w-md mx-auto">
+            Members can browse and accept custom craft orders placed by other members. 
+            Build your reputation by fulfilling orders and earn aUEC!
+          </p>
+          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700 text-left max-w-md mx-auto">
+            <h3 className="text-white font-medium mb-2">What members can do:</h3>
+            <ul className="text-sm text-slate-400 space-y-1">
+              <li>• Accept orders that match your acquired blueprints</li>
+              <li>• Track crafting progress and mark orders ready</li>
+              <li>• Earn buyer ratings and build your fulfiller reputation</li>
+              <li>• Auto-deduct materials from your Resource Tracker</li>
+            </ul>
+          </div>
+          <p className="text-amber-300/70 text-sm mt-6">
+            Sign in with Discord to access Fulfillment and start earning.
+          </p>
+        </div>
+      </FeaturePageLayout>
+    )
   }
 
   return (

@@ -180,7 +180,9 @@ export default function BlueprintsRoute() {
     user,
     isApproved,
     isSuperAdmin,
+    isGuestPreview,
   } = useAuth()
+  const isGuest = !user && isGuestPreview
 
   const { overridesMap, setOrderable } = useBlueprintOrderOverrides()
   const { isOnTargetList, toggleTarget } = useTargetList(overridesMap)
@@ -506,6 +508,13 @@ export default function BlueprintsRoute() {
         </>
       }
     >
+      {isGuest && (
+        <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">
+          <strong>Guest Preview</strong> – Your "Acquired" marks are saved locally in this browser.
+          Sign in to sync them to your account and keep them permanently.
+        </div>
+      )}
+
       <div className="space-y-3 mb-6 w-full min-w-0">
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
           <input

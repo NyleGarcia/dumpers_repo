@@ -61,6 +61,7 @@ const PAGE_GUIDES = [
       'Mark blueprints as "acquired" to track your collection progress',
       'View the resources and components required to craft each item',
       'Click any blueprint to see detailed crafting requirements and DFP values',
+      'Guest Mode: acquired marks save locally until you sign in',
     ],
     relatesTo: ['Target BP List', 'Resource Tracker'],
   },
@@ -79,6 +80,7 @@ const PAGE_GUIDES = [
       'Track your progress toward the required reputation levels',
       'Prioritize which factions to grind based on your goals',
       'Remove blueprints once you\'ve acquired them',
+      'Guest Mode: list saves locally until you sign in (then migrates automatically)',
     ],
     relatesTo: ['Blueprints', 'Factions'],
   },
@@ -97,6 +99,7 @@ const PAGE_GUIDES = [
       'DFP automatically calculates fair market values for your resources',
       'See your total inventory value at a glance',
       'Perfect for tracking what you have available for crafting or trading',
+      'Guest Mode: inventory saves locally until you sign in (then migrates automatically)',
     ],
     relatesTo: ['Blueprints', 'Mining Guide', 'Mining Tracker'],
   },
@@ -239,6 +242,67 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           <p className="text-sm text-slate-400 leading-relaxed">
             The site is designed to be a one-stop shop for crafters, miners, and traders who want 
             transparency and fairness in their in-game economic activities.
+          </p>
+        </div>
+      </section>
+
+      {/* Guest Mode */}
+      <section className="space-y-4">
+        <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          Guest Mode
+        </h3>
+        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+          <p className="text-sm text-slate-300 leading-relaxed">
+            Want to try out the tools before signing up? <strong className="text-white">Guest Mode</strong> lets 
+            you explore most features without creating an account.
+          </p>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-green-500/20">
+              <h4 className="text-sm font-medium text-green-400 mb-2">What Works in Guest Mode</h4>
+              <ul className="text-xs text-slate-400 space-y-1">
+                <li>• Browse all blueprints and archive data</li>
+                <li>• Mark blueprints as acquired (local only)</li>
+                <li>• Build your Target BP List (local only)</li>
+                <li>• Track resources in Resource Tracker (local only)</li>
+                <li>• Use the Mining Tracker for RS references</li>
+                <li>• Preview pending fulfillment orders</li>
+              </ul>
+            </div>
+            
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-amber-500/20">
+              <h4 className="text-sm font-medium text-amber-400 mb-2">Members-Only Features</h4>
+              <ul className="text-xs text-slate-400 space-y-1">
+                <li>• Create custom crafting orders</li>
+                <li>• Accept and fulfill orders for aUEC</li>
+                <li>• View member directory / browse collections</li>
+                <li>• Site Total resource aggregation</li>
+                <li>• Cross-device data sync</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="p-3 bg-blue-900/20 border border-blue-500/20 rounded-lg">
+            <h4 className="text-sm font-medium text-blue-300 mb-1 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Data Migration
+            </h4>
+            <p className="text-xs text-slate-400">
+              When you decide to sign in, <strong className="text-blue-300">all your guest data migrates automatically</strong>. 
+              Your acquired blueprints, target list, resource inventory, and mission checklist preferences 
+              transfer to your account — nothing is lost.
+            </p>
+          </div>
+
+          <p className="text-xs text-slate-500">
+            Guest data is stored in your browser's local storage. It persists across sessions but won't sync 
+            between devices or browsers until you create an account.
           </p>
         </div>
       </section>

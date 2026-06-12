@@ -8,7 +8,20 @@ import {
   type VisibilityContext,
 } from '../lib/featureAccess'
 import { readGuestPreviewSession, writeGuestPreviewSession } from '../lib/guestPreview'
-import { GUEST_ACQUIRED_STORAGE_KEY } from '../lib/localGuestCache'
+import {
+  GUEST_ACQUIRED_STORAGE_KEY,
+  clearGuestAcquiredBlueprints,
+  clearGuestMissionPrefs,
+  clearGuestResources,
+  clearGuestTargetList,
+  readGuestAcquiredBlueprints,
+  readGuestResources,
+  readGuestTargetList,
+  sanitizeBlueprintId,
+  sanitizeMigrationBatch,
+  sanitizeResourceEntry,
+  writeGuestAcquiredBlueprints,
+} from '../lib/localGuestCache'
 import { removeTargetBlueprint } from '../lib/targetList'
 import type { User, Session } from '@supabase/supabase-js'
 
@@ -74,6 +87,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const enterGuestPreview = useCallback(() => {
     writeGuestPreviewSession(true)
     setIsGuestPreview(true)
+    // Load guest acquired blueprints from localStorage
+    setAcquiredBlueprints(readGuestAcquiredBlueprints())
   }, [])
 
   const exitGuestPreview = useCallback(() => {
@@ -185,30 +200,112 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const migrateLocalStorage = useCallback(async (userId: string) => {
     if (typeof localStorage === 'undefined') return
 
-    const localData = localStorage.getItem(GUEST_ACQUIRED_STORAGE_KEY)
-    if (!localData) return
+    // 1. Migrate acquired blueprints
+    const localBpData = localStorage.getItem(GUEST_ACQUIRED_STORAGE_KEY)
+    if (localBpData) {
+      try {
+        const localBlueprints = JSON.parse(localBpData) as Record<string, boolean>
+        const blueprintIds = Object.keys(localBlueprints)
+          .filter(id => localBlueprints[id])
+          .map(id => sanitizeBlueprintId(id))
+          .filter((id): id is string => id !== null)
 
-    try {
-      const localBlueprints = JSON.parse(localData) as Record<string, boolean>
-      const blueprintIds = Object.keys(localBlueprints).filter(id => localBlueprints[id])
+        if (blueprintIds.length > 0) {
+          const inserts = sanitizeMigrationBatch(blueprintIds).map(blueprint_id => ({
+            user_id: userId,
+            blueprint_id,
+          }))
 
-      if (blueprintIds.length === 0) return
+          const { error } = await supabase
+            .from('acquired_blueprints')
+            .upsert(inserts, { onConflict: 'user_id,blueprint_id' })
 
-      const inserts = blueprintIds.map(blueprint_id => ({
-        user_id: userId,
-        blueprint_id,
-      }))
-
-      const { error } = await supabase
-        .from('acquired_blueprints')
-        .upsert(inserts, { onConflict: 'user_id,blueprint_id' })
-
-      if (!error) {
-        localStorage.removeItem(GUEST_ACQUIRED_STORAGE_KEY)
-        console.log(`Migrated ${blueprintIds.length} blueprints to server`)
+          if (!error) {
+            clearGuestAcquiredBlueprints()
+            console.log(`Migrated ${inserts.length} acquired blueprints to server`)
+          }
+        }
+      } catch (e) {
+        console.error('Error migrating acquired blueprints:', e)
       }
-    } catch (e) {
-      console.error('Error migrating local blueprints:', e)
+    }
+
+    // 2. Migrate target list
+    const { targetIds, missionPrefs } = readGuestTargetList()
+    const targetBpIds = Object.keys(targetIds)
+      .filter(id => targetIds[id])
+      .map(id => sanitizeBlueprintId(id))
+      .filter((id): id is string => id !== null)
+
+    if (targetBpIds.length > 0) {
+      try {
+        const inserts = sanitizeMigrationBatch(targetBpIds).map(blueprint_id => ({
+          user_id: userId,
+          blueprint_id,
+        }))
+
+        const { error } = await supabase
+          .from('target_blueprints')
+          .upsert(inserts, { onConflict: 'user_id,blueprint_id' })
+
+        if (!error) {
+          clearGuestTargetList()
+          console.log(`Migrated ${inserts.length} target blueprints to server`)
+        }
+      } catch (e) {
+        console.error('Error migrating target list:', e)
+      }
+    }
+
+    // 3. Migrate mission prefs
+    const missionKeys = Object.keys(missionPrefs).filter(k => missionPrefs[k])
+    if (missionKeys.length > 0) {
+      try {
+        const inserts = sanitizeMigrationBatch(missionKeys).map(mission_key => ({
+          user_id: userId,
+          mission_key,
+          included: true,
+        }))
+
+        const { error } = await supabase
+          .from('mission_checklist_prefs')
+          .upsert(inserts, { onConflict: 'user_id,mission_key' })
+
+        if (!error) {
+          clearGuestMissionPrefs()
+          console.log(`Migrated ${inserts.length} mission prefs to server`)
+        }
+      } catch (e) {
+        console.error('Error migrating mission prefs:', e)
+      }
+    }
+
+    // 4. Migrate resources
+    const guestResources = readGuestResources()
+    const validResources = guestResources
+      .map(r => sanitizeResourceEntry(r))
+      .filter((r): r is NonNullable<typeof r> => r !== null)
+
+    if (validResources.length > 0) {
+      try {
+        const inserts = sanitizeMigrationBatch(validResources).map(r => ({
+          user_id: userId,
+          resource_key: r.resource_key,
+          quality: r.quality,
+          quantity: r.quantity,
+        }))
+
+        const { error } = await supabase
+          .from('resource_inventory')
+          .upsert(inserts, { onConflict: 'user_id,resource_key,quality' })
+
+        if (!error) {
+          clearGuestResources()
+          console.log(`Migrated ${inserts.length} resource entries to server`)
+        }
+      } catch (e) {
+        console.error('Error migrating resources:', e)
+      }
     }
   }, [])
 
@@ -326,6 +423,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const toggleAcquired = useCallback(async (blueprintId: string) => {
     const activeUser = userRef.current
     const activeProfile = profileRef.current
+    const isGuestMode = !activeUser && readGuestPreviewSession()
+
+    // Guest mode: localStorage only
+    if (isGuestMode) {
+      const current = acquiredRef.current
+      const isCurrentlyAcquired = current[blueprintId]
+      const updated = { ...current }
+
+      if (isCurrentlyAcquired) {
+        delete updated[blueprintId]
+      } else {
+        updated[blueprintId] = true
+      }
+
+      writeGuestAcquiredBlueprints(updated)
+      setAcquiredBlueprints(updated)
+      return
+    }
 
     if (!activeUser || !activeProfile || activeProfile.role === 'pending') {
       console.warn('Cannot toggle: user not authenticated or pending')
@@ -523,7 +638,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isPending = profile?.role === 'pending'
   const isGhostMode = profile?.ghost_mode ?? false
   const guestPreviewActive = !user && isGuestPreview
-  const canModifyBlueprints = !!profile && profile.role !== 'pending'
+  const canModifyBlueprints = guestPreviewActive || (!!profile && profile.role !== 'pending')
   const isApproved = !!profile && profile.role !== 'pending'
   const visibilityContext = useMemo(
     () =>

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { isSalvageResource } from '../config/extraResources'
@@ -13,6 +13,11 @@ import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
 import { inventoryLineKey } from '../lib/inventoryStock'
+import {
+  type GuestResourceEntry,
+  readGuestResources,
+  writeGuestResources,
+} from '../lib/localGuestCache'
 import { adjustInventoryQuantity, setInventoryQuantity } from '../lib/operations'
 import type { InventoryScope } from '../lib/operations'
 import ResourceQuantityInput from '../components/ResourceQuantityInput'
@@ -23,18 +28,152 @@ import {
   formatResourceQuantity,
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
+import type { BlueprintResourceRow } from '../lib/operations'
+
+interface GuestStockAddPanelProps {
+  catalog: BlueprintResourceRow[]
+  labelMap: Record<string, string>
+  existingKeys: Set<string>
+  onAdd: (resourceKey: string, quality: number, quantity: number) => void
+}
+
+function GuestStockAddPanel({ catalog, labelMap, existingKeys, onAdd }: GuestStockAddPanelProps) {
+  const [selectedResource, setSelectedResource] = useState('')
+  const [quantity, setQuantity] = useState('')
+  const [search, setSearch] = useState('')
+
+  const quality = DEFAULT_STOCK_QUALITY
+
+  const filteredCatalog = useMemo(() => {
+    if (search.length < 2) return []
+    const lowerSearch = search.toLowerCase()
+    return catalog
+      .filter(
+        (c) =>
+          c.is_active &&
+          (c.label.toLowerCase().includes(lowerSearch) ||
+            c.resource_key.toLowerCase().includes(lowerSearch))
+      )
+      .slice(0, 20)
+  }, [catalog, search])
+
+  const handleAdd = () => {
+    if (!selectedResource) return
+    const qty = parseQuantityForResource(selectedResource, quantity)
+    if (qty == null || qty <= 0) return
+
+    onAdd(selectedResource, quality, qty)
+    setSelectedResource('')
+    setQuantity('')
+    setSearch('')
+  }
+
+  const selectedLabel = labelMap[selectedResource] ?? selectedResource
+
+  return (
+    <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700">
+      <h3 className="text-sm font-medium text-slate-300 mb-3">Add Material Stock (Guest)</h3>
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex-1 relative">
+          {!selectedResource ? (
+            <>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Type to search resources..."
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50"
+              />
+              {filteredCatalog.length > 0 && (
+                <div className="absolute z-10 mt-1 w-full bg-slate-800 border border-slate-600 rounded-lg shadow-xl max-h-48 overflow-y-auto">
+                  {filteredCatalog.map((c) => {
+                    const lineKey = inventoryLineKey(c.resource_key, quality)
+                    const alreadyExists = existingKeys.has(lineKey)
+                    return (
+                      <button
+                        key={c.resource_key}
+                        type="button"
+                        disabled={alreadyExists}
+                        onClick={() => {
+                          setSelectedResource(c.resource_key)
+                          setSearch('')
+                        }}
+                        className={`w-full text-left px-3 py-2 text-sm ${
+                          alreadyExists
+                            ? 'text-slate-500 cursor-not-allowed'
+                            : 'text-white hover:bg-slate-700'
+                        }`}
+                      >
+                        {c.label}
+                        {alreadyExists && (
+                          <span className="ml-2 text-xs text-slate-500">(already added)</span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className={`text-sm ${resourceLabelClassName(selectedResource)}`}>
+                {selectedLabel}
+              </span>
+              <button
+                type="button"
+                onClick={() => setSelectedResource('')}
+                className="text-slate-400 hover:text-white text-xs"
+              >
+                (change)
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <ResourceQuantityInput
+            resourceKey={selectedResource}
+            value={quantity}
+            onValueChange={setQuantity}
+            placeholder="Qty"
+            className="w-24 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50"
+          />
+          <span className="text-slate-500 text-sm">
+            {resourceQuantityUnitLabel(selectedResource)}
+          </span>
+          <button
+            type="button"
+            onClick={handleAdd}
+            disabled={!selectedResource || !quantity}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-500 transition-colors"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function ResourceTrackerRoute() {
-  const { user, visibilityContext, isSuperAdmin, isGhostMode } = useAuth()
+  const { user, visibilityContext, isSuperAdmin, isGhostMode, isGuestPreview } = useAuth()
+  const isGuest = !user && isGuestPreview
   const canViewSiteTotal =
-    !isGhostMode && canUseFeature('site_total', visibilityContext)
+    !isGhostMode && !isGuest && canUseFeature('site_total', visibilityContext)
 
   const [activeTab, setActiveTab] = useState<InventoryScope>('personal')
   const [stockError, setStockError] = useState<string | null>(null)
+  const [guestResources, setGuestResources] = useState<GuestResourceEntry[]>([])
 
   useEffect(() => {
-    if (isGhostMode && activeTab === 'site') setActiveTab('personal')
-  }, [isGhostMode, activeTab])
+    if ((isGhostMode || isGuest) && activeTab === 'site') setActiveTab('personal')
+  }, [isGhostMode, isGuest, activeTab])
+
+  // Load guest resources from localStorage on mount / guest enter
+  useEffect(() => {
+    if (isGuest) {
+      setGuestResources(readGuestResources())
+    }
+  }, [isGuest])
 
   const [search, setSearch] = useState('')
   const [showInactive, setShowInactive] = useState(false)
@@ -42,12 +181,12 @@ export default function ResourceTrackerRoute() {
   const [editValue, setEditValue] = useState('')
 
   const inventoryContext = useMemo(() => {
-    if (!user?.id) return null
+    if (isGuest || !user?.id) return null
     return {
       scope: activeTab,
       userId: user.id,
     }
-  }, [user?.id, activeTab])
+  }, [isGuest, user?.id, activeTab])
 
   const readOnly = activeTab === 'site'
   const isPersonalTab = activeTab === 'personal'
@@ -64,13 +203,40 @@ export default function ResourceTrackerRoute() {
   } = useResourceCatalog({
     enableCatalogSync: isSuperAdmin,
     includeInactive: showInactive,
-    withInventory: true,
+    withInventory: !isGuest,
     inventoryContext,
   })
 
-  const stockCards = catalogWithInventory
+  // Build stock cards: for guests, merge catalog with localStorage resources
+  const stockCards = useMemo(() => {
+    if (!isGuest) return catalogWithInventory
 
-  const existingLineKeys = useMemo(() => new Set(personalLineKeys), [personalLineKeys])
+    // For guests: merge catalog with their localStorage resources
+    const guestQtyMap = new Map<string, GuestResourceEntry>()
+    guestResources.forEach((r) => {
+      guestQtyMap.set(`${r.resource_key}::${r.quality}`, r)
+    })
+
+    return catalog.map((c) => {
+      const quality = DEFAULT_STOCK_QUALITY
+      const entry = guestQtyMap.get(`${c.resource_key}::${quality}`)
+      return {
+        resource_key: c.resource_key,
+        label: c.label,
+        is_active: c.is_active,
+        synced_at: c.synced_at,
+        quantity: entry?.quantity ?? 0,
+        quality,
+      }
+    })
+  }, [isGuest, catalog, catalogWithInventory, guestResources])
+
+  const existingLineKeys = useMemo(() => {
+    if (isGuest) {
+      return new Set(guestResources.map((r) => inventoryLineKey(r.resource_key, r.quality)))
+    }
+    return new Set(personalLineKeys)
+  }, [isGuest, guestResources, personalLineKeys])
 
   const filteredCards = stockCards.filter((card) => {
     const matchesSearch =
@@ -89,8 +255,36 @@ export default function ResourceTrackerRoute() {
     0
   )
 
+  // Guest localStorage helpers
+  const updateGuestResource = useCallback(
+    (resourceKey: string, quality: number, quantity: number) => {
+      const updated = guestResources.filter(
+        (r) => !(r.resource_key === resourceKey && r.quality === quality)
+      )
+      if (quantity > 0) {
+        updated.push({ resource_key: resourceKey, quality, quantity })
+      }
+      setGuestResources(updated)
+      writeGuestResources(updated)
+    },
+    [guestResources]
+  )
+
   const handleAdjust = async (resourceKey: string, quality: number, delta: number) => {
-    if (!inventoryContext || readOnly) return
+    if (readOnly) return
+
+    if (isGuest) {
+      const existing = guestResources.find(
+        (r) => r.resource_key === resourceKey && r.quality === quality
+      )
+      const currentQty = existing?.quantity ?? 0
+      const newQty = Math.max(0, currentQty + delta)
+      updateGuestResource(resourceKey, quality, newQty)
+      setStockError(null)
+      return
+    }
+
+    if (!inventoryContext) return
     const result = await adjustInventoryQuantity(inventoryContext, resourceKey, quality, delta)
     if (result.error) {
       setStockError(result.error)
@@ -101,10 +295,19 @@ export default function ResourceTrackerRoute() {
   }
 
   const handleSaveEdit = async (resourceKey: string, quality: number) => {
-    if (!inventoryContext || readOnly) return
+    if (readOnly) return
     const qty = parseQuantityForResource(resourceKey, editValue)
     if (qty == null) return
 
+    if (isGuest) {
+      updateGuestResource(resourceKey, quality, qty)
+      setEditingKey(null)
+      setEditValue('')
+      setStockError(null)
+      return
+    }
+
+    if (!inventoryContext) return
     const result = await setInventoryQuantity(inventoryContext, resourceKey, quality, qty)
     if (result.error) {
       setStockError(result.error)
@@ -117,6 +320,14 @@ export default function ResourceTrackerRoute() {
     await refresh()
   }
 
+  // Guest add resource handler
+  const handleGuestAddResource = useCallback(
+    (resourceKey: string, quality: number, quantity: number) => {
+      updateGuestResource(resourceKey, quality, quantity)
+    },
+    [updateGuestResource]
+  )
+
   const tabLabel = activeTab === 'personal' ? 'My stock cards' : 'Site Total'
 
   return (
@@ -124,6 +335,13 @@ export default function ResourceTrackerRoute() {
       title="Resource Tracker"
       subtitle={SITE_SLOGAN}
     >
+      {isGuest && (
+        <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">
+          <strong>Guest Preview</strong> – Your resource inventory is saved locally in this browser.
+          Sign in to sync it to your account and keep it permanently.
+        </div>
+      )}
+
       <div className="w-full min-w-0 overflow-x-hidden">
       <div className="flex flex-wrap gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit max-w-full">
         <button
@@ -161,6 +379,13 @@ export default function ResourceTrackerRoute() {
             existingKeys={existingLineKeys}
             onAdded={() => void refresh()}
             onError={setStockError}
+          />
+        ) : isPersonalTab && isGuest ? (
+          <GuestStockAddPanel
+            catalog={catalog}
+            labelMap={labelMap}
+            existingKeys={existingLineKeys}
+            onAdd={handleGuestAddResource}
           />
         ) : readOnly ? (
           <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">

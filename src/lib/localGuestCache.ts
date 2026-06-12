@@ -84,3 +84,93 @@ export function writeGuestMissionPrefs(missionPrefs: Record<string, boolean>): v
   if (typeof localStorage === 'undefined') return
   localStorage.setItem(GUEST_MISSION_PREFS_STORAGE_KEY, JSON.stringify(missionPrefs))
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Guest Resource Inventory (localStorage)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const GUEST_RESOURCES_STORAGE_KEY = 'dumpers_guest_resources'
+
+export interface GuestResourceEntry {
+  resource_key: string
+  quantity: number
+  quality: number
+}
+
+export function readGuestResources(): GuestResourceEntry[] {
+  if (typeof localStorage === 'undefined') return []
+  return safeParse<GuestResourceEntry[]>(
+    localStorage.getItem(GUEST_RESOURCES_STORAGE_KEY),
+    []
+  )
+}
+
+export function writeGuestResources(entries: GuestResourceEntry[]): void {
+  if (typeof localStorage === 'undefined') return
+  localStorage.setItem(GUEST_RESOURCES_STORAGE_KEY, JSON.stringify(entries))
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Clear functions for migration cleanup
+// ─────────────────────────────────────────────────────────────────────────────
+
+export function clearGuestAcquiredBlueprints(): void {
+  if (typeof localStorage === 'undefined') return
+  localStorage.removeItem(GUEST_ACQUIRED_STORAGE_KEY)
+}
+
+export function clearGuestTargetList(): void {
+  if (typeof localStorage === 'undefined') return
+  localStorage.removeItem(GUEST_TARGET_LIST_STORAGE_KEY)
+}
+
+export function clearGuestMissionPrefs(): void {
+  if (typeof localStorage === 'undefined') return
+  localStorage.removeItem(GUEST_MISSION_PREFS_STORAGE_KEY)
+}
+
+export function clearGuestResources(): void {
+  if (typeof localStorage === 'undefined') return
+  localStorage.removeItem(GUEST_RESOURCES_STORAGE_KEY)
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Validation helpers for migration sanitization
+// ─────────────────────────────────────────────────────────────────────────────
+
+const MAX_BLUEPRINT_ID_LENGTH = 500
+const MAX_RESOURCE_KEY_LENGTH = 200
+const MAX_RESOURCE_QUANTITY = 100000
+const MIN_QUALITY = 500
+const MAX_QUALITY = 1000
+const MAX_MIGRATION_BATCH = 1000
+
+export function sanitizeBlueprintId(id: unknown): string | null {
+  if (typeof id !== 'string') return null
+  if (id.length === 0 || id.length > MAX_BLUEPRINT_ID_LENGTH) return null
+  return id
+}
+
+export function sanitizeResourceEntry(entry: unknown): GuestResourceEntry | null {
+  if (!entry || typeof entry !== 'object') return null
+  const e = entry as Record<string, unknown>
+  
+  if (typeof e.resource_key !== 'string') return null
+  if (e.resource_key.length === 0 || e.resource_key.length > MAX_RESOURCE_KEY_LENGTH) return null
+  
+  const quantity = Number(e.quantity)
+  if (!Number.isFinite(quantity) || quantity < 0 || quantity > MAX_RESOURCE_QUANTITY) return null
+  
+  const quality = Number(e.quality)
+  if (!Number.isFinite(quality) || quality < MIN_QUALITY || quality > MAX_QUALITY) return null
+  
+  return {
+    resource_key: e.resource_key,
+    quantity: Math.floor(quantity),
+    quality: Math.floor(quality),
+  }
+}
+
+export function sanitizeMigrationBatch<T>(items: T[]): T[] {
+  return items.slice(0, MAX_MIGRATION_BATCH)
+}
