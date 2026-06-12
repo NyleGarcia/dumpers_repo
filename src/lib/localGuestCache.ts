@@ -7,7 +7,6 @@ export const MINING_TRACKER_STORAGE_KEY = 'dumpers_mining_tracker'
 export interface MiningTrackerEntry {
   id: string
   oreName: string
-  location: string | null
   rarity: string
   addedAt: number
 }
@@ -44,8 +43,8 @@ export function writeMiningTrackerEntries(entries: MiningTrackerEntry[]): void {
   localStorage.setItem(MINING_TRACKER_STORAGE_KEY, JSON.stringify(entries))
 }
 
-export function miningTrackerEntryId(oreName: string, location: string | null): string {
-  return `${oreName}::${location ?? '*'}`
+export function miningTrackerEntryId(oreName: string): string {
+  return oreName
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -6,7 +6,6 @@ import { miningTrackerEntryId } from '../lib/localGuestCache'
 interface TrackOreButtonProps {
   oreName: string
   rarity: string
-  location?: string | null
   compact?: boolean
   showTrackerLink?: boolean
 }
@@ -14,29 +13,20 @@ interface TrackOreButtonProps {
 export default function TrackOreButton({
   oreName,
   rarity,
-  location = null,
   compact = false,
   showTrackerLink = false,
 }: TrackOreButtonProps) {
   const { addEntry, removeEntry, isTracked } = useMiningTracker()
-  const tracked = isTracked(oreName, location)
+  const tracked = isTracked(oreName)
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (tracked) {
-      removeEntry(miningTrackerEntryId(oreName, location))
+      removeEntry(miningTrackerEntryId(oreName))
     } else {
-      addEntry(oreName, rarity, location)
+      addEntry(oreName, rarity)
     }
   }
-
-  const label = tracked
-    ? location
-      ? 'Tracked here'
-      : 'Tracked'
-    : location
-      ? 'Track here'
-      : 'Track ore'
 
   if (compact) {
     return (
@@ -66,12 +56,12 @@ export default function TrackOreButton({
             : 'bg-slate-800/60 border-slate-600/50 text-slate-300 hover:border-orange-500/40 hover:text-orange-300'
         }`}
       >
-        {label}
+        {tracked ? 'Tracked' : 'Track'}
       </button>
       {showTrackerLink && (
         <Link
           to="/mining-tracker"
-          search={{ ore: oreName, location: location ?? undefined }}
+          search={{ ore: oreName }}
           className="text-xs text-slate-500 hover:text-orange-400 transition-colors"
           onClick={(e) => e.stopPropagation()}
         >

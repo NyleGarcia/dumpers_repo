@@ -25,15 +25,14 @@ export function useMiningTracker() {
   }, [])
 
   const addEntry = useCallback(
-    (oreName: string, rarity: string, location: string | null = null) => {
-      const id = miningTrackerEntryId(oreName, location)
+    (oreName: string, rarity: string) => {
+      const id = miningTrackerEntryId(oreName)
       if (entries.some((e) => e.id === id)) return false
 
       const next: MiningTrackerEntry[] = [
         {
           id,
           oreName,
-          location,
           rarity,
           addedAt: Date.now(),
         },
@@ -57,8 +56,8 @@ export function useMiningTracker() {
   }, [persist])
 
   const isTracked = useCallback(
-    (oreName: string, location: string | null = null) => {
-      return entries.some((e) => e.id === miningTrackerEntryId(oreName, location))
+    (oreName: string) => {
+      return entries.some((e) => e.id === miningTrackerEntryId(oreName))
     },
     [entries]
   )

@@ -422,7 +422,6 @@ function OreModal({ ore, onClose }: { ore: MiningData; onClose: () => void }) {
                   <TrackOreButton
                     oreName={ore.ore_name}
                     rarity={ore.rarity}
-                    location={location}
                     compact
                   />
                 </div>
@@ -488,7 +487,6 @@ function LocationModal({ location, ores, onClose }: { location: string; ores: Mi
                       <TrackOreButton
                         oreName={ore.ore_name}
                         rarity={ore.rarity}
-                        location={location}
                         compact
                       />
                       {signature && (
