@@ -255,7 +255,7 @@ export default function MiningTrackerRoute() {
                 </p>
               </div>
             ) : (
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="flex flex-wrap gap-4">
                 {sortedEntries.map((entry) => {
                   const colors = MINING_RARITY_COLORS[entry.rarity] || MINING_RARITY_COLORS.common
                   const baseSignature = getOreBaseSignature(entry.oreName)
@@ -264,7 +264,7 @@ export default function MiningTrackerRoute() {
                   return (
                     <div
                       key={entry.id}
-                      className={`p-4 rounded-xl border ${colors.bg} ${colors.border}`}
+                      className={`p-4 rounded-xl border w-48 ${colors.bg} ${colors.border}`}
                     >
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="min-w-0">
