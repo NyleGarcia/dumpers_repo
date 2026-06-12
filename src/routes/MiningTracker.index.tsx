@@ -43,7 +43,7 @@ export default function MiningTrackerRoute() {
       .filter((o) => {
         if (seen.has(o.ore_name)) return false
         seen.add(o.ore_name)
-        return true
+        return getOreBaseSignature(o.ore_name) !== undefined
       })
       .sort((a, b) => a.ore_name.localeCompare(b.ore_name))
   }, [data])
@@ -60,6 +60,7 @@ export default function MiningTrackerRoute() {
     if (!search.ore || !data) return
     const ore = findOreByName(data, search.ore)
     if (!ore) return
+    if (getOreBaseSignature(ore.ore_name) === undefined) return
 
     setOreSearch(ore.ore_name)
     setSelectedOreName(ore.ore_name)
@@ -91,6 +92,7 @@ export default function MiningTrackerRoute() {
     if (!oreName) return false
     const ore = findOreByName(data, oreName)
     if (!ore) return false
+    if (getOreBaseSignature(ore.ore_name) === undefined) return false
     return !isTracked(ore.ore_name)
   }, [data, selectedOreName, oreSearch, isTracked])
 
