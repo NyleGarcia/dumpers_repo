@@ -396,7 +396,7 @@ export default function FulfillmentRoute() {
             </ul>
           </div>
           <p className="text-amber-300/70 text-sm mt-6">
-            Sign in with Discord to access Fulfillment and start earning.
+            Sign in to access Fulfillment and start earning.
           </p>
         </div>
       </FeaturePageLayout>

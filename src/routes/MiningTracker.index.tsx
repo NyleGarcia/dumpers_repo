@@ -15,6 +15,10 @@ import {
   getOreBaseSignature,
   getSignatureMultiples,
 } from '../lib/miningSignatures'
+import {
+  readMiningTrackerMultiplier,
+  writeMiningTrackerMultiplier,
+} from '../lib/localGuestCache'
 
 export default function MiningTrackerRoute() {
   const { isGuestPreview } = useAuth()
@@ -25,6 +29,12 @@ export default function MiningTrackerRoute() {
   const [oreSearch, setOreSearch] = useState('')
   const [selectedOreName, setSelectedOreName] = useState<string>('')
   const [listRarityFilter, setListRarityFilter] = useState<string>('')
+  const [multiplierCount, setMultiplierCount] = useState(() => readMiningTrackerMultiplier())
+
+  const handleMultiplierChange = (count: number) => {
+    setMultiplierCount(count)
+    writeMiningTrackerMultiplier(count)
+  }
 
   const allOreNames = useMemo(() => {
     if (!data) return []
@@ -98,7 +108,7 @@ export default function MiningTrackerRoute() {
   return (
     <FeaturePageLayout
       title="Mining Tracker"
-      subtitle="Cluster RS reference for ores you are hunting — base signature through 6×."
+      subtitle={`Cluster RS reference for ores you are hunting — base signature through ${multiplierCount}×.`}
       badge={isGuestPreview ? 'Local only' : undefined}
       meta={
         isGuestPreview ? (
@@ -112,15 +122,29 @@ export default function MiningTrackerRoute() {
         )
       }
       actions={
-        entries.length > 0 ? (
-          <button
-            type="button"
-            onClick={clearAll}
-            className="text-xs px-3 py-1.5 rounded-lg border border-slate-600/50 text-slate-400 hover:text-red-400 hover:border-red-500/40 transition-colors"
-          >
-            Clear all
-          </button>
-        ) : undefined
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 text-xs text-slate-400">
+            <span>Show</span>
+            <select
+              value={multiplierCount}
+              onChange={(e) => handleMultiplierChange(Number(e.target.value))}
+              className="site-input px-2 py-1 text-xs w-14"
+            >
+              {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                <option key={n} value={n}>{n}×</option>
+              ))}
+            </select>
+          </label>
+          {entries.length > 0 && (
+            <button
+              type="button"
+              onClick={clearAll}
+              className="text-xs px-3 py-1.5 rounded-lg border border-slate-600/50 text-slate-400 hover:text-red-400 hover:border-red-500/40 transition-colors"
+            >
+              Clear all
+            </button>
+          )}
+        </div>
       }
     >
       {loading && (
@@ -231,11 +255,11 @@ export default function MiningTrackerRoute() {
                 </p>
               </div>
             ) : (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {sortedEntries.map((entry) => {
                   const colors = MINING_RARITY_COLORS[entry.rarity] || MINING_RARITY_COLORS.common
                   const baseSignature = getOreBaseSignature(entry.oreName)
-                  const multiples = baseSignature ? getSignatureMultiples(baseSignature, 6) : []
+                  const multiples = baseSignature ? getSignatureMultiples(baseSignature, multiplierCount) : []
 
                   return (
                     <div

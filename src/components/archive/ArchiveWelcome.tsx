@@ -114,7 +114,7 @@ const PAGE_GUIDES = [
     description: 'In-game cluster RS reference for ores you are hunting.',
     details: [
       'Add ores from the Mining Guide or search by name on the tracker page',
-      'Each tracked ore displays the first six cluster RS readings (base through 6×)',
+      'Choose how many RS multiples to display (2–10×, defaults to 3×)',
       'Compare scanner readings in-game: cluster RS = node count × base RS',
       'Search by ore name to quickly add to your list (minimum 2 characters)',
       'Logged-in users sync to their account; Offline Mode saves locally',

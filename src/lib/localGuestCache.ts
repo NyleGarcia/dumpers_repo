@@ -3,6 +3,7 @@
 export const GUEST_ACQUIRED_STORAGE_KEY = 'acquired_blueprints'
 
 export const MINING_TRACKER_STORAGE_KEY = 'dumpers_mining_tracker'
+export const MINING_TRACKER_MULTIPLIER_KEY = 'dumpers_mining_tracker_multiplier'
 
 export interface MiningTrackerEntry {
   id: string
@@ -50,6 +51,21 @@ export function clearMiningTrackerEntries(): void {
 
 export function miningTrackerEntryId(oreName: string): string {
   return oreName
+}
+
+export function readMiningTrackerMultiplier(): number {
+  if (typeof localStorage === 'undefined') return 3
+  const raw = localStorage.getItem(MINING_TRACKER_MULTIPLIER_KEY)
+  if (!raw) return 3
+  const val = parseInt(raw, 10)
+  if (Number.isNaN(val) || val < 2 || val > 10) return 3
+  return val
+}
+
+export function writeMiningTrackerMultiplier(count: number): void {
+  if (typeof localStorage === 'undefined') return
+  const clamped = Math.max(2, Math.min(10, Math.floor(count)))
+  localStorage.setItem(MINING_TRACKER_MULTIPLIER_KEY, String(clamped))
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
