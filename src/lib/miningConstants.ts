@@ -25,7 +25,7 @@ export const ORE_SIGNATURES: Record<string, number> = {
   Tungsten: 3870,
   Agricium: 3885,
   Torite: 3900,
-  Hephestanite: 4180,
+  Hephaestanite: 4180,
   Tin: 4195,
   Quartz: 4210,
   Corundum: 4225,
@@ -33,6 +33,7 @@ export const ORE_SIGNATURES: Record<string, number> = {
   Silicon: 4255,
   Iron: 4270,
   Aluminium: 4285,
+  Aluminum: 4285,
   Ice: 4300,
 }
 

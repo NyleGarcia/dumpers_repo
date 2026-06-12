@@ -297,8 +297,10 @@ export default function MiningTrackerRoute() {
                             </div>
                           ))}
                         </div>
+                      ) : entry.rarity === 'handMineable' ? (
+                        <p className="text-xs text-slate-500">Hand-mineable only (no ship RS)</p>
                       ) : (
-                        <p className="text-xs text-slate-500">No RS signature on file.</p>
+                        <p className="text-xs text-slate-500">RS signature not on file</p>
                       )}
                     </div>
                   )
