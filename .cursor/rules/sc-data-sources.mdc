@@ -5,28 +5,41 @@ alwaysApply: true
 
 # Star Citizen Data Sources
 
-When needing Star Citizen game data (components, shops, mining, ships, etc.), check these repos **first** before web searching:
+When needing Star Citizen game data (components, shops, mining, ships, etc.), check these sources **first** before web searching:
 
-## Primary Data Repos
+## Primary Data Sources
 
-### 1. richardthombs/scunpacked
+### 1. UEX Corp API (Live Shop Data)
+**URL:** https://uexcorp.space/api/documentation
+
+Crowdsourced live game data for all systems (Stanton, Pyro, Nyx). Key endpoints:
+- `/terminals` - All shop/terminal locations with system info
+- `/items_prices_all` - All items and prices across all terminals
+- `/items_prices` - Specific item/terminal prices
+- No auth required for read endpoints
+- Updated hourly by community reporters
+- **Use for:** Shop inventories, prices, locations (all systems)
+
+### 2. richardthombs/scunpacked (Static Game Data)
 **URL:** https://github.com/richardthombs/scunpacked
 
-Main game data extracted from Star Citizen files. Key files in `api/dist/json/`:
-- `shops.json` - Shop inventories and locations (~12MB)
+⚠️ **Note:** This repo is archived and only has Stanton data. Use UEX for shop data.
+
+Game data extracted from Star Citizen files. Key files in `api/dist/json/`:
 - `items.json` - All game items (~15MB)
 - `ship-items.json` - Ship equipment index
 - `ships.json` - Ship data
 - `manufacturers.json` - Manufacturer info
 - `starmap.json` - Location data
+- `shops.json` - ⚠️ OUTDATED (Stanton only, no Pyro/Nyx)
 
-### 2. seneca0815-rgb/SC_Signature_Scanner
+### 3. seneca0815-rgb/SC_Signature_Scanner
 **URL:** https://github.com/seneca0815-rgb/SC_Signature_Scanner
 
 Mining RS signature data:
 - `lookup.json` - 163 signature values for 26 minerals × 6 multipliers
 
-### 3. MrKraken/StarStrings
+### 4. MrKraken/StarStrings
 **URL:** https://github.com/MrKraken/StarStrings
 
 Component and ordnance localization data for Star Citizen:
@@ -38,14 +51,16 @@ Component and ordnance localization data for Star Citizen:
 ## Usage Pattern
 
 1. Identify what data is needed
-2. Check if scunpacked has it (most game data - shops, items, ships)
-3. Check StarStrings for component/ordnance display names and categorization
-4. Check SC_Signature_Scanner for mining RS signatures
-5. Only web search if none of these repos have the data
+2. **Shop/price data:** Use UEX Corp API (has all systems including Pyro/Nyx)
+3. **Static game data:** Check scunpacked for items, ships, etc.
+4. **Component names/categorization:** Check StarStrings
+5. **Mining signatures:** Check SC_Signature_Scanner
+6. Only web search if none of these sources have the data
 
 ## Notes
 
-- scunpacked data is extracted from game files, so it's authoritative for raw game data
+- UEX provides live, community-sourced data for all game systems
+- scunpacked is archived and only has Stanton shop data
 - StarStrings provides curated display names and categorization
 - Hand-mineable gems share base RS 620 (not useful for identification)
 - Ship-mineable ores each have unique signatures (3170-4300 range)

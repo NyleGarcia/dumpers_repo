@@ -1,5 +1,5 @@
 // Supabase Edge Function: sync-shop-data
-// Fetches shop data from scunpacked GitHub and updates Supabase tables
+// Fetches shop data from UEX Corp API and updates Supabase tables
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
@@ -9,157 +9,120 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const SCUNPACKED_SHOPS_URL = 'https://raw.githubusercontent.com/richardthombs/scunpacked/master/api/dist/json/shops.json'
+const UEX_TERMINALS_URL = 'https://api.uexcorp.space/2.0/terminals'
+const UEX_ITEMS_PRICES_URL = 'https://api.uexcorp.space/2.0/items_prices_all'
 
-// Types matching scunpacked shops.json structure
-interface ShopInventoryItem {
+// UEX Terminal structure
+interface UEXTerminal {
+  id: number
+  id_star_system: number
+  id_planet: number
+  id_orbit: number
+  id_moon: number
+  id_space_station: number
+  id_outpost: number
+  id_poi: number
+  id_city: number
+  id_faction: number
   name: string
-  displayName?: string
-  basePrice: number
-  basePriceOffsetPercentage?: number
-  maxDiscountPercentage?: number
-  maxPremiumPercentage?: number
-  shopBuysThis: boolean
-  shopSellsThis: boolean
-  shopRentThis: boolean
-  filename?: string
-  type?: string
-  subType?: string
-  tags?: string[]
-  item_reference?: string
-  node_reference?: string
+  fullname: string
+  nickname: string
+  code: string
+  type: string
+  is_available: number
+  is_visible: number
+  is_shop_fps: number
+  is_shop_vehicle: number
+  is_refinery: number
+  is_cargo_center: number
+  is_habitation: number
+  is_medical: number
+  is_food: number
+  is_refuel: number
+  is_repair: number
+  is_nqa: number
+  is_player_owned: number
+  game_version: string | null
+  star_system_name: string | null
+  planet_name: string | null
+  orbit_name: string | null
+  moon_name: string | null
+  space_station_name: string | null
+  outpost_name: string | null
+  city_name: string | null
+  faction_name: string | null
 }
 
-interface ShopData {
-  name: string
-  containerPath: string
-  acceptsStolenGoods: boolean
-  profitMargin: number
-  reference: string
-  inventory: ShopInventoryItem[]
-}
-
-// Location parsing from containerPath patterns
-function parseLocation(shopName: string, containerPath: string): { system: string; location: string; locationType: string } {
-  let system = 'Stanton'
-  let location = ''
-  let locationType = 'unknown'
-
-  // Parse from shop name first (e.g., "Aparelli, New Babbage")
-  if (shopName.includes(',')) {
-    const parts = shopName.split(',').map(p => p.trim())
-    if (parts.length >= 2) {
-      location = parts[parts.length - 1]
-    }
-  }
-
-  // Parse system and location type from containerPath
-  const pathLower = containerPath.toLowerCase()
-
-  // System detection
-  if (pathLower.includes('pyro') || pathLower.includes('ruin_station')) {
-    system = 'Pyro'
-  }
-
-  // Location type detection
-  if (pathLower.includes('reststop') || pathLower.includes('rest_stop') || /_l\d/.test(pathLower)) {
-    locationType = 'rest_stop'
-  } else if (pathLower.includes('refiner')) {
-    locationType = 'refinery'
-  } else if (pathLower.includes('orbital') || pathLower.includes('_leo')) {
-    locationType = 'orbital'
-  } else if (pathLower.includes('prison') || pathLower.includes('klescher')) {
-    locationType = 'prison'
-  } else if (pathLower.includes('dealership')) {
-    locationType = 'dealership'
-  } else if (
-    pathLower.includes('area18') ||
-    pathLower.includes('lorville') ||
-    pathLower.includes('newbabbage') ||
-    pathLower.includes('orison') ||
-    pathLower.includes('levski') ||
-    pathLower.includes('grimhex')
-  ) {
-    locationType = 'city'
-  }
-
-  // Detailed location from containerPath patterns
-  if (!location) {
-    // Stanton rest stops: Stanton1_L1 = HUR-L1, etc.
-    const restStopMatch = containerPath.match(/Stanton(\d)_L(\d)/i)
-    if (restStopMatch) {
-      const planetNum = restStopMatch[1]
-      const lagrangeNum = restStopMatch[2]
-      const planetCodes: Record<string, string> = { '1': 'HUR', '2': 'CRU', '3': 'ARC', '4': 'MIC' }
-      location = `${planetCodes[planetNum] || 'UNK'}-L${lagrangeNum}`
-    }
-
-    // LEO stations: Stanton4_LEO1 = MIC-L1 orbital
-    const leoMatch = containerPath.match(/Stanton(\d)_LEO(\d)/i)
-    if (leoMatch) {
-      const planetNum = leoMatch[1]
-      const orbitNum = leoMatch[2]
-      const planetCodes: Record<string, string> = { '1': 'HUR', '2': 'CRU', '3': 'ARC', '4': 'MIC' }
-      location = `${planetCodes[planetNum] || 'UNK'} Orbit ${orbitNum}`
-    }
-
-    // Cities
-    if (pathLower.includes('area18')) location = 'Area18'
-    else if (pathLower.includes('lorville')) location = 'Lorville'
-    else if (pathLower.includes('newbabbage') || pathLower.includes('new_babbage')) location = 'New Babbage'
-    else if (pathLower.includes('orison')) location = 'Orison'
-    else if (pathLower.includes('levski')) location = 'Levski'
-    else if (pathLower.includes('grimhex') || pathLower.includes('grim_hex')) location = 'GrimHEX'
-    else if (pathLower.includes('porto') || pathLower.includes('port_o')) location = 'Port Olisar'
-    else if (pathLower.includes('everus')) location = 'Everus Harbor'
-    else if (pathLower.includes('baijini')) location = 'Baijini Point'
-    else if (pathLower.includes('seraphim')) location = 'Seraphim Station'
-  }
-
-  return { system, location: location || 'Unknown', locationType }
-}
-
-// Calculate effective price including margins
-function calculateEffectivePrice(item: ShopInventoryItem, shopProfitMargin: number): number {
-  const base = item.basePrice || 0
-  const offsetPct = item.basePriceOffsetPercentage || 0
-  
-  // Price = basePrice * (1 + offset%) * (1 + shopMargin%)
-  const withOffset = base * (1 + offsetPct / 100)
-  const withMargin = withOffset * (1 + shopProfitMargin / 100)
-  
-  return Math.round(withMargin)
+// UEX Item Price structure
+interface UEXItemPrice {
+  id: number
+  id_item: number
+  id_terminal: number
+  id_category: number
+  price_buy: number | null
+  price_sell: number | null
+  date_added: number
+  date_modified: number
+  item_name: string
+  item_uuid: string | null
+  terminal_name: string
 }
 
 // Component types we want to track for price summaries
 const COMPONENT_TYPES = new Set([
-  'QuantumDrive',
-  'PowerPlant',
-  'Shield',
-  'Cooler',
-  'MissileRack',
-  'WeaponGun',
-  'Turret',
-  'Radar',
-  'EMP',
-  'MiningLaser',
-  'QIGDampener',
-  'QuantumInterdictionGenerator',
-  'Missile',
-  'Torpedo',
-  'WeaponMining',
-  'TractorBeam',
-  'UtilityTurret',
-  'SelfDestruct',
-  'Ping',
-  'FlightController',
-  'FuelIntake',
-  'FuelTank',
-  'Container',
-  'Turret_Gun',
-  'TurretBase',
-  'WheeledController',
+  'weapons',
+  'turrets',
+  'missiles',
+  'shields',
+  'power_plants',
+  'coolers',
+  'quantum_drives',
+  'radar',
+  'emp',
+  'mining_lasers',
+  'qig',
+  'tractors',
+  'utility',
+  'paints',
+  'undersuits',
+  'armor',
+  'fps_weapons',
+  'medical',
+  'mining_gadgets',
+  'personal',
+  'multitools',
 ])
+
+// Determine location type from terminal properties
+function getLocationType(terminal: UEXTerminal): string {
+  if (terminal.is_refinery) return 'refinery'
+  if (terminal.space_station_name) {
+    if (terminal.space_station_name.includes('L1') || 
+        terminal.space_station_name.includes('L2') ||
+        terminal.space_station_name.includes('L3') ||
+        terminal.space_station_name.includes('L4') ||
+        terminal.space_station_name.includes('L5')) {
+      return 'rest_stop'
+    }
+    return 'orbital'
+  }
+  if (terminal.city_name) return 'city'
+  if (terminal.outpost_name) return 'outpost'
+  if (terminal.is_nqa) return 'nqa'
+  if (terminal.is_player_owned) return 'player_owned'
+  return 'unknown'
+}
+
+// Get the most specific location name
+function getLocationName(terminal: UEXTerminal): string {
+  return terminal.city_name || 
+         terminal.space_station_name || 
+         terminal.outpost_name || 
+         terminal.moon_name || 
+         terminal.planet_name || 
+         terminal.orbit_name ||
+         'Unknown'
+}
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -213,32 +176,60 @@ serve(async (req) => {
       .update({ sync_status: 'syncing', sync_error: null, updated_at: new Date().toISOString() })
       .eq('id', 1)
 
-    console.log('Fetching shops.json from scunpacked...')
+    console.log('Fetching terminals from UEX API...')
 
-    // Fetch shops.json (~12MB)
-    const response = await fetch(SCUNPACKED_SHOPS_URL, {
-      headers: { 'User-Agent': 'DumpersRepo-Sync' }
+    // Fetch terminals
+    const terminalsResponse = await fetch(UEX_TERMINALS_URL, {
+      headers: { 
+        'User-Agent': 'DumpersRepo-Sync',
+        'Accept': 'application/json'
+      }
     })
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch shops.json: ${response.status}`)
+    if (!terminalsResponse.ok) {
+      throw new Error(`Failed to fetch UEX terminals: ${terminalsResponse.status}`)
     }
 
-    const shops: ShopData[] = await response.json()
-    console.log(`Fetched ${shops.length} shops`)
+    const terminalsData = await terminalsResponse.json()
+    const terminals: UEXTerminal[] = terminalsData.data || terminalsData
+    console.log(`Fetched ${terminals.length} terminals from UEX`)
 
-    // Get scunpacked version from GitHub API
-    let version = 'unknown'
-    try {
-      const commitRes = await fetch('https://api.github.com/repos/richardthombs/scunpacked/commits/master', {
-        headers: { 'User-Agent': 'DumpersRepo-Sync' }
-      })
-      if (commitRes.ok) {
-        const commitData = await commitRes.json()
-        version = `commit-${commitData.sha?.substring(0, 7) || 'unknown'}`
+    // Filter to shop terminals only (fps items or vehicle items)
+    const shopTerminals = terminals.filter(t => 
+      (t.is_shop_fps || t.is_shop_vehicle) && 
+      t.is_available && 
+      t.is_visible &&
+      t.star_system_name
+    )
+    console.log(`${shopTerminals.length} are shop terminals`)
+
+    console.log('Fetching item prices from UEX API...')
+
+    // Fetch all item prices
+    const pricesResponse = await fetch(UEX_ITEMS_PRICES_URL, {
+      headers: { 
+        'User-Agent': 'DumpersRepo-Sync',
+        'Accept': 'application/json'
       }
-    } catch (e) {
-      console.log('Could not fetch version info:', e)
+    })
+
+    if (!pricesResponse.ok) {
+      throw new Error(`Failed to fetch UEX item prices: ${pricesResponse.status}`)
+    }
+
+    const pricesData = await pricesResponse.json()
+    const allPrices: UEXItemPrice[] = pricesData.data || pricesData
+    console.log(`Fetched ${allPrices.length} item prices from UEX`)
+
+    // Build a map of terminal_id -> prices
+    const pricesByTerminal = new Map<number, UEXItemPrice[]>()
+    for (const price of allPrices) {
+      const existing = pricesByTerminal.get(price.id_terminal)
+      if (existing) {
+        existing.push(price)
+      } else {
+        pricesByTerminal.set(price.id_terminal, [price])
+      }
     }
 
     // Clear existing data
@@ -248,64 +239,72 @@ serve(async (req) => {
     await supabase.from('component_price_summary').delete().neq('id', 0)
 
     // Process shops and inventory
+    let shopCount = 0
     let totalInventoryCount = 0
     const componentPrices: Map<string, { type: string; prices: number[] }> = new Map()
 
-    for (const shop of shops) {
-      const { system, location, locationType } = parseLocation(shop.name, shop.containerPath)
+    for (const terminal of shopTerminals) {
+      const system = terminal.star_system_name || 'Unknown'
+      const location = getLocationName(terminal)
+      const locationType = getLocationType(terminal)
 
       // Insert shop
       const { data: insertedShop, error: shopError } = await supabase
         .from('shops')
         .insert({
-          shop_reference: shop.reference,
-          name: shop.name,
-          container_path: shop.containerPath,
+          shop_reference: `uex-${terminal.id}`,
+          name: terminal.fullname || terminal.name,
+          container_path: terminal.code || '',
           system,
           location,
           location_type: locationType,
-          accepts_stolen_goods: shop.acceptsStolenGoods,
-          profit_margin: shop.profitMargin,
+          accepts_stolen_goods: terminal.is_nqa === 1,
+          profit_margin: 0, // UEX provides final prices
         })
         .select('id')
         .single()
 
       if (shopError || !insertedShop) {
-        console.error(`Failed to insert shop ${shop.name}:`, shopError)
+        console.error(`Failed to insert shop ${terminal.name}:`, shopError)
         continue
       }
 
+      shopCount++
       const shopId = insertedShop.id
 
-      // Process inventory in batches
-      if (shop.inventory && shop.inventory.length > 0) {
-        const inventoryRows = shop.inventory.map((item) => {
-          const effectivePrice = calculateEffectivePrice(item, shop.profitMargin)
+      // Get prices for this terminal
+      const terminalPrices = pricesByTerminal.get(terminal.id) || []
+
+      if (terminalPrices.length > 0) {
+        const inventoryRows = terminalPrices.map((item) => {
+          const sellPrice = item.price_sell || 0
+          const buyPrice = item.price_buy || 0
+          const effectivePrice = sellPrice > 0 ? sellPrice : buyPrice
 
           // Track component prices for summary
-          if (item.type && COMPONENT_TYPES.has(item.type) && item.shopSellsThis && item.displayName) {
-            const existing = componentPrices.get(item.displayName)
+          if (sellPrice > 0 && item.item_name) {
+            const existing = componentPrices.get(item.item_name)
             if (existing) {
-              existing.prices.push(effectivePrice)
+              existing.prices.push(sellPrice)
             } else {
-              componentPrices.set(item.displayName, { type: item.type, prices: [effectivePrice] })
+              componentPrices.set(item.item_name, { type: 'item', prices: [sellPrice] })
             }
           }
 
           return {
             shop_id: shopId,
-            item_name: item.name,
-            display_name: item.displayName || item.name,
-            item_type: item.type || null,
-            sub_type: item.subType || null,
-            base_price: item.basePrice,
+            item_name: item.item_uuid || `uex-${item.id_item}`,
+            display_name: item.item_name,
+            item_type: null, // UEX doesn't provide type in prices_all
+            sub_type: null,
+            base_price: effectivePrice,
             effective_price: effectivePrice,
-            base_price_offset_pct: item.basePriceOffsetPercentage || 0,
-            shop_buys: item.shopBuysThis,
-            shop_sells: item.shopSellsThis,
-            shop_rents: item.shopRentThis,
-            item_reference: item.item_reference || null,
-            tags: item.tags || null,
+            base_price_offset_pct: 0,
+            shop_buys: (buyPrice || 0) > 0,
+            shop_sells: (sellPrice || 0) > 0,
+            shop_rents: false,
+            item_reference: item.item_uuid || null,
+            tags: null,
           }
         })
 
@@ -315,7 +314,7 @@ serve(async (req) => {
           const batch = inventoryRows.slice(i, i + batchSize)
           const { error: invError } = await supabase.from('shop_inventory').insert(batch)
           if (invError) {
-            console.error(`Failed to insert inventory batch for ${shop.name}:`, invError)
+            console.error(`Failed to insert inventory batch for ${terminal.name}:`, invError)
           }
         }
 
@@ -323,7 +322,7 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Inserted ${shops.length} shops and ${totalInventoryCount} inventory items`)
+    console.log(`Inserted ${shopCount} shops and ${totalInventoryCount} inventory items`)
 
     // Insert component price summaries
     console.log(`Computing price summaries for ${componentPrices.size} components...`)
@@ -348,15 +347,18 @@ serve(async (req) => {
       }
     }
 
+    // Get version from first terminal's game_version
+    const version = shopTerminals[0]?.game_version || 'unknown'
+
     // Update sync status to success
     await supabase
       .from('shop_data_sync_status')
       .update({
         sync_status: 'success',
         last_synced_at: new Date().toISOString(),
-        source_url: SCUNPACKED_SHOPS_URL,
+        source_url: 'UEX Corp API (uexcorp.space)',
         source_version: version,
-        shop_count: shops.length,
+        shop_count: shopCount,
         inventory_count: totalInventoryCount,
         sync_error: null,
         updated_at: new Date().toISOString()
@@ -367,8 +369,11 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         version,
+        source: 'UEX Corp API',
         counts: {
-          shops: shops.length,
+          terminals: terminals.length,
+          shopTerminals: shopTerminals.length,
+          shops: shopCount,
           inventory: totalInventoryCount,
           componentPriceSummaries: priceSummaries.length,
         }
