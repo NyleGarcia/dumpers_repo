@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useRouterState } from '@tanstack/react-router'
-import SiteBrandMark from '../SiteBrandMark'
 import SiteBrandTitle from '../SiteBrandTitle'
 import { SITE_COPYRIGHT } from '../../config/site'
 import DfpOptOutFooter from './DfpOptOutFooter'
@@ -68,11 +67,8 @@ export default function AppChrome({
       <header className="site-app-header fixed top-0 inset-x-0 z-40 overflow-visible">
         <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
           <AppSidebar groups={navGroups} />
-          <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
-            <SiteBrandMark size="md" />
-            <div className="min-w-0 border-l border-slate-700/70 pl-2 sm:pl-3 overflow-hidden">
-              <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
-            </div>
+          <div className="flex items-center min-w-0 flex-1 overflow-hidden">
+            <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {isGuestPreview ? (
