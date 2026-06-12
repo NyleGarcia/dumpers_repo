@@ -177,7 +177,7 @@ const PAGE_GUIDES = [
     details: [
       'Set or update your RSI Handle for verification and orders',
       'Enable Ghost Mode to hide from member lists while keeping personal blueprint and resource tracking',
-      'Ghost Mode keeps blueprints, target list, resource tracker, and the archive — orders and fulfillment stay hidden',
+      'Ghost Mode keeps blueprints, Mission Tracker, Resource Tracker, and the Archive — orders and fulfillment stay hidden',
       'Turn Ghost Mode off anytime from Privacy settings',
     ],
     relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker'],

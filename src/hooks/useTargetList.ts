@@ -78,7 +78,7 @@ export function useTargetList(
       setTargetIds(map)
       setMissionPrefs(prefs)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load target list')
+      setError(e instanceof Error ? e.message : 'Failed to load Mission Tracker')
     } finally {
       setLoading(false)
     }
@@ -158,7 +158,7 @@ export function useTargetList(
         } else {
           if (!canAddBlueprintToTargetListById(blueprintId, overridesMap)) {
             setError(
-              'This blueprint cannot be added to your target list (not orderable and no reward missions).'
+              'This blueprint cannot be tracked (not orderable and no reward missions).'
             )
             return false
           }
@@ -172,7 +172,7 @@ export function useTargetList(
       if (!user || !isApproved) return false
 
       if (acquiredBlueprints[blueprintId]) {
-        setError('This blueprint is already in your pool and cannot be on the target list.')
+        setError('This blueprint is already in your pool and cannot be tracked.')
         return false
       }
 
@@ -205,7 +205,7 @@ export function useTargetList(
       } else {
         if (!canAddBlueprintToTargetListById(blueprintId, overridesMap)) {
           setError(
-            'This blueprint cannot be added to your target list (not orderable and no reward missions).'
+            'This blueprint cannot be tracked (not orderable and no reward missions).'
           )
           return false
         }

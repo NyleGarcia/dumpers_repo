@@ -280,12 +280,12 @@ export default function TargetsRoute() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-slate-400">Loading target list…</div>
+        <div className="text-center py-12 text-slate-400">Loading tracked blueprints…</div>
       ) : targetCount === 0 ? (
         <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
-          <p className="text-slate-400 text-lg mb-2">No target blueprints yet</p>
+          <p className="text-slate-400 text-lg mb-2">No tracked blueprints yet</p>
           <p className="text-slate-500 text-sm">
-            Use the <strong className="text-amber-400">+ Target</strong> button on a blueprint card or inside the blueprint details.
+            Use the <strong className="text-amber-400">Track</strong> button on a blueprint card or inside the blueprint details.
           </p>
         </div>
       ) : (

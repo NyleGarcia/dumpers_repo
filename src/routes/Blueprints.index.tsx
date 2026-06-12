@@ -560,7 +560,7 @@ export default function BlueprintsRoute() {
                 {loadingUserBlueprints && <span>(loading...)</span>}
               </div>
               <p className="text-amber-300/70">
-                Checkmarks show your own acquired status. Mark blueprints as acquired or add to your Target list without affecting their collection.
+                Checkmarks show your own acquired status. Mark blueprints as acquired or track them in your Mission Tracker without affecting their collection.
               </p>
             </div>
           )
