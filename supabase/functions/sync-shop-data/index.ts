@@ -244,11 +244,17 @@ serve(async (req) => {
     const componentPrices: Map<string, { type: string; prices: number[] }> = new Map()
 
     for (const terminal of shopTerminals) {
+      // Get prices for this terminal - skip if empty
+      const terminalPrices = pricesByTerminal.get(terminal.id) || []
+      if (terminalPrices.length === 0) {
+        continue // Skip shops with no inventory
+      }
+
       const system = terminal.star_system_name || 'Unknown'
       const location = getLocationName(terminal)
       const locationType = getLocationType(terminal)
 
-      // Insert shop
+      // Insert shop (only if it has inventory)
       const { data: insertedShop, error: shopError } = await supabase
         .from('shops')
         .insert({
@@ -272,10 +278,8 @@ serve(async (req) => {
       shopCount++
       const shopId = insertedShop.id
 
-      // Get prices for this terminal
-      const terminalPrices = pricesByTerminal.get(terminal.id) || []
-
-      if (terminalPrices.length > 0) {
+      // Process inventory
+      {
         const inventoryRows = terminalPrices.map((item) => {
           const sellPrice = item.price_sell || 0
           const buyPrice = item.price_buy || 0
