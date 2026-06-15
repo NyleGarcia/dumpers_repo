@@ -1,4 +1,4 @@
--- Set up cron job to process Discord message queue every 5 minutes
+-- Set up cron job to process Discord message queue (see 067 for 1-minute interval)
 -- Uses pg_cron and pg_net extensions to call the send-discord edge function
 
 -- Enable required extensions
