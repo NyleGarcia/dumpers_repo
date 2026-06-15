@@ -47,6 +47,7 @@ import {
 
 interface CartBlueprintLine extends OrderBlueprintLine {
   cartKey: string
+  slotQualities?: Record<number, number>
 }
 
 interface CartResourceLine extends OrderResourceLine {
@@ -62,14 +63,33 @@ interface ResourceBuyOrderPanelProps {
   editOrder?: CustomOrder | null
   hasPendingBuyerRep?: boolean
   minOrderValue?: number
+  initialBlueprintLines?: CartBlueprintLine[]
   onCancelEdit?: () => void
   onSubmitted?: () => void
   onError?: (message: string) => void
   onForceEditOrder?: (orderId: string) => void
+  onDraftCleared?: () => void
 }
 
 function nextCartKey() {
   return `cart-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
+function isUniformSlotQuality(slotQualities?: Record<number, number>): boolean {
+  if (!slotQualities) return true
+  const values = Object.values(slotQualities)
+  if (values.length <= 1) return true
+  return values.every((v) => v === values[0])
+}
+
+function formatSlotQualityLabel(line: CartBlueprintLine): string {
+  if (!line.slotQualities || isUniformSlotQuality(line.slotQualities)) {
+    return `Q${line.minQuality}`
+  }
+  const values = Object.values(line.slotQualities)
+  const min = Math.min(...values)
+  const max = Math.max(...values)
+  return `Q${min}–Q${max} mix`
 }
 
 export default function ResourceBuyOrderPanel({
@@ -81,10 +101,12 @@ export default function ResourceBuyOrderPanel({
   editOrder,
   hasPendingBuyerRep = false,
   minOrderValue = 10000,
+  initialBlueprintLines,
   onCancelEdit,
   onSubmitted,
   onError,
   onForceEditOrder,
+  onDraftCleared,
 }: ResourceBuyOrderPanelProps) {
   const { dfpDisplayEnabled } = useAuth()
   const isEditing = Boolean(editOrder?.id)
@@ -135,6 +157,13 @@ export default function ResourceBuyOrderPanel({
       resolveOrderBlueprintLines(editOrder).length > 0 ? 'blueprint' : 'resource'
     )
   }, [editOrder])
+
+  // Initialize cart from draft items
+  useEffect(() => {
+    if (editOrder || !initialBlueprintLines || initialBlueprintLines.length === 0) return
+    setBpCart(initialBlueprintLines)
+    setMode('blueprint')
+  }, [editOrder, initialBlueprintLines])
 
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
@@ -264,6 +293,7 @@ export default function ResourceBuyOrderPanel({
         blueprintId: line.blueprintId,
         blueprintTitle: line.blueprintTitle,
         minQuality: line.minQuality,
+        slotQualities: line.slotQualities,
         quantity: line.quantity,
         unitDfpAuec: line.unitDfpAuec,
         lineDfpAuec: line.lineDfpAuec,
@@ -323,6 +353,7 @@ export default function ResourceBuyOrderPanel({
       setResCart([])
       setNotes('')
       setMinFulfillerRep('')
+      onDraftCleared?.()
     }
     onSubmitted?.()
   }
@@ -497,27 +528,32 @@ export default function ResourceBuyOrderPanel({
         {(bpCart.length > 0 || resCart.length > 0) && (
           <div className="border border-slate-700 rounded-xl overflow-hidden">
             <ul className="divide-y divide-slate-800">
-              {bpCart.map((line) => (
-                <li
-                  key={line.cartKey}
-                  className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40"
-                >
-                  <span className="text-white">
-                    {line.blueprintTitle} × {line.quantity} ·{' '}
-                    {formatBlueprintOrderQualityLabel(line.minQuality)}
-                  </span>
-                  {dfpDisplayEnabled && (
-                    <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setBpCart((p) => p.filter((l) => l.cartKey !== line.cartKey))}
-                    className="text-red-400 text-xs"
+              {bpCart.map((line) => {
+                const isMixed = line.slotQualities && !isUniformSlotQuality(line.slotQualities)
+                return (
+                  <li
+                    key={line.cartKey}
+                    className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40"
                   >
-                    ×
-                  </button>
-                </li>
-              ))}
+                    <span className="text-white flex-1 min-w-0">
+                      <span className="block">{line.blueprintTitle} × {line.quantity}</span>
+                      <span className={`text-xs ${isMixed ? 'text-orange-300' : 'text-slate-400'}`}>
+                        {formatSlotQualityLabel(line)}
+                      </span>
+                    </span>
+                    {dfpDisplayEnabled && (
+                      <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setBpCart((p) => p.filter((l) => l.cartKey !== line.cartKey))}
+                      className="text-red-400 text-xs"
+                    >
+                      ×
+                    </button>
+                  </li>
+                )
+              })}
               {resCart.map((line) => (
                 <li
                   key={line.cartKey}

@@ -19,6 +19,7 @@ import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
+import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { filterOrderableBlueprints } from '../lib/blueprintOrderable'
 import {
   canCustomerArchive,
@@ -98,6 +99,7 @@ export default function CustomOrdersRoute() {
     [blueprints, overridesMap]
   )
   const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
+  const { draftItems, draftCount, clearDraft } = useOrderDraft()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -271,6 +273,22 @@ export default function CustomOrdersRoute() {
 
   const totalOrderCount = openOrderCount + completedOrderCount
 
+  // Convert draft items to cart blueprint lines format
+  const draftCartLines = useMemo(
+    () =>
+      draftItems.map((item) => ({
+        cartKey: item.cartKey,
+        blueprintId: item.blueprintId,
+        blueprintTitle: item.blueprintTitle,
+        minQuality: Math.min(...Object.values(item.slotQualities), 500),
+        quantity: item.quantity,
+        unitDfpAuec: item.unitDfpAuec,
+        lineDfpAuec: item.lineDfpAuec,
+        slotQualities: item.slotQualities,
+      })),
+    [draftItems]
+  )
+
   return (
     <FeaturePageLayout
       title="Custom Orders"
@@ -381,6 +399,41 @@ export default function CustomOrdersRoute() {
         </div>
       )}
 
+      {draftCount > 0 && !showForm && !editingOrderId && (
+        <div className="mb-4 p-4 rounded-xl bg-red-950/30 border border-red-500/30">
+          <div className="flex items-start gap-3">
+            <div className="shrink-0 p-2 rounded-lg bg-red-600/20">
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-red-300 font-medium">Draft Order</h3>
+              <p className="text-red-200/70 text-sm mt-1">
+                You have <strong className="text-red-300">{draftCount}</strong> blueprint{draftCount !== 1 ? 's' : ''} in your draft order.
+                Click <strong className="text-red-300">New order</strong> to continue building or submit.
+              </p>
+              <div className="flex gap-2 mt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(true)}
+                  className="text-sm text-red-300 hover:text-red-200 underline"
+                >
+                  Continue order →
+                </button>
+                <button
+                  type="button"
+                  onClick={clearDraft}
+                  className="text-sm text-slate-400 hover:text-slate-300"
+                >
+                  Clear draft
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">Open orders</p>
@@ -437,6 +490,7 @@ export default function CustomOrdersRoute() {
             orderOverridesMap={overridesMap}
             hasPendingBuyerRep={orderLimits?.has_pending_buyer_rep}
             minOrderValue={orderLimits?.buyer_min_order_value ?? 10000}
+            initialBlueprintLines={draftCartLines.length > 0 ? draftCartLines : undefined}
             onError={setError}
             onSubmitted={() => {
               setShowForm(false)
@@ -447,6 +501,7 @@ export default function CustomOrdersRoute() {
               setEditingOrderId(orderId)
               void loadOrders()
             }}
+            onDraftCleared={clearDraft}
           />
         </div>
       )}

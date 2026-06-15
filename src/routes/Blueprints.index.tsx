@@ -9,6 +9,7 @@ import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import {
+  canAddBlueprintToOrder,
   canAddBlueprintToTargetList,
   resolveIsOrderable,
 } from '../lib/blueprintOrderable'
@@ -815,6 +816,7 @@ export default function BlueprintsRoute() {
           effectiveIsOrderable={resolveIsOrderable(selectedBlueprint, overridesMap)}
           canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}
           onToggleTarget={() => toggleTarget(selectedBlueprint.file)}
+          canAddToOrder={!isGuest && isApproved && canAddBlueprintToOrder(selectedBlueprint, overridesMap)}
         />
       )}
     </FeaturePageLayout>

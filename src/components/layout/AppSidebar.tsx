@@ -3,6 +3,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import type { AppNavItem, NavGroup } from '../../config/appNav'
 import { isNavItemLocked } from '../../config/appNav'
 import { useAuth } from '../../contexts/AuthContext'
+import { useOrderDraft } from '../../contexts/OrderDraftContext'
 
 interface AppSidebarProps {
   groups: NavGroup[]
@@ -11,6 +12,7 @@ interface AppSidebarProps {
 
 export default function AppSidebar({ groups, className = '' }: AppSidebarProps) {
   const { visibilityContext, canAccess } = useAuth()
+  const { draftCount } = useOrderDraft()
   const [isOpen, setIsOpen] = useState(false)
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
   const [userCollapsed, setUserCollapsed] = useState<Set<string>>(new Set())
@@ -148,6 +150,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
                     isUserCollapsed={userCollapsed.has(item.id)}
                     onToggleExpand={() => toggleExpanded(item.id)}
                     onNavigate={() => setIsOpen(false)}
+                    badgeCount={item.id === 'orders' ? draftCount : undefined}
                   />
                 ))}
               </ul>
@@ -168,9 +171,10 @@ interface SidebarNavItemProps {
   isUserCollapsed: boolean
   onToggleExpand: () => void
   onNavigate: () => void
+  badgeCount?: number
 }
 
-function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCollapsed, onToggleExpand, onNavigate }: SidebarNavItemProps) {
+function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCollapsed, onToggleExpand, onNavigate, badgeCount }: SidebarNavItemProps) {
   const hasChildren = item.children && item.children.length > 0
   const fullPath = pathname + search
   
@@ -242,6 +246,11 @@ function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCo
       >
         {item.icon && <NavIcon name={item.icon} className={`w-4 h-4 shrink-0 ${isLocked ? 'opacity-50' : ''}`} />}
         <span className="flex-1">{item.label}</span>
+        {badgeCount && badgeCount > 0 && (
+          <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-600 text-white rounded-full min-w-[18px] text-center">
+            {badgeCount}
+          </span>
+        )}
         {isLocked && <LockIcon className="w-3.5 h-3.5 shrink-0 text-amber-500/80" />}
       </Link>
     </li>

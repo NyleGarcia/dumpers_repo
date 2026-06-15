@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
+import { Link } from '@tanstack/react-router'
 import { resourceLabelClassName } from '../config/resourceTypes'
-import { slugifyResourceName } from '../lib/blueprintResources'
+import { slugifyResourceName, type BlueprintWithSlots } from '../lib/blueprintResources'
 import {
   Modifier,
   calculateSlotModifiers,
@@ -10,6 +11,9 @@ import {
   formatStatValue,
   SlotModifierResult,
 } from '../lib/qualityModifiers'
+import { pricingForBlueprintLine } from '../lib/orderPricing'
+import { formatDfpAuec } from '../lib/dfp'
+import { useOrderDraft } from '../contexts/OrderDraftContext'
 import AppModal from './layout/AppModal'
 
 interface SlotOption {
@@ -53,6 +57,7 @@ interface BlueprintDetailsModalProps {
   effectiveIsOrderable?: boolean
   canAddToTargetList?: boolean
   onToggleTarget?: () => void
+  canAddToOrder?: boolean
 }
 
 export default function BlueprintDetailsModal({
@@ -66,9 +71,12 @@ export default function BlueprintDetailsModal({
   effectiveIsOrderable = false,
   canAddToTargetList = false,
   onToggleTarget,
+  canAddToOrder = false,
 }: BlueprintDetailsModalProps) {
   // Track quality for each slot (indexed by slot position)
   const [slotQualities, setSlotQualities] = useState<Record<number, number>>({})
+  const [addedToOrder, setAddedToOrder] = useState(false)
+  const { addToDraft, draftCount } = useOrderDraft()
 
   // Check if any slot has modifiers
   const hasModifiers = useMemo(() => {
@@ -98,7 +106,7 @@ export default function BlueprintDetailsModal({
     if (!blueprint.slots) return []
     
     return blueprint.slots.map((slot, idx) => {
-      const quality = slotQualities[idx] ?? 1
+      const quality = slotQualities[idx] ?? 500
       const modifiers = slot.options?.[0]?.modifiers
       return calculateSlotModifiers(quality, modifiers)
     })
@@ -112,6 +120,54 @@ export default function BlueprintDetailsModal({
 
   const handleQualityChange = (slotIndex: number, quality: number) => {
     setSlotQualities(prev => ({ ...prev, [slotIndex]: quality }))
+  }
+
+  // Get effective slot qualities (using defaults for unset slots)
+  const effectiveSlotQualities = useMemo(() => {
+    const qualities: Record<number, number> = {}
+    const slotCount = blueprint.slots?.length ?? 0
+    for (let i = 0; i < slotCount; i++) {
+      qualities[i] = slotQualities[i] ?? 500
+    }
+    return qualities
+  }, [blueprint.slots?.length, slotQualities])
+
+  // Calculate the minimum quality across all slots (floor for order matching)
+  const minSlotQuality = useMemo(() => {
+    const values = Object.values(effectiveSlotQualities)
+    return values.length > 0 ? Math.min(...values) : 500
+  }, [effectiveSlotQualities])
+
+  // Check if all slots have the same quality (uniform vs mixed)
+  const isUniformQuality = useMemo(() => {
+    const values = Object.values(effectiveSlotQualities)
+    return values.length <= 1 || values.every((v) => v === values[0])
+  }, [effectiveSlotQualities])
+
+  // Calculate pricing for the current quality settings
+  const orderPricing = useMemo(() => {
+    if (!canAddToOrder) return null
+    return pricingForBlueprintLine(
+      blueprint as BlueprintWithSlots,
+      minSlotQuality,
+      1
+    )
+  }, [blueprint, minSlotQuality, canAddToOrder])
+
+  const handleAddToOrder = () => {
+    if (!orderPricing || !canAddToOrder) return
+
+    addToDraft({
+      blueprintId: blueprint.file,
+      blueprintTitle: blueprint.blueprintName || blueprint.file,
+      slotQualities: effectiveSlotQualities,
+      quantity: 1,
+      unitDfpAuec: orderPricing.unitDfpAuec,
+      lineDfpAuec: orderPricing.lineDfpAuec,
+    })
+
+    setAddedToOrder(true)
+    setTimeout(() => setAddedToOrder(false), 3000)
   }
 
   return (
@@ -153,7 +209,7 @@ export default function BlueprintDetailsModal({
                   key={idx}
                   slot={slot}
                   slotIndex={idx}
-                  quality={slotQualities[idx] ?? 1}
+                  quality={slotQualities[idx] ?? 500}
                   onQualityChange={handleQualityChange}
                   modifierResults={allSlotModifiers[idx] ?? []}
                 />
@@ -202,6 +258,62 @@ export default function BlueprintDetailsModal({
                 <span className="text-sm text-slate-400">Click to add to Mission Tracker</span>
               </div>
             )}
+          </div>
+        )}
+
+        {canAddToOrder && orderPricing && (
+          <div className="bg-red-950/20 border border-red-500/25 rounded-xl p-3 sm:p-4">
+            <h3 className="text-red-300/90 text-sm font-semibold mb-2 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Add to Order
+            </h3>
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2 text-sm">
+                <span className="text-slate-400">Quality:</span>
+                {isUniformQuality ? (
+                  <span className="px-2 py-0.5 bg-slate-800 rounded text-orange-300 font-mono">
+                    Q{minSlotQuality}
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 bg-slate-800 rounded text-orange-300 font-mono">
+                    Q{minSlotQuality}–Q{Math.max(...Object.values(effectiveSlotQualities))} mix
+                  </span>
+                )}
+                <span className="text-slate-500">·</span>
+                <span className="text-amber-300 font-medium">
+                  {formatDfpAuec(orderPricing.unitDfpAuec)}
+                </span>
+              </div>
+              {!isUniformQuality && (
+                <p className="text-xs text-slate-500">
+                  Mixed quality — fulfiller will use minimum Q{minSlotQuality} for all slots.
+                  Per-slot quality preferences are saved for your reference.
+                </p>
+              )}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleAddToOrder}
+                  disabled={addedToOrder}
+                  className={`text-sm font-medium px-4 py-2 rounded-lg transition-colors ${
+                    addedToOrder
+                      ? 'bg-green-600/30 text-green-300 cursor-default'
+                      : 'bg-red-600/30 text-red-300 hover:bg-red-600/40'
+                  }`}
+                >
+                  {addedToOrder ? '✓ Added!' : 'Add to Order'}
+                </button>
+                {draftCount > 0 && (
+                  <Link
+                    to="/orders"
+                    className="text-xs text-slate-400 hover:text-slate-300"
+                  >
+                    {draftCount} item{draftCount !== 1 ? 's' : ''} in draft →
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -263,24 +375,25 @@ function ResourceSlotCard({
             </label>
             <input
               type="range"
-              min={1}
+              min={500}
               max={1000}
-              step={1}
+              step={100}
               value={quality}
               onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
               className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
             />
-            <input
-              type="number"
-              min={1}
-              max={1000}
+            <select
               value={quality}
-              onChange={(e) => {
-                const val = parseInt(e.target.value, 10)
-                if (!isNaN(val)) onQualityChange(slotIndex, Math.max(1, Math.min(1000, val)))
-              }}
-              className="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-right text-orange-400 font-mono"
-            />
+              onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
+              className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono"
+            >
+              <option value={500}>Q500</option>
+              <option value={600}>Q600</option>
+              <option value={700}>Q700</option>
+              <option value={800}>Q800</option>
+              <option value={900}>Q900</option>
+              <option value={1000}>Q1000</option>
+            </select>
           </div>
           
           <div className="space-y-1">

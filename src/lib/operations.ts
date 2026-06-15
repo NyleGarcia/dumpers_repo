@@ -76,6 +76,7 @@ export interface CustomOrderBlueprint {
   blueprint_id: string
   blueprint_title: string | null
   min_quality: number
+  slot_qualities: Record<number, number> | null
   quantity: number
   unit_dfp_auec: number
   line_dfp_auec: number
@@ -86,6 +87,7 @@ export interface CustomOrderBlueprintInput {
   blueprintId: string
   blueprintTitle: string
   minQuality: number
+  slotQualities?: Record<number, number>
   quantity: number
   unitDfpAuec: number
   lineDfpAuec: number
@@ -618,6 +620,7 @@ export async function createCustomOrder(input: {
       blueprint_id: bp.blueprintId,
       blueprint_title: bp.blueprintTitle,
       min_quality: bp.minQuality,
+      slot_qualities: bp.slotQualities ?? null,
       quantity: bp.quantity,
       unit_dfp_auec: Math.round(bp.unitDfpAuec),
       line_dfp_auec: Math.round(bp.lineDfpAuec),
@@ -734,6 +737,7 @@ export async function updateCustomOrderRequester(input: {
       blueprint_id: bp.blueprintId,
       blueprint_title: bp.blueprintTitle,
       min_quality: bp.minQuality,
+      slot_qualities: bp.slotQualities ?? null,
       quantity: bp.quantity,
       unit_dfp_auec: Math.round(bp.unitDfpAuec),
       line_dfp_auec: Math.round(bp.lineDfpAuec),
