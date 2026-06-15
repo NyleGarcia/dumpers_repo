@@ -113,11 +113,11 @@ export default function MiningSection() {
     <div className="w-full space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-xs text-slate-500">
-          Star ores to add them to your{' '}
+          Use the Track button to add ores to your{' '}
           <Link to="/mining-tracker" className="text-orange-400 hover:text-orange-300">
             Mining Tracker
           </Link>{' '}
-          (saved locally in your browser).
+          (saved locally in your browser). Only ores with mining signatures can be tracked.
         </p>
       </div>
 
@@ -271,7 +271,9 @@ function OreCard({ item, onLocationClick }: { item: MiningData; onLocationClick:
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <TrackOreButton oreName={item.ore_name} rarity={item.rarity} compact />
+          {signature && (
+            <TrackOreButton oreName={item.ore_name} rarity={item.rarity} compact />
+          )}
           <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
             {item.locations.length} location{item.locations.length !== 1 ? 's' : ''}
           </span>
@@ -388,7 +390,9 @@ function OreModal({ ore, onClose }: { ore: MiningData; onClose: () => void }) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <TrackOreButton oreName={ore.ore_name} rarity={ore.rarity} showTrackerLink />
+            {signature && (
+              <TrackOreButton oreName={ore.ore_name} rarity={ore.rarity} showTrackerLink />
+            )}
             <button
               onClick={onClose}
               className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
@@ -411,19 +415,12 @@ function OreModal({ ore, onClose }: { ore: MiningData; onClose: () => void }) {
               return (
                 <div
                   key={location}
-                  className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 flex items-start justify-between gap-3"
+                  className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
                 >
-                  <div>
-                    <span className="font-medium text-white">{location}</span>
-                    {system && (
-                      <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
-                    )}
-                  </div>
-                  <TrackOreButton
-                    oreName={ore.ore_name}
-                    rarity={ore.rarity}
-                    compact
-                  />
+                  <span className="font-medium text-white">{location}</span>
+                  {system && (
+                    <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
+                  )}
                 </div>
               )
             })}
@@ -484,15 +481,17 @@ function LocationModal({ location, ores, onClose }: { location: string; ores: Mi
                   <div className="flex items-center justify-between gap-2">
                     <span className={`font-medium ${colors.text}`}>{ore.ore_name}</span>
                     <div className="flex items-center gap-2 shrink-0">
-                      <TrackOreButton
-                        oreName={ore.ore_name}
-                        rarity={ore.rarity}
-                        compact
-                      />
                       {signature && (
-                        <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-2 py-1 rounded">
-                          RS {signature}
-                        </span>
+                        <>
+                          <TrackOreButton
+                            oreName={ore.ore_name}
+                            rarity={ore.rarity}
+                            compact
+                          />
+                          <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-2 py-1 rounded">
+                            RS {signature}
+                          </span>
+                        </>
                       )}
                     </div>
                   </div>

@@ -63,15 +63,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     ghostAllowed: true,
   },
   {
-    id: 'shops',
-    label: 'Shops',
-    path: '/shops',
-    icon: 'shop',
-    featureId: 'shops_browse',
-    minRole: 'member',
-    ghostAllowed: true,
-  },
-  {
     id: 'custom-orders',
     label: 'Custom Orders',
     path: '/orders',
@@ -98,6 +89,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
       { id: 'archive-welcome', label: 'Overview', path: '/archive', icon: 'home' },
       { id: 'archive-mining', label: 'Mining Guide', path: '/archive?section=mining', icon: 'mining' },
       { id: 'archive-components', label: 'Components', path: '/archive?section=components', icon: 'components' },
+      { id: 'archive-shops', label: 'Shops', path: '/shops', icon: 'shop' },
       { id: 'archive-ordnance', label: 'Ordnance', path: '/archive?section=ordnance', icon: 'ordnance' },
       { id: 'archive-factions', label: 'Factions', path: '/archive?section=factions', icon: 'factions' },
       { id: 'archive-general', label: 'General Info', path: '/archive?section=general', icon: 'info' },
@@ -115,7 +107,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'tools',
     label: 'Tools',
-    itemIds: ['shops', 'custom-orders', 'fulfillment'],
+    itemIds: ['custom-orders', 'fulfillment'],
   },
   {
     id: 'reference',
