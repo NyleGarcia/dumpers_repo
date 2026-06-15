@@ -26,6 +26,7 @@ interface AppChromeProps {
   showAdminPanelButton: boolean
   onOpenSettings: () => void
   onOpenDbActions: () => void
+  onOpenDiscord: () => void
   onOpenAdmin: () => void
   onOpenSupport: () => void
   onSignOut: () => void
@@ -49,6 +50,7 @@ export default function AppChrome({
   showAdminPanelButton,
   onOpenSettings,
   onOpenDbActions,
+  onOpenDiscord,
   onOpenAdmin,
   onOpenSupport,
   onSignOut,
@@ -95,6 +97,7 @@ export default function AppChrome({
                   showAdminPanelButton={showAdminPanelButton}
                   onOpenSettings={onOpenSettings}
                   onOpenDbActions={onOpenDbActions}
+                  onOpenDiscord={onOpenDiscord}
                   onOpenAdmin={onOpenAdmin}
                   onOpenSupport={onOpenSupport}
                   onSignOut={onSignOut}

@@ -177,6 +177,18 @@ serve(async (req) => {
       })
       .eq('id', 1)
 
+    // Queue Discord notification for blueprint sync
+    await supabase.rpc('queue_discord_message', {
+      p_event_type: 'blueprints',
+      p_title: 'Blueprint Data Synced',
+      p_description: `Successfully synced ${inserted.toLocaleString()} blueprints from sccrafter.com`,
+      p_color: 0xf97316, // Orange
+      p_fields: [
+        { name: 'Blueprints', value: inserted.toLocaleString(), inline: true },
+        { name: 'Version', value: version, inline: true },
+      ],
+    })
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -203,6 +215,15 @@ serve(async (req) => {
           updated_at: new Date().toISOString()
         })
         .eq('id', 1)
+
+      // Queue Discord admin error notification
+      await supabase.rpc('queue_discord_message', {
+        p_event_type: 'admin',
+        p_title: 'Blueprint Sync Failed',
+        p_description: (error as Error).message,
+        p_color: 0xef4444, // Red
+        p_fields: [],
+      })
     } catch (_) {
       // Ignore error update failure
     }

@@ -11,6 +11,7 @@ import SupportDashboardRoute from './SupportDashboard.index'
 import GuestLockedRoute from './GuestLocked.index'
 import MiningTrackerRoute from './MiningTracker.index'
 import ShopsRoute from './Shops.index'
+import DiscordSubscribeRoute from './DiscordSubscribe.index'
 import { requireFeature } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -99,6 +100,12 @@ const guestLockedRoute = createRoute({
   }),
 })
 
+const discordSubscribeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/discord-subscribe',
+  component: DiscordSubscribeRoute,
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   miningTrackerRoute,
@@ -110,6 +117,7 @@ export const routeTree = rootRoute.addChildren([
   archiveRoute,
   supportDashboardRoute,
   guestLockedRoute,
+  discordSubscribeRoute,
 ])
 
 export default routeTree

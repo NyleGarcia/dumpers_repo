@@ -445,6 +445,19 @@ serve(async (req) => {
       })
       .eq('id', 1)
 
+    // Queue Discord notification for starstrings sync
+    await supabase.rpc('queue_discord_message', {
+      p_event_type: 'admin',
+      p_title: 'StarStrings Data Synced',
+      p_description: `Successfully synced game data from StarStrings`,
+      p_color: 0xa855f7, // Purple
+      p_fields: [
+        { name: 'Mining Ores', value: miningData.length.toString(), inline: true },
+        { name: 'Components', value: componentsData.length.toString(), inline: true },
+        { name: 'Version', value: version, inline: true },
+      ],
+    })
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -477,6 +490,15 @@ serve(async (req) => {
           updated_at: new Date().toISOString()
         })
         .eq('id', 1)
+
+      // Queue Discord admin error notification
+      await supabase.rpc('queue_discord_message', {
+        p_event_type: 'admin',
+        p_title: 'StarStrings Sync Failed',
+        p_description: error.message,
+        p_color: 0xef4444, // Red
+        p_fields: [],
+      })
     } catch (_) {
       // Ignore error update failure
     }

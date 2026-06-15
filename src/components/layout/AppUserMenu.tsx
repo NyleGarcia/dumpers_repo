@@ -17,6 +17,7 @@ interface AppUserMenuProps {
   showAdminPanelButton: boolean
   onOpenSettings: () => void
   onOpenDbActions: () => void
+  onOpenDiscord: () => void
   onOpenAdmin: () => void
   onOpenSupport: () => void
   onSignOut: () => void
@@ -34,6 +35,7 @@ export default function AppUserMenu({
   showAdminPanelButton,
   onOpenSettings,
   onOpenDbActions,
+  onOpenDiscord,
   onOpenAdmin,
   onOpenSupport,
   onSignOut,
@@ -316,6 +318,19 @@ export default function AppUserMenu({
                 className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
               >
                 DB Actions
+              </button>
+            )}
+
+            {!isGhostMode && isSuperAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  close()
+                  onOpenDiscord()
+                }}
+                className="w-full px-4 py-2 text-left text-indigo-400 hover:bg-slate-700 transition-colors"
+              >
+                Discord
               </button>
             )}
 

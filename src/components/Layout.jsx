@@ -8,6 +8,7 @@ import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
 import ProfileSettings from './ProfileSettings'
 import DbActionsModal from './DbActionsModal'
+import DiscordSettingsModal from './DiscordSettingsModal'
 import WelcomeModal from './WelcomeModal'
 import SupportTicketsModal from './SupportTicketsModal'
 import AppChrome from './layout/AppChrome'
@@ -40,6 +41,7 @@ export default function Layout() {
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showProfileSettings, setShowProfileSettings] = useState(false)
   const [showDbActions, setShowDbActions] = useState(false)
+  const [showDiscordSettings, setShowDiscordSettings] = useState(false)
   const [showWelcomeModal, setShowWelcomeModal] = useState(false)
   const [showSupportModal, setShowSupportModal] = useState(false)
   const [welcomeChecked, setWelcomeChecked] = useState(false)
@@ -109,6 +111,7 @@ export default function Layout() {
         showAdminPanelButton={showAdminPanelButton}
         onOpenSettings={() => setShowProfileSettings(true)}
         onOpenDbActions={() => setShowDbActions(true)}
+        onOpenDiscord={() => setShowDiscordSettings(true)}
         onOpenAdmin={() => setShowAdminPanel(true)}
         onOpenSupport={() => setShowSupportModal(true)}
         onSignOut={signOut}
@@ -124,6 +127,9 @@ export default function Layout() {
         <ProfileSettings onClose={() => setShowProfileSettings(false)} />
       )}
       {!isGuestPreview && showDbActions && <DbActionsModal onClose={() => setShowDbActions(false)} />}
+      {!isGuestPreview && showDiscordSettings && (
+        <DiscordSettingsModal onClose={() => setShowDiscordSettings(false)} />
+      )}
       {!isGuestPreview && showSupportModal && (
         <SupportTicketsModal onClose={() => setShowSupportModal(false)} />
       )}
