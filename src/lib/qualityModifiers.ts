@@ -187,7 +187,7 @@ export function aggregateModifiers(
       k => k.toLowerCase() === property.toLowerCase()
     )
     const baseValue = baseKey ? baseStats![baseKey] : undefined
-    const finalValue = baseValue !== undefined ? Math.round(baseValue * combinedModifier) : undefined
+    const finalValue = baseValue !== undefined ? Math.round(baseValue * combinedModifier * 100) / 100 : undefined
 
     aggregated.push({
       property: data.originalProperty,
@@ -204,8 +204,9 @@ export function aggregateModifiers(
 }
 
 /**
- * Format a number with locale-specific thousands separators.
+ * Format a number with locale-specific thousands separators, rounded to 2 decimal places.
  */
 export function formatStatValue(value: number): string {
-  return Math.round(value).toLocaleString()
+  const rounded = Math.round(value * 100) / 100
+  return rounded.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })
 }
