@@ -61,6 +61,7 @@ const PAGE_GUIDES = [
       'Mark blueprints as "acquired" to track your collection progress',
       'View the resources and components required to craft each item',
       'Click any blueprint to see detailed crafting requirements and DFP values',
+      'Use the Quality Simulator to preview how resource quality affects final stats',
       'Offline Mode: acquired marks save locally until you sign in',
     ],
     relatesTo: ['Mission Tracker', 'Resource Tracker'],
@@ -113,10 +114,11 @@ const PAGE_GUIDES = [
     ),
     description: 'In-game cluster RS reference for ores you are hunting.',
     details: [
-      'Add ores from the Mining Guide or search by name on the tracker page',
+      'Add ores from the Mining Guide using the Track button (ores with RS signatures only)',
       'Choose how many RS multiples to display (2–10×, defaults to 3×)',
       'Compare scanner readings in-game: cluster RS = node count × base RS',
       'Search by ore name to quickly add to your list (minimum 2 characters)',
+      'Hand-mineables and gems cannot be tracked (no RS signature)',
       'Logged-in users sync to their account; Offline Mode saves locally',
     ],
     relatesTo: ['Mining Guide', 'Resource Tracker'],
@@ -129,14 +131,14 @@ const PAGE_GUIDES = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
       </svg>
     ),
-    description: 'Browse in-game shop inventories and prices across the Stanton system.',
+    description: 'Browse in-game shop inventories and prices across Stanton, Pyro, and Nyx.',
     details: [
       'Filter by system, location, and shop to browse inventories',
       'See effective prices including shop margins and offsets',
       'Find where specific components are sold — or discover items are loot-only',
       'View buy/sell/rent transaction types for each item',
       'Accessible in Offline Mode — reference data only, no account required',
-      'Click component names in the Archive to jump directly to their shop listings',
+      'Click component names in the Component Database to jump directly to their shop listings',
     ],
     relatesTo: ['Components', 'Mining Guide'],
   },
@@ -289,6 +291,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <li>• Build your Mission Tracker list (local only)</li>
                 <li>• Track resources in Resource Tracker (local only)</li>
                 <li>• Use the Mining Tracker for RS references</li>
+                <li>• Browse shop inventories and prices</li>
                 <li>• Preview pending fulfillment orders</li>
               </ul>
             </div>
