@@ -52,7 +52,7 @@ BEGIN
   END IF;
   
   -- Call the edge function via pg_net
-  PERFORM extensions.http_post(
+  PERFORM net.http_post(
     url := v_supabase_url || '/functions/v1/send-discord',
     headers := jsonb_build_object(
       'Authorization', 'Bearer ' || v_service_key,
