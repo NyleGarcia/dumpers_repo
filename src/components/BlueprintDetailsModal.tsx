@@ -28,6 +28,7 @@ interface BlueprintDetailsModalProps {
   subTypeLabel?: string | null
   onClose: () => void
   isApproved: boolean
+  isGuest?: boolean
   isAcquired: boolean
   isOnTarget: boolean
   effectiveIsOrderable?: boolean
@@ -40,6 +41,7 @@ export default function BlueprintDetailsModal({
   subTypeLabel,
   onClose,
   isApproved,
+  isGuest = false,
   isAcquired,
   isOnTarget,
   effectiveIsOrderable = false,
@@ -119,7 +121,7 @@ export default function BlueprintDetailsModal({
             <h3 className="text-amber-300/90 text-sm font-semibold mb-2">
               Reward Missions ({blueprint.rewardMissions.length})
             </h3>
-            {!isApproved ? (
+            {!isApproved && !isGuest ? (
               <p className="text-sm text-slate-400">
                 After your account is approved, add this blueprint to your Mission Tracker to track which
                 missions reward it.

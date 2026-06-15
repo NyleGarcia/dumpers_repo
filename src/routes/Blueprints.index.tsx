@@ -742,8 +742,9 @@ export default function BlueprintsRoute() {
               const effectiveIsOrderable = resolveIsOrderable(bp, overridesMap)
               const catalogReward = bp.isReward === true
               // Use display (viewer's) acquired status for canTarget check
+              // Allow both approved members AND offline/guest users to track
               const canTarget =
-                isApproved &&
+                (isApproved || isGuest) &&
                 !displayAcquiredBlueprints[bp.file] &&
                 canAddBlueprintToTargetList(bp, overridesMap)
 
@@ -778,6 +779,7 @@ export default function BlueprintsRoute() {
           subTypeLabel={formatSubType(getSubType(selectedBlueprint))}
           onClose={() => setSelectedBlueprint(null)}
           isApproved={isApproved}
+          isGuest={isGuest}
           isAcquired={!!displayAcquiredBlueprints[selectedBlueprint.file]}
           isOnTarget={isOnTargetList(selectedBlueprint.file)}
           effectiveIsOrderable={resolveIsOrderable(selectedBlueprint, overridesMap)}
