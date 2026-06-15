@@ -673,9 +673,23 @@ export async function createCustomOrder(input: {
 
   // Queue Discord notification for new order
   const orderData = order as CustomOrder
-  const itemCount = input.blueprints.reduce((sum, bp) => sum + bp.quantity, 0) +
-    input.resources.reduce((sum, r) => sum + Math.ceil(r.quantityScu), 0)
-  queueOrderEvent('created', orderData.title, itemCount).catch(() => {})
+  const orderItems = [
+    ...input.blueprints.map(bp => ({
+      name: bp.blueprintTitle,
+      quantity: bp.quantity,
+      unitAuec: Math.round(bp.unitDfpAuec),
+    })),
+    ...input.resources.map(r => ({
+      name: r.resourceLabel,
+      quantity: Math.ceil(r.quantityScu),
+      unitAuec: Math.round(r.unitDfpAuec),
+    })),
+  ]
+  queueOrderEvent('created', {
+    orderTitle: orderData.title,
+    items: orderItems,
+    totalAuec: Math.round(input.totalDfpAuec),
+  }).catch(() => {})
 
   return { data: orderData }
 }
@@ -750,9 +764,19 @@ export async function deleteCustomOrderRequester(
   // Fetch order details before deleting for Discord notification
   const { data: orderData } = await supabase
     .from('custom_orders')
-    .select('title')
+    .select('title, total_dfp_auec')
     .eq('id', orderId)
     .single()
+
+  const { data: blueprints } = await supabase
+    .from('custom_order_blueprints')
+    .select('blueprint_title, quantity, unit_dfp_auec')
+    .eq('order_id', orderId)
+
+  const { data: resources } = await supabase
+    .from('custom_order_resources')
+    .select('resource_label, quantity_scu, unit_dfp_auec')
+    .eq('order_id', orderId)
 
   const { error } = await supabase.rpc('delete_custom_order_requester', {
     p_order_id: orderId,
@@ -761,7 +785,23 @@ export async function deleteCustomOrderRequester(
 
   // Queue Discord notification for cancelled order
   if (orderData?.title) {
-    queueOrderEvent('cancelled', orderData.title, 1).catch(() => {})
+    const orderItems = [
+      ...(blueprints ?? []).map(bp => ({
+        name: bp.blueprint_title ?? 'Unknown',
+        quantity: bp.quantity,
+        unitAuec: bp.unit_dfp_auec,
+      })),
+      ...(resources ?? []).map(r => ({
+        name: r.resource_label ?? 'Unknown',
+        quantity: Math.ceil(r.quantity_scu),
+        unitAuec: r.unit_dfp_auec,
+      })),
+    ]
+    queueOrderEvent('cancelled', {
+      orderTitle: orderData.title,
+      items: orderItems,
+      totalAuec: orderData.total_dfp_auec ?? 0,
+    }).catch(() => {})
   }
 
   return {}
@@ -809,16 +849,42 @@ export async function acceptCustomOrder(orderId: string): Promise<{ error?: stri
   // Fetch order details before accepting for Discord notification
   const { data: orderData } = await supabase
     .from('custom_orders')
-    .select('title')
+    .select('title, total_dfp_auec')
     .eq('id', orderId)
     .single()
+
+  const { data: blueprints } = await supabase
+    .from('custom_order_blueprints')
+    .select('blueprint_title, quantity, unit_dfp_auec')
+    .eq('order_id', orderId)
+
+  const { data: resources } = await supabase
+    .from('custom_order_resources')
+    .select('resource_label, quantity_scu, unit_dfp_auec')
+    .eq('order_id', orderId)
 
   const { error } = await supabase.rpc('accept_custom_order', { p_order_id: orderId })
   if (error) return { error: error.message }
 
   // Queue Discord notification for order accepted by fulfiller
   if (orderData?.title) {
-    queueOrderEvent('fulfilled', orderData.title, 1).catch(() => {})
+    const orderItems = [
+      ...(blueprints ?? []).map(bp => ({
+        name: bp.blueprint_title ?? 'Unknown',
+        quantity: bp.quantity,
+        unitAuec: bp.unit_dfp_auec,
+      })),
+      ...(resources ?? []).map(r => ({
+        name: r.resource_label ?? 'Unknown',
+        quantity: Math.ceil(r.quantity_scu),
+        unitAuec: r.unit_dfp_auec,
+      })),
+    ]
+    queueOrderEvent('fulfilled', {
+      orderTitle: orderData.title,
+      items: orderItems,
+      totalAuec: orderData.total_dfp_auec ?? 0,
+    }).catch(() => {})
   }
 
   return {}
@@ -883,9 +949,19 @@ export async function resolveOrderDispute(
   // Fetch order details before resolving for Discord notification
   const { data: orderData } = await supabase
     .from('custom_orders')
-    .select('title')
+    .select('title, total_dfp_auec')
     .eq('id', orderId)
     .single()
+
+  const { data: blueprints } = await supabase
+    .from('custom_order_blueprints')
+    .select('blueprint_title, quantity, unit_dfp_auec')
+    .eq('order_id', orderId)
+
+  const { data: resources } = await supabase
+    .from('custom_order_resources')
+    .select('resource_label, quantity_scu, unit_dfp_auec')
+    .eq('order_id', orderId)
 
   const { data, error } = await supabase.rpc('resolve_order_dispute', {
     p_order_id: orderId,
@@ -899,7 +975,23 @@ export async function resolveOrderDispute(
 
   // Queue Discord notification for cancelled order (from dispute)
   if (outcome === 'cancel' && orderData?.title) {
-    queueOrderEvent('cancelled', orderData.title, 1).catch(() => {})
+    const orderItems = [
+      ...(blueprints ?? []).map(bp => ({
+        name: bp.blueprint_title ?? 'Unknown',
+        quantity: bp.quantity,
+        unitAuec: bp.unit_dfp_auec,
+      })),
+      ...(resources ?? []).map(r => ({
+        name: r.resource_label ?? 'Unknown',
+        quantity: Math.ceil(r.quantity_scu),
+        unitAuec: r.unit_dfp_auec,
+      })),
+    ]
+    queueOrderEvent('cancelled', {
+      orderTitle: orderData.title,
+      items: orderItems,
+      totalAuec: orderData.total_dfp_auec ?? 0,
+    }).catch(() => {})
   }
 
   return {}

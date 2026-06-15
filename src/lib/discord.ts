@@ -436,10 +436,15 @@ export async function processDiscordQueue(): Promise<{
 
 // Convenience functions for queueing specific event types
 
+export interface OrderEventDetails {
+  orderTitle: string
+  items: Array<{ name: string; quantity: number; unitAuec?: number }>
+  totalAuec: number
+}
+
 export async function queueOrderEvent(
   action: 'created' | 'fulfilled' | 'cancelled',
-  blueprintName: string,
-  quantity: number
+  details: OrderEventDetails
 ) {
   const eventTypes: Record<string, DiscordEventType> = {
     created: 'order_new',
@@ -449,21 +454,37 @@ export async function queueOrderEvent(
 
   const titles: Record<string, string> = {
     created: 'New Order Placed',
-    fulfilled: 'Order Fulfilled',
+    fulfilled: 'Order Accepted',
     cancelled: 'Order Cancelled',
   }
 
   const eventType = eventTypes[action]
 
+  // Build item list string (max 5 items shown)
+  const itemLines = details.items.slice(0, 5).map(item => {
+    if (item.unitAuec) {
+      return `• ${item.name} ×${item.quantity} (${item.unitAuec.toLocaleString()} aUEC ea)`
+    }
+    return `• ${item.name} ×${item.quantity}`
+  })
+  
+  if (details.items.length > 5) {
+    itemLines.push(`• ...and ${details.items.length - 5} more items`)
+  }
+
+  const description = itemLines.join('\n')
+
+  const fields: DiscordField[] = [
+    { name: 'Total Value', value: `${details.totalAuec.toLocaleString()} aUEC`, inline: true },
+    { name: 'Items', value: details.items.length.toString(), inline: true },
+  ]
+
   return queueDiscordMessage(
     eventType,
-    titles[action],
-    `${blueprintName} x${quantity}`,
+    `${titles[action]}: ${details.orderTitle}`,
+    description,
     DISCORD_COLORS[eventType],
-    [
-      { name: 'Blueprint', value: blueprintName, inline: true },
-      { name: 'Quantity', value: quantity.toString(), inline: true },
-    ]
+    fields
   )
 }
 
