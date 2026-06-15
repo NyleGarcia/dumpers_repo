@@ -23,6 +23,7 @@ export interface OrderBlueprintLine {
   blueprintId: string
   blueprintTitle: string
   minQuality: number
+  slotQualities?: Record<number, number> | null
   quantity: number
   unitDfpAuec: number
   lineDfpAuec: number
@@ -73,6 +74,7 @@ export function resolveOrderBlueprintLines(order: CustomOrder): OrderBlueprintLi
         blueprintId: row.blueprint_id,
         blueprintTitle: row.blueprint_title ?? row.blueprint_id,
         minQuality: row.min_quality,
+        slotQualities: row.slot_qualities,
         quantity: row.quantity,
         unitDfpAuec: Number(row.unit_dfp_auec),
         lineDfpAuec: Number(row.line_dfp_auec),

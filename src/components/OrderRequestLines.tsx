@@ -9,10 +9,32 @@ import {
   orderBlueprintCraftCount,
   resolveOrderBlueprintLines,
   resolveOrderResourceLines,
+  type OrderBlueprintLine,
 } from '../lib/orderPricing'
 import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
 import type { CustomOrder } from '../lib/operations'
+
+function formatBlueprintQuality(line: OrderBlueprintLine): string {
+  const sq = line.slotQualities
+  if (!sq || Object.keys(sq).length === 0) {
+    return formatBlueprintOrderQualityLabel(line.minQuality)
+  }
+  const values = Object.values(sq).map(Number)
+  const min = Math.min(...values)
+  const max = Math.max(...values)
+  if (min === max) {
+    return `Q${min}`
+  }
+  return `Q${min}–Q${max} mix`
+}
+
+function isMixedQuality(line: OrderBlueprintLine): boolean {
+  const sq = line.slotQualities
+  if (!sq || Object.keys(sq).length === 0) return false
+  const values = Object.values(sq).map(Number)
+  return values.length > 1 && Math.min(...values) !== Math.max(...values)
+}
 
 interface OrderRequestLinesProps {
   order: CustomOrder
@@ -56,7 +78,9 @@ export default function OrderRequestLines({ order, showDfp = true }: OrderReques
           >
             <span className="text-slate-300">{line.blueprintTitle}</span>
             <span>× {line.quantity}</span>
-            <span>· {formatBlueprintOrderQualityLabel(line.minQuality)}</span>
+            <span className={isMixedQuality(line) ? 'text-orange-300' : ''}>
+              · {formatBlueprintQuality(line)}
+            </span>
             {showDfp && line.lineDfpAuec > 0 && (
               <span className="text-amber-300/90">· {formatDfpAuec(line.lineDfpAuec)}</span>
             )}
