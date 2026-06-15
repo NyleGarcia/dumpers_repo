@@ -1,4 +1,12 @@
-import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from './extraResources'
+import {
+  isSalvageResource,
+  isGasResource,
+  isHalogenResource,
+  isFuelResource,
+  isContrabandResource,
+  isTradeGoodResource,
+  SALVAGE_ORDER_MIN_QUALITY,
+} from './extraResources'
 import { isHarvestResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
@@ -14,11 +22,24 @@ export const ORDER_QUALITY_TIERS = STOCK_QUALITY_TIERS
 export const DEFAULT_STOCK_QUALITY = 500
 export const AMMO_ORDER_MIN_QUALITY = 0
 
+/** Trade commodities without quality tiers (always Q0). */
+function isNoQualityResource(resourceKey: string): boolean {
+  return (
+    isSalvageResource(resourceKey) ||
+    isHarvestResource(resourceKey) ||
+    isGasResource(resourceKey) ||
+    isHalogenResource(resourceKey) ||
+    isFuelResource(resourceKey) ||
+    isContrabandResource(resourceKey) ||
+    isTradeGoodResource(resourceKey)
+  )
+}
+
 export function stockQualityTiersForResource(
   resourceKey: string,
   _label?: string
 ): readonly number[] {
-  if (isSalvageResource(resourceKey) || isHarvestResource(resourceKey)) {
+  if (isNoQualityResource(resourceKey)) {
     return [SALVAGE_ORDER_MIN_QUALITY]
   }
   return STOCK_QUALITY_TIERS
@@ -29,7 +50,7 @@ export function orderMinQualityForResource(
   _label: string,
   selectedQuality: number
 ): number {
-  if (isSalvageResource(resourceKey) || isHarvestResource(resourceKey)) {
+  if (isNoQualityResource(resourceKey)) {
     return SALVAGE_ORDER_MIN_QUALITY
   }
   return selectedQuality

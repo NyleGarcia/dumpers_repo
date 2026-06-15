@@ -200,12 +200,20 @@ export default function ResourceTrackerRoute() {
     loading,
     error,
     refresh,
+    syncFromBlueprints,
   } = useResourceCatalog({
     enableCatalogSync: isSuperAdmin,
     includeInactive: showInactive,
     withInventory: !isGuest,
     inventoryContext,
   })
+  const [syncing, setSyncing] = useState(false)
+
+  const handleSyncCatalog = async () => {
+    setSyncing(true)
+    await syncFromBlueprints()
+    setSyncing(false)
+  }
 
   // Build stock cards: for guests, merge catalog with localStorage resources
   const stockCards = useMemo(() => {
@@ -611,11 +619,29 @@ export default function ResourceTrackerRoute() {
       </div>
 
       {isSuperAdmin && (
-        <p className="text-slate-500 text-xs mt-6">
-          Quantities are in SCU (3 decimal precision). Resource names come from{' '}
-          <code>Blueprints.json</code> — use <strong className="text-slate-400">Sync from
-          blueprints</strong> after catalog updates.
-        </p>
+        <div className="mt-6 p-4 bg-slate-900/60 border border-slate-700 rounded-xl">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-slate-300 text-sm font-medium">Sync Resource Catalog</p>
+              <p className="text-slate-500 text-xs mt-1">
+                Import resources from <code className="text-slate-400">Blueprints.json</code> and extra catalog.
+                {syncResult && (
+                  <span className="text-emerald-400 ml-2">
+                    Last sync: {syncResult.inserted} added, {syncResult.updated} updated
+                  </span>
+                )}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void handleSyncCatalog()}
+              disabled={syncing}
+              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-lg font-medium shrink-0"
+            >
+              {syncing ? 'Syncing...' : 'Sync from Blueprints'}
+            </button>
+          </div>
+        </div>
       )}
       </div>
     </FeaturePageLayout>

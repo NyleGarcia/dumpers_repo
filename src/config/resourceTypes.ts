@@ -1,4 +1,12 @@
-import { EXTRA_CATALOG_RESOURCE_KEYS, isSalvageResource } from './extraResources'
+import {
+  EXTRA_CATALOG_RESOURCE_KEYS,
+  isSalvageResource,
+  isGasResource,
+  isHalogenResource,
+  isFuelResource,
+  isContrabandResource,
+  isTradeGoodResource,
+} from './extraResources'
 
 function slugifyResourceName(name: string): string {
   return name
@@ -7,7 +15,17 @@ function slugifyResourceName(name: string): string {
     .replace(/^_|_$/g, '')
 }
 
-export type ResourceType = 'ore' | 'gem' | 'harvest' | 'shop_special' | 'salvage'
+export type ResourceType =
+  | 'ore'
+  | 'gem'
+  | 'harvest'
+  | 'shop_special'
+  | 'salvage'
+  | 'gas'
+  | 'halogen'
+  | 'fuel'
+  | 'contraband'
+  | 'trade_good'
 
 const GEM_RESOURCE_KEYS = new Set([
   'aphorite',
@@ -47,12 +65,16 @@ export function isShopSpecialResource(resourceKey: string): boolean {
 }
 
 export function getResourceType(resourceKey: string): ResourceType {
-  if (isSalvageResource(resourceKey) || EXTRA_CATALOG_RESOURCE_KEYS.has(resourceKey)) {
-    return 'salvage'
-  }
+  if (isSalvageResource(resourceKey)) return 'salvage'
+  if (isGasResource(resourceKey)) return 'gas'
+  if (isHalogenResource(resourceKey)) return 'halogen'
+  if (isFuelResource(resourceKey)) return 'fuel'
+  if (isContrabandResource(resourceKey)) return 'contraband'
+  if (isTradeGoodResource(resourceKey)) return 'trade_good'
   if (HARVEST_RESOURCE_KEYS.has(resourceKey)) return 'harvest'
   if (SHOP_SPECIAL_RESOURCE_KEYS.has(resourceKey)) return 'shop_special'
   if (GEM_RESOURCE_KEYS.has(resourceKey)) return 'gem'
+  if (EXTRA_CATALOG_RESOURCE_KEYS.has(resourceKey)) return 'trade_good'
   return 'ore'
 }
 
@@ -70,6 +92,16 @@ export function resourceLabelClassName(resourceKey: string): string {
       return 'text-cyan-400'
     case 'salvage':
       return 'text-emerald-400'
+    case 'gas':
+      return 'text-sky-400'
+    case 'halogen':
+      return 'text-lime-400'
+    case 'fuel':
+      return 'text-yellow-400'
+    case 'contraband':
+      return 'text-rose-400'
+    case 'trade_good':
+      return 'text-teal-400'
     default:
       return 'text-red-400'
   }
@@ -85,6 +117,16 @@ export function resourceChipClassName(resourceKey: string): string {
       return 'bg-cyan-950/30 text-cyan-400 border-cyan-500/20'
     case 'salvage':
       return 'bg-emerald-950/30 text-emerald-400 border-emerald-500/20'
+    case 'gas':
+      return 'bg-sky-950/30 text-sky-400 border-sky-500/20'
+    case 'halogen':
+      return 'bg-lime-950/30 text-lime-400 border-lime-500/20'
+    case 'fuel':
+      return 'bg-yellow-950/30 text-yellow-400 border-yellow-500/20'
+    case 'contraband':
+      return 'bg-rose-950/30 text-rose-400 border-rose-500/20'
+    case 'trade_good':
+      return 'bg-teal-950/30 text-teal-400 border-teal-500/20'
     default:
       return 'bg-red-950/30 text-red-400 border-red-500/20'
   }
