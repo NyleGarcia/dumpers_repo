@@ -10,16 +10,22 @@ const corsHeaders = {
 }
 
 // Discord embed colors
-const COLORS = {
-  orders: 0x22c55e,    // Green
-  blueprints: 0xf97316, // Orange
-  support: 0x3b82f6,   // Blue
-  admin: 0xef4444,     // Red
+const COLORS: Record<string, number> = {
+  orders: 0x22c55e,         // Green (legacy)
+  order_new: 0x22c55e,      // Green
+  order_fulfilled: 0x3b82f6, // Blue
+  order_cancelled: 0xef4444, // Red
+  blueprints: 0xf97316,     // Orange
+  support: 0x8b5cf6,        // Purple
+  admin: 0xef4444,          // Red
 }
 
 interface DiscordSettings {
   enabled: boolean
   orders_enabled: boolean
+  order_new_enabled: boolean
+  order_fulfilled_enabled: boolean
+  order_cancelled_enabled: boolean
   blueprints_enabled: boolean
   support_enabled: boolean
   admin_enabled: boolean
@@ -29,7 +35,7 @@ interface DiscordSettings {
 
 interface QueuedMessage {
   id: string
-  event_type: 'orders' | 'blueprints' | 'support' | 'admin'
+  event_type: 'orders' | 'order_new' | 'order_fulfilled' | 'order_cancelled' | 'blueprints' | 'support' | 'admin'
   title: string
   description: string | null
   color: number
@@ -171,6 +177,8 @@ serve(async (req) => {
       }
 
       // Determine target webhooks based on event type
+      // Public events: order_new, order_fulfilled, order_cancelled, blueprints, orders (legacy)
+      // Org-only events: support, admin
       const isOrgOnly = msg.event_type === 'support' || msg.event_type === 'admin'
 
       if (isOrgOnly) {

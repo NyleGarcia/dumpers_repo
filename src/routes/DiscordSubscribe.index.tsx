@@ -12,8 +12,8 @@ export default function DiscordSubscribeRoute() {
   const navigate = useNavigate()
   const [webhookUrl, setWebhookUrl] = useState('')
   const [webhookName, setWebhookName] = useState('')
-  const [selectedEvents, setSelectedEvents] = useState<string[]>(['orders', 'blueprints'])
-  const [availableEvents, setAvailableEvents] = useState<Array<{ event_type: string; enabled: boolean }>>([])
+  const [selectedEvents, setSelectedEvents] = useState<string[]>(['order_new', 'order_fulfilled', 'order_cancelled', 'blueprints'])
+  const [availableEvents, setAvailableEvents] = useState<Array<{ event_type: string; enabled: boolean; display_name: string; description: string }>>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -259,12 +259,11 @@ export default function DiscordSubscribeRoute() {
                       className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500/20"
                     />
                     <div>
-                      <span className="text-sm text-white capitalize">
-                        {event.event_type}
+                      <span className="text-sm text-white">
+                        {event.display_name}
                       </span>
                       <p className="text-xs text-slate-500">
-                        {event.event_type === 'orders' && 'New orders, fulfillments, cancellations'}
-                        {event.event_type === 'blueprints' && 'Blueprint data sync completions'}
+                        {event.description}
                       </p>
                       {!event.enabled && (
                         <span className="text-xs text-amber-400">Currently disabled</span>

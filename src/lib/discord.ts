@@ -2,17 +2,20 @@ import { supabase } from './supabase'
 
 // Discord embed colors
 export const DISCORD_COLORS = {
-  orders: 0x22c55e,     // Green
-  blueprints: 0xf97316, // Orange
-  support: 0x3b82f6,    // Blue
-  admin: 0xef4444,      // Red
-  success: 0x22c55e,    // Green
-  warning: 0xeab308,    // Yellow
-  error: 0xef4444,      // Red
-  info: 0x5865f2,       // Discord blurple
+  orders: 0x22c55e,           // Green (legacy)
+  order_new: 0x22c55e,        // Green
+  order_fulfilled: 0x3b82f6,  // Blue
+  order_cancelled: 0xef4444,  // Red
+  blueprints: 0xf97316,       // Orange
+  support: 0x8b5cf6,          // Purple
+  admin: 0xef4444,            // Red
+  success: 0x22c55e,          // Green
+  warning: 0xeab308,          // Yellow
+  error: 0xef4444,            // Red
+  info: 0x5865f2,             // Discord blurple
 }
 
-export type DiscordEventType = 'orders' | 'blueprints' | 'support' | 'admin'
+export type DiscordEventType = 'orders' | 'order_new' | 'order_fulfilled' | 'order_cancelled' | 'blueprints' | 'support' | 'admin'
 
 export interface DiscordField {
   name: string
@@ -23,6 +26,9 @@ export interface DiscordField {
 export interface DiscordSettings {
   enabled: boolean
   orders_enabled: boolean
+  order_new_enabled: boolean
+  order_fulfilled_enabled: boolean
+  order_cancelled_enabled: boolean
   blueprints_enabled: boolean
   support_enabled: boolean
   admin_enabled: boolean
@@ -108,6 +114,9 @@ export async function getDiscordSettings(): Promise<{
 export async function updateDiscordSettings(settings: Partial<{
   enabled: boolean
   orders_enabled: boolean
+  order_new_enabled: boolean
+  order_fulfilled_enabled: boolean
+  order_cancelled_enabled: boolean
   blueprints_enabled: boolean
   support_enabled: boolean
   admin_enabled: boolean
@@ -118,6 +127,9 @@ export async function updateDiscordSettings(settings: Partial<{
     const { error } = await supabase.rpc('update_discord_settings', {
       p_enabled: settings.enabled ?? null,
       p_orders_enabled: settings.orders_enabled ?? null,
+      p_order_new_enabled: settings.order_new_enabled ?? null,
+      p_order_fulfilled_enabled: settings.order_fulfilled_enabled ?? null,
+      p_order_cancelled_enabled: settings.order_cancelled_enabled ?? null,
       p_blueprints_enabled: settings.blueprints_enabled ?? null,
       p_support_enabled: settings.support_enabled ?? null,
       p_admin_enabled: settings.admin_enabled ?? null,
@@ -331,17 +343,25 @@ export async function queueOrderEvent(
   blueprintName: string,
   quantity: number
 ) {
+  const eventTypes: Record<string, DiscordEventType> = {
+    created: 'order_new',
+    fulfilled: 'order_fulfilled',
+    cancelled: 'order_cancelled',
+  }
+
   const titles: Record<string, string> = {
     created: 'New Order Placed',
     fulfilled: 'Order Fulfilled',
     cancelled: 'Order Cancelled',
   }
 
+  const eventType = eventTypes[action]
+
   return queueDiscordMessage(
-    'orders',
+    eventType,
     titles[action],
     `${blueprintName} x${quantity}`,
-    DISCORD_COLORS.orders,
+    DISCORD_COLORS[eventType],
     [
       { name: 'Blueprint', value: blueprintName, inline: true },
       { name: 'Quantity', value: quantity.toString(), inline: true },

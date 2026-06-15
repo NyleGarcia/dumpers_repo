@@ -220,44 +220,71 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
 
           {/* Event Type Toggles */}
           <div className="p-4 rounded-xl border border-slate-700 bg-slate-800/30 space-y-3">
-            <h3 className="text-white font-medium text-sm mb-3">Event Types</h3>
+            <h3 className="text-white font-medium text-sm mb-3">Public Event Types</h3>
             
-            <ToggleRow
-              label="Orders"
-              description="New orders, fulfillments, cancellations (Public)"
-              enabled={settings?.orders_enabled ?? false}
-              onToggle={() => handleToggleSetting('orders_enabled')}
-              disabled={saving}
-              color="green"
-            />
+            <div className="pl-2 border-l-2 border-green-500/50 space-y-2">
+              <p className="text-xs text-slate-400 -ml-2 mb-2">Order Events</p>
+              <ToggleRow
+                label="New Orders"
+                description="When orders are placed"
+                enabled={settings?.order_new_enabled ?? false}
+                onToggle={() => handleToggleSetting('order_new_enabled')}
+                disabled={saving}
+                color="green"
+              />
+              <ToggleRow
+                label="Order Fulfilled"
+                description="When orders are completed"
+                enabled={settings?.order_fulfilled_enabled ?? false}
+                onToggle={() => handleToggleSetting('order_fulfilled_enabled')}
+                disabled={saving}
+                color="blue"
+              />
+              <ToggleRow
+                label="Order Cancelled"
+                description="When orders are cancelled"
+                enabled={settings?.order_cancelled_enabled ?? false}
+                onToggle={() => handleToggleSetting('order_cancelled_enabled')}
+                disabled={saving}
+                color="red"
+              />
+            </div>
             
             <ToggleRow
               label="Blueprints"
-              description="Blueprint sync completions (Public)"
+              description="Blueprint sync completions"
               enabled={settings?.blueprints_enabled ?? false}
               onToggle={() => handleToggleSetting('blueprints_enabled')}
               disabled={saving}
               color="orange"
             />
+          </div>
+
+          {/* Org-Only Event Types */}
+          <div className="p-4 rounded-xl border border-purple-500/30 bg-purple-950/10 space-y-3">
+            <div className="flex items-center gap-2 mb-3">
+              <h3 className="text-white font-medium text-sm">Org-Only Event Types</h3>
+              <span className="px-1.5 py-0.5 bg-purple-900/50 text-purple-400 rounded text-xs">
+                Official Webhook Only
+              </span>
+            </div>
             
             <ToggleRow
               label="Support"
-              description="New support tickets (Org Only)"
+              description="New support tickets"
               enabled={settings?.support_enabled ?? false}
               onToggle={() => handleToggleSetting('support_enabled')}
               disabled={saving}
-              color="blue"
-              orgOnly
+              color="purple"
             />
             
             <ToggleRow
               label="Admin"
-              description="Sync errors, system alerts (Org Only)"
+              description="Sync errors, system alerts"
               enabled={settings?.admin_enabled ?? false}
               onToggle={() => handleToggleSetting('admin_enabled')}
               disabled={saving}
               color="red"
-              orgOnly
             />
           </div>
 
@@ -409,27 +436,22 @@ interface ToggleRowProps {
   enabled: boolean
   onToggle: () => void
   disabled?: boolean
-  color: 'green' | 'orange' | 'blue' | 'red'
-  orgOnly?: boolean
+  color: 'green' | 'orange' | 'blue' | 'red' | 'purple'
 }
 
-function ToggleRow({ label, description, enabled, onToggle, disabled, color, orgOnly }: ToggleRowProps) {
+function ToggleRow({ label, description, enabled, onToggle, disabled, color }: ToggleRowProps) {
   const colorClasses = {
     green: 'bg-green-600',
     orange: 'bg-orange-600',
     blue: 'bg-blue-600',
     red: 'bg-red-600',
+    purple: 'bg-purple-600',
   }
 
   return (
     <div className="flex items-center justify-between py-1">
       <div>
         <span className="text-white text-sm">{label}</span>
-        {orgOnly && (
-          <span className="ml-2 px-1.5 py-0.5 bg-purple-900/50 text-purple-400 rounded text-xs">
-            Org Only
-          </span>
-        )}
         <p className="text-xs text-slate-500">{description}</p>
       </div>
       <button
