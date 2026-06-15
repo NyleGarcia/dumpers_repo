@@ -699,6 +699,74 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </div>
       </section>
 
+      {/* Organizations */}
+      <section className="space-y-4">
+        <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
+          Organizations
+        </h3>
+        <p className="text-sm text-slate-400">
+          Looking for an org to join? Check out the RSI Organization Hub to find a community that fits your playstyle.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <a
+            href="https://robertsspaceindustries.com/en/community/orgs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group text-left p-4 rounded-lg bg-slate-800/40 border border-slate-700/50 hover:border-orange-500/30 hover:bg-slate-800/60 transition-all"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 rounded-lg bg-slate-700/50 text-orange-400 shrink-0">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h4 className="text-sm font-medium text-slate-200 group-hover:text-orange-300 transition-colors">
+                RSI Organization Hub
+              </h4>
+            </div>
+            <p className="text-xs text-slate-500 line-clamp-2">
+              Browse all Star Citizen organizations on the official RSI site. Find orgs by archetype, commitment level, and language.
+            </p>
+            <span className="inline-flex items-center gap-1 mt-2 text-xs text-orange-400/70 group-hover:text-orange-400 transition-colors">
+              Visit RSI
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </span>
+          </a>
+
+          <a
+            href="https://robertsspaceindustries.com/en/orgs/BSTR"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group text-left p-4 rounded-lg bg-gradient-to-br from-slate-800/60 to-orange-900/20 border border-orange-500/30 hover:border-orange-500/50 hover:from-slate-800/80 hover:to-orange-900/30 transition-all"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 rounded-lg bg-orange-500/20 text-orange-400 shrink-0">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-slate-200 group-hover:text-orange-300 transition-colors">
+                  Black Star [BSTR]
+                </h4>
+                <span className="text-[10px] text-orange-400/80 uppercase tracking-wide">Site Sponsor</span>
+              </div>
+            </div>
+            <p className="text-xs text-slate-500 line-clamp-2">
+              The industrial and defense enterprise sponsoring Dumper's Repo. Focused on extraction, production, and trade across the verse.
+            </p>
+            <span className="inline-flex items-center gap-1 mt-2 text-xs text-orange-400/70 group-hover:text-orange-400 transition-colors">
+              View Org
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </section>
+
       {/* Data source info */}
       <section className="p-4 bg-slate-800/30 rounded-lg border border-slate-700/50">
         <div className="flex items-start gap-3">
