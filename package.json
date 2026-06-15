@@ -7,8 +7,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build-dfp": "node scripts/build-dfp-engine.mjs",
-    "build": "npm run build-dfp && vite build && node scripts/write-build-version.mjs",
+    "build-dfp": "echo DFP engine is built from the private dfp-engine-private repo. The pre-built public/dfp-engine.js is used.",
+    "build": "vite build && node scripts/write-build-version.mjs",
     "preview": "vite preview",
     "lint": "eslint src",
     "fetch-blueprints": "node scripts/fetch-blueprints.mjs",

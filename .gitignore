@@ -29,3 +29,10 @@ scripts/.cache/
 
 # Local backups
 dumpers-repo-backup.zip
+DumpersRepo-backup.zip
+
+# DFP Engine source (proprietary - kept in private repo)
+dfp-engine/
+scripts/build-dfp-engine.mjs
+scripts/generate-acquisition-premiums.mjs
+scripts/generate-component-metadata.mjs
