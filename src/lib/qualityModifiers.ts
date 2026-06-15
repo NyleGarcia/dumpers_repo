@@ -163,23 +163,24 @@ export function aggregateModifiers(
   slotResults: SlotModifierResult[][],
   baseStats?: Record<string, number>
 ): AggregatedModifier[] {
-  const byProperty = new Map<string, { label: string; modifiers: number[]; originalProperty: string }>()
+  const byProperty = new Map<string, { label: string; percentChanges: number[]; originalProperty: string }>()
 
   for (const slotResult of slotResults) {
     for (const result of slotResult) {
       const key = result.property.toLowerCase()
       if (!byProperty.has(key)) {
-        byProperty.set(key, { label: result.propertyLabel, modifiers: [], originalProperty: result.property })
+        byProperty.set(key, { label: result.propertyLabel, percentChanges: [], originalProperty: result.property })
       }
-      byProperty.get(key)!.modifiers.push(result.modifier)
+      // Store percentage change, not the modifier
+      byProperty.get(key)!.percentChanges.push(result.percentChange)
     }
   }
 
   const aggregated: AggregatedModifier[] = []
   for (const [property, data] of byProperty) {
-    // Multiply all modifiers together
-    const combinedModifier = data.modifiers.reduce((acc, m) => acc * m, 1)
-    const percentChange = (combinedModifier - 1) * 100
+    // ADD the percentage changes together (not multiply)
+    const percentChange = data.percentChanges.reduce((acc, p) => acc + p, 0)
+    const combinedModifier = 1 + (percentChange / 100)
 
     // Find base stat if available (case-insensitive comparison)
     // vehicleBaseStats uses keys like "Health_MaxHealth" while gameplayProperty uses "Health_Maxhealth"
