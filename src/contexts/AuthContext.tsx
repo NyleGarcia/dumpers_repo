@@ -371,15 +371,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints, fetchSiteSettings])
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
+    // Handle OAuth callback - clean up URL hash after auth processes it
+    const handleOAuthCallback = async () => {
+      const hash = window.location.hash
+      if (hash && hash.includes('access_token')) {
+        // Let Supabase process the hash first
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (session && !error) {
+          // Clean up the URL by removing the hash
+          window.history.replaceState(null, '', window.location.pathname)
+        }
+        
+        setSession(session)
+        setUser(session?.user ?? null)
 
-      if (session?.user) {
-        await loadUserData(session.user, true)
+        if (session?.user) {
+          await loadUserData(session.user, true)
+        }
+
+        setLoading(false)
+        return true
       }
+      return false
+    }
 
-      setLoading(false)
+    handleOAuthCallback().then(async (wasCallback) => {
+      if (!wasCallback) {
+        // Normal session check (not an OAuth callback)
+        const { data: { session } } = await supabase.auth.getSession()
+        setSession(session)
+        setUser(session?.user ?? null)
+
+        if (session?.user) {
+          await loadUserData(session.user, true)
+        }
+
+        setLoading(false)
+      }
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
