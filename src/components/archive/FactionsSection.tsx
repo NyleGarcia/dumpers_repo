@@ -6,25 +6,37 @@ interface FactionStanding {
   minReputation: number
 }
 
+interface CareerTrack {
+  name: string
+  standings: FactionStanding[]
+}
+
 interface Faction {
   name: string
   uuid: string
   standings: FactionStanding[]
+  careers?: Record<string, CareerTrack>
 }
 
 type FactionsData = Record<string, Faction>
 
 const factions = factionsData as FactionsData
 
-const STANDING_COLORS: Record<string, string> = {
-  'Hostile': 'bg-red-500/20 text-red-400 border-red-500/30',
-  'Neutral': 'bg-slate-500/20 text-slate-400 border-slate-500/30',
-  'Jr. Contractor': 'bg-green-500/20 text-green-400 border-green-500/30',
-  'Contractor': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  'Sr. Contractor': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-  'Veteran Contractor': 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-  'Head Contractor': 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-  'Elite Contractor': 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+function getStandingColor(standing: string, index: number, total: number): string {
+  const lowerName = standing.toLowerCase()
+  
+  if (lowerName.includes('hostile')) return 'bg-red-500/20 text-red-400 border-red-500/30'
+  if (lowerName.includes('neutral') || lowerName.includes('applicant') || lowerName.includes('not eligible') || lowerName.includes('volunteer') || lowerName.includes('enthusiast')) {
+    return 'bg-slate-500/20 text-slate-400 border-slate-500/30'
+  }
+  
+  if (index === total - 1) return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+  if (index === total - 2) return 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+  if (index === total - 3) return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+  if (index >= total - 4) return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
+  if (index >= 2) return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+  
+  return 'bg-green-500/20 text-green-400 border-green-500/30'
 }
 
 export default function FactionsSection() {
@@ -50,35 +62,17 @@ export default function FactionsSection() {
 
   return (
     <div className="space-y-6">
-      {/* Intro */}
       <div className="p-4 bg-slate-800/30 rounded-lg border border-slate-700/50">
         <h3 className="text-sm font-semibold text-slate-300 mb-2">Understanding Reputation</h3>
         <p className="text-xs text-slate-400 leading-relaxed">
           Each faction tracks your reputation separately. Completing contracts and missions 
           increases your standing, unlocking access to higher-tier contracts and blueprint rewards.
-          The reputation thresholds below show how much reputation is required for each standing level.
+          <span className="text-orange-400"> Note: Different factions use different rank names</span> — 
+          Covalex uses "Trainee → Master" while Bounty Hunters Guild uses "Applicant → Guild Steward".
+          Some factions also have multiple career tracks (e.g., Bounty Hunting vs Security).
         </p>
       </div>
 
-      {/* Common standing ladder */}
-      <div>
-        <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">
-          Standard Standing Ladder
-        </h3>
-        <div className="flex flex-wrap gap-1.5">
-          {factionList[0]?.standings.filter(s => s.minReputation >= 0).map((standing) => (
-            <div
-              key={standing.name}
-              className={`px-2 py-1 rounded border text-[10px] font-medium ${STANDING_COLORS[standing.name] || 'bg-slate-700 text-slate-400 border-slate-600'}`}
-            >
-              {standing.name}
-              <span className="ml-1 opacity-70">({standing.minReputation.toLocaleString()}+)</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Search */}
       <div className="relative">
         <input
           type="text"
@@ -92,12 +86,10 @@ export default function FactionsSection() {
         </svg>
       </div>
 
-      {/* Stats */}
       <div className="text-xs text-slate-500">
         {filteredFactions.length} faction{filteredFactions.length !== 1 ? 's' : ''} found
       </div>
 
-      {/* Faction list */}
       <div className="space-y-2">
         {filteredFactions.length === 0 ? (
           <p className="text-center text-slate-500 py-8">No matching factions found.</p>
@@ -123,8 +115,19 @@ interface FactionCardProps {
 }
 
 function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
-  const positiveStandings = faction.standings.filter((s) => s.minReputation >= 0)
-  const maxRep = positiveStandings[positiveStandings.length - 1]?.minReputation || 0
+  const [selectedCareer, setSelectedCareer] = useState<string | null>(null)
+  
+  const hasMultipleCareers = faction.careers && Object.keys(faction.careers).length > 0
+  const careerKeys = hasMultipleCareers ? Object.keys(faction.careers!) : []
+  
+  const activeStandings = useMemo(() => {
+    if (hasMultipleCareers && selectedCareer && faction.careers![selectedCareer]) {
+      return faction.careers![selectedCareer].standings.filter(s => s.minReputation >= 0)
+    }
+    return faction.standings.filter((s) => s.minReputation >= 0)
+  }, [faction, selectedCareer, hasMultipleCareers])
+  
+  const maxRep = activeStandings[activeStandings.length - 1]?.minReputation || 0
 
   return (
     <div className="rounded-lg border border-slate-700/50 overflow-hidden">
@@ -141,7 +144,8 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
           <div className="text-left">
             <h4 className="text-sm font-medium text-white">{faction.name}</h4>
             <span className="text-[10px] text-slate-500">
-              {positiveStandings.length} standing levels
+              {activeStandings.length} standing levels
+              {hasMultipleCareers && ` • ${careerKeys.length} career tracks`}
             </span>
           </div>
         </div>
@@ -157,22 +161,54 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
 
       {isExpanded && (
         <div className="p-3 border-t border-slate-700/50 bg-slate-900/40">
-          {/* Visual reputation bar */}
+          {hasMultipleCareers && (
+            <div className="mb-4">
+              <label className="text-[10px] text-slate-500 uppercase tracking-wider mb-2 block">
+                Career Track
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  onClick={() => setSelectedCareer(null)}
+                  className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors ${
+                    selectedCareer === null
+                      ? 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                      : 'bg-slate-700/50 text-slate-400 border-slate-600/50 hover:border-slate-500/50'
+                  }`}
+                >
+                  Default
+                </button>
+                {careerKeys.map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedCareer(key)}
+                    className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors ${
+                      selectedCareer === key
+                        ? 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                        : 'bg-slate-700/50 text-slate-400 border-slate-600/50 hover:border-slate-500/50'
+                    }`}
+                  >
+                    {faction.careers![key].name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <div className="mb-4">
             <div className="flex items-center justify-between text-[10px] text-slate-500 mb-1">
               <span>0 Rep</span>
               <span>{maxRep.toLocaleString()} Rep</span>
             </div>
             <div className="h-2 bg-slate-800 rounded-full overflow-hidden flex">
-              {positiveStandings.map((standing, idx) => {
-                const prevRep = idx > 0 ? positiveStandings[idx - 1].minReputation : 0
-                const width = ((standing.minReputation - prevRep) / maxRep) * 100
-                const colorClass = STANDING_COLORS[standing.name]?.split(' ')[0] || 'bg-slate-600'
+              {activeStandings.map((standing, idx) => {
+                const prevRep = idx > 0 ? activeStandings[idx - 1].minReputation : 0
+                const width = maxRep > 0 ? ((standing.minReputation - prevRep) / maxRep) * 100 : 0
+                const colorClass = getStandingColor(standing.name, idx, activeStandings.length).split(' ')[0]
                 return (
                   <div
                     key={standing.name}
                     className={`h-full ${colorClass}`}
-                    style={{ width: `${width}%` }}
+                    style={{ width: `${Math.max(width, 2)}%` }}
                     title={`${standing.name}: ${standing.minReputation.toLocaleString()}+ rep`}
                   />
                 )
@@ -180,7 +216,6 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
             </div>
           </div>
 
-          {/* Standing breakdown */}
           <table className="w-full text-xs">
             <thead>
               <tr className="text-slate-500">
@@ -190,13 +225,13 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
               </tr>
             </thead>
             <tbody>
-              {positiveStandings.map((standing, idx) => {
-                const prevRep = idx > 0 ? positiveStandings[idx - 1].minReputation : 0
+              {activeStandings.map((standing, idx) => {
+                const prevRep = idx > 0 ? activeStandings[idx - 1].minReputation : 0
                 const repNeeded = standing.minReputation - prevRep
                 return (
                   <tr key={standing.name} className="border-t border-slate-800/50">
                     <td className="py-1.5">
-                      <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium border ${STANDING_COLORS[standing.name] || ''}`}>
+                      <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium border ${getStandingColor(standing.name, idx, activeStandings.length)}`}>
                         {standing.name}
                       </span>
                     </td>
