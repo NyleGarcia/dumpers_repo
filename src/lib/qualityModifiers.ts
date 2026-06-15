@@ -34,11 +34,14 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Armor_Temperaturemin': 'Min Temperature',
   'Armor_Temperaturemax': 'Max Temperature',
   'Armor_Radiationdissipation': 'Radiation Dissipation',
+  'Armor_Radiationcapacity': 'Radiation Capacity',
   'Weapon_Damage': 'Damage',
   'Weapon_Recoil_Smoothness': 'Recoil Smoothness',
   'Weapon_Recoil_Handling': 'Recoil Handling',
   'Weapon_Recoil_Kick': 'Recoil Kick',
   'Weapon_Firerate': 'Fire Rate',
+  'Weapon_Spread': 'Spread',
+  'Weapon_Reloadspeed': 'Reload Speed',
   'Itemresource_Coolantgeneration': 'Coolant Generation',
   'Itemresource_Powergeneration': 'Power Generation',
   'Quantum_Speed': 'Quantum Speed',
@@ -52,6 +55,26 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Weapon_Tractor_Maxdist': 'Tractor Max Distance',
   'Weapon_Tractor_Force': 'Tractor Force',
   'Weapon_Tractor_Maxvolume': 'Tractor Max Volume',
+}
+
+/**
+ * Stats where LOWER values are better (inverted color coding).
+ * For these, a negative percentage is good (green) and positive is bad (red).
+ */
+const LOWER_IS_BETTER_STATS = new Set([
+  'weapon_recoil_smoothness',
+  'weapon_recoil_handling',
+  'weapon_recoil_kick',
+  'weapon_spread',
+  'quantum_fuelrequirement',
+  'armor_temperaturemin', // More negative = can survive colder
+])
+
+/**
+ * Check if a stat is one where lower values are better.
+ */
+export function isLowerBetter(property: string): boolean {
+  return LOWER_IS_BETTER_STATS.has(property.toLowerCase())
 }
 
 export function getPropertyLabel(property: string): string {
@@ -115,10 +138,17 @@ export function formatModifierPercent(modifier: number): string {
 
 /**
  * Get the color class for a modifier value.
+ * For stats where lower is better, colors are inverted.
  */
-export function getModifierColorClass(modifier: number): string {
-  if (modifier < 0.9999) return 'text-red-400'
-  if (modifier > 1.0001) return 'text-green-400'
+export function getModifierColorClass(modifier: number, property?: string): string {
+  const inverted = property ? isLowerBetter(property) : false
+  
+  if (modifier < 0.9999) {
+    return inverted ? 'text-green-400' : 'text-red-400'
+  }
+  if (modifier > 1.0001) {
+    return inverted ? 'text-red-400' : 'text-green-400'
+  }
   return 'text-slate-400'
 }
 

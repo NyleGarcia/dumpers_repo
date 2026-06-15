@@ -37,7 +37,9 @@ interface BlueprintRecord {
   craftTime?: { hours?: number; minutes?: number; seconds?: number }
   slots?: BlueprintSlot[]
   rewardMissions?: unknown[]
-  vehicleBaseStats?: Record<string, number>
+  vehicleBaseStats?: Record<string, number | null>
+  armorBaseStats?: Record<string, number | null>
+  weaponBaseStats?: Record<string, number | null>
 }
 
 interface BlueprintDetailsModalProps {
@@ -75,6 +77,22 @@ export default function BlueprintDetailsModal({
     ) ?? false
   }, [blueprint.slots])
 
+  // Merge all base stats (vehicle, armor, weapon) into one object, filtering out nulls
+  const mergedBaseStats = useMemo(() => {
+    const stats: Record<string, number> = {}
+    const allStats = {
+      ...blueprint.vehicleBaseStats,
+      ...blueprint.armorBaseStats,
+      ...blueprint.weaponBaseStats,
+    }
+    for (const [key, value] of Object.entries(allStats)) {
+      if (value !== null && value !== undefined) {
+        stats[key] = value
+      }
+    }
+    return stats
+  }, [blueprint.vehicleBaseStats, blueprint.armorBaseStats, blueprint.weaponBaseStats])
+
   // Calculate modifiers for all slots based on current quality settings
   const allSlotModifiers = useMemo(() => {
     if (!blueprint.slots) return []
@@ -89,8 +107,8 @@ export default function BlueprintDetailsModal({
   // Aggregate all modifiers across slots
   const aggregatedModifiers = useMemo(() => {
     if (!hasModifiers) return []
-    return aggregateModifiers(allSlotModifiers, blueprint.vehicleBaseStats)
-  }, [allSlotModifiers, blueprint.vehicleBaseStats, hasModifiers])
+    return aggregateModifiers(allSlotModifiers, mergedBaseStats)
+  }, [allSlotModifiers, mergedBaseStats, hasModifiers])
 
   const handleQualityChange = (slotIndex: number, quality: number) => {
     setSlotQualities(prev => ({ ...prev, [slotIndex]: quality }))
@@ -145,10 +163,7 @@ export default function BlueprintDetailsModal({
         )}
 
         {hasModifiers && aggregatedModifiers.length > 0 && (
-          <CombinedModifiersSection
-            modifiers={aggregatedModifiers}
-            baseStats={blueprint.vehicleBaseStats}
-          />
+          <CombinedModifiersSection modifiers={aggregatedModifiers} />
         )}
 
         {blueprint.rewardMissions && blueprint.rewardMissions.length > 0 && (
@@ -272,7 +287,7 @@ function ResourceSlotCard({
             {modifierResults.map((result, idx) => (
               <div key={idx} className="flex justify-between items-center text-xs">
                 <span className="text-slate-400">{result.propertyLabel}</span>
-                <span className={getModifierColorClass(result.modifier)}>
+                <span className={getModifierColorClass(result.modifier, result.property)}>
                   {formatModifierPercent(result.modifier)}
                 </span>
               </div>
@@ -286,10 +301,9 @@ function ResourceSlotCard({
 
 interface CombinedModifiersSectionProps {
   modifiers: ReturnType<typeof aggregateModifiers>
-  baseStats?: Record<string, number>
 }
 
-function CombinedModifiersSection({ modifiers, baseStats }: CombinedModifiersSectionProps) {
+function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) {
   if (modifiers.length === 0) return null
 
   return (
@@ -312,12 +326,12 @@ function CombinedModifiersSection({ modifiers, baseStats }: CombinedModifiersSec
               {mod.baseValue !== undefined && mod.finalValue !== undefined && (
                 <span className="text-slate-500">
                   {formatStatValue(mod.baseValue)} → {' '}
-                  <span className={getModifierColorClass(mod.combinedModifier)}>
+                  <span className={getModifierColorClass(mod.combinedModifier, mod.property)}>
                     {formatStatValue(mod.finalValue)}
                   </span>
                 </span>
               )}
-              <span className={`font-mono font-semibold ${getModifierColorClass(mod.combinedModifier)}`}>
+              <span className={`font-mono font-semibold ${getModifierColorClass(mod.combinedModifier, mod.property)}`}>
                 {formatModifierPercent(mod.combinedModifier)}
               </span>
             </div>
