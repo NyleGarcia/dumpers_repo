@@ -579,7 +579,7 @@ export default function FulfillmentRoute() {
                               )}
                             </div>
                             <div className="mt-1">
-                              <OrderRequestLines order={order} />
+                              <OrderRequestLines order={order} blueprintById={blueprintById} />
                             </div>
                             {!meetsMinRep && (
                               <p className="text-amber-400/90 text-xs">
@@ -670,7 +670,7 @@ export default function FulfillmentRoute() {
                         )}
                       </p>
                       <div className="mt-2">
-                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} />
+                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
                       </div>
                       <div className="mt-2">
                         <ReputationBadge
@@ -711,7 +711,7 @@ export default function FulfillmentRoute() {
                   />
                 )}
 
-                <OrderRequestLines order={selectedOrder} showDfp={dfpDisplayEnabled} />
+                <OrderRequestLines order={selectedOrder} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
                 <OrderDeadlineNotice order={selectedOrder} role="fulfiller" />
 
                 {selectedFulfillmentItems.length > 0 && (
@@ -893,7 +893,7 @@ export default function FulfillmentRoute() {
                             </p>
                           )}
                           <div className="mt-2">
-                            <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} />
+                            <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
                           </div>
                         </div>
                         {canArchive && (

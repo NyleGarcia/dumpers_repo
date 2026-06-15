@@ -18,6 +18,7 @@ import { formatQuantityForResource } from '../lib/resourceQuantity'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useBlueprintData } from './blueprints'
+import type { BlueprintWithSlots } from '../lib/blueprintResources'
 import { useAuth } from '../contexts/AuthContext'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { filterOrderableBlueprints } from '../lib/blueprintOrderable'
@@ -98,6 +99,13 @@ export default function CustomOrdersRoute() {
     () => filterOrderableBlueprints(blueprints, overridesMap),
     [blueprints, overridesMap]
   )
+  const blueprintById = useMemo(() => {
+    const map = new Map<string, BlueprintWithSlots>()
+    blueprints.forEach((bp) => {
+      if (bp.file) map.set(bp.file, bp)
+    })
+    return map
+  }, [blueprints])
   const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
   const { draftItems, draftCount, clearDraft } = useOrderDraft()
   const [orders, setOrders] = useState<CustomOrder[]>([])
@@ -595,7 +603,7 @@ export default function CustomOrdersRoute() {
                     )}
 
                     <div className="mt-3">
-                      <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} />
+                      <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
                     </div>
                     <OrderDeadlineNotice order={order} role="buyer" />
                   </div>
