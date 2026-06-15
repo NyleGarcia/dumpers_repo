@@ -806,8 +806,21 @@ export async function replaceCustomOrderFulfillmentItems(
 }
 
 export async function acceptCustomOrder(orderId: string): Promise<{ error?: string }> {
+  // Fetch order details before accepting for Discord notification
+  const { data: orderData } = await supabase
+    .from('custom_orders')
+    .select('title')
+    .eq('id', orderId)
+    .single()
+
   const { error } = await supabase.rpc('accept_custom_order', { p_order_id: orderId })
   if (error) return { error: error.message }
+
+  // Queue Discord notification for order accepted by fulfiller
+  if (orderData?.title) {
+    queueOrderEvent('fulfilled', orderData.title, 1).catch(() => {})
+  }
+
   return {}
 }
 
@@ -831,21 +844,8 @@ export async function completeOrderCraft(
 }
 
 export async function confirmOrderPickup(orderId: string): Promise<{ error?: string }> {
-  // Fetch order details before confirming for Discord notification
-  const { data: orderData } = await supabase
-    .from('custom_orders')
-    .select('title')
-    .eq('id', orderId)
-    .single()
-
   const { error } = await supabase.rpc('confirm_order_pickup', { p_order_id: orderId })
   if (error) return { error: error.message }
-
-  // Queue Discord notification for fulfilled order
-  if (orderData?.title) {
-    queueOrderEvent('fulfilled', orderData.title, 1).catch(() => {})
-  }
-
   return {}
 }
 
