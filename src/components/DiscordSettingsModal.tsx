@@ -233,8 +233,8 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                 color="green"
               />
               <ToggleRow
-                label="Order Fulfilled"
-                description="When orders are completed"
+                label="Order Accepted"
+                description="When a crafter accepts an order"
                 enabled={settings?.order_fulfilled_enabled ?? false}
                 onToggle={() => handleToggleSetting('order_fulfilled_enabled')}
                 disabled={saving}

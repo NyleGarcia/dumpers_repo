@@ -14,7 +14,7 @@ const MAX_WEBHOOKS = 4
 
 const EVENT_LABELS: Record<string, string> = {
   order_new: 'New Orders',
-  order_fulfilled: 'Fulfilled',
+  order_fulfilled: 'Accepted',
   order_cancelled: 'Cancelled',
   blueprints: 'Blueprint Syncs',
 }
