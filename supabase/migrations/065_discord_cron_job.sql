@@ -64,34 +64,37 @@ $$;
 -- Schedule the cron job to run every 5 minutes
 -- Note: Cron jobs are managed in Supabase Dashboard > Database > Extensions > pg_cron
 -- This creates the job if pg_cron is properly configured
-DO $$
-BEGIN
-  -- Remove existing job if it exists
-  PERFORM cron.unschedule('process-discord-queue');
-EXCEPTION
-  WHEN undefined_function THEN
-    RAISE NOTICE 'pg_cron not available, skipping cron job setup';
-  WHEN others THEN
-    NULL; -- Job might not exist, that's fine
-END;
-$$;
+-- Remove existing job if it exists (run separately if needed)
+-- SELECT cron.unschedule('process-discord-queue');
 
-DO $$
+-- Schedule the cron job to run every 5 minutes
+-- Run this in Supabase SQL Editor after enabling pg_cron extension:
+-- SELECT cron.schedule('process-discord-queue', '*/5 * * * *', 'SELECT public.invoke_discord_processor()');
+
+-- Attempt automatic setup (may fail if pg_cron not enabled yet)
+DO $setup$
 BEGIN
-  -- Schedule new job every 5 minutes
+  -- Try to unschedule existing job first
+  BEGIN
+    PERFORM cron.unschedule('process-discord-queue');
+  EXCEPTION WHEN OTHERS THEN
+    NULL; -- Ignore if job doesn't exist or cron not available
+  END;
+  
+  -- Schedule new job
   PERFORM cron.schedule(
     'process-discord-queue',
-    '*/5 * * * *',  -- Every 5 minutes
-    $$SELECT public.invoke_discord_processor()$$
+    '*/5 * * * *',
+    'SELECT public.invoke_discord_processor()'
   );
   RAISE NOTICE 'Discord cron job scheduled: every 5 minutes';
 EXCEPTION
   WHEN undefined_function THEN
-    RAISE NOTICE 'pg_cron not available. Set up cron job manually in Supabase Dashboard.';
-  WHEN others THEN
-    RAISE NOTICE 'Could not schedule cron job: %', SQLERRM;
+    RAISE NOTICE 'pg_cron extension not available. Enable it in Supabase Dashboard > Database > Extensions, then run: SELECT cron.schedule(''process-discord-queue'', ''*/5 * * * *'', ''SELECT public.invoke_discord_processor()'');';
+  WHEN OTHERS THEN
+    RAISE NOTICE 'Could not schedule cron job: %. Run manually in SQL Editor.', SQLERRM;
 END;
-$$;
+$setup$;
 
 -- Alternative: Simple approach using Supabase's built-in cron
 -- If pg_cron/pg_net don't work, you can set this up in the Supabase Dashboard:
