@@ -293,7 +293,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
             <div>
               <h3 className="text-white font-medium text-sm">Official Org Webhook</h3>
               <p className="text-xs text-slate-400 mt-1">
-                This channel receives ALL events including org-only (support, admin)
+                This channel receives org-only events (support tickets, admin alerts)
               </p>
             </div>
             <input

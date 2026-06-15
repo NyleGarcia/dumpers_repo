@@ -182,7 +182,7 @@ serve(async (req) => {
       const isOrgOnly = msg.event_type === 'support' || msg.event_type === 'admin'
 
       if (isOrgOnly) {
-        // Org-only events go to official webhook only
+        // Org-only events go to official webhook ONLY
         if (settings.official_webhook_url) {
           const success = await sendToWebhook(
             settings.official_webhook_url,
@@ -194,7 +194,7 @@ serve(async (req) => {
           console.log(`Skipping org-only message (${msg.event_type}): No official webhook configured`)
         }
       } else {
-        // Public events go to all subscribed webhooks
+        // Public events go to subscribed public webhooks ONLY (not official)
         const { data: webhooks, error: webhookError } = await supabase
           .rpc('get_discord_webhooks_for_event', { p_event_type: msg.event_type })
 
@@ -216,15 +216,6 @@ serve(async (req) => {
 
           // Rate limiting: Discord allows 30 requests per minute per webhook
           await new Promise(resolve => setTimeout(resolve, 100))
-        }
-
-        // Also send public events to official webhook if configured
-        if (settings.official_webhook_url) {
-          await sendToWebhook(
-            settings.official_webhook_url,
-            embed,
-            settings.official_webhook_name || 'Official'
-          )
         }
       }
 
