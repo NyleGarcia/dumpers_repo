@@ -13,6 +13,7 @@ import {
   normalizeResourceQuantity,
   toMilliScu,
 } from './resourceQuantity'
+import { queueOrderEvent } from './discord'
 
 export type CustomOrderStatus =
   | 'pending'
@@ -670,7 +671,13 @@ export async function createCustomOrder(input: {
     return { error: fetchError?.message ?? 'Order created but failed to fetch' }
   }
 
-  return { data: order as CustomOrder }
+  // Queue Discord notification for new order
+  const orderData = order as CustomOrder
+  const itemCount = input.blueprints.reduce((sum, bp) => sum + bp.quantity, 0) +
+    input.resources.reduce((sum, r) => sum + Math.ceil(r.quantityScu), 0)
+  queueOrderEvent('created', orderData.title, itemCount).catch(() => {})
+
+  return { data: orderData }
 }
 
 export async function updateCustomOrderRequester(input: {
@@ -740,10 +747,23 @@ export async function updateCustomOrderRequester(input: {
 export async function deleteCustomOrderRequester(
   orderId: string
 ): Promise<{ error?: string }> {
+  // Fetch order details before deleting for Discord notification
+  const { data: orderData } = await supabase
+    .from('custom_orders')
+    .select('title')
+    .eq('id', orderId)
+    .single()
+
   const { error } = await supabase.rpc('delete_custom_order_requester', {
     p_order_id: orderId,
   })
   if (error) return { error: error.message }
+
+  // Queue Discord notification for cancelled order
+  if (orderData?.title) {
+    queueOrderEvent('cancelled', orderData.title, 1).catch(() => {})
+  }
+
   return {}
 }
 
@@ -811,8 +831,21 @@ export async function completeOrderCraft(
 }
 
 export async function confirmOrderPickup(orderId: string): Promise<{ error?: string }> {
+  // Fetch order details before confirming for Discord notification
+  const { data: orderData } = await supabase
+    .from('custom_orders')
+    .select('title')
+    .eq('id', orderId)
+    .single()
+
   const { error } = await supabase.rpc('confirm_order_pickup', { p_order_id: orderId })
   if (error) return { error: error.message }
+
+  // Queue Discord notification for fulfilled order
+  if (orderData?.title) {
+    queueOrderEvent('fulfilled', orderData.title, 1).catch(() => {})
+  }
+
   return {}
 }
 
@@ -847,6 +880,13 @@ export async function resolveOrderDispute(
   orderId: string,
   outcome: 'cancel' | 'release'
 ): Promise<{ error?: string }> {
+  // Fetch order details before resolving for Discord notification
+  const { data: orderData } = await supabase
+    .from('custom_orders')
+    .select('title')
+    .eq('id', orderId)
+    .single()
+
   const { data, error } = await supabase.rpc('resolve_order_dispute', {
     p_order_id: orderId,
     p_outcome: outcome,
@@ -856,6 +896,12 @@ export async function resolveOrderDispute(
 
   const result = data as { success: boolean; error?: string }
   if (!result.success) return { error: result.error ?? 'Failed to resolve dispute' }
+
+  // Queue Discord notification for cancelled order (from dispute)
+  if (outcome === 'cancel' && orderData?.title) {
+    queueOrderEvent('cancelled', orderData.title, 1).catch(() => {})
+  }
+
   return {}
 }
 
