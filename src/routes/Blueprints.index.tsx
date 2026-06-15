@@ -200,6 +200,7 @@ export default function BlueprintsRoute() {
   const [selectedUserId, setSelectedUserId] = React.useState('all')
   const [viewedUserBlueprints, setViewedUserBlueprints] = React.useState({})
   const [loadingUserBlueprints, setLoadingUserBlueprints] = React.useState(false)
+  const [acquisitionFilter, setAcquisitionFilter] = React.useState<'all' | 'acquired' | 'not_acquired'>('all')
 
   const { data: blueprints, isLoading } = useBlueprintData()
 
@@ -241,7 +242,7 @@ export default function BlueprintsRoute() {
   // For DISPLAY (checkmarks): always show the viewer's own acquired status
   const displayAcquiredBlueprints = myAcquiredBlueprints
 
-  // Base filtered blueprints (applies global filters: search, rewards, and user filter)
+  // Base filtered blueprints (applies global filters: search, rewards, user filter, and acquisition filter)
   const baseFilteredBlueprints = React.useMemo(() => {
     if (!blueprints) return []
     
@@ -251,12 +252,25 @@ export default function BlueprintsRoute() {
       const matchesSearch = searchTerm === '' || bp.blueprintName.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesReward = !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
       
-      // When viewing a specific user (not "all"), only show their acquired blueprints
-      const matchesUserFilter = selectedUserId === 'all' || filterAcquiredBlueprints[bp.file]
+      // When viewing a specific user (not "all" and not self), only show their acquired blueprints
+      const isViewingSpecificOther = selectedUserId !== 'all' && selectedUserId !== user?.id
+      const matchesUserFilter = !isViewingSpecificOther || filterAcquiredBlueprints[bp.file]
       
-      return matchesSearch && matchesReward && matchesUserFilter
+      // Acquisition filter: based on the active acquired set
+      // When viewing self or "all", use myAcquiredBlueprints; when viewing other, use viewedUserBlueprints
+      const activeAcquiredSet = isViewingSpecificOther ? viewedUserBlueprints : myAcquiredBlueprints
+      const isAcquiredInActiveSet = !!activeAcquiredSet[bp.file]
+      
+      let matchesAcquisition = true
+      if (acquisitionFilter === 'acquired') {
+        matchesAcquisition = isAcquiredInActiveSet
+      } else if (acquisitionFilter === 'not_acquired') {
+        matchesAcquisition = !isAcquiredInActiveSet
+      }
+      
+      return matchesSearch && matchesReward && matchesUserFilter && matchesAcquisition
     })
-  }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, filterAcquiredBlueprints, overridesMap])
+  }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, user?.id, filterAcquiredBlueprints, myAcquiredBlueprints, viewedUserBlueprints, overridesMap, acquisitionFilter])
 
   // Category data with counts based on current global filters
   const categoryData = React.useMemo(() => {
@@ -534,6 +548,16 @@ export default function BlueprintsRoute() {
           >
             ★ Rewards
           </button>
+          {/* Acquisition Filter */}
+          <select
+            value={acquisitionFilter}
+            onChange={(e) => setAcquisitionFilter(e.target.value as 'all' | 'acquired' | 'not_acquired')}
+            className="site-input px-2 py-1.5 text-sm"
+          >
+            <option value="all">All</option>
+            <option value="acquired">✓ Acquired</option>
+            <option value="not_acquired">✗ Not Acquired</option>
+          </select>
           {showMemberCollections && (
             <select
               value={selectedUserId}
@@ -541,7 +565,12 @@ export default function BlueprintsRoute() {
               className="site-input w-full sm:w-auto sm:max-w-[10rem] px-2 py-1.5 text-sm min-w-0"
             >
               <option value="all">Everyone</option>
-              {usersWithBlueprints.map(u => (
+              {user && (
+                <option value={user.id}>
+                  ★ Me ({Object.keys(myAcquiredBlueprints).length})
+                </option>
+              )}
+              {usersWithBlueprints.filter(u => u.id !== user?.id).map(u => (
                 <option key={u.id} value={u.id}>
                   {u.rsi_handle_verified ? '✓ ' : ''}{u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
                 </option>
@@ -730,6 +759,7 @@ export default function BlueprintsRoute() {
                 setShowOnlyRewards(false)
                 setSearchTerm('')
                 setSelectedUserId('all')
+                setAcquisitionFilter('all')
               }}
               className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors shadow-lg shadow-blue-500/25"
             >
