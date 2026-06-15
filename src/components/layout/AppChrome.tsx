@@ -106,9 +106,7 @@ export default function AppChrome({
       </header>
 
       <div className="site-header-offset flex-1 flex flex-col">
-        {isGuestPreview && (
-          <GuestPreviewBanner onExit={onExitGuestPreview} />
-        )}
+        {isGuestPreview && <GuestPreviewBanner />}
         {!isGuestPreview && isGhostMode && (
           <GhostModeBanner onOpenSettings={onOpenSettings} />
         )}
