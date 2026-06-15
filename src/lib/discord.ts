@@ -162,6 +162,11 @@ export async function getDiscordQueueStatus(): Promise<{
       return { success: false, error: error.message }
     }
 
+    // RPC returns a TABLE, so data is an array - get first row
+    if (Array.isArray(data) && data.length > 0) {
+      return { success: true, status: data[0] as QueueStatus }
+    }
+
     return { success: true, status: data as QueueStatus }
   } catch (err) {
     return { success: false, error: (err as Error).message }
