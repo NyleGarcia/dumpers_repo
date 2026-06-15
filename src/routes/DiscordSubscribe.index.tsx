@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import {
   registerDiscordWebhook,
   getDiscordPublicEventTypes,
 } from '../lib/discord'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function DiscordSubscribeRoute() {
+  const { user, profile, loading: authLoading } = useAuth()
+  const navigate = useNavigate()
   const [webhookUrl, setWebhookUrl] = useState('')
   const [webhookName, setWebhookName] = useState('')
-  const [registeredBy, setRegisteredBy] = useState('')
   const [selectedEvents, setSelectedEvents] = useState<string[]>(['orders', 'blueprints'])
   const [availableEvents, setAvailableEvents] = useState<Array<{ event_type: string; enabled: boolean }>>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Get user email for registration
+  const userEmail = profile?.email || user?.email || ''
+
+  // Redirect offline users to login
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate({ to: '/' })
+    }
+  }, [authLoading, user, navigate])
 
   useEffect(() => {
     const fetchEventTypes = async () => {
@@ -65,7 +77,7 @@ export default function DiscordSubscribeRoute() {
       webhookUrl,
       webhookName.trim(),
       selectedEvents,
-      registeredBy.trim() || undefined
+      userEmail || undefined
     )
 
     if (result.success) {
@@ -74,6 +86,26 @@ export default function DiscordSubscribeRoute() {
       setError(result.error || 'Failed to register webhook')
     }
     setSubmitting(false)
+  }
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <FeaturePageLayout
+        title="Webhooks"
+        subtitle="Loading..."
+        badge="Discord"
+      >
+        <div className="flex justify-center py-12">
+          <div className="w-8 h-8 border-t-2 border-indigo-500 rounded-full animate-spin"></div>
+        </div>
+      </FeaturePageLayout>
+    )
+  }
+
+  // Don't render form for unauthenticated users (redirect handles it)
+  if (!user) {
+    return null
   }
 
   if (success) {
@@ -119,7 +151,6 @@ export default function DiscordSubscribeRoute() {
                 setSuccess(false)
                 setWebhookUrl('')
                 setWebhookName('')
-                setRegisteredBy('')
               }}
               className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors"
             >
@@ -139,9 +170,9 @@ export default function DiscordSubscribeRoute() {
 
   return (
     <FeaturePageLayout
-      title="Discord Notifications"
+      title="Webhooks"
       subtitle="Subscribe your Discord channel to Dumper's Repo updates"
-      badge="Webhooks"
+      badge="Discord"
     >
       <div className="max-w-xl space-y-6">
         <div className="p-4 bg-indigo-950/40 rounded-xl border border-indigo-500/30">
@@ -201,19 +232,6 @@ export default function DiscordSubscribeRoute() {
                 placeholder="e.g., #dumpers-updates"
                 className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm"
                 required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Your Email (optional)
-              </label>
-              <input
-                type="email"
-                value={registeredBy}
-                onChange={(e) => setRegisteredBy(e.target.value)}
-                placeholder="For admin contact if issues arise"
-                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm"
               />
             </div>
 

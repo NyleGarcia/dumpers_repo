@@ -308,6 +308,17 @@ export default function AppUserMenu({
               </button>
             )}
 
+            {/* Webhooks - available to all authenticated users */}
+            {!isGhostMode && (
+              <Link
+                to="/discord-subscribe"
+                onClick={close}
+                className="block w-full px-4 py-2 text-left text-indigo-400 hover:bg-slate-700 transition-colors"
+              >
+                Webhooks
+              </Link>
+            )}
+
             {!isGhostMode && showDbActionsButton && (
               <button
                 type="button"
