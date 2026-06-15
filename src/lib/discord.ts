@@ -259,7 +259,7 @@ export async function deleteDiscordWebhook(
 }
 
 /**
- * Register a public webhook (anyone can call)
+ * Register a webhook (authenticated users only)
  */
 export async function registerDiscordWebhook(
   webhookUrl: string,
@@ -279,7 +279,100 @@ export async function registerDiscordWebhook(
       return { success: false, error: error.message }
     }
 
+    // Function now returns JSONB with success/error fields
+    if (data && typeof data === 'object') {
+      if (data.success) {
+        return { success: true, webhookId: data.webhook_id }
+      } else {
+        return { success: false, error: data.error || 'Registration failed' }
+      }
+    }
+
     return { success: true, webhookId: data }
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+}
+
+export interface UserWebhook {
+  id: string
+  webhook_name: string
+  subscribed_events: string[]
+  created_at: string
+  last_success_at: string | null
+  failure_count: number
+  active: boolean
+}
+
+/**
+ * Get current user's webhooks
+ */
+export async function getMyDiscordWebhooks(): Promise<{
+  success: boolean
+  webhooks?: UserWebhook[]
+  error?: string
+}> {
+  try {
+    const { data, error } = await supabase.rpc('get_my_discord_webhooks')
+
+    if (error) {
+      return { success: false, error: error.message }
+    }
+
+    return { success: true, webhooks: data as UserWebhook[] }
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+}
+
+/**
+ * Delete one of user's own webhooks
+ */
+export async function deleteMyDiscordWebhook(
+  webhookId: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { data, error } = await supabase.rpc('delete_my_discord_webhook', {
+      p_webhook_id: webhookId,
+    })
+
+    if (error) {
+      return { success: false, error: error.message }
+    }
+
+    if (data && typeof data === 'object') {
+      return { success: data.success, error: data.error }
+    }
+
+    return { success: true }
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+}
+
+/**
+ * Update one of user's own webhooks
+ */
+export async function updateMyDiscordWebhook(
+  webhookId: string,
+  updates: { webhook_name?: string; subscribed_events?: string[] }
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { data, error } = await supabase.rpc('update_my_discord_webhook', {
+      p_webhook_id: webhookId,
+      p_webhook_name: updates.webhook_name ?? null,
+      p_subscribed_events: updates.subscribed_events ?? null,
+    })
+
+    if (error) {
+      return { success: false, error: error.message }
+    }
+
+    if (data && typeof data === 'object') {
+      return { success: data.success, error: data.error }
+    }
+
+    return { success: true }
   } catch (err) {
     return { success: false, error: (err as Error).message }
   }
