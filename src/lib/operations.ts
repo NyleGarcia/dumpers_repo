@@ -246,6 +246,24 @@ export async function syncBlueprintResourceCatalog(
   }
 }
 
+export async function fetchBlueprintOwnerCounts(
+  blueprintIds: string[]
+): Promise<{ data: Record<string, number>; error?: string }> {
+  if (blueprintIds.length === 0) return { data: {} }
+
+  const { data, error } = await supabase.rpc('get_blueprint_owner_counts', {
+    p_blueprint_ids: blueprintIds,
+  })
+
+  if (error) return { data: {}, error: error.message }
+
+  const counts: Record<string, number> = {}
+  for (const row of data ?? []) {
+    counts[row.blueprint_id] = Number(row.owner_count)
+  }
+  return { data: counts }
+}
+
 export async function fetchResourceCatalog(options?: {
   includeInactive?: boolean
 }): Promise<{ data: BlueprintResourceRow[]; error?: string }> {

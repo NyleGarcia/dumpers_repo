@@ -601,6 +601,79 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </div>
       </section>
 
+      {/* Best Ordering Practices */}
+      <section id="ordering-tips" className="space-y-4">
+        <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          Best Ordering Practices
+        </h3>
+        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+          <p className="text-sm text-slate-400 leading-relaxed">
+            Follow these tips to get your orders fulfilled faster and make it easier for fulfillers to help you.
+          </p>
+
+          <div className="space-y-3">
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-emerald-500/20">
+              <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
+                <span>✓</span> Separate Easy from Hard
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Create <strong className="text-slate-300">separate orders</strong> for easy items (Q500–Q700) and harder items (Q800–Q1000). 
+                Mixing them forces fulfillers to either source rare high-quality materials for everything or skip your order entirely.
+                Split them up and get your easy items faster.
+              </p>
+            </div>
+
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-emerald-500/20">
+              <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
+                <span>✓</span> Check Blueprint Ownership
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Each blueprint card shows how many members own it. If <strong className="text-amber-400">no one owns a blueprint</strong>, 
+                your order may sit unfulfilled until someone acquires it. Consider ordering common blueprints separately 
+                from rare ones so your easier items don&apos;t get blocked.
+              </p>
+            </div>
+
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-emerald-500/20">
+              <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
+                <span>✓</span> One Hard Item Per Order
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                For Q800+ or rare blueprints, consider <strong className="text-slate-300">one item per order</strong>. 
+                This lets specialized fulfillers pick up what they can craft well, rather than needing someone who 
+                happens to have all your specific blueprints and high-quality materials.
+              </p>
+            </div>
+
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-amber-500/20">
+              <h4 className="text-sm font-medium text-amber-400 mb-2 flex items-center gap-2">
+                <span>⚠</span> Avoid Mixed-Ownership Orders
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                If your order includes blueprints that some members own and others that <strong className="text-slate-300">no one owns yet</strong>, 
+                the entire order is unfulfillable. A fulfiller must own <em>every</em> blueprint in an order to accept it. 
+                You&apos;ll see a warning when creating such orders.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-3 bg-blue-900/20 border border-blue-500/20 rounded-lg">
+            <p className="text-xs text-blue-300 flex items-start gap-2">
+              <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>
+                <strong>Tip:</strong> Smaller, focused orders tend to get picked up faster than large mixed orders. 
+                Fulfillers can quickly see if they can help and jump in immediately.
+              </span>
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Protecting Yourself */}
       <section id="trade-protection" className="space-y-4">
         <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">

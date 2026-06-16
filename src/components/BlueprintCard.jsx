@@ -24,6 +24,7 @@ export default function BlueprintCard({
   catalogIsReward = false,
   isSuperAdmin = false,
   onToggleOrderable,
+  ownerCount,
 }) {
   const { dfpDisplayEnabled } = useAuth()
 
@@ -125,16 +126,24 @@ export default function BlueprintCard({
         <div className="space-y-2 text-sm">
           {hasRequirements ? (
             <div className="bg-slate-950/50 rounded-lg p-2.5 border border-slate-800/50">
-              <p className="text-slate-400 flex items-center gap-1.5 text-xs mb-2">
-                <span>⏱️</span>
-                <span className="font-mono">
-                  <strong>{blueprint.craftTime?.hours || 0}h</strong>
-                  {' '}
-                  <strong>{blueprint.craftTime?.minutes || 0}m</strong>
-                  {' '}
-                  <strong>{blueprint.craftTime?.seconds || 0}s</strong>
-                </span>
-              </p>
+              <div className="flex items-center justify-between gap-2 text-xs mb-2">
+                <p className="text-slate-400 flex items-center gap-1.5">
+                  <span>⏱️</span>
+                  <span className="font-mono">
+                    <strong>{blueprint.craftTime?.hours || 0}h</strong>
+                    {' '}
+                    <strong>{blueprint.craftTime?.minutes || 0}m</strong>
+                    {' '}
+                    <strong>{blueprint.craftTime?.seconds || 0}s</strong>
+                  </span>
+                </p>
+                {ownerCount !== undefined && (
+                  <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-400' : 'text-slate-500'}`} title={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
+                    <span>👤</span>
+                    <span>{ownerCount}</span>
+                  </span>
+                )}
+              </div>
               <div className="flex flex-wrap gap-1">
                 {blueprint.slots.flatMap((slot, slotIdx) => 
                   (slot.options || []).map((opt, optIdx) => {

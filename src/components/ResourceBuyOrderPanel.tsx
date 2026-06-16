@@ -64,6 +64,7 @@ interface ResourceBuyOrderPanelProps {
   hasPendingBuyerRep?: boolean
   minOrderValue?: number
   initialBlueprintLines?: CartBlueprintLine[]
+  blueprintOwnerCounts?: Record<string, number>
   onCancelEdit?: () => void
   onSubmitted?: () => void
   onError?: (message: string) => void
@@ -102,6 +103,7 @@ export default function ResourceBuyOrderPanel({
   hasPendingBuyerRep = false,
   minOrderValue = 10000,
   initialBlueprintLines,
+  blueprintOwnerCounts = {},
   onCancelEdit,
   onSubmitted,
   onError,
@@ -121,6 +123,8 @@ export default function ResourceBuyOrderPanel({
   const [minFulfillerRep, setMinFulfillerRep] = useState('')
   const [bpCart, setBpCart] = useState<CartBlueprintLine[]>([])
   const [resCart, setResCart] = useState<CartResourceLine[]>([])
+  const [showNoOwnerWarning, setShowNoOwnerWarning] = useState(false)
+  const [noOwnerBlueprints, setNoOwnerBlueprints] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [showTransferModal, setShowTransferModal] = useState(false)
   const [duplicatePendingModal, setDuplicatePendingModal] = useState<{
@@ -361,6 +365,27 @@ export default function ResourceBuyOrderPanel({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (bpCart.length === 0 && resCart.length === 0) return
+
+    // Check for blueprints with no owners
+    const bpsWithNoOwners = bpCart
+      .filter((line) => blueprintOwnerCounts[line.blueprintId] === 0)
+      .map((line) => line.blueprintTitle)
+    
+    if (bpsWithNoOwners.length > 0 && !showNoOwnerWarning) {
+      setNoOwnerBlueprints(bpsWithNoOwners)
+      setShowNoOwnerWarning(true)
+      return
+    }
+
+    if (exceedsSingleTransferLimit(cartTotalDfp)) {
+      setShowTransferModal(true)
+      return
+    }
+    void submitOrder()
+  }
+
+  const handleConfirmNoOwnerWarning = () => {
+    setShowNoOwnerWarning(false)
     if (exceedsSingleTransferLimit(cartTotalDfp)) {
       setShowTransferModal(true)
       return
@@ -694,6 +719,42 @@ export default function ResourceBuyOrderPanel({
           onCancel={() => setShowTransferModal(false)}
           confirming={submitting}
         />
+      )}
+
+      {showNoOwnerWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-amber-500/40 rounded-xl p-6 max-w-md mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-amber-400 mb-3 flex items-center gap-2">
+              <span>⚠️</span> No Owners Found
+            </h3>
+            <p className="text-slate-300 mb-3">
+              The following blueprint{noOwnerBlueprints.length > 1 ? 's have' : ' has'} not been acquired by any members yet:
+            </p>
+            <ul className="mb-4 space-y-1">
+              {noOwnerBlueprints.map((title, i) => (
+                <li key={i} className="text-amber-300 text-sm pl-4">• {title}</li>
+              ))}
+            </ul>
+            <p className="text-slate-400 text-sm mb-6">
+              This order may take longer to fulfill since no one currently owns {noOwnerBlueprints.length > 1 ? 'these blueprints' : 'this blueprint'}.
+              Consider creating separate orders for easier items.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowNoOwnerWarning(false)}
+                className="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium"
+              >
+                Go Back
+              </button>
+              <button
+                onClick={handleConfirmNoOwnerWarning}
+                className="flex-1 px-4 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-medium"
+              >
+                Submit Anyway
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {duplicatePendingModal.show && (

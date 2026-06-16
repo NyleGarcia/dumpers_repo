@@ -58,6 +58,7 @@ interface BlueprintDetailsModalProps {
   canAddToTargetList?: boolean
   onToggleTarget?: () => void
   canAddToOrder?: boolean
+  ownerCount?: number
 }
 
 export default function BlueprintDetailsModal({
@@ -72,6 +73,7 @@ export default function BlueprintDetailsModal({
   canAddToTargetList = false,
   onToggleTarget,
   canAddToOrder = false,
+  ownerCount,
 }: BlueprintDetailsModalProps) {
   // Track quality for each slot (indexed by slot position)
   const [slotQualities, setSlotQualities] = useState<Record<number, number>>({})
@@ -192,12 +194,27 @@ export default function BlueprintDetailsModal({
           )}
         </div>
 
-        <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
-          <h3 className="text-slate-400 text-sm mb-2">Craft Time</h3>
-          <p className="text-white text-base font-mono">
-            {blueprint.craftTime?.hours || 0}h {blueprint.craftTime?.minutes || 0}m{' '}
-            {blueprint.craftTime?.seconds || 0}s
-          </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
+            <h3 className="text-slate-400 text-sm mb-2">Craft Time</h3>
+            <p className="text-white text-base font-mono">
+              {blueprint.craftTime?.hours || 0}h {blueprint.craftTime?.minutes || 0}m{' '}
+              {blueprint.craftTime?.seconds || 0}s
+            </p>
+          </div>
+          <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
+            <h3 className="text-slate-400 text-sm mb-2">Members Own</h3>
+            {ownerCount !== undefined ? (
+              <p className={`text-base font-semibold ${ownerCount === 0 ? 'text-amber-400' : 'text-white'}`}>
+                {ownerCount === 0 ? 'None yet' : ownerCount.toLocaleString()}
+              </p>
+            ) : (
+              <p className="text-slate-500 text-base">—</p>
+            )}
+            {ownerCount === 0 && (
+              <p className="text-amber-400/70 text-xs mt-1">Orders may take longer</p>
+            )}
+          </div>
         </div>
 
         {blueprint.slots && blueprint.slots.length > 0 && (

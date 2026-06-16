@@ -13,6 +13,7 @@ import {
   canAddBlueprintToTargetList,
   resolveIsOrderable,
 } from '../lib/blueprintOrderable'
+import { fetchBlueprintOwnerCounts } from '../lib/operations'
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
 const getFpsWeaponTypeFromFilename = (filename) => {
@@ -202,8 +203,23 @@ export default function BlueprintsRoute() {
   const [viewedUserBlueprints, setViewedUserBlueprints] = React.useState({})
   const [loadingUserBlueprints, setLoadingUserBlueprints] = React.useState(false)
   const [acquisitionFilter, setAcquisitionFilter] = React.useState<'all' | 'acquired' | 'not_acquired'>('all')
+  const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
 
   const { data: blueprints, isLoading } = useBlueprintData()
+
+  // Fetch blueprint owner counts when blueprints load (only for logged-in users)
+  useAsyncEffect(async ({ cancelled }) => {
+    if (!blueprints || blueprints.length === 0 || isGuest) {
+      setBlueprintOwnerCounts({})
+      return
+    }
+
+    const blueprintIds = blueprints.map(bp => bp.file)
+    const { data } = await fetchBlueprintOwnerCounts(blueprintIds)
+    if (!cancelled) {
+      setBlueprintOwnerCounts(data)
+    }
+  }, [blueprints, isGuest])
 
   useAsyncEffect(async ({ cancelled }) => {
     if (!showMemberCollections) {
@@ -797,6 +813,7 @@ export default function BlueprintsRoute() {
                   onToggleOrderable={(next) =>
                     void setOrderable(bp.file, next, catalogReward)
                   }
+                  ownerCount={blueprintOwnerCounts[bp.file]}
                 />
               )
             })}
@@ -817,6 +834,7 @@ export default function BlueprintsRoute() {
           canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}
           onToggleTarget={() => toggleTarget(selectedBlueprint.file)}
           canAddToOrder={!isGuest && isApproved && canAddBlueprintToOrder(selectedBlueprint, overridesMap)}
+          ownerCount={blueprintOwnerCounts[selectedBlueprint.file]}
         />
       )}
     </FeaturePageLayout>

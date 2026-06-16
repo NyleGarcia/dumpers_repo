@@ -36,6 +36,7 @@ import {
   confirmOrderPickup,
   deleteCustomOrderRequester,
   reportOrderDispute,
+  fetchBlueprintOwnerCounts,
   fetchCustomOrders,
   fetchMemberReputations,
   fetchUserOrderLimits,
@@ -129,6 +130,16 @@ export default function CustomOrdersRoute() {
   const [archiving, setArchiving] = useState(false)
   const [myReputation, setMyReputation] = useState<MemberReputationRow | null>(null)
   const [orderLimits, setOrderLimits] = useState<UserOrderLimits | null>(null)
+  const [blueprintOwnerCounts, setBlueprintOwnerCounts] = useState<Record<string, number>>({})
+
+  // Fetch blueprint owner counts when orderable blueprints load
+  useEffect(() => {
+    if (orderableBlueprints.length === 0) return
+    const blueprintIds = orderableBlueprints.map((bp) => bp.file)
+    fetchBlueprintOwnerCounts(blueprintIds).then(({ data }) => {
+      setBlueprintOwnerCounts(data)
+    })
+  }, [orderableBlueprints])
 
   const loadOrders = useCallback(async () => {
     setLoading(true)
@@ -499,6 +510,7 @@ export default function CustomOrdersRoute() {
             hasPendingBuyerRep={orderLimits?.has_pending_buyer_rep}
             minOrderValue={orderLimits?.buyer_min_order_value ?? 10000}
             initialBlueprintLines={draftCartLines.length > 0 ? draftCartLines : undefined}
+            blueprintOwnerCounts={blueprintOwnerCounts}
             onError={setError}
             onSubmitted={() => {
               setShowForm(false)
@@ -529,6 +541,7 @@ export default function CustomOrdersRoute() {
             editOrder={orders.find((o) => o.id === editingOrderId) ?? null}
             hasPendingBuyerRep={orderLimits?.has_pending_buyer_rep}
             minOrderValue={orderLimits?.buyer_min_order_value ?? 10000}
+            blueprintOwnerCounts={blueprintOwnerCounts}
             onCancelEdit={() => setEditingOrderId(null)}
             onError={setError}
             onSubmitted={() => {
