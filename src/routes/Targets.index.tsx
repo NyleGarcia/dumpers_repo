@@ -18,43 +18,65 @@ function formatDropChance(chance: number | null | undefined): string | null {
   return `${Math.round(chance * 100)}% BP drop`
 }
 
+function MissionRepBadge({
+  minStandingName,
+  minReputation,
+}: {
+  minStandingName?: string | null
+  minReputation?: number | null
+}) {
+  if (minReputation == null && minStandingName == null) {
+    return (
+      <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-slate-800/60 text-slate-500 border-slate-600/40">
+        Rep unknown
+      </span>
+    )
+  }
+
+  const isNeutral = minReputation === 0
+  const label = minStandingName
+    ? minReputation != null
+      ? `${minStandingName} (${minReputation.toLocaleString()})`
+      : minStandingName
+    : minReputation != null
+      ? `${minReputation.toLocaleString()} rep`
+      : null
+
+  return (
+    <span
+      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border ${
+        isNeutral
+          ? 'bg-slate-800/60 text-slate-400 border-slate-600/40'
+          : 'bg-cyan-950/50 text-cyan-300 border-cyan-500/40'
+      }`}
+    >
+      {label}
+    </span>
+  )
+}
+
 function MissionMetaLine({
   repMin,
   repMax,
   minStandingName,
   minReputation,
   dropChance,
-  unlockMinReputation,
-  unlockStandingName,
 }: {
   repMin?: number | null
   repMax?: number | null
   minStandingName?: string | null
   minReputation?: number | null
   dropChance?: number | null
-  unlockMinReputation?: number | null
-  unlockStandingName?: string | null
 }) {
   const repText = formatRepReward(repMin ?? null, repMax ?? null)
-  const requiresText = formatStandingRequirement(minStandingName ?? null, minReputation ?? null)
   const dropText = formatDropChance(dropChance)
-  const showRequires =
-    requiresText &&
-    (unlockMinReputation == null ||
-      unlockStandingName == null ||
-      minReputation !== unlockMinReputation ||
-      minStandingName !== unlockStandingName)
-
-  if (!repText && !showRequires && !dropText) {
-    return <p className="text-[10px] text-slate-600 mt-0.5">Rep data unavailable</p>
-  }
 
   return (
-    <p className="text-[10px] text-slate-500 mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5">
-      {repText && <span className="text-emerald-400/90">{repText}</span>}
-      {showRequires && <span>Requires: {requiresText}</span>}
-      {dropText && <span className="text-amber-400/80">{dropText}</span>}
-    </p>
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
+      <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} />
+      {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
+      {dropText && <span className="text-[10px] text-amber-400/80">{dropText}</span>}
+    </div>
   )
 }
 
@@ -375,8 +397,6 @@ export default function TargetsRoute() {
                                   minStandingName={m.minStandingName}
                                   minReputation={m.minReputation}
                                   dropChance={m.dropChance}
-                                  unlockMinReputation={unlockInfo.unlockMinReputation}
-                                  unlockStandingName={unlockInfo.unlockStandingName}
                                 />
                               </button>
                             </li>
