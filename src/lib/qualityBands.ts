@@ -1,70 +1,40 @@
 /**
- * Star Citizen 4.8 Quality Band System
+ * Star Citizen 4.8 Quality System
  * 
- * Mining resources now use 8 static quality bands.
- * Each band maps a range of raw quality values to a single representative value.
+ * Quality ranges from 1-1000 for all resources.
+ * Each resource type has its own unique quality band values (e.g., Iron bands
+ * differ from Copper bands). Since we don't have complete band data for all
+ * resources, we use a continuous 1-1000 slider.
+ * 
+ * Example resource-specific bands:
+ * - Iron: 325, 521, 664, 710, 874, 907, 970, 1000
+ * - Copper: 359, 593, 652, 742, 855, 917, 958, 1000
+ * - Titanium: 295, 516, 622, 784, 866, 916, 959, 1000
  */
 
-export interface QualityBand {
-  band: number
-  minRaw: number
-  maxRaw: number
-  value: number
-  label: string
-  tier: 'low' | 'mid' | 'good' | 'high' | 'premium'
+/**
+ * Default quality value for UI components.
+ * 500 is the midpoint and a reasonable starting value.
+ */
+export const DEFAULT_QUALITY_BAND = { value: 500 }
+
+/**
+ * Quality tier classification based on approximate ranges
+ */
+export type QualityTier = 'low' | 'mid' | 'good' | 'high' | 'premium'
+
+export function getQualityTier(quality: number): QualityTier {
+  if (quality < 400) return 'low'
+  if (quality < 700) return 'mid'
+  if (quality < 850) return 'good'
+  if (quality < 950) return 'high'
+  return 'premium'
 }
 
 /**
- * The 8 quality bands used in Star Citizen 4.8+
- * Raw quality ranges are mapped to these fixed band values
+ * Get CSS color class for a quality tier
  */
-export const QUALITY_BANDS: QualityBand[] = [
-  { band: 1, minRaw: 0, maxRaw: 399, value: 325, label: 'Q325', tier: 'low' },
-  { band: 2, minRaw: 400, maxRaw: 599, value: 521, label: 'Q521', tier: 'low' },
-  { band: 3, minRaw: 600, maxRaw: 699, value: 664, label: 'Q664', tier: 'mid' },
-  { band: 4, minRaw: 700, maxRaw: 799, value: 710, label: 'Q710', tier: 'mid' },
-  { band: 5, minRaw: 800, maxRaw: 899, value: 874, label: 'Q874', tier: 'good' },
-  { band: 6, minRaw: 900, maxRaw: 949, value: 907, label: 'Q907', tier: 'high' },
-  { band: 7, minRaw: 950, maxRaw: 998, value: 970, label: 'Q970', tier: 'high' },
-  { band: 8, minRaw: 999, maxRaw: 1000, value: 1000, label: 'Q1000', tier: 'premium' },
-]
-
-/**
- * Get the quality band for a raw quality value
- */
-export function getQualityBand(rawQuality: number): QualityBand {
-  for (const band of QUALITY_BANDS) {
-    if (rawQuality >= band.minRaw && rawQuality <= band.maxRaw) {
-      return band
-    }
-  }
-  // Default to lowest band if out of range
-  return QUALITY_BANDS[0]
-}
-
-/**
- * Get the band value (snapped quality) for a raw quality
- */
-export function snapToQualityBand(rawQuality: number): number {
-  return getQualityBand(rawQuality).value
-}
-
-/**
- * Default quality band for new items (Band 5 - "Good" tier)
- * This is the recommended starting point for crafting
- */
-export const DEFAULT_QUALITY_BAND = QUALITY_BANDS[4] // Q874
-
-/**
- * Quality bands suitable for crafting (Band 5+)
- * Bands 1-4 are generally sold or used for low-tier inputs
- */
-export const CRAFTING_QUALITY_BANDS = QUALITY_BANDS.filter(b => b.band >= 5)
-
-/**
- * Get CSS color class for a quality band tier
- */
-export function getQualityTierColor(tier: QualityBand['tier']): string {
+export function getQualityTierColor(tier: QualityTier): string {
   switch (tier) {
     case 'low':
       return 'text-slate-400'

@@ -12,7 +12,7 @@ import {
   SlotModifierResult,
   getPropertyLabel,
 } from '../lib/qualityModifiers'
-import { QUALITY_BANDS, getQualityTierColor, DEFAULT_QUALITY_BAND } from '../lib/qualityBands'
+import { DEFAULT_QUALITY_BAND } from '../lib/qualityBands'
 import { pricingForBlueprintLine } from '../lib/orderPricing'
 import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
@@ -416,19 +416,30 @@ function ResourceSlotCard({
         <div className="mt-3 pt-3 border-t border-slate-700/50">
           <div className="flex items-center gap-3 mb-2">
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
-              Quality Band
+              Quality
             </label>
-            <select
+            <input
+              type="range"
+              min={1}
+              max={1000}
+              step={1}
               value={quality}
               onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-              className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm font-mono"
-            >
-              {QUALITY_BANDS.map((band) => (
-                <option key={band.band} value={band.value} className={getQualityTierColor(band.tier)}>
-                  Band {band.band}: {band.label} ({band.tier})
-                </option>
-              ))}
-            </select>
+              className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+            />
+            <input
+              type="number"
+              min={1}
+              max={1000}
+              value={quality}
+              onChange={(e) => {
+                const val = parseInt(e.target.value, 10)
+                if (!isNaN(val) && val >= 1 && val <= 1000) {
+                  onQualityChange(slotIndex, val)
+                }
+              }}
+              className="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
+            />
           </div>
           
           <div className="space-y-1">
@@ -488,7 +499,7 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
       </div>
       
       <p className="text-[10px] text-slate-500 mt-3">
-        Select quality bands above to simulate different resource qualities.
+        Adjust quality sliders above to simulate different resource qualities (1-1000).
       </p>
     </div>
   )
