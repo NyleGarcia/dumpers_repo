@@ -10,6 +10,7 @@ import {
   getModifierColorClass,
   formatStatValue,
   SlotModifierResult,
+  getPropertyLabel,
 } from '../lib/qualityModifiers'
 import { pricingForBlueprintLine } from '../lib/orderPricing'
 import { formatDfpAuec } from '../lib/dfp'
@@ -216,6 +217,21 @@ export default function BlueprintDetailsModal({
             )}
           </div>
         </div>
+
+        {/* Display base stats for components (mining lasers, etc.) */}
+        {Object.keys(mergedBaseStats).length > 0 && (
+          <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
+            <h3 className="text-slate-400 text-sm mb-3">Base Specifications</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(mergedBaseStats).map(([key, value]) => (
+                <div key={key} className="flex justify-between items-center text-sm">
+                  <span className="text-slate-400">{getPropertyLabel(key)}</span>
+                  <span className="text-white font-mono">{formatStatValue(value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {blueprint.slots && blueprint.slots.length > 0 && (
           <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
