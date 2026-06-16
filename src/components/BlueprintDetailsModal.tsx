@@ -12,6 +12,7 @@ import {
   SlotModifierResult,
   getPropertyLabel,
 } from '../lib/qualityModifiers'
+import { QUALITY_BANDS, getQualityTierColor, DEFAULT_QUALITY_BAND } from '../lib/qualityBands'
 import { pricingForBlueprintLine } from '../lib/orderPricing'
 import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
@@ -109,7 +110,7 @@ export default function BlueprintDetailsModal({
     if (!blueprint.slots) return []
     
     return blueprint.slots.map((slot, idx) => {
-      const quality = slotQualities[idx] ?? 500
+      const quality = slotQualities[idx] ?? DEFAULT_QUALITY_BAND.value
       const modifiers = slot.options?.[0]?.modifiers
       return calculateSlotModifiers(quality, modifiers)
     })
@@ -130,7 +131,7 @@ export default function BlueprintDetailsModal({
     const qualities: Record<number, number> = {}
     const slotCount = blueprint.slots?.length ?? 0
     for (let i = 0; i < slotCount; i++) {
-      qualities[i] = slotQualities[i] ?? 500
+      qualities[i] = slotQualities[i] ?? DEFAULT_QUALITY_BAND.value
     }
     return qualities
   }, [blueprint.slots?.length, slotQualities])
@@ -138,7 +139,7 @@ export default function BlueprintDetailsModal({
   // Calculate the minimum quality across all slots (floor for order matching)
   const minSlotQuality = useMemo(() => {
     const values = Object.values(effectiveSlotQualities)
-    return values.length > 0 ? Math.min(...values) : 500
+    return values.length > 0 ? Math.min(...values) : DEFAULT_QUALITY_BAND.value
   }, [effectiveSlotQualities])
 
   // Check if all slots have the same quality (uniform vs mixed)
@@ -242,7 +243,7 @@ export default function BlueprintDetailsModal({
                   key={idx}
                   slot={slot}
                   slotIndex={idx}
-                  quality={slotQualities[idx] ?? 500}
+                  quality={slotQualities[idx] ?? DEFAULT_QUALITY_BAND.value}
                   onQualityChange={handleQualityChange}
                   modifierResults={allSlotModifiers[idx] ?? []}
                 />
@@ -415,28 +416,18 @@ function ResourceSlotCard({
         <div className="mt-3 pt-3 border-t border-slate-700/50">
           <div className="flex items-center gap-3 mb-2">
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
-              Quality
+              Quality Band
             </label>
-            <input
-              type="range"
-              min={500}
-              max={1000}
-              step={100}
-              value={quality}
-              onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-              className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
-            />
             <select
               value={quality}
               onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-              className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono"
+              className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm font-mono"
             >
-              <option value={500}>Q500</option>
-              <option value={600}>Q600</option>
-              <option value={700}>Q700</option>
-              <option value={800}>Q800</option>
-              <option value={900}>Q900</option>
-              <option value={1000}>Q1000</option>
+              {QUALITY_BANDS.map((band) => (
+                <option key={band.band} value={band.value} className={getQualityTierColor(band.tier)}>
+                  Band {band.band}: {band.label} ({band.tier})
+                </option>
+              ))}
             </select>
           </div>
           
@@ -497,7 +488,7 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
       </div>
       
       <p className="text-[10px] text-slate-500 mt-3">
-        Adjust quality sliders above to simulate different resource qualities.
+        Select quality bands above to simulate different resource qualities.
       </p>
     </div>
   )
