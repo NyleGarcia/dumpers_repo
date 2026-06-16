@@ -12,7 +12,7 @@ import {
   SlotModifierResult,
   getPropertyLabel,
 } from '../lib/qualityModifiers'
-import { DEFAULT_QUALITY_BAND } from '../lib/qualityBands'
+import { DEFAULT_QUALITY, getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
 import { pricingForBlueprintLine } from '../lib/orderPricing'
 import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
@@ -110,7 +110,7 @@ export default function BlueprintDetailsModal({
     if (!blueprint.slots) return []
     
     return blueprint.slots.map((slot, idx) => {
-      const quality = slotQualities[idx] ?? DEFAULT_QUALITY_BAND.value
+      const quality = slotQualities[idx] ?? DEFAULT_QUALITY
       const modifiers = slot.options?.[0]?.modifiers
       return calculateSlotModifiers(quality, modifiers)
     })
@@ -131,7 +131,7 @@ export default function BlueprintDetailsModal({
     const qualities: Record<number, number> = {}
     const slotCount = blueprint.slots?.length ?? 0
     for (let i = 0; i < slotCount; i++) {
-      qualities[i] = slotQualities[i] ?? DEFAULT_QUALITY_BAND.value
+      qualities[i] = slotQualities[i] ?? DEFAULT_QUALITY
     }
     return qualities
   }, [blueprint.slots?.length, slotQualities])
@@ -139,7 +139,7 @@ export default function BlueprintDetailsModal({
   // Calculate the minimum quality across all slots (floor for order matching)
   const minSlotQuality = useMemo(() => {
     const values = Object.values(effectiveSlotQualities)
-    return values.length > 0 ? Math.min(...values) : DEFAULT_QUALITY_BAND.value
+    return values.length > 0 ? Math.min(...values) : DEFAULT_QUALITY
   }, [effectiveSlotQualities])
 
   // Check if all slots have the same quality (uniform vs mixed)
@@ -243,7 +243,7 @@ export default function BlueprintDetailsModal({
                   key={idx}
                   slot={slot}
                   slotIndex={idx}
-                  quality={slotQualities[idx] ?? DEFAULT_QUALITY_BAND.value}
+                  quality={slotQualities[idx] ?? DEFAULT_QUALITY}
                   onQualityChange={handleQualityChange}
                   modifierResults={allSlotModifiers[idx] ?? []}
                 />
@@ -383,6 +383,10 @@ function ResourceSlotCard({
 }: ResourceSlotCardProps) {
   const hasModifiers = modifierResults.length > 0
   const option = slot.options?.[0]
+  
+  // Get resource-specific quality bands if available
+  const resourceName = option?.resourceName || option?.entityName || ''
+  const bands = getResourceBands(resourceName)
 
   return (
     <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
@@ -418,28 +422,49 @@ function ResourceSlotCard({
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
               Quality
             </label>
-            <input
-              type="range"
-              min={1}
-              max={1000}
-              step={1}
-              value={quality}
-              onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-              className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
-            />
-            <input
-              type="number"
-              min={1}
-              max={1000}
-              value={quality}
-              onChange={(e) => {
-                const val = parseInt(e.target.value, 10)
-                if (!isNaN(val) && val >= 1 && val <= 1000) {
-                  onQualityChange(slotIndex, val)
-                }
-              }}
-              className="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
-            />
+            {bands ? (
+              // Resource has known quality bands - show dropdown
+              <select
+                value={quality}
+                onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
+                className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm font-mono"
+              >
+                {bands.map((bandValue, idx) => {
+                  const tier = getQualityTier(bandValue)
+                  return (
+                    <option key={idx} value={bandValue} className={getQualityTierColor(tier)}>
+                      Band {idx + 1}: Q{bandValue}
+                    </option>
+                  )
+                })}
+              </select>
+            ) : (
+              // No known bands - show full slider
+              <>
+                <input
+                  type="range"
+                  min={1}
+                  max={1000}
+                  step={1}
+                  value={quality}
+                  onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
+                  className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                />
+                <input
+                  type="number"
+                  min={1}
+                  max={1000}
+                  value={quality}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10)
+                    if (!isNaN(val) && val >= 1 && val <= 1000) {
+                      onQualityChange(slotIndex, val)
+                    }
+                  }}
+                  className="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
+                />
+              </>
+            )}
           </div>
           
           <div className="space-y-1">
@@ -499,7 +524,7 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
       </div>
       
       <p className="text-[10px] text-slate-500 mt-3">
-        Adjust quality sliders above to simulate different resource qualities (1-1000).
+        Select quality bands (for known resources) or adjust sliders to simulate different resource qualities.
       </p>
     </div>
   )
