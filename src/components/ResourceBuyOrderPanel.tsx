@@ -397,7 +397,16 @@ export default function ResourceBuyOrderPanel({
     <>
       <p className="text-slate-400 text-sm mb-4">
         Build a buy order from <strong className="text-slate-300">crafted blueprints</strong>{' '}
-        (full DFP) and/or <strong className="text-slate-300">refined materials</strong>{' '}
+        (full{' '}
+        <a
+          href="/archive#dfp"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-orange-400/70 hover:text-orange-300 underline"
+        >
+          DFP
+        </a>
+        ) and/or <strong className="text-slate-300">refined materials</strong>{' '}
         (material-only DFP at your quality tier). Submits as a custom order — view progress on{' '}
         <Link to="/orders" className="text-red-400 hover:text-red-300">
           Custom Orders

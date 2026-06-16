@@ -372,7 +372,19 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             >
               <SettingsToggle
                 label="Disable DFP display"
-                description="Hide Dumper's Fair-Value Price amounts in the UI. The opt-out notice will automatically appear at the bottom of every page while this is off."
+                description={
+                  <>
+                    Hide Dumper's Fair-Value Price amounts in the UI. The opt-out notice will automatically appear at the bottom of every page while this is off.{' '}
+                    <a
+                      href="/archive#dfp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-orange-400/70 hover:text-orange-300 underline"
+                    >
+                      What is DFP?
+                    </a>
+                  </>
+                }
                 checked={!dfpDisplayEnabled}
                 onChange={(disabled) => handleDfpDisplayChange(!disabled)}
                 saving={savingDfpDisplay}

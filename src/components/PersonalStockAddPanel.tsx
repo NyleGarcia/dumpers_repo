@@ -105,7 +105,15 @@ export default function PersonalStockAddPanel({
         <p className="text-slate-500 text-xs mt-1">
           Create a card per resource and quality tier — Q0 for store-bought and salvage (RMC,
           construction material), Q100–Q1000 for mined/refined ore. Use the buttons on each card to
-          adjust in-game.
+          adjust in-game.{' '}
+          <a
+            href="/archive#dfp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-orange-400/70 hover:text-orange-300 underline"
+          >
+            Learn about quality &amp; DFP
+          </a>
         </p>
       </div>
 

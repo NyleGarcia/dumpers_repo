@@ -14,7 +14,15 @@ export default function DfpOptOutFooter() {
 
   return (
     <p className="text-xs text-slate-500" data-dfp-opt-out-notice>
-      {DFP_OPT_OUT_NOTICE}
+      {DFP_OPT_OUT_NOTICE}{' '}
+      <a
+        href="/archive#dfp"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-orange-400/70 hover:text-orange-300 underline"
+      >
+        Learn more
+      </a>
     </p>
   )
 }

@@ -133,7 +133,15 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
               </p>
               <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700/50">
                 <p className="text-xs text-slate-500">
-                  <span className="text-orange-400 font-medium">Pro tip:</span> The Information Archive 
+                  <span className="text-orange-400 font-medium">Pro tip:</span> The{' '}
+                  <a
+                    href="/archive"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-orange-400 hover:text-orange-300 underline"
+                  >
+                    Information Archive
+                  </a>{' '}
                   has a complete guide explaining every feature and how they work together.
                 </p>
               </div>
