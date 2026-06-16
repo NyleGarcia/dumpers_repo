@@ -251,9 +251,22 @@ export default function MiningTrackerRoute() {
             {sortedEntries.length === 0 ? (
               <div className="text-center py-12 rounded-xl border border-dashed border-slate-700/50">
                 <p className="text-slate-500 text-sm">
-                  {entries.length === 0
-                    ? 'Nothing tracked yet. Add ores above or use Track in the Mining Guide.'
-                    : 'No entries match your filter.'}
+                  {entries.length === 0 ? (
+                    <>
+                      Nothing tracked yet. Add ores above or use Track in the{' '}
+                      <a
+                        href="/archive?section=mining"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-orange-400 hover:text-orange-300 underline"
+                      >
+                        Mining Guide
+                      </a>
+                      .
+                    </>
+                  ) : (
+                    'No entries match your filter.'
+                  )}
                 </p>
               </div>
             ) : (
