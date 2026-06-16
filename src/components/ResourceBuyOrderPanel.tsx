@@ -735,10 +735,18 @@ export default function ResourceBuyOrderPanel({
                 <li key={i} className="text-amber-300 text-sm pl-4">• {title}</li>
               ))}
             </ul>
-            <p className="text-slate-400 text-sm mb-6">
+            <p className="text-slate-400 text-sm mb-4">
               This order may take longer to fulfill since no one currently owns {noOwnerBlueprints.length > 1 ? 'these blueprints' : 'this blueprint'}.
               Consider creating separate orders for easier items.
             </p>
+            <a
+              href="/archive#ordering-tips"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-orange-400 hover:text-orange-300 text-sm underline mb-6 inline-block"
+            >
+              View ordering best practices
+            </a>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowNoOwnerWarning(false)}

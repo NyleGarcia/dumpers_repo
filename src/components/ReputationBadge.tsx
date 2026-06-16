@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from '@tanstack/react-router'
 import { formatReputationLabel, type MemberReputation } from '../lib/reputation'
 
 interface ReputationBadgeProps {
@@ -100,13 +99,15 @@ export default function ReputationBadge({ label, reputation, className = '', typ
             </div>
 
             <div className="flex gap-3">
-              <Link
-                to="/archive"
+              <a
+                href="/archive#pending-rep"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setShowRulesModal(false)}
                 className="flex-1 px-4 py-2 bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30 rounded-lg text-sm text-center transition-colors"
               >
                 Full Rules in Archive
-              </Link>
+              </a>
               <button
                 onClick={() => setShowRulesModal(false)}
                 className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors"

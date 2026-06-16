@@ -412,7 +412,14 @@ export default function CustomOrdersRoute() {
               <span className="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400">
                 {(orderLimits.buyer_order_total / 1000).toFixed(0)}k / {(orderLimits.buyer_auec_limit / 1000000).toFixed(0)}M aUEC
               </span>
-              <span className="text-[10px] text-slate-500">(pending rep limits)</span>
+              <a
+                href="/archive#pending-rep"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] text-orange-400/70 hover:text-orange-300 underline"
+              >
+                (pending rep limits)
+              </a>
             </>
           )}
         </div>

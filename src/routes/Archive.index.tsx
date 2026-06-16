@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import ArchiveWelcome from '../components/archive/ArchiveWelcome'
 import MiningSection from '../components/archive/MiningSection'
@@ -38,6 +38,21 @@ export default function ArchivePage() {
     },
     [navigate]
   )
+
+  // Scroll to anchor after content renders
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash) {
+      // Small delay to ensure content has rendered
+      const timer = setTimeout(() => {
+        const element = document.querySelector(hash)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [currentSection])
 
   const sectionTitle = SECTION_TITLES[currentSection]
 

@@ -491,7 +491,14 @@ export default function FulfillmentRoute() {
                 <span className="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400">
                   {orderLimits.fulfillment_count}/{orderLimits.fulfiller_order_limit} active
                 </span>
-                <span className="text-[10px] text-slate-500">(pending rep limit)</span>
+                <a
+                  href="/archive#pending-rep"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] text-orange-400/70 hover:text-orange-300 underline"
+                >
+                  (pending rep limit)
+                </a>
               </>
             )}
           </div>
