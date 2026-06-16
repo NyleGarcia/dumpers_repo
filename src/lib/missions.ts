@@ -1,5 +1,25 @@
 import { getMissionRepInfo } from './missionAcquisition'
 
+export type Region = 'stanton' | 'pyro' | 'nyx'
+
+export function categorizeRegions(locations: string[] | undefined): Region[] {
+  if (!locations?.length) return []
+  const regions = new Set<Region>()
+  for (const loc of locations) {
+    const l = loc.toLowerCase()
+    if (l.startsWith('stanton') || l === 'stantonandnyx' || l === 'stantonandpyro') {
+      regions.add('stanton')
+    }
+    if (l.startsWith('pyro') || l === 'stantonandpyro') {
+      regions.add('pyro')
+    }
+    if (l.startsWith('nyx') || l === 'stantonandnyx') {
+      regions.add('nyx')
+    }
+  }
+  return [...regions].sort()
+}
+
 export interface RewardMission {
   mission: string
   chance?: number
@@ -24,6 +44,7 @@ export interface MissionListEntry {
   minReputation?: number | null
   minStandingName?: string | null
   dropChance?: number | null
+  regions: Region[]
 }
 
 export interface MissionGiverGroup {
@@ -53,6 +74,7 @@ export function buildMissionList(
   missionPrefs: Record<string, boolean>
 ): MissionGiverGroup[] {
   const missionMap = new Map<string, MissionListEntry>()
+  const missionLocations = new Map<string, Set<string>>()
 
   for (const bp of targetBlueprints) {
     for (const reward of bp.rewardMissions ?? []) {
@@ -60,6 +82,15 @@ export function buildMissionList(
       if (!mission) continue
 
       const key = missionKey(mission)
+      
+      // Aggregate locations for this mission
+      if (!missionLocations.has(key)) {
+        missionLocations.set(key, new Set())
+      }
+      for (const loc of reward.locations ?? []) {
+        missionLocations.get(key)!.add(loc)
+      }
+      
       let entry = missionMap.get(key)
       if (!entry) {
         entry = attachMissionRep({
@@ -69,8 +100,11 @@ export function buildMissionList(
           linkedBlueprintIds: [],
           linkedBlueprintNames: [],
           unacquiredBlueprintIds: [],
-        }, reward.chance)
+        }, reward.chance, reward.locations)
         missionMap.set(key, entry)
+      } else {
+        // Update regions with aggregated locations
+        entry.regions = categorizeRegions([...missionLocations.get(key)!])
       }
 
       if (!entry.linkedBlueprintIds.includes(bp.blueprintId)) {
@@ -118,12 +152,14 @@ export interface TargetBlueprintMissionOption {
   minReputation?: number | null
   minStandingName?: string | null
   dropChance?: number | null
+  regions: Region[]
 }
 
 function attachMissionRep<T extends { mission: string }>(
   entry: T,
-  dropChance?: number | null
-): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance'> {
+  dropChance?: number | null,
+  locations?: string[]
+): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance' | 'regions'> {
   const rep = getMissionRepInfo(entry.mission)
   return {
     ...entry,
@@ -132,6 +168,7 @@ function attachMissionRep<T extends { mission: string }>(
     minReputation: rep.minReputation,
     minStandingName: rep.minStandingName,
     dropChance: dropChance ?? null,
+    regions: categorizeRegions(locations),
   }
 }
 
@@ -142,8 +179,23 @@ export function getMissionsForBlueprint(
   if (acquiredBlueprintIds.has(blueprint.blueprintId)) return []
 
   const seen = new Set<string>()
+  const missionLocations = new Map<string, Set<string>>()
   const options: TargetBlueprintMissionOption[] = []
 
+  // First pass: collect all locations for each mission
+  for (const reward of blueprint.rewardMissions ?? []) {
+    const mission = reward.mission?.trim()
+    if (!mission) continue
+    const key = missionKey(mission)
+    if (!missionLocations.has(key)) {
+      missionLocations.set(key, new Set())
+    }
+    for (const loc of reward.locations ?? []) {
+      missionLocations.get(key)!.add(loc)
+    }
+  }
+
+  // Second pass: create mission options with aggregated locations
   for (const reward of blueprint.rewardMissions ?? []) {
     const mission = reward.mission?.trim()
     if (!mission) continue
@@ -152,6 +204,7 @@ export function getMissionsForBlueprint(
     if (seen.has(key)) continue
     seen.add(key)
 
+    const allLocations = [...(missionLocations.get(key) ?? [])]
     options.push(
       attachMissionRep(
         {
@@ -159,7 +212,8 @@ export function getMissionsForBlueprint(
           mission,
           giver: parseMissionGiver(mission),
         },
-        reward.chance
+        reward.chance,
+        allLocations
       )
     )
   }

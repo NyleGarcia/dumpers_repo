@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { resolveIsOrderable } from '../lib/blueprintOrderable'
-import { buildMissionList, getMissionsForBlueprint, missionKey } from '../lib/missions'
+import { buildMissionList, getMissionsForBlueprint, missionKey, type Region } from '../lib/missions'
 import {
   formatBlueprintUnlockBadge,
   formatRepReward,
@@ -16,6 +16,27 @@ import {
 function formatDropChance(chance: number | null | undefined): string | null {
   if (chance == null || chance >= 1) return null
   return `${Math.round(chance * 100)}% BP drop`
+}
+
+function MissionRegionBadge({ regions }: { regions: Region[] }) {
+  const label =
+    regions.length === 0
+      ? 'Unknown'
+      : regions.map((r) => r.charAt(0).toUpperCase() + r.slice(1)).join(', ')
+
+  const isUnknown = regions.length === 0
+
+  return (
+    <span
+      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border ${
+        isUnknown
+          ? 'bg-slate-800/60 text-slate-500 border-slate-600/40'
+          : 'bg-violet-950/50 text-violet-300 border-violet-500/40'
+      }`}
+    >
+      {label}
+    </span>
+  )
 }
 
 function MissionRepBadge({
@@ -56,12 +77,14 @@ function MissionRepBadge({
 }
 
 function MissionMetaLine({
+  regions,
   repMin,
   repMax,
   minStandingName,
   minReputation,
   dropChance,
 }: {
+  regions: Region[]
   repMin?: number | null
   repMax?: number | null
   minStandingName?: string | null
@@ -73,6 +96,7 @@ function MissionMetaLine({
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
+      <MissionRegionBadge regions={regions} />
       <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} />
       {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
       {dropText && <span className="text-[10px] text-amber-400/80">{dropText}</span>}
@@ -151,6 +175,7 @@ function MissionChecklistGroups({
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-slate-200">{mission.mission}</p>
                       <MissionMetaLine
+                        regions={mission.regions}
                         repMin={mission.repMin}
                         repMax={mission.repMax}
                         minStandingName={mission.minStandingName}
@@ -392,6 +417,7 @@ export default function TargetsRoute() {
                               >
                                 <p className="text-xs text-slate-300 leading-snug">{m.mission}</p>
                                 <MissionMetaLine
+                                  regions={m.regions}
                                   repMin={m.repMin}
                                   repMax={m.repMax}
                                   minStandingName={m.minStandingName}
