@@ -72,7 +72,17 @@ function GuestStockAddPanel({ catalog, labelMap, existingKeys, onAdd }: GuestSto
 
   return (
     <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700">
-      <h3 className="text-sm font-medium text-slate-300 mb-3">Add Material Stock</h3>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-medium text-slate-300">Add Material Stock</h3>
+        <a
+          href="/archive#page-guides"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-orange-400/70 hover:text-orange-300"
+        >
+          How does this work?
+        </a>
+      </div>
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1 relative">
           {!selectedResource ? (
@@ -495,9 +505,21 @@ export default function ResourceTrackerRoute() {
       ) : filteredCards.length === 0 ? (
         <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
           <p className="text-slate-400">
-            {isPersonalTab
-              ? 'No stock cards yet. Use Add material stock above to create your first Q-tier entry.'
-              : 'No site-wide stock recorded yet.'}
+            {isPersonalTab ? (
+              <>
+                No stock cards yet. Use <span className="text-slate-300 font-medium">Add Material Stock</span> above to create your first Q-tier entry.{' '}
+                <a
+                  href="/archive#page-guides"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-400 hover:text-orange-300 underline"
+                >
+                  Learn more in the Archive
+                </a>
+              </>
+            ) : (
+              'No site-wide stock recorded yet.'
+            )}
           </p>
         </div>
       ) : (
