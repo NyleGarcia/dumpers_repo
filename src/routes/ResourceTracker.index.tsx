@@ -18,7 +18,7 @@ import {
   readGuestResources,
   writeGuestResources,
 } from '../lib/localGuestCache'
-import { adjustInventoryQuantity, setInventoryQuantity } from '../lib/operations'
+import { adjustInventoryQuantity, setInventoryQuantity, updateInventoryNote } from '../lib/operations'
 import type { InventoryScope } from '../lib/operations'
 import ResourceQuantityInput from '../components/ResourceQuantityInput'
 import {
@@ -179,6 +179,8 @@ export default function ResourceTrackerRoute() {
   const [showInactive, setShowInactive] = useState(false)
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
+  const [editingNoteKey, setEditingNoteKey] = useState<string | null>(null)
+  const [noteValue, setNoteValue] = useState('')
 
   const inventoryContext = useMemo(() => {
     if (isGuest || !user?.id) return null
@@ -324,6 +326,28 @@ export default function ResourceTrackerRoute() {
 
     setEditingKey(null)
     setEditValue('')
+    setStockError(null)
+    await refresh()
+  }
+
+  const handleSaveNote = async (resourceKey: string, quality: number) => {
+    if (readOnly || isGuest) return
+    if (!user?.id) return
+
+    const result = await updateInventoryNote({
+      userId: user.id,
+      resourceKey,
+      quality,
+      note: noteValue.trim() || null,
+    })
+
+    if (result.error) {
+      setStockError(result.error)
+      return
+    }
+
+    setEditingNoteKey(null)
+    setNoteValue('')
     setStockError(null)
     await refresh()
   }
@@ -603,6 +627,64 @@ export default function ResourceTrackerRoute() {
                     </div>
                   )}
                 </div>
+
+                {isPersonalTab && !isGuest && (
+                  <div className="mt-3 pt-3 border-t border-slate-700/50">
+                    {editingNoteKey === lineKey ? (
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={noteValue}
+                          onChange={(e) => setNoteValue(e.target.value.slice(0, 64))}
+                          placeholder="Add note (64 chars max)"
+                          maxLength={64}
+                          className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs placeholder-slate-500"
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              void handleSaveNote(card.resource_key, quality)
+                            } else if (e.key === 'Escape') {
+                              setEditingNoteKey(null)
+                              setNoteValue('')
+                            }
+                          }}
+                        />
+                        <button
+                          onClick={() => void handleSaveNote(card.resource_key, quality)}
+                          className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded shrink-0"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingNoteKey(null)
+                            setNoteValue('')
+                          }}
+                          className="px-2 py-1 text-xs text-slate-400 shrink-0"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setEditingNoteKey(lineKey)
+                          setNoteValue(card.note ?? '')
+                        }}
+                        className="w-full text-left text-xs"
+                        disabled={readOnly}
+                      >
+                        {card.note ? (
+                          <span className="text-slate-400 italic">"{card.note}"</span>
+                        ) : (
+                          <span className="text-slate-600 hover:text-slate-400">
+                            + Add note
+                          </span>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             )
           })}

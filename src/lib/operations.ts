@@ -44,6 +44,7 @@ export interface ResourceInventoryRow {
   resource_key: string
   quality: number
   quantity: number
+  note: string | null
   updated_at: string
   updated_by: string | null
   user_id?: string
@@ -52,6 +53,7 @@ export interface ResourceInventoryRow {
 export interface ResourceCatalogEntry extends BlueprintResourceRow {
   quantity: number
   quality?: number
+  note?: string | null
 }
 
 export interface PersonalInventoryCard {
@@ -59,6 +61,7 @@ export interface PersonalInventoryCard {
   resource_key: string
   quality: number
   quantity: number
+  note: string | null
   label: string
   is_active: boolean
 }
@@ -292,6 +295,7 @@ export async function fetchPersonalInventoryCards(
         resource_key: row.resource_key,
         quality: row.quality,
         quantity: normalizeResourceQuantity(Number(row.quantity)),
+        note: row.note ?? null,
         label: catalog?.label ?? row.resource_key,
         is_active: catalog?.is_active ?? true,
       }
@@ -511,6 +515,22 @@ export async function setInventoryQuantity(
     .from('personal_resource_inventory')
     .update({ quantity: nextQty, updated_at: now })
     .eq('id', current.id)
+
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function updateInventoryNote(input: {
+  userId: string
+  resourceKey: string
+  quality: number
+  note: string | null
+}): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('update_inventory_note', {
+    p_resource_key: input.resourceKey,
+    p_quality: input.quality,
+    p_note: input.note ?? '',
+  })
 
   if (error) return { error: error.message }
   return {}

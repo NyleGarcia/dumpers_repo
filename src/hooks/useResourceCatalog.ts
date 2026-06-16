@@ -81,6 +81,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
             synced_at: '',
             quantity: card.quantity,
             quality: card.quality,
+            note: card.note,
           }))
         )
       } else {
