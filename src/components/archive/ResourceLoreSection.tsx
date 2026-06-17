@@ -29,11 +29,14 @@ function categorizeResource(key: string, label: string): string {
   const lowerKey = key.toLowerCase()
   const lowerLabel = label.toLowerCase()
   
-  // Ores & Minerals
-  if (lowerKey.includes('ore') || ['iron', 'copper', 'titanium', 'aluminum', 'tungsten', 'gold', 'tin'].includes(lowerKey)) {
-    return 'Ores & Minerals'
-  }
-  if (['quantainium', 'laranite', 'agricium', 'bexalite', 'borase', 'taranite', 'beryl', 'aslarite', 'hephaestanite', 'corundum', 'riccite', 'stileron'].includes(lowerKey)) {
+  // Ores & Minerals - common metals and mineable ores
+  const oreKeys = [
+    'iron', 'copper', 'titanium', 'aluminum', 'tungsten', 'gold', 'tin', 'silicon',
+    'quantainium', 'laranite', 'agricium', 'bexalite', 'borase', 'taranite', 'beryl',
+    'aslarite', 'hephaestanite', 'corundum', 'riccite', 'stileron', 'quartz',
+    'torite', 'ouratite', 'savrilium', 'lindinium',
+  ]
+  if (lowerKey.includes('ore') || oreKeys.includes(lowerKey)) {
     return 'Ores & Minerals'
   }
   
@@ -47,12 +50,22 @@ function categorizeResource(key: string, label: string): string {
     return 'Gases'
   }
   
-  // Contraband
+  // Fuels
+  if (['hydrogen_fuel', 'quantum_fuel'].includes(lowerKey) || lowerLabel.includes('fuel')) {
+    return 'Industrial'
+  }
+  
+  // Contraband / Drugs
   if (['altruciatoxin', 'widow', 'slam', 'neon', 'e_tam', 'maze', 'glow', 'freeze', 'thrust', 'mala', 'dopple', 'zip', 'dcsr2'].includes(lowerKey)) {
     return 'Contraband'
   }
   if (['osoian_hides', 'gasping_weevil_eggs', 'human_food_bars', 'lifecure_medsticks', 'redfin_energy_modulators'].includes(lowerKey)) {
     return 'Contraband'
+  }
+  
+  // Natural / Organic
+  if (['heart_of_the_woods', 'golden_medmon', 'revenant_pod', 'prota', 'pressurized_ice'].includes(lowerKey)) {
+    return 'Trade Goods'
   }
   
   // Medical
@@ -74,7 +87,7 @@ function categorizeResource(key: string, label: string): string {
   }
   
   // Refined Materials
-  if (lowerLabel.includes('refined') || ['diamond', 'prota', 'silnex', 'neograph', 'thermalfoam'].includes(lowerKey)) {
+  if (lowerLabel.includes('refined') || ['diamond', 'silnex', 'neograph', 'thermalfoam'].includes(lowerKey)) {
     return 'Refined Materials'
   }
   
