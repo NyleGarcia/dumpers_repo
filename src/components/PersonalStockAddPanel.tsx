@@ -13,6 +13,7 @@ import {
   formatQuantityForResource,
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
+import { getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
 
 interface PersonalStockAddPanelProps {
   userId: string
@@ -62,10 +63,21 @@ export default function PersonalStockAddPanel({
   const selectedIsSalvage = qualityTiers.length === 1 && qualityTiers[0] === SALVAGE_ORDER_MIN_QUALITY
   const selectedIsHarvest = resourceKey ? isHarvestResource(resourceKey) : false
   const qtyUnit = resourceKey ? resourceQuantityUnitLabel(resourceKey) : 'SCU'
+  
+  // Get resource-specific quality bands if available
+  const resourceBands = useMemo(
+    () => (resourceKey && !selectedIsSalvage ? getResourceBands(selectedLabel) : undefined),
+    [resourceKey, selectedLabel, selectedIsSalvage]
+  )
 
   useEffect(() => {
-    if (selectedIsSalvage) setQuality(String(SALVAGE_ORDER_MIN_QUALITY))
-  }, [resourceKey, selectedIsSalvage])
+    if (selectedIsSalvage) {
+      setQuality(String(SALVAGE_ORDER_MIN_QUALITY))
+    } else if (resourceBands && resourceBands.length > 0) {
+      // Set to a middle-high band (band 5) as default
+      setQuality(String(resourceBands[4] ?? resourceBands[0]))
+    }
+  }, [resourceKey, selectedIsSalvage, resourceBands])
 
   const lineKey = resourceKey && quality ? `${resourceKey}::${quality}` : ''
   const lineExists = lineKey ? existingKeys.has(lineKey) : false
@@ -141,21 +153,51 @@ export default function PersonalStockAddPanel({
 
         {selectedIsSalvage ? (
           <div className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-300 text-sm">
-            Q0 (salvage)
+            Q0 (no quality)
           </div>
-        ) : (
+        ) : resourceBands ? (
           <select
             value={quality}
             onChange={(e) => setQuality(e.target.value)}
             className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-            aria-label="Quality tier"
+            aria-label="Quality band"
           >
-            {qualityTiers.map((tier) => (
-              <option key={tier} value={tier}>
-                Q{tier}
-              </option>
-            ))}
+            {resourceBands.map((bandValue, idx) => {
+              const tier = getQualityTier(bandValue)
+              return (
+                <option key={idx} value={bandValue} className={getQualityTierColor(tier)}>
+                  Band {idx + 1}: Q{bandValue}
+                </option>
+              )
+            })}
           </select>
+        ) : (
+          <div className="flex items-center gap-2">
+            <input
+              type="range"
+              min={1}
+              max={1000}
+              step={1}
+              value={quality}
+              onChange={(e) => setQuality(e.target.value)}
+              className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+              aria-label="Quality slider"
+            />
+            <input
+              type="number"
+              min={1}
+              max={1000}
+              value={quality}
+              onChange={(e) => {
+                const val = parseInt(e.target.value, 10)
+                if (!isNaN(val) && val >= 1 && val <= 1000) {
+                  setQuality(e.target.value)
+                }
+              }}
+              className="w-16 px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
+              aria-label="Quality value"
+            />
+          </div>
         )}
 
         <ResourceQuantityInput
