@@ -1,7 +1,14 @@
 import React, { useState, useMemo } from 'react'
 import reputationData from '../data/game-reputation.json'
 import blueprintMissionData from '../data/game-blueprint-missions.json'
-import { useBlueprintData, type BlueprintWithSlots } from '../routes/blueprints'
+import { useBlueprintData } from '../routes/blueprints'
+
+type BlueprintRecord = {
+  file: string
+  internalName?: string
+  blueprintName?: string
+  [key: string]: unknown
+}
 
 type MissionEntry = {
   label: string
@@ -15,6 +22,8 @@ type MissionEntry = {
   aUecReward: { min: number; max: number }
   hasBlueprintReward: boolean
 }
+
+type MissionWithKey = MissionEntry & { key: string; system: System }
 
 type MissionPoolBlueprint = {
   name: string
@@ -111,8 +120,8 @@ export default function BrowseMissionsView({
   const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
 
   const blueprintsByInternalName = useMemo(() => {
-    const map: Record<string, BlueprintWithSlots> = {}
-    for (const bp of blueprints) {
+    const map: Record<string, BlueprintRecord> = {}
+    for (const bp of blueprints as BlueprintRecord[]) {
       if (bp.internalName) {
         map[bp.internalName.toLowerCase()] = bp
       }
@@ -153,7 +162,7 @@ export default function BrowseMissionsView({
   }, [missionsWithBlueprints])
 
   const factionsBySystem = useMemo(() => {
-    const map: Record<System, Record<string, MissionEntry[]>> = {
+    const map: Record<System, Record<string, MissionWithKey[]>> = {
       stanton: {},
       pyro: {},
       nyx: {},
@@ -177,7 +186,7 @@ export default function BrowseMissionsView({
     if (!searchTerm) return factions
     
     const term = searchTerm.toLowerCase()
-    const filtered: Record<string, MissionEntry[]> = {}
+    const filtered: Record<string, MissionWithKey[]> = {}
     for (const [faction, missions] of Object.entries(factions)) {
       const matchingMissions = missions.filter(m => 
         m.title.toLowerCase().includes(term) ||
@@ -190,7 +199,7 @@ export default function BrowseMissionsView({
     return filtered
   }, [selectedSystem, factionsBySystem, searchTerm])
 
-  const selectedFactionMissions = useMemo(() => {
+  const selectedFactionMissions = useMemo((): MissionWithKey[] => {
     if (!selectedSystem || !selectedFaction) return []
     return factionsBySystem[selectedSystem][selectedFaction] || []
   }, [selectedSystem, selectedFaction, factionsBySystem])

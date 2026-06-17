@@ -27,10 +27,15 @@ export interface BlueprintUnlockInfo {
   isInferred: boolean
 }
 
-const missions = reputationData.missions as Record<string, {
+type MissionData = {
   label: string
   title: string
   faction: string
+  missionGiver?: string
+  isLawful?: boolean
+  aUecReward?: { min: number; max: number }
+  missionType?: string
+  locations?: string[]
   reputationRequirements: Array<{
     factionRef: string
     scopeRef: string
@@ -41,11 +46,86 @@ const missions = reputationData.missions as Record<string, {
     rewardRef: string
     factionRef: string
   }>
+  repAmounts?: {
+    success: Array<{
+      rewardType: string
+      factionKey: string
+      rewardRef: string
+    }>
+  }
   blueprintRewards: Array<{
     poolRef: string
     weight: number
   }>
-}>
+}
+
+const missions = reputationData.missions as Record<string, MissionData>
+
+const GIVER_ALIASES: Record<string, string[]> = {
+  'citizensforprosperity': ['citizens for prosperity', 'cfp'],
+  'bountyhuntersguild': ['bounty hunters guild', 'bhg', 'bounty hunter'],
+  'shubin interstellar': ['shubin'],
+  'crusader security': ['crusec', 'crusader'],
+  'hurston security': ['hurston', 'hd'],
+  'microtech': ['mt', 'micro tech'],
+  'northrock': ['northrock service group', 'nrsg'],
+  'headhunters': ['headhunter'],
+  'nine tails': ['ninetails', '9tails'],
+  'covalex': ['covalex shipping'],
+  'rayari': ['rayari deltana'],
+  'adagio': ['adagio holdings'],
+  'eckhart': ['eckhart security'],
+}
+
+function buildMissionGiverIndex(): Map<string, MissionData[]> {
+  const index = new Map<string, MissionData[]>()
+  
+  for (const [_key, mission] of Object.entries(missions)) {
+    const giver = (mission.missionGiver || mission.faction || '').toLowerCase()
+    if (!giver || giver === 'unknown' || giver.includes('~mission')) continue
+    
+    const normalizedGiver = giver.replace(/[^a-z0-9]/g, '')
+    if (!index.has(normalizedGiver)) {
+      index.set(normalizedGiver, [])
+    }
+    index.get(normalizedGiver)!.push(mission)
+  }
+  
+  return index
+}
+
+const missionsByGiver = buildMissionGiverIndex()
+
+function findMissionByGiverAndTitle(giverPrefix: string, titlePart: string): MissionData | null {
+  const normalizedGiver = giverPrefix.toLowerCase().replace(/[^a-z0-9]/g, '')
+  const normalizedTitle = normalizeMissionTitle(titlePart)
+  
+  const possibleGivers = [normalizedGiver]
+  for (const [canonical, aliases] of Object.entries(GIVER_ALIASES)) {
+    const canonicalNorm = canonical.replace(/[^a-z0-9]/g, '')
+    if (canonicalNorm === normalizedGiver || aliases.some(a => a.replace(/[^a-z0-9]/g, '') === normalizedGiver)) {
+      possibleGivers.push(canonicalNorm)
+      aliases.forEach(a => possibleGivers.push(a.replace(/[^a-z0-9]/g, '')))
+    }
+  }
+  
+  for (const giver of possibleGivers) {
+    const candidates = missionsByGiver.get(giver)
+    if (!candidates) continue
+    
+    for (const mission of candidates) {
+      const missionTitle = normalizeMissionTitle(mission.title || '')
+      if (missionTitle === normalizedTitle) {
+        return mission
+      }
+      if (missionTitle.includes(normalizedTitle) || normalizedTitle.includes(missionTitle)) {
+        return mission
+      }
+    }
+  }
+  
+  return null
+}
 
 const rewardAmounts = reputationData.rewardAmounts as Record<string, {
   name: string
@@ -162,37 +242,24 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     return defaultReturn
   }
 
+  // Strategy 1: Direct key lookup (for internal mission labels)
   const key = missionLookupKey(missionLabel)
-  const entry = missions[key] as {
-    label: string
-    title: string
-    faction: string
-    isLawful?: boolean
-    aUecReward?: { min: number; max: number }
-    missionType?: string
-    locations?: string[]
-    reputationRequirements: Array<{
-      factionRef: string
-      scopeRef: string
-      comparison: string
-      standingRef: string
-    }> | null
-    reputationRewards: Array<{
-      rewardRef: string
-      factionRef: string
-    }>
-    repAmounts?: {
-      success: Array<{
-        rewardType: string
-        factionKey: string
-        rewardRef: string
-      }>
+  let entry: MissionData | undefined = missions[key]
+  
+  // Strategy 2: Parse "Giver: Title" format and try to match by giver + title
+  if (!entry && missionLabel.includes(':')) {
+    const colonIndex = missionLabel.indexOf(':')
+    const giverPart = missionLabel.slice(0, colonIndex).trim()
+    let titlePart = missionLabel.slice(colonIndex + 1).trim()
+    
+    // Remove "(Not currently available in game)" suffix
+    titlePart = titlePart.replace(/\s*\(Not currently available in game\)\s*$/i, '').trim()
+    
+    const matched = findMissionByGiverAndTitle(giverPart, titlePart)
+    if (matched) {
+      entry = matched
     }
-    blueprintRewards: Array<{
-      poolRef: string
-      weight: number
-    }>
-  } | undefined
+  }
   
   if (!entry) {
     return defaultReturn

@@ -231,7 +231,7 @@ function MissionChecklistGroups({
 }
 
 export default function TargetsRoute() {
-  const { acquiredBlueprints, isApproved, isGuestPreview, user } = useAuth()
+  const { acquiredBlueprints, isApproved, isGuestPreview, user, toggleAcquired } = useAuth()
   const isGuest = isGuestPreview && !user
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
@@ -277,9 +277,9 @@ export default function TargetsRoute() {
 
   const targetBlueprintRecords = useMemo(() => {
     return blueprints
-      .filter((bp) => targetIds[bp.file])
+      .filter((bp) => targetIds[bp.file] && !acquiredSet.has(bp.file))
       .sort((a, b) => (a.blueprintName ?? '').localeCompare(b.blueprintName ?? ''))
-  }, [blueprints, targetIds])
+  }, [blueprints, targetIds, acquiredSet])
 
   const missionGroups = useMemo(
     () =>
@@ -427,7 +427,6 @@ export default function TargetsRoute() {
                   acquiredSet
                 )
                 const addableMissions = missions.filter((m) => !isMissionOnChecklist(m.missionKey))
-                const _unlockInfo = getBlueprintUnlockInfo(bp.file)
 
                 return (
                   <div
@@ -456,6 +455,13 @@ export default function TargetsRoute() {
                             Add all
                           </button>
                         )}
+                        <button
+                          type="button"
+                          onClick={() => void toggleAcquired(bp.file)}
+                          className="px-2 py-0.5 text-[10px] font-semibold text-green-400 hover:text-green-300 border border-green-500/40 rounded hover:bg-green-950/40 transition-colors"
+                        >
+                          Acquired
+                        </button>
                         <button
                           type="button"
                           onClick={() => void toggleTarget(bp.file)}
