@@ -38,6 +38,7 @@ export const RESOURCE_QUALITY_BANDS: Record<string, number[]> = {
   'dolivine': [304, 577, 621, 743, 886, 901, 957, 1000],
   'hadanite': [274, 526, 665, 762, 867, 916, 959, 1000],
   'janalite': [269, 596, 632, 732, 898, 926, 964, 1000],
+  'sadaryx': [258, 510, 644, 730, 865, 940, 970, 1000], // Band 4 (730) estimated
   
   // Vehicle mineables
   'beradom': [287, 578, 656, 723, 881, 937, 969, 1000],
