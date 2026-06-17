@@ -2,95 +2,45 @@
 
 This document describes the structured game data files used by Dumper's Repo and their origins.
 
-## Source: MrKraken's StarStrings
+## Primary Source: Star Citizen Game Files (Direct Extraction)
 
-**Repository:** [MrKraken/StarStrings](https://github.com/MrKraken/StarStrings)
+The primary data source is now direct extraction from Star Citizen's game files using StarBreaker.
 
-StarStrings is a community-curated localization pack for Star Citizen that adds useful information to in-game text, including blueprint pools, rep requirements, and mission metadata.
+### Extraction Process
 
-### Extracted Data Files
+1. **Extract DataForge**: Run `.\scripts\extract-game-data.ps1`
+   - Uses StarBreaker CLI to extract the DCB database from `Data.p4k`
+   - Outputs JSON files to `extracted-data/` (gitignored)
 
-| File | Description | Source File |
-|------|-------------|-------------|
-| `mining-locations.json` | Ore locations organized by rarity tier | `mining.ini` |
-| `component-types.json` | Ship component metadata (type/size/grade/manufacturer) | `components.ini` |
-| `ordnance.json` | Missile and torpedo data with guidance types | `ordnance.ini` |
-| `contract-blueprints.json` | Blueprint pools per contract with standing requirements | `contracts.ini` |
-| `starstrings-global.json` | Standing levels and BP mission counts | `global.ini` |
-| `starstrings-extracted.json` | Blueprint unlock standing data | `contracts.ini` + `global.ini` |
+2. **Parse Extracted Data**: Run `node scripts/parse-extracted-data.mjs`
+   - Parses extracted JSON files
+   - Generates app data files in `src/data/`
+   - Reports validation issues if game data structure changed
 
-### Data Schemas
+### Generated Data Files
 
-#### Mining Locations (`mining-locations.json`)
-```typescript
-{
-  rarityTiers: {
-    legendary: [{ name: string, locations: string[] }],
-    epic: [...],
-    rare: [...],
-    uncommon: [...],
-    common: [...],
-    handMineable: [...]
-  },
-  oreLocations: Record<oreName, { rarity: string, locations: string[] }>,
-  locationOres: Record<locationName, { name: string, rarity: string }[]>
-}
-```
+| File | Description | Source |
+|------|-------------|--------|
+| `game-blueprint-missions.json` | Mission → blueprint reward mappings | `crafting/blueprintrewards/` |
+| `game-blueprints.json` | Blueprint definitions with crafting recipes | `crafting/blueprints/` |
+| `game-mining.json` | Mineable elements and mining lasers | `mining/`, `entities/scitem/ships/weapons/` |
+| `game-components.json` | Ship components (coolers, shields, etc.) | `entities/scitem/ships/` |
+| `game-reputation.json` | Reputation standing thresholds | `reputation/standings/` |
+| `_extraction-validation.json` | Validation issues (if any) | Generated |
 
-#### Component Types (`component-types.json`)
-```typescript
-{
-  components: [{
-    internalId: string,
-    displayName: string,
-    type: 'Cooler' | 'Power Plant' | 'Quantum Drive' | 'Shield Generator' | ...,
-    typeCode: 'COOL' | 'POWR' | 'QDRV' | 'SHLD' | ...,
-    manufacturer: string,
-    manufacturerCode: string,
-    size: number,        // 0-4
-    class: 'Military' | 'Civilian' | 'Industrial' | 'Competition' | 'Stealth',
-    classCode: 'Mil' | 'Civ' | 'Ind' | 'Cmp' | 'Sth',
-    grade: 'A' | 'B' | 'C' | 'D',
-    gradeRank: 1-4,
-    fullLabel: string    // e.g., "Mil/1/D Tundra"
-  }],
-  componentsByType: Record<type, ComponentData[]>,
-  componentsByManufacturer: Record<manufacturer, ComponentData[]>,
-  componentsByClass: Record<class, ComponentData[]>
-}
-```
+### Data Validation
 
-#### Ordnance (`ordnance.json`)
-```typescript
-{
-  ordnance: [{
-    internalId: string,
-    displayName: string,
-    guidance: 'Cross-Section' | 'Electromagnetic' | 'Infrared',
-    guidanceCode: 'CS' | 'EM' | 'IR',
-    size: number,        // 1-12
-    isGimbal: boolean,
-    isTorpedo: boolean,
-    type: 'Missile' | 'Torpedo',
-    manufacturer: string
-  }],
-  ordnanceByGuidance: Record<guidance, OrdnanceItem[]>,
-  ordnanceBySize: Record<size, OrdnanceItem[]>
-}
-```
+The parser validates expected data paths exist. If the game data structure changes between patches, the parser will report which paths are missing in `_extraction-validation.json`.
 
-#### Contract Blueprints (`contract-blueprints.json`)
-```typescript
-{
-  blueprintPools: [{
-    contractKey: string,
-    blueprints: string[],
-    standingTier: 'neutral' | 'friendly' | 'trusted' | 'jr_contractor' | 'sr_contractor' | 'master' | 'unknown'
-  }],
-  standingTierBlueprints: Record<tier, blueprintName[]>,
-  blueprintStandings: Record<blueprintName, { minStanding: string, contracts: string[] }>
-}
-```
+---
+
+## Deprecated: MrKraken's StarStrings
+
+> **Note:** StarStrings extraction has been deprecated in favor of direct game file extraction.
+> Old scripts are archived in `scripts/archive-deprecated/`.
+
+StarStrings was a community-curated localization pack that added useful information to in-game text.
+We previously extracted data from it, but this created a dependency on a third party updating their repo.
 
 ---
 

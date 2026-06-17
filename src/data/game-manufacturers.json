@@ -1,0 +1,609 @@
+{
+  "_source": "Star Citizen Game Files (extracted localization)",
+  "_extracted": "2026-06-17T21:03:43.141Z",
+  "manufacturers": {
+    "987": {
+      "code": "987",
+      "name": "987",
+      "descKey": "manufacturer_Desc987"
+    },
+    "ABIN": {
+      "code": "ABIN",
+      "name": "Abernathy Interiors",
+      "descKey": "manufacturer_DescABIN"
+    },
+    "ACAS": {
+      "code": "ACAS",
+      "name": "Ace Astrogation",
+      "descKey": "manufacturer_DescACAS"
+    },
+    "ACDO": {
+      "code": "ACDO",
+      "name": "Aciedo CommRelay",
+      "descKey": "manufacturer_DescACDO"
+    },
+    "ACOM": {
+      "code": "ACOM",
+      "name": "ACOM",
+      "descKey": "manufacturer_DescACOM"
+    },
+    "AEGS": {
+      "code": "AEGS",
+      "name": "Aegis Dynamics",
+      "descKey": "manufacturer_DescAEGS"
+    },
+    "ALB": {
+      "code": "ALB",
+      "name": "Alejo Brothers",
+      "descKey": "manufacturer_DescALB"
+    },
+    "AMD": {
+      "code": "AMD",
+      "name": "Accelerated Mass Design",
+      "descKey": "manufacturer_DescAMD"
+    },
+    "AMRS": {
+      "code": "AMRS",
+      "name": "Amon & Reese Co.",
+      "descKey": "manufacturer_DescAMRS"
+    },
+    "ANVL": {
+      "code": "ANVL",
+      "name": "Anvil Aerospace",
+      "descKey": "manufacturer_DescANVL"
+    },
+    "APAR": {
+      "code": "APAR",
+      "name": "Apocalypse Arms",
+      "descKey": "manufacturer_DescAPAR"
+    },
+    "ARCC": {
+      "code": "ARCC",
+      "name": "ArcCorp",
+      "descKey": "manufacturer_DescARCC"
+    },
+    "ARGO": {
+      "code": "ARGO",
+      "name": "Argo Astronautics",
+      "descKey": "manufacturer_DescARGO"
+    },
+    "ARMA": {
+      "code": "ARMA",
+      "name": "ArmaMod",
+      "descKey": "manufacturer_DescARMA"
+    },
+    "ASAS": {
+      "code": "ASAS",
+      "name": "Ascension Astro",
+      "descKey": "manufacturer_DescASAS"
+    },
+    "ATK": {
+      "code": "ATK",
+      "name": "A-Tek",
+      "descKey": "manufacturer_DescATK"
+    },
+    "AVNG": {
+      "code": "AVNG",
+      "name": "adVance NanoGraph",
+      "descKey": "manufacturer_DescAVNG"
+    },
+    "BANU": {
+      "code": "BANU",
+      "name": "Banu",
+      "descKey": "manufacturer_DescBANU"
+    },
+    "BASL": {
+      "code": "BASL",
+      "name": "Basilisk",
+      "descKey": "manufacturer_DescBASL"
+    },
+    "BEHR": {
+      "code": "BEHR",
+      "name": "Behring",
+      "descKey": "manufacturer_DescBEHR"
+    },
+    "BLTR": {
+      "code": "BLTR",
+      "name": "Blue Triangle Inc.",
+      "descKey": "manufacturer_DescBLTR"
+    },
+    "BRRA": {
+      "code": "BRRA",
+      "name": "Broad & Rabiee",
+      "descKey": "manufacturer_DescBRRA"
+    },
+    "CBA": {
+      "code": "CBA",
+      "name": "CBA",
+      "descKey": "manufacturer_DescCBA"
+    },
+    "CBD": {
+      "code": "CBD",
+      "name": "CBD",
+      "descKey": "manufacturer_DescCBD"
+    },
+    "CDS": {
+      "code": "CDS",
+      "name": "Clark Defense Systems",
+      "descKey": "manufacturer_DescCDS"
+    },
+    "CHCO": {
+      "code": "CHCO",
+      "name": "Chimera Communications",
+      "descKey": "manufacturer_DescCHCO"
+    },
+    "CLDA": {
+      "code": "CLDA",
+      "name": "Caldera",
+      "descKey": "manufacturer_DescCLDA"
+    },
+    "CNOU": {
+      "code": "CNOU",
+      "name": "Consolidated Outland",
+      "descKey": "manufacturer_DescCNOU"
+    },
+    "CRLF": {
+      "code": "CRLF",
+      "name": "Curelife",
+      "descKey": "manufacturer_DescCRLF"
+    },
+    "CRUS": {
+      "code": "CRUS",
+      "name": "Crusader Industries",
+      "descKey": "manufacturer_DescCRUS"
+    },
+    "CTL": {
+      "code": "CTL",
+      "name": "City Lights",
+      "descKey": "manufacturer_DescCTL"
+    },
+    "DMC": {
+      "code": "DMC",
+      "name": "DMC",
+      "descKey": "manufacturer_DescDMC"
+    },
+    "DNN": {
+      "code": "DNN",
+      "name": "DoNoNo",
+      "descKey": "manufacturer_DescDNN"
+    },
+    "DOOM": {
+      "code": "DOOM",
+      "name": "Doomsday",
+      "descKey": "manufacturer_DescDOOM"
+    },
+    "DRAK": {
+      "code": "DRAK",
+      "name": "Drake Interplanetary",
+      "descKey": "manufacturer_DescDRAK"
+    },
+    "DRN": {
+      "code": "DRN",
+      "name": "Derion",
+      "descKey": "manufacturer_DescDRN"
+    },
+    "DYL": {
+      "code": "DYL",
+      "name": "Dyna Lei",
+      "descKey": "manufacturer_DescDYL"
+    },
+    "ELD": {
+      "code": "ELD",
+      "name": "Escar Limited",
+      "descKey": "manufacturer_DescELD"
+    },
+    "ESPR": {
+      "code": "ESPR",
+      "name": "Esperia",
+      "descKey": "manufacturer_DescESPR"
+    },
+    "EVL": {
+      "code": "EVL",
+      "name": "Evalight",
+      "descKey": "manufacturer_DescEVL"
+    },
+    "FFSY": {
+      "code": "FFSY",
+      "name": "Flashfire Systems",
+      "descKey": "manufacturer_DescFFSY"
+    },
+    "FIO": {
+      "code": "FIO",
+      "name": "Fiore",
+      "descKey": "manufacturer_DescFIO"
+    },
+    "FRO": {
+      "code": "FRO",
+      "name": "Feroh",
+      "descKey": "manufacturer_DescFRO"
+    },
+    "FSIN": {
+      "code": "FSIN",
+      "name": "Friskers Inc.",
+      "descKey": "manufacturer_DescFSIN"
+    },
+    "GAMA": {
+      "code": "GAMA",
+      "name": "Gatac Manufacture",
+      "descKey": "manufacturer_DescGAMA"
+    },
+    "GATS": {
+      "code": "GATS",
+      "name": "Gallenson Tactical Systems",
+      "descKey": "manufacturer_DescGATS"
+    },
+    "GMNI": {
+      "code": "GMNI",
+      "name": "Gemini",
+      "descKey": "manufacturer_DescGMNI"
+    },
+    "GODI": {
+      "code": "GODI",
+      "name": "Gorgon Defender Industries",
+      "descKey": "manufacturer_DescGODI"
+    },
+    "GREY": {
+      "code": "GREY",
+      "name": "Grey's Market",
+      "descKey": "manufacturer_DescGREY"
+    },
+    "GRIN": {
+      "code": "GRIN",
+      "name": "Greycat Industrial",
+      "descKey": "manufacturer_DescGRIN"
+    },
+    "GRNP": {
+      "code": "GRNP",
+      "name": "GNP",
+      "descKey": "manufacturer_DescGRNP"
+    },
+    "GSB": {
+      "code": "GSB",
+      "name": "GSB",
+      "descKey": "manufacturer_DescGSB"
+    },
+    "GYS": {
+      "code": "GYS",
+      "name": "Gyson Inc.",
+      "descKey": "manufacturer_DescGYS"
+    },
+    "HDGW": {
+      "code": "HDGW",
+      "name": "Hedeby Gunworks",
+      "descKey": "manufacturer_DescHDGW"
+    },
+    "HDH": {
+      "code": "HDH",
+      "name": "Habidash",
+      "descKey": "manufacturer_DescHDH"
+    },
+    "HDTC": {
+      "code": "HDTC",
+      "name": "Hardin Tactical",
+      "descKey": "manufacturer_DescHDTC"
+    },
+    "HRST": {
+      "code": "HRST",
+      "name": "Hurston Dynamics",
+      "descKey": "manufacturer_DescHRST"
+    },
+    "HWK": {
+      "code": "HWK",
+      "name": "Hawksworth's",
+      "descKey": "manufacturer_DescHWK"
+    },
+    "JOKR": {
+      "code": "JOKR",
+      "name": "Joker Engineering",
+      "descKey": "manufacturer_DescJOKR"
+    },
+    "JSPN": {
+      "code": "JSPN",
+      "name": "J-Span",
+      "descKey": "manufacturer_DescJSPN"
+    },
+    "JUST": {
+      "code": "JUST",
+      "name": "Juno Starwerk",
+      "descKey": "manufacturer_DescJUST"
+    },
+    "KAP": {
+      "code": "KAP",
+      "name": "Kilgore and Poole",
+      "descKey": "manufacturer_DescKAP"
+    },
+    "KBAR": {
+      "code": "KBAR",
+      "name": "KnightBridge Arms",
+      "descKey": "manufacturer_DescKBAR"
+    },
+    "KLWE": {
+      "code": "KLWE",
+      "name": "Klaus & Werner",
+      "descKey": "manufacturer_DescKLWE"
+    },
+    "KRIG": {
+      "code": "KRIG",
+      "name": "Kruger Intergalactic",
+      "descKey": "manufacturer_DescKRIG"
+    },
+    "KRON": {
+      "code": "KRON",
+      "name": "Kroneg",
+      "descKey": "manufacturer_DescKRON"
+    },
+    "KSAR": {
+      "code": "KSAR",
+      "name": "Kastak Arms",
+      "descKey": "manufacturer_DescKSAR"
+    },
+    "LNA": {
+      "code": "LNA",
+      "name": "Luna",
+      "descKey": "manufacturer_DescLNA"
+    },
+    "LOCO": {
+      "code": "LOCO",
+      "name": "Lortell Computing",
+      "descKey": "manufacturer_DescLOCO"
+    },
+    "LPLT": {
+      "code": "LPLT",
+      "name": "Lightning Power Ltd.",
+      "descKey": "manufacturer_DescLPLT"
+    },
+    "MISC": {
+      "code": "MISC",
+      "name": "Musashi Industrial & Starflight Concern",
+      "descKey": "manufacturer_DescMISC"
+    },
+    "MITE": {
+      "code": "MITE",
+      "name": "microTech",
+      "descKey": "manufacturer_DescMITE"
+    },
+    "MRAI": {
+      "code": "MRAI",
+      "name": "Mirai",
+      "descKey": "manufacturer_DescMRAI"
+    },
+    "MXOX": {
+      "code": "MXOX",
+      "name": "maxOx",
+      "descKey": "manufacturer_DescMXOX"
+    },
+    "MYM": {
+      "code": "MYM",
+      "name": "MYM",
+      "descKey": "manufacturer_DescMYM"
+    },
+    "NAVE": {
+      "code": "NAVE",
+      "name": "Nav-E7 Gadgets",
+      "descKey": "manufacturer_DescNAVE"
+    },
+    "NOVP": {
+      "code": "NOVP",
+      "name": "Nova Pyrotechnica",
+      "descKey": "manufacturer_DescNOVP"
+    },
+    "NRS": {
+      "code": "NRS",
+      "name": "NorthStar",
+      "descKey": "manufacturer_DescNRS"
+    },
+    "NVS": {
+      "code": "NVS",
+      "name": "Navy Surplus",
+      "descKey": "manufacturer_DescNVS"
+    },
+    "NVTC": {
+      "code": "NVTC",
+      "name": "NV-TAC",
+      "descKey": "manufacturer_DescNVTC"
+    },
+    "NVY": {
+      "code": "NVY",
+      "name": "UEE Navy",
+      "descKey": "manufacturer_DescNVY"
+    },
+    "OCT": {
+      "code": "OCT",
+      "name": "Octagon",
+      "descKey": "manufacturer_DescOCT"
+    },
+    "OPS": {
+      "code": "OPS",
+      "name": "OpalSky",
+      "descKey": "manufacturer_DescOPS"
+    },
+    "ORIGIN": {
+      "code": "ORIGIN",
+      "name": "Origin Jumpworks",
+      "descKey": "manufacturer_DescOrigin"
+    },
+    "PROTLIFE": {
+      "code": "PROTLIFE",
+      "name": "ProtLife Insurance",
+      "descKey": "manufacturer_DescProtLife"
+    },
+    "QRT": {
+      "code": "QRT",
+      "name": "Quirinus Tech",
+      "descKey": "manufacturer_DescQRT"
+    },
+    "R6P": {
+      "code": "R6P",
+      "name": "R6 Pro",
+      "descKey": "manufacturer_DescR6P"
+    },
+    "RACO": {
+      "code": "RACO",
+      "name": "RAMP Corporation",
+      "descKey": "manufacturer_DescRACO"
+    },
+    "RMB": {
+      "code": "RMB",
+      "name": "Rambler",
+      "descKey": "manufacturer_DescRMB"
+    },
+    "RRS": {
+      "code": "RRS",
+      "name": "Roussimoff Rehabilitation Systems",
+      "descKey": "manufacturer_DescRRS"
+    },
+    "RSI": {
+      "code": "RSI",
+      "name": "Roberts Space Industries",
+      "descKey": "manufacturer_DescRSI"
+    },
+    "SADA": {
+      "code": "SADA",
+      "name": "Saga Datasystems",
+      "descKey": "manufacturer_DescSADA"
+    },
+    "SASU": {
+      "code": "SASU",
+      "name": "Sakura Sun",
+      "descKey": "manufacturer_DescSASU"
+    },
+    "SCH": {
+      "code": "SCH",
+      "name": "Schui",
+      "descKey": "manufacturer_DescSCH"
+    },
+    "SCU": {
+      "code": "SCU",
+      "name": "SCU",
+      "descKey": "manufacturer_DescSCU"
+    },
+    "SECO": {
+      "code": "SECO",
+      "name": "Seal Corporation",
+      "descKey": "manufacturer_DescSECO"
+    },
+    "SHIN": {
+      "code": "SHIN",
+      "name": "Shubin Interstellar",
+      "descKey": "manufacturer_DescSHIN"
+    },
+    "SPV": {
+      "code": "SPV",
+      "name": "Spar Van Miles",
+      "descKey": "manufacturer_DescSPV"
+    },
+    "STOR": {
+      "code": "STOR",
+      "name": "Stor*All",
+      "descKey": "manufacturer_DescSTOR"
+    },
+    "SYFB": {
+      "code": "SYFB",
+      "name": "Syang Fabrication",
+      "descKey": "manufacturer_DescSYFB"
+    },
+    "TALN": {
+      "code": "TALN",
+      "name": "Talon",
+      "descKey": "manufacturer_DescTALN"
+    },
+    "TARS": {
+      "code": "TARS",
+      "name": "Tarsus",
+      "descKey": "manufacturer_DescTARS"
+    },
+    "THCN": {
+      "code": "THCN",
+      "name": "Thermyte Concern",
+      "descKey": "manufacturer_DescTHCN"
+    },
+    "THP": {
+      "code": "THP",
+      "name": "Tehachapi",
+      "descKey": "manufacturer_DescTHP"
+    },
+    "TKSU": {
+      "code": "TKSU",
+      "name": "Takuetsu",
+      "descKey": "manufacturer_DescTKSU"
+    },
+    "TMBL": {
+      "code": "TMBL",
+      "name": "Tumbril Land Systems",
+      "descKey": "manufacturer_DescTMBL"
+    },
+    "TYDT": {
+      "code": "TYDT",
+      "name": "Tyler Design & Tech",
+      "descKey": "manufacturer_DescTYDT"
+    },
+    "UBA": {
+      "code": "UBA",
+      "name": "Universal Body Armor",
+      "descKey": "manufacturer_DescUBA"
+    },
+    "UEE": {
+      "code": "UEE",
+      "name": "United Empire of Earth",
+      "descKey": "manufacturer_DescUEE"
+    },
+    "UNKN": {
+      "code": "UNKN",
+      "name": "Unknown",
+      "descKey": "manufacturer_DescUNKN"
+    },
+    "UPS": {
+      "code": "UPS",
+      "name": "Upsiders",
+      "descKey": "manufacturer_DescUPS"
+    },
+    "UTFL": {
+      "code": "UTFL",
+      "name": "UltiFlex",
+      "descKey": "manufacturer_DescUTFL"
+    },
+    "VGL": {
+      "code": "VGL",
+      "name": "Virgil",
+      "descKey": "manufacturer_DescVGL"
+    },
+    "VNCL": {
+      "code": "VNCL",
+      "name": "Vanduul",
+      "descKey": "manufacturer_DescVNCL"
+    },
+    "VPW": {
+      "code": "VPW",
+      "name": "Vaporwear",
+      "descKey": "manufacturer_DescVPW"
+    },
+    "WCPR": {
+      "code": "WCPR",
+      "name": "Wen/Cassel Propulsion",
+      "descKey": "manufacturer_DescWCPR"
+    },
+    "WETK": {
+      "code": "WETK",
+      "name": "Wei-Tek",
+      "descKey": "manufacturer_DescWETK"
+    },
+    "WLOP": {
+      "code": "WLOP",
+      "name": "WillsOp",
+      "descKey": "manufacturer_DescWLOP"
+    },
+    "XNAA": {
+      "code": "XNAA",
+      "name": "Aopoa",
+      "descKey": "manufacturer_DescXNAA"
+    },
+    "YORM": {
+      "code": "YORM",
+      "name": "Yorm",
+      "descKey": "manufacturer_DescYORM"
+    }
+  },
+  "summary": {
+    "totalManufacturers": 120
+  }
+}

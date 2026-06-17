@@ -1,0 +1,2240 @@
+{
+  "_source": "Star Citizen Game Files (extracted via dcb query)",
+  "_extracted": "2026-06-17T21:03:43.154Z",
+  "qualityBands": {
+    "carinite": {
+      "name": "Carinite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 273
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 554
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 647
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 716
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 880
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 909
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 959
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        273,
+        554,
+        647,
+        716,
+        880,
+        909,
+        959,
+        1000
+      ]
+    },
+    "titanium": {
+      "name": "Titanium",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 295
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 516
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 622
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 784
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 866
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 916
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 959
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        295,
+        516,
+        622,
+        784,
+        866,
+        916,
+        959,
+        1000
+      ]
+    },
+    "copper": {
+      "name": "Copper",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 359
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 593
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 652
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 742
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 855
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 917
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 958
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        359,
+        593,
+        652,
+        742,
+        855,
+        917,
+        958,
+        1000
+      ]
+    },
+    "janalite": {
+      "name": "Janalite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 269
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 596
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 632
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 732
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 898
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 926
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 964
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        269,
+        596,
+        632,
+        732,
+        898,
+        926,
+        964,
+        1000
+      ]
+    },
+    "jaclium": {
+      "name": "Jaclium",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 284
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 576
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 607
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 781
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 864
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 941
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 955
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        284,
+        576,
+        607,
+        781,
+        864,
+        941,
+        955,
+        1000
+      ]
+    },
+    "agricium": {
+      "name": "Agricium",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 346
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 588
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 667
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 796
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 852
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 943
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 971
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        346,
+        588,
+        667,
+        796,
+        852,
+        943,
+        971,
+        1000
+      ]
+    },
+    "savrilium": {
+      "name": "Savrilium",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 322
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 580
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 636
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 776
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 878
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 905
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 967
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        322,
+        580,
+        636,
+        776,
+        878,
+        905,
+        967,
+        1000
+      ]
+    },
+    "borase": {
+      "name": "Borase",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 359
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 584
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 676
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 743
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 892
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 903
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 976
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        359,
+        584,
+        676,
+        743,
+        892,
+        903,
+        976,
+        1000
+      ]
+    },
+    "torite": {
+      "name": "Torite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 262
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 528
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 661
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 785
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 873
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 944
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 951
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        262,
+        528,
+        661,
+        785,
+        873,
+        944,
+        951,
+        1000
+      ]
+    },
+    "glacosite": {
+      "name": "Glacosite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 360
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 567
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 678
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 724
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 857
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 916
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 972
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        360,
+        567,
+        678,
+        724,
+        857,
+        916,
+        972,
+        1000
+      ]
+    },
+    "dolivine": {
+      "name": "Dolivine",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 304
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 577
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 621
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 743
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 886
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 901
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 957
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        304,
+        577,
+        621,
+        743,
+        886,
+        901,
+        957,
+        1000
+      ]
+    },
+    "iron": {
+      "name": "Iron",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 325
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 521
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 664
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 710
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 874
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 907
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 970
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        325,
+        521,
+        664,
+        710,
+        874,
+        907,
+        970,
+        1000
+      ]
+    },
+    "ouratite": {
+      "name": "Ouratite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 310
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 523
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 647
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 779
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 860
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 912
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 960
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        310,
+        523,
+        647,
+        779,
+        860,
+        912,
+        960,
+        1000
+      ]
+    },
+    "tin": {
+      "name": "Tin",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 340
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 537
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 664
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 704
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 880
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 940
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 964
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        340,
+        537,
+        664,
+        704,
+        880,
+        940,
+        964,
+        1000
+      ]
+    },
+    "silicon": {
+      "name": "Silicon",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 310
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 510
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 672
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 782
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 889
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 926
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 968
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        310,
+        510,
+        672,
+        782,
+        889,
+        926,
+        968,
+        1000
+      ]
+    },
+    "bexalite": {
+      "name": "Bexalite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 302
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 597
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 632
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 756
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 875
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 941
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 959
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        302,
+        597,
+        632,
+        756,
+        875,
+        941,
+        959,
+        1000
+      ]
+    },
+    "aslarite": {
+      "name": "Aslarite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 287
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 575
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 602
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 741
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 854
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 927
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 963
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        287,
+        575,
+        602,
+        741,
+        854,
+        927,
+        963,
+        1000
+      ]
+    },
+    "gold": {
+      "name": "Gold",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 264
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 553
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 644
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 786
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 864
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 916
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 959
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        264,
+        553,
+        644,
+        786,
+        864,
+        916,
+        959,
+        1000
+      ]
+    },
+    "aluminum": {
+      "name": "Aluminum",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 318
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 511
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 614
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 783
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 896
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 919
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 953
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        318,
+        511,
+        614,
+        783,
+        896,
+        919,
+        953,
+        1000
+      ]
+    },
+    "stileron": {
+      "name": "Stileron",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 330
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 517
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 681
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 747
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 874
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 947
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 972
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        330,
+        517,
+        681,
+        747,
+        874,
+        947,
+        972,
+        1000
+      ]
+    },
+    "beradom": {
+      "name": "Beradom",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 287
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 578
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 656
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 723
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 881
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 937
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 969
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        287,
+        578,
+        656,
+        723,
+        881,
+        937,
+        969,
+        1000
+      ]
+    },
+    "quartz": {
+      "name": "Quartz",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 330
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 522
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 641
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 710
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 899
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 914
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 969
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        330,
+        522,
+        641,
+        710,
+        899,
+        914,
+        969,
+        1000
+      ]
+    },
+    "saldynium": {
+      "name": "Saldynium",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 301
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 575
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 674
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 757
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 861
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 938
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 955
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        301,
+        575,
+        674,
+        757,
+        861,
+        938,
+        955,
+        1000
+      ]
+    },
+    "hadanite": {
+      "name": "Hadanite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 274
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 526
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 665
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 762
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 867
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 916
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 959
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        274,
+        526,
+        665,
+        762,
+        867,
+        916,
+        959,
+        1000
+      ]
+    },
+    "hephaestanite": {
+      "name": "Hephaestanite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 330
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 572
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 692
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 758
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 896
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 916
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 975
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        330,
+        572,
+        692,
+        758,
+        896,
+        916,
+        975,
+        1000
+      ]
+    },
+    "beryl": {
+      "name": "Beryl",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 324
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 547
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 677
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 717
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 860
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 937
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 955
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        324,
+        547,
+        677,
+        717,
+        860,
+        937,
+        955,
+        1000
+      ]
+    },
+    "aphorite": {
+      "name": "Aphorite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 348
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 523
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 686
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 717
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 861
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 916
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 975
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        348,
+        523,
+        686,
+        717,
+        861,
+        916,
+        975,
+        1000
+      ]
+    },
+    "laranite": {
+      "name": "Laranite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 298
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 510
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 698
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 707
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 858
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 910
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 975
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        298,
+        510,
+        698,
+        707,
+        858,
+        910,
+        975,
+        1000
+      ]
+    },
+    "tungsten": {
+      "name": "Tungsten",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 363
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 530
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 662
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 787
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 858
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 902
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 964
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        363,
+        530,
+        662,
+        787,
+        858,
+        902,
+        964,
+        1000
+      ]
+    },
+    "rawice": {
+      "name": "RawIce",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 322
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 561
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 659
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 714
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 873
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 922
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 966
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        322,
+        561,
+        659,
+        714,
+        873,
+        922,
+        966,
+        1000
+      ]
+    },
+    "sadaryx": {
+      "name": "Sadaryx",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 258
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 510
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 688
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 797
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 865
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 940
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 971
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        258,
+        510,
+        688,
+        797,
+        865,
+        940,
+        971,
+        1000
+      ]
+    },
+    "quantainium": {
+      "name": "Quantainium",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 344
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 514
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 669
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 762
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 852
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 901
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 974
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        344,
+        514,
+        669,
+        762,
+        852,
+        901,
+        974,
+        1000
+      ]
+    },
+    "riccite": {
+      "name": "Riccite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 325
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 525
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 671
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 743
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 870
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 942
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 965
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        325,
+        525,
+        671,
+        743,
+        870,
+        942,
+        965,
+        1000
+      ]
+    },
+    "feynmaline": {
+      "name": "Feynmaline",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 371
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 561
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 682
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 769
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 880
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 906
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 965
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        371,
+        561,
+        682,
+        769,
+        880,
+        906,
+        965,
+        1000
+      ]
+    }
+  },
+  "qualityDistribution": {
+    "default": {
+      "name": "Default",
+      "type": "CraftingQualityDistributionNormal",
+      "min": 501,
+      "max": 1000,
+      "mean": 500,
+      "stddev": 163
+    },
+    "carinite": {
+      "name": "Carinite",
+      "type": "CraftingQualityDistributionNormal",
+      "min": 501,
+      "max": 1000,
+      "mean": 203,
+      "stddev": 270
+    }
+  },
+  "bandThresholds": {
+    "carinite": [
+      273,
+      554,
+      647,
+      716,
+      880,
+      909,
+      959,
+      1000
+    ],
+    "titanium": [
+      295,
+      516,
+      622,
+      784,
+      866,
+      916,
+      959,
+      1000
+    ],
+    "copper": [
+      359,
+      593,
+      652,
+      742,
+      855,
+      917,
+      958,
+      1000
+    ],
+    "janalite": [
+      269,
+      596,
+      632,
+      732,
+      898,
+      926,
+      964,
+      1000
+    ],
+    "jaclium": [
+      284,
+      576,
+      607,
+      781,
+      864,
+      941,
+      955,
+      1000
+    ],
+    "agricium": [
+      346,
+      588,
+      667,
+      796,
+      852,
+      943,
+      971,
+      1000
+    ],
+    "savrilium": [
+      322,
+      580,
+      636,
+      776,
+      878,
+      905,
+      967,
+      1000
+    ],
+    "borase": [
+      359,
+      584,
+      676,
+      743,
+      892,
+      903,
+      976,
+      1000
+    ],
+    "torite": [
+      262,
+      528,
+      661,
+      785,
+      873,
+      944,
+      951,
+      1000
+    ],
+    "glacosite": [
+      360,
+      567,
+      678,
+      724,
+      857,
+      916,
+      972,
+      1000
+    ],
+    "dolivine": [
+      304,
+      577,
+      621,
+      743,
+      886,
+      901,
+      957,
+      1000
+    ],
+    "iron": [
+      325,
+      521,
+      664,
+      710,
+      874,
+      907,
+      970,
+      1000
+    ],
+    "ouratite": [
+      310,
+      523,
+      647,
+      779,
+      860,
+      912,
+      960,
+      1000
+    ],
+    "tin": [
+      340,
+      537,
+      664,
+      704,
+      880,
+      940,
+      964,
+      1000
+    ],
+    "silicon": [
+      310,
+      510,
+      672,
+      782,
+      889,
+      926,
+      968,
+      1000
+    ],
+    "bexalite": [
+      302,
+      597,
+      632,
+      756,
+      875,
+      941,
+      959,
+      1000
+    ],
+    "aslarite": [
+      287,
+      575,
+      602,
+      741,
+      854,
+      927,
+      963,
+      1000
+    ],
+    "gold": [
+      264,
+      553,
+      644,
+      786,
+      864,
+      916,
+      959,
+      1000
+    ],
+    "aluminum": [
+      318,
+      511,
+      614,
+      783,
+      896,
+      919,
+      953,
+      1000
+    ],
+    "stileron": [
+      330,
+      517,
+      681,
+      747,
+      874,
+      947,
+      972,
+      1000
+    ],
+    "beradom": [
+      287,
+      578,
+      656,
+      723,
+      881,
+      937,
+      969,
+      1000
+    ],
+    "quartz": [
+      330,
+      522,
+      641,
+      710,
+      899,
+      914,
+      969,
+      1000
+    ],
+    "saldynium": [
+      301,
+      575,
+      674,
+      757,
+      861,
+      938,
+      955,
+      1000
+    ],
+    "hadanite": [
+      274,
+      526,
+      665,
+      762,
+      867,
+      916,
+      959,
+      1000
+    ],
+    "hephaestanite": [
+      330,
+      572,
+      692,
+      758,
+      896,
+      916,
+      975,
+      1000
+    ],
+    "beryl": [
+      324,
+      547,
+      677,
+      717,
+      860,
+      937,
+      955,
+      1000
+    ],
+    "aphorite": [
+      348,
+      523,
+      686,
+      717,
+      861,
+      916,
+      975,
+      1000
+    ],
+    "laranite": [
+      298,
+      510,
+      698,
+      707,
+      858,
+      910,
+      975,
+      1000
+    ],
+    "tungsten": [
+      363,
+      530,
+      662,
+      787,
+      858,
+      902,
+      964,
+      1000
+    ],
+    "rawice": [
+      322,
+      561,
+      659,
+      714,
+      873,
+      922,
+      966,
+      1000
+    ],
+    "sadaryx": [
+      258,
+      510,
+      688,
+      797,
+      865,
+      940,
+      971,
+      1000
+    ],
+    "quantainium": [
+      344,
+      514,
+      669,
+      762,
+      852,
+      901,
+      974,
+      1000
+    ],
+    "riccite": [
+      325,
+      525,
+      671,
+      743,
+      870,
+      942,
+      965,
+      1000
+    ],
+    "feynmaline": [
+      371,
+      561,
+      682,
+      769,
+      880,
+      906,
+      965,
+      1000
+    ]
+  },
+  "summary": {
+    "totalResources": 34,
+    "distributionTypes": 2
+  }
+}

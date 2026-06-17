@@ -36,3 +36,6 @@ dfp-engine/
 scripts/build-dfp-engine.mjs
 scripts/generate-acquisition-premiums.mjs
 scripts/generate-component-metadata.mjs
+
+# Extracted Star Citizen game data (large, regenerated locally)
+extracted-data/

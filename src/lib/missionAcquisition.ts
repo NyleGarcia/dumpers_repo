@@ -1,4 +1,5 @@
-import acquisitionData from '../data/blueprint-acquisition.json'
+import reputationData from '../data/game-reputation.json'
+import blueprintMissionData from '../data/game-blueprint-missions.json'
 
 export interface MissionRepInfo {
   repMin: number | null
@@ -20,17 +21,60 @@ export interface BlueprintUnlockInfo {
   isInferred: boolean
 }
 
-function slugifyGiver(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, '')
+const missions = reputationData.missions as Record<string, {
+  label: string
+  title: string
+  faction: string
+  reputationRequirements: Array<{
+    factionRef: string
+    scopeRef: string
+    comparison: string
+    standingRef: string
+  }> | null
+  reputationRewards: Array<{
+    rewardRef: string
+    factionRef: string
+  }>
+  blueprintRewards: Array<{
+    poolRef: string
+    weight: number
+  }>
+}>
+
+const rewardAmounts = reputationData.rewardAmounts as Record<string, {
+  name: string
+  amount: number
+  editorName: string
+}>
+
+const standingsByCategory = reputationData.standingsByCategory as Record<string, Array<{
+  displayName: string
+  minReputation: number
+  gated: boolean
+  filePath: string
+}>>
+
+const blueprintMissions = blueprintMissionData.blueprintMissions as Record<string, string[]>
+
+function extractRewardKey(rewardRef: string): string {
+  const match = rewardRef.match(/\/([^/]+)\.json$/i)
+  return match ? match[1].toLowerCase() : ''
 }
 
-function parseMissionLabel(label: string): { giverSlug: string; title: string } {
-  const colon = label.indexOf(':')
-  if (colon <= 0) return { giverSlug: '', title: label.trim() }
-  return {
-    giverSlug: slugifyGiver(label.slice(0, colon).trim()),
-    title: label.slice(colon + 1).trim(),
+function extractStandingMinRep(standingRef: string): { minReputation: number; displayName: string } | null {
+  const match = standingRef.match(/\/([^/]+)\.json$/i)
+  if (!match) return null
+  
+  const standingFile = match[1].toLowerCase()
+  
+  for (const standings of Object.values(standingsByCategory)) {
+    for (const s of standings) {
+      if (s.filePath.toLowerCase().includes(standingFile)) {
+        return { minReputation: s.minReputation, displayName: s.displayName }
+      }
+    }
   }
+  return null
 }
 
 export function normalizeMissionTitle(title: string): string {
@@ -65,32 +109,8 @@ export function normalizeMissionTitle(title: string): string {
 }
 
 export function missionLookupKey(missionLabel: string): string {
-  const { giverSlug, title } = parseMissionLabel(missionLabel)
-  return `${giverSlug}|${normalizeMissionTitle(title)}`
+  return missionLabel.replace('MissionBrokerEntry.', '')
 }
-
-type MissionByLabel = {
-  repMin: number | null
-  repMax: number | null
-  minReputation: number | null
-  minStandingName: string | null
-  variantCount: number
-  missionGiver: string | null
-}
-
-type BlueprintAcquisition = {
-  isAvailableByDefault?: boolean
-  unlockMinReputation: number | null
-  unlockStandingName: string | null
-  matchedMissionCount?: number
-  unmatchedMissionCount?: number
-  _inferred?: boolean
-  _unlockInferred?: boolean
-  _starstringsEnriched?: boolean
-}
-
-const missionsByLabel = acquisitionData.missionsByLabel as Record<string, MissionByLabel>
-const blueprints = acquisitionData.blueprints as Record<string, BlueprintAcquisition>
 
 export function formatRepReward(repMin: number | null, repMax: number | null): string | null {
   if (repMin == null && repMax == null) return null
@@ -129,7 +149,9 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     }
   }
 
-  const entry = missionsByLabel[missionLookupKey(missionLabel)]
+  const key = missionLookupKey(missionLabel)
+  const entry = missions[key]
+  
   if (!entry) {
     return {
       repMin: null,
@@ -142,24 +164,57 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     }
   }
 
+  let repMin: number | null = null
+  let repMax: number | null = null
+  
+  for (const reward of entry.reputationRewards) {
+    const rewardKey = extractRewardKey(reward.rewardRef)
+    const rewardData = rewardAmounts[rewardKey]
+    if (rewardData) {
+      const amount = rewardData.amount
+      if (repMin === null || amount < repMin) repMin = amount
+      if (repMax === null || amount > repMax) repMax = amount
+    }
+  }
+
+  let minReputation: number | null = null
+  let minStandingName: string | null = null
+  
+  if (entry.reputationRequirements && entry.reputationRequirements.length > 0) {
+    for (const req of entry.reputationRequirements) {
+      const standingInfo = extractStandingMinRep(req.standingRef)
+      if (standingInfo) {
+        minReputation = standingInfo.minReputation
+        minStandingName = standingInfo.displayName
+        break
+      }
+    }
+  }
+
   return {
-    repMin: entry.repMin,
-    repMax: entry.repMax,
-    minReputation: entry.minReputation,
-    minStandingName: entry.minStandingName,
-    variantCount: entry.variantCount,
-    missionGiver: entry.missionGiver,
+    repMin,
+    repMax,
+    minReputation,
+    minStandingName,
+    variantCount: 1,
+    missionGiver: entry.faction || null,
     matched: true,
   }
 }
 
 export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlockInfo {
-  const entry = blueprints[blueprintFileId]
-  if (!entry) {
+  const normalizedId = blueprintFileId
+    .replace(/\\/g, '/')
+    .replace(/^.*crafting\/blueprints\//, '')
+    .replace('.json', '')
+  
+  const missionKeys = blueprintMissions[normalizedId] || []
+  
+  if (missionKeys.length === 0) {
     return {
       unlockMinReputation: null,
       unlockStandingName: null,
-      isAvailableByDefault: false,
+      isAvailableByDefault: true,
       matched: false,
       matchedMissionCount: 0,
       unmatchedMissionCount: 0,
@@ -167,16 +222,42 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
     }
   }
 
-  const isInferred = !!(entry._inferred || entry._unlockInferred || entry._starstringsEnriched)
+  let lowestReputation: number | null = null
+  let lowestStandingName: string | null = null
+  let matchedCount = 0
+  
+  for (const missionKey of missionKeys) {
+    const mission = missions[missionKey]
+    if (!mission) continue
+    
+    matchedCount++
+    
+    if (mission.reputationRequirements && mission.reputationRequirements.length > 0) {
+      for (const req of mission.reputationRequirements) {
+        const standingInfo = extractStandingMinRep(req.standingRef)
+        if (standingInfo) {
+          if (lowestReputation === null || standingInfo.minReputation < lowestReputation) {
+            lowestReputation = standingInfo.minReputation
+            lowestStandingName = standingInfo.displayName
+          }
+        }
+      }
+    } else {
+      if (lowestReputation === null) {
+        lowestReputation = 0
+        lowestStandingName = 'Neutral'
+      }
+    }
+  }
 
   return {
-    unlockMinReputation: entry.unlockMinReputation,
-    unlockStandingName: entry.unlockStandingName,
-    isAvailableByDefault: entry.isAvailableByDefault ?? false,
-    matched: true,
-    matchedMissionCount: entry.matchedMissionCount ?? 0,
-    unmatchedMissionCount: entry.unmatchedMissionCount ?? 0,
-    isInferred,
+    unlockMinReputation: lowestReputation,
+    unlockStandingName: lowestStandingName,
+    isAvailableByDefault: lowestReputation === 0 || lowestReputation === null,
+    matched: matchedCount > 0,
+    matchedMissionCount: matchedCount,
+    unmatchedMissionCount: missionKeys.length - matchedCount,
+    isInferred: false,
   }
 }
 
@@ -197,5 +278,5 @@ export function formatBlueprintUnlockBadge(blueprintFileId: string, isReward?: b
   return 'Rep unknown'
 }
 
-export const acquisitionDataVersion = acquisitionData.version
-export const acquisitionStats = acquisitionData.stats
+export const acquisitionDataVersion = reputationData._extracted
+export const acquisitionStats = reputationData.summary

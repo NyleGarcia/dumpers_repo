@@ -116,21 +116,21 @@ function useCachedArchiveData<T>(
 }
 
 export function useMiningData() {
-  return useCachedArchiveData<MiningData>('starstrings_mining', 'rarity')
+  return useCachedArchiveData<MiningData>('game_mining', 'rarity')
 }
 
 export function useComponentsData() {
-  return useCachedArchiveData<ComponentData>('starstrings_components', 'component_type')
+  return useCachedArchiveData<ComponentData>('game_components', 'component_type')
 }
 
 export function useOrdnanceData() {
-  return useCachedArchiveData<OrdnanceData>('starstrings_ordnance', 'size')
+  return useCachedArchiveData<OrdnanceData>('game_ordnance', 'size')
 }
 
 export function useBlueprintPoolsData() {
-  return useCachedArchiveData<BlueprintPoolData>('starstrings_blueprint_pools', 'standing_tier')
+  return useCachedArchiveData<BlueprintPoolData>('game_blueprint_pools', 'standing_tier')
 }
 
 export function useBlueprintStandingsData() {
-  return useCachedArchiveData<BlueprintStandingData>('starstrings_blueprint_standings', 'min_standing')
+  return useCachedArchiveData<BlueprintStandingData>('game_blueprint_standings', 'min_standing')
 }

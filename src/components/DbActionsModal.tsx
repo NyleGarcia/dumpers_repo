@@ -3,17 +3,6 @@ import { wipeResourceTracker } from '../lib/operations'
 import { supabase } from '../lib/supabase'
 import AppModal from './layout/AppModal'
 
-interface StarstringsSyncStatus {
-  last_synced_at: string | null
-  source_version: string | null
-  sync_status: string
-  sync_error: string | null
-  mining_count: number
-  components_count: number
-  ordnance_count: number
-  blueprint_pools_count: number
-}
-
 interface BlueprintsSyncStatus {
   last_synced_at: string | null
   source_version: string | null
@@ -40,10 +29,6 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [bpSyncStatus, setBpSyncStatus] = useState<BlueprintsSyncStatus | null>(null)
   const [bpSyncing, setBpSyncing] = useState(false)
 
-  // StarStrings sync state
-  const [syncStatus, setSyncStatus] = useState<StarstringsSyncStatus | null>(null)
-  const [syncing, setSyncing] = useState(false)
-
   // Shop data sync state
   const [shopSyncStatus, setShopSyncStatus] = useState<ShopDataSyncStatus | null>(null)
   const [shopSyncing, setShopSyncing] = useState(false)
@@ -68,12 +53,6 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
       const { data: bpData, error: bpError } = await supabase.rpc('get_blueprints_sync_status')
       if (!bpError && bpData && bpData.length > 0) {
         setBpSyncStatus(bpData[0])
-      }
-
-      // StarStrings sync status
-      const { data, error } = await supabase.rpc('get_starstrings_sync_status')
-      if (!error && data && data.length > 0) {
-        setSyncStatus(data[0])
       }
 
       // Shop data sync status
@@ -129,52 +108,6 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
     }
 
     setBpSyncing(false)
-  }
-
-  const handleStarstringsSync = async () => {
-    setSyncing(true)
-    setMessage(null)
-
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setMessage({ type: 'error', text: 'Not authenticated' })
-        setSyncing(false)
-        return
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-starstrings`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        setMessage({ type: 'error', text: result.error || 'Sync failed' })
-      } else {
-        setMessage({ 
-          type: 'success', 
-          text: `Synced: ${result.counts.mining} ores, ${result.counts.components} components, ${result.counts.ordnance} ordnance, ${result.counts.blueprintPools} BP pools` 
-        })
-        
-        // Refresh sync status
-        const { data } = await supabase.rpc('get_starstrings_sync_status')
-        if (data && data.length > 0) {
-          setSyncStatus(data[0])
-        }
-      }
-    } catch {
-      setMessage({ type: 'error', text: 'Network error during sync' })
-    }
-
-    setSyncing(false)
   }
 
   const handleShopDataSync = async () => {
@@ -373,38 +306,60 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
       )}
 
       <div className="space-y-4">
-        {/* Blueprints Sync */}
+        {/* Game Data Update Process */}
         <div className="p-3 sm:p-4 rounded-xl border border-orange-500/30 bg-orange-950/20 space-y-3">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-white font-medium text-sm">Blueprint Update Process</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Multi-step process to update blueprints when a new patch drops.
-              </p>
-              {bpSyncStatus && (
-                <div className="mt-2 text-xs text-slate-500 space-y-0.5">
-                  {bpSyncStatus.last_synced_at && (
-                    <p>Last synced: {new Date(bpSyncStatus.last_synced_at).toLocaleString()}</p>
-                  )}
-                  {bpSyncStatus.source_version && (
-                    <p>Version: {bpSyncStatus.source_version}</p>
-                  )}
-                  <p className="text-slate-600">
-                    {bpSyncStatus.blueprint_count} blueprints
-                  </p>
-                </div>
-              )}
-            </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-white font-medium text-sm">Game Data Update Process</h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Extract and parse data directly from Star Citizen game files when a new patch drops.
+            </p>
+            {bpSyncStatus && (
+              <div className="mt-2 text-xs text-slate-500 space-y-0.5">
+                {bpSyncStatus.last_synced_at && (
+                  <p>Last synced: {new Date(bpSyncStatus.last_synced_at).toLocaleString()}</p>
+                )}
+                {bpSyncStatus.source_version && (
+                  <p>Version: {bpSyncStatus.source_version}</p>
+                )}
+                <p className="text-slate-600">
+                  {bpSyncStatus.blueprint_count} blueprints
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* Step-by-step blueprint update process */}
+          {/* Step-by-step game data update process */}
           <div className="mt-3 space-y-2">
-            {/* Step 1: Sync from sccrafter */}
+            {/* Step 1: Extract Game Data */}
             <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-600 text-white text-xs font-bold rounded-full">1</span>
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">1</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Sync from sccrafter.com</p>
-                <p className="text-[10px] text-slate-500">Fetches latest Blueprints.json to public/data/</p>
+                <p className="text-xs text-white font-medium">Extract Game Data</p>
+                <p className="text-[10px] text-slate-500">Uses StarBreaker to extract DataForge + localization from Data.p4k</p>
+              </div>
+              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
+                .\scripts\extract-game-data.ps1
+              </code>
+            </div>
+
+            {/* Step 2: Parse Extracted Data */}
+            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">2</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white font-medium">Parse Extracted Data</p>
+                <p className="text-[10px] text-slate-500">Generates game-*.json files (blueprints, mining, weapons, lore, etc.)</p>
+              </div>
+              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
+                node scripts/parse-extracted-data.mjs
+              </code>
+            </div>
+
+            {/* Step 3: Sync from sccrafter (for DFP calculations) */}
+            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-600 text-white text-xs font-bold rounded-full">3</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white font-medium">Sync Blueprints to DB</p>
+                <p className="text-[10px] text-slate-500">Syncs blueprint data from sccrafter.com</p>
               </div>
               <button
                 onClick={handleBlueprintsSync}
@@ -415,89 +370,12 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               </button>
             </div>
 
-            {/* Step 2: Enrich Mining Lasers */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-amber-600 text-white text-xs font-bold rounded-full">2</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Enrich Mining Lasers</p>
-                <p className="text-[10px] text-slate-500">Adds power/range stats from star-citizen.wiki</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-amber-400 text-[10px] font-mono rounded select-all">
-                node scripts/enrich-mining-lasers.mjs
-              </code>
-            </div>
-
-            {/* Step 3: Enrich FPS Weapons */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-amber-600 text-white text-xs font-bold rounded-full">3</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Enrich FPS Weapons</p>
-                <p className="text-[10px] text-slate-500">Adds damage/RPM/range from star-citizen.wiki</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-amber-400 text-[10px] font-mono rounded select-all">
-                node scripts/enrich-fps-weapons.mjs
-              </code>
-            </div>
-
-            {/* Step 4: Enrich Salvage Modules */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-amber-600 text-white text-xs font-bold rounded-full">4</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Enrich Salvage Modules</p>
-                <p className="text-[10px] text-slate-500">Adds scraping efficiency/radius from star-citizen.wiki</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-amber-400 text-[10px] font-mono rounded select-all">
-                node scripts/enrich-salvage-modules.mjs
-              </code>
-            </div>
-
-            {/* Step 5: Fetch Resource Lore */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-teal-600 text-white text-xs font-bold rounded-full">5</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Fetch Resource Lore</p>
-                <p className="text-[10px] text-slate-500">Fetches lore/descriptions from star-citizen.wiki for Archive</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-teal-400 text-[10px] font-mono rounded select-all">
-                node scripts/fetch-resource-lore.mjs
-              </code>
-            </div>
-
             <p className="text-[10px] text-slate-600 italic pt-1">
-              Steps 2-5 run locally in terminal. After all steps, build and deploy.
+              Steps 1-2 run locally in terminal. Step 2 now extracts all data including lore from game files.
             </p>
-          </div>
-        </div>
-
-        {/* StarStrings Sync */}
-        <div className="p-3 sm:p-4 rounded-xl border border-purple-500/30 bg-purple-950/20 space-y-3">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-white font-medium text-sm">Sync StarStrings Data</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Fetch latest mining, component, ordnance, and blueprint data from MrKraken's StarStrings GitHub repo.
-              </p>
-              {syncStatus && (
-                <div className="mt-2 text-xs text-slate-500 space-y-0.5">
-                  {syncStatus.last_synced_at && (
-                    <p>Last synced: {new Date(syncStatus.last_synced_at).toLocaleString()}</p>
-                  )}
-                  {syncStatus.source_version && (
-                    <p>Version: {syncStatus.source_version}</p>
-                  )}
-                  <p className="text-slate-600">
-                    {syncStatus.mining_count} ores · {syncStatus.components_count} components · {syncStatus.ordnance_count} ordnance · {syncStatus.blueprint_pools_count} BP pools
-                  </p>
-                </div>
-              )}
-            </div>
-            <button
-              onClick={handleStarstringsSync}
-              disabled={syncing}
-              className="shrink-0 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {syncing ? 'Syncing...' : 'Sync Now'}
-            </button>
+            <p className="text-[10px] text-amber-400/70 pt-1">
+              If Step 2 reports validation issues, game data structure may have changed.
+            </p>
           </div>
         </div>
 

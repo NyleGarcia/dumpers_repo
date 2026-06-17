@@ -197,33 +197,9 @@ export default function GeneralArchiveSection() {
         </div>
       </section>
 
-      {/* Data attribution */}
+      {/* Disclaimer */}
       <section className="p-4 bg-slate-800/30 rounded-lg border border-slate-700/50">
-        <h3 className="text-sm font-semibold text-slate-300 mb-3">Data Sources & Attribution</h3>
-        <ul className="space-y-2 text-xs text-slate-400">
-          <li className="flex items-start gap-2">
-            <span className="text-orange-400 mt-0.5">•</span>
-            <span>
-              <strong className="text-slate-300">MrKraken's StarStrings</strong> - Community-curated localization and mission data
-              extracted from game files. Used for mining locations, components, ordnance, and blueprint-to-standing mappings.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-orange-400 mt-0.5">•</span>
-            <span>
-              <strong className="text-slate-300">Star Citizen Wiki API</strong> - Official community wiki API for blueprint metadata,
-              component information, and game data.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-orange-400 mt-0.5">•</span>
-            <span>
-              <strong className="text-slate-300">scunpacked-data</strong> - Pre-extracted game data repository used for
-              contract/mission analysis and reputation requirements.
-            </span>
-          </li>
-        </ul>
-        <p className="text-[10px] text-slate-500 mt-3">
+        <p className="text-[10px] text-slate-500">
           This site is not affiliated with Cloud Imperium Games or Roberts Space Industries.
           All game content and materials are trademarks and copyrights of their respective owners.
         </p>

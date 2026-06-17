@@ -1,6 +1,9 @@
 /**
  * Master Data Index
  * Central access point for all structured game data
+ * 
+ * Data is now sourced directly from Star Citizen game files
+ * via the parse-extracted-data.mjs script.
  */
 
 // ============================================================================
@@ -12,7 +15,7 @@ export interface OreLocation {
   locations: string[]
 }
 
-export interface MiningData {
+export interface MiningLocationsData {
   _source: string
   _extracted: string
   rarityTiers: {
@@ -23,38 +26,43 @@ export interface MiningData {
     common: OreLocation[]
     handMineable: OreLocation[]
   }
-  oreLocations: Record<string, { rarity: string; locations: string[] }>
+  oreLocations: Record<string, string[]>
   locationOres: Record<string, { name: string; rarity: string }[]>
+  locationMineables: Record<string, {
+    shipMineables: string[]
+    groundVehicleMineables: string[]
+    handMineables: string[]
+    harvestables: string[]
+    creatures: string[]
+  }>
   rarityOrder: string[]
+  summary: {
+    totalOres: number
+    totalLocations: number
+    locationsWithDetails: number
+  }
 }
 
-export interface ComponentData {
-  internalId: string
-  displayName: string
+export interface GameComponent {
+  id: string
+  name: string
   type: string
-  typeCode: string
-  manufacturer: string
-  manufacturerCode: string
+  displayName: string
   size: number
-  class: string
-  classCode: string
-  grade: string
-  gradeRank: number
-  fullLabel: string
+  grade: number
+  manufacturerCode: string | null
+  manufacturer: string | null
+  tags: string
+  typeParams: unknown
 }
 
-export interface ComponentTypes {
+export interface GameComponentsData {
   _source: string
   _extracted: string
-  components: ComponentData[]
-  componentsByType: Record<string, ComponentData[]>
-  componentsByManufacturer: Record<string, ComponentData[]>
-  componentsByClass: Record<string, ComponentData[]>
-  metadata: {
-    manufacturerCodes: Record<string, string>
-    typeCodes: Record<string, string>
-    classCodes: Record<string, string>
-    gradeOrder: string[]
+  components: GameComponent[]
+  summary: {
+    totalComponents: number
+    byType: Record<string, number>
   }
 }
 
@@ -71,12 +79,12 @@ export interface OrdnanceItem {
   fullLabel: string
 }
 
-export interface OrdnanceData {
+export interface GameOrdnanceData {
   _source: string
   _extracted: string
   ordnance: OrdnanceItem[]
   ordnanceByGuidance: Record<string, OrdnanceItem[]>
-  ordnanceBySize: Record<number, OrdnanceItem[]>
+  ordnanceBySize: Record<string, OrdnanceItem[]>
   metadata: {
     guidanceCodes: Record<string, string>
     sizeRanges: {
@@ -84,39 +92,107 @@ export interface OrdnanceData {
       torpedo: number[]
     }
   }
-}
-
-export interface BlueprintPool {
-  contractKey: string
-  blueprints: string[]
-  standingTier: string
-}
-
-export interface ContractBlueprints {
-  _source: string
-  _extracted: string
-  blueprintPools: BlueprintPool[]
-  standingTierBlueprints: Record<string, string[]>
-  blueprintStandings: Record<string, { minStanding: string; contracts: string[] }>
-  reputationAmounts: number[]
   summary: {
-    totalPoolsFound: number
-    uniqueBlueprintsFound: number
+    totalOrdnance: number
+    missiles: number
+    torpedoes: number
   }
 }
 
-export interface StarstringsGlobal {
+export interface GameBlueprintMission {
+  name: string
+  weight: number
+  path: string
+}
+
+export interface GameBlueprintMissionsData {
   _source: string
   _extracted: string
-  standingLevels: {
-    lawful: string[]
-    unlawful: string[]
+  missionBlueprints: Record<string, GameBlueprintMission[]>
+  blueprintMissions: Record<string, string[]>
+  summary: {
+    missionsWithBlueprints: number
+    uniqueBlueprints: number
   }
-  contractTypeCounts: Record<string, number>
-  bpMissions: {
-    totalBpTagged: number
-    conditionalBp: number
-    guaranteedBp: number
+}
+
+export interface GameManufacturer {
+  code: string
+  name: string
+  descKey: string
+}
+
+export interface GameManufacturersData {
+  _source: string
+  _extracted: string
+  manufacturers: Record<string, GameManufacturer>
+  summary: {
+    totalManufacturers: number
+  }
+}
+
+export interface GameReputationStanding {
+  id: string
+  name: string
+  displayName: string
+  displayNameKey: string
+  minReputation: number
+  driftReputation: number
+  driftTimeHours: number
+  gated: boolean
+  category: string
+  recordName: string
+  filePath: string
+}
+
+export interface GameFaction {
+  id: string
+  key: string
+  name: string
+  displayNameKey: string
+  descriptionKey: string
+  recordName: string
+  filePath: string
+}
+
+export interface GameFactionStanding {
+  faction: string
+  factionKey: string
+  scopeName: string
+  standings: Array<{
+    displayName: string
+    minReputation: number
+    gated: boolean
+  }>
+}
+
+export interface GameReputationData {
+  _source: string
+  _extracted: string
+  factions: Record<string, GameFaction>
+  factionStandings: Record<string, GameFactionStanding>
+  standingsByCategory: Record<string, GameReputationStanding[]>
+  scopes: Record<string, unknown>
+  rewardAmounts: Record<string, { name: string; amount: number; editorName: string }>
+  missions: Record<string, unknown>
+  missionsByFaction: Record<string, string[]>
+  summary: {
+    totalStandings: number
+    totalScopes: number
+    totalFactions: number
+    totalRewardTypes: number
+    totalMissions: number
+    missionsWithBlueprints: number
+    missionsWithRepRequirements: number
+  }
+}
+
+export interface GameLoreData {
+  _source: string
+  _extracted: string
+  resources: Record<string, { key: string; description: string }>
+  summary: {
+    totalDescriptions: number
   }
 }
 
@@ -124,18 +200,25 @@ export interface StarstringsGlobal {
 // DATA IMPORTS
 // ============================================================================
 
-import miningLocationsData from './mining-locations.json'
-import componentTypesData from './component-types.json'
-import ordnanceData from './ordnance.json'
-import contractBlueprintsData from './contract-blueprints.json'
-import starstringsGlobalData from './starstrings-global.json'
+import gameMiningLocationsData from './game-mining-locations.json'
+import gameComponentsData from './game-components.json'
+import gameOrdnanceData from './game-ordnance.json'
+import gameBlueprintMissionsData from './game-blueprint-missions.json'
+import gameManufacturersData from './game-manufacturers.json'
+import gameReputationData from './game-reputation.json'
+import gameLoreData from './game-lore.json'
 
 // Cast to proper types
-export const miningLocations = miningLocationsData as MiningData
-export const componentTypes = componentTypesData as ComponentTypes
-export const ordnance = ordnanceData as OrdnanceData
-export const contractBlueprints = contractBlueprintsData as ContractBlueprints
-export const starstringsGlobal = starstringsGlobalData as StarstringsGlobal
+export const miningLocations = gameMiningLocationsData as MiningLocationsData
+export const gameComponents = gameComponentsData as GameComponentsData
+export const gameOrdnance = gameOrdnanceData as GameOrdnanceData
+export const blueprintMissions = gameBlueprintMissionsData as GameBlueprintMissionsData
+export const manufacturers = gameManufacturersData as GameManufacturersData
+export const reputation = gameReputationData as GameReputationData
+export const lore = gameLoreData as GameLoreData
+
+// Legacy aliases for backward compatibility
+export const ordnance = gameOrdnance
 
 // ============================================================================
 // HELPER FUNCTIONS
@@ -145,8 +228,7 @@ export const starstringsGlobal = starstringsGlobalData as StarstringsGlobal
  * Get all locations where a specific ore can be found
  */
 export function getOreLocations(oreName: string): string[] {
-  const ore = miningLocations.oreLocations[oreName]
-  return ore?.locations ?? []
+  return miningLocations.oreLocations[oreName] ?? []
 }
 
 /**
@@ -160,7 +242,12 @@ export function getLocationOres(location: string): { name: string; rarity: strin
  * Get ore rarity tier
  */
 export function getOreRarity(oreName: string): string | null {
-  return miningLocations.oreLocations[oreName]?.rarity ?? null
+  for (const [rarity, ores] of Object.entries(miningLocations.rarityTiers)) {
+    if (ores.some(o => o.name.toLowerCase() === oreName.toLowerCase())) {
+      return rarity
+    }
+  }
+  return null
 }
 
 /**
@@ -169,14 +256,13 @@ export function getOreRarity(oreName: string): string | null {
 export function findComponents(criteria: {
   type?: string
   manufacturer?: string
-  class?: string
   size?: number
-  grade?: string
-}): ComponentData[] {
-  let results = componentTypes.components
+  grade?: number
+}): GameComponent[] {
+  let results = gameComponents.components
 
   if (criteria.type) {
-    results = results.filter(c => c.type === criteria.type || c.typeCode === criteria.type)
+    results = results.filter(c => c.type === criteria.type)
   }
   if (criteria.manufacturer) {
     results = results.filter(c => 
@@ -184,13 +270,10 @@ export function findComponents(criteria: {
       c.manufacturerCode === criteria.manufacturer
     )
   }
-  if (criteria.class) {
-    results = results.filter(c => c.class === criteria.class || c.classCode === criteria.class)
-  }
   if (criteria.size !== undefined) {
     results = results.filter(c => c.size === criteria.size)
   }
-  if (criteria.grade) {
+  if (criteria.grade !== undefined) {
     results = results.filter(c => c.grade === criteria.grade)
   }
 
@@ -200,11 +283,11 @@ export function findComponents(criteria: {
 /**
  * Get component by name
  */
-export function getComponentByName(name: string): ComponentData | null {
+export function getComponentByName(name: string): GameComponent | null {
   const normalized = name.toLowerCase()
-  return componentTypes.components.find(c => 
+  return gameComponents.components.find(c => 
     c.displayName.toLowerCase() === normalized ||
-    c.internalId.toLowerCase().includes(normalized)
+    c.name.toLowerCase().includes(normalized)
   ) ?? null
 }
 
@@ -217,7 +300,7 @@ export function findOrdnance(criteria: {
   type?: 'Missile' | 'Torpedo'
   isGimbal?: boolean
 }): OrdnanceItem[] {
-  let results = ordnance.ordnance
+  let results = gameOrdnance.ordnance
 
   if (criteria.guidance) {
     results = results.filter(o => 
@@ -239,31 +322,38 @@ export function findOrdnance(criteria: {
 }
 
 /**
- * Get blueprints available at a standing tier
+ * Get blueprints for a mission
  */
-export function getBlueprintsAtStanding(tier: string): string[] {
-  return contractBlueprints.standingTierBlueprints[tier] ?? []
+export function getMissionBlueprints(missionKey: string): GameBlueprintMission[] {
+  return blueprintMissions.missionBlueprints[missionKey] ?? []
 }
 
 /**
- * Get standing requirement for a blueprint
+ * Get missions that can reward a blueprint
  */
-export function getBlueprintStanding(blueprintName: string): string | null {
-  return contractBlueprints.blueprintStandings[blueprintName]?.minStanding ?? null
+export function getBlueprintMissions(blueprintName: string): string[] {
+  return blueprintMissions.blueprintMissions[blueprintName] ?? []
 }
 
 /**
- * Get all unique manufacturers
+ * Get manufacturer by code
+ */
+export function getManufacturer(code: string): GameManufacturer | null {
+  return manufacturers.manufacturers[code.toUpperCase()] ?? null
+}
+
+/**
+ * Get all manufacturer codes
  */
 export function getAllManufacturers(): string[] {
-  return Object.keys(componentTypes.componentsByManufacturer)
+  return Object.keys(manufacturers.manufacturers)
 }
 
 /**
  * Get all component types
  */
 export function getAllComponentTypes(): string[] {
-  return Object.keys(componentTypes.componentsByType)
+  return Object.keys(gameComponents.summary.byType)
 }
 
 /**
@@ -281,27 +371,45 @@ export function getRarityColor(rarity: string): string {
   return colors[rarity] ?? colors.common
 }
 
+/**
+ * Get lore description for a resource
+ */
+export function getResourceLore(resourceKey: string): string | null {
+  const entry = lore.resources[resourceKey.toLowerCase()]
+  return entry?.description ?? null
+}
+
 // ============================================================================
 // DATA SUMMARY
 // ============================================================================
 
 export const dataSummary = {
   mining: {
-    totalOres: Object.keys(miningLocations.oreLocations).length,
-    totalLocations: Object.keys(miningLocations.locationOres).length,
+    totalOres: miningLocations.summary.totalOres,
+    totalLocations: miningLocations.summary.totalLocations,
   },
   components: {
-    total: componentTypes.components.length,
-    types: Object.keys(componentTypes.componentsByType).length,
-    manufacturers: Object.keys(componentTypes.componentsByManufacturer).length,
+    total: gameComponents.summary.totalComponents,
+    byType: gameComponents.summary.byType,
   },
   ordnance: {
-    total: ordnance.ordnance.length,
-    missiles: ordnance.ordnance.filter(o => o.type === 'Missile').length,
-    torpedoes: ordnance.ordnance.filter(o => o.type === 'Torpedo').length,
+    total: gameOrdnance.summary.totalOrdnance,
+    missiles: gameOrdnance.summary.missiles,
+    torpedoes: gameOrdnance.summary.torpedoes,
   },
   blueprints: {
-    totalPools: contractBlueprints.summary.totalPoolsFound,
-    uniqueBlueprints: contractBlueprints.summary.uniqueBlueprintsFound,
+    totalMissions: blueprintMissions.summary.missionsWithBlueprints,
+    uniqueBlueprints: blueprintMissions.summary.uniqueBlueprints,
+  },
+  reputation: {
+    totalFactions: reputation.summary.totalFactions,
+    totalStandings: reputation.summary.totalStandings,
+    totalMissions: reputation.summary.totalMissions,
+  },
+  manufacturers: {
+    total: manufacturers.summary.totalManufacturers,
+  },
+  lore: {
+    totalDescriptions: lore.summary.totalDescriptions,
   },
 }

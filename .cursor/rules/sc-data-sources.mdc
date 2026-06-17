@@ -7,7 +7,25 @@ alwaysApply: true
 
 When needing Star Citizen game data (components, shops, mining, ships, etc.), check these sources **first** before web searching:
 
-## Primary Data Sources
+## Primary Data Source: Direct Game File Extraction
+
+We extract data directly from Star Citizen's `Data.p4k` using StarBreaker.
+
+**Local extracted data:** `extracted-data/libs/foundry/records/` (gitignored)
+
+Key paths in extracted data:
+- `crafting/blueprints/` - Blueprint definitions with crafting recipes
+- `crafting/blueprintrewards/` - Mission → blueprint mappings
+- `mining/mineableelements/` - Ore properties (instability, resistance, etc.)
+- `entities/scitem/ships/weapons/` - Mining lasers, weapons
+- `entities/scitem/ships/{cooler,powerplant,shieldgenerator}/` - Ship components
+- `reputation/standings/` - Standing thresholds
+
+**Extraction scripts:**
+- `scripts/extract-game-data.ps1` - Extract DataForge from Data.p4k
+- `scripts/parse-extracted-data.mjs` - Parse extracted JSON into app data
+
+## Secondary Data Sources
 
 ### 1. UEX Corp API (Live Shop Data)
 **URL:** https://uexcorp.space/api/documentation
@@ -15,23 +33,15 @@ When needing Star Citizen game data (components, shops, mining, ships, etc.), ch
 Crowdsourced live game data for all systems (Stanton, Pyro, Nyx). Key endpoints:
 - `/terminals` - All shop/terminal locations with system info
 - `/items_prices_all` - All items and prices across all terminals
-- `/items_prices` - Specific item/terminal prices
 - No auth required for read endpoints
 - Updated hourly by community reporters
 - **Use for:** Shop inventories, prices, locations (all systems)
 
-### 2. richardthombs/scunpacked (Static Game Data)
-**URL:** https://github.com/richardthombs/scunpacked
+### 2. Star Citizen Wiki API (Lore/Descriptions)
+**URL:** https://api.star-citizen.wiki/api/
 
-⚠️ **Note:** This repo is archived and only has Stanton data. Use UEX for shop data.
-
-Game data extracted from Star Citizen files. Key files in `api/dist/json/`:
-- `items.json` - All game items (~15MB)
-- `ship-items.json` - Ship equipment index
-- `ships.json` - Ship data
-- `manufacturers.json` - Manufacturer info
-- `starmap.json` - Location data
-- `shops.json` - ⚠️ OUTDATED (Stanton only, no Pyro/Nyx)
+Used for resource lore/flavor text for the Archive.
+- `scripts/fetch-resource-lore.mjs` - Fetches commodity descriptions
 
 ### 3. seneca0815-rgb/SC_Signature_Scanner
 **URL:** https://github.com/seneca0815-rgb/SC_Signature_Scanner
@@ -39,28 +49,16 @@ Game data extracted from Star Citizen files. Key files in `api/dist/json/`:
 Mining RS signature data:
 - `lookup.json` - 163 signature values for 26 minerals × 6 multipliers
 
-### 4. MrKraken/StarStrings
-**URL:** https://github.com/MrKraken/StarStrings
+## Deprecated Sources
 
-Component and ordnance localization data for Star Citizen:
-- `components.ini` - Component types, grades, manufacturers, display names
-- `ordnance.ini` - Missiles and torpedoes
-- `mining.ini` - Mining ore locations and rarity
-- `contracts.ini` - Contract blueprint pools
+### MrKraken/StarStrings (DEPRECATED)
+StarStrings has been replaced by direct game file extraction.
+Old scripts archived in `scripts/archive-deprecated/`.
 
 ## Usage Pattern
 
-1. Identify what data is needed
-2. **Shop/price data:** Use UEX Corp API (has all systems including Pyro/Nyx)
-3. **Static game data:** Check scunpacked for items, ships, etc.
-4. **Component names/categorization:** Check StarStrings
-5. **Mining signatures:** Check SC_Signature_Scanner
-6. Only web search if none of these sources have the data
-
-## Notes
-
-- UEX provides live, community-sourced data for all game systems
-- scunpacked is archived and only has Stanton shop data
-- StarStrings provides curated display names and categorization
-- Hand-mineable gems share base RS 620 (not useful for identification)
-- Ship-mineable ores each have unique signatures (3170-4300 range)
+1. **Game data (blueprints, components, mining):** Use extracted data or run extraction
+2. **Live shop/price data:** Use UEX Corp API
+3. **Lore/descriptions:** Use Star Citizen Wiki API
+4. **Mining signatures:** Check SC_Signature_Scanner
+5. Only web search if none of these sources have the data
