@@ -297,6 +297,18 @@ export default function TargetsRoute() {
 
   const activeMissionCount = missionGroups.reduce((sum, g) => sum + g.missions.length, 0)
 
+  const handleAddToTrackerFromBrowse = useCallback(
+    (blueprintId: string) => {
+      void toggleTarget(blueprintId)
+    },
+    [toggleTarget]
+  )
+
+  const isOnTargetList = useCallback(
+    (blueprintId: string) => !!targetIds[blueprintId],
+    [targetIds]
+  )
+
   if (!isApproved && !isGuest) {
     return (
       <FeaturePageLayout
@@ -309,18 +321,6 @@ export default function TargetsRoute() {
       </FeaturePageLayout>
     )
   }
-
-  const handleAddToTrackerFromBrowse = useCallback(
-    (blueprintId: string) => {
-      void toggleTarget(blueprintId)
-    },
-    [toggleTarget]
-  )
-
-  const isOnTargetList = useCallback(
-    (blueprintId: string) => !!targetIds[blueprintId],
-    [targetIds]
-  )
 
   return (
     <FeaturePageLayout
