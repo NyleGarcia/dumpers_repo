@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import ArchiveWelcome from '../components/archive/ArchiveWelcome'
-import ArchiveTreeNav from '../components/archive/ArchiveTreeNav'
 import MiningSection from '../components/archive/MiningSection'
 import ComponentsSection from '../components/archive/ComponentsSection'
 import OrdnanceSection from '../components/archive/OrdnanceSection'
@@ -88,19 +87,9 @@ export default function ArchivePage() {
         <p className="site-page-subtitle">Star Citizen Reference Data</p>
       </header>
 
-      {/* Layout with sidebar navigation */}
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Sidebar navigation */}
-        <aside className="lg:w-56 shrink-0">
-          <div className="lg:sticky lg:top-20 bg-slate-900/40 border border-slate-800/60 rounded-xl py-3">
-            <ArchiveTreeNav currentSection={currentSection} onSelectSection={setSection} />
-          </div>
-        </aside>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0 bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
-          {renderSection()}
-        </div>
+      {/* Content */}
+      <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
+        {renderSection()}
       </div>
     </div>
   )
