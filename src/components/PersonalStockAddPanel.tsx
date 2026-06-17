@@ -74,8 +74,8 @@ export default function PersonalStockAddPanel({
     if (selectedIsSalvage) {
       setQuality(String(SALVAGE_ORDER_MIN_QUALITY))
     } else if (resourceBands && resourceBands.length > 0) {
-      // Set to a middle-high band (band 5) as default
-      setQuality(String(resourceBands[4] ?? resourceBands[0]))
+      // Set to band 4 as default (the "Good" tier - higher bands are much rarer)
+      setQuality(String(resourceBands[3] ?? resourceBands[0]))
     }
   }, [resourceKey, selectedIsSalvage, resourceBands])
 
