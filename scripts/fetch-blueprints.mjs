@@ -3,9 +3,30 @@ import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
 const BLUEPRINTS_URL = 'https://www.sccrafter.com/Blueprints.json'
+const SCCRAFTER_PAGE_URL = 'https://www.sccrafter.com/'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const outputPath = join(root, 'src', 'data', 'Blueprints.json')
 const force = process.argv.includes('--force')
+
+/**
+ * Fetch the actual game version from sccrafter's website (shown in their header)
+ */
+async function fetchSccrafterVersion() {
+  try {
+    const response = await fetch(SCCRAFTER_PAGE_URL)
+    if (!response.ok) return null
+    
+    const html = await response.text()
+    // Look for version pattern like "v4.8.2" in the HTML
+    const match = html.match(/v(\d+\.\d+\.\d+)/i)
+    if (match) {
+      return match[1] // Returns "4.8.2"
+    }
+  } catch {
+    // Silently fail - we'll use the JSON version
+  }
+  return null
+}
 
 function slugifyResourceName(name) {
   return name
@@ -94,6 +115,16 @@ async function main() {
     throw new Error(
       `Blueprint count regressed (${prior.count} -> ${count}). Re-run with --force to override.`
     )
+  }
+
+  // Try to get the actual version number from sccrafter's website
+  const siteVersion = await fetchSccrafterVersion()
+  const originalVersion = data.version
+  if (siteVersion) {
+    // Combine: "4.8.2 - Tactical Strike" instead of just "4.8 - Tactical Strike"
+    const namePart = data.version.replace(/^\d+\.\d+(\.\d+)?\s*[-–]?\s*/, '').trim()
+    data.version = namePart ? `${siteVersion} - ${namePart}` : siteVersion
+    console.log(`Version updated: "${originalVersion}" -> "${data.version}"`)
   }
 
   const resources = extractBlueprintResources(data.blueprints)
