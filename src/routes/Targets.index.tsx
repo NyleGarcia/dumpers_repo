@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
@@ -11,6 +11,9 @@ import {
   formatRepReward,
   getBlueprintUnlockInfo,
 } from '../lib/missionAcquisition'
+import BrowseMissionsView from '../components/BrowseMissionsView'
+
+type ViewMode = 'tracker' | 'browse'
 
 function formatDropChance(chance: number | null | undefined): string | null {
   if (chance == null || chance >= 1) return null
@@ -232,6 +235,7 @@ export default function TargetsRoute() {
   const isGuest = isGuestPreview && !user
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
+  const [viewMode, setViewMode] = useState<ViewMode>('tracker')
 
   // Build a map of blueprint ID to its mission keys for cleanup
   const blueprintMissionKeysMap = useMemo(() => {
@@ -306,27 +310,65 @@ export default function TargetsRoute() {
     )
   }
 
+  const handleAddToTrackerFromBrowse = useCallback(
+    (blueprintId: string) => {
+      void toggleTarget(blueprintId)
+    },
+    [toggleTarget]
+  )
+
+  const isOnTargetList = useCallback(
+    (blueprintId: string) => !!targetIds[blueprintId],
+    [targetIds]
+  )
+
   return (
     <FeaturePageLayout
       title="Mission Tracker"
       subtitle="Track blueprints and the missions that reward them"
       actions={
-        <button
-          onClick={() => void refresh()}
-          className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
-        >
-          Refresh
-        </button>
+        viewMode === 'tracker' && (
+          <button
+            onClick={() => void refresh()}
+            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
+          >
+            Refresh
+          </button>
+        )
       }
     >
-      {isGuest && (
+      {/* View Mode Toggle */}
+      <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit mb-6">
+        <button
+          onClick={() => setViewMode('tracker')}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            viewMode === 'tracker'
+              ? 'bg-orange-600 text-white'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          My Tracker
+        </button>
+        <button
+          onClick={() => setViewMode('browse')}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            viewMode === 'browse'
+              ? 'bg-orange-600 text-white'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          Browse Missions
+        </button>
+      </div>
+
+      {isGuest && viewMode === 'tracker' && (
         <div className="mb-4 px-3 py-2 rounded-lg border border-amber-500/30 bg-amber-950/30 text-xs text-amber-200/90">
           <strong className="text-amber-100">Offline Mode</strong> — Your tracked missions save in this browser only. 
           Sign in to sync across devices.
         </div>
       )}
 
-      {error && (
+      {error && viewMode === 'tracker' && (
         <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
           {error}
           {error.includes('relation') && (
@@ -337,28 +379,41 @@ export default function TargetsRoute() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Targets</p>
-          <p className="text-2xl font-bold text-white mt-1">{targetCount}</p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">On checklist</p>
-          <p className="text-2xl font-bold text-amber-400 mt-1">{activeMissionCount}</p>
-        </div>
-      </div>
+      {/* Browse Missions View */}
+      {viewMode === 'browse' && (
+        <BrowseMissionsView
+          acquiredBlueprints={acquiredBlueprints}
+          onAddToTracker={handleAddToTrackerFromBrowse}
+          isOnTargetList={isOnTargetList}
+        />
+      )}
 
-      {loading ? (
-        <div className="text-center py-12 text-slate-400">Loading tracked blueprints…</div>
-      ) : targetCount === 0 ? (
-        <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
-          <p className="text-slate-400 text-lg mb-2">No tracked blueprints yet</p>
-          <p className="text-slate-500 text-sm">
-            Use the <strong className="text-amber-400">Track</strong> button on a blueprint card or inside the blueprint details.
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,360px)_1fr] gap-6 items-start">
+      {/* Tracker View */}
+      {viewMode === 'tracker' && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+              <p className="text-slate-500 text-xs uppercase tracking-wide">Targets</p>
+              <p className="text-2xl font-bold text-white mt-1">{targetCount}</p>
+            </div>
+            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+              <p className="text-slate-500 text-xs uppercase tracking-wide">On checklist</p>
+              <p className="text-2xl font-bold text-amber-400 mt-1">{activeMissionCount}</p>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-12 text-slate-400">Loading tracked blueprints…</div>
+          ) : targetCount === 0 ? (
+            <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
+              <p className="text-slate-400 text-lg mb-2">No tracked blueprints yet</p>
+              <p className="text-slate-500 text-sm">
+                Use the <strong className="text-amber-400">Track</strong> button on a blueprint card or inside the blueprint details,
+                or switch to <strong className="text-orange-400">Browse Missions</strong> to explore mission pools.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,360px)_1fr] gap-6 items-start">
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-white">Your targets</h2>
             <div className="space-y-4">
@@ -469,6 +524,8 @@ export default function TargetsRoute() {
             />
           </section>
         </div>
+          )}
+        </>
       )}
     </FeaturePageLayout>
   )
