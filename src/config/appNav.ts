@@ -92,6 +92,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
       { id: 'archive-shops', label: 'Shops', path: '/shops', icon: 'shop' },
       { id: 'archive-ordnance', label: 'Ordnance', path: '/archive?section=ordnance', icon: 'ordnance' },
       { id: 'archive-factions', label: 'Factions', path: '/archive?section=factions', icon: 'factions' },
+      { id: 'archive-lore', label: 'Resource Lore', path: '/archive?section=lore', icon: 'book' },
       { id: 'archive-general', label: 'General Info', path: '/archive?section=general', icon: 'info' },
     ],
   },
