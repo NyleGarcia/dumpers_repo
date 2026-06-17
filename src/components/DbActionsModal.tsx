@@ -377,9 +377,9 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
         <div className="p-3 sm:p-4 rounded-xl border border-orange-500/30 bg-orange-950/20 space-y-3">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <h3 className="text-white font-medium text-sm">Sync Blueprints Data</h3>
+              <h3 className="text-white font-medium text-sm">Blueprint Update Process</h3>
               <p className="text-xs text-slate-400 mt-1">
-                Fetch latest blueprint catalog from sccrafter.com including crafting recipes and mission rewards.
+                Multi-step process to update blueprints when a new patch drops.
               </p>
               {bpSyncStatus && (
                 <div className="mt-2 text-xs text-slate-500 space-y-0.5">
@@ -395,13 +395,65 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
                 </div>
               )}
             </div>
-            <button
-              onClick={handleBlueprintsSync}
-              disabled={bpSyncing}
-              className="shrink-0 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {bpSyncing ? 'Syncing...' : 'Sync Now'}
-            </button>
+          </div>
+
+          {/* Step-by-step blueprint update process */}
+          <div className="mt-3 space-y-2">
+            {/* Step 1: Sync from sccrafter */}
+            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-600 text-white text-xs font-bold rounded-full">1</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white font-medium">Sync from sccrafter.com</p>
+                <p className="text-[10px] text-slate-500">Fetches latest Blueprints.json to public/data/</p>
+              </div>
+              <button
+                onClick={handleBlueprintsSync}
+                disabled={bpSyncing}
+                className="shrink-0 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-medium rounded transition-colors disabled:opacity-50"
+              >
+                {bpSyncing ? 'Syncing...' : 'Sync'}
+              </button>
+            </div>
+
+            {/* Step 2: Enrich Mining Lasers */}
+            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-amber-600 text-white text-xs font-bold rounded-full">2</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white font-medium">Enrich Mining Lasers</p>
+                <p className="text-[10px] text-slate-500">Adds power/range stats from star-citizen.wiki</p>
+              </div>
+              <code className="shrink-0 px-2 py-1 bg-slate-900 text-amber-400 text-[10px] font-mono rounded select-all">
+                node scripts/enrich-mining-lasers.mjs
+              </code>
+            </div>
+
+            {/* Step 3: Enrich FPS Weapons */}
+            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-amber-600 text-white text-xs font-bold rounded-full">3</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white font-medium">Enrich FPS Weapons</p>
+                <p className="text-[10px] text-slate-500">Adds damage/RPM/range from star-citizen.wiki</p>
+              </div>
+              <code className="shrink-0 px-2 py-1 bg-slate-900 text-amber-400 text-[10px] font-mono rounded select-all">
+                node scripts/enrich-fps-weapons.mjs
+              </code>
+            </div>
+
+            {/* Step 4: Enrich Salvage Modules */}
+            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-amber-600 text-white text-xs font-bold rounded-full">4</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white font-medium">Enrich Salvage Modules</p>
+                <p className="text-[10px] text-slate-500">Adds scraping efficiency/radius from star-citizen.wiki</p>
+              </div>
+              <code className="shrink-0 px-2 py-1 bg-slate-900 text-amber-400 text-[10px] font-mono rounded select-all">
+                node scripts/enrich-salvage-modules.mjs
+              </code>
+            </div>
+
+            <p className="text-[10px] text-slate-600 italic pt-1">
+              Steps 2-4 run locally in terminal. After all steps, build and deploy.
+            </p>
           </div>
         </div>
 
