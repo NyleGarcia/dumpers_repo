@@ -9,7 +9,6 @@ import { buildMissionList, getMissionsForBlueprint, missionKey, type Region } fr
 import {
   formatBlueprintUnlockBadge,
   formatRepReward,
-  formatStandingRequirement,
   getBlueprintUnlockInfo,
 } from '../lib/missionAcquisition'
 
@@ -350,7 +349,7 @@ export default function TargetsRoute() {
                   acquiredSet
                 )
                 const addableMissions = missions.filter((m) => !isMissionOnChecklist(m.missionKey))
-                const unlockInfo = getBlueprintUnlockInfo(bp.file)
+                const _unlockInfo = getBlueprintUnlockInfo(bp.file)
 
                 return (
                   <div

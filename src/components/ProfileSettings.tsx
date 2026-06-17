@@ -11,7 +11,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     user,
     profile,
     refreshProfile,
-    updateRsiHandle,
+    updateRsiHandle: _updateRsiHandle,
     updateGhostMode,
     updateCraftDeductInventory,
     updateDfpDisplayEnabled,
@@ -38,7 +38,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
-  const [checkingOrders, setCheckingOrders] = useState(true)
+  const [_checkingOrders, setCheckingOrders] = useState(true)
 
   const isVerified = profile?.rsi_handle_verified ?? false
 

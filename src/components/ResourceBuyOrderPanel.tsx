@@ -17,7 +17,6 @@ import {
   formatDfpAuec,
   formatDfpLabel,
   formatDfpRequiredPrice,
-  formatBlueprintOrderQualityLabel,
   formatResourceOrderQualityLabel,
   isAmmoBlueprint,
 } from '../lib/dfp'

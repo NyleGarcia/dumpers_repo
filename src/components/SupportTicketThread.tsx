@@ -118,6 +118,7 @@ export default function SupportTicketThread({
 
   useEffect(() => {
     loadTicket()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId])
 
   useEffect(() => {
@@ -247,7 +248,7 @@ export default function SupportTicketThread({
     setResolutionMessage('')
   }
 
-  const handleDelete = async () => {
+  const _handleDelete = async () => {
     if (!resolutionMessage.trim()) return
     
     setDeleting(true)

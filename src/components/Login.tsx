@@ -25,7 +25,7 @@ export default function Login() {
     try {
       setError(null)
       await signInWithGoogle()
-    } catch (e) {
+    } catch {
       setError('Failed to sign in. Please try again.')
     }
   }

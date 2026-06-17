@@ -55,7 +55,7 @@ export default function AppChrome({
   onOpenSupport,
   onSignOut,
   onGuestSignIn,
-  onExitGuestPreview,
+  onExitGuestPreview: _onExitGuestPreview,
   guestSigningIn = false,
 }: AppChromeProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })

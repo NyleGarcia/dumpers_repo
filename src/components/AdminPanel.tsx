@@ -21,6 +21,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     } else {
       fetchUsers()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])
 
   const fetchUsers = async () => {

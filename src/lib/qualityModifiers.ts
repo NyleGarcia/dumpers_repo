@@ -84,7 +84,6 @@ export function isLowerBetter(property: string): boolean {
 }
 
 export function getPropertyLabel(property: string): string {
-  const normalized = property.charAt(0).toUpperCase() + property.slice(1).toLowerCase()
   const key = Object.keys(PROPERTY_LABELS).find(
     k => k.toLowerCase() === property.toLowerCase()
   )
@@ -178,7 +177,7 @@ export function calculateSlotModifiers(
   }
 
   const results: SlotModifierResult[] = []
-  for (const [property, mods] of byProperty) {
+  for (const [_property, mods] of byProperty) {
     const modifier = interpolateModifier(quality, mods)
     results.push({
       property: mods[0].gameplayProperty,

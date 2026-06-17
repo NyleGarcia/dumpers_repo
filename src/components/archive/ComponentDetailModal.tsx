@@ -173,8 +173,8 @@ export default function ComponentDetailModal({
 }: ComponentDetailModalProps) {
   const { data: shopListings, loading: shopsLoading } = useShopsSellingComponent(component.display_name)
 
-  const gradeClass = GRADE_COLORS[component.grade] || GRADE_COLORS.D
-  const classColor = CLASS_COLORS[component.class] || 'text-slate-300'
+  const _gradeClass = GRADE_COLORS[component.grade] || GRADE_COLORS.D
+  const _classColor = CLASS_COLORS[component.class] || 'text-slate-300'
 
   // Find similar components (same type + size, different grade/class)
   const similarComponents = useMemo(() => {
