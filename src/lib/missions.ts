@@ -1,4 +1,4 @@
-import { getMissionRepInfo } from './missionAcquisition'
+import { getMissionRepInfo, getBlueprintUnlockInfo } from './missionAcquisition'
 
 export type Region = 'stanton' | 'pyro' | 'nyx'
 
@@ -165,18 +165,29 @@ export interface TargetBlueprintMissionOption {
   missionType: string | null
 }
 
+interface FallbackRepInfo {
+  minReputation: number | null
+  minStandingName: string | null
+  factionName: string | null
+}
+
 function attachMissionRep<T extends { mission: string }>(
   entry: T,
   dropChance?: number | null,
-  locations?: string[]
+  locations?: string[],
+  fallbackRep?: FallbackRepInfo
 ): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType'> {
   const rep = getMissionRepInfo(entry.mission)
+  
+  const minReputation = rep.minReputation ?? fallbackRep?.minReputation ?? null
+  const minStandingName = rep.minStandingName ?? fallbackRep?.minStandingName ?? null
+  
   return {
     ...entry,
     repMin: rep.repMin,
     repMax: rep.repMax,
-    minReputation: rep.minReputation,
-    minStandingName: rep.minStandingName,
+    minReputation,
+    minStandingName,
     dropChance: dropChance ?? null,
     regions: categorizeRegions(locations),
     isLawful: rep.isLawful,
@@ -195,6 +206,13 @@ export function getMissionsForBlueprint(
   const seen = new Set<string>()
   const missionLocations = new Map<string, Set<string>>()
   const options: TargetBlueprintMissionOption[] = []
+
+  const bpUnlockInfo = getBlueprintUnlockInfo(blueprint.blueprintId)
+  const fallbackRep: FallbackRepInfo = {
+    minReputation: bpUnlockInfo.unlockMinReputation,
+    minStandingName: bpUnlockInfo.unlockStandingName,
+    factionName: bpUnlockInfo.factionName,
+  }
 
   // First pass: collect all locations for each mission
   for (const reward of blueprint.rewardMissions ?? []) {
@@ -227,7 +245,8 @@ export function getMissionsForBlueprint(
           giver: parseMissionGiver(mission),
         },
         reward.chance,
-        allLocations
+        allLocations,
+        fallbackRep
       )
     )
   }
