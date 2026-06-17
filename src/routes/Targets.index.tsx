@@ -82,6 +82,9 @@ function MissionMetaLine({
   minStandingName,
   minReputation,
   dropChance,
+  isLawful = true,
+  aUecMin = 0,
+  aUecMax = 0,
 }: {
   regions: Region[]
   repMin?: number | null
@@ -89,15 +92,32 @@ function MissionMetaLine({
   minStandingName?: string | null
   minReputation?: number | null
   dropChance?: number | null
+  isLawful?: boolean
+  aUecMin?: number
+  aUecMax?: number
 }) {
   const repText = formatRepReward(repMin ?? null, repMax ?? null)
   const dropText = formatDropChance(dropChance)
+  
+  // Format aUEC reward
+  const aUecText = aUecMin > 0 || aUecMax > 0
+    ? aUecMin === aUecMax || aUecMax === 0
+      ? `${aUecMin.toLocaleString()} aUEC`
+      : `${aUecMin.toLocaleString()}–${aUecMax.toLocaleString()} aUEC`
+    : null
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
+      {/* Lawful/Illegal indicator */}
+      {!isLawful && (
+        <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-red-950/50 text-red-400 border-red-500/40">
+          Illegal
+        </span>
+      )}
       <MissionRegionBadge regions={regions} />
       <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} />
       {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
+      {aUecText && <span className="text-[10px] text-yellow-400/90">{aUecText}</span>}
       {dropText && <span className="text-[10px] text-amber-400/80">{dropText}</span>}
     </div>
   )
@@ -172,7 +192,7 @@ function MissionChecklistGroups({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-slate-200">{mission.mission}</p>
+                      <p className={`text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>{mission.mission}</p>
                       <MissionMetaLine
                         regions={mission.regions}
                         repMin={mission.repMin}
@@ -180,6 +200,9 @@ function MissionChecklistGroups({
                         minStandingName={mission.minStandingName}
                         minReputation={mission.minReputation}
                         dropChance={mission.dropChance}
+                        isLawful={mission.isLawful}
+                        aUecMin={mission.aUecMin}
+                        aUecMax={mission.aUecMax}
                       />
                       <p className="text-xs text-slate-500 mt-1">
                         Waiting on: {mission.unacquiredBlueprintIds.length} blueprint
@@ -414,7 +437,7 @@ export default function TargetsRoute() {
                                     : 'Add to mission checklist'
                                 }
                               >
-                                <p className="text-xs text-slate-300 leading-snug">{m.mission}</p>
+                                <p className={`text-xs leading-snug ${m.isLawful ? 'text-green-300' : 'text-red-400'}`}>{m.mission}</p>
                                 <MissionMetaLine
                                   regions={m.regions}
                                   repMin={m.repMin}
@@ -422,6 +445,9 @@ export default function TargetsRoute() {
                                   minStandingName={m.minStandingName}
                                   minReputation={m.minReputation}
                                   dropChance={m.dropChance}
+                                  isLawful={m.isLawful}
+                                  aUecMin={m.aUecMin}
+                                  aUecMax={m.aUecMax}
                                 />
                               </button>
                             </li>

@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted via dcb query)",
-  "_extracted": "2026-06-17T21:03:43.154Z",
+  "_extracted": "2026-06-17T21:42:23.022Z",
   "qualityBands": {
     "carinite": {
       "name": "Carinite",
@@ -57,6 +57,61 @@
         1000
       ]
     },
+    "taranite": {
+      "name": "Taranite",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 310
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 525
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 646
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 718
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 853
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 925
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 957
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        310,
+        525,
+        646,
+        718,
+        853,
+        925,
+        957,
+        1000
+      ]
+    },
     "titanium": {
       "name": "Titanium",
       "bands": [
@@ -109,6 +164,61 @@
         866,
         916,
         959,
+        1000
+      ]
+    },
+    "lindinium": {
+      "name": "Lindinium",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 305
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 585
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 618
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 729
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 853
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 930
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 954
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        305,
+        585,
+        618,
+        729,
+        853,
+        930,
+        954,
         1000
       ]
     },
@@ -879,6 +989,61 @@
         875,
         941,
         959,
+        1000
+      ]
+    },
+    "corundum": {
+      "name": "Corundum",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 309
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 504
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 665
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 793
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 886
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 904
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 971
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        309,
+        504,
+        665,
+        793,
+        886,
+        904,
+        971,
         1000
       ]
     },
@@ -1902,6 +2067,16 @@
       959,
       1000
     ],
+    "taranite": [
+      310,
+      525,
+      646,
+      718,
+      853,
+      925,
+      957,
+      1000
+    ],
     "titanium": [
       295,
       516,
@@ -1910,6 +2085,16 @@
       866,
       916,
       959,
+      1000
+    ],
+    "lindinium": [
+      305,
+      585,
+      618,
+      729,
+      853,
+      930,
+      954,
       1000
     ],
     "copper": [
@@ -2050,6 +2235,16 @@
       875,
       941,
       959,
+      1000
+    ],
+    "corundum": [
+      309,
+      504,
+      665,
+      793,
+      886,
+      904,
+      971,
       1000
     ],
     "aslarite": [
@@ -2234,7 +2429,7 @@
     ]
   },
   "summary": {
-    "totalResources": 34,
+    "totalResources": 37,
     "distributionTypes": 2
   }
 }

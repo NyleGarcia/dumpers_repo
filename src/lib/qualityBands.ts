@@ -39,23 +39,35 @@ export function normalizeResourceName(name: string): string {
 }
 
 /**
+ * Known spelling variations/aliases in game data
+ */
+const RESOURCE_ALIASES: Record<string, string> = {
+  'quantanium': 'quantainium',  // Blueprint uses "Quantanium", game uses "Quantainium"
+  'pressurizedice': 'rawice',   // Pressurized_Ice maps to RawIce
+  'yormandieye': 'beryl',       // Yormandi Eye is a variant of Beryl (use Beryl's bands)
+}
+
+/**
  * Get quality bands for a specific resource
  * Returns undefined if no bands are available for this resource
  */
 export function getResourceBands(resourceName: string): number[] | undefined {
   const normalized = normalizeResourceName(resourceName)
   
+  // Check alias first
+  const aliased = RESOURCE_ALIASES[normalized] || normalized
+  
   // Try direct match
-  if (RESOURCE_QUALITY_BANDS[normalized]) {
-    return RESOURCE_QUALITY_BANDS[normalized]
+  if (RESOURCE_QUALITY_BANDS[aliased]) {
+    return RESOURCE_QUALITY_BANDS[aliased]
   }
   
   // Try common variations
   const variations = [
-    normalized,
-    normalized.replace('ore', ''),
-    normalized.replace('raw', ''),
-    `raw${normalized}`,
+    aliased,
+    aliased.replace('ore', ''),
+    aliased.replace('raw', ''),
+    `raw${aliased}`,
   ]
   
   for (const v of variations) {

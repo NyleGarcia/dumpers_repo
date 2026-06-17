@@ -9,6 +9,12 @@ export interface MissionRepInfo {
   variantCount: number
   missionGiver: string | null
   matched: boolean
+  // New enhanced fields
+  isLawful: boolean
+  aUecMin: number
+  aUecMax: number
+  missionType: string | null
+  missionLocations: string[]
 }
 
 export interface BlueprintUnlockInfo {
@@ -137,43 +143,87 @@ export function formatStandingRequirement(
 }
 
 export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
+  const defaultReturn: MissionRepInfo = {
+    repMin: null,
+    repMax: null,
+    minReputation: null,
+    minStandingName: null,
+    variantCount: 0,
+    missionGiver: null,
+    matched: false,
+    isLawful: true,
+    aUecMin: 0,
+    aUecMax: 0,
+    missionType: null,
+    missionLocations: [],
+  }
+
   if (/uninitialized/i.test(missionLabel)) {
-    return {
-      repMin: null,
-      repMax: null,
-      minReputation: null,
-      minStandingName: null,
-      variantCount: 0,
-      missionGiver: null,
-      matched: false,
-    }
+    return defaultReturn
   }
 
   const key = missionLookupKey(missionLabel)
-  const entry = missions[key]
+  const entry = missions[key] as {
+    label: string
+    title: string
+    faction: string
+    isLawful?: boolean
+    aUecReward?: { min: number; max: number }
+    missionType?: string
+    locations?: string[]
+    reputationRequirements: Array<{
+      factionRef: string
+      scopeRef: string
+      comparison: string
+      standingRef: string
+    }> | null
+    reputationRewards: Array<{
+      rewardRef: string
+      factionRef: string
+    }>
+    repAmounts?: {
+      success: Array<{
+        rewardType: string
+        factionKey: string
+        rewardRef: string
+      }>
+    }
+    blueprintRewards: Array<{
+      poolRef: string
+      weight: number
+    }>
+  } | undefined
   
   if (!entry) {
-    return {
-      repMin: null,
-      repMax: null,
-      minReputation: null,
-      minStandingName: null,
-      variantCount: 0,
-      missionGiver: null,
-      matched: false,
-    }
+    return defaultReturn
   }
 
   let repMin: number | null = null
   let repMax: number | null = null
   
-  for (const reward of entry.reputationRewards) {
-    const rewardKey = extractRewardKey(reward.rewardRef)
-    const rewardData = rewardAmounts[rewardKey]
-    if (rewardData) {
-      const amount = rewardData.amount
-      if (repMin === null || amount < repMin) repMin = amount
-      if (repMax === null || amount > repMax) repMax = amount
+  // Try to get rep amounts from the new repAmounts.success array
+  if (entry.repAmounts?.success?.length) {
+    for (const ra of entry.repAmounts.success) {
+      const rewardKey = ra.rewardType.toLowerCase()
+      const rewardData = rewardAmounts[rewardKey]
+      if (rewardData) {
+        const amount = rewardData.amount
+        if (repMin === null || amount < repMin) repMin = amount
+        if (repMax === null || amount > repMax) repMax = amount
+      }
+    }
+  }
+  
+  // Fallback to old method if no repAmounts
+  if (repMin === null && entry.reputationRewards) {
+    for (const reward of entry.reputationRewards) {
+      const rewardKey = extractRewardKey(reward.rewardRef)
+      const rewardData = rewardAmounts[rewardKey]
+      if (rewardData) {
+        const amount = rewardData.amount
+        if (repMin === null || amount < repMin) repMin = amount
+        if (repMax === null || amount > repMax) repMax = amount
+      }
     }
   }
 
@@ -199,6 +249,11 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     variantCount: 1,
     missionGiver: entry.faction || null,
     matched: true,
+    isLawful: entry.isLawful !== false,
+    aUecMin: entry.aUecReward?.min || 0,
+    aUecMax: entry.aUecReward?.max || 0,
+    missionType: entry.missionType || null,
+    missionLocations: entry.locations || [],
   }
 }
 

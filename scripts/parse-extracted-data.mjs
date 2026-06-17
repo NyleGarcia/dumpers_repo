@@ -500,14 +500,20 @@ function parseQualityBands() {
     return { bands: {}, distribution: {} }
   }
   
-  const content = readFileSync(queryFile, 'utf-8')
+  const rawContent = readFileSync(queryFile, 'utf-8')
+  
+  // CRITICAL: First strip out ALL lines that start with "---" 
+  // StarBreaker interleaves these markers IN THE MIDDLE of JSON content
+  const content = rawContent
+    .split('\n')
+    .filter(line => !line.trim().startsWith('---'))
+    .join('\n')
   
   // Parse the concatenated JSON objects from query output
-  // Format: {record1}{record2}... with --- separators at the end
+  // Format: {record1}{record2}...
   const bands = {}
   
-  // Split by record start pattern and parse each
-  const recordPattern = /\{\s*"_RecordName_":\s*"CraftingQualityQuantizationRecord\.Quantization_(\w+)"/g
+  // Split by }{ boundary and reconstruct each JSON object
   const records = content.split(/\}\s*\{/).map((r, i, arr) => {
     if (i === 0) return r + '}'
     if (i === arr.length - 1) return '{' + r
@@ -562,7 +568,12 @@ function parseQualityBands() {
   const distribution = {}
   const distFile = join(EXTRACTED_DATA, QUALITY_DISTRIBUTION_FILE)
   if (existsSync(distFile)) {
-    const distContent = readFileSync(distFile, 'utf-8')
+    const rawDistContent = readFileSync(distFile, 'utf-8')
+    // Strip --- markers that may be interleaved
+    const distContent = rawDistContent
+      .split('\n')
+      .filter(line => !line.trim().startsWith('---'))
+      .join('\n')
     const distRecords = distContent.split(/\}\s*\{/).map((r, i, arr) => {
       if (i === 0) return r + '}'
       if (i === arr.length - 1) return '{' + r
@@ -1265,6 +1276,7 @@ function parseFactionReputations(localization = {}) {
 
 /**
  * Parse mission broker data to extract missions with reputation requirements and blueprint rewards
+ * Now includes: lawful/illegal status, locations, aUEC rewards, rep reward amounts
  */
 function parseMissionBrokerData(localization = {}) {
   console.log('  Parsing mission broker data...')
@@ -1276,7 +1288,13 @@ function parseMissionBrokerData(localization = {}) {
     return { missions: {}, missionsByFaction: {} }
   }
   
-  const content = readFileSync(missionQueryFile, 'utf-8')
+  const rawContent = readFileSync(missionQueryFile, 'utf-8')
+  
+  // Strip --- markers that may be interleaved in the JSON
+  const content = rawContent
+    .split('\n')
+    .filter(line => !line.trim().startsWith('---'))
+    .join('\n')
   
   // Parse concatenated JSON records
   const missions = {}
@@ -1316,7 +1334,7 @@ function parseMissionBrokerData(localization = {}) {
         }))
       }
       
-      // Extract reputation rewards
+      // Extract reputation rewards (file references)
       const repRewards = []
       if (val.reputationRewards) {
         for (const reward of val.reputationRewards) {
@@ -1325,6 +1343,28 @@ function parseMissionBrokerData(localization = {}) {
               rewardRef: reward.reward,
               factionRef: reward.factionReputation || ''
             })
+          }
+        }
+      }
+      
+      // Extract actual rep amounts from missionResultReputationRewards
+      // This is an array of result states (success, fail, etc.) with reputationAmounts
+      const repAmounts = { success: [], fail: [] }
+      if (val.missionResultReputationRewards && Array.isArray(val.missionResultReputationRewards)) {
+        // Index 0 is typically success, others are failure states
+        const successRewards = val.missionResultReputationRewards[0]
+        if (successRewards?.reputationAmounts) {
+          for (const ra of successRewards.reputationAmounts) {
+            if (ra.reward && ra.factionReputation) {
+              // Extract the reward amount reference
+              const rewardMatch = ra.reward.match(/reputationrewardamount_(\w+)\.json/i)
+              const factionMatch = ra.factionReputation.match(/factionreputation_(\w+)\.json/i)
+              repAmounts.success.push({
+                rewardType: rewardMatch ? rewardMatch[1] : 'unknown',
+                factionKey: factionMatch ? factionMatch[1].toLowerCase() : 'unknown',
+                rewardRef: ra.reward
+              })
+            }
           }
         }
       }
@@ -1347,6 +1387,11 @@ function parseMissionBrokerData(localization = {}) {
       const resolvedTitle = titleKey.startsWith('@') ? 
         (localization[titleKey.substring(1)] || titleKey) : titleKey
       
+      // Extract description
+      const descKey = val.description || ''
+      const resolvedDesc = descKey.startsWith('@') ?
+        (localization[descKey.substring(1)] || '') : descKey
+      
       // Extract faction from path/requirements
       let faction = 'unknown'
       if (repRequirements?.length > 0) {
@@ -1354,13 +1399,64 @@ function parseMissionBrokerData(localization = {}) {
         if (factionMatch) faction = factionMatch[1].toLowerCase()
       }
       
+      // Extract lawful/illegal status
+      const isLawful = val.lawfulMission === true
+      
+      // Extract location data
+      let locations = []
+      if (val.localityAvailable) {
+        // This can be a string path or array
+        const locPath = typeof val.localityAvailable === 'string' ? val.localityAvailable : ''
+        const locMatch = locPath.match(/locality_(\w+)\.json/i)
+        if (locMatch) locations.push(locMatch[1])
+      }
+      if (val.locationMissionAvailable) {
+        const locPath = typeof val.locationMissionAvailable === 'string' ? val.locationMissionAvailable : ''
+        const locMatch = locPath.match(/([^/]+)\.json$/i)
+        if (locMatch && locMatch[1] !== 'null') locations.push(locMatch[1])
+      }
+      
+      // Extract mission type
+      let missionType = 'unknown'
+      if (val.type) {
+        const typeMatch = val.type.match(/missiontype\/pu\/(\w+)\.json/i)
+        if (typeMatch) missionType = typeMatch[1]
+      }
+      
+      // Extract aUEC reward
+      const aUecReward = {
+        min: val.missionReward?.reward || 0,
+        max: val.missionReward?.max || val.missionReward?.reward || 0,
+        currency: val.missionReward?.currencyType || 'UEC'
+      }
+      
+      // Extract difficulty
+      const difficulty = val.missionDifficulty ?? -1
+      
+      // Extract mission giver
+      const missionGiverKey = val.missionGiver || ''
+      const missionGiver = missionGiverKey.startsWith('@') ?
+        (localization[missionGiverKey.substring(1)] || missionGiverKey) : missionGiverKey
+      
+      // Skip not for release missions
+      const notForRelease = val.notForRelease === true
+      
       missions[missionLabel] = {
         label: missionLabel,
         title: resolvedTitle,
         titleKey: titleKey,
+        description: resolvedDesc,
         faction,
+        missionGiver,
+        missionType,
+        isLawful,
+        notForRelease,
+        locations,
+        difficulty,
+        aUecReward,
         reputationRequirements: repRequirements,
         reputationRewards: repRewards,
+        repAmounts,
         blueprintRewards,
         hasRepRequirement: !!repRequirements,
         hasBlueprintReward: blueprintRewards.length > 0
@@ -1379,6 +1475,8 @@ function parseMissionBrokerData(localization = {}) {
   
   console.log(`  Parsed ${Object.keys(missions).length} mission broker entries`)
   console.log(`  Factions with missions: ${Object.keys(missionsByFaction).length}`)
+  console.log(`  Lawful missions: ${Object.values(missions).filter(m => m.isLawful).length}`)
+  console.log(`  Unlawful missions: ${Object.values(missions).filter(m => !m.isLawful).length}`)
   
   return { missions, missionsByFaction }
 }
