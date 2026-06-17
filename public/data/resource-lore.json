@@ -1,0 +1,302 @@
+{
+  "generated_at": "2026-06-17T02:24:32.953Z",
+  "source": "star-citizen.wiki API",
+  "count": 59,
+  "resources": {
+    "hephaestanite": {
+      "label": "Hephaestanite",
+      "description": "Found often near volcanic outcroppings, this mineral is commonly used for a thermal insulator.",
+      "source_url": "https://api.star-citizen.wiki/commodities/hephaestanite"
+    },
+    "iron": {
+      "label": "Iron",
+      "description": "Element Fe, strong, malleable, highly susceptible to rust and found in large volume across most star systems.",
+      "source_url": "https://api.star-citizen.wiki/commodities/iron"
+    },
+    "torite": {
+      "label": "Torite",
+      "description": "Found throughout the Nyx system, this common metal has been mined by local inhabitants for a variety of uses though it has yet to be adopted wider.",
+      "source_url": "https://api.star-citizen.wiki/commodities/torite"
+    },
+    "tungsten": {
+      "label": "Tungsten",
+      "description": "Used in many different alloys, tungsten in its pure form becomes malleable while maintaining its hardness.",
+      "source_url": "https://api.star-citizen.wiki/commodities/tungsten"
+    },
+    "gold": {
+      "label": "Gold",
+      "description": "A commonly found ductile metal favored for its conductivity. Though it falls in and out of fashion, it is often used for decorative purposes as well.",
+      "source_url": "https://api.star-citizen.wiki/commodities/gold"
+    },
+    "quartz": {
+      "label": "Quartz",
+      "description": "A chiral crystal composed of silicon and oxygen that can be found in a wide variety of forms and colors.",
+      "source_url": "https://api.star-citizen.wiki/commodities/quartz"
+    },
+    "copper": {
+      "label": "Copper",
+      "description": "A soft red-orange colored metal with high conductivity. Prone to oxidation unless properly treated.",
+      "source_url": "https://api.star-citizen.wiki/commodities/copper"
+    },
+    "taranite": {
+      "label": "Taranite",
+      "description": "Extremely conductive, this mineral was first discovered when a researcher noticed a breed of electrosensitive hermit crab using pieces of it to form its shell.",
+      "source_url": "https://api.star-citizen.wiki/commodities/taranite"
+    },
+    "aluminum": {
+      "label": "Aluminum",
+      "description": "A chemically reactive, gray metal that is malleable, lightweight, ductile, strong, and resistant to corrosion. Capable of superconductivity.",
+      "source_url": "https://api.star-citizen.wiki/commodities/aluminum"
+    },
+    "ouratite": {
+      "label": "Ouratite",
+      "description": "Notable for its ability to withstand kinetic impacts, ouratite is a solid hydrocarbon that is found only in the Stanton system. Once refined, this rare material can be used as combat armor plating.",
+      "source_url": "https://api.star-citizen.wiki/commodities/ouratite"
+    },
+    "aslarite": {
+      "label": "Aslarite",
+      "description": "Aslarite is a naturally-occurring mineral that is most commonly found on asteroids. Sought for its natural thermal insulation properties, it can be processed and used in the construction of personal armor to help the wearer withstand extreme temperatures.",
+      "source_url": "https://api.star-citizen.wiki/commodities/aslarite"
+    },
+    "savrilium": {
+      "label": "Savrilium",
+      "description": "This metal, first discovered in the Nyx system, was a main economic driver for early miners of the system thanks to its unique alloyed properties.",
+      "source_url": "https://api.star-citizen.wiki/commodities/savrilium"
+    },
+    "titanium": {
+      "label": "Titanium",
+      "description": "This silver-colored chemical element is excellent at producing strong, lightweight alloys.",
+      "source_url": "https://api.star-citizen.wiki/commodities/titanium"
+    },
+    "agricium": {
+      "label": "Agricium",
+      "description": "A rare and valuable silvery metal with a blue-green sheen. Malleable, ductile, and largely non-reactive.",
+      "source_url": "https://api.star-citizen.wiki/commodities/agricium"
+    },
+    "lindinium": {
+      "label": "Lindinium",
+      "description": "A versatile metal that has been successfully alloyed with numerous other elements, miners in the Nyx system have been known to go to great lengths to procure it.",
+      "source_url": "https://api.star-citizen.wiki/commodities/lindinium"
+    },
+    "stileron": {
+      "label": "Stileron",
+      "description": "This metal is ideally suited to the rigors of physical-based warfare. It is favored by defense manufacturers in armor construction for its ability to take a beating. However, it does not handle distortion well and is notoriously difficult to refine.",
+      "source_url": "https://api.star-citizen.wiki/commodities/stileron"
+    },
+    "laranite": {
+      "label": "Laranite",
+      "description": "A somewhat radioactive, crystalline gemstone. Black with streaks of dark red, it can only be used as jewelry if shielded.",
+      "source_url": "https://api.star-citizen.wiki/commodities/laranite"
+    },
+    "riccite": {
+      "label": "Riccite",
+      "description": "Found on worlds with heavy seismic activity, this metal is extremely flexible and has some self-healing properties.",
+      "source_url": "https://api.star-citizen.wiki/commodities/riccite"
+    },
+    "silicon": {
+      "label": "Silicon",
+      "description": "A strong and brittle element with good thermal conductivity. Crystalizes in a diamond form.",
+      "source_url": "https://api.star-citizen.wiki/commodities/silicon"
+    },
+    "corundum": {
+      "label": "Corundum",
+      "description": "The crystalline form of aluminum oxide. Used as a gem. Varieties include ruby, sapphire, and padparadscha.",
+      "source_url": "https://api.star-citizen.wiki/commodities/corundum"
+    },
+    "tin": {
+      "label": "Tin",
+      "description": "Tin is a pliable, soft metal, with a silvery white-blue tint. It is conductive and resistance to corrosion.",
+      "source_url": "https://api.star-citizen.wiki/commodities/tin"
+    },
+    "beryl": {
+      "label": "Beryl",
+      "description": "A mineral that creates natural hexagonal crystals. Colorless in its pure form, its impure forms include the gems emerald and aquamarine.",
+      "source_url": "https://api.star-citizen.wiki/commodities/beryl"
+    },
+    "pressurized_ice": {
+      "label": "Pressurized_Ice",
+      "description": "Ice that has been purified and compressed to transparent by restricting natural expansion. This allows for more efficient transport in bulk.",
+      "source_url": "https://api.star-citizen.wiki/commodities/pressurized-ice"
+    },
+    "borase": {
+      "label": "Borase",
+      "description": "This highly thermally conductive material is often formed from cosmic ray spallation and is most typically found in younger star systems.",
+      "source_url": "https://api.star-citizen.wiki/commodities/borase"
+    },
+    "bexalite": {
+      "label": "Bexalite",
+      "description": "This mineral harvested from worlds with no natural magnetic core, has found widespread use in electrical systems.",
+      "source_url": "https://api.star-citizen.wiki/commodities/bexalite"
+    },
+    "rmc": {
+      "label": "RMC (Recycled Material Composite)",
+      "description": "Recycled Material Composite, commonly referred to as RMC, is the end result of low-tier salvaging where a myriad of alloys and polymers are mixed together during the collection process.",
+      "source_url": "https://api.star-citizen.wiki/commodities/recycled-material-composite"
+    },
+    "compboard": {
+      "label": "Compboard",
+      "description": "A main processing unit used inside various computers and electronics.",
+      "source_url": "https://api.star-citizen.wiki/commodities/compboard"
+    },
+    "scrap": {
+      "label": "Scrap",
+      "description": "Waste that is ready to be converted into new materials for reuse.",
+      "source_url": "https://api.star-citizen.wiki/commodities/scrap"
+    },
+    "waste": {
+      "label": "Waste",
+      "description": "Unwanted and unusable materials that are designated to be discarded.",
+      "source_url": "https://api.star-citizen.wiki/commodities/waste"
+    },
+    "hydrogen_fuel": {
+      "label": "Hydrogen Fuel",
+      "description": "Hydrogen that is energized and then used by thrusters to propel vehicles.",
+      "source_url": "https://api.star-citizen.wiki/commodities/hydrogen-fuel"
+    },
+    "quantum_fuel": {
+      "label": "Quantum Fuel",
+      "description": "Fuel used by quantum drives to propel ships at high speeds or, if equipped with a jump module, through jump tunnels to other systems.",
+      "source_url": "https://api.star-citizen.wiki/commodities/quantum-fuel"
+    },
+    "argon": {
+      "label": "Argon",
+      "description": "Chemically inert under most conditions, argon is an odorless, colorless gas that is as soluble in water as oxygen. Appears lilac in a discharge tube.",
+      "source_url": "https://api.star-citizen.wiki/commodities/argon"
+    },
+    "helium": {
+      "label": "Helium",
+      "description": "An inert noble gas that is colorless, tasteless, and non-toxic. The second most abundant element in the universe. Produced within stars during the nuclear fusion of hydrogen.",
+      "source_url": "https://api.star-citizen.wiki/commodities/helium"
+    },
+    "hydrogen": {
+      "label": "Hydrogen",
+      "description": "The most abundant element in the universe. The building block of stars. Highly flammable in its pure form.",
+      "source_url": "https://api.star-citizen.wiki/commodities/hydrogen"
+    },
+    "nitrogen": {
+      "label": "Nitrogen",
+      "description": "A low-density, diatomic gas with no color or odor in its natural state. A necessary element in human respiration.",
+      "source_url": "https://api.star-citizen.wiki/commodities/nitrogen"
+    },
+    "altruciatoxin": {
+      "label": "Altruciatoxin",
+      "description": "Created by chemically processing the pollen of Revenant Tree (altrucia lacus), common effects of ingesting or smoking altruciatoxin include relaxing of the muscles, sensory enhancement, and lethargy. Heavy usage can cause staining of the tongue.",
+      "source_url": "https://api.star-citizen.wiki/commodities/altruciatoxin"
+    },
+    "e_tam": {
+      "label": "E'tam",
+      "description": "Created from the leaves of indigenous plants, E'tam is an organic hallucinogenic drug used by the Xi'an to slow body function and focus in order to achieve a deeper meditative state. For Humans, the effects are much more severe. E'tam causes hyper awareness, cognitive enhancement and improved focus. Users can be so engrossed in tasks that they neglect to eat, sleep or take care of other body functions.",
+      "source_url": "https://api.star-citizen.wiki/commodities/etam"
+    },
+    "slam": {
+      "label": "SLAM",
+      "description": "Most commonly ingested as a gas. Vials of SLAM are cracked and inhaled. Initially developed as a performance enhancer for athletes, SLAM targets the user's nervous system acting as a fear-inhibitor and painkiller. Once the severe physical side effects were discovered, the drug went underground and found popularity among mercs and outlaws who relied on it to provide that slight edge in combat. Unfortunately, SLAM is also heavily addictive, so many of these mercs ended up getting burned out on the drug. Heavy-duty SLAM junkies are easily identifiable in public; they have ‘the shakes’ -- involuntary muscle twitches. Important to note that this is not a sign of withdrawal, simply a side effect.",
+      "source_url": "https://api.star-citizen.wiki/commodities/slam"
+    },
+    "widow": {
+      "label": "WiDoW",
+      "description": "Thick, ink-black synthetic opioid commonly used as a recreational drug. WiDoW has spread like wildfire throughout the Empire thanks to the fact that it's relatively easy to produce. This also creates a wide variety of quality between batches of the drug. Designed to be injected as a liquid directly into the bloodstream, the name derived from one of the main side effects from extensive use, the drug stains the veins black, creating web-like subcutaneous patterns through the body. Illegal inside the UEE.",
+      "source_url": "https://api.star-citizen.wiki/commodities/widow"
+    },
+    "neon": {
+      "label": "Neon",
+      "description": "A psychoactive designer drug known for increased energy, euphoria, and mild hallucinations (particularly how the body processes light). Due to its chemical complexity, it's much more expensive than other street drugs, but is very popular in club culture.",
+      "source_url": "https://api.star-citizen.wiki/commodities/neon"
+    },
+    "distilled_spirits": {
+      "label": "Distilled Spirits",
+      "description": "A purified beverage produced through the distillation of fermented substances. Possesses at least 20 percent of alcohol by volume.",
+      "source_url": "https://api.star-citizen.wiki/commodities/distilled-spirits"
+    },
+    "agricultural_supplies": {
+      "label": "Agricultural Supplies",
+      "description": "Items required for agricultural production. Includes fertilizers, feed, and pesticides.",
+      "source_url": "https://api.star-citizen.wiki/commodities/agricultural-supplies"
+    },
+    "fresh_food": {
+      "label": "Fresh Food",
+      "description": "Various meats, grains and produce that have not yet been cooked, dried, salted, frozen, pickled, or otherwise preserved.",
+      "source_url": "https://api.star-citizen.wiki/commodities/fresh-food"
+    },
+    "processed_food": {
+      "label": "Processed Food",
+      "description": "A nutritional substance that has been transformed trough physical or chemical means into food.",
+      "source_url": "https://api.star-citizen.wiki/commodities/processed-food"
+    },
+    "medical_supplies": {
+      "label": "Medical Supplies",
+      "description": "A variety of items produced primarily to treat injury or illness.",
+      "source_url": "https://api.star-citizen.wiki/commodities/medical-supplies"
+    },
+    "diamond": {
+      "label": "Diamond",
+      "description": "An allotrope of the element carbon, diamonds form over billions of years under high heat and pressure. Extremely hard and thermally conductive.",
+      "source_url": "https://api.star-citizen.wiki/commodities/diamond"
+    },
+    "quantainium": {
+      "label": "Quantainium",
+      "description": "A highly unstable mineral used in the production of quantum fuel.",
+      "source_url": "https://api.star-citizen.wiki/commodities/quantainium"
+    },
+    "hadanite": {
+      "label": "Hadanite",
+      "description": "A crystal oscillator sought out for its extremely high frequency of vibration which makes it useful in various applications.",
+      "source_url": "https://api.star-citizen.wiki/commodities/hadanite"
+    },
+    "aphorite": {
+      "label": "Aphorite",
+      "description": "Decorative jewel crystal prized for its multi-hued tones.",
+      "source_url": "https://api.star-citizen.wiki/commodities/aphorite"
+    },
+    "dolivine": {
+      "label": "Dolivine",
+      "description": "A dull green gemstone that is used decoratively but also can be used for industrial purposes thanks to its resistance to weathering and high density.",
+      "source_url": "https://api.star-citizen.wiki/commodities/dolivine"
+    },
+    "osoian_hides": {
+      "label": "Osoian Hides",
+      "description": "The tanned skins from Osoians, a Fair Chance protected species from Oso II.",
+      "source_url": "https://api.star-citizen.wiki/commodities/osoian-hides"
+    },
+    "redfin_energy_modulators": {
+      "label": "Redfin Energy Modulators",
+      "description": "Made by various Banu manufacturers, this energy modulator is distinct for its red-hued heatsinks. Though it can be installed into most Human component subsystems to reduce power draw, its extremely dangerous fail rate has caused it to be banned for import into the UEE.",
+      "source_url": "https://api.star-citizen.wiki/commodities/redfin-energy-modulators"
+    },
+    "human_food_bars": {
+      "label": "Human Food Bars",
+      "description": "Despite what the label on the packaging declares, the Banu manufactured \"Human Food Bars\" have been shown to contain multiple additives deemed unsafe for Human consumption.",
+      "source_url": "https://api.star-citizen.wiki/commodities/human-food-bars"
+    },
+    "lifecure_medsticks": {
+      "label": "LifeCure Medsticks",
+      "description": "The use of these imitation CureLife Medpens has resulted in numerous deaths.",
+      "source_url": "https://api.star-citizen.wiki/commodities/lifecure-medsticks"
+    },
+    "gasping_weevil_eggs": {
+      "label": "Gasping Weevil Eggs",
+      "description": "The eggs of this small beetle are commonly held to be an aphrodisiac, but when allowed to hatch the weevils themselves will eat through sealants used in space station construction. Transport of the insect or its eggs is banned in the UEE.",
+      "source_url": "https://api.star-citizen.wiki/commodities/gasping-weevil-eggs"
+    },
+    "heart_of_the_woods": {
+      "label": "Heart of the Woods",
+      "description": "NDR: 31\nEffects: Toxic\n\nThis fungus produces fleshy deep-red caps that grow in a pattern resembling a internal structure of a heart. Found in cold climates, it typically grows on trees and decaying logs. Not yet successfully cultivated commercially, this deep flavored mushroom is prized by epicureans across the 'verse and can fetch a high price in the right markets. It does contain a mild toxin that is destroyed when cooked, so consuming raw should be avoided.",
+      "source_url": "https://api.star-citizen.wiki/commodities/heart-of-the-woods"
+    },
+    "golden_medmon": {
+      "label": "Golden Medmon",
+      "description": "NDR: 39\nHEI: 19\nEffects: Energizing, Hydrating\n\nGrown in temperate climates on the Maru Ebony Tree, Golden Medmons are left to fall off the tree when ripe and collected. The fruit at that stage is extremely firm and astringent. They only become edible after being 'bletted' or softened through ethylene ripening.",
+      "source_url": "https://api.star-citizen.wiki/commodities/golden-medmon"
+    },
+    "revenant_pod": {
+      "label": "Revenant Pod",
+      "description": "Contrary to its ominous name, the Revenant is actually a variety of the Altrucia Tree, an indigenous plant of Terra known for its thick and colorful leaves. Geoengineers introduced fields of Altrucias to Hyperion in an effort to break up the dust storms. Although the project failed, the Altrucia trees adapted to the perpetual wind patterns, shedding its leaves and thickening the wood in the trunk. Botanists initially believed that the Altrucias had died, but on closer inspection, discovered that they were quite alive and thus, the name was born.The pods are collected because the pollen is processed and turned into Altruciatoxin.",
+      "source_url": "https://api.star-citizen.wiki/commodities/revenant-pod"
+    },
+    "prota": {
+      "label": "Prota",
+      "description": "A resilient slime mold that can form in extremely corrosive environments and pressure, Prota secretes a strong adhesive that can be distilled into a commercial-grade glue.",
+      "source_url": "https://api.star-citizen.wiki/commodities/prota"
+    }
+  }
+}

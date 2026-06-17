@@ -6,8 +6,9 @@ import ComponentsSection from '../components/archive/ComponentsSection'
 import OrdnanceSection from '../components/archive/OrdnanceSection'
 import FactionsSection from '../components/archive/FactionsSection'
 import GeneralArchiveSection from '../components/archive/GeneralArchiveSection'
+import ResourceLoreSection from '../components/archive/ResourceLoreSection'
 
-export type ArchiveSection = 'welcome' | 'mining' | 'components' | 'ordnance' | 'factions' | 'general'
+export type ArchiveSection = 'welcome' | 'mining' | 'components' | 'ordnance' | 'factions' | 'lore' | 'general'
 
 interface ArchiveSearchParams {
   section?: ArchiveSection
@@ -19,6 +20,7 @@ const SECTION_TITLES: Record<ArchiveSection, string> = {
   components: 'Component Database',
   ordnance: 'Ordnance Reference',
   factions: 'Faction Reference',
+  lore: 'Resource Lore',
   general: 'General Archive',
 }
 
@@ -68,6 +70,8 @@ export default function ArchivePage() {
         return <OrdnanceSection />
       case 'factions':
         return <FactionsSection />
+      case 'lore':
+        return <ResourceLoreSection />
       case 'general':
         return <GeneralArchiveSection />
       default:

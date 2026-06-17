@@ -451,8 +451,20 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               </code>
             </div>
 
+            {/* Step 5: Fetch Resource Lore */}
+            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-teal-600 text-white text-xs font-bold rounded-full">5</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white font-medium">Fetch Resource Lore</p>
+                <p className="text-[10px] text-slate-500">Fetches lore/descriptions from star-citizen.wiki for Archive</p>
+              </div>
+              <code className="shrink-0 px-2 py-1 bg-slate-900 text-teal-400 text-[10px] font-mono rounded select-all">
+                node scripts/fetch-resource-lore.mjs
+              </code>
+            </div>
+
             <p className="text-[10px] text-slate-600 italic pt-1">
-              Steps 2-4 run locally in terminal. After all steps, build and deploy.
+              Steps 2-5 run locally in terminal. After all steps, build and deploy.
             </p>
           </div>
         </div>

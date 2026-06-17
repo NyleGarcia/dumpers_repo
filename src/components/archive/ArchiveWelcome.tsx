@@ -38,6 +38,12 @@ const QUICK_LINKS: QuickLink[] = [
     section: 'factions',
   },
   {
+    id: 'lore',
+    label: 'Resource Lore',
+    description: 'In-game flavor text and descriptions for Star Citizen commodities and materials.',
+    section: 'lore',
+  },
+  {
     id: 'general',
     label: 'General Archive',
     description: 'External resources, quick tips, and data attribution.',
