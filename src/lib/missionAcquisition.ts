@@ -203,12 +203,51 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
 }
 
 export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlockInfo {
-  const normalizedId = blueprintFileId
-    .replace(/\\/g, '/')
-    .replace(/^.*crafting\/blueprints\//, '')
-    .replace('.json', '')
+  // Extract the blueprint name from the file path
+  // Input: "LIVEfiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mining\\mining_laser_grin_arbor\\bp_craft_mining_laser_grin_arbor_mh2_scitem.json"
+  // We need to try multiple extraction strategies since game data keys vary
   
-  const missionKeys = blueprintMissions[normalizedId] || []
+  const normalized = blueprintFileId.replace(/\\/g, '/').toLowerCase()
+  
+  // Strategy 1: Extract from bp_craft_XXX_scitem.json pattern
+  const scitemMatch = normalized.match(/bp_craft_([^/]+?)_scitem\.json$/i)
+  const nameFromScitem = scitemMatch ? scitemMatch[1] : null
+  
+  // Strategy 2: Extract from bp_craft_XXX.json pattern
+  const simpleMatch = normalized.match(/bp_craft_([^/]+?)\.json$/i)
+  const nameFromSimple = simpleMatch ? simpleMatch[1] : null
+  
+  // Strategy 3: Get the folder name before the file
+  const folderMatch = normalized.match(/\/([^/]+)\/bp_craft_[^/]+\.json$/i)
+  const nameFromFolder = folderMatch ? folderMatch[1] : null
+  
+  // Try all possible keys
+  const possibleKeys = [
+    nameFromScitem,
+    nameFromSimple,
+    nameFromFolder,
+    // Also try with common suffixes stripped
+    nameFromScitem?.replace(/_s\d+$/, ''),
+    nameFromSimple?.replace(/_s\d+$/, ''),
+  ].filter(Boolean) as string[]
+  
+  // Find matching mission keys
+  let missionKeys: string[] = []
+  for (const key of possibleKeys) {
+    if (blueprintMissions[key]) {
+      missionKeys = blueprintMissions[key]
+      break
+    }
+    // Also try matching with size suffix variations (s0, s1, s2, s3)
+    for (const suffix of ['_s0', '_s1', '_s2', '_s3', '']) {
+      const keyWithSuffix = key.replace(/_s\d+$/, '') + suffix
+      if (blueprintMissions[keyWithSuffix]) {
+        missionKeys = blueprintMissions[keyWithSuffix]
+        break
+      }
+    }
+    if (missionKeys.length > 0) break
+  }
   
   if (missionKeys.length === 0) {
     return {
