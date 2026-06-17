@@ -1,5 +1,6 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
 import factionsData from '../data/factions.json'
+import acquisitionData from '../data/blueprint-acquisition.json'
 
 export interface MissionRepInfo {
   repMin: number | null
@@ -188,6 +189,35 @@ export function formatStandingRequirement(
   return null
 }
 
+type MissionsByLabelEntry = {
+  sourceLabel: string
+  lookupKey: string
+  missionTypeKey?: string
+  repMin?: number | null
+  repMax?: number | null
+  minReputation?: number | null
+  minStandingName?: string | null
+  variantCount?: number
+  missionGiver?: string | null
+  giverSlug?: string
+}
+
+const missionsByLabel = acquisitionData.missionsByLabel as Record<string, MissionsByLabelEntry>
+
+function buildMissionLookupKey(missionLabel: string): string {
+  const cleaned = missionLabel
+    .replace(/\s*\(Not currently available in game\)\s*$/i, '')
+    .trim()
+  
+  const colonIndex = cleaned.indexOf(':')
+  if (colonIndex <= 0) return cleaned.toLowerCase()
+  
+  const giver = cleaned.slice(0, colonIndex).trim().toLowerCase()
+  const title = cleaned.slice(colonIndex + 1).trim().toLowerCase()
+  
+  return `${giver}|${title}`
+}
+
 export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
   const defaultReturn: MissionRepInfo = {
     repMin: null,
@@ -206,6 +236,29 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
 
   if (/uninitialized/i.test(missionLabel)) {
     return defaultReturn
+  }
+
+  const lookupKey = buildMissionLookupKey(missionLabel)
+  const entry = missionsByLabel[lookupKey]
+  
+  if (entry) {
+    const giverSlug = entry.giverSlug || ''
+    const isLawful = !['headhunters', 'xenothreat', 'ruto', 'vaughn', 'ninetails'].includes(giverSlug)
+    
+    return {
+      repMin: entry.repMin ?? null,
+      repMax: entry.repMax ?? null,
+      minReputation: entry.minReputation ?? null,
+      minStandingName: entry.minStandingName ?? null,
+      variantCount: entry.variantCount ?? 1,
+      missionGiver: entry.missionGiver ?? null,
+      matched: true,
+      isLawful,
+      aUecMin: 0,
+      aUecMax: 0,
+      missionType: null,
+      missionLocations: [],
+    }
   }
 
   if (missionLabel.includes(':')) {

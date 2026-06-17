@@ -59,6 +59,22 @@ const FACTION_PATTERNS: Record<string, { name: string; isLawful: boolean }> = {
   'rayari': { name: 'Rayari Deltana', isLawful: true },
 }
 
+const FACTION_DEFAULT_SYSTEMS: Record<string, System> = {
+  'Shubin Interstellar': 'stanton',
+  'Adagio Holdings': 'stanton',
+  'Covalex': 'stanton',
+  'Eckhart Security': 'stanton',
+  'Northrock Service Group': 'stanton',
+  'Crusader Security': 'stanton',
+  'microTech': 'stanton',
+  'Bounty Hunters Guild': 'stanton',
+  'Civilian Defense Force': 'stanton',
+  'Citizens for Prosperity': 'pyro',
+  'Headhunters': 'pyro',
+  'Xenothreat': 'pyro',
+  'Rayari Deltana': 'nyx',
+}
+
 function parseMissionPoolKey(key: string): { faction: string; system: System; isLawful: boolean; displayName: string } {
   const keyLower = key.toLowerCase()
   
@@ -74,10 +90,20 @@ function parseMissionPoolKey(key: string): { faction: string; system: System; is
   }
   
   let system: System = 'unknown'
-  if (keyLower.includes('stanton')) system = 'stanton'
-  else if (keyLower.includes('pyro')) system = 'pyro'
-  else if (keyLower.includes('nyx')) system = 'nyx'
-  else if (keyLower.includes('regiona') || keyLower.includes('regionb')) system = 'pyro'
+  
+  if (keyLower.includes('stanton')) {
+    system = 'stanton'
+  } else if (keyLower.includes('pyronyx')) {
+    system = 'pyro'
+  } else if (keyLower.includes('pyro')) {
+    system = 'pyro'
+  } else if (keyLower.includes('nyx')) {
+    system = 'nyx'
+  } else if (/region[a-d]/i.test(keyLower)) {
+    system = 'pyro'
+  } else if (faction !== 'Unknown' && FACTION_DEFAULT_SYSTEMS[faction]) {
+    system = FACTION_DEFAULT_SYSTEMS[faction]
+  }
   
   const displayName = key
     .replace(/^BP_MISSIONREWARD_/i, '')
