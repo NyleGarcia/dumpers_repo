@@ -444,6 +444,13 @@ export default function TargetsRoute() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => void toggleAcquired(bp.file)}
+                          className="px-2.5 py-1 text-[10px] font-bold text-emerald-900 bg-emerald-500 hover:bg-emerald-400 border border-emerald-400 rounded shadow-sm transition-colors"
+                        >
+                          ✓ Got It!
+                        </button>
                         {addableMissions.length > 0 && (
                           <button
                             type="button"
@@ -455,13 +462,6 @@ export default function TargetsRoute() {
                             Add all
                           </button>
                         )}
-                        <button
-                          type="button"
-                          onClick={() => void toggleAcquired(bp.file)}
-                          className="px-2 py-0.5 text-[10px] font-semibold text-green-400 hover:text-green-300 border border-green-500/40 rounded hover:bg-green-950/40 transition-colors"
-                        >
-                          Acquired
-                        </button>
                         <button
                           type="button"
                           onClick={() => void toggleTarget(bp.file)}
