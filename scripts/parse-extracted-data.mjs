@@ -1341,17 +1341,36 @@ function parseBlueprintDefinitions(localization = {}) {
       }
       
       // Try reversed patterns: ksar_armor_light_arms -> ksar_light_armor_arms
-      // Pattern: {mfg}_armor_{weight}_{slot} -> {mfg}_{weight}_armor_{slot}
+      // Also try dropping _armor_ entirely: srvl_armor_heavy_arms -> srvl_heavy_arms
+      // Pattern: {mfg}_armor_{weight}_{slot} -> {mfg}_{weight}_armor_{slot} or {mfg}_{weight}_{slot}
       const reversedMatch = nameLower.match(/^(\w+?)_armor_(\w+?)_(\w+?)_(\d+)_(\d+)_(\d+)/)
       if (!blueprintName && reversedMatch) {
         const [, mfg, weight, slot, v1, v2, v3] = reversedMatch
         const keysToTry = [
+          // Try without _armor_ (e.g., srvl_heavy_arms_01)
+          `item_Name_${mfg}_${weight}_${slot}_0${v1}`,
+          `item_Name_${mfg}_${weight}_${slot}_${v1}`,
+          // Try with _armor_ reordered
           `item_Name_${mfg}_${weight}_armor_${slot}_0${v1}`,
           `item_Name_${mfg}_${weight}_armor_${slot}_${v1}`,
           `item_Name_${mfg}_${weight}_armor_${slot}_${v1}_${v2}_${v3}`,
         ]
         for (const k of keysToTry) {
           if (localization[k]) { blueprintName = localization[k]; break }
+        }
+        
+        // Try using short name from srvl_heavy_ar_short pattern
+        if (!blueprintName) {
+          const shortKeys = [
+            `item_Name_${mfg}_${weight}_ar_short`,
+            `item_Name_${mfg}_${weight}_armor_0${v1}_short`,
+          ]
+          for (const sk of shortKeys) {
+            if (localization[sk]) {
+              blueprintName = `${localization[sk]} ${getSlotName(slot)}`
+              break
+            }
+          }
         }
       }
       
