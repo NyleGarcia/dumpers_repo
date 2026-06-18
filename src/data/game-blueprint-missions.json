@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-06-18T17:12:12.910Z",
+  "_extracted": "2026-06-18T18:09:15.990Z",
   "missionBlueprints": {
     "adagioresourcegatheringshipsalvage": [
       {
@@ -13383,11 +13383,11 @@
     {
       "id": "bbb52b26-4a27-4afa-aac5-9299fde95dbf",
       "debugName": "Hockrow_FacilityDelve_P3MM_Repeat",
-      "title": "Hockrow_FacilityDelve_P3MM_Repeat",
-      "titleKey": "",
-      "faction": "Unknown",
-      "factionKey": "unknown",
-      "system": "Unknown",
+      "title": "Jorrit Dossier: Project Hyperion",
+      "titleKey": "@Hockrow_FacilityDelve_P3M1_title",
+      "faction": "Hockrow Agency",
+      "factionKey": "lawful_hockrowagency",
+      "system": "Stanton",
       "region": null,
       "category": "Investigation",
       "blueprintPools": [
@@ -13411,8 +13411,8 @@
       "debugName": "Hockrow_FacilityDelve_P2M1-Stanton4_Repeat",
       "title": "Jorrit Dossier: Updated Energy Anomaly Data",
       "titleKey": "@Hockrow_FacilityDelve_P2M1_Repeat_title",
-      "faction": "Unknown",
-      "factionKey": "unknown",
+      "faction": "Hockrow Agency",
+      "factionKey": "lawful_hockrowagency",
       "system": "Stanton",
       "region": null,
       "category": "Investigation",
@@ -13432,8 +13432,8 @@
       "debugName": "Hockrow_FacilityDelve_P2M2-Stanton4_Repeat",
       "title": "Jorrit Dossier: Updated Security Data",
       "titleKey": "@Hockrow_FacilityDelve_P2M2_Repeat_title",
-      "faction": "Unknown",
-      "factionKey": "unknown",
+      "faction": "Hockrow Agency",
+      "factionKey": "lawful_hockrowagency",
       "system": "Stanton",
       "region": null,
       "category": "Investigation",
@@ -13453,8 +13453,8 @@
       "debugName": "Hockrow_FacilityDelve_P2M3-Stanton4_Repeat",
       "title": "Jorrit Dossier: Updated Seismic Data",
       "titleKey": "@Hockrow_FacilityDelve_P2M3_Repeat_title",
-      "faction": "Unknown",
-      "factionKey": "unknown",
+      "faction": "Hockrow Agency",
+      "factionKey": "lawful_hockrowagency",
       "system": "Stanton",
       "region": null,
       "category": "Investigation",
@@ -13474,8 +13474,8 @@
       "debugName": "Hockrow_FacilityDelve_P2M4-Stanton4_Repeat",
       "title": "Jorrit Dossier: Updated Power Usage Data",
       "titleKey": "@Hockrow_FacilityDelve_P2M4_Repeat_title",
-      "faction": "Unknown",
-      "factionKey": "unknown",
+      "faction": "Hockrow Agency",
+      "factionKey": "lawful_hockrowagency",
       "system": "Stanton",
       "region": null,
       "category": "Investigation",
@@ -14079,11 +14079,11 @@
       "debugName": "TheCollector_vglFlightsuit",
       "title": "Suit Up Take Off",
       "titleKey": "@TheCollector_Recipes_Title_VGLflightsuit",
-      "faction": "Unknown",
-      "factionKey": "unknown",
-      "system": "Unknown",
+      "faction": "Wikelo Emporium",
+      "factionKey": "wikelo",
+      "system": "Stanton",
       "region": null,
-      "category": null,
+      "category": "Collection",
       "blueprintPools": [
         {
           "key": "bp_reward_vgl_flightsuit_helmet_01_02_01",
@@ -14105,11 +14105,11 @@
       "debugName": "TheCollector_NoneAssultRifle",
       "title": "Your Best Shot",
       "titleKey": "@TheCollector_Recipes_Title_NoneAR",
-      "faction": "Unknown",
-      "factionKey": "unknown",
-      "system": "Unknown",
+      "faction": "Wikelo Emporium",
+      "factionKey": "wikelo",
+      "system": "Stanton",
       "region": null,
-      "category": null,
+      "category": "Collection",
       "blueprintPools": [
         {
           "key": "bp_reward_none_rifle_multi_01_collector01",
@@ -14126,11 +14126,11 @@
       "debugName": "TheCollector_Vehicle_L22_Wolf",
       "title": "Extra Special Wolf",
       "titleKey": "@TheCollector_Recipes_Title_L22Wolf",
-      "faction": "Unknown",
-      "factionKey": "unknown",
-      "system": "Unknown",
+      "faction": "Wikelo Emporium",
+      "factionKey": "wikelo",
+      "system": "Stanton",
       "region": null,
-      "category": null,
+      "category": "Collection",
       "blueprintPools": [
         {
           "key": "bp_reward_collectormaterial_001",
@@ -30414,10 +30414,10 @@
     ],
     "asd3": [
       {
-        "title": "Hockrow_FacilityDelve_P3MM_Repeat",
-        "titleKey": "",
-        "faction": "Unknown",
-        "system": "Unknown",
+        "title": "Jorrit Dossier: Project Hyperion",
+        "titleKey": "@Hockrow_FacilityDelve_P3M1_title",
+        "faction": "Hockrow Agency",
+        "system": "Stanton",
         "region": null,
         "category": "Investigation",
         "minStanding": null,
@@ -30427,10 +30427,10 @@
     ],
     "asd3vgear": [
       {
-        "title": "Hockrow_FacilityDelve_P3MM_Repeat",
-        "titleKey": "",
-        "faction": "Unknown",
-        "system": "Unknown",
+        "title": "Jorrit Dossier: Project Hyperion",
+        "titleKey": "@Hockrow_FacilityDelve_P3M1_title",
+        "faction": "Hockrow Agency",
+        "system": "Stanton",
         "region": null,
         "category": "Investigation",
         "minStanding": null,
@@ -30442,7 +30442,7 @@
       {
         "title": "Jorrit Dossier: Updated Energy Anomaly Data",
         "titleKey": "@Hockrow_FacilityDelve_P2M1_Repeat_title",
-        "faction": "Unknown",
+        "faction": "Hockrow Agency",
         "system": "Stanton",
         "region": null,
         "category": "Investigation",
@@ -30455,7 +30455,7 @@
       {
         "title": "Jorrit Dossier: Updated Security Data",
         "titleKey": "@Hockrow_FacilityDelve_P2M2_Repeat_title",
-        "faction": "Unknown",
+        "faction": "Hockrow Agency",
         "system": "Stanton",
         "region": null,
         "category": "Investigation",
@@ -30468,7 +30468,7 @@
       {
         "title": "Jorrit Dossier: Updated Seismic Data",
         "titleKey": "@Hockrow_FacilityDelve_P2M3_Repeat_title",
-        "faction": "Unknown",
+        "faction": "Hockrow Agency",
         "system": "Stanton",
         "region": null,
         "category": "Investigation",
@@ -30481,7 +30481,7 @@
       {
         "title": "Jorrit Dossier: Updated Power Usage Data",
         "titleKey": "@Hockrow_FacilityDelve_P2M4_Repeat_title",
-        "faction": "Unknown",
+        "faction": "Hockrow Agency",
         "system": "Stanton",
         "region": null,
         "category": "Investigation",
@@ -30810,10 +30810,10 @@
       {
         "title": "Suit Up Take Off",
         "titleKey": "@TheCollector_Recipes_Title_VGLflightsuit",
-        "faction": "Unknown",
-        "system": "Unknown",
+        "faction": "Wikelo Emporium",
+        "system": "Stanton",
         "region": null,
-        "category": null,
+        "category": "Collection",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 10
@@ -30823,10 +30823,10 @@
       {
         "title": "Suit Up Take Off",
         "titleKey": "@TheCollector_Recipes_Title_VGLflightsuit",
-        "faction": "Unknown",
-        "system": "Unknown",
+        "faction": "Wikelo Emporium",
+        "system": "Stanton",
         "region": null,
-        "category": null,
+        "category": "Collection",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 10
@@ -30836,10 +30836,10 @@
       {
         "title": "Your Best Shot",
         "titleKey": "@TheCollector_Recipes_Title_NoneAR",
-        "faction": "Unknown",
-        "system": "Unknown",
+        "faction": "Wikelo Emporium",
+        "system": "Stanton",
         "region": null,
-        "category": null,
+        "category": "Collection",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 10
@@ -30849,10 +30849,10 @@
       {
         "title": "Extra Special Wolf",
         "titleKey": "@TheCollector_Recipes_Title_L22Wolf",
-        "faction": "Unknown",
-        "system": "Unknown",
+        "faction": "Wikelo Emporium",
+        "system": "Stanton",
         "region": null,
-        "category": null,
+        "category": "Collection",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 0

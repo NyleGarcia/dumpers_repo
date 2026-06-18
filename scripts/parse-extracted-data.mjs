@@ -971,6 +971,19 @@ function parseContractGenerators(localization) {
     'northrock': 'Northrock Service Group',
     'intersec': 'InterSec Defense Solutions',
     'unitedwayfarers': 'United Wayfarers Club',
+    'hockrowagency': 'Hockrow Agency',
+    'hockrow': 'Hockrow Agency',
+    'thecollector': 'Wikelo Emporium',
+    'wikelo': 'Wikelo Emporium',
+    'collectorwikelo': 'Wikelo Emporium',
+  }
+
+  const factionKeyPatterns = {
+    hockrowagency: 'lawful_hockrowagency',
+    hockrow: 'lawful_hockrowagency',
+    thecollector: 'wikelo',
+    wikelo: 'wikelo',
+    collectorwikelo: 'wikelo',
   }
   
   function inferFactionFromPath(filePath, debugName) {
@@ -981,6 +994,58 @@ function parseContractGenerators(localization) {
       }
     }
     return null
+  }
+
+  function inferFactionKeyFromPath(filePath, debugName) {
+    const combined = (filePath + ' ' + (debugName || '')).toLowerCase()
+    for (const [pattern, key] of Object.entries(factionKeyPatterns)) {
+      if (combined.includes(pattern)) {
+        return key
+      }
+    }
+    return null
+  }
+
+  function resolveContractFaction({
+    generatorFactionKey,
+    generatorFactionName,
+    generatorFile,
+    generatorDebugName,
+    contractDebugName,
+    titleKey,
+    templatePath,
+    blueprintPoolPaths,
+  }) {
+    let factionKey = generatorFactionKey
+    let factionName = generatorFactionName
+
+    const contractSignals = [
+      contractDebugName || '',
+      titleKey || '',
+      templatePath || '',
+      ...(blueprintPoolPaths || []),
+    ].join(' ').toLowerCase()
+
+    if (contractSignals.includes('hockrow') || contractSignals.includes('asdfacilitydelve') || /\basd[23][a-z]?\b/.test(contractSignals)) {
+      factionKey = 'lawful_hockrowagency'
+      factionName = factionNames.factionreputation_lawful_hockrowagency || 'Hockrow Agency'
+    } else if (
+      contractSignals.includes('thecollector') ||
+      contractSignals.includes('collectorwikelo') ||
+      contractSignals.includes('@thecollector_')
+    ) {
+      factionKey = 'wikelo'
+      factionName = factionNames.factionreputation_wikelo || 'Wikelo Emporium'
+    } else if (factionName === 'Unknown' || factionName === factionKey) {
+      const inferredName = inferFactionFromPath(generatorFile, `${generatorDebugName || ''} ${contractDebugName || ''}`)
+      if (inferredName) {
+        factionName = inferredName
+        const inferredKey = inferFactionKeyFromPath(generatorFile, `${generatorDebugName || ''} ${contractDebugName || ''}`)
+        if (inferredKey) factionKey = inferredKey
+      }
+    }
+
+    return { factionKey, factionName }
   }
 
   for (const file of contractFiles) {
@@ -1014,9 +1079,13 @@ function parseContractGenerators(localization) {
       for (const contract of generator.contracts) {
         totalContracts++
         
+        const debugName = contract.debugName || ''
+        const debugLower = debugName.toLowerCase()
+        const templatePath = contract.template || ''
+
         // Extract title from paramOverrides
         let titleKey = ''
-        let title = contract.debugName || 'Unknown Mission'
+        let title = debugName || 'Unknown Mission'
         if (contract.paramOverrides?.stringParamOverrides) {
           const titleParam = contract.paramOverrides.stringParamOverrides.find(
             p => p.param === 'Title'
@@ -1029,6 +1098,10 @@ function parseContractGenerators(localization) {
               title = titleKey
             }
           }
+        }
+        if (title === debugName && debugLower.includes('hockrow_facilitydelve_p3mm')) {
+          titleKey = '@Hockrow_FacilityDelve_P3M1_title'
+          title = localization.Hockrow_FacilityDelve_P3M1_title || title
         }
         
         // Extract blueprint pools from contractResults
@@ -1052,6 +1125,19 @@ function parseContractGenerators(localization) {
             }
           }
         }
+
+        const resolvedFaction = resolveContractFaction({
+          generatorFactionKey: factionKey,
+          generatorFactionName: factionName,
+          generatorFile: file,
+          generatorDebugName: generator.debugName,
+          contractDebugName: contract.debugName,
+          titleKey,
+          templatePath: contract.template,
+          blueprintPoolPaths: blueprintPools.map(pool => pool.path),
+        })
+        factionKey = resolvedFaction.factionKey
+        factionName = resolvedFaction.factionName
         
         // Extract rep points from contractResults
         let repPoints = 0
@@ -1122,10 +1208,25 @@ function parseContractGenerators(localization) {
             break
           }
         }
+        if (system === 'Unknown') {
+          const contractSignals = `${debugName} ${titleKey} ${templatePath}`.toLowerCase()
+          if (
+            factionKey === 'wikelo' ||
+            contractSignals.includes('thecollector') ||
+            contractSignals.includes('collectorwikelo')
+          ) {
+            system = 'Stanton'
+          } else if (
+            factionKey === 'lawful_hockrowagency' ||
+            contractSignals.includes('hockrow_facilitydelve') ||
+            contractSignals.includes('asdfacilitydelve')
+          ) {
+            system = 'Stanton'
+          }
+        }
         
         // Extract region from debugName (e.g., RegionA, RegionB, RegionC, RegionD)
         let region = null
-        const debugName = contract.debugName || ''
         const regionMatch = debugName.match(/Region([A-Z])/i)
         if (regionMatch) {
           region = regionMatch[1].toUpperCase() // Just the letter: A, B, C, D
@@ -1155,11 +1256,27 @@ function parseContractGenerators(localization) {
             category = catName
           }
         }
-        // Fallback: infer from file path or debugName
+        const templateLower = templatePath.toLowerCase()
+        const titleLower = title.toLowerCase()
+        const poolKeys = blueprintPools.map(pool => pool.key).join(' ')
+
+        // Fallback: infer from contract signals
         if (!category) {
           const pathLower = (contract.__path || '').toLowerCase()
-          const debugLower = debugName.toLowerCase()
-          if (pathLower.includes('bountyhunter') || debugLower.includes('bhg_') || debugLower.includes('bounty')) {
+          if (
+            templateLower.includes('asdfacilitydelve') ||
+            debugLower.includes('hockrow_facilitydelve') ||
+            titleLower.includes('jorrit dossier') ||
+            /\basd[23][a-z]?\b/.test(poolKeys)
+          ) {
+            category = 'Investigation'
+          } else if (
+            templateLower.includes('itemresourcegathering_thecollector') ||
+            debugLower.startsWith('thecollector_') ||
+            blueprintPools.some(pool => pool.path.toLowerCase().includes('collectorwikelo'))
+          ) {
+            category = 'Collection'
+          } else if (pathLower.includes('bountyhunter') || debugLower.includes('bhg_') || debugLower.includes('bounty')) {
             category = 'Bounty Hunter'
           } else if (pathLower.includes('mercenary') || debugLower.includes('merc')) {
             category = 'Mercenary'
@@ -1180,7 +1297,6 @@ function parseContractGenerators(localization) {
         
         // Second fallback: infer from mission title
         if (!category && title) {
-          const titleLower = title.toLowerCase()
           // Combat/Elimination missions
           if (titleLower.includes('bounty') || titleLower.includes('hunt')) {
             category = 'Bounty Hunter'
