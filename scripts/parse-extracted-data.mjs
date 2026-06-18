@@ -1199,12 +1199,17 @@ function parseBlueprintDefinitions(localization = {}) {
       .replace(/_scitem$/i, '')
     
     // Look up display name from localization
-    // Keys are like: item_NameAMRS_LaserCannon_S1 (case-sensitive!)
-    // Try internalName first (preserves casing), then entityClass patterns
+    // Keys vary by item type:
+    //   Vehicle weapons: item_NameAMRS_LaserCannon_S1 (no underscore after Name)
+    //   Armor/gear: item_Name_ccc_medium_armor_arms_01_01_01 (underscore after Name_)
+    //   Mission items: item_Name_Carryable_2H_CY_CollectorMaterial_001 (mixed case with underscore)
     let blueprintName = null
     const locKeyPatterns = [
       `item_Name${internalName}`,                           // AMRS_LaserCannon_S1
+      `item_Name_${internalName}`,                          // item_Name_Carryable_2H... (mission items, mixed case)
+      `item_Name_${internalName?.toLowerCase()}`,           // item_Name_ccc_medium_armor... (armor, lowercase)
       `item_Name${entityClass}`,                            // amrs_lasercannon_s1
+      `item_Name_${entityClass}`,                           // item_Name_entityclass (armor pattern)
       `item_Name${internalName?.toLowerCase()}`,            // lowercase version
     ]
     for (const key of locKeyPatterns) {
