@@ -1220,6 +1220,7 @@ function parseBlueprintDefinitions(localization = {}) {
         `item_Name_${name}`,                   // item_Name_Carryable_2H...
         `item_Name${name?.toLowerCase()}`,     // lowercase
         `item_Name_${name?.toLowerCase()}`,    // item_Name_ccc_medium_armor...
+        `item_name${name}_SCItem`,             // lowercase item_name prefix
       )
       
       // Try with uppercase manufacturer prefix (e.g., GRIN_utility_medium_arms)
@@ -1239,6 +1240,75 @@ function parseBlueprintDefinitions(localization = {}) {
           const fixedCase = withoutBP.replace(/scattergun/i, 'Scattergun')
           locKeyPatterns.push(`item_Name${fixedCase}`)
         }
+        
+        // Handle common typos in localization (e.g., Idirs vs Idris)
+        if (name.includes('Idris')) {
+          locKeyPatterns.push(`item_Name${name.replace('Idris', 'Idirs')}`)
+        }
+        
+        // Handle _TEMP suffix items
+        if (name.includes('_TEMP')) {
+          locKeyPatterns.push(`item_Name${name.replace('_TEMP', '')}`)
+          locKeyPatterns.push(`item_Name_${name.replace('_TEMP', '')}`)
+        }
+        
+        // Handle Lite/Lite suffix patterns (RADR_CHCO_S02_BroadSpec_Lite -> RADR_CHCO_S02_BroadSpec)
+        if (name.includes('_Lite') || name.includes('Lite')) {
+          locKeyPatterns.push(`item_Name_${name.replace(/_?Lite/i, '')}`)
+          locKeyPatterns.push(`item_Name${name.replace(/_?Lite/i, '')}`)
+        }
+        
+        // Handle typos like BroudSpec vs BroadSpec
+        if (name.includes('Broud')) {
+          locKeyPatterns.push(`item_Name_${name.replace('Broud', 'Broad')}`)
+        }
+        
+        // Handle case variations (e.g., ScatterGun vs Scattergun, QuadraCell vs Quadracell)
+        const lowerCaseFixed = name.replace(/ScatterGun/g, 'Scattergun').replace(/Quadracell/g, 'QuadraCell')
+        if (lowerCaseFixed !== name) {
+          locKeyPatterns.push(`item_Name${lowerCaseFixed}`)
+          locKeyPatterns.push(`item_Name_${lowerCaseFixed}`)
+        }
+        
+        // Handle QDRV vs QRDV typo in localization + case variations
+        if (name.includes('QDRV')) {
+          const fixed = name.replace('QDRV', 'QRDV')
+          locKeyPatterns.push(`item_Name_${fixed}`)
+          // Also handle FoxFire -> Foxfire case
+          locKeyPatterns.push(`item_Name_${fixed.replace(/FoxFire/i, 'Foxfire')}`)
+          locKeyPatterns.push(`item_Name_${fixed.replace(/LightFire/i, 'Lightfire')}`)
+        }
+        
+        // Handle underscore variations in radar names (SNS_R6x vs SNSR6x)
+        if (name.includes('SNS_')) {
+          locKeyPatterns.push(`item_Name_${name.replace('SNS_', 'SNS')}`)
+        }
+        
+        // Handle typos like Capstan vs Capston
+        if (name.includes('Capstan')) {
+          locKeyPatterns.push(`item_Name_${name.replace('Capstan', 'Capston')}`)
+        }
+        
+        // Handle size variations (S00 might be S01 in localization)
+        if (name.includes('_S00_')) {
+          locKeyPatterns.push(`item_Name_${name.replace('_S00_', '_S01_')}`)
+        }
+        
+        // Handle manufacturer typos (GRNO vs GRNP)
+        if (name.includes('GRNO')) {
+          locKeyPatterns.push(`item_Name_${name.replace('GRNO', 'GRNP')}`)
+        }
+        
+        // Handle VB80112 vs V80112 radar typo
+        if (name.includes('VB80112')) {
+          locKeyPatterns.push(`item_Name_${name.replace('VB80112', 'V80112')}`)
+        }
+        
+        // Handle BroudSpec -> BroadSpec but also try without Lite suffix
+        if (name.includes('BroudSpec')) {
+          const fixed = name.replace('BroudSpec', 'FullSpecMax')
+          locKeyPatterns.push(`item_Name_${fixed}`)
+        }
       }
     }
     
@@ -1246,6 +1316,99 @@ function parseBlueprintDefinitions(localization = {}) {
       if (key && localization[key]) {
         blueprintName = localization[key]
         break
+      }
+    }
+    
+    // Special handling for vehicle components with manufacturer prefixes (COOL_, POWR_, QDRV_, SHLD_, RADR_)
+    if (!blueprintName && internalName) {
+      // Handle alternate pattern like COOL_S04_CNOU_Pioneer
+      const altMatch = internalName.match(/^(COOL|POWR|QDRV|SHLD|RADR)_S(\d+)_(\w+)_(.+)$/i)
+      if (altMatch) {
+        const [, type, size, mfg, name] = altMatch
+        const typeNames = { COOL: 'Cooler', POWR: 'Power Plant', QDRV: 'Quantum Drive', SHLD: 'Shield', RADR: 'Radar' }
+        const mfgNames = { CNOU: 'Crusader', AEGS: 'Aegis', RSI: 'RSI', ORIG: 'Origin' }
+        blueprintName = `${mfgNames[mfg.toUpperCase()] || mfg} ${name} ${typeNames[type.toUpperCase()] || type}`
+      }
+      
+      const componentMatch = internalName.match(/^(COOL|POWR|QDRV|SHLD|RADR)_(\w+)_S(\d+)_(.+)$/i)
+      if (componentMatch) {
+        const [, type, mfg, size, name] = componentMatch
+        const keysToTry = [
+          `item_Name${type}_${mfg}_S0${size}_${name}`,
+          `item_Name${type.toUpperCase()}_${mfg.toUpperCase()}_S0${size}_${name}`,
+          `item_Name_${type}_${mfg}_S0${size}_${name}`,
+          `item_Name_${type.toUpperCase()}_${mfg.toUpperCase()}_S0${size}_${name}`,
+          // Try with _SCItem suffix
+          `item_Name${type}_${mfg}_S0${size}_${name}_SCItem`,
+          `item_name${type}_${mfg}_S0${size}_${name}_SCItem`,
+          // Try without size padding
+          `item_Name${type}_${mfg}_S${size}_${name}`,
+          `item_Name_${type}_${mfg}_S${size}_${name}`,
+        ]
+        // Handle typos like Idirs vs Idris
+        if (name.includes('Idris')) {
+          keysToTry.push(`item_Name${type}_${mfg}_S0${size}_${name.replace('Idris', 'Idirs')}`)
+        }
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+        
+        // If still no localization, generate a descriptive name for capital ship components
+        if (!blueprintName) {
+          const typeNames = { COOL: 'Cooler', POWR: 'Power Plant', QDRV: 'Quantum Drive', SHLD: 'Shield', RADR: 'Radar' }
+          const mfgNames = { AEGS: 'Aegis', RSI: 'RSI', CNOU: 'Crusader', ORIG: 'Origin', WCPR: 'Wildcat', WETK: 'Wei-Tek', ACAS: 'Acas', ARCC: 'ArcCorp', TARS: 'Tarsus', CHCO: 'ChengCo', GRNP: 'Grinp', GRNO: 'Grino', GNRP: 'Gnrp', NAVE: 'Navex', WLOP: 'Wulop', GODI: 'Godenicht' }
+          const cleanName = name.replace(/_/g, ' ').replace(/TEMP$/i, '').trim()
+          blueprintName = `${mfgNames[mfg.toUpperCase()] || mfg} ${cleanName} ${typeNames[type.toUpperCase()] || type} (S${size})`
+        }
+      }
+    }
+    
+    // Special handling for Tractor Beams (WEP_TractorBeam_S1_Utility_1 -> GRIN_TractorBeam_002_S1_UT1)
+    if (!blueprintName && internalName?.includes('TractorBeam')) {
+      const tbMatch = internalName.match(/WEP_TractorBeam_S(\d+)_(Military|Utility)_(\d+)/i)
+      if (tbMatch) {
+        const [, size, type, variant] = tbMatch
+        // Map to GRIN naming: UT1 = Utility 1, UT2 = Utility 2, Military = base
+        const typeCode = type.toLowerCase() === 'utility' ? `UT${variant}` : ''
+        const keysToTry = [
+          `item_NameGRIN_TractorBeam_002_S${size}${typeCode ? '_' + typeCode : ''}`,
+          `item_NameGRIN_TractorBeam_003_S${size}${typeCode ? '_' + typeCode : ''}`,
+          `item_NameARGO_TractorBeam_S${size}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+    }
+    
+    // Special handling for Nozzles (Nozzle_FuelGiver_GRIN_NozzleFast)
+    if (!blueprintName && internalName?.includes('Nozzle_FuelGiver')) {
+      const nozzleMatch = internalName.match(/Nozzle_FuelGiver_(\w+)_Nozzle(\w+)/i)
+      if (nozzleMatch) {
+        const [, mfg, variant] = nozzleMatch
+        const keysToTry = [
+          `item_Name_Nozzle_FuelGiver_${mfg}_${variant}`,
+          `item_NameNozzle_FuelGiver_${mfg}_Nozzle${variant}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+        // If no localization, create a nice display name
+        if (!blueprintName) {
+          const mfgNames = { GRIN: 'Greycat', MISC: 'MISC', SHIN: 'Shinrai' }
+          const variantNames = { Fast: 'Fast', Secure: 'Secure', VeryFast: 'Very Fast', VerySecure: 'Very Secure', Standard: 'Standard', ExpensiveFast: 'Premium Fast', ExpensiveSecure: 'Premium Secure', MostExpensive: 'Premium' }
+          blueprintName = `${mfgNames[mfg] || mfg} ${variantNames[variant] || variant} Nozzle`
+        }
+      }
+    }
+    
+    // Special handling for Salvage Modifiers
+    if (!blueprintName && internalName?.includes('Salvage_Modifier')) {
+      const salvageMatch = internalName.match(/Salvage_Modifier_Scraper_(?:Salvation_)?(\w+)/i)
+      if (salvageMatch) {
+        const [full, size] = salvageMatch
+        const isSalvation = full.includes('Salvation')
+        blueprintName = isSalvation ? `Reclaimer ${size} Scraper` : `${size} Scraper`
       }
     }
     
