@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect } from 'react'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import ArchiveWelcome from '../components/archive/ArchiveWelcome'
-import MiningSection from '../components/archive/MiningSection'
 import ComponentsSection from '../components/archive/ComponentsSection'
 import OrdnanceSection from '../components/archive/OrdnanceSection'
 import FactionsSection from '../components/archive/FactionsSection'
 import GeneralArchiveSection from '../components/archive/GeneralArchiveSection'
 import ResourceLoreSection from '../components/archive/ResourceLoreSection'
 
-export type ArchiveSection = 'welcome' | 'mining' | 'components' | 'ordnance' | 'factions' | 'lore' | 'general'
+export type ArchiveSection = 'welcome' | 'components' | 'ordnance' | 'factions' | 'lore' | 'general'
 
 interface ArchiveSearchParams {
   section?: ArchiveSection
@@ -16,7 +15,6 @@ interface ArchiveSearchParams {
 
 const SECTION_TITLES: Record<ArchiveSection, string> = {
   welcome: 'Information Archive',
-  mining: 'Mining Guide',
   components: 'Component Database',
   ordnance: 'Ordnance Reference',
   factions: 'Faction Reference',
@@ -62,8 +60,6 @@ export default function ArchivePage() {
     switch (currentSection) {
       case 'welcome':
         return <ArchiveWelcome onNavigate={setSection} />
-      case 'mining':
-        return <MiningSection />
       case 'components':
         return <ComponentsSection />
       case 'ordnance':

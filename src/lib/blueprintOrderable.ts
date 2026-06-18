@@ -1,4 +1,4 @@
-import bluesPrints from '../data/Blueprints.json'
+import blueprintMissionData from '../data/game-blueprint-missions.json'
 
 export interface BlueprintOrderableSource {
   file?: string
@@ -6,16 +6,42 @@ export interface BlueprintOrderableSource {
   rewardMissions?: unknown[]
 }
 
-const catalogByFile = new Map(
-  bluesPrints.blueprints.map((bp) => [bp.file, bp] as const)
-)
+const blueprintMissions = blueprintMissionData.blueprintMissions as Record<string, string[]>
+
+// Build a set of blueprint names that are mission rewards
+const rewardBlueprintNames = new Set(Object.keys(blueprintMissions))
+
+function extractBlueprintName(fileId: string): string | null {
+  const normalized = fileId.replace(/\\/g, '/').toLowerCase()
+  
+  // Match patterns like bp_craft_xxx_scitem.json or bp_craft_xxx.json
+  const scitemMatch = normalized.match(/bp_craft_([^/]+?)_scitem\.json$/i)
+  if (scitemMatch) return scitemMatch[1]
+  
+  const simpleMatch = normalized.match(/bp_craft_([^/]+?)\.json$/i)
+  if (simpleMatch) return simpleMatch[1]
+  
+  return null
+}
 
 export function catalogIsReward(blueprintId: string): boolean {
-  return catalogByFile.get(blueprintId)?.isReward === true
+  const name = extractBlueprintName(blueprintId)
+  if (!name) return false
+  return rewardBlueprintNames.has(name)
 }
 
 export function getCatalogBlueprint(blueprintId: string) {
-  return catalogByFile.get(blueprintId)
+  const name = extractBlueprintName(blueprintId)
+  if (!name) return undefined
+  
+  const pools = blueprintMissions[name]
+  if (!pools || pools.length === 0) return undefined
+  
+  return {
+    file: blueprintId,
+    isReward: true,
+    rewardMissions: pools.map(poolKey => ({ mission: poolKey }))
+  }
 }
 
 export function resolveIsOrderable(
@@ -25,7 +51,12 @@ export function resolveIsOrderable(
   const id = blueprint.file
   if (!id) return false
   if (id in overridesMap) return overridesMap[id]
-  return blueprint.isReward === true
+  
+  // Check if explicitly marked as reward
+  if (blueprint.isReward === true) return true
+  
+  // Check if in our mission reward data
+  return catalogIsReward(id)
 }
 
 export function resolveIsOrderableById(
@@ -37,7 +68,17 @@ export function resolveIsOrderableById(
 }
 
 export function hasRewardMissions(blueprint: BlueprintOrderableSource): boolean {
-  return Array.isArray(blueprint.rewardMissions) && blueprint.rewardMissions.length > 0
+  // Check explicit rewardMissions array
+  if (Array.isArray(blueprint.rewardMissions) && blueprint.rewardMissions.length > 0) {
+    return true
+  }
+  
+  // Check if in our mission reward data
+  if (blueprint.file) {
+    return catalogIsReward(blueprint.file)
+  }
+  
+  return false
 }
 
 export function canAddBlueprintToOrder(
@@ -59,9 +100,8 @@ export function canAddBlueprintToTargetListById(
   blueprintId: string,
   overridesMap: Record<string, boolean>
 ): boolean {
-  const bp = catalogByFile.get(blueprintId)
-  if (!bp) return false
-  return canAddBlueprintToTargetList(bp, overridesMap)
+  if (resolveIsOrderableById(blueprintId, overridesMap)) return true
+  return catalogIsReward(blueprintId)
 }
 
 export function filterOrderableBlueprints<T extends BlueprintOrderableSource>(

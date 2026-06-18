@@ -29,6 +29,10 @@ const EXPECTED_PATHS = {
   missionData: 'libs/foundry/records/missionbroker',
   commodities: 'libs/foundry/records/entities/commodities',
   fpsWeapons: 'libs/foundry/records/entities/scitem/weapons/fps_weapons',
+  // New paths for contract-based mission data
+  contractGenerators: 'libs/foundry/records/contracts/contractgenerator',
+  reputationRewards: 'libs/foundry/records/reputation/rewards',
+  factionReputation: 'libs/foundry/records/factions/factionreputation',
 }
 
 // Localization path (extracted separately from Data.p4k)
@@ -802,8 +806,244 @@ function parseBlueprintRewards() {
   
   console.log(`  Found ${Object.keys(missionBlueprints).length} missions with blueprint rewards`)
   console.log(`  Found ${Object.keys(blueprintMissions).length} unique blueprints`)
-  
+
   return { missionBlueprints, blueprintMissions }
+}
+
+/**
+ * Parse contract generator files to extract complete mission data:
+ * - Mission titles (from localization)
+ * - Blueprint reward pools
+ * - Reputation requirements (minStanding/maxStanding)
+ * - aUEC rewards
+ * - Rep points awarded
+ */
+function parseContractGenerators(localization) {
+  console.log('\n[CONTRACT PARSING] Parsing contract generators for mission data...')
+  
+  const contractFiles = findJsonFiles(EXPECTED_PATHS.contractGenerators)
+  if (contractFiles.length === 0) {
+    validationIssues.push('No contract generator files found')
+    return { contracts: [], missionsByPool: {}, poolsByBlueprint: {} }
+  }
+  
+  console.log(`  Found ${contractFiles.length} contract generator files`)
+  
+  // Build reputation reward amount cache (rep points per reward file)
+  const repRewardAmounts = {}
+  const repRewardFiles = findJsonFiles(EXPECTED_PATHS.reputationRewards)
+  for (const file of repRewardFiles) {
+    const json = readJson(file)
+    if (json?._RecordValue_?.reputationAmount !== undefined) {
+      const key = basename(file, '.json').toLowerCase()
+      repRewardAmounts[key] = json._RecordValue_.reputationAmount
+    }
+  }
+  console.log(`  Cached ${Object.keys(repRewardAmounts).length} reputation reward amounts`)
+  
+  // Build standing definitions cache
+  const standingDefs = {}
+  const standingFiles = findJsonFiles(EXPECTED_PATHS.reputation)
+  for (const file of standingFiles) {
+    const json = readJson(file)
+    if (json?._RecordName_) {
+      const name = json._RecordName_.toLowerCase()
+      standingDefs[name] = {
+        displayName: json._RecordValue_?.displayName || 'Unknown',
+        minReputation: json._RecordValue_?.minReputation || 0,
+        gated: json._RecordValue_?.gated || false
+      }
+    }
+  }
+  console.log(`  Cached ${Object.keys(standingDefs).length} standing definitions`)
+  
+  // Build faction name cache
+  const factionNames = {}
+  const factionFiles = findJsonFiles(EXPECTED_PATHS.factionReputation)
+  for (const file of factionFiles) {
+    const json = readJson(file)
+    if (json?._RecordName_) {
+      const key = basename(file, '.json').toLowerCase()
+      const displayNameKey = json._RecordValue_?.displayName
+      let displayName = displayNameKey
+      if (displayNameKey?.startsWith('@')) {
+        displayName = localization[displayNameKey.substring(1)] || displayNameKey
+      }
+      factionNames[key] = displayName || json._RecordName_.replace('FactionReputation.', '')
+    }
+  }
+  console.log(`  Cached ${Object.keys(factionNames).length} faction names`)
+  
+  const contracts = []
+  const missionsByPool = {} // Pool key -> array of missions
+  const poolsByBlueprint = {} // Blueprint name -> array of pool keys
+  
+  let totalContracts = 0
+  let contractsWithBlueprints = 0
+  
+  for (const file of contractFiles) {
+    const json = readJson(file)
+    if (!json?._RecordValue_?.generators) continue
+    
+    const generators = json._RecordValue_.generators
+    
+    for (const generator of generators) {
+      if (!generator.contracts) continue
+      
+      // Extract faction from factionReputation path
+      let factionKey = 'unknown'
+      let factionName = 'Unknown'
+      if (generator.factionReputation) {
+        const factionMatch = generator.factionReputation.match(/factionreputation_(\w+)\.json/i)
+        if (factionMatch) {
+          factionKey = factionMatch[1].toLowerCase()
+          factionName = factionNames[`factionreputation_${factionKey}`] || factionKey
+        }
+      }
+      
+      for (const contract of generator.contracts) {
+        totalContracts++
+        
+        // Extract title from paramOverrides
+        let titleKey = ''
+        let title = contract.debugName || 'Unknown Mission'
+        if (contract.paramOverrides?.stringParamOverrides) {
+          const titleParam = contract.paramOverrides.stringParamOverrides.find(
+            p => p.param === 'Title'
+          )
+          if (titleParam?.value) {
+            titleKey = titleParam.value
+            if (titleKey.startsWith('@')) {
+              title = localization[titleKey.substring(1)] || titleKey
+            } else {
+              title = titleKey
+            }
+          }
+        }
+        
+        // Extract blueprint pools from contractResults
+        const blueprintPools = []
+        if (contract.contractResults?.contractResults) {
+          for (const result of contract.contractResults.contractResults) {
+            if (!result) continue
+            if (result._Type_ === 'BlueprintRewards' && result.blueprintPool) {
+              const poolMatch = result.blueprintPool.match(/([^/]+)\.json$/i)
+              if (poolMatch) {
+                const poolKey = poolMatch[1]
+                  .replace('bp_rewards_', '')
+                  .replace('bp_missionreward_', '')
+                blueprintPools.push({
+                  key: poolKey,
+                  chance: result.chance || 1.0,
+                  path: result.blueprintPool
+                })
+              }
+            }
+          }
+        }
+        
+        // Extract rep points from contractResults
+        let repPoints = 0
+        if (contract.contractResults?.contractResults) {
+          for (const result of contract.contractResults.contractResults) {
+            if (!result) continue
+            if (result._Type_ === 'ContractResult_LegacyReputation') {
+              const rewardPath = result.contractResultReputationAmounts?.reward
+              if (rewardPath) {
+                const rewardMatch = rewardPath.match(/([^/]+)\.json$/i)
+                if (rewardMatch) {
+                  const rewardKey = rewardMatch[1].toLowerCase()
+                  repPoints = repRewardAmounts[rewardKey] || 0
+                }
+              }
+            }
+          }
+        }
+        
+        // Extract standing requirements
+        let minStanding = null
+        let maxStanding = null
+        if (contract.minStanding) {
+          const minMatch = contract.minStanding.match(/([^/]+)\.json$/i)
+          if (minMatch) {
+            const standingKey = `reputationstanding.${minMatch[1]}`.toLowerCase()
+            const def = standingDefs[standingKey]
+            minStanding = def ? {
+              name: def.displayName,
+              minReputation: def.minReputation
+            } : { name: minMatch[1], minReputation: 0 }
+          }
+        }
+        if (contract.maxStanding) {
+          const maxMatch = contract.maxStanding.match(/([^/]+)\.json$/i)
+          if (maxMatch) {
+            const standingKey = `reputationstanding.${maxMatch[1]}`.toLowerCase()
+            const def = standingDefs[standingKey]
+            maxStanding = def ? {
+              name: def.displayName,
+              minReputation: def.minReputation
+            } : { name: maxMatch[1], minReputation: 0 }
+          }
+        }
+        
+        // Extract system from title or debugName
+        let system = 'Unknown'
+        const systemPatterns = [
+          /stanton/i, /pyro/i, /nyx/i, /terra/i, /sol/i
+        ]
+        const nameToCheck = (title + ' ' + (contract.debugName || '')).toLowerCase()
+        for (const pattern of systemPatterns) {
+          if (pattern.test(nameToCheck)) {
+            system = nameToCheck.match(pattern)[0]
+            system = system.charAt(0).toUpperCase() + system.slice(1)
+            break
+          }
+        }
+        
+        if (blueprintPools.length > 0) {
+          contractsWithBlueprints++
+          
+          const contractData = {
+            id: contract.id || contract.debugName,
+            debugName: contract.debugName,
+            title,
+            titleKey,
+            faction: factionName,
+            factionKey,
+            system,
+            blueprintPools,
+            minStanding,
+            maxStanding,
+            repPoints
+          }
+          
+          contracts.push(contractData)
+          
+          // Index by pool
+          for (const pool of blueprintPools) {
+            if (!missionsByPool[pool.key]) {
+              missionsByPool[pool.key] = []
+            }
+            missionsByPool[pool.key].push({
+              title,
+              titleKey,
+              faction: factionName,
+              system,
+              minStanding,
+              maxStanding,
+              repPoints
+            })
+          }
+        }
+      }
+    }
+  }
+  
+  console.log(`  Parsed ${totalContracts} total contracts`)
+  console.log(`  Found ${contractsWithBlueprints} contracts with blueprint rewards`)
+  console.log(`  Indexed ${Object.keys(missionsByPool).length} unique blueprint pools`)
+  
+  return { contracts, missionsByPool, poolsByBlueprint }
 }
 
 function parseBlueprintDefinitions() {
@@ -1528,6 +1768,85 @@ function parseReputationRewardAmounts() {
 }
 
 /**
+ * Parse reputation context files to get proper faction → scope mappings
+ * These files define which career scopes belong to which faction
+ */
+function parseReputationContexts(scopes) {
+  console.log('  Parsing reputation contexts (faction → scope mappings)...')
+  
+  const contextPath = join(EXTRACTED_DATA, 'libs/foundry/records/reputation/contexts')
+  if (!existsSync(contextPath)) {
+    console.log('  Contexts path not found')
+    return {}
+  }
+  
+  const factionContexts = {}
+  
+  function processDir(dir) {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = join(dir, entry.name)
+      if (entry.isDirectory()) {
+        processDir(fullPath)
+      } else if (entry.name.endsWith('.json') && entry.name.includes('reputationcontext_')) {
+        const json = readJson(fullPath)
+        if (!json?._RecordValue_) continue
+        
+        const val = json._RecordValue_
+        const contextName = entry.name.replace('reputationcontext_', '').replace('.json', '')
+        
+        // Extract scope references from scopeContextList (career paths)
+        const careerScopes = []
+        for (const scopeCtx of val.scopeContextList || []) {
+          if (scopeCtx.scope) {
+            const scopeRef = scopeCtx.scope.split('/').pop().replace('.json', '')
+            const scopeName = scopeRef.replace('reputationscope_', '')
+            
+            // Find the matching scope in our parsed scopes
+            const matchingScope = Object.entries(scopes).find(([key]) => 
+              key.toLowerCase() === scopeRef.toLowerCase() ||
+              key.toLowerCase().includes(scopeName.toLowerCase())
+            )
+            
+            if (matchingScope) {
+              careerScopes.push({
+                scopeKey: matchingScope[0],
+                scopeName: scopeName,
+                standings: matchingScope[1].standings
+              })
+            }
+          }
+        }
+        
+        // Also get primary scope (usually affinity)
+        let primaryScope = null
+        if (val.primaryScopeContext?.scope) {
+          const scopeRef = val.primaryScopeContext.scope.split('/').pop().replace('.json', '')
+          const matchingScope = Object.entries(scopes).find(([key]) => 
+            key.toLowerCase() === scopeRef.toLowerCase()
+          )
+          if (matchingScope) {
+            primaryScope = {
+              scopeKey: matchingScope[0],
+              standings: matchingScope[1].standings
+            }
+          }
+        }
+        
+        factionContexts[contextName] = {
+          primaryScope,
+          careerScopes
+        }
+      }
+    }
+  }
+  
+  processDir(contextPath)
+  console.log(`  Parsed ${Object.keys(factionContexts).length} reputation contexts`)
+  
+  return factionContexts
+}
+
+/**
  * Build complete reputation system data
  */
 function parseReputationSystem(localization = {}) {
@@ -1537,29 +1856,122 @@ function parseReputationSystem(localization = {}) {
   const { standingsByPath, standingsByCategory } = parseReputationStandings(localization)
   const scopes = parseReputationScopes(standingsByPath)
   const factions = parseFactionReputations(localization)
+  const factionContexts = parseReputationContexts(scopes)
   const rewardAmounts = parseReputationRewardAmounts()
   const { missions, missionsByFaction } = parseMissionBrokerData(localization)
   
-  // Build faction standings map (faction -> their reputation tiers)
+  // Build faction standings map using context files for proper scope mapping
   const factionStandings = {}
   for (const [factionKey, faction] of Object.entries(factions)) {
-    // Find matching scopes for this faction
-    const matchingScopes = Object.entries(scopes).filter(([scopeName]) => 
-      scopeName.toLowerCase().includes(factionKey) || 
-      factionKey.includes(scopeName.toLowerCase().replace('reputationscope_', ''))
+    // Extract the faction identifier from the key (e.g., "factionreputation_lawful_bountyhuntersguild" -> "bountyhuntersguild")
+    const factionId = factionKey
+      .replace('factionreputation_', '')
+      .replace('lawful_', '')
+      .replace('unlawful_', '')
+    
+    // Find matching context by faction ID - prioritize exact matches, then longer/more specific matches
+    const contextEntries = Object.entries(factionContexts)
+    
+    // First try exact match
+    let contextEntry = contextEntries.find(([ctxName]) => 
+      ctxName.toLowerCase() === factionId.toLowerCase()
     )
     
-    if (matchingScopes.length > 0) {
-      const [scopeName, scope] = matchingScopes[0]
-      factionStandings[factionKey] = {
-        faction: faction.name,
-        factionKey,
-        scopeName,
-        standings: scope.standings.map(s => ({
-          displayName: s.displayName,
-          minReputation: s.minReputation,
-          gated: s.gated
-        }))
+    // If no exact match, try partial matches but prefer longer context names (more specific)
+    if (!contextEntry) {
+      const partialMatches = contextEntries.filter(([ctxName]) => 
+        factionId.toLowerCase().includes(ctxName.toLowerCase()) ||
+        ctxName.toLowerCase().includes(factionId.toLowerCase())
+      ).sort((a, b) => b[0].length - a[0].length) // Sort by length descending (more specific first)
+      
+      if (partialMatches.length > 0) {
+        contextEntry = partialMatches[0]
+      }
+    }
+    
+    if (contextEntry) {
+      const [ctxName, context] = contextEntry
+      
+      // Use career scopes if available (these have proper standing names)
+      if (context.careerScopes.length > 0) {
+        // Build careers object with multiple career paths
+        const careers = {}
+        for (const career of context.careerScopes) {
+          // Filter out placeholders and get valid standings
+          const validStandings = (career.standings || [])
+            .filter(s => !s.displayName.includes('PLACEHOLDER') && s.displayName)
+            .map(s => ({
+              displayName: s.displayName,
+              minReputation: s.minReputation,
+              gated: s.gated
+            }))
+          
+          if (validStandings.length > 0) {
+            careers[career.scopeName] = {
+              scopeKey: career.scopeKey,
+              standings: validStandings
+            }
+          }
+        }
+        
+        // Use the first career with valid standings as the default
+        const firstValidCareer = Object.values(careers)[0]
+        
+        factionStandings[factionKey] = {
+          faction: faction.name,
+          factionKey,
+          careers: Object.keys(careers).length > 0 ? careers : undefined,
+          scopeName: firstValidCareer?.scopeKey || ctxName,
+          standings: firstValidCareer?.standings || []
+        }
+      } else if (context.primaryScope) {
+        // Fall back to primary scope
+        const validStandings = (context.primaryScope.standings || [])
+          .filter(s => !s.displayName.includes('PLACEHOLDER') && s.displayName)
+          .map(s => ({
+            displayName: s.displayName,
+            minReputation: s.minReputation,
+            gated: s.gated
+          }))
+        
+        factionStandings[factionKey] = {
+          faction: faction.name,
+          factionKey,
+          scopeName: context.primaryScope.scopeKey,
+          standings: validStandings
+        }
+      }
+    }
+    
+    // Fallback: try direct scope matching if no context found
+    if (!factionStandings[factionKey]) {
+      // Try to find a scope that matches this faction specifically (not generic "guild")
+      const specificMatches = Object.entries(scopes).filter(([scopeName]) => {
+        const normalizedScope = scopeName.toLowerCase().replace('reputationscope_', '')
+        const normalizedFaction = factionId.toLowerCase()
+        // Match faction-specific scopes like "bounty_bountyhuntersguild" but not generic "guild"
+        return normalizedScope.includes(normalizedFaction) || 
+               (normalizedFaction.includes(normalizedScope) && normalizedScope.length > 5)
+      }).sort((a, b) => b[0].length - a[0].length) // Prefer longer (more specific) matches
+      
+      if (specificMatches.length > 0) {
+        const [scopeName, scope] = specificMatches[0]
+        const validStandings = (scope.standings || [])
+          .filter(s => !s.displayName.includes('PLACEHOLDER') && s.displayName)
+          .map(s => ({
+            displayName: s.displayName,
+            minReputation: s.minReputation,
+            gated: s.gated
+          }))
+        
+        if (validStandings.length > 0) {
+          factionStandings[factionKey] = {
+            faction: faction.name,
+            factionKey,
+            scopeName,
+            standings: validStandings
+          }
+        }
       }
     }
   }
@@ -1568,6 +1980,7 @@ function parseReputationSystem(localization = {}) {
     standingsByCategory,
     scopes,
     factions,
+    factionContexts,
     factionStandings,
     rewardAmounts,
     missions,
@@ -1576,6 +1989,7 @@ function parseReputationSystem(localization = {}) {
       totalStandings: Object.keys(standingsByPath).length,
       totalScopes: Object.keys(scopes).length,
       totalFactions: Object.keys(factions).length,
+      totalContexts: Object.keys(factionContexts).length,
       totalRewardTypes: Object.keys(rewardAmounts).length,
       totalMissions: Object.keys(missions).length,
       missionsWithBlueprints: Object.values(missions).filter(m => m.hasBlueprintReward).length,
@@ -1626,6 +2040,9 @@ async function main() {
   const miningLasers = parseMiningLasers(localization)
   const components = parseShipComponents(localization)
   const reputationSystem = parseReputationSystem(localization)
+  
+  // Parse contract generators for complete mission -> blueprint mapping
+  const contractData = parseContractGenerators(localization)
   
   // Parse weapons, ordnance, and modules
   console.log('\n[6/7] Parsing FPS weapons, ordnance, and salvage modules...')
@@ -1692,13 +2109,48 @@ async function main() {
     }
   })
   
-  // Blueprint definitions
+  // Enrich blueprint definitions with mission reward data
+  const enrichedBlueprints = blueprintDefs.map(bp => {
+    const bpName = bp.name.toLowerCase().replace('bp_craft_', '')
+    const poolKeys = blueprintMissions[bpName] || []
+    
+    if (poolKeys.length === 0) {
+      return { ...bp, isReward: false, rewardMissions: [] }
+    }
+    
+    // Build rewardMissions from contract data
+    const rewardMissions = []
+    for (const poolKey of poolKeys) {
+      const missions = contractData.missionsByPool[poolKey] || contractData.missionsByPool[poolKey.toLowerCase()] || []
+      for (const m of missions) {
+        rewardMissions.push({
+          mission: m.faction && m.title ? `${m.faction}: ${m.title}` : m.title,
+          chance: 1,
+          locations: m.system ? [m.system] : [],
+          repPoints: m.repPoints || 0,
+          minReputation: m.minStanding?.minReputation || 0,
+          standingName: m.minStanding?.name || null
+        })
+      }
+    }
+    
+    return {
+      ...bp,
+      isReward: true,
+      rewardMissions,
+      missionPools: poolKeys
+    }
+  })
+  
+  // Blueprint definitions (enriched with mission data)
   saveJson('game-blueprints.json', {
     _source: 'Star Citizen Game Files (extracted)',
     _extracted: new Date().toISOString(),
-    blueprints: blueprintDefs,
+    version: new Date().toISOString().split('T')[0],
+    blueprints: enrichedBlueprints,
     summary: {
-      totalBlueprints: blueprintDefs.length
+      totalBlueprints: enrichedBlueprints.length,
+      blueprintsWithRewards: enrichedBlueprints.filter(b => b.isReward).length
     }
   })
   
@@ -1733,6 +2185,7 @@ async function main() {
     _source: 'Star Citizen Game Files (extracted)',
     _extracted: new Date().toISOString(),
     factions: reputationSystem.factions,
+    factionContexts: reputationSystem.factionContexts,
     factionStandings: reputationSystem.factionStandings,
     standingsByCategory: reputationSystem.standingsByCategory,
     scopes: reputationSystem.scopes,
@@ -1740,6 +2193,24 @@ async function main() {
     missions: reputationSystem.missions,
     missionsByFaction: reputationSystem.missionsByFaction,
     summary: reputationSystem.summary
+  })
+  
+  // Blueprint missions (contract-based mission → blueprint mapping with full details)
+  saveJson('game-blueprint-missions.json', {
+    _source: 'Star Citizen Game Files (contract generators)',
+    _extracted: new Date().toISOString(),
+    // Existing pool -> blueprint mappings
+    missionBlueprints,
+    blueprintMissions,
+    // NEW: Contract-based mission data with titles, rep, aUEC
+    contracts: contractData.contracts,
+    missionsByPool: contractData.missionsByPool,
+    summary: {
+      totalPools: Object.keys(missionBlueprints).length,
+      totalBlueprints: Object.keys(blueprintMissions).length,
+      contractsWithBlueprints: contractData.contracts.length,
+      poolsWithMissionData: Object.keys(contractData.missionsByPool).length
+    }
   })
   
   // FPS Weapons (replaces wiki-enriched weapon data)

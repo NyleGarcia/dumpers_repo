@@ -17,6 +17,8 @@ type MissionPoolBlueprint = {
 
 type System = 'stanton' | 'pyro' | 'nyx' | 'unknown'
 
+type ViewMode = 'system' | 'faction'
+
 type MissionPool = {
   key: string
   displayName: string
@@ -128,6 +130,7 @@ export default function BrowseMissionsView({
   isOnTargetList,
 }: BrowseMissionsViewProps) {
   const { data: blueprints = [] } = useBlueprintData()
+  const [viewMode, setViewMode] = useState<ViewMode>('system')
   const [selectedSystem, setSelectedSystem] = useState<System | null>(null)
   const [selectedFaction, setSelectedFaction] = useState<string | null>(null)
   const [selectedMissionPool, setSelectedMissionPool] = useState<string | null>(null)
@@ -197,6 +200,33 @@ export default function BrowseMissionsView({
     return map
   }, [missionPools])
 
+  // For faction view: group all pools by faction (across all systems)
+  const poolsByFaction = useMemo(() => {
+    const map: Record<string, { pools: MissionPool[]; isLawful: boolean; systems: Set<System> }> = {}
+    
+    for (const pool of missionPools) {
+      if (!map[pool.faction]) {
+        map[pool.faction] = { pools: [], isLawful: pool.isLawful, systems: new Set() }
+      }
+      map[pool.faction].pools.push(pool)
+      map[pool.faction].systems.add(pool.system)
+    }
+    
+    return map
+  }, [missionPools])
+
+  const filteredFactionsList = useMemo(() => {
+    const entries = Object.entries(poolsByFaction)
+    
+    if (!searchTerm) return entries
+    
+    const term = searchTerm.toLowerCase()
+    return entries.filter(([faction, data]) => 
+      faction.toLowerCase().includes(term) ||
+      data.pools.some(p => p.displayName.toLowerCase().includes(term))
+    )
+  }, [poolsByFaction, searchTerm])
+
   const filteredFactions = useMemo(() => {
     if (!selectedSystem) return {}
     const factions = factionsBySystem[selectedSystem]
@@ -262,23 +292,42 @@ export default function BrowseMissionsView({
     }
   }
 
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode)
+    setSelectedSystem(null)
+    setSelectedFaction(null)
+    setSelectedMissionPool(null)
+    setSearchTerm('')
+  }
+
   const breadcrumbs = useMemo(() => {
-    const crumbs: { label: string; onClick: () => void }[] = [
-      { label: 'Systems', onClick: () => { setSelectedSystem(null); setSelectedFaction(null); setSelectedMissionPool(null) } },
-    ]
+    const crumbs: { label: string; onClick: () => void }[] = []
     
-    if (selectedSystem) {
-      crumbs.push({
-        label: SYSTEM_LABELS[selectedSystem],
-        onClick: () => { setSelectedFaction(null); setSelectedMissionPool(null) },
-      })
-    }
-    
-    if (selectedFaction) {
-      crumbs.push({
-        label: selectedFaction,
-        onClick: () => { setSelectedMissionPool(null) },
-      })
+    if (viewMode === 'system') {
+      crumbs.push({ label: 'Systems', onClick: () => { setSelectedSystem(null); setSelectedFaction(null); setSelectedMissionPool(null) } })
+      
+      if (selectedSystem) {
+        crumbs.push({
+          label: SYSTEM_LABELS[selectedSystem],
+          onClick: () => { setSelectedFaction(null); setSelectedMissionPool(null) },
+        })
+      }
+      
+      if (selectedFaction) {
+        crumbs.push({
+          label: selectedFaction,
+          onClick: () => { setSelectedMissionPool(null) },
+        })
+      }
+    } else {
+      crumbs.push({ label: 'Factions', onClick: () => { setSelectedFaction(null); setSelectedMissionPool(null) } })
+      
+      if (selectedFaction) {
+        crumbs.push({
+          label: selectedFaction,
+          onClick: () => { setSelectedMissionPool(null) },
+        })
+      }
     }
     
     if (selectedMissionPool) {
@@ -290,32 +339,62 @@ export default function BrowseMissionsView({
     }
     
     return crumbs
-  }, [selectedSystem, selectedFaction, selectedMissionPool, missionPools])
+  }, [viewMode, selectedSystem, selectedFaction, selectedMissionPool, missionPools])
 
   return (
     <div className="space-y-4">
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-sm">
-        {breadcrumbs.map((crumb, idx) => (
-          <React.Fragment key={idx}>
-            {idx > 0 && <span className="text-slate-600">›</span>}
+      {/* View Mode Switcher */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm">
+          {breadcrumbs.map((crumb, idx) => (
+            <React.Fragment key={idx}>
+              {idx > 0 && <span className="text-slate-600">›</span>}
+              <button
+                onClick={crumb.onClick}
+                className={`${
+                  idx === breadcrumbs.length - 1
+                    ? 'text-orange-400 cursor-default'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                disabled={idx === breadcrumbs.length - 1}
+              >
+                {crumb.label}
+              </button>
+            </React.Fragment>
+          ))}
+        </div>
+        
+        {/* View toggle - only show when at top level */}
+        {!selectedFaction && !selectedMissionPool && (
+          <div className="flex items-center gap-1 bg-slate-800/60 rounded-lg p-0.5 border border-slate-700/50">
             <button
-              onClick={crumb.onClick}
-              className={`${
-                idx === breadcrumbs.length - 1
-                  ? 'text-orange-400 cursor-default'
+              onClick={() => handleViewModeChange('system')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                viewMode === 'system'
+                  ? 'bg-orange-500/20 text-orange-300 border border-orange-500/40'
                   : 'text-slate-400 hover:text-white'
               }`}
-              disabled={idx === breadcrumbs.length - 1}
             >
-              {crumb.label}
+              By System
             </button>
-          </React.Fragment>
-        ))}
+            <button
+              onClick={() => handleViewModeChange('faction')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                viewMode === 'faction'
+                  ? 'bg-orange-500/20 text-orange-300 border border-orange-500/40'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              By Faction
+            </button>
+          </div>
+        )}
       </div>
 
+      {/* ========== SYSTEM VIEW ========== */}
+      
       {/* System Selection */}
-      {!selectedSystem && (
+      {viewMode === 'system' && !selectedSystem && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {(['stanton', 'pyro', 'nyx', 'unknown'] as System[]).map(system => {
             const stats = systemStats[system]
@@ -338,8 +417,8 @@ export default function BrowseMissionsView({
         </div>
       )}
 
-      {/* Faction Selection */}
-      {selectedSystem && !selectedFaction && (
+      {/* Faction Selection (System View) */}
+      {viewMode === 'system' && selectedSystem && !selectedFaction && (
         <>
           <div className="relative">
             <input
@@ -382,8 +461,8 @@ export default function BrowseMissionsView({
         </>
       )}
 
-      {/* Mission Pool Selection */}
-      {selectedSystem && selectedFaction && !selectedMissionPool && (
+      {/* Mission Pool Selection (System View) */}
+      {viewMode === 'system' && selectedSystem && selectedFaction && !selectedMissionPool && (
         <div className="space-y-2">
           {selectedFactionPools.map(pool => {
             const poolBps = missionBlueprints[pool.key] || []
@@ -429,6 +508,119 @@ export default function BrowseMissionsView({
         </div>
       )}
 
+      {/* ========== FACTION VIEW ========== */}
+      
+      {/* Faction List (Faction View) */}
+      {viewMode === 'faction' && !selectedFaction && (
+        <>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search factions or mission pools..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="site-input w-full pl-9 pr-4 py-2 text-sm"
+            />
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredFactionsList
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([faction, data]) => {
+                const systemsArray = Array.from(data.systems)
+                return (
+                  <button
+                    key={faction}
+                    onClick={() => setSelectedFaction(faction)}
+                    className={`p-3 rounded-lg border text-left transition-all hover:scale-[1.01] ${
+                      data.isLawful 
+                        ? 'bg-green-950/30 border-green-500/30 hover:border-green-500/50'
+                        : 'bg-red-950/30 border-red-500/30 hover:border-red-500/50'
+                    }`}
+                  >
+                    <h4 className={`font-medium ${data.isLawful ? 'text-green-300' : 'text-red-400'}`}>
+                      {faction}
+                    </h4>
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                      {systemsArray.map(sys => (
+                        <span
+                          key={sys}
+                          className={`text-[10px] px-1.5 py-0.5 rounded border ${SYSTEM_COLORS[sys].bg} ${SYSTEM_COLORS[sys].border} ${SYSTEM_COLORS[sys].text}`}
+                        >
+                          {SYSTEM_LABELS[sys]}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {data.pools.length} mission pool{data.pools.length !== 1 ? 's' : ''} with blueprints
+                    </p>
+                  </button>
+                )
+              })}
+          </div>
+        </>
+      )}
+
+      {/* Mission Pool Selection (Faction View) */}
+      {viewMode === 'faction' && selectedFaction && !selectedMissionPool && (
+        <div className="space-y-2">
+          {poolsByFaction[selectedFaction]?.pools
+            .sort((a, b) => a.displayName.localeCompare(b.displayName))
+            .map(pool => {
+              const poolBps = missionBlueprints[pool.key] || []
+              const acquiredCount = poolBps.filter(bp => {
+                const bpName = bp.name.toLowerCase()
+                const fullBp = blueprintsByInternalName[bpName]
+                return fullBp && acquiredBlueprints[fullBp.file]
+              }).length
+              const colors = SYSTEM_COLORS[pool.system]
+              
+              return (
+                <button
+                  key={pool.key}
+                  onClick={() => setSelectedMissionPool(pool.key)}
+                  className={`w-full p-3 rounded-lg border text-left transition-all hover:bg-slate-800/50 ${
+                    pool.isLawful 
+                      ? 'border-green-500/20 hover:border-green-500/40'
+                      : 'border-red-500/20 hover:border-red-500/40'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className={`font-medium text-sm ${pool.isLawful ? 'text-green-300' : 'text-red-400'}`}>
+                          {pool.displayName}
+                        </h4>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${colors.bg} ${colors.border} ${colors.text}`}>
+                          {SYSTEM_LABELS[pool.system]}
+                        </span>
+                      </div>
+                      {!pool.isLawful && (
+                        <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded mt-1 inline-block">
+                          Illegal
+                        </span>
+                      )}
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <span className={`text-sm font-medium ${
+                        acquiredCount === poolBps.length ? 'text-green-400' : 'text-amber-400'
+                      }`}>
+                        {acquiredCount}/{poolBps.length}
+                      </span>
+                      <p className="text-[10px] text-slate-500">blueprints</p>
+                    </div>
+                  </div>
+                </button>
+              )
+            })}
+        </div>
+      )}
+
+      {/* ========== SHARED: Blueprint Pool View ========== */}
+      
       {/* Blueprint Pool View */}
       {selectedMissionPool && (
         <div className="space-y-4">

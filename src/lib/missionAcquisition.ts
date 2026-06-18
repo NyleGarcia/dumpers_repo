@@ -1,6 +1,4 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
-import factionsData from '../data/factions.json'
-import acquisitionData from '../data/blueprint-acquisition.json'
 
 export interface MissionRepInfo {
   repMin: number | null
@@ -15,6 +13,7 @@ export interface MissionRepInfo {
   aUecMax: number
   missionType: string | null
   missionLocations: string[]
+  repPoints: number
 }
 
 export interface BlueprintUnlockInfo {
@@ -27,6 +26,7 @@ export interface BlueprintUnlockInfo {
   unmatchedMissionCount: number
   isInferred: boolean
   missionPoolName: string | null
+  repPoints: number
 }
 
 type MissionPoolBlueprint = {
@@ -35,91 +35,27 @@ type MissionPoolBlueprint = {
   path: string
 }
 
-type FactionData = {
-  name: string
-  uuid: string
-  standings: Array<{
-    name: string
-    minReputation: number
-  }>
+type MissionPoolEntry = {
+  title: string
+  titleKey: string
+  faction: string
+  system: string
+  minStanding: { name: string; minReputation: number } | null
+  maxStanding: { name: string; minReputation: number } | null
+  repPoints: number
 }
 
 const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
-const factions = factionsData as Record<string, FactionData>
+const missionsByPool = blueprintMissionData.missionsByPool as Record<string, MissionPoolEntry[]>
 
-const FACTION_PATTERN_MAP: Record<string, string> = {
-  'shubin': 'shubininterstellar',
-  'adagio': 'adagioholdings',
-  'covalex': 'covalex',
-  'eckhart': 'eckhartsecurity',
-  'northrock': 'northrockservicegroup',
-  'crusader': 'crusadersecurity',
-  'hurston': 'hurstonsecurity',
-  'microtech': 'microtech',
-  'citizensforprosperity': 'citizensforprosperity',
-  'cfp': 'citizensforprosperity',
-  'headhunter': 'headhunters',
-  'ninetail': 'xenothreat',
-  'bountyhunter': 'bountyhuntersguild',
-  'cdf': 'civiliandefenseforce',
-  'xenothreat': 'xenothreat',
-  'rayari': 'rayariincorporated',
-  'wildstar': 'wildstarracing',
-  'ling': 'lingfamilyhauling',
-  'ftl': 'ftlcourier',
-  'mtprotection': 'mtprotectionservices',
-  'blacjac': 'blacjacsecurity',
-  'redwind': 'redwindlinehaul',
-  'udm': 'unifieddistributionmanagement',
-  'bitzeros': 'bitzeros',
-  'clovus': 'clovusdarneely',
-  'vaughn': 'vaughn',
-  'ruto': 'ruto',
-  'tecia': 'teciatwitchpacheco',
-  'wallace': 'wallaceklim',
-  'wikelo': 'wikeloemporium',
-}
+const UNLAWFUL_FACTIONS = [
+  'headhunters', 'xenothreat', 'ruto', 'vaughn', 'ninetails',
+  'tarpits', 'bitzeros', 'dead saints'
+]
 
-const RANK_TO_STANDING_INDEX: Record<string, number> = {
-  '0': 1,
-  '1': 2,
-  '2': 3,
-  '3': 4,
-  '4': 5,
-  '5': 6,
-  '0to1': 2,
-  '2to3': 4,
-}
-
-function parseMissionPoolKey(poolKey: string): { factionKey: string | null; rankIndex: number | null } {
-  const keyLower = poolKey.toLowerCase()
-  
-  let factionKey: string | null = null
-  for (const [pattern, key] of Object.entries(FACTION_PATTERN_MAP)) {
-    if (keyLower.includes(pattern)) {
-      factionKey = key
-      break
-    }
-  }
-  
-  let rankIndex: number | null = null
-  const rankMatch = keyLower.match(/rank(\d+(?:to\d+)?)/i)
-  if (rankMatch) {
-    const rankKey = rankMatch[1].toLowerCase()
-    rankIndex = RANK_TO_STANDING_INDEX[rankKey] ?? null
-  }
-  
-  return { factionKey, rankIndex }
-}
-
-function getStandingForRank(factionKey: string, rankIndex: number): { name: string; minReputation: number } | null {
-  const faction = factions[factionKey]
-  if (!faction || !faction.standings) return null
-  
-  if (rankIndex >= 0 && rankIndex < faction.standings.length) {
-    return faction.standings[rankIndex]
-  }
-  return null
+function isUnlawfulFaction(factionName: string): boolean {
+  const lower = factionName.toLowerCase()
+  return UNLAWFUL_FACTIONS.some(f => lower.includes(f))
 }
 
 function buildBlueprintToPoolIndex(): Map<string, string[]> {
@@ -189,35 +125,68 @@ export function formatStandingRequirement(
   return null
 }
 
-type MissionsByLabelEntry = {
-  sourceLabel: string
-  lookupKey: string
-  missionTypeKey?: string
-  repMin?: number | null
-  repMax?: number | null
-  minReputation?: number | null
-  minStandingName?: string | null
-  variantCount?: number
-  missionGiver?: string | null
-  giverSlug?: string
+/**
+ * Get mission rep info from the pool-based mission data.
+ * Looks up by pool key or mission title.
+ */
+export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string): MissionRepInfo {
+  const defaultReturn: MissionRepInfo = {
+    repMin: null,
+    repMax: null,
+    minReputation: null,
+    minStandingName: null,
+    variantCount: 0,
+    missionGiver: null,
+    matched: false,
+    isLawful: true,
+    aUecMin: 0,
+    aUecMax: 0,
+    missionType: null,
+    missionLocations: [],
+    repPoints: 0,
+  }
+
+  const poolMissions = missionsByPool[poolKey] || missionsByPool[poolKey.toLowerCase()]
+  if (!poolMissions || poolMissions.length === 0) {
+    return defaultReturn
+  }
+
+  // If a specific title is provided, try to match it
+  let mission: MissionPoolEntry | undefined
+  if (missionTitle) {
+    const normalizedTitle = missionTitle.toLowerCase()
+    mission = poolMissions.find(m => 
+      m.title.toLowerCase().includes(normalizedTitle) || 
+      normalizedTitle.includes(m.title.toLowerCase())
+    )
+  }
+  
+  // Fall back to first mission in pool
+  if (!mission) {
+    mission = poolMissions[0]
+  }
+
+  return {
+    repMin: mission.repPoints,
+    repMax: mission.repPoints,
+    minReputation: mission.minStanding?.minReputation ?? null,
+    minStandingName: mission.minStanding?.name ?? null,
+    variantCount: poolMissions.length,
+    missionGiver: mission.faction,
+    matched: true,
+    isLawful: !isUnlawfulFaction(mission.faction),
+    aUecMin: 0,
+    aUecMax: 0,
+    missionType: null,
+    missionLocations: mission.system ? [mission.system] : [],
+    repPoints: mission.repPoints,
+  }
 }
 
-const missionsByLabel = acquisitionData.missionsByLabel as Record<string, MissionsByLabelEntry>
-
-function buildMissionLookupKey(missionLabel: string): string {
-  const cleaned = missionLabel
-    .replace(/\s*\(Not currently available in game\)\s*$/i, '')
-    .trim()
-  
-  const colonIndex = cleaned.indexOf(':')
-  if (colonIndex <= 0) return cleaned.toLowerCase()
-  
-  const giver = cleaned.slice(0, colonIndex).trim().toLowerCase()
-  const title = cleaned.slice(colonIndex + 1).trim().toLowerCase()
-  
-  return `${giver}|${title}`
-}
-
+/**
+ * Legacy getMissionRepInfo for backwards compatibility.
+ * Tries to match mission label to pool data.
+ */
 export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
   const defaultReturn: MissionRepInfo = {
     repMin: null,
@@ -232,49 +201,32 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     aUecMax: 0,
     missionType: null,
     missionLocations: [],
+    repPoints: 0,
   }
 
   if (/uninitialized/i.test(missionLabel)) {
     return defaultReturn
   }
 
-  const lookupKey = buildMissionLookupKey(missionLabel)
-  const entry = missionsByLabel[lookupKey]
-  
-  if (entry) {
-    const giverSlug = entry.giverSlug || ''
-    const isLawful = !['headhunters', 'xenothreat', 'ruto', 'vaughn', 'ninetails'].includes(giverSlug)
-    
-    return {
-      repMin: entry.repMin ?? null,
-      repMax: entry.repMax ?? null,
-      minReputation: entry.minReputation ?? null,
-      minStandingName: entry.minStandingName ?? null,
-      variantCount: entry.variantCount ?? 1,
-      missionGiver: entry.missionGiver ?? null,
-      matched: true,
-      isLawful,
-      aUecMin: 0,
-      aUecMax: 0,
-      missionType: null,
-      missionLocations: [],
-    }
-  }
-
-  if (missionLabel.includes(':')) {
-    const colonIndex = missionLabel.indexOf(':')
-    const giverPart = missionLabel.slice(0, colonIndex).trim().toLowerCase()
-    
-    for (const [pattern, factionKey] of Object.entries(FACTION_PATTERN_MAP)) {
-      if (giverPart.includes(pattern) || giverPart.replace(/[^a-z]/g, '').includes(pattern)) {
-        const faction = factions[factionKey]
-        if (faction) {
-          return {
-            ...defaultReturn,
-            missionGiver: faction.name,
-            matched: true,
-            isLawful: !['headhunters', 'xenothreat', 'ruto', 'vaughn'].includes(factionKey),
-          }
+  // Try to find matching pool by searching all pools for matching titles
+  for (const [poolKey, missions] of Object.entries(missionsByPool)) {
+    for (const mission of missions) {
+      if (mission.title.toLowerCase() === missionLabel.toLowerCase() ||
+          missionLabel.toLowerCase().includes(mission.title.toLowerCase())) {
+        return {
+          repMin: mission.repPoints,
+          repMax: mission.repPoints,
+          minReputation: mission.minStanding?.minReputation ?? null,
+          minStandingName: mission.minStanding?.name ?? null,
+          variantCount: missions.length,
+          missionGiver: mission.faction,
+          matched: true,
+          isLawful: !isUnlawfulFaction(mission.faction),
+          aUecMin: 0,
+          aUecMax: 0,
+          missionType: null,
+          missionLocations: mission.system ? [mission.system] : [],
+          repPoints: mission.repPoints,
         }
       }
     }
@@ -296,6 +248,7 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
     unmatchedMissionCount: 0,
     isInferred: false,
     missionPoolName: null,
+    repPoints: 0,
   }
   
   if (!internalName) return defaultReturn
@@ -308,32 +261,22 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
   let factionName: string | null = null
   let bestPoolName: string | null = null
   let matchedCount = 0
+  let repPoints = 0
   
   for (const poolKey of poolKeys) {
-    const { factionKey, rankIndex } = parseMissionPoolKey(poolKey)
-    
-    if (!factionKey) continue
-    
-    const faction = factions[factionKey]
-    if (!faction) continue
+    const poolMissions = missionsByPool[poolKey] || missionsByPool[poolKey.toLowerCase()]
+    if (!poolMissions || poolMissions.length === 0) continue
     
     matchedCount++
-    factionName = faction.name
+    const mission = poolMissions[0]
+    factionName = mission.faction
     bestPoolName = poolKey
+    repPoints = mission.repPoints
     
-    if (rankIndex !== null) {
-      const standing = getStandingForRank(factionKey, rankIndex)
-      if (standing) {
-        if (lowestReputation === null || standing.minReputation < lowestReputation) {
-          lowestReputation = standing.minReputation
-          lowestStandingName = standing.name
-        }
-      }
-    } else {
-      if (lowestReputation === null) {
-        lowestReputation = 0
-        lowestStandingName = faction.standings?.[1]?.name || 'Neutral'
-      }
+    const minRep = mission.minStanding?.minReputation ?? 0
+    if (lowestReputation === null || minRep < lowestReputation) {
+      lowestReputation = minRep
+      lowestStandingName = mission.minStanding?.name ?? 'Neutral'
     }
   }
   
@@ -347,8 +290,9 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
     matched: true,
     matchedMissionCount: matchedCount,
     unmatchedMissionCount: poolKeys.length - matchedCount,
-    isInferred: true,
+    isInferred: false,
     missionPoolName: bestPoolName,
+    repPoints,
   }
 }
 
@@ -372,8 +316,25 @@ export function formatBlueprintUnlockBadge(blueprintFileId: string, isReward?: b
   return 'Vendor / default — no rep required'
 }
 
+/**
+ * Get all missions that reward a specific blueprint pool
+ */
+export function getMissionsForPool(poolKey: string): MissionPoolEntry[] {
+  return missionsByPool[poolKey] || missionsByPool[poolKey.toLowerCase()] || []
+}
+
+/**
+ * Get all pool keys that contain a specific blueprint
+ */
+export function getPoolsForBlueprint(blueprintFileId: string): string[] {
+  const internalName = extractBlueprintInternalName(blueprintFileId)
+  if (!internalName) return []
+  return blueprintToPoolIndex.get(internalName) || []
+}
+
 export const acquisitionDataVersion = blueprintMissionData._extracted
 export const acquisitionStats = { 
   totalMissionPools: Object.keys(missionBlueprints).length,
   totalBlueprintsInPools: Object.values(missionBlueprints).reduce((sum, arr) => sum + arr.length, 0),
+  contractsWithMissionData: Object.keys(missionsByPool).length,
 }

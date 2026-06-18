@@ -87,7 +87,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     ghostAllowed: true,
     children: [
       { id: 'archive-welcome', label: 'Overview', path: '/archive', icon: 'home' },
-      { id: 'archive-mining', label: 'Mining Guide', path: '/archive?section=mining', icon: 'mining' },
       { id: 'archive-components', label: 'Components', path: '/archive?section=components', icon: 'components' },
       { id: 'archive-shops', label: 'Shops', path: '/shops', icon: 'shop' },
       { id: 'archive-ordnance', label: 'Ordnance', path: '/archive?section=ordnance', icon: 'ordnance' },

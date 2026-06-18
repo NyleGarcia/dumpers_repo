@@ -14,12 +14,6 @@ interface ArchiveWelcomeProps {
 
 const QUICK_LINKS: QuickLink[] = [
   {
-    id: 'mining',
-    label: 'Mining Guide',
-    description: 'Find ore locations by rarity tier, discover which moons and asteroids yield the best resources.',
-    section: 'mining',
-  },
-  {
     id: 'components',
     label: 'Component Database',
     description: 'Browse ship components by type, size, grade, and manufacturer. Click any component to see shop prices and similar upgrades.',
@@ -83,11 +77,12 @@ const PAGE_GUIDES = [
     description: 'Your personal wishlist of blueprints you\'re working towards unlocking.',
     details: [
       'Track blueprints from the main Blueprints page',
-      'Browse Missions: explore all mission pools by system, faction, and see which blueprints each rewards',
+      'Browse Missions: explore mission pools by Star System or by Faction',
+      'By System view: drill down into systems → factions → mission pools',
+      'By Faction view: browse factions directly with system tags on each pool',
       'See X/X progress (owned vs total) for each mission pool',
       'Add unowned blueprints to your tracker directly from the browse view',
       'My Tracker: view your tracked blueprints and build a mission checklist',
-      'See which faction contracts will reward your tracked blueprints',
       'Prioritize which factions to grind based on your goals',
       'Offline Mode: list saves locally until you sign in (then migrates automatically)',
     ],
@@ -110,7 +105,7 @@ const PAGE_GUIDES = [
       'Perfect for tracking what you have available for crafting or trading',
       'Offline Mode: inventory saves locally until you sign in (then migrates automatically)',
     ],
-    relatesTo: ['Blueprints', 'Mining Guide', 'Mining Tracker'],
+    relatesTo: ['Blueprints', 'Mining Tracker'],
   },
   {
     id: 'mining-tracker',
@@ -120,16 +115,17 @@ const PAGE_GUIDES = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
       </svg>
     ),
-    description: 'In-game cluster RS reference for ores you are hunting.',
+    description: 'Track ores by RS signature and browse the complete ore/location guide.',
     details: [
-      'Add ores from the Mining Guide using the Track button (ores with RS signatures only)',
+      'RS Tracker view: cluster RS reference for ores you are hunting',
+      'Mining Guide view: browse all ores by rarity or find ores at specific locations',
+      'Track ores directly from the Mining Guide using the Track button',
       'Choose how many RS multiples to display (2–10×, defaults to 3×)',
       'Compare scanner readings in-game: cluster RS = node count × base RS',
-      'Search by ore name to quickly add to your list (minimum 2 characters)',
       'Hand-mineables and gems cannot be tracked (no RS signature)',
       'Logged-in users sync to their account; Offline Mode saves locally',
     ],
-    relatesTo: ['Mining Guide', 'Resource Tracker'],
+    relatesTo: ['Resource Tracker'],
   },
   {
     id: 'shops',
@@ -148,7 +144,7 @@ const PAGE_GUIDES = [
       'Accessible in Offline Mode — reference data only, no account required',
       'Click component names in the Component Database to jump directly to their shop listings',
     ],
-    relatesTo: ['Components', 'Mining Guide'],
+    relatesTo: ['Components', 'Mining Tracker'],
   },
   {
     id: 'orders',

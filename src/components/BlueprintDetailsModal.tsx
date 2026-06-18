@@ -427,7 +427,7 @@ function ResourceSlotCard({
               <select
                 value={quality}
                 onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-                className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm font-mono"
+                className="flex-1 px-2 py-1 bg-slate-700/80 border border-slate-500 rounded text-sm font-mono text-white cursor-pointer hover:bg-slate-600/80 focus:border-orange-500/50 focus:outline-none"
               >
                 {bands.map((bandValue, idx) => {
                   const tier = getQualityTier(bandValue)

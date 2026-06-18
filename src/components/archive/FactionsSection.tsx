@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import factionsData from '../../data/factions.json'
+import gameReputationData from '../../data/game-reputation.json'
 
 interface FactionStanding {
   name: string
@@ -20,7 +20,56 @@ interface Faction {
 
 type FactionsData = Record<string, Faction>
 
-const factions = factionsData as FactionsData
+// Transform game-reputation.json factionStandings to the expected format
+const factions: FactionsData = Object.entries(gameReputationData.factionStandings || {}).reduce((acc, [key, data]) => {
+  const factionData = data as {
+    faction: string
+    factionKey: string
+    scopeName?: string
+    standings?: Array<{ displayName: string; minReputation: number; gated?: boolean }>
+    careers?: Record<string, { scopeKey: string; standings: Array<{ displayName: string; minReputation: number; gated?: boolean }> }>
+  }
+  
+  // Convert standings format (displayName -> name)
+  const standings: FactionStanding[] = (factionData.standings || []).map(s => ({
+    name: s.displayName,
+    minReputation: s.minReputation
+  }))
+  
+  // Convert careers format if present
+  let careers: Record<string, CareerTrack> | undefined
+  if (factionData.careers && Object.keys(factionData.careers).length > 0) {
+    careers = Object.entries(factionData.careers).reduce((careerAcc, [careerKey, careerData]) => {
+      // Format career name from key (e.g., "bounty_bountyhuntersguild" -> "Bounty")
+      const careerName = careerKey
+        .split('_')[0]
+        .replace(/([A-Z])/g, ' $1')
+        .trim()
+        .replace(/^./, c => c.toUpperCase())
+      
+      careerAcc[careerKey] = {
+        name: careerName,
+        standings: (careerData.standings || []).map(s => ({
+          name: s.displayName,
+          minReputation: s.minReputation
+        }))
+      }
+      return careerAcc
+    }, {} as Record<string, CareerTrack>)
+  }
+  
+  // Get faction info from the factions list for UUID
+  const factionInfo = (gameReputationData.factions as Record<string, { id?: string }>)?.[key]
+  
+  acc[key] = {
+    name: factionData.faction,
+    uuid: factionInfo?.id || key,
+    standings,
+    careers
+  }
+  
+  return acc
+}, {} as FactionsData)
 
 function getStandingColor(standing: string, index: number, total: number): string {
   const lowerName = standing.toLowerCase()

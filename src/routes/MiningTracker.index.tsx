@@ -1,14 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useSearch } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
-import { useMiningData } from '../hooks/useArchiveData'
+import { useMiningData, type MiningData } from '../hooks/useArchiveData'
 import { useMiningTracker } from '../hooks/useMiningTracker'
 import { useAuth } from '../contexts/AuthContext'
 import { findOreByName } from '../lib/miningDataHelpers'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import {
+  LOCATION_SYSTEMS,
   MINING_RARITY_COLORS,
   MINING_RARITY_LABELS,
   MINING_RARITY_ORDER,
+  MINING_SYSTEM_COLORS,
+  ORE_SIGNATURES,
 } from '../lib/miningConstants'
 import {
   formatRsReading,
@@ -19,6 +23,9 @@ import {
   readMiningTrackerMultiplier,
   writeMiningTrackerMultiplier,
 } from '../lib/localGuestCache'
+import TrackOreButton from '../components/TrackOreButton'
+
+type ViewMode = 'tracker' | 'guide'
 
 export default function MiningTrackerRoute() {
   const { isGuestPreview } = useAuth()
@@ -26,10 +33,18 @@ export default function MiningTrackerRoute() {
   const { entries, addEntry, removeEntry, clearAll, isTracked } = useMiningTracker()
   const search = useSearch({ from: '/mining-tracker' })
 
+  const [viewMode, setViewMode] = useState<ViewMode>('tracker')
   const [oreSearch, setOreSearch] = useState('')
   const [selectedOreName, setSelectedOreName] = useState<string>('')
   const [listRarityFilter, setListRarityFilter] = useState<string>('')
   const [multiplierCount, setMultiplierCount] = useState(() => readMiningTrackerMultiplier())
+  
+  // Guide view state
+  const [guideRarityFilter, setGuideRarityFilter] = useState<string | null>(null)
+  const [guideSearch, setGuideSearch] = useState('')
+  const [guideViewMode, setGuideViewMode] = useState<'ores' | 'locations'>('ores')
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null)
+  const [selectedOre, setSelectedOre] = useState<MiningData | null>(null)
 
   const handleMultiplierChange = (count: number) => {
     setMultiplierCount(count)
@@ -107,48 +122,140 @@ export default function MiningTrackerRoute() {
     return [...filteredEntries].sort((a, b) => b.addedAt - a.addedAt)
   }, [filteredEntries])
 
+  // Guide view computed data
+  const groupedByRarity = useMemo(() => {
+    if (!data) return {}
+    return data.reduce<Record<string, MiningData[]>>((acc, item) => {
+      if (!acc[item.rarity]) acc[item.rarity] = []
+      acc[item.rarity].push(item)
+      return acc
+    }, {})
+  }, [data])
+
+  const locationOresMap = useMemo(() => {
+    if (!data) return {}
+    const map: Record<string, MiningData[]> = {}
+    for (const ore of data) {
+      for (const loc of ore.locations) {
+        if (!map[loc]) map[loc] = []
+        map[loc].push(ore)
+      }
+    }
+    return map
+  }, [data])
+
+  const allLocations = useMemo(() => {
+    return Object.keys(locationOresMap).sort((a, b) => {
+      const sysA = LOCATION_SYSTEMS[a] || 'Unknown'
+      const sysB = LOCATION_SYSTEMS[b] || 'Unknown'
+      if (sysA !== sysB) return sysA.localeCompare(sysB)
+      return a.localeCompare(b)
+    })
+  }, [locationOresMap])
+
+  const guideFilteredData = useMemo(() => {
+    let filtered = data || []
+    if (guideRarityFilter) {
+      filtered = filtered.filter((item) => item.rarity === guideRarityFilter)
+    }
+    if (guideSearch) {
+      const term = guideSearch.toLowerCase()
+      filtered = filtered.filter(
+        (item) =>
+          item.ore_name.toLowerCase().includes(term) ||
+          item.locations.some((loc) => loc.toLowerCase().includes(term))
+      )
+    }
+    return filtered
+  }, [data, guideRarityFilter, guideSearch])
+
+  const guideFilteredLocations = useMemo(() => {
+    if (!guideSearch) return allLocations
+    const term = guideSearch.toLowerCase()
+    return allLocations.filter(loc => 
+      loc.toLowerCase().includes(term) ||
+      locationOresMap[loc]?.some(ore => ore.ore_name.toLowerCase().includes(term))
+    )
+  }, [allLocations, locationOresMap, guideSearch])
+
   return (
     <FeaturePageLayout
       title="Mining Tracker"
-      subtitle={`Cluster RS reference for ores you are hunting — base signature through ${multiplierCount}×.`}
+      subtitle={viewMode === 'tracker' 
+        ? `Cluster RS reference for ores you are hunting — base signature through ${multiplierCount}×.`
+        : 'Browse all ores by rarity or find ores at specific locations.'
+      }
       badge={isGuestPreview ? 'Local only' : undefined}
       meta={
-        isGuestPreview ? (
-          <span className="text-amber-400/90">
-            Tracked ores save in this browser only. Sign in for acquired blueprint tracking and more.
-          </span>
+        viewMode === 'tracker' ? (
+          isGuestPreview ? (
+            <span className="text-amber-400/90">
+              Tracked ores save in this browser only. Sign in for acquired blueprint tracking and more.
+            </span>
+          ) : (
+            <span>
+              Cluster RS = node count × base RS. Compare in-game scanner readings to the values below.
+            </span>
+          )
         ) : (
           <span>
-            Cluster RS = node count × base RS. Compare in-game scanner readings to the values below.
+            Use the Track button to add ores to your tracker. Only ores with mining signatures can be tracked.
           </span>
         )
       }
       actions={
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 text-xs text-slate-400">
-            <span>Show</span>
-            <select
-              value={multiplierCount}
-              onChange={(e) => handleMultiplierChange(Number(e.target.value))}
-              className="site-input px-2 py-1 text-xs w-14"
-            >
-              {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                <option key={n} value={n}>{n}×</option>
-              ))}
-            </select>
-          </label>
-          {entries.length > 0 && (
-            <button
-              type="button"
-              onClick={clearAll}
-              className="text-xs px-3 py-1.5 rounded-lg border border-slate-600/50 text-slate-400 hover:text-red-400 hover:border-red-500/40 transition-colors"
-            >
-              Clear all
-            </button>
+          {viewMode === 'tracker' && (
+            <>
+              <label className="flex items-center gap-2 text-xs text-slate-400">
+                <span>Show</span>
+                <select
+                  value={multiplierCount}
+                  onChange={(e) => handleMultiplierChange(Number(e.target.value))}
+                  className="site-input px-2 py-1 text-xs w-14"
+                >
+                  {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                    <option key={n} value={n}>{n}×</option>
+                  ))}
+                </select>
+              </label>
+              {entries.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-slate-600/50 text-slate-400 hover:text-red-400 hover:border-red-500/40 transition-colors"
+                >
+                  Clear all
+                </button>
+              )}
+            </>
           )}
         </div>
       }
     >
+      {/* View Mode Switcher */}
+      <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit mb-6">
+        <button
+          onClick={() => setViewMode('tracker')}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            viewMode === 'tracker' 
+              ? 'bg-orange-600 text-white' 
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          RS Tracker
+        </button>
+        <button
+          onClick={() => setViewMode('guide')}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            viewMode === 'guide' 
+              ? 'bg-orange-600 text-white' 
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          Mining Guide
+        </button>
+      </div>
       {loading && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
@@ -168,7 +275,7 @@ export default function MiningTrackerRoute() {
         </div>
       )}
 
-      {!loading && !error && data && (
+      {!loading && !error && data && viewMode === 'tracker' && (
         <div className="space-y-8">
           <section className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/20 space-y-4">
             <h2 className="text-sm font-semibold text-white">Add to tracker</h2>
@@ -253,15 +360,14 @@ export default function MiningTrackerRoute() {
                 <p className="text-slate-500 text-sm">
                   {entries.length === 0 ? (
                     <>
-                      Nothing tracked yet. Add ores above or use Track in the{' '}
-                      <a
-                        href="/archive?section=mining"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      Nothing tracked yet. Add ores above or browse the{' '}
+                      <button
+                        type="button"
+                        onClick={() => setViewMode('guide')}
                         className="text-orange-400 hover:text-orange-300 underline"
                       >
                         Mining Guide
-                      </a>
+                      </button>
                       .
                     </>
                   ) : (
@@ -325,6 +431,393 @@ export default function MiningTrackerRoute() {
           </section>
         </div>
       )}
+
+      {/* Mining Guide View */}
+      {!loading && !error && data && viewMode === 'guide' && (
+        <div className="space-y-6">
+          {/* Guide view mode toggle */}
+          <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
+            <button
+              onClick={() => setGuideViewMode('ores')}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                guideViewMode === 'ores' 
+                  ? 'bg-slate-700 text-white' 
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              By Ore
+            </button>
+            <button
+              onClick={() => setGuideViewMode('locations')}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                guideViewMode === 'locations' 
+                  ? 'bg-slate-700 text-white' 
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              By Location
+            </button>
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder={guideViewMode === 'ores' ? "Search ores or locations..." : "Search locations or ores..."}
+                value={guideSearch}
+                onChange={(e) => setGuideSearch(e.target.value)}
+                className="site-input w-full pl-9 pr-4 py-2 text-sm"
+              />
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            {guideViewMode === 'ores' && (
+              <select
+                value={guideRarityFilter || ''}
+                onChange={(e) => setGuideRarityFilter(e.target.value || null)}
+                className="site-input px-3 py-2 text-sm"
+              >
+                <option value="">All Rarities</option>
+                {MINING_RARITY_ORDER.map((rarity) => (
+                  <option key={rarity} value={rarity}>
+                    {MINING_RARITY_LABELS[rarity]} ({groupedByRarity[rarity]?.length || 0})
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          {/* Stats summary - only in ore view */}
+          {guideViewMode === 'ores' && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+              {MINING_RARITY_ORDER.map((rarity) => {
+                const colors = MINING_RARITY_COLORS[rarity]
+                const count = groupedByRarity[rarity]?.length || 0
+                return (
+                  <button
+                    key={rarity}
+                    onClick={() => setGuideRarityFilter(guideRarityFilter === rarity ? null : rarity)}
+                    className={`
+                      p-2 rounded-lg border text-center transition-all
+                      ${guideRarityFilter === rarity ? colors.bg + ' ' + colors.border : 'bg-slate-800/40 border-slate-700/50 hover:border-slate-600'}
+                    `}
+                  >
+                    <span className={`text-lg font-bold ${guideRarityFilter === rarity ? colors.text : 'text-white'}`}>
+                      {count}
+                    </span>
+                    <span className="block text-[10px] text-slate-500 uppercase tracking-wider">
+                      {MINING_RARITY_LABELS[rarity]}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Results */}
+          {guideViewMode === 'ores' ? (
+            <div className="space-y-3">
+              {guideFilteredData.length === 0 ? (
+                <p className="text-center text-slate-500 py-8">No matching ores found.</p>
+              ) : (
+                guideFilteredData.map((item) => (
+                  <GuideOreCard key={item.id} item={item} onLocationClick={setSelectedLocation} />
+                ))
+              )}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {guideFilteredLocations.length === 0 ? (
+                <p className="text-center text-slate-500 py-8">No matching locations found.</p>
+              ) : (
+                guideFilteredLocations.map((location) => (
+                  <GuideLocationCard
+                    key={location}
+                    location={location}
+                    ores={locationOresMap[location] || []}
+                    onOreClick={setSelectedOre}
+                  />
+                ))
+              )}
+            </div>
+          )}
+
+          {/* Location detail modal */}
+          {selectedLocation && (
+            <GuideLocationModal
+              location={selectedLocation}
+              ores={locationOresMap[selectedLocation] || []}
+              onClose={() => setSelectedLocation(null)}
+            />
+          )}
+
+          {/* Ore detail modal */}
+          {selectedOre && (
+            <GuideOreModal
+              ore={selectedOre}
+              onClose={() => setSelectedOre(null)}
+            />
+          )}
+        </div>
+      )}
     </FeaturePageLayout>
+  )
+}
+
+// ===== Guide View Helper Components =====
+
+function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationClick: (loc: string) => void }) {
+  const colors = MINING_RARITY_COLORS[item.rarity] || MINING_RARITY_COLORS.common
+  const signature = ORE_SIGNATURES[item.ore_name]
+  
+  return (
+    <div className={`p-4 rounded-lg border ${colors.bg} ${colors.border}`}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 className={`font-semibold ${colors.text}`}>{item.ore_name}</h3>
+          <div className="flex items-center gap-3 mt-0.5">
+            <span className="text-xs text-slate-500 uppercase tracking-wider">
+              {MINING_RARITY_LABELS[item.rarity]}
+            </span>
+            {signature && (
+              <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded">
+                RS {signature}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          {signature && (
+            <TrackOreButton oreName={item.ore_name} rarity={item.rarity} compact />
+          )}
+          <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
+            {item.locations.length} location{item.locations.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {item.locations.map((location, idx) => {
+          const system = LOCATION_SYSTEMS[location]
+          const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+          return (
+            <button
+              key={idx}
+              onClick={() => onLocationClick(location)}
+              className="text-xs px-2 py-1 rounded bg-slate-800/60 text-slate-300 hover:bg-slate-700/60 hover:text-white transition-colors cursor-pointer text-left"
+            >
+              {location}
+              {system && (
+                <span className={`ml-1 ${systemColor} opacity-70`}>({system})</span>
+              )}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function GuideLocationCard({
+  location,
+  ores,
+  onOreClick,
+}: {
+  location: string
+  ores: MiningData[]
+  onOreClick: (ore: MiningData) => void
+}) {
+  const system = LOCATION_SYSTEMS[location]
+  const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+  
+  const sortedOres = [...ores].sort((a, b) => {
+    return MINING_RARITY_ORDER.indexOf(a.rarity) - MINING_RARITY_ORDER.indexOf(b.rarity)
+  })
+  
+  return (
+    <div className="p-4 rounded-lg border bg-slate-800/30 border-slate-700/50">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 className="font-semibold text-white">{location}</h3>
+          {system && (
+            <span className={`text-xs ${systemColor} uppercase tracking-wider`}>
+              {system} System
+            </span>
+          )}
+        </div>
+        <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
+          {ores.length} ore{ores.length !== 1 ? 's' : ''}
+        </span>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {sortedOres.map((ore) => {
+          const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
+          const signature = ORE_SIGNATURES[ore.ore_name]
+          return (
+            <button
+              key={ore.id}
+              type="button"
+              onClick={() => onOreClick(ore)}
+              className={`text-xs px-2 py-1 rounded ${colors.bg} ${colors.text} border ${colors.border} hover:brightness-125 transition-all cursor-pointer text-left`}
+            >
+              {ore.ore_name}
+              {signature && (
+                <span className="ml-1 text-amber-400/70 font-mono text-[10px]">
+                  {signature}
+                </span>
+              )}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function GuideOreModal({ ore, onClose }: { ore: MiningData; onClose: () => void }) {
+  useBodyScrollLock(true)
+
+  const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
+  const signature = ORE_SIGNATURES[ore.ore_name]
+
+  const sortedLocations = [...ore.locations].sort((a, b) => {
+    const sysA = LOCATION_SYSTEMS[a] || 'Unknown'
+    const sysB = LOCATION_SYSTEMS[b] || 'Unknown'
+    if (sysA !== sysB) return sysA.localeCompare(sysB)
+    return a.localeCompare(b)
+  })
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl">
+        <div className="p-4 border-b border-slate-800 flex items-start justify-between gap-4">
+          <div>
+            <h2 className={`text-lg font-semibold ${colors.text}`}>{ore.ore_name}</h2>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="text-xs text-slate-500 uppercase tracking-wider">
+                {MINING_RARITY_LABELS[ore.rarity]}
+              </span>
+              {signature && (
+                <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded">
+                  RS {signature}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {signature && (
+              <TrackOreButton oreName={ore.ore_name} rarity={ore.rarity} showTrackerLink />
+            )}
+            <button
+              onClick={onClose}
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div className="p-4 overflow-y-auto max-h-[60vh]">
+          <p className="text-sm text-slate-400 mb-4">
+            Found at {ore.locations.length} location{ore.locations.length !== 1 ? 's' : ''}:
+          </p>
+          <div className="space-y-2">
+            {sortedLocations.map((location) => {
+              const system = LOCATION_SYSTEMS[location]
+              const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+              return (
+                <div
+                  key={location}
+                  className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+                >
+                  <span className="font-medium text-white">{location}</span>
+                  {system && (
+                    <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function GuideLocationModal({ location, ores, onClose }: { location: string; ores: MiningData[]; onClose: () => void }) {
+  useBodyScrollLock(true)
+  
+  const system = LOCATION_SYSTEMS[location]
+  const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+  
+  const sortedOres = [...ores].sort((a, b) => {
+    return MINING_RARITY_ORDER.indexOf(a.rarity) - MINING_RARITY_ORDER.indexOf(b.rarity)
+  })
+  
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl">
+        <div className="p-4 border-b border-slate-800 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-semibold text-white">{location}</h2>
+            {system && (
+              <span className={`text-sm ${systemColor}`}>{system} System</span>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <div className="p-4 overflow-y-auto max-h-[60vh]">
+          <p className="text-sm text-slate-400 mb-4">
+            {ores.length} ore{ores.length !== 1 ? 's' : ''} found at this location:
+          </p>
+          <div className="space-y-2">
+            {sortedOres.map((ore) => {
+              const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
+              const signature = ORE_SIGNATURES[ore.ore_name]
+              return (
+                <div
+                  key={ore.id}
+                  className={`p-3 rounded-lg ${colors.bg} border ${colors.border}`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className={`font-medium ${colors.text}`}>{ore.ore_name}</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {signature && (
+                        <>
+                          <TrackOreButton
+                            oreName={ore.ore_name}
+                            rarity={ore.rarity}
+                            compact
+                          />
+                          <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-2 py-1 rounded">
+                            RS {signature}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-xs text-slate-500 uppercase">
+                    {MINING_RARITY_LABELS[ore.rarity]}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
