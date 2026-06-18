@@ -37,6 +37,13 @@ export function slugifyResourceName(name: string | null | undefined): string {
     .replace(/^_|_$/g, '')
 }
 
+/** Human-readable label from a blueprint slot option (resource or item). */
+export function resolveBlueprintRequirementLabel(
+  option: BlueprintRequirementOption
+): string | null {
+  return option.resourceName || option.entityName || option.displayName || option.itemName || null
+}
+
 export function extractBlueprintResources(
   blueprints: BlueprintWithSlots[]
 ): ExtractedBlueprintResource[] {
@@ -45,7 +52,7 @@ export function extractBlueprintResources(
   for (const blueprint of blueprints) {
     for (const slot of blueprint.slots ?? []) {
       for (const option of slot.options ?? []) {
-        const label = option.resourceName || option.entityName || option.displayName || option.itemName
+        const label = resolveBlueprintRequirementLabel(option)
         if (!label) continue
 
         const resourceKey = slugifyResourceName(label)
@@ -86,7 +93,7 @@ function quantityPerCraftForOption(
   resourceKey: string
 ): number {
   const optQty = option.quantity ?? 1
-  if (isWholeUnitResource(resourceKey)) {
+  if (isWholeUnitResource(resourceKey) || option.type === 'item') {
     return slotCount * optQty
   }
   const units = option.standardCargoUnits ?? 0
@@ -104,9 +111,9 @@ export function extractOrderLineItemsFromBlueprint(
   for (const slot of blueprint.slots ?? []) {
     const slotCount = slot.requiredCount ?? 1
     for (const option of slot.options ?? []) {
-      if (option.type && option.type !== 'resource') continue
+      if (option.type && option.type !== 'resource' && option.type !== 'item') continue
 
-      const label = option.resourceName || option.entityName || option.displayName || option.itemName
+      const label = resolveBlueprintRequirementLabel(option)
       if (!label) continue
 
       const resourceKey = slugifyResourceName(label)
