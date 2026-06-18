@@ -1689,9 +1689,9 @@ function parseBlueprintDefinitions(localization = {}) {
       }
     }
     
-    // Special handling for Tractor Beams (WEP_TractorBeam_S1_Utility_1 -> GRIN_TractorBeam_002_S1_UT1)
-    if (!blueprintName && internalName?.includes('TractorBeam')) {
-      const tbMatch = internalName.match(/WEP_TractorBeam_S(\d+)_(Military|Utility)_(\d+)/i)
+    // Special handling for Tractor Beams (wep_tractorbeam_s1_utility_1 -> GRIN_TractorBeam_002_S1_UT1)
+    if (!blueprintName && internalName?.toLowerCase().includes('tractorbeam')) {
+      const tbMatch = internalName.match(/wep_tractorbeam_s(\d+)_(military|utility)_(\d+)/i)
       if (tbMatch) {
         const [, size, type, variant] = tbMatch
         // Map to GRIN naming: UT1 = Utility 1, UT2 = Utility 2, Military = base
@@ -1707,38 +1707,103 @@ function parseBlueprintDefinitions(localization = {}) {
       }
     }
     
+    // Special handling for Mining Lasers
+    // Pattern: mining_laser_{mfg}_{model}_s{size} -> item_Mining_MiningLaser_{Manufacturer}_{ModelNum}_S{size}
+    if (!blueprintName && internalName?.toLowerCase().startsWith('mining_laser_')) {
+      const laserMatch = internalName.match(/mining_laser_(\w+)_(\w+)_s(\d+|v)/i)
+      if (laserMatch) {
+        const [, mfg, model, size] = laserMatch
+        // Map internal manufacturer codes to localization names
+        const mfgMap = {
+          'grin': 'Greycat',
+          'shin': 'Shubin',
+          'drak': 'Drake',
+          'thrm': 'Thermyte',
+          'thcn': 'Thermyte'  // Thermyte Concern
+        }
+        // Map model names to localization model numbers
+        const modelMap = {
+          'arbor': 'Default',
+          'lancet': '1',
+          'hofstede': '1',
+          'klein': '2',
+          'impact': '1',
+          'helix': '2',
+          'golem': 'Default'
+        }
+        const locMfg = mfgMap[mfg.toLowerCase()] || mfg
+        const locModel = modelMap[model.toLowerCase()] || 'Default'
+        // S0 can be either _S0 or _SV in localization
+        const locSize = size.toLowerCase() === 'v' ? 'SV' : `S${size}`
+        const altSize = size === '0' ? 'SV' : null  // For S0, also try SV
+        
+        const keysToTry = [
+          `item_Mining_MiningLaser_${locMfg}_${locModel}_${locSize}`,
+          `item_Mining_MiningLaser_${locMfg}_Default_${locSize}`,
+          `item_Name_Mining_MiningLaser_${locMfg}_${locModel}_${locSize}`,
+        ]
+        // For S0, also try SV variant
+        if (altSize) {
+          keysToTry.push(`item_Mining_MiningLaser_${locMfg}_${locModel}_${altSize}`)
+          keysToTry.push(`item_Mining_MiningLaser_${locMfg}_Default_${altSize}`)
+        }
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+          // Try case-insensitive
+          if (localization._lowerMap?.[k.toLowerCase()]) {
+            blueprintName = localization._lowerMap[k.toLowerCase()]
+            break
+          }
+        }
+      }
+    }
+    
     // Special handling for Nozzles (Nozzle_FuelGiver_GRIN_NozzleFast)
-    if (!blueprintName && internalName?.includes('Nozzle_FuelGiver')) {
+    // Localization pattern: Nozzle_FuelGiver_{MFG}_Nozzle{Type}_Name
+    if (!blueprintName && internalName?.toLowerCase().includes('nozzle_fuelgiver')) {
       const nozzleMatch = internalName.match(/Nozzle_FuelGiver_(\w+)_Nozzle(\w+)/i)
       if (nozzleMatch) {
         const [, mfg, variant] = nozzleMatch
+        // Map manufacturer codes
+        const mfgMap = { 'grin': 'GRIN', 'shin': 'SHIN', 'misc': 'MISC' }
+        const locMfg = mfgMap[mfg.toLowerCase()] || mfg.toUpperCase()
+        // Format variant with proper case (fast -> Fast, veryfast -> VeryFast)
+        const locVariant = variant.charAt(0).toUpperCase() + variant.slice(1).toLowerCase()
+        
         const keysToTry = [
-          `item_Name_Nozzle_FuelGiver_${mfg}_${variant}`,
-          `item_NameNozzle_FuelGiver_${mfg}_Nozzle${variant}`,
+          `Nozzle_FuelGiver_${locMfg}_Nozzle${locVariant}_Name`,
+          `Nozzle_FuelGiver_${locMfg}_Nozzle${variant}_Name`,
+          `item_Name_Nozzle_FuelGiver_${locMfg}_Nozzle${locVariant}`,
         ]
         for (const k of keysToTry) {
           if (localization[k]) { blueprintName = localization[k]; break }
+          // Try case-insensitive
+          if (localization._lowerMap?.[k.toLowerCase()]) {
+            blueprintName = localization._lowerMap[k.toLowerCase()]
+            break
+          }
         }
         // If no localization, create a nice display name
         if (!blueprintName) {
-          const mfgNames = { GRIN: 'Greycat', MISC: 'MISC', SHIN: 'Shinrai' }
-          const variantNames = { Fast: 'Fast', Secure: 'Secure', VeryFast: 'Very Fast', VerySecure: 'Very Secure', Standard: 'Standard', ExpensiveFast: 'Premium Fast', ExpensiveSecure: 'Premium Secure', MostExpensive: 'Premium' }
-          blueprintName = `${mfgNames[mfg] || mfg} ${variantNames[variant] || variant} Nozzle`
+          const mfgNames = { GRIN: 'Greycat', MISC: 'MISC', SHIN: 'Shubin' }
+          const variantNames = { fast: 'Fast', secure: 'Secure', veryfast: 'Very Fast', verysecure: 'Very Secure', standard: 'Standard', expensivefast: 'Premium Fast', expensivesecure: 'Premium Secure', mostexpensive: 'Premium' }
+          blueprintName = `${mfgNames[locMfg] || locMfg} ${variantNames[variant.toLowerCase()] || variant} Nozzle`
         }
       }
     }
     
     // Special handling for Salvage Modifiers - use proper localization keys
-    if (!blueprintName && internalName?.includes('Salvage_Modifier')) {
-      // Map internal names to localization keys
+    if (!blueprintName && internalName?.toLowerCase().includes('salvage_modifier')) {
+      // Map internal names to localization keys (using lowercase for matching)
       const scraperNameMap = {
-        'Salvage_Modifier_Scraper_Small': 'item_scraper_GRIN_Small_Name',
-        'Salvage_Modifier_Scraper_Medium': 'item_scraper_GRIN_Standard_Name',
-        'Salvage_Modifier_Scraper_Large': 'item_scraper_GRIN_Large_Name',
-        'Salvage_Modifier_Scraper_Salvation_Small': 'item_scraper_GRIN_Small_Name',  // Reclaimer variant
-        'Salvage_Modifier_Scraper_Salvation_Medium': 'item_scraper_GRIN_Standard_Name',
+        'salvage_modifier_scraper_small': 'item_scraper_GRIN_Small_Name',
+        'salvage_modifier_scraper_medium': 'item_scraper_GRIN_Standard_Name',
+        'salvage_modifier_scraper_large': 'item_scraper_GRIN_Large_Name',
+        'salvage_modifier_scraper_salvation_small': 'item_scraper_GRIN_Small_Name',  // Reclaimer variant
+        'salvage_modifier_scraper_salvation_medium': 'item_scraper_GRIN_Standard_Name',
+        'salvage_modifier_scraper_salvation_large': 'item_scraper_GRIN_Large_Name',  // Reclaimer variant
       }
-      const locKey = scraperNameMap[internalName]
+      const locKey = scraperNameMap[internalName.toLowerCase()]
       if (locKey && localization[locKey]) {
         const baseName = localization[locKey]
         // Add Reclaimer prefix for Salvation variants
@@ -2009,7 +2074,10 @@ function parseBlueprintDefinitions(localization = {}) {
     }
     
     // Fallback: generate from internal name if not in localization
+    // Track this for priority rule: isReward=true items MUST have localization
+    let usedFallbackName = false
     if (!blueprintName) {
+      usedFallbackName = true
       blueprintName = internalName
         .replace(/_/g, ' ')
         .replace(/\b\w/g, c => c.toUpperCase()) // Title case
@@ -2120,7 +2188,8 @@ function parseBlueprintDefinitions(localization = {}) {
       armorWeight,
       craftTimeMinutes: totalMinutes,
       craftTime: { hours, minutes, seconds },
-      slots
+      slots,
+      _usedFallbackName: usedFallbackName // Track for priority rule validation
     })
   }
   
@@ -3157,15 +3226,38 @@ async function main() {
     }
   })
   
+  // Priority Rule Validation: isReward=true items MUST have localization
+  const rewardBlueprintsWithFallback = enrichedBlueprints.filter(b => b.isReward && b._usedFallbackName)
+  const nonRewardBlueprintsWithFallback = enrichedBlueprints.filter(b => !b.isReward && b._usedFallbackName)
+  
+  if (rewardBlueprintsWithFallback.length > 0) {
+    console.log(`\n  ⚠️  WARNING: ${rewardBlueprintsWithFallback.length} reward blueprints using fallback names (need localization fix):`)
+    rewardBlueprintsWithFallback.slice(0, 10).forEach(b => {
+      console.log(`      - ${b.internalName} → "${b.blueprintName}"`)
+    })
+    if (rewardBlueprintsWithFallback.length > 10) {
+      console.log(`      ... and ${rewardBlueprintsWithFallback.length - 10} more`)
+    }
+  }
+  
+  if (nonRewardBlueprintsWithFallback.length > 0) {
+    console.log(`  ℹ️  INFO: ${nonRewardBlueprintsWithFallback.length} non-reward blueprints using fallback names (expected, not in game yet)`)
+  }
+  
+  // Clean up internal tracking flag before saving (don't expose to frontend)
+  const cleanedBlueprints = enrichedBlueprints.map(({ _usedFallbackName, ...bp }) => bp)
+  
   // Blueprint definitions (enriched with mission data)
   saveJson('game-blueprints.json', {
     _source: 'Star Citizen Game Files (extracted)',
     _extracted: new Date().toISOString(),
     version: new Date().toISOString().split('T')[0],
-    blueprints: enrichedBlueprints,
+    blueprints: cleanedBlueprints,
     summary: {
-      totalBlueprints: enrichedBlueprints.length,
-      blueprintsWithRewards: enrichedBlueprints.filter(b => b.isReward).length
+      totalBlueprints: cleanedBlueprints.length,
+      blueprintsWithRewards: cleanedBlueprints.filter(b => b.isReward).length,
+      rewardBlueprintsNeedingLocalization: rewardBlueprintsWithFallback.length,
+      nonRewardBlueprintsWithFallback: nonRewardBlueprintsWithFallback.length
     }
   })
   
