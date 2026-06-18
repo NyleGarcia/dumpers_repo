@@ -236,6 +236,16 @@ export default function TargetsRoute() {
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
   const [viewMode, setViewMode] = useState<ViewMode>('tracker')
+  const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set())
+
+  const toggleCollapsed = useCallback((id: string) => {
+    setCollapsedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }, [])
 
   // Build a map of blueprint ID to its mission keys for cleanup
   const blueprintMissionKeysMap = useMemo(() => {
@@ -434,15 +444,31 @@ export default function TargetsRoute() {
                     className="bg-slate-900/50 border border-slate-700 rounded-xl overflow-hidden"
                   >
                     <div className="px-3 py-2.5 bg-slate-800/80 border-b border-slate-700 flex items-start justify-between gap-2">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-white leading-snug">{bp.blueprintName}</p>
-                        <div className="mt-1">
-                          <BlueprintUnlockBadge
-                            blueprintId={bp.file}
-                            isReward={resolveIsOrderable(bp, overridesMap)}
-                          />
+                      <button
+                        type="button"
+                        onClick={() => toggleCollapsed(bp.file)}
+                        className="flex items-start gap-2 min-w-0 flex-1 text-left hover:opacity-80 transition-opacity"
+                      >
+                        <svg
+                          className={`w-4 h-4 mt-0.5 text-slate-400 shrink-0 transition-transform duration-200 ${
+                            collapsedIds.has(bp.file) ? '-rotate-90' : ''
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-white leading-snug">{bp.blueprintName}</p>
+                          <div className="mt-1">
+                            <BlueprintUnlockBadge
+                              blueprintId={bp.file}
+                              isReward={resolveIsOrderable(bp, overridesMap)}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      </button>
                       <div className="flex flex-col items-end gap-1 shrink-0">
                         <button
                           type="button"
@@ -451,70 +477,74 @@ export default function TargetsRoute() {
                         >
                           ✓ Got It!
                         </button>
-                        {addableMissions.length > 0 && (
+                        <div className="flex items-center gap-1">
+                          {addableMissions.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                void addAllMissionsToChecklist(addableMissions.map((m) => m.mission))
+                              }
+                              className="px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-500/40 rounded hover:bg-amber-950/40 transition-colors"
+                            >
+                              Add all
+                            </button>
+                          )}
                           <button
                             type="button"
-                            onClick={() =>
-                              void addAllMissionsToChecklist(addableMissions.map((m) => m.mission))
-                            }
-                            className="px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-500/40 rounded hover:bg-amber-950/40 transition-colors"
+                            onClick={() => void toggleTarget(bp.file)}
+                            className="px-2 py-0.5 text-[10px] text-red-400 hover:text-red-300 border border-red-500/30 rounded hover:bg-red-950/30 transition-colors"
                           >
-                            Add all
+                            Remove
                           </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => void toggleTarget(bp.file)}
-                          className="px-2 py-0.5 text-[10px] text-red-400 hover:text-red-300 border border-red-500/30 rounded hover:bg-red-950/30 transition-colors"
-                        >
-                          Remove
-                        </button>
+                        </div>
                       </div>
                     </div>
 
-                    {missions.length === 0 ? (
-                      <p className="px-3 py-3 text-xs text-slate-500">No reward missions for this blueprint.</p>
-                    ) : (
-                      <ul className="divide-y divide-slate-800/80">
-                        {missions.map((m) => {
-                          const onChecklist = isMissionOnChecklist(m.missionKey)
-                          const hasKnownRepLevel = m.minReputation != null || m.minStandingName != null
-                          return (
-                            <li key={m.missionKey}>
-                              <button
-                                type="button"
-                                disabled={onChecklist}
-                                onClick={() => void addMissionToChecklist(m.mission)}
-                                className={`w-full text-left px-3 py-2.5 transition-colors ${
-                                  onChecklist
-                                    ? 'opacity-40 cursor-not-allowed bg-slate-950/20'
-                                    : hasKnownRepLevel
-                                      ? 'bg-amber-900/20 hover:bg-amber-800/30 cursor-pointer'
-                                      : 'hover:bg-slate-800/50 cursor-pointer'
-                                }`}
-                                title={
-                                  onChecklist
-                                    ? 'Already on your checklist'
-                                    : 'Add to mission checklist'
-                                }
-                              >
-                                <p className={`text-xs leading-snug ${m.isLawful ? 'text-green-300' : 'text-red-400'}`}>{m.mission}</p>
-                                <MissionMetaLine
-                                  regions={m.regions}
-                                  repMin={m.repMin}
-                                  repMax={m.repMax}
-                                  minStandingName={m.minStandingName}
-                                  minReputation={m.minReputation}
-                                  dropChance={m.dropChance}
-                                  isLawful={m.isLawful}
-                                  aUecMin={m.aUecMin}
-                                  aUecMax={m.aUecMax}
-                                />
-                              </button>
-                            </li>
-                          )
-                        })}
-                      </ul>
+                    {!collapsedIds.has(bp.file) && (
+                      missions.length === 0 ? (
+                        <p className="px-3 py-3 text-xs text-slate-500">No reward missions for this blueprint.</p>
+                      ) : (
+                        <ul className="divide-y divide-slate-800/80">
+                          {missions.map((m) => {
+                            const onChecklist = isMissionOnChecklist(m.missionKey)
+                            const hasKnownRepLevel = m.minReputation != null || m.minStandingName != null
+                            return (
+                              <li key={m.missionKey}>
+                                <button
+                                  type="button"
+                                  disabled={onChecklist}
+                                  onClick={() => void addMissionToChecklist(m.mission)}
+                                  className={`w-full text-left px-3 py-2.5 transition-colors ${
+                                    onChecklist
+                                      ? 'opacity-40 cursor-not-allowed bg-slate-950/20'
+                                      : hasKnownRepLevel
+                                        ? 'bg-amber-900/20 hover:bg-amber-800/30 cursor-pointer'
+                                        : 'hover:bg-slate-800/50 cursor-pointer'
+                                  }`}
+                                  title={
+                                    onChecklist
+                                      ? 'Already on your checklist'
+                                      : 'Add to mission checklist'
+                                  }
+                                >
+                                  <p className={`text-xs leading-snug ${m.isLawful ? 'text-green-300' : 'text-red-400'}`}>{m.mission}</p>
+                                  <MissionMetaLine
+                                    regions={m.regions}
+                                    repMin={m.repMin}
+                                    repMax={m.repMax}
+                                    minStandingName={m.minStandingName}
+                                    minReputation={m.minReputation}
+                                    dropChance={m.dropChance}
+                                    isLawful={m.isLawful}
+                                    aUecMin={m.aUecMin}
+                                    aUecMax={m.aUecMax}
+                                  />
+                                </button>
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      )
                     )}
                   </div>
                 )
