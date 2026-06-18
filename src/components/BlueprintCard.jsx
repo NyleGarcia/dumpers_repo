@@ -157,7 +157,7 @@ export default function BlueprintCard({
                         key={`${slotIdx}-${optIdx}`} 
                         className={`inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words ${chipClass}`}
                       >
-                        {name}{opt.quantity > 1 ? ` ×${opt.quantity}` : ''}
+                        {name}
                       </span>
                     )
                   })
