@@ -15,6 +15,7 @@ export interface MissionRepInfo {
   missionLocations: string[]
   repPoints: number
   region: string | null
+  system: string | null
   category: string | null
 }
 
@@ -161,6 +162,7 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     missionLocations: [],
     repPoints: 0,
     region: null,
+    system: null,
     category: null,
   }
 
@@ -204,6 +206,7 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     missionLocations: mission.system ? [mission.system] : [],
     repPoints: mission.repPoints,
     region: mission.region ?? null,
+    system: mission.system ?? null,
     category: mission.category ?? null,
   }
 }
@@ -228,6 +231,7 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     missionLocations: [],
     repPoints: 0,
     region: null,
+    system: null,
     category: null,
   }
 
@@ -256,6 +260,7 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
           missionLocations: mission.system ? [mission.system] : [],
           repPoints: mission.repPoints,
           region: mission.region ?? null,
+          system: mission.system ?? null,
           category: mission.category ?? null,
         }
       }

@@ -11,8 +11,8 @@ import {
   formatRepReward,
   getBlueprintUnlockInfo,
 } from '../lib/missionAcquisition'
-import { getRegionInfo } from '../lib/missionConstants'
 import BrowseMissionsView from '../components/BrowseMissionsView'
+import MissionLocationTags from '../components/MissionLocationTags'
 
 type ViewMode = 'tracker' | 'browse'
 
@@ -21,60 +21,11 @@ function formatDropChance(chance: number | null | undefined): string | null {
   return `${Math.round(chance * 100)}% BP drop`
 }
 
-function MissionRegionBadge({ regions, subRegion, category }: { regions: Region[]; subRegion?: string | null; category?: string | null }) {
-  // Build display: "Pyro A" or just "Pyro" if no subRegion
-  const systemLabel = regions.length === 0
-    ? 'Unknown'
-    : regions.map((r) => r.charAt(0).toUpperCase() + r.slice(1)).join(', ')
-  
-  const label = subRegion ? `${systemLabel} ${subRegion}` : systemLabel
-  const isUnknown = regions.length === 0
-
-  // Get tooltip info for subRegion
-  const regionInfo = subRegion && regions.length === 1 
-    ? getRegionInfo(regions[0], subRegion) 
-    : null
-  
-  // Build tooltip lines
-  const tooltipLines: string[] = []
-  
-  // Add category if available
-  if (category) {
-    tooltipLines.push(`Category: ${category}`)
-  }
-  
-  // Add region/location info
-  if (regionInfo) {
-    tooltipLines.push(`${regionInfo.label}`)
-    tooltipLines.push(`Locations: ${regionInfo.locations.join(', ')}`)
-  } else if (!subRegion && regions.includes('pyro')) {
-    // Pyro without sub-region - likely system-wide
-    tooltipLines.push('Likely available system-wide')
-  }
-  
-  const tooltip = tooltipLines.length > 0 ? tooltipLines.join('\n') : undefined
-
-  return (
-    <span
-      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border cursor-help ${
-        isUnknown
-          ? 'bg-slate-800/60 text-slate-500 border-slate-600/40'
-          : 'bg-violet-950/50 text-violet-300 border-violet-500/40'
-      }`}
-      title={tooltip}
-    >
-      {label}
-    </span>
-  )
-}
-
 function MissionCategoryBadge({ category }: { category?: string | null }) {
   if (!category) return null
-  
+
   return (
-    <span
-      className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/40"
-    >
+    <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/40">
       {category}
     </span>
   )
@@ -120,6 +71,7 @@ function MissionRepBadge({
 function MissionMetaLine({
   regions,
   subRegion,
+  system,
   category,
   repMin,
   repMax,
@@ -132,6 +84,7 @@ function MissionMetaLine({
 }: {
   regions: Region[]
   subRegion?: string | null
+  system?: string | null
   category?: string | null
   repMin?: number | null
   repMax?: number | null
@@ -161,7 +114,7 @@ function MissionMetaLine({
         </span>
       )}
       <MissionCategoryBadge category={category} />
-      <MissionRegionBadge regions={regions} subRegion={subRegion} category={category} />
+      <MissionLocationTags regions={regions} subRegion={subRegion} system={system} />
       <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} />
       {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
       {aUecText && <span className="text-[10px] text-yellow-400/90">{aUecText}</span>}
@@ -243,6 +196,7 @@ function MissionChecklistGroups({
                       <MissionMetaLine
                         regions={mission.regions}
                         subRegion={mission.subRegion}
+                        system={mission.system}
                         category={mission.category}
                         repMin={mission.repMin}
                         repMax={mission.repMax}
@@ -599,6 +553,7 @@ export default function TargetsRoute() {
                                   <MissionMetaLine
                                     regions={m.regions}
                                     subRegion={m.subRegion}
+                                    system={m.system}
                                     category={m.category}
                                     repMin={m.repMin}
                                     repMax={m.repMax}

@@ -51,6 +51,7 @@ export interface MissionListEntry {
   aUecMax: number
   missionType: string | null
   subRegion: string | null
+  system: string | null
   category: string | null
 }
 
@@ -166,6 +167,7 @@ export interface TargetBlueprintMissionOption {
   aUecMax: number
   missionType: string | null
   subRegion: string | null
+  system: string | null
   category: string | null
 }
 
@@ -173,7 +175,7 @@ function attachMissionRep<T extends { mission: string }>(
   entry: T,
   dropChance?: number | null,
   locations?: string[]
-): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'category'> {
+): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category'> {
   const rep = getMissionRepInfo(entry.mission)
   return {
     ...entry,
@@ -188,6 +190,7 @@ function attachMissionRep<T extends { mission: string }>(
     aUecMax: rep.aUecMax,
     missionType: rep.missionType,
     subRegion: rep.region,
+    system: rep.system,
     category: rep.category,
   }
 }

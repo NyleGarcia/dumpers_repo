@@ -1,0 +1,175 @@
+/**
+ * Mission location tagging — system regions and physical locations.
+ *
+ * Standard pattern:
+ * - System-wide missions: one tag (e.g. "Pyro")
+ * - Region-specific missions: region tag (e.g. "Pyro A") + location tags (e.g. "Monox")
+ *
+ * Extend SYSTEM_REGION_REGISTRY when new region data appears in game files.
+ */
+
+import type { Region } from './missions'
+
+export type MissionStarSystem = 'pyro' | 'stanton' | 'nyx'
+export type SystemRegionCode = 'A' | 'B' | 'C' | 'D'
+
+export type MissionLocationTagKind = 'system' | 'region' | 'location'
+
+export interface MissionLocationTag {
+  key: string
+  label: string
+  kind: MissionLocationTagKind
+}
+
+export interface SystemRegionDefinition {
+  system: MissionStarSystem
+  region: SystemRegionCode
+  /** Planet/moon group label, e.g. "Pyro I" */
+  groupLabel: string
+  /** Planets/moons where players pull contracts */
+  locations: string[]
+}
+
+/** Registry keyed by `${system}:${region}` — add Stanton entries when game data provides them */
+export const SYSTEM_REGION_REGISTRY: Record<string, SystemRegionDefinition> = {
+  'pyro:A': {
+    system: 'pyro',
+    region: 'A',
+    groupLabel: 'Pyro I',
+    locations: ['Monox'],
+  },
+  'pyro:B': {
+    system: 'pyro',
+    region: 'B',
+    groupLabel: 'Pyro II',
+    locations: ['Bloom', 'Ignis'],
+  },
+  'pyro:C': {
+    system: 'pyro',
+    region: 'C',
+    groupLabel: 'Pyro III',
+    locations: ['Fairo'],
+  },
+  'pyro:D': {
+    system: 'pyro',
+    region: 'D',
+    groupLabel: 'Pyro IV/V',
+    locations: ['Terminus', 'Vatra'],
+  },
+}
+
+const SYSTEM_LABELS: Record<MissionStarSystem, string> = {
+  pyro: 'Pyro',
+  stanton: 'Stanton',
+  nyx: 'Nyx',
+}
+
+function normalizeSystem(value: string | null | undefined): MissionStarSystem | null {
+  if (!value) return null
+  const lower = value.toLowerCase()
+  if (lower.includes('pyro')) return 'pyro'
+  if (lower.includes('stanton')) return 'stanton'
+  if (lower.includes('nyx')) return 'nyx'
+  return null
+}
+
+function normalizeRegionCode(value: string | null | undefined): SystemRegionCode | null {
+  if (!value) return null
+  const upper = value.trim().toUpperCase()
+  if (upper === 'A' || upper === 'B' || upper === 'C' || upper === 'D') {
+    return upper
+  }
+  return null
+}
+
+export function getSystemRegionDefinition(
+  system: string | MissionStarSystem | Region,
+  region: string | SystemRegionCode
+): SystemRegionDefinition | null {
+  const sys = typeof system === 'string' ? normalizeSystem(system) : system
+  const reg = normalizeRegionCode(region)
+  if (!sys || !reg) return null
+  return SYSTEM_REGION_REGISTRY[`${sys}:${reg}`] ?? null
+}
+
+/**
+ * Parse region letter(s) from mission pool keys like `cfp_outpost_regionab`.
+ */
+export function parseRegionCodesFromPoolKey(poolKey: string): SystemRegionCode[] {
+  const match = poolKey.match(/region([a-d]+)$/i)
+  if (!match) return []
+  return [...match[1].toUpperCase()].filter(
+    (c): c is SystemRegionCode => c === 'A' || c === 'B' || c === 'C' || c === 'D'
+  )
+}
+
+export function formatSystemLabel(system: MissionStarSystem | Region | string): string {
+  const normalized = normalizeSystem(String(system))
+  if (normalized) return SYSTEM_LABELS[normalized]
+  return String(system).charAt(0).toUpperCase() + String(system).slice(1)
+}
+
+export function formatRegionLabel(system: string | Region, region: string): string {
+  return `${formatSystemLabel(system)} ${region.toUpperCase()}`
+}
+
+/** Build visible location tags for mission UI (no tooltips). */
+export function buildMissionLocationTags(options: {
+  regions?: Region[]
+  subRegion?: string | null
+  system?: string | null
+}): MissionLocationTag[] {
+  const { regions = [], subRegion, system } = options
+  const regionCode = normalizeRegionCode(subRegion)
+  const tags: MissionLocationTag[] = []
+
+  const systems: MissionStarSystem[] =
+    regions.length > 0
+      ? regions
+          .map((r) => normalizeSystem(r))
+          .filter((s): s is MissionStarSystem => s !== null)
+      : normalizeSystem(system)
+        ? [normalizeSystem(system)!]
+        : []
+
+  if (systems.length === 0) {
+    return [{ key: 'unknown', label: 'Unknown', kind: 'system' }]
+  }
+
+  // Region-specific: single system + sub-region letter
+  if (regionCode && systems.length === 1) {
+    const sys = systems[0]
+    tags.push({
+      key: `${sys}-${regionCode}`,
+      label: formatRegionLabel(sys, regionCode),
+      kind: 'region',
+    })
+
+    const regionDef = getSystemRegionDefinition(sys, regionCode)
+    for (const location of regionDef?.locations ?? []) {
+      tags.push({
+        key: `${sys}-${regionCode}-${location.toLowerCase()}`,
+        label: location,
+        kind: 'location',
+      })
+    }
+    return tags
+  }
+
+  // System-wide (or multi-system): one tag per system, no sub-locations
+  for (const sys of systems) {
+    tags.push({
+      key: sys,
+      label: SYSTEM_LABELS[sys],
+      kind: 'system',
+    })
+  }
+
+  return tags
+}
+
+export const MISSION_LOCATION_TAG_STYLES: Record<MissionLocationTagKind, string> = {
+  system: 'bg-violet-950/50 text-violet-300 border-violet-500/40',
+  region: 'bg-violet-950/50 text-violet-300 border-violet-500/40',
+  location: 'bg-emerald-950/50 text-emerald-300 border-emerald-500/40',
+}

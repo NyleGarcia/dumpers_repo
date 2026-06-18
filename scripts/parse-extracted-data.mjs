@@ -3211,6 +3211,8 @@ async function main() {
           mission: m.faction && m.title ? `${m.faction}: ${m.title}` : m.title,
           chance: 1,
           locations: m.system ? [m.system] : [],
+          system: m.system || null,
+          region: m.region || null,
           repPoints: m.repPoints || 0,
           minReputation: m.minStanding?.minReputation || 0,
           standingName: m.minStanding?.name || null

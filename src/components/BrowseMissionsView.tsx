@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react'
 import blueprintMissionData from '../data/game-blueprint-missions.json'
 import { useBlueprintData } from '../routes/blueprints'
-import { getRegionInfo } from '../lib/missionConstants'
+import MissionLocationTags from './MissionLocationTags'
+import type { Region } from '../lib/missions'
 
 type BlueprintRecord = {
   file: string
@@ -339,9 +340,11 @@ export default function BrowseMissionsView({
       return fullBp && acquiredBlueprints[fullBp.internalName]
     }).length
     
-    const regionInfo = mission.region && mission.system === 'pyro' 
-      ? getRegionInfo('pyro', mission.region)
-      : null
+    const systemRegion = mission.system?.toLowerCase()
+    const regions: Region[] =
+      systemRegion === 'stanton' || systemRegion === 'pyro' || systemRegion === 'nyx'
+        ? [systemRegion]
+        : []
     
     return (
       <button
@@ -369,14 +372,11 @@ export default function BrowseMissionsView({
                   {mission.category}
                 </span>
               )}
-              {mission.region && (
-                <span 
-                  className="text-[10px] px-1.5 py-0.5 bg-violet-950/50 text-violet-300 border border-violet-500/40 rounded cursor-help"
-                  title={regionInfo ? `${regionInfo.label}\nLocations: ${regionInfo.locations.join(', ')}` : undefined}
-                >
-                  {SYSTEM_LABELS[mission.system]} {mission.region}
-                </span>
-              )}
+              <MissionLocationTags
+                regions={regions}
+                subRegion={mission.region}
+                system={mission.system}
+              />
               {mission.minStanding && mission.minStanding.minReputation > 0 && (
                 <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">
                   {mission.minStanding.name} ({mission.minStanding.minReputation.toLocaleString()})
