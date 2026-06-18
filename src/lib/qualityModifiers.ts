@@ -11,6 +11,76 @@ export interface Modifier {
   modifierAtEnd: number
 }
 
+/** Raw modifier shape from game-blueprints.json (parse-extracted-data.mjs output) */
+export interface RawModifier {
+  gameplayProperty?: string
+  property?: string
+  startQuality?: number
+  endQuality?: number
+  modifierAtStart?: number
+  modifierAtEnd?: number
+  baseAmount?: number
+  perQuality?: number
+  isIntegerAdditive?: boolean
+}
+
+/**
+ * Normalize modifier data from either legacy or parsed game-file format.
+ * Legacy: gameplayProperty + modifierAtStart/modifierAtEnd
+ * Parsed: property + baseAmount/perQuality
+ */
+export function normalizeModifier(raw: RawModifier | Modifier | null | undefined): Modifier | null {
+  if (!raw) return null
+
+  const gameplayProperty = raw.gameplayProperty ?? raw.property
+  if (!gameplayProperty) return null
+
+  const startQuality = raw.startQuality ?? 0
+  const endQuality = raw.endQuality ?? 1000
+  const range = endQuality - startQuality
+
+  if (raw.modifierAtStart !== undefined && raw.modifierAtEnd !== undefined) {
+    return {
+      gameplayProperty,
+      startQuality,
+      endQuality,
+      modifierAtStart: raw.modifierAtStart,
+      modifierAtEnd: raw.modifierAtEnd,
+    }
+  }
+
+  if (raw.baseAmount !== undefined && raw.perQuality !== undefined && range !== 0) {
+    return {
+      gameplayProperty,
+      startQuality,
+      endQuality,
+      modifierAtStart: raw.baseAmount,
+      modifierAtEnd: raw.baseAmount + raw.perQuality * range,
+    }
+  }
+
+  if (raw.baseAmount !== undefined) {
+    return {
+      gameplayProperty,
+      startQuality,
+      endQuality,
+      modifierAtStart: raw.baseAmount,
+      modifierAtEnd: raw.baseAmount,
+    }
+  }
+
+  return null
+}
+
+export function normalizeModifiers(
+  modifiers: Array<RawModifier | Modifier> | undefined
+): Modifier[] {
+  if (!modifiers?.length) return []
+  return modifiers
+    .map(normalizeModifier)
+    .filter((mod): mod is Modifier => mod !== null)
+}
+
 export interface SlotModifierResult {
   property: string
   propertyLabel: string
@@ -79,11 +149,13 @@ const LOWER_IS_BETTER_STATS = new Set([
 /**
  * Check if a stat is one where lower values are better.
  */
-export function isLowerBetter(property: string): boolean {
+export function isLowerBetter(property: string | null | undefined): boolean {
+  if (!property) return false
   return LOWER_IS_BETTER_STATS.has(property.toLowerCase())
 }
 
-export function getPropertyLabel(property: string): string {
+export function getPropertyLabel(property: string | null | undefined): string {
+  if (!property) return 'Unknown'
   const key = Object.keys(PROPERTY_LABELS).find(
     k => k.toLowerCase() === property.toLowerCase()
   )
@@ -162,13 +234,14 @@ export function getModifierColorClass(modifier: number, property?: string): stri
  */
 export function calculateSlotModifiers(
   quality: number,
-  modifiers: Modifier[] | undefined
+  modifiers: Array<RawModifier | Modifier> | undefined
 ): SlotModifierResult[] {
-  if (!modifiers || modifiers.length === 0) return []
+  const normalized = normalizeModifiers(modifiers)
+  if (normalized.length === 0) return []
 
   // Group modifiers by property
   const byProperty = new Map<string, Modifier[]>()
-  for (const mod of modifiers) {
+  for (const mod of normalized) {
     const key = mod.gameplayProperty.toLowerCase()
     if (!byProperty.has(key)) {
       byProperty.set(key, [])

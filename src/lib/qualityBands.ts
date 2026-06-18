@@ -28,7 +28,8 @@ export const QUALITY_DISTRIBUTION = qualityBandsData.qualityDistribution
 /**
  * Normalize a resource name to match lookup keys
  */
-export function normalizeResourceName(name: string): string {
+export function normalizeResourceName(name: string | null | undefined): string {
+  if (!name) return ''
   return name
     .toLowerCase()
     .replace(/\s*\(.*?\)\s*/g, '') // Remove parenthetical suffixes like "(Ore)", "(Raw)"

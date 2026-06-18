@@ -3,7 +3,6 @@ import { Link } from '@tanstack/react-router'
 import { resourceLabelClassName } from '../config/resourceTypes'
 import { slugifyResourceName, type BlueprintWithSlots } from '../lib/blueprintResources'
 import {
-  Modifier,
   calculateSlotModifiers,
   aggregateModifiers,
   formatModifierPercent,
@@ -22,10 +21,21 @@ interface SlotOption {
   type?: string
   resourceName?: string
   entityName?: string
+  displayName?: string
+  itemName?: string
   quantity?: number
   standardCargoUnits?: number
   minQuality?: number
-  modifiers?: Modifier[]
+  modifiers?: Array<{
+    gameplayProperty?: string
+    property?: string
+    startQuality?: number
+    endQuality?: number
+    modifierAtStart?: number
+    modifierAtEnd?: number
+    baseAmount?: number
+    perQuality?: number
+  }>
 }
 
 interface BlueprintSlot {
@@ -37,6 +47,7 @@ interface BlueprintSlot {
 
 interface BlueprintRecord {
   file: string
+  internalName?: string
   blueprintName?: string
   categoryName?: string
   isReward?: boolean
