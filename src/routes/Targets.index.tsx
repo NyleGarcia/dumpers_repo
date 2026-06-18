@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
@@ -13,6 +13,7 @@ import {
 } from '../lib/missionAcquisition'
 import BrowseMissionsView from '../components/BrowseMissionsView'
 import MissionLocationTags from '../components/MissionLocationTags'
+import { readMissionTrackerUiState, writeMissionTrackerUiState } from '../lib/missionTrackerUiState'
 
 type ViewMode = 'tracker' | 'browse'
 
@@ -235,8 +236,17 @@ export default function TargetsRoute() {
   const isGuest = isGuestPreview && !user
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
-  const [viewMode, setViewMode] = useState<ViewMode>('tracker')
-  const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set())
+  const [viewMode, setViewMode] = useState<ViewMode>(() => readMissionTrackerUiState().topView)
+  const [collapsedIds, setCollapsedIds] = useState<Set<string>>(() => {
+    return new Set(readMissionTrackerUiState().collapsedBlueprintIds)
+  })
+
+  useEffect(() => {
+    writeMissionTrackerUiState({
+      topView: viewMode,
+      collapsedBlueprintIds: [...collapsedIds],
+    })
+  }, [viewMode, collapsedIds])
 
   const toggleCollapsed = useCallback((id: string) => {
     setCollapsedIds(prev => {

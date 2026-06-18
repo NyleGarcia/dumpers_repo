@@ -1,8 +1,15 @@
-import React, { useState, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import blueprintMissionData from '../data/game-blueprint-missions.json'
 import { useBlueprintData } from '../routes/blueprints'
 import MissionLocationTags from './MissionLocationTags'
 import type { Region } from '../lib/missions'
+import {
+  makeBrowseMissionKey,
+  readMissionTrackerUiState,
+  writeMissionTrackerUiState,
+  type BrowseSystem,
+  type BrowseViewMode,
+} from '../lib/missionTrackerUiState'
 
 type BlueprintRecord = {
   file: string
@@ -29,9 +36,8 @@ type MissionEntry = {
   repPoints: number
 }
 
-type System = 'stanton' | 'pyro' | 'nyx' | 'unknown'
-
-type ViewMode = 'system' | 'faction'
+type System = BrowseSystem
+type ViewMode = BrowseViewMode
 
 const SYSTEM_LABELS: Record<System, string> = {
   stanton: 'Stanton',
@@ -90,11 +96,17 @@ export default function BrowseMissionsView({
   isOnTargetList,
 }: BrowseMissionsViewProps) {
   const { data: blueprints = [] } = useBlueprintData()
-  const [viewMode, setViewMode] = useState<ViewMode>('system')
-  const [selectedSystem, setSelectedSystem] = useState<System | null>(null)
-  const [selectedFaction, setSelectedFaction] = useState<string | null>(null)
-  const [selectedMission, setSelectedMission] = useState<MissionDisplay | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [viewMode, setViewMode] = useState<ViewMode>(() => readMissionTrackerUiState().browse.viewMode)
+  const [selectedSystem, setSelectedSystem] = useState<System | null>(
+    () => readMissionTrackerUiState().browse.selectedSystem
+  )
+  const [selectedFaction, setSelectedFaction] = useState<string | null>(
+    () => readMissionTrackerUiState().browse.selectedFaction
+  )
+  const [selectedMissionKey, setSelectedMissionKey] = useState<string | null>(
+    () => readMissionTrackerUiState().browse.selectedMissionKey
+  )
+  const [searchTerm, setSearchTerm] = useState(() => readMissionTrackerUiState().browse.searchTerm)
 
   const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
   const missionsByPool = blueprintMissionData.missionsByPool as Record<string, MissionEntry[]>
@@ -152,6 +164,23 @@ export default function BrowseMissionsView({
     
     return result.sort((a, b) => a.title.localeCompare(b.title))
   }, [missionsByPool, missionBlueprints])
+
+  const selectedMission = useMemo(() => {
+    if (!selectedMissionKey) return null
+    return missions.find((mission) => makeBrowseMissionKey(mission) === selectedMissionKey) ?? null
+  }, [missions, selectedMissionKey])
+
+  useEffect(() => {
+    writeMissionTrackerUiState({
+      browse: {
+        viewMode,
+        selectedSystem,
+        selectedFaction,
+        selectedMissionKey,
+        searchTerm,
+      },
+    })
+  }, [viewMode, selectedSystem, selectedFaction, selectedMissionKey, searchTerm])
 
   const systemStats = useMemo(() => {
     const stats: Record<System, { factions: Set<string>; missions: number }> = {
@@ -275,8 +304,8 @@ export default function BrowseMissionsView({
   }, [selectedMissionBlueprints])
 
   const handleBack = () => {
-    if (selectedMission) {
-      setSelectedMission(null)
+    if (selectedMissionKey) {
+      setSelectedMissionKey(null)
     } else if (selectedFaction) {
       setSelectedFaction(null)
     } else if (selectedSystem) {
@@ -288,7 +317,7 @@ export default function BrowseMissionsView({
     setViewMode(mode)
     setSelectedSystem(null)
     setSelectedFaction(null)
-    setSelectedMission(null)
+    setSelectedMissionKey(null)
     setSearchTerm('')
   }
 
@@ -296,28 +325,28 @@ export default function BrowseMissionsView({
     const crumbs: { label: string; onClick: () => void }[] = []
     
     if (viewMode === 'system') {
-      crumbs.push({ label: 'Systems', onClick: () => { setSelectedSystem(null); setSelectedFaction(null); setSelectedMission(null) } })
+      crumbs.push({ label: 'Systems', onClick: () => { setSelectedSystem(null); setSelectedFaction(null); setSelectedMissionKey(null) } })
       
       if (selectedSystem) {
         crumbs.push({
           label: SYSTEM_LABELS[selectedSystem],
-          onClick: () => { setSelectedFaction(null); setSelectedMission(null) },
+          onClick: () => { setSelectedFaction(null); setSelectedMissionKey(null) },
         })
       }
       
       if (selectedFaction) {
         crumbs.push({
           label: selectedFaction,
-          onClick: () => { setSelectedMission(null) },
+          onClick: () => { setSelectedMissionKey(null) },
         })
       }
     } else {
-      crumbs.push({ label: 'Factions', onClick: () => { setSelectedFaction(null); setSelectedMission(null) } })
+      crumbs.push({ label: 'Factions', onClick: () => { setSelectedFaction(null); setSelectedMissionKey(null) } })
       
       if (selectedFaction) {
         crumbs.push({
           label: selectedFaction,
-          onClick: () => { setSelectedMission(null) },
+          onClick: () => { setSelectedMissionKey(null) },
         })
       }
     }
@@ -349,7 +378,7 @@ export default function BrowseMissionsView({
     return (
       <button
         key={`${mission.poolKey}-${mission.title}`}
-        onClick={() => setSelectedMission(mission)}
+        onClick={() => setSelectedMissionKey(makeBrowseMissionKey(mission))}
         className={`w-full p-3 rounded-lg border text-left transition-all hover:bg-slate-800/50 ${
           mission.isLawful 
             ? 'border-green-500/20 hover:border-green-500/40'

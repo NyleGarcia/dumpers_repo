@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-06-18T18:09:15.990Z",
+  "_extracted": "2026-06-18T18:24:23.415Z",
   "missionBlueprints": {
     "adagioresourcegatheringshipsalvage": [
       {
@@ -5963,7 +5963,7 @@
       "debugName": "HighpointWildernessSpecialists_KillAnimals_Nyx_Easy",
       "title": "Reduce Valakkar Breaker Station Population",
       "titleKey": "@Highpoint_KillAnimals_rockcracker_title_E_001",
-      "faction": "<= PLACEHOLDER =>",
+      "faction": "Highpoint Wilderness Specialists",
       "factionKey": "lawful_highpointwildernessspecialists",
       "system": "Nyx",
       "region": null,
@@ -25209,7 +25209,7 @@
       {
         "title": "Reduce Valakkar Breaker Station Population",
         "titleKey": "@Highpoint_KillAnimals_rockcracker_title_E_001",
-        "faction": "<= PLACEHOLDER =>",
+        "faction": "Highpoint Wilderness Specialists",
         "system": "Nyx",
         "region": null,
         "category": null,

@@ -121,6 +121,75 @@ function resolveLocalization(key, localization) {
   return key
 }
 
+const FACTION_NAME_OVERRIDES = {
+  foxwell: 'Foxwell Enforcement',
+  bountyhuntersguild: 'Bounty Hunters Guild',
+  bhg: 'Bounty Hunters Guild',
+  shubin: 'Shubin Interstellar',
+  eckhart: 'Eckhart Security',
+  covalex: 'Covalex',
+  ftl: 'FTL Courier',
+  rayari: 'Rayari Incorporated',
+  headhunters: 'Headhunters',
+  vaughn: 'Vaughn',
+  ninetails: 'Nine Tails',
+  bitzero: 'Bit Zeros',
+  deadsaint: 'Dead Saints',
+  citizensforprosperity: 'Citizens For Prosperity',
+  cfp: 'Citizens For Prosperity',
+  adagio: 'Adagio Holdings',
+  ling: 'Ling Family Hauling',
+  northrock: 'Northrock Service Group',
+  intersec: 'InterSec Defense Solutions',
+  unitedwayfarers: 'United Wayfarers Club',
+  hockrowagency: 'Hockrow Agency',
+  hockrow: 'Hockrow Agency',
+  thecollector: 'Wikelo Emporium',
+  wikelo: 'Wikelo Emporium',
+  collectorwikelo: 'Wikelo Emporium',
+  highpointwildernessspecialists: 'Highpoint Wilderness Specialists',
+  highpoint: 'Highpoint Wilderness Specialists',
+}
+
+function isUnresolvedDisplayName(name) {
+  if (!name || typeof name !== 'string') return true
+  const trimmed = name.trim()
+  return (
+    trimmed.length === 0 ||
+    trimmed.startsWith('@') ||
+    trimmed.includes('PLACEHOLDER') ||
+    trimmed.includes('UNINITIALIZED')
+  )
+}
+
+function humanizeFactionKey(factionKey) {
+  return String(factionKey || '')
+    .replace(/^factionreputation[._]/i, '')
+    .replace(/^lawful_/i, '')
+    .replace(/^unlawful_/i, '')
+    .replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(' ')
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
+
+function inferFactionDisplayName(factionKey, hints = '') {
+  const combined = `${factionKey} ${hints}`.toLowerCase()
+  for (const [pattern, name] of Object.entries(FACTION_NAME_OVERRIDES)) {
+    if (combined.includes(pattern)) return name
+  }
+  return humanizeFactionKey(factionKey)
+}
+
+function resolveFactionDisplayName({ rawName, factionKey, recordName, hints = '' }) {
+  if (!isUnresolvedDisplayName(rawName)) return rawName
+  const inferred = inferFactionDisplayName(factionKey || recordName || '', hints)
+  if (!isUnresolvedDisplayName(inferred)) return inferred
+  return humanizeFactionKey(recordName || factionKey || 'Unknown')
+}
+
 /**
  * Resolve item internal filename to display name using localization
  * Examples:
@@ -937,6 +1006,11 @@ function parseContractGenerators(localization) {
       if (displayNameKey?.startsWith('@')) {
         displayName = localization[displayNameKey.substring(1)] || displayNameKey
       }
+      displayName = resolveFactionDisplayName({
+        rawName: displayName,
+        factionKey: key,
+        recordName: json._RecordName_,
+      })
       factionNames[key] = displayName || json._RecordName_.replace('FactionReputation.', '')
     }
   }
@@ -950,33 +1024,7 @@ function parseContractGenerators(localization) {
   let contractsWithBlueprints = 0
   
   // Faction name inference patterns (for when factionReputation is missing)
-  const factionPatterns = {
-    'foxwell': 'Foxwell Enforcement',
-    'bountyhuntersguild': 'Bounty Hunters Guild',
-    'bhg': 'Bounty Hunters Guild',
-    'shubin': 'Shubin Interstellar',
-    'eckhart': 'Eckhart Security',
-    'covalex': 'Covalex',
-    'ftl': 'FTL Courier',
-    'rayari': 'Rayari Incorporated',
-    'headhunters': 'Headhunters',
-    'vaughn': 'Vaughn',
-    'ninetails': 'Nine Tails',
-    'bitzero': 'Bit Zeros',
-    'deadsaint': 'Dead Saints',
-    'citizensforprosperity': 'Citizens For Prosperity',
-    'cfp': 'Citizens For Prosperity',
-    'adagio': 'Adagio Holdings',
-    'ling': 'Ling Family Hauling',
-    'northrock': 'Northrock Service Group',
-    'intersec': 'InterSec Defense Solutions',
-    'unitedwayfarers': 'United Wayfarers Club',
-    'hockrowagency': 'Hockrow Agency',
-    'hockrow': 'Hockrow Agency',
-    'thecollector': 'Wikelo Emporium',
-    'wikelo': 'Wikelo Emporium',
-    'collectorwikelo': 'Wikelo Emporium',
-  }
+  const factionPatterns = FACTION_NAME_OVERRIDES
 
   const factionKeyPatterns = {
     hockrowagency: 'lawful_hockrowagency',
@@ -1036,7 +1084,7 @@ function parseContractGenerators(localization) {
     ) {
       factionKey = 'wikelo'
       factionName = factionNames.factionreputation_wikelo || 'Wikelo Emporium'
-    } else if (factionName === 'Unknown' || factionName === factionKey) {
+    } else if (factionName === 'Unknown' || factionName === factionKey || isUnresolvedDisplayName(factionName)) {
       const inferredName = inferFactionFromPath(generatorFile, `${generatorDebugName || ''} ${contractDebugName || ''}`)
       if (inferredName) {
         factionName = inferredName
@@ -1044,6 +1092,12 @@ function parseContractGenerators(localization) {
         if (inferredKey) factionKey = inferredKey
       }
     }
+
+    factionName = resolveFactionDisplayName({
+      rawName: factionName,
+      factionKey: `factionreputation_${factionKey}`,
+      hints: `${generatorFile} ${generatorDebugName || ''} ${contractDebugName || ''}`,
+    })
 
     return { factionKey, factionName }
   }
@@ -1065,11 +1119,18 @@ function parseContractGenerators(localization) {
         if (factionMatch) {
           factionKey = factionMatch[1].toLowerCase()
           factionName = factionNames[`factionreputation_${factionKey}`] || factionKey
+          if (isUnresolvedDisplayName(factionName)) {
+            factionName = resolveFactionDisplayName({
+              rawName: factionName,
+              factionKey: `factionreputation_${factionKey}`,
+              hints: `${file} ${generator.debugName || ''}`,
+            })
+          }
         }
       }
       
       // If faction is still unknown, try to infer from file path or debugName
-      if (factionName === 'Unknown' || factionName === factionKey) {
+      if (factionName === 'Unknown' || factionName === factionKey || isUnresolvedDisplayName(factionName)) {
         const inferredFaction = inferFactionFromPath(file, generator.debugName)
         if (inferredFaction) {
           factionName = inferredFaction
@@ -2690,11 +2751,16 @@ function parseFactionReputations(localization = {}) {
     // Resolve display name
     const nameKey = val.displayName?.startsWith('@') ? val.displayName.substring(1) : null
     const resolvedName = nameKey ? (localization[nameKey] || val.displayName) : val.displayName
+    const name = resolveFactionDisplayName({
+      rawName: resolvedName,
+      factionKey,
+      recordName,
+    })
     
     factions[factionKey] = {
       id: json._RecordId_,
       key: factionKey,
-      name: resolvedName || factionKey,
+      name,
       displayNameKey: val.displayName || '',
       descriptionKey: val.description || '',
       recordName,
