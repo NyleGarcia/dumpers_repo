@@ -11,7 +11,8 @@
  * Normalize any identifier for storage/lookup
  * Converts to lowercase and trims whitespace
  */
-export function normalizeId(value: string): string {
+export function normalizeId(value: string | null | undefined): string {
+  if (!value) return ''
   return value.toLowerCase().trim()
 }
 
@@ -36,7 +37,8 @@ export function idsMatch(
  * Normalize a slug/key for database storage
  * Converts to lowercase, replaces non-alphanumeric with underscores
  */
-export function normalizeKey(value: string): string {
+export function normalizeKey(value: string | null | undefined): string {
+  if (!value) return ''
   return value
     .toLowerCase()
     .trim()

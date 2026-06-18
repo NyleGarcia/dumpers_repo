@@ -29,7 +29,8 @@ export interface ExtractedBlueprintResource {
   label: string
 }
 
-export function slugifyResourceName(name: string): string {
+export function slugifyResourceName(name: string | null | undefined): string {
+  if (!name) return ''
   return name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')

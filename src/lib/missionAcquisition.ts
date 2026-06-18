@@ -67,7 +67,8 @@ function buildBlueprintToPoolIndex(): Map<string, string[]> {
   
   for (const [poolKey, blueprints] of Object.entries(missionBlueprints)) {
     for (const bp of blueprints) {
-      const bpName = bp.name.toLowerCase()
+      const bpName = (bp.name || '').toLowerCase()
+      if (!bpName) continue
       if (!index.has(bpName)) {
         index.set(bpName, [])
       }
@@ -166,10 +167,10 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
   let mission: MissionPoolEntry | undefined
   if (missionTitle) {
     const normalizedTitle = missionTitle.toLowerCase()
-    mission = poolMissions.find(m => 
-      m.title.toLowerCase().includes(normalizedTitle) || 
-      normalizedTitle.includes(m.title.toLowerCase())
-    )
+    mission = poolMissions.find(m => {
+      const mTitle = (m.title || '').toLowerCase()
+      return mTitle.includes(normalizedTitle) || normalizedTitle.includes(mTitle)
+    })
   }
   
   // Fall back to first mission in pool
@@ -226,8 +227,9 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
   // Try to find matching pool by searching all pools for matching titles
   for (const [poolKey, missions] of Object.entries(missionsByPool)) {
     for (const mission of missions) {
-      if (mission.title.toLowerCase() === missionLabel.toLowerCase() ||
-          missionLabel.toLowerCase().includes(mission.title.toLowerCase())) {
+      const mTitle = (mission.title || '').toLowerCase()
+      const labelLower = (missionLabel || '').toLowerCase()
+      if (mTitle === labelLower || labelLower.includes(mTitle)) {
         return {
           repMin: mission.repPoints,
           repMax: mission.repPoints,
