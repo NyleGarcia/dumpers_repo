@@ -1,46 +1,9 @@
 import { isSalvageResource } from '../config/extraResources'
 import { isHarvestResource } from '../config/resourceTypes'
 import { AMMO_ORDER_MIN_QUALITY } from '../config/dfp'
-import { resolveBlueprintRequirementLabel } from './blueprintResources'
 import { getDfpEngine } from './dfpEngine'
 
 const MIN_SCU = 0.001
-
-/** Names the DFP engine expects but differ from parsed blueprint display labels. */
-const DFP_ENGINE_RESOURCE_ALIASES: Record<string, string> = {
-  Saldynium: 'Saldynium (Ore)',
-}
-
-function resolveDfpEngineResourceName(name: string): string {
-  return DFP_ENGINE_RESOURCE_ALIASES[name] ?? name
-}
-
-function normalizeBlueprintForDfp(blueprint: BlueprintDfpInput): BlueprintDfpInput {
-  if (!blueprint.slots?.length) return blueprint
-
-  return {
-    ...blueprint,
-    slots: blueprint.slots.map((slot) => ({
-      ...slot,
-      options: (slot.options ?? []).map((option) => {
-        const rawName =
-          option.resourceName ||
-          option.entityName ||
-          resolveBlueprintRequirementLabel(option)
-        if (!rawName) return option
-
-        const engineName = resolveDfpEngineResourceName(rawName)
-        if (option.resourceName) {
-          return { ...option, resourceName: engineName }
-        }
-        if (option.entityName) {
-          return { ...option, entityName: engineName }
-        }
-        return { ...option, entityName: engineName }
-      }),
-    })),
-  }
-}
 
 export interface DfpLineItem {
   resource: string
@@ -71,8 +34,6 @@ export interface BlueprintDfpInput {
       type?: string
       resourceName?: string
       entityName?: string
-      itemName?: string
-      displayName?: string
       minQuality?: number
       standardCargoUnits?: number
       quantity?: number
@@ -176,12 +137,7 @@ export function calculateBlueprintDfpForOrder(
   orderMinQuality: number,
   craftQuantity = 1
 ): DfpResult {
-  const normalized = normalizeBlueprintForDfp(blueprint)
-  const raw = getDfpEngine().calculateBlueprintDfpForOrder(
-    normalized,
-    orderMinQuality,
-    craftQuantity
-  )
+  const raw = getDfpEngine().calculateBlueprintDfpForOrder(blueprint, orderMinQuality, craftQuantity)
   if (raw.acquisitionPremium != null || raw.craftLaborPremium != null) {
     return {
       materialTotal: raw.materialTotal,
@@ -197,7 +153,7 @@ export function calculateBlueprintDfpForOrder(
 }
 
 export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {
-  const raw = getDfpEngine().calculateBlueprintDfp(normalizeBlueprintForDfp(blueprint))
+  const raw = getDfpEngine().calculateBlueprintDfp(blueprint)
   return {
     materialTotal: raw.materialTotal,
     acquisitionPremium: raw.acquisitionPremium ?? 0,
