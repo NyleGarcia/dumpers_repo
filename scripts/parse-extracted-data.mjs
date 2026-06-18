@@ -1064,6 +1064,12 @@ function parseBlueprintDefinitions(localization = {}) {
     const bp = json._RecordValue_.blueprint
     const recordName = json._RecordName_ || ''
     
+    // Generate file path in the format stored in the database
+    // Old format: LIVEfiles\libs\foundry\records\crafting\blueprints\crafting\<path>\<name>.json
+    // Extract path from extracted-data/ onward and convert to LIVEfiles prefix
+    const relativePath = file.replace(/.*extracted-data[\\\/]/i, '').replace(/\//g, '\\')
+    const legacyFilePath = `LIVEfiles\\${relativePath}`
+    
     // Extract entity class for the item being crafted
     let entityClass = null
     if (bp.processSpecificData?.entityClass) {
@@ -1199,7 +1205,7 @@ function parseBlueprintDefinitions(localization = {}) {
     
     blueprints.push({
       id: json._RecordId_,
-      file: json._RecordId_, // Alias for backwards compatibility
+      file: legacyFilePath, // Path format matching database keys
       name: fullName,
       internalName,
       blueprintName,
