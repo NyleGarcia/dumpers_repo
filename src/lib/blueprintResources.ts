@@ -5,6 +5,8 @@ export interface BlueprintRequirementOption {
   type?: string
   resourceName?: string
   entityName?: string
+  itemName?: string
+  displayName?: string
   standardCargoUnits?: number
   quantity?: number
 }
@@ -42,7 +44,7 @@ export function extractBlueprintResources(
   for (const blueprint of blueprints) {
     for (const slot of blueprint.slots ?? []) {
       for (const option of slot.options ?? []) {
-        const label = option.resourceName || option.entityName || option.itemName
+        const label = option.resourceName || option.entityName || option.displayName || option.itemName
         if (!label) continue
 
         const resourceKey = slugifyResourceName(label)
@@ -103,7 +105,7 @@ export function extractOrderLineItemsFromBlueprint(
     for (const option of slot.options ?? []) {
       if (option.type && option.type !== 'resource') continue
 
-      const label = option.resourceName || option.entityName || option.itemName
+      const label = option.resourceName || option.entityName || option.displayName || option.itemName
       if (!label) continue
 
       const resourceKey = slugifyResourceName(label)

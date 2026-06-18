@@ -384,7 +384,7 @@ function ResourceSlotCard({
   const option = slot.options?.[0]
   
   // Get resource-specific quality bands if available
-  const resourceName = option?.resourceName || option?.entityName || option?.itemName || ''
+  const resourceName = option?.resourceName || option?.entityName || option?.displayName || option?.itemName || ''
   const bands = getResourceBands(resourceName)
   
   // Check if this slot has modifiers defined in the blueprint data
@@ -408,7 +408,7 @@ function ResourceSlotCard({
       {slot.options && slot.options.length > 0 && (
         <div className="space-y-2">
           {slot.options.map((opt, optIdx) => {
-            const name = opt.resourceName || opt.entityName || opt.itemName || 'Unknown'
+            const name = opt.resourceName || opt.entityName || opt.displayName || opt.itemName || 'Unknown'
             const resourceKey = slugifyResourceName(name)
             const isItem = opt.type === 'item'
             const labelClass = isItem ? 'text-purple-400' : resourceLabelClassName(resourceKey)

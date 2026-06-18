@@ -171,7 +171,7 @@ export default function ResourceBuyOrderPanel({
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
     blueprints.forEach((bp) => {
-      if (bp.file) map.set(bp.file, bp)
+      if (bp.internalName) map.set(bp.internalName, bp)
     })
     return map
   }, [blueprints])
@@ -230,7 +230,7 @@ export default function ResourceBuyOrderPanel({
   }, [resourceKey, selectedResNoQuality])
 
   const addBlueprint = () => {
-    if (!selectedBlueprint?.file) return
+    if (!selectedBlueprint?.internalName) return
     if (!canAddBlueprintToOrder(selectedBlueprint, orderOverridesMap)) {
       onError?.('This blueprint is not available for orders')
       return
@@ -242,8 +242,8 @@ export default function ResourceBuyOrderPanel({
       ...prev,
       {
         cartKey: nextCartKey(),
-        blueprintId: selectedBlueprint.file,
-        blueprintTitle: selectedBlueprint.blueprintName || selectedBlueprint.file,
+        blueprintId: selectedBlueprint.internalName,
+        blueprintTitle: selectedBlueprint.blueprintName || selectedBlueprint.internalName,
         minQuality: pricing.orderMinQuality,
         quantity: qty,
         unitDfpAuec: pricing.unitDfpAuec,
@@ -440,7 +440,7 @@ export default function ResourceBuyOrderPanel({
             <BlueprintTypeahead
               blueprints={blueprints}
               selectedBlueprint={selectedBlueprint}
-              onSelect={(bp) => setSelectedBlueprintId(bp.file ?? '')}
+              onSelect={(bp) => setSelectedBlueprintId(bp.internalName ?? '')}
               onClear={() => setSelectedBlueprintId('')}
             />
             {selectedBlueprint && (

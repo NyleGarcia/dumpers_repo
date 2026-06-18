@@ -103,7 +103,7 @@ export default function CustomOrdersRoute() {
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
     blueprints.forEach((bp) => {
-      if (bp.file) map.set(bp.file, bp)
+      if (bp.internalName) map.set(bp.internalName, bp)
     })
     return map
   }, [blueprints])
@@ -135,7 +135,7 @@ export default function CustomOrdersRoute() {
   // Fetch blueprint owner counts when orderable blueprints load
   useEffect(() => {
     if (orderableBlueprints.length === 0) return
-    const blueprintIds = orderableBlueprints.map((bp) => bp.file)
+    const blueprintIds = orderableBlueprints.map((bp) => bp.internalName)
     fetchBlueprintOwnerCounts(blueprintIds).then(({ data }) => {
       setBlueprintOwnerCounts(data)
     })

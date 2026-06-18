@@ -120,7 +120,7 @@ export default function BlueprintTypeahead({
                 )}
                 <ul>
                   {results.map((bp, index) => (
-                    <li key={bp.file}>
+                    <li key={bp.internalName}>
                       <button
                         type="button"
                         onMouseEnter={() => setHighlightIndex(index)}
@@ -131,7 +131,7 @@ export default function BlueprintTypeahead({
                             : 'text-slate-300 hover:bg-slate-800'
                         }`}
                       >
-                        {bp.blueprintName || bp.file}
+                        {bp.blueprintName || bp.internalName}
                       </button>
                     </li>
                   ))}

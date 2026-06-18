@@ -146,7 +146,7 @@ export default function FulfillmentRoute() {
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
     blueprints.forEach((bp) => {
-      if (bp.file) map.set(bp.file, bp)
+      if (bp.internalName) map.set(bp.internalName, bp)
     })
     return map
   }, [blueprints])

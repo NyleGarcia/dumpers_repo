@@ -48,7 +48,7 @@ export function resolveIsOrderable(
   blueprint: BlueprintOrderableSource,
   overridesMap: Record<string, boolean>
 ): boolean {
-  const id = blueprint.file
+  const id = blueprint.internalName
   if (!id) return false
   if (id in overridesMap) return overridesMap[id]
   
@@ -74,8 +74,8 @@ export function hasRewardMissions(blueprint: BlueprintOrderableSource): boolean 
   }
   
   // Check if in our mission reward data
-  if (blueprint.file) {
-    return catalogIsReward(blueprint.file)
+  if (blueprint.internalName) {
+    return catalogIsReward(blueprint.internalName)
   }
   
   return false

@@ -122,6 +122,48 @@ function resolveLocalization(key, localization) {
 }
 
 /**
+ * Resolve item internal filename to display name using localization
+ * Examples:
+ *   harvestable_mineral_1h_sadaryx -> "Sadaryx" (via items_commodities_sadaryx)
+ *   harvestable_ore_1h_saldyniumore -> "Saldynium" (via items_commodities_saldynium)
+ *   harvestable_trophy_1h_yormandi_eye -> "Yormandi Eye" (via items_commodities_yormandi or fallback)
+ */
+function resolveItemDisplayName(itemName, localization) {
+  if (!itemName || !localization) return null
+
+  // Extract the material name from the filename
+  // Patterns: harvestable_mineral_1h_<name>, harvestable_ore_1h_<name>ore, harvestable_trophy_1h_<name>
+  let baseName = itemName
+    .replace(/^harvestable_(mineral|ore|trophy)_\d+h_/i, '')
+    .replace(/ore$/i, '')  // Remove trailing "ore" from saldyniumore -> saldynium
+    .replace(/_/g, ' ')    // yormandi_eye -> yormandi eye
+
+  // Try common localization patterns
+  const keysToTry = [
+    `items_commodities_${baseName.replace(/ /g, '')}`,  // yormandi eye -> items_commodities_yormandieye
+    `items_commodities_${baseName.split(' ')[0]}`,      // Try just first word: yormandi
+    `item_Name${baseName}`,
+    `item_Name_${itemName}`,
+  ]
+
+  for (const key of keysToTry) {
+    if (localization[key]) {
+      return localization[key]
+    }
+    // Try lowercase
+    if (localization[key.toLowerCase()]) {
+      return localization[key.toLowerCase()]
+    }
+  }
+
+  // Fallback: Title case the base name
+  return baseName
+    .split(' ')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ')
+}
+
+/**
  * Extract manufacturer code from file path and resolve to display name
  * Path looks like: file://./../../../libs/foundry/records/scitemmanufacturer/scitemmanufacturer.acom.json
  */
@@ -1226,10 +1268,11 @@ function parseBlueprintDefinitions(localization = {}) {
     const recordName = json._RecordName_ || ''
     
     // Generate file path in the format stored in the database
-    // Old format: LIVEfiles\libs\foundry\records\crafting\blueprints\crafting\<path>\<name>.json
-    // Extract path from extracted-data/ onward and convert to LIVEfiles prefix
-    const relativePath = file.replace(/.*extracted-data[\\\/]/i, '').replace(/\//g, '\\')
-    const legacyFilePath = `LIVEfiles\\${relativePath}`
+    // Old format: livefiles\libs\foundry\records\crafting\blueprints\crafting\<path>\<name>.json
+    // Extract path from extracted-data/ onward and convert to livefiles prefix
+    // ALWAYS lowercase for consistent storage/lookup
+    const relativePath = file.replace(/.*extracted-data[\\\/]/i, '').replace(/\//g, '\\').toLowerCase()
+    const legacyFilePath = `livefiles\\${relativePath}`
     
     // Extract entity class for the item being crafted
     let entityClass = null
@@ -1305,12 +1348,16 @@ function parseBlueprintDefinitions(localization = {}) {
               // Handle item-type slots (e.g., LENSES, REGULATOR, FILTER with weapon_damage modifiers)
               const itemPath = slotOption.entityClass || ''
               const itemMatch = itemPath.match(/([^/\\]+)\.json$/i)
-              const itemName = itemMatch ? itemMatch[1] : 'Unknown'
-              
+              // itemName is always lowercase for consistent storage/lookup
+              const itemName = itemMatch ? itemMatch[1].toLowerCase() : 'unknown'
+              // Resolve display name from localization (e.g., "harvestable_mineral_1h_sadaryx" -> "Sadaryx")
+              const displayName = resolveItemDisplayName(itemName, localization)
+
               slotOptions.push({
                 type: 'item',
                 itemName,
-                itemPath,
+                displayName,
+                itemPath: itemPath.toLowerCase(),
                 quantity: slotOption.quantity || 1,
                 minQuality: slotOption.minQuality || 1,
                 modifiers: slotModifiers.length > 0 ? slotModifiers : undefined
@@ -1346,9 +1393,11 @@ function parseBlueprintDefinitions(localization = {}) {
     // Generate names
     const fullName = recordName.replace('CraftingBlueprintRecord.', '')
     // internalName is the short form (without BP_CRAFT_ prefix) used for matching
+    // ALWAYS lowercase for consistent storage/lookup
     const internalName = fullName
       .replace(/^BP_CRAFT_/i, '')
       .replace(/_scitem$/i, '')
+      .toLowerCase()
     
     // Look up display name from localization
     // Keys vary by item type - try multiple patterns
@@ -2704,10 +2753,12 @@ function parseReputationSystem(localization = {}) {
   const factionStandings = {}
   for (const [factionKey, faction] of Object.entries(factions)) {
     // Extract the faction identifier from the key (e.g., "factionreputation_lawful_bountyhuntersguild" -> "bountyhuntersguild")
+    // ALWAYS lowercase for consistent storage/lookup
     const factionId = factionKey
       .replace('factionreputation_', '')
       .replace('lawful_', '')
       .replace('unlawful_', '')
+      .toLowerCase()
     
     // Find matching context by faction ID - prioritize exact matches, then longer/more specific matches
     const contextEntries = Object.entries(factionContexts)

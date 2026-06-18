@@ -251,8 +251,8 @@ export default function BrowseMissionsView({
     return poolBps.map(bp => {
       const bpName = bp.name.toLowerCase()
       const fullBp = blueprintsByInternalName[bpName]
-      const isAcquired = fullBp ? !!acquiredBlueprints[fullBp.file] : false
-      const isTracked = fullBp ? isOnTargetList(fullBp.file) : false
+      const isAcquired = fullBp ? !!acquiredBlueprints[fullBp.internalName] : false
+      const isTracked = fullBp ? isOnTargetList(fullBp.internalName) : false
       
       return {
         ...bp,
@@ -336,7 +336,7 @@ export default function BrowseMissionsView({
     const acquiredCount = poolBps.filter(bp => {
       const bpName = bp.name.toLowerCase()
       const fullBp = blueprintsByInternalName[bpName]
-      return fullBp && acquiredBlueprints[fullBp.file]
+      return fullBp && acquiredBlueprints[fullBp.internalName]
     }).length
     
     const regionInfo = mission.region && mission.system === 'pyro' 
@@ -640,7 +640,7 @@ export default function BrowseMissionsView({
                   </div>
                   {!bp.isAcquired && !bp.isTracked && bp.fullBlueprint && (
                     <button
-                      onClick={() => onAddToTracker(bp.fullBlueprint!.file)}
+                      onClick={() => onAddToTracker(bp.fullBlueprint!.internalName)}
                       className="shrink-0 px-2 py-1 text-[10px] font-medium text-amber-300 border border-amber-500/40 rounded hover:bg-amber-950/40 transition-colors"
                     >
                       Track

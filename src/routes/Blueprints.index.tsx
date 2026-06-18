@@ -181,7 +181,7 @@ export default function BlueprintsRoute() {
       return
     }
 
-    const blueprintIds = blueprints.map(bp => bp.file)
+    const blueprintIds = blueprints.map(bp => bp.internalName)
     const { data } = await fetchBlueprintOwnerCounts(blueprintIds)
     if (!cancelled) {
       setBlueprintOwnerCounts(data)
@@ -231,19 +231,19 @@ export default function BlueprintsRoute() {
     if (!blueprints) return []
     
     return blueprints.filter(bp => {
-      if (!bp.blueprintName || !bp.file) return false
+      if (!bp.blueprintName || !bp.internalName) return false
       
       const matchesSearch = searchTerm === '' || bp.blueprintName.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesReward = !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
       
       // When viewing a specific user (not "all" and not self), only show their acquired blueprints
       const isViewingSpecificOther = selectedUserId !== 'all' && selectedUserId !== user?.id
-      const matchesUserFilter = !isViewingSpecificOther || filterAcquiredBlueprints[bp.file]
+      const matchesUserFilter = !isViewingSpecificOther || filterAcquiredBlueprints[bp.internalName]
       
       // Acquisition filter: based on the active acquired set
       // When viewing self or "all", use myAcquiredBlueprints; when viewing other, use viewedUserBlueprints
       const activeAcquiredSet = isViewingSpecificOther ? viewedUserBlueprints : myAcquiredBlueprints
-      const isAcquiredInActiveSet = !!activeAcquiredSet[bp.file]
+      const isAcquiredInActiveSet = !!activeAcquiredSet[bp.internalName]
       
       let matchesAcquisition = true
       if (acquisitionFilter === 'acquired') {
@@ -759,28 +759,28 @@ export default function BlueprintsRoute() {
               // Allow both approved members AND offline/guest users to track
               const canTarget =
                 (isApproved || isGuest) &&
-                !displayAcquiredBlueprints[bp.file] &&
+                !displayAcquiredBlueprints[bp.internalName] &&
                 canAddBlueprintToTargetList(bp, overridesMap)
 
               return (
                 <BlueprintCard
-                  key={bp.file}
+                  key={bp.internalName}
                   blueprint={bp}
                   onClick={() => setSelectedBlueprint(bp)}
-                  isAcquired={!!displayAcquiredBlueprints[bp.file]}
-                  onToggleAcquired={() => toggleAcquired(bp.file)}
+                  isAcquired={!!displayAcquiredBlueprints[bp.internalName]}
+                  onToggleAcquired={() => toggleAcquired(bp.internalName)}
                   canModify={canModifyBlueprints}
                   isPending={isPending}
                   showTargetControl={canTarget}
-                  isOnTargetList={isOnTargetList(bp.file)}
-                  onToggleTarget={() => toggleTarget(bp.file)}
+                  isOnTargetList={isOnTargetList(bp.internalName)}
+                  onToggleTarget={() => toggleTarget(bp.internalName)}
                   effectiveIsOrderable={effectiveIsOrderable}
                   catalogIsReward={catalogReward}
                   isSuperAdmin={isSuperAdmin && !isViewingOther}
                   onToggleOrderable={(next) =>
-                    void setOrderable(bp.file, next, catalogReward)
+                    void setOrderable(bp.internalName, next, catalogReward)
                   }
-                  ownerCount={blueprintOwnerCounts[bp.file]}
+                  ownerCount={blueprintOwnerCounts[bp.internalName]}
                 />
               )
             })}
@@ -795,13 +795,13 @@ export default function BlueprintsRoute() {
           onClose={() => setSelectedBlueprint(null)}
           isApproved={isApproved}
           isGuest={isGuest}
-          isAcquired={!!displayAcquiredBlueprints[selectedBlueprint.file]}
-          isOnTarget={isOnTargetList(selectedBlueprint.file)}
+          isAcquired={!!displayAcquiredBlueprints[selectedBlueprint.internalName]}
+          isOnTarget={isOnTargetList(selectedBlueprint.internalName)}
           effectiveIsOrderable={resolveIsOrderable(selectedBlueprint, overridesMap)}
           canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}
-          onToggleTarget={() => toggleTarget(selectedBlueprint.file)}
+          onToggleTarget={() => toggleTarget(selectedBlueprint.internalName)}
           canAddToOrder={!isGuest && isApproved && canAddBlueprintToOrder(selectedBlueprint, overridesMap)}
-          ownerCount={blueprintOwnerCounts[selectedBlueprint.file]}
+          ownerCount={blueprintOwnerCounts[selectedBlueprint.internalName]}
         />
       )}
     </FeaturePageLayout>

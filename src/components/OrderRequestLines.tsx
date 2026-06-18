@@ -56,7 +56,7 @@ function getSlotQualityDetails(
       const slotIndex = Number(idx)
       const slot = blueprint?.slots?.[slotIndex]
       const slotName = slot?.slotDisplayName || `Slot ${slotIndex + 1}`
-      const resourceName = slot?.options?.[0]?.resourceName || slot?.options?.[0]?.entityName || slot?.options?.[0]?.itemName || ''
+      const resourceName = slot?.options?.[0]?.resourceName || slot?.options?.[0]?.entityName || slot?.options?.[0]?.displayName || slot?.options?.[0]?.itemName || ''
       return { slotIndex, slotName, resourceName, quality: Number(quality) }
     })
     .sort((a, b) => a.slotIndex - b.slotIndex)

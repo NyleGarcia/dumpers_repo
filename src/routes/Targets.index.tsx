@@ -302,7 +302,7 @@ export default function TargetsRoute() {
         const mission = reward.mission?.trim()
         if (mission) keys.push(missionKey(mission))
       }
-      map[bp.file] = keys
+      map[bp.internalName] = keys
     }
     return map
   }, [blueprints])
@@ -333,7 +333,7 @@ export default function TargetsRoute() {
 
   const targetBlueprintRecords = useMemo(() => {
     return blueprints
-      .filter((bp) => targetIds[bp.file] && !acquiredSet.has(bp.file))
+      .filter((bp) => targetIds[bp.internalName] && !acquiredSet.has(bp.internalName))
       .sort((a, b) => (a.blueprintName ?? '').localeCompare(b.blueprintName ?? ''))
   }, [blueprints, targetIds, acquiredSet])
 
@@ -341,7 +341,7 @@ export default function TargetsRoute() {
     () =>
       buildMissionList(
         targetBlueprintRecords.map((bp) => ({
-          blueprintId: bp.file,
+          blueprintId: bp.internalName,
           blueprintName: bp.blueprintName ?? 'Unknown',
           rewardMissions: bp.rewardMissions,
         })),
@@ -474,10 +474,10 @@ export default function TargetsRoute() {
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">Your targets</h2>
               <div className="flex items-center gap-1">
-                {!targetBlueprintRecords.every(bp => collapsedIds.has(bp.file)) && (
+                {!targetBlueprintRecords.every(bp => collapsedIds.has(bp.internalName)) && (
                   <button
                     type="button"
-                    onClick={() => setCollapsedIds(new Set(targetBlueprintRecords.map(bp => bp.file)))}
+                    onClick={() => setCollapsedIds(new Set(targetBlueprintRecords.map(bp => bp.internalName)))}
                     className="px-2 py-1 text-xs text-slate-400 hover:text-white border border-slate-600 hover:border-slate-500 rounded transition-colors"
                   >
                     Close All
@@ -498,7 +498,7 @@ export default function TargetsRoute() {
               {targetBlueprintRecords.map((bp) => {
                 const missions = getMissionsForBlueprint(
                   {
-                    blueprintId: bp.file,
+                    blueprintId: bp.internalName,
                     blueprintName: bp.blueprintName ?? 'Unknown',
                     rewardMissions: bp.rewardMissions,
                   },
@@ -508,18 +508,18 @@ export default function TargetsRoute() {
 
                 return (
                   <div
-                    key={bp.file}
+                    key={bp.internalName}
                     className="bg-slate-900/50 border border-slate-700 rounded-xl overflow-hidden"
                   >
                     <div className="px-3 py-2.5 bg-slate-800/80 border-b border-slate-700 flex items-start justify-between gap-2">
                       <button
                         type="button"
-                        onClick={() => toggleCollapsed(bp.file)}
+                        onClick={() => toggleCollapsed(bp.internalName)}
                         className="flex items-start gap-2 min-w-0 flex-1 text-left hover:opacity-80 transition-opacity"
                       >
                         <svg
                           className={`w-4 h-4 mt-0.5 text-slate-400 shrink-0 transition-transform duration-200 ${
-                            collapsedIds.has(bp.file) ? '-rotate-90' : ''
+                            collapsedIds.has(bp.internalName) ? '-rotate-90' : ''
                           }`}
                           fill="none"
                           stroke="currentColor"
@@ -531,7 +531,7 @@ export default function TargetsRoute() {
                           <p className="text-sm font-semibold text-white leading-snug">{bp.blueprintName}</p>
                           <div className="mt-1">
                             <BlueprintUnlockBadge
-                              blueprintId={bp.file}
+                              blueprintId={bp.internalName}
                               isReward={resolveIsOrderable(bp, overridesMap)}
                             />
                           </div>
@@ -540,7 +540,7 @@ export default function TargetsRoute() {
                       <div className="flex flex-col items-end gap-1 shrink-0">
                         <button
                           type="button"
-                          onClick={() => void toggleAcquired(bp.file)}
+                          onClick={() => void toggleAcquired(bp.internalName)}
                           className="px-2.5 py-1 text-[10px] font-bold text-emerald-900 bg-emerald-500 hover:bg-emerald-400 border border-emerald-400 rounded shadow-sm transition-colors"
                         >
                           ✓ Got It!
@@ -559,7 +559,7 @@ export default function TargetsRoute() {
                           )}
                           <button
                             type="button"
-                            onClick={() => void toggleTarget(bp.file)}
+                            onClick={() => void toggleTarget(bp.internalName)}
                             className="px-2 py-0.5 text-[10px] text-red-400 hover:text-red-300 border border-red-500/30 rounded hover:bg-red-950/30 transition-colors"
                           >
                             Remove
@@ -568,7 +568,7 @@ export default function TargetsRoute() {
                       </div>
                     </div>
 
-                    {!collapsedIds.has(bp.file) && (
+                    {!collapsedIds.has(bp.internalName) && (
                       missions.length === 0 ? (
                         <p className="px-3 py-3 text-xs text-slate-500">No reward missions for this blueprint.</p>
                       ) : (
