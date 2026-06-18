@@ -71,16 +71,20 @@ export function getBlueprintDisplayTags(bp: BlueprintTaxonomyInput): BlueprintDi
     tags.push({ kind: 'size', label: size })
   }
 
-  const armorWeight = getArmorWeight(bp)
-  if (armorWeight) {
-    const label = formatTaxonomyLabel(armorWeight)
-    if (label) tags.push({ kind: 'armorWeight', label })
-  }
+  const isFpsArmor = bp.categoryName === 'FPSArmours'
 
-  const armorSlot = getArmorSlot(bp)
-  if (armorSlot) {
-    const label = formatTaxonomyLabel(armorSlot)
-    if (label) tags.push({ kind: 'armorSlot', label })
+  if (isFpsArmor) {
+    const armorWeight = getArmorWeight(bp)
+    if (armorWeight) {
+      const label = formatTaxonomyLabel(armorWeight)
+      if (label) tags.push({ kind: 'armorWeight', label })
+    }
+
+    const armorSlot = getArmorSlot(bp)
+    if (armorSlot) {
+      const label = formatTaxonomyLabel(armorSlot)
+      if (label) tags.push({ kind: 'armorSlot', label })
+    }
   }
 
   const subType = getBlueprintSubType(bp)
@@ -176,6 +180,7 @@ function isFlightArmor(parts: string[], filename: string, blueprintName = ''): b
 }
 
 export function getArmorWeight(bp: BlueprintTaxonomyInput): string | null {
+  if (bp.categoryName && bp.categoryName !== 'FPSArmours') return null
   if (bp.armorWeight) return bp.armorWeight
   const pathKey = bp.file?.includes('\\') ? bp.file : null
   if (!pathKey) return null
@@ -198,6 +203,7 @@ export function getArmorWeight(bp: BlueprintTaxonomyInput): string | null {
 }
 
 export function getArmorSlot(bp: BlueprintTaxonomyInput): string | null {
+  if (bp.categoryName && bp.categoryName !== 'FPSArmours') return null
   if (bp.armorSlot) return bp.armorSlot
   const pathKey = bp.file?.includes('\\') ? bp.file : null
   if (!pathKey) return null

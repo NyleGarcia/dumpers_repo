@@ -1490,6 +1490,183 @@ function resolveCanonicalBaseBlueprintName(internalName, localization) {
   return null
 }
 
+const ARMOR_SLOT_DISPLAY = {
+  arms: 'Arms',
+  core: 'Core',
+  helmet: 'Helmet',
+  legs: 'Legs',
+  backpack: 'Backpack',
+  undersuit: 'Undersuit',
+  suit: 'Suit',
+}
+
+function detectArmorSlotFromInternalName(internalName) {
+  const nameForSlot = (internalName || '').toLowerCase()
+  if (/_helmet(?:_|$)/.test(nameForSlot)) return 'helmet'
+  if (/_backpack(?:_|$)/.test(nameForSlot)) return 'backpack'
+  if (/_legs(?:_|$)/.test(nameForSlot)) return 'legs'
+  if (/_arms(?:_|$)/.test(nameForSlot)) return 'arms'
+  if (/_core(?:_|$)|_torso(?:_|$)|_jacket(?:_|$)/.test(nameForSlot)) return 'core'
+  if (/_undersuit(?:_|$)/.test(nameForSlot)) return 'undersuit'
+  return null
+}
+
+function nameImpliesArmorSlot(name) {
+  if (!name) return null
+  const n = name.toLowerCase()
+  if (/\bhelmet\b|\bhelm\b/.test(n)) return 'helmet'
+  if (/\bcore\b|\btorso\b|\bjacket\b/.test(n)) return 'core'
+  if (/\barms\b/.test(n)) return 'arms'
+  if (/\blegs\b|\bpants\b/.test(n)) return 'legs'
+  if (/backpack/.test(n)) return 'backpack'
+  if (/undersuit/.test(n)) return 'undersuit'
+  return null
+}
+
+function nameMatchesArmorSlot(name, slot) {
+  const implied = nameImpliesArmorSlot(name)
+  if (!implied) return true
+  return implied === slot
+}
+
+function lookupLocalizationKey(key, localization) {
+  if (!key) return null
+  return localization[key] || localization._lowerMap?.[key.toLowerCase()] || null
+}
+
+function parseArmorInternalName(internalName) {
+  const n = (internalName || '').toLowerCase()
+  if (!n) return null
+
+  let m = n.match(/^(\w+)_undersuit_helmet_(\d+)_(\d+)_(\d+)$/)
+  if (m) return { mfg: m[1], slot: 'helmet', line: 'undersuit', weight: null, v1: m[2], v2: m[3], v3: m[4] }
+
+  m = n.match(/^(\w+)_undersuit_(\d+)_(\d+)_(\d+)$/)
+  if (m) return { mfg: m[1], slot: 'undersuit', line: 'undersuit', weight: null, v1: m[2], v2: m[3], v3: m[4] }
+
+  m = n.match(/^(\w+)_(combat|utility|env|specialist)_(\w+)_(helmet|arms|core|legs|backpack|undersuit)_(\d+)_(\d+)_(\d+)$/)
+  if (m) {
+    return { mfg: m[1], line: m[2], weight: m[3], slot: m[4], v1: m[5], v2: m[6], v3: m[7] }
+  }
+
+  m = n.match(/^(\w+)_legacy_armor_(\w+)_(helmet|arms|core|legs|backpack)_(\d+)_(\d+)_(\d+)$/)
+  if (m) return { mfg: m[1], line: 'legacy', weight: m[2], slot: m[3], v1: m[4], v2: m[5], v3: m[6] }
+
+  m = n.match(/^(\w+)_(?:legacy_)?armor_(\w+)_(helmet|arms|core|legs|backpack)_(\d+)_(\d+)_(\d+)$/)
+  if (m) return { mfg: m[1], line: 'armor', weight: m[2], slot: m[3], v1: m[4], v2: m[5], v3: m[6] }
+
+  m = n.match(/^(\w+)_env_armor_(\w+)_(helmet|arms|core|legs|backpack)_(\d+)(?:_|$)/)
+  if (m) return { mfg: m[1], line: 'env', weight: m[2], slot: m[3], v1: m[4], v2: '01', v3: '01' }
+
+  return null
+}
+
+function buildArmorLocalizationKeys(parsed) {
+  const { mfg, line, weight, slot, v1, v2, v3 } = parsed
+  const MFG = mfg.toUpperCase()
+  const keys = []
+
+  const push = (...candidates) => {
+    for (const key of candidates) keys.push(key)
+  }
+
+  if (line === 'undersuit') {
+    if (slot === 'helmet') {
+      push(
+        `item_Name_${mfg}_undersuit_helmet_${v1}_${v2}_${v3}`,
+        `item_Name_${MFG}_undersuit_helmet_${v1}_${v2}_${v3}`,
+        `item_Name_${mfg}_undersuit_helmet_0${v1}_0${v2}_0${v3}`,
+      )
+    } else {
+      push(
+        `item_Name_${MFG}_Undersuit_Armor_${v1}_${v2}_${v3}`,
+        `item_Name_${mfg}_undersuit_${v1}_${v2}_${v3}`,
+        `item_Name_${MFG}_undersuit_${v1}_${v2}_${v3}`,
+      )
+    }
+    return keys
+  }
+
+  if (line === 'legacy') {
+    push(
+      `item_Name_${mfg}_legacy_armor_${weight}_${slot}_${v1}_${v2}_${v3}`,
+      `item_Name_${MFG}_legacy_armor_${weight}_${slot}_${v1}_${v2}_${v3}`,
+      `item_Name_${mfg}_legacy_${weight}_armor_01_${slot}`,
+    )
+    return keys
+  }
+
+  if (line === 'armor') {
+    push(
+      `item_Name_${mfg}_armor_${weight}_${slot}_${v1}_${v2}_${v3}`,
+      `item_Name_${MFG}_armor_${weight}_${slot}_${v1}_${v2}_${v3}`,
+      `item_Name_${mfg}_${weight}_armor_${v1}_${slot}`,
+      `item_Name_${mfg}_${weight}_armor_0${v1}_${slot}`,
+    )
+    return keys
+  }
+
+  if (line === 'env') {
+    push(
+      `item_Name_${mfg}_env_${weight}_${slot}_0${v1}`,
+      `item_Name_${mfg}_env_${weight}_${slot}_${v1}`,
+      `item_Name_${mfg}_env_armor_${weight}_${slot}_0${v1}`,
+    )
+    return keys
+  }
+
+  // combat | utility | env | specialist
+  for (const prefix of [`item_Name_${mfg}`, `item_Name_${MFG}`]) {
+    push(
+      `${prefix}_${line}_${weight}_${slot}_${v1}_${v2}_${v3}`,
+      `${prefix}_${line}_${weight}_${slot}_0${v1}_0${v2}_0${v3}`,
+    )
+  }
+  return keys
+}
+
+function appendArmorSlotToName(name, slot) {
+  const label = ARMOR_SLOT_DISPLAY[slot]
+  if (!label || name.toLowerCase().includes(label.toLowerCase())) return name
+  return `${name} ${label}`
+}
+
+/** Slot-aware armor name resolution — never accept a core name for a helmet key, etc. */
+function resolveArmorBlueprintName(internalName, localization) {
+  const parsed = parseArmorInternalName(internalName)
+  if (!parsed) return null
+
+  for (const key of buildArmorLocalizationKeys(parsed)) {
+    const value = lookupLocalizationKey(key, localization)
+    if (value && nameMatchesArmorSlot(value, parsed.slot)) return value
+  }
+
+  // Short-name + slot suffix (colorway shared across set pieces)
+  if (parsed.line === 'specialist' || parsed.line === 'combat' || parsed.line === 'utility') {
+    const { mfg, line, weight, v1 } = parsed
+    const shortKeys = [
+      `item_Name_${mfg}_${line}_${weight}_0${v1}_short`,
+      `item_Name_${mfg}_${line}_${weight}_armor_0${v1}_short`,
+      `item_Name_${mfg.toUpperCase()}_${line}_${weight}_0${v1}_short`,
+    ]
+    for (const sk of shortKeys) {
+      const base = lookupLocalizationKey(sk, localization)
+      if (base) return appendArmorSlotToName(base, parsed.slot)
+    }
+  }
+
+  // Undersuit helmet: reuse body undersuit name + Helmet
+  if (parsed.line === 'undersuit' && parsed.slot === 'helmet') {
+    const bodyParsed = { ...parsed, slot: 'undersuit' }
+    for (const key of buildArmorLocalizationKeys(bodyParsed)) {
+      const value = lookupLocalizationKey(key, localization)
+      if (value) return appendArmorSlotToName(value, 'helmet')
+    }
+  }
+
+  return null
+}
+
 function parseBlueprintDefinitions(localization = {}) {
   console.log('\n[2/7] Parsing blueprint definitions (crafting recipes)...')
   
@@ -1641,12 +1818,12 @@ function parseBlueprintDefinitions(localization = {}) {
       .toLowerCase()
     
     // Look up display name from localization
-    // Keys vary by item type - try multiple patterns
-    let blueprintName = null
+    // Slot-aware armor names first — prevents cross-slot localization bleed (core name on helmet, etc.)
+    let blueprintName = resolveArmorBlueprintName(internalName, localization)
     const namesToTry = [internalName, entityClass].filter(Boolean)
     const locKeyPatterns = []
     
-    for (const name of namesToTry) {
+    if (!blueprintName) for (const name of namesToTry) {
       // Try different key formats
       locKeyPatterns.push(
         `item_Name${name}`,                    // item_NamePOWR_ACOM_S01_SunFlare
@@ -2324,7 +2501,11 @@ function parseBlueprintDefinitions(localization = {}) {
         .replace(/(\d+)x(\d+)/gi, '$1x$2') // Fix dimensions like 2x2
         .trim()
     }
-    
+
+    // FPS armor slot/weight derived before final name validation
+    let armorSlot = detectArmorSlotFromInternalName(internalName || entityClass)
+    let armorWeight = null
+
     // Derive subtype from entityClass for filtering (pistol, rifle, cooler, etc.)
     let subtype = null
     const ecLower = (entityClass || '').toLowerCase()
@@ -2339,20 +2520,8 @@ function parseBlueprintDefinitions(localization = {}) {
       if (!subtype && ecLower.includes('mag')) subtype = 'magazine'
       if (!subtype && ecLower.includes('frag')) subtype = 'grenade'
     }
-    // FPS armor - detect slot and weight
-    let armorSlot = null
-    let armorWeight = null
     if (category === 'FPSArmours') {
       const nameForSlot = (internalName || entityClass || '').toLowerCase()
-      // Use _arms_ / _legs_ tokens — includes('arm') falsely matches "armor" in leg items
-      if (/_helmet(?:_|$)/.test(nameForSlot)) armorSlot = 'helmet'
-      else if (/_backpack(?:_|$)/.test(nameForSlot)) armorSlot = 'backpack'
-      else if (/_legs(?:_|$)/.test(nameForSlot)) armorSlot = 'legs'
-      else if (/_arms(?:_|$)/.test(nameForSlot)) armorSlot = 'arms'
-      else if (/_core(?:_|$)|_torso(?:_|$)|_jacket(?:_|$)/.test(nameForSlot)) armorSlot = 'core'
-      else if (/_undersuit(?:_|$)/.test(nameForSlot)) armorSlot = 'undersuit'
-      
-      // Detect armor weight
       if (ecLower.includes('flightsuit') || ecLower.includes('racer') || ecLower.includes('racing') || ecLower.includes('flight')) {
         armorWeight = 'flight'
       } else if (ecLower.includes('_superheavy_') || ecLower.includes('_superheavy')) {
@@ -2385,6 +2554,17 @@ function parseBlueprintDefinitions(localization = {}) {
         else if (n.includes('stealth')) subtype = 'stealth'
         else if (n.includes('salvag')) subtype = 'salvager'
         else subtype = 'standard'
+      }
+
+      // Reconcile display name with body slot when generic localization bleed occurred
+      if (armorSlot && blueprintName && !nameMatchesArmorSlot(blueprintName, armorSlot)) {
+        const slotSafeName = resolveArmorBlueprintName(internalName, localization)
+        if (slotSafeName) {
+          blueprintName = slotSafeName
+          usedFallbackName = false
+        } else {
+          blueprintName = appendArmorSlotToName(blueprintName, armorSlot)
+        }
       }
     }
     // Vehicle component types - detect from internalName prefix
