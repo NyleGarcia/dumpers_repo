@@ -887,6 +887,40 @@ function parseContractGenerators(localization) {
   let totalContracts = 0
   let contractsWithBlueprints = 0
   
+  // Faction name inference patterns (for when factionReputation is missing)
+  const factionPatterns = {
+    'foxwell': 'Foxwell Enforcement',
+    'bountyhuntersguild': 'Bounty Hunters Guild',
+    'bhg': 'Bounty Hunters Guild',
+    'shubin': 'Shubin Interstellar',
+    'eckhart': 'Eckhart Security',
+    'covalex': 'Covalex',
+    'ftl': 'FTL Courier',
+    'rayari': 'Rayari Incorporated',
+    'headhunters': 'Headhunters',
+    'vaughn': 'Vaughn',
+    'ninetails': 'Nine Tails',
+    'bitzero': 'Bit Zeros',
+    'deadsaint': 'Dead Saints',
+    'citizensforprosperity': 'Citizens For Prosperity',
+    'cfp': 'Citizens For Prosperity',
+    'adagio': 'Adagio Holdings',
+    'ling': 'Ling Family Hauling',
+    'northrock': 'Northrock Service Group',
+    'intersec': 'InterSec Defense Solutions',
+    'unitedwayfarers': 'United Wayfarers Club',
+  }
+  
+  function inferFactionFromPath(filePath, debugName) {
+    const combined = (filePath + ' ' + (debugName || '')).toLowerCase()
+    for (const [pattern, factionName] of Object.entries(factionPatterns)) {
+      if (combined.includes(pattern)) {
+        return factionName
+      }
+    }
+    return null
+  }
+
   for (const file of contractFiles) {
     const json = readJson(file)
     if (!json?._RecordValue_?.generators) continue
@@ -904,6 +938,14 @@ function parseContractGenerators(localization) {
         if (factionMatch) {
           factionKey = factionMatch[1].toLowerCase()
           factionName = factionNames[`factionreputation_${factionKey}`] || factionKey
+        }
+      }
+      
+      // If faction is still unknown, try to infer from file path or debugName
+      if (factionName === 'Unknown' || factionName === factionKey) {
+        const inferredFaction = inferFactionFromPath(file, generator.debugName)
+        if (inferredFaction) {
+          factionName = inferredFaction
         }
       }
       

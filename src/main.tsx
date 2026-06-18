@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import QueryClientProvider from './providers/QueryClientProvider'
 import { AuthProvider } from './contexts/AuthContext'
 import { OrderDraftProvider } from './contexts/OrderDraftContext'
+import { MiningTrackerProvider } from './contexts/MiningTrackerContext'
 import RouterApp from './components/RouterApp'
 import DfpInitGate from './components/DfpInitGate'
 import './index.css'
@@ -19,13 +20,15 @@ if (appElement) {
     root.render(
       <React.StrictMode>
         <AuthProvider>
-          <OrderDraftProvider>
-            <DfpInitGate>
-              <QueryClientProvider>
-                <RouterApp />
-              </QueryClientProvider>
-            </DfpInitGate>
-          </OrderDraftProvider>
+          <MiningTrackerProvider>
+            <OrderDraftProvider>
+              <DfpInitGate>
+                <QueryClientProvider>
+                  <RouterApp />
+                </QueryClientProvider>
+              </DfpInitGate>
+            </OrderDraftProvider>
+          </MiningTrackerProvider>
         </AuthProvider>
       </React.StrictMode>
     )

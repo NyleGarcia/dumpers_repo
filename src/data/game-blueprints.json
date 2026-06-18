@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-06-18T00:56:36.374Z",
+  "_extracted": "2026-06-18T01:11:22.928Z",
   "version": "2026-06-18",
   "blueprints": [
     {
@@ -36514,7 +36514,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -36565,7 +36565,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -36616,7 +36616,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -36667,7 +36667,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -36718,7 +36718,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -36769,7 +36769,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -36894,7 +36894,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Assist People's Alliance Vessel Tranquility",
+          "mission": "InterSec Defense Solutions: Assist People's Alliance Vessel Tranquility",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -36904,7 +36904,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Strategic Bombing",
+          "mission": "InterSec Defense Solutions: Strategic Bombing",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -37058,7 +37058,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Strategic Bombing",
+          "mission": "InterSec Defense Solutions: Strategic Bombing",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -37109,7 +37109,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Assist People's Alliance Vessel Tranquility",
+          "mission": "InterSec Defense Solutions: Assist People's Alliance Vessel Tranquility",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -37160,7 +37160,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -37211,7 +37211,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Strategic Bombing",
+          "mission": "InterSec Defense Solutions: Strategic Bombing",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -37262,7 +37262,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -37313,7 +37313,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -37364,7 +37364,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Assist People's Alliance Vessel Tranquility",
+          "mission": "InterSec Defense Solutions: Assist People's Alliance Vessel Tranquility",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -37415,7 +37415,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -53797,7 +53797,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -53862,7 +53862,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -53927,7 +53927,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -53992,7 +53992,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -98428,7 +98428,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98438,7 +98438,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98448,7 +98448,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98527,7 +98527,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -98537,7 +98537,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -98547,7 +98547,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -98691,7 +98691,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98701,7 +98701,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98711,7 +98711,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98721,7 +98721,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98731,7 +98731,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98741,7 +98741,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -98821,7 +98821,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -98831,7 +98831,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -98841,7 +98841,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -99115,7 +99115,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -99125,7 +99125,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -99135,7 +99135,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -99214,7 +99214,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -99224,7 +99224,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -99234,7 +99234,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -99313,7 +99313,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -99323,7 +99323,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -99333,7 +99333,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -99542,7 +99542,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -99552,7 +99552,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -99562,7 +99562,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -110829,7 +110829,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Assist People's Alliance Vessel Tranquility",
+          "mission": "InterSec Defense Solutions: Assist People's Alliance Vessel Tranquility",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -110908,7 +110908,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Assist People's Alliance Vessel Tranquility",
+          "mission": "InterSec Defense Solutions: Assist People's Alliance Vessel Tranquility",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -110987,7 +110987,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Assist People's Alliance Vessel Tranquility",
+          "mission": "InterSec Defense Solutions: Assist People's Alliance Vessel Tranquility",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111066,7 +111066,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Strategic Bombing",
+          "mission": "InterSec Defense Solutions: Strategic Bombing",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111145,7 +111145,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Strategic Bombing",
+          "mission": "InterSec Defense Solutions: Strategic Bombing",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111224,7 +111224,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Strategic Bombing",
+          "mission": "InterSec Defense Solutions: Strategic Bombing",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111303,7 +111303,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111313,7 +111313,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111323,7 +111323,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111402,7 +111402,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111412,7 +111412,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111422,7 +111422,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111501,7 +111501,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111511,7 +111511,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -111521,7 +111521,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112385,7 +112385,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112395,7 +112395,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112405,7 +112405,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112484,7 +112484,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112494,7 +112494,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112504,7 +112504,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112583,7 +112583,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112593,7 +112593,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112603,7 +112603,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -112682,7 +112682,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112692,7 +112692,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112702,7 +112702,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112781,7 +112781,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112791,7 +112791,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112801,7 +112801,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112880,7 +112880,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112890,7 +112890,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -112900,7 +112900,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -113788,7 +113788,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -113798,7 +113798,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -113808,7 +113808,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -113887,7 +113887,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -113897,7 +113897,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -113907,7 +113907,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -113986,7 +113986,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Stop Rival Attack at ~mission(Location)",
+          "mission": "Headhunters: Stop Rival Attack at ~mission(Location)",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -113996,7 +113996,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Defend ~mission(Location) From Mercs",
+          "mission": "Headhunters: Defend ~mission(Location) From Mercs",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -114006,7 +114006,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: Guard ~mission(Location) From Rivals",
+          "mission": "Headhunters: Guard ~mission(Location) From Rivals",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -114769,7 +114769,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -114779,7 +114779,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -114789,7 +114789,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -114854,7 +114854,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -114864,7 +114864,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -114874,7 +114874,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -114939,7 +114939,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -114949,7 +114949,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -114959,7 +114959,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Pyro"
@@ -115061,7 +115061,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -115112,7 +115112,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -115163,7 +115163,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -115214,7 +115214,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -115265,7 +115265,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -115316,7 +115316,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Tactical Strike Group Needed",
+          "mission": "InterSec Defense Solutions: Tactical Strike Group Needed",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -117700,7 +117700,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -117710,7 +117710,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -117720,7 +117720,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -117785,7 +117785,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -117795,7 +117795,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -117805,7 +117805,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -117870,7 +117870,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -117880,7 +117880,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -117890,7 +117890,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Stanton"
@@ -118006,7 +118006,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118016,7 +118016,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118026,7 +118026,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118091,7 +118091,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118101,7 +118101,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118111,7 +118111,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118176,7 +118176,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118186,7 +118186,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118196,7 +118196,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118261,7 +118261,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118271,7 +118271,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118281,7 +118281,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118346,7 +118346,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118356,7 +118356,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118366,7 +118366,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118431,7 +118431,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_H_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_H_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118441,7 +118441,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_VH_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_VH_Title",
           "chance": 1,
           "locations": [
             "Nyx"
@@ -118451,7 +118451,7 @@
           "standingName": null
         },
         {
-          "mission": "Unknown: @Foxwell_DefendEntitesAndEscort_S_Title",
+          "mission": "Foxwell Enforcement: @Foxwell_DefendEntitesAndEscort_S_Title",
           "chance": 1,
           "locations": [
             "Nyx"

@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-06-18T00:56:36.412Z",
+  "_extracted": "2026-06-18T01:11:22.964Z",
   "missionBlueprints": {
     "AdagioResourceGatheringShipSalvage": [
       {
@@ -7363,7 +7363,7 @@
       "debugName": "BountyHuntersGuild_PAF_EliminateSpecific",
       "title": "Verified Bounty: ~mission(TargetName) | ~mission(Danger)",
       "titleKey": "@bhg_bounty_title_gen_001",
-      "faction": "Unknown",
+      "faction": "Bounty Hunters Guild",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -7382,7 +7382,7 @@
       "debugName": "BHG_ASDFacilityDelving_ResearchWing_EliminateSpecific",
       "title": "Verified Bounty: ~mission(TargetName) at ~mission(Location)",
       "titleKey": "@bhg_bounty_title_ASD_Research_001",
-      "faction": "Unknown",
+      "faction": "Bounty Hunters Guild",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -7401,7 +7401,7 @@
       "debugName": "BHG_ASDFacilityDelving_EngineeringWing_EliminateSpecific",
       "title": "Verified Bounty: ~mission(TargetName) at ~mission(Location)",
       "titleKey": "@bhg_bounty_title_ASD_Engineering_001",
-      "faction": "Unknown",
+      "faction": "Bounty Hunters Guild",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -10625,7 +10625,7 @@
       "debugName": "FoxwellEnforcement_Stanton_DefendShipNamed_E",
       "title": "Yellow Level Contract: Ship Under Attack",
       "titleKey": "@foxwell_DefendShip_E_title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -10644,7 +10644,7 @@
       "debugName": "FoxwellEnforcement_Stanton_DefendShipNamed_M",
       "title": "Orange Level Contract: ~mission(Ship) Needs Assistance",
       "titleKey": "@foxwell_DefendShip_M_title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -10663,7 +10663,7 @@
       "debugName": "FoxwellEnforcement_Stanton_DefendShipNamed_H",
       "title": "Red Level Contract: Ship Under Attack",
       "titleKey": "@foxwell_DefendShip_H_title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -10682,7 +10682,7 @@
       "debugName": "FoxwellEnforcement_Stanton_DefendShipNamed_E_NearLocation",
       "title": "Yellow Level Contract: Ship Under Attack",
       "titleKey": "@foxwell_DefendShip_E_title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -10701,7 +10701,7 @@
       "debugName": "FoxwellEnforcement_Stanton_DefendShipNamed_M_NearLocation",
       "title": "Orange Level Contract: ~mission(Ship) Needs Assistance",
       "titleKey": "@foxwell_DefendShip_M_title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -10720,7 +10720,7 @@
       "debugName": "FoxwellEnforcement_Stanton_DefendShipNamed_H_NearLocation",
       "title": "Red Level Contract: Ship Under Attack",
       "titleKey": "@foxwell_DefendShip_H_title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -11064,7 +11064,7 @@
       "debugName": "Foxwell_PAF_HaulCargo_Multi2ToSingle_Small_Aluminum",
       "title": "Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
       "titleKey": "@Foxwell_HaulCargo_MultiToSingle_title_01",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -11083,7 +11083,7 @@
       "debugName": "Foxwell_PAF_HaulCargo_AtoB_Small_AgriculturalSupplies",
       "title": "Red Level Contract: Recoup Stolen Cargo Haul",
       "titleKey": "@Foxwell_HaulCargo_AToB_PAF_title_01",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -11102,7 +11102,7 @@
       "debugName": "Foxwell_OLP_HaulCargo_AtoB_Small_Carbon",
       "title": "Red Level Contract: Retrieve Cargo Haul",
       "titleKey": "@Foxwell_HaulCargo_AToB_OLP_title_01",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -11521,7 +11521,7 @@
       "debugName": "Foxwell_DefendDestructibleEntities_Stanton_VeryEasy",
       "title": "Yellow Lvl. Contract: Defend ~mission(Objects)",
       "titleKey": "@Foxwell_DefendDestructibleEntites_VE_Title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -11540,7 +11540,7 @@
       "debugName": "Foxwell_DefendDestructibleEntities_Stanton_Easy",
       "title": "Yellow Lvl. Contract: Protect ~mission(Objects)",
       "titleKey": "@Foxwell_DefendDestructibleEntites_E_Title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -11559,7 +11559,7 @@
       "debugName": "Foxwell_DefendDestructibleEntities_Stanton_Medium",
       "title": "Orange Lvl. Contract: Defend ~mission(Objects)",
       "titleKey": "@Foxwell_DefendDestructibleEntites_M_Title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -11578,7 +11578,7 @@
       "debugName": "Foxwell_DefendDestructibleEntities_Stanton_Hard",
       "title": "Orange Lvl. Contract: Protect ~mission(Objects)",
       "titleKey": "@Foxwell_DefendDestructibleEntites_H_Title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -11597,7 +11597,7 @@
       "debugName": "Foxwell_DefendDestructibleEntities_Stanton_VeryHard",
       "title": "Red Lvl. Contract: Defend ~mission(Objects)",
       "titleKey": "@Foxwell_DefendDestructibleEntites_VH_Title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -11616,7 +11616,7 @@
       "debugName": "Foxwell_DefendDestructibleEntities_Stanton_Super",
       "title": "Red Lvl. Contract: Protect ~mission(Objects)",
       "titleKey": "@Foxwell_DefendDestructibleEntites_S_Title_001",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -12385,7 +12385,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_VeryEasy_From",
       "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -12404,7 +12404,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_VeryEasy_To",
       "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -12423,7 +12423,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_Easy",
       "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -12442,7 +12442,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_Medium",
       "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -12461,7 +12461,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_Hard",
       "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -12485,7 +12485,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_VeryHard",
       "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -12509,7 +12509,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_Super",
       "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -12533,7 +12533,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_VeryEasy_From",
       "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -12552,7 +12552,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_VeryEasy_To",
       "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -12571,7 +12571,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_Easy",
       "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -12590,7 +12590,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_Medium",
       "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -12609,7 +12609,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_Hard",
       "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -12633,7 +12633,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_VeryHard",
       "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -12657,7 +12657,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_Super",
       "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -12681,7 +12681,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_VeryEasy_From",
       "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -12700,7 +12700,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_VeryEasy_To",
       "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -12719,7 +12719,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_Easy",
       "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -12738,7 +12738,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_Medium",
       "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -12757,7 +12757,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_Hard",
       "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -12781,7 +12781,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_VeryHard",
       "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -12805,7 +12805,7 @@
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_Super",
       "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-      "faction": "Unknown",
+      "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -13309,7 +13309,7 @@
       "debugName": "IDS_ResourceGathering_CryoP",
       "title": "Recover Vanduul Corpses",
       "titleKey": "@InterSec_ResourceGathering_Cryopods_Title",
-      "faction": "Unknown",
+      "faction": "InterSec Defense Solutions",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -13328,7 +13328,7 @@
       "debugName": "IDS_ResourceGathering_Tech",
       "title": "Recover Vanduul Tech",
       "titleKey": "@InterSec_ResourceGathering_Tech_Title",
-      "faction": "Unknown",
+      "faction": "InterSec Defense Solutions",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -13347,7 +13347,7 @@
       "debugName": "InterSec_Nyx_TSG_FullStrikeOnStation",
       "title": "Tactical Strike Group Needed",
       "titleKey": "@Intersec_TSG_Group_Title_001",
-      "faction": "Unknown",
+      "faction": "InterSec Defense Solutions",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -13371,7 +13371,7 @@
       "debugName": "InterSec_Nyx_TSG_Solo_AssistShipInCombat",
       "title": "Assist People's Alliance Vessel Tranquility",
       "titleKey": "@Intersec_TSG_Assist_Solo_Title_001",
-      "faction": "Unknown",
+      "faction": "InterSec Defense Solutions",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -13395,7 +13395,7 @@
       "debugName": "InterSec_Nyx_TSG_Solo_BombingRun",
       "title": "Strategic Bombing",
       "titleKey": "@Intersec_TSG_BombRun_Solo_Title_001",
-      "faction": "Unknown",
+      "faction": "InterSec Defense Solutions",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -14226,7 +14226,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Stanton_VeryEasy_From",
       "title": "Keep ~mission(Location) Safe",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -14245,7 +14245,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Stanton_VeryEasy_To",
       "title": "Keep ~mission(Location) Safe",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -14264,7 +14264,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Stanton_Easy",
       "title": "Provide Protection at ~mission(Location)",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_E_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -14283,7 +14283,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Stanton_Medium",
       "title": "Secure ~mission(Location) from Upstarts",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_M_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -14302,7 +14302,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Stanton_Hard",
       "title": "Stop Rival Attack at ~mission(Location)",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -14326,7 +14326,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Stanton_VeryHard",
       "title": "Defend ~mission(Location) From Mercs",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -14350,7 +14350,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Stanton_Super",
       "title": "Guard ~mission(Location) From Rivals",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Stanton",
       "blueprintPools": [
@@ -14374,7 +14374,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Pyro_VeryEasy_From",
       "title": "Keep ~mission(Location) Safe",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -14393,7 +14393,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Pyro_VeryEasy_To",
       "title": "Keep ~mission(Location) Safe",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -14412,7 +14412,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Pyro_Easy",
       "title": "Provide Protection at ~mission(Location)",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_E_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -14431,7 +14431,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Pyro_Medium",
       "title": "Secure ~mission(Location) from Upstarts",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_M_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -14450,7 +14450,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Pyro_Hard",
       "title": "Stop Rival Attack at ~mission(Location)",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -14474,7 +14474,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Pyro_VeryHard",
       "title": "Defend ~mission(Location) From Mercs",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -14498,7 +14498,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Pyro_Super",
       "title": "Guard ~mission(Location) From Rivals",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Pyro",
       "blueprintPools": [
@@ -14522,7 +14522,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Nyx_VeryEasy_From",
       "title": "Keep ~mission(Location) Safe",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -14541,7 +14541,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Nyx_VeryEasy_To",
       "title": "Keep ~mission(Location) Safe",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -14560,7 +14560,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Nyx_Easy",
       "title": "Provide Protection at ~mission(Location)",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_E_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -14579,7 +14579,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Nyx_Medium",
       "title": "Secure ~mission(Location) from Upstarts",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_M_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -14598,7 +14598,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Nyx_Hard",
       "title": "Stop Rival Attack at ~mission(Location)",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -14622,7 +14622,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Nyx_VeryHard",
       "title": "Defend ~mission(Location) From Mercs",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -14646,7 +14646,7 @@
       "debugName": "HeadHunters_DefendEntitiesAndEscort_Nyx_Super",
       "title": "Guard ~mission(Location) From Rivals",
       "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-      "faction": "Unknown",
+      "faction": "Headhunters",
       "factionKey": "unknown",
       "system": "Nyx",
       "blueprintPools": [
@@ -19095,7 +19095,7 @@
       "debugName": "RCD_Exclusive",
       "title": "QV Breaker Station Mining Rights (Exclusive)",
       "titleKey": "@shubin_rockcracker_solo_title_01",
-      "faction": "Unknown",
+      "faction": "Shubin Interstellar",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -19114,7 +19114,7 @@
       "debugName": "RCD_Contested",
       "title": "QV Breaker Station Mining Rights (Shared)",
       "titleKey": "@shubin_rockcracker_pvp_title_01",
-      "faction": "Unknown",
+      "faction": "Shubin Interstellar",
       "factionKey": "unknown",
       "system": "Unknown",
       "blueprintPools": [
@@ -24413,7 +24413,7 @@
       {
         "title": "Verified Bounty: ~mission(TargetName) | ~mission(Danger)",
         "titleKey": "@bhg_bounty_title_gen_001",
-        "faction": "Unknown",
+        "faction": "Bounty Hunters Guild",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -25182,7 +25182,7 @@
       {
         "title": "Verified Bounty: ~mission(TargetName) at ~mission(Location)",
         "titleKey": "@bhg_bounty_title_ASD_Research_001",
-        "faction": "Unknown",
+        "faction": "Bounty Hunters Guild",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -25193,7 +25193,7 @@
       {
         "title": "Verified Bounty: ~mission(TargetName) at ~mission(Location)",
         "titleKey": "@bhg_bounty_title_ASD_Engineering_001",
-        "faction": "Unknown",
+        "faction": "Bounty Hunters Guild",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -27096,7 +27096,7 @@
       {
         "title": "Yellow Level Contract: Ship Under Attack",
         "titleKey": "@foxwell_DefendShip_E_title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27105,7 +27105,7 @@
       {
         "title": "Orange Level Contract: ~mission(Ship) Needs Assistance",
         "titleKey": "@foxwell_DefendShip_M_title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27114,7 +27114,7 @@
       {
         "title": "Red Level Contract: Ship Under Attack",
         "titleKey": "@foxwell_DefendShip_H_title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27123,7 +27123,7 @@
       {
         "title": "Yellow Level Contract: Ship Under Attack",
         "titleKey": "@foxwell_DefendShip_E_title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27132,7 +27132,7 @@
       {
         "title": "Orange Level Contract: ~mission(Ship) Needs Assistance",
         "titleKey": "@foxwell_DefendShip_M_title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27141,7 +27141,7 @@
       {
         "title": "Red Level Contract: Ship Under Attack",
         "titleKey": "@foxwell_DefendShip_H_title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27345,7 +27345,7 @@
       {
         "title": "Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
         "titleKey": "@Foxwell_HaulCargo_MultiToSingle_title_01",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -27354,7 +27354,7 @@
       {
         "title": "Red Level Contract: Recoup Stolen Cargo Haul",
         "titleKey": "@Foxwell_HaulCargo_AToB_PAF_title_01",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -27363,7 +27363,7 @@
       {
         "title": "Red Level Contract: Retrieve Cargo Haul",
         "titleKey": "@Foxwell_HaulCargo_AToB_OLP_title_01",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -27434,7 +27434,7 @@
       {
         "title": "Yellow Lvl. Contract: Defend ~mission(Objects)",
         "titleKey": "@Foxwell_DefendDestructibleEntites_VE_Title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27443,7 +27443,7 @@
       {
         "title": "Yellow Lvl. Contract: Protect ~mission(Objects)",
         "titleKey": "@Foxwell_DefendDestructibleEntites_E_Title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27452,7 +27452,7 @@
       {
         "title": "Orange Lvl. Contract: Defend ~mission(Objects)",
         "titleKey": "@Foxwell_DefendDestructibleEntites_M_Title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27461,7 +27461,7 @@
       {
         "title": "Orange Lvl. Contract: Protect ~mission(Objects)",
         "titleKey": "@Foxwell_DefendDestructibleEntites_H_Title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27470,7 +27470,7 @@
       {
         "title": "Red Lvl. Contract: Defend ~mission(Objects)",
         "titleKey": "@Foxwell_DefendDestructibleEntites_VH_Title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -27479,7 +27479,7 @@
       {
         "title": "Red Lvl. Contract: Protect ~mission(Objects)",
         "titleKey": "@Foxwell_DefendDestructibleEntites_S_Title_001",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28126,7 +28126,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28135,7 +28135,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28144,7 +28144,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28153,7 +28153,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28162,7 +28162,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28171,7 +28171,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28180,7 +28180,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28191,7 +28191,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28200,7 +28200,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28209,7 +28209,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -28220,7 +28220,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28229,7 +28229,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28238,7 +28238,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28247,7 +28247,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28256,7 +28256,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28265,7 +28265,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28274,7 +28274,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28285,7 +28285,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28294,7 +28294,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28303,7 +28303,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -28314,7 +28314,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28323,7 +28323,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28332,7 +28332,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28341,7 +28341,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28350,7 +28350,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28359,7 +28359,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28368,7 +28368,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28379,7 +28379,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28388,7 +28388,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28397,7 +28397,7 @@
       {
         "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Foxwell Enforcement",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28632,7 +28632,7 @@
       {
         "title": "Recover Vanduul Corpses",
         "titleKey": "@InterSec_ResourceGathering_Cryopods_Title",
-        "faction": "Unknown",
+        "faction": "InterSec Defense Solutions",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -28641,7 +28641,7 @@
       {
         "title": "Recover Vanduul Tech",
         "titleKey": "@InterSec_ResourceGathering_Tech_Title",
-        "faction": "Unknown",
+        "faction": "InterSec Defense Solutions",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -28652,7 +28652,7 @@
       {
         "title": "Tactical Strike Group Needed",
         "titleKey": "@Intersec_TSG_Group_Title_001",
-        "faction": "Unknown",
+        "faction": "InterSec Defense Solutions",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28663,7 +28663,7 @@
       {
         "title": "Tactical Strike Group Needed",
         "titleKey": "@Intersec_TSG_Group_Title_001",
-        "faction": "Unknown",
+        "faction": "InterSec Defense Solutions",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28674,7 +28674,7 @@
       {
         "title": "Assist People's Alliance Vessel Tranquility",
         "titleKey": "@Intersec_TSG_Assist_Solo_Title_001",
-        "faction": "Unknown",
+        "faction": "InterSec Defense Solutions",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28685,7 +28685,7 @@
       {
         "title": "Assist People's Alliance Vessel Tranquility",
         "titleKey": "@Intersec_TSG_Assist_Solo_Title_001",
-        "faction": "Unknown",
+        "faction": "InterSec Defense Solutions",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28696,7 +28696,7 @@
       {
         "title": "Strategic Bombing",
         "titleKey": "@Intersec_TSG_BombRun_Solo_Title_001",
-        "faction": "Unknown",
+        "faction": "InterSec Defense Solutions",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -28707,7 +28707,7 @@
       {
         "title": "Strategic Bombing",
         "titleKey": "@Intersec_TSG_BombRun_Solo_Title_001",
-        "faction": "Unknown",
+        "faction": "InterSec Defense Solutions",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29141,7 +29141,7 @@
       {
         "title": "QV Breaker Station Mining Rights (Exclusive)",
         "titleKey": "@shubin_rockcracker_solo_title_01",
-        "faction": "Unknown",
+        "faction": "Shubin Interstellar",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -29150,7 +29150,7 @@
       {
         "title": "QV Breaker Station Mining Rights (Shared)",
         "titleKey": "@shubin_rockcracker_pvp_title_01",
-        "faction": "Unknown",
+        "faction": "Shubin Interstellar",
         "system": "Unknown",
         "minStanding": null,
         "maxStanding": null,
@@ -29285,7 +29285,7 @@
       {
         "title": "Keep ~mission(Location) Safe",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29294,7 +29294,7 @@
       {
         "title": "Keep ~mission(Location) Safe",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29303,7 +29303,7 @@
       {
         "title": "Provide Protection at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_E_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29312,7 +29312,7 @@
       {
         "title": "Secure ~mission(Location) from Upstarts",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_M_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29321,7 +29321,7 @@
       {
         "title": "Stop Rival Attack at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29330,7 +29330,7 @@
       {
         "title": "Defend ~mission(Location) From Mercs",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29339,7 +29339,7 @@
       {
         "title": "Guard ~mission(Location) From Rivals",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29350,7 +29350,7 @@
       {
         "title": "Stop Rival Attack at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29359,7 +29359,7 @@
       {
         "title": "Defend ~mission(Location) From Mercs",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29368,7 +29368,7 @@
       {
         "title": "Guard ~mission(Location) From Rivals",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Stanton",
         "minStanding": null,
         "maxStanding": null,
@@ -29379,7 +29379,7 @@
       {
         "title": "Keep ~mission(Location) Safe",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29388,7 +29388,7 @@
       {
         "title": "Keep ~mission(Location) Safe",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29397,7 +29397,7 @@
       {
         "title": "Provide Protection at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_E_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29406,7 +29406,7 @@
       {
         "title": "Secure ~mission(Location) from Upstarts",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_M_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29415,7 +29415,7 @@
       {
         "title": "Stop Rival Attack at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29424,7 +29424,7 @@
       {
         "title": "Defend ~mission(Location) From Mercs",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29433,7 +29433,7 @@
       {
         "title": "Guard ~mission(Location) From Rivals",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29444,7 +29444,7 @@
       {
         "title": "Stop Rival Attack at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29453,7 +29453,7 @@
       {
         "title": "Defend ~mission(Location) From Mercs",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29462,7 +29462,7 @@
       {
         "title": "Guard ~mission(Location) From Rivals",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Pyro",
         "minStanding": null,
         "maxStanding": null,
@@ -29473,7 +29473,7 @@
       {
         "title": "Keep ~mission(Location) Safe",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29482,7 +29482,7 @@
       {
         "title": "Keep ~mission(Location) Safe",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VE_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29491,7 +29491,7 @@
       {
         "title": "Provide Protection at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_E_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29500,7 +29500,7 @@
       {
         "title": "Secure ~mission(Location) from Upstarts",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_M_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29509,7 +29509,7 @@
       {
         "title": "Stop Rival Attack at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29518,7 +29518,7 @@
       {
         "title": "Defend ~mission(Location) From Mercs",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29527,7 +29527,7 @@
       {
         "title": "Guard ~mission(Location) From Rivals",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29538,7 +29538,7 @@
       {
         "title": "Stop Rival Attack at ~mission(Location)",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_H_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29547,7 +29547,7 @@
       {
         "title": "Defend ~mission(Location) From Mercs",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_VH_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,
@@ -29556,7 +29556,7 @@
       {
         "title": "Guard ~mission(Location) From Rivals",
         "titleKey": "@HeadHunters_DefendEntitesAndEscort_S_Title",
-        "faction": "Unknown",
+        "faction": "Headhunters",
         "system": "Nyx",
         "minStanding": null,
         "maxStanding": null,

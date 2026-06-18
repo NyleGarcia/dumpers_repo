@@ -6,6 +6,7 @@ import {
   isContrabandResource,
   isTradeGoodResource,
   SALVAGE_ORDER_MIN_QUALITY,
+  EXTRA_CATALOG_RESOURCE_KEYS,
 } from './extraResources'
 import { isHarvestResource } from './resourceTypes'
 
@@ -31,7 +32,8 @@ function isNoQualityResource(resourceKey: string): boolean {
     isHalogenResource(resourceKey) ||
     isFuelResource(resourceKey) ||
     isContrabandResource(resourceKey) ||
-    isTradeGoodResource(resourceKey)
+    isTradeGoodResource(resourceKey) ||
+    EXTRA_CATALOG_RESOURCE_KEYS.has(resourceKey)
   )
 }
 
