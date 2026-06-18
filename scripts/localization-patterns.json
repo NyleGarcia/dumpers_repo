@@ -1,0 +1,329 @@
+{
+  "_description": "Documented localization patterns for parsing Star Citizen game data. Patterns are grouped by item type and ordered from strongest (most reliable) to weakest (edge cases).",
+  "_usage": "The parse-extracted-data.mjs script uses these patterns to resolve internal names to human-readable display names from global.ini localization.",
+  "_lastUpdated": "2026-06-18",
+  
+  "patterns": {
+    "vehicleComponents": {
+      "_description": "Ship/vehicle components like radars, coolers, power plants, shields, quantum drives",
+      "_priority": 1,
+      "categories": ["COOL", "POWR", "QDRV", "SHLD", "RADR"],
+      "localizationKeyPattern": "item_Name_{CATEGORY}_{MFG}_{SIZE}_{PRODUCT}",
+      "examples": [
+        {
+          "internalName": "SCItem_RADR_CHCO_S00_BroadSpecGo",
+          "localizationKey": "item_Name_RADR_CHCO_S00_BroadSpecGo",
+          "displayName": "BroadSpec-Go"
+        }
+      ],
+      "knownProductMappings": {
+        "broadspecgo": "BroadSpec-Go",
+        "broadspeclite": "Broadspec-Lite",
+        "broadspec": "BroadSpec",
+        "broadspecmax": "BroadSpec-Max",
+        "broadspec_lite": "Broadspec-Lite",
+        "fullspecgo": "FullSpec-Go",
+        "fullspeclite": "FullSpec-Lite",
+        "fullspec": "FullSpec",
+        "fullspecmax": "FullSpec-Max",
+        "observergo": "Observer-Go",
+        "observerlite": "Observer-Lite",
+        "observer": "Observer",
+        "observermax": "Observer-Max",
+        "surveyorgo": "Surveyor-Go",
+        "surveyorlite": "Surveyor-Lite",
+        "surveyor": "Surveyor",
+        "surveyormax": "Surveyor-Max",
+        "zeroflux": "ZeroFlux",
+        "frostburn": "FrostBurn",
+        "coldburst": "ColdBurst",
+        "thermalcore": "ThermalCore",
+        "bracer": "Bracer",
+        "snowblind": "Snowblind",
+        "arctic_standard": "Arctic",
+        "winterextreme": "WinterExtreme",
+        "heatdamp": "HeatDamp",
+        "gelid": "Gelid",
+        "snowpack": "SnowPack",
+        "coolingchamber": "Cooling Chamber",
+        "frigidcore": "FrigidCore",
+        "blizzard": "Blizzard",
+        "ultraflow": "UltraFlow",
+        "dragonfire": "Dragonfire",
+        "endurance": "Endurance",
+        "maelstrom": "Maelstrom",
+        "rampager": "Rampager",
+        "overdrive": "OverDrive",
+        "fierell": "Fierell",
+        "boost": "Boost",
+        "starlight": "Starlight",
+        "solarflare": "SolarFlare",
+        "novastrike": "NovaStrike",
+        "js300": "JS-300",
+        "js400": "JS-400",
+        "mirage": "Mirage",
+        "constellation": "Constellation",
+        "vk00": "VK-00",
+        "rush": "Rush",
+        "pontes": "Pontes",
+        "goliath": "Goliath",
+        "beacon": "Beacon",
+        "atlas": "Atlas",
+        "expedition": "Expedition",
+        "yeager": "Yeager",
+        "hemera": "Hemera",
+        "siren": "Siren",
+        "intrepid": "Intrepid",
+        "progressgo": "Progress-Go",
+        "shimmer": "Shimmer",
+        "fr66": "FR-66",
+        "fr76": "FR-76",
+        "secureshield": "SecureShield",
+        "stopshield": "Stop! Shield",
+        "guardian": "Guardian",
+        "palisade": "Palisade",
+        "allstop": "AllStop",
+        "rampart": "Rampart",
+        "stronghold": "Stronghold",
+        "bulwark": "Bulwark",
+        "forcewall": "ForceWall",
+        "shieldwall": "ShieldWall",
+        "inkg": "INK-G",
+        "inkm": "INK-M"
+      },
+      "notes": [
+        "Vehicle components have the most standardized naming pattern",
+        "Product names are often CamelCase or hyphenated in display",
+        "Size is S00, S01, S02, etc. for component class"
+      ]
+    },
+    
+    "miningLasers": {
+      "_description": "Mining laser equipment",
+      "_priority": 2,
+      "localizationKeyPattern": "item_Mining_MiningLaser_{MANUFACTURER}_{MODEL}_{SIZE}",
+      "manufacturerMappings": {
+        "grin": "Greycat",
+        "shin": "Shubin", 
+        "drak": "Drake",
+        "thrm": "Thermyte",
+        "thcn": "Thermyte"
+      },
+      "modelMappings": {
+        "arbor": "Default",
+        "lancet": "1",
+        "hofstede": "1",
+        "klein": "2",
+        "impact": "1",
+        "helix": "2",
+        "golem": "Default"
+      },
+      "sizeMappings": {
+        "0": ["S0", "SV"],
+        "1": ["S1"],
+        "2": ["S2"],
+        "v": ["SV"]
+      },
+      "examples": [
+        {
+          "internalName": "mining_laser_grin_arbor_s0",
+          "tryKeys": [
+            "item_Mining_MiningLaser_Greycat_Default_S0",
+            "item_Mining_MiningLaser_Greycat_Default_SV"
+          ],
+          "displayName": "Arbor"
+        }
+      ],
+      "notes": [
+        "S0 and SV are sometimes interchangeable in localization keys",
+        "Model names in internal name don't directly match localization - need mapping"
+      ]
+    },
+    
+    "nozzles": {
+      "_description": "Fuel nozzles for mining/refueling",
+      "_priority": 3,
+      "localizationKeyPattern": "Nozzle_FuelGiver_{MFG}_Nozzle{TYPE}_Name",
+      "manufacturerMappings": {
+        "grin": "GRIN",
+        "shin": "SHIN",
+        "misc": "MISC"
+      },
+      "examples": [
+        {
+          "internalName": "Nozzle_FuelGiver_GRIN_NozzleStandard",
+          "localizationKey": "Nozzle_FuelGiver_GRIN_NozzleStandard_Name",
+          "displayName": "Trawler"
+        }
+      ],
+      "generatedFallback": "{Manufacturer} {Type} Nozzle",
+      "notes": [
+        "Nozzle naming is inconsistent in game files",
+        "Fallback naming is acceptable for these"
+      ]
+    },
+    
+    "salvageScrapers": {
+      "_description": "Salvage scraper tools",
+      "_priority": 4,
+      "directMappings": {
+        "salvage_modifier_scraper_small": "item_scraper_GRIN_Small_Name",
+        "salvage_modifier_scraper_medium": "item_scraper_GRIN_Standard_Name",
+        "salvage_modifier_scraper_large": "item_scraper_GRIN_Large_Name",
+        "salvage_modifier_scraper_salvation_small": "item_scraper_GRIN_Small_Name",
+        "salvage_modifier_scraper_salvation_medium": "item_scraper_GRIN_Standard_Name",
+        "salvage_modifier_scraper_salvation_large": "item_scraper_GRIN_Large_Name"
+      },
+      "displayNames": {
+        "item_scraper_GRIN_Small_Name": "Cinch",
+        "item_scraper_GRIN_Standard_Name": "Abrade",
+        "item_scraper_GRIN_Large_Name": "Trawler"
+      },
+      "notes": [
+        "Scrapers use direct mapping lookup table",
+        "All scrapers are currently from Greycat (GRIN)"
+      ]
+    },
+    
+    "tractorBeams": {
+      "_description": "Tractor beam equipment",
+      "_priority": 5,
+      "localizationKeyPattern": "item_Name_TractorBeam_{MFG}_S{SIZE}_{TYPE}",
+      "regex": "wep_tractorbeam_s(\\d+)_(military|utility)_(\\d+)",
+      "examples": [
+        {
+          "internalName": "wep_tractorbeam_s0_utility_01",
+          "localizationKey": "item_Name_TractorBeam_MISC_S0_Utility",
+          "displayName": "TruHold Tractor Beam"
+        }
+      ],
+      "notes": [
+        "Manufacturer is often derived from size and type",
+        "Utility vs Military affects the lookup pattern"
+      ]
+    },
+    
+    "fpsWeapons": {
+      "_description": "Personal/FPS weapons",
+      "_priority": 6,
+      "subtypeDetection": {
+        "patterns": [
+          { "regex": "smg", "subtype": "SMG" },
+          { "regex": "assaultrifle|assault_rifle", "subtype": "Assault Rifle" },
+          { "regex": "sniper", "subtype": "Sniper" },
+          { "regex": "lmg", "subtype": "LMG" },
+          { "regex": "shotgun", "subtype": "Shotgun" },
+          { "regex": "pistol", "subtype": "Pistol" },
+          { "regex": "launcher", "subtype": "Launcher" },
+          { "regex": "railgun", "subtype": "Railgun" },
+          { "regex": "melee|knife|blade", "subtype": "Melee" }
+        ]
+      },
+      "localizationKeyPatterns": [
+        "item_Name_{INTERNAL_NAME}",
+        "{INTERNAL_NAME}_Name"
+      ],
+      "notes": [
+        "FPS weapons typically have more reliable localization",
+        "Subtype detection is based on filename patterns"
+      ]
+    },
+    
+    "commodities": {
+      "_description": "Trade commodities and raw resources",
+      "_priority": 7,
+      "localizationKeyPatterns": [
+        "items_commodities_{NAME}",
+        "item_commodity_{NAME}",
+        "{NAME}"
+      ],
+      "examples": [
+        {
+          "itemName": "harvestable_mineral_1h_sadaryx",
+          "extractedName": "sadaryx",
+          "localizationKey": "items_commodities_sadaryx",
+          "displayName": "Sadaryx"
+        }
+      ],
+      "nameExtraction": {
+        "patterns": [
+          "harvestable_\\w+_\\w+_(\\w+)",
+          "mineral_(\\w+)",
+          "commodity_(\\w+)"
+        ],
+        "fallback": "Last segment after underscore"
+      },
+      "notes": [
+        "Commodity names are typically the last segment of the filename",
+        "Localization keys vary between items_commodities_ and item_commodity_"
+      ]
+    },
+    
+    "ammo": {
+      "_description": "Ammunition types",
+      "_priority": 8,
+      "localizationKeyPatterns": [
+        "item_Name_Ammo_{TYPE}_{SIZE}",
+        "item_ammo_{TYPE}_{SIZE}_Name"
+      ],
+      "notes": [
+        "Ammo typically follows standard naming",
+        "Size may be caliber or general size classification"
+      ]
+    },
+    
+    "armor": {
+      "_description": "Personal armor and undersuits",
+      "_priority": 9,
+      "subtypeDetection": {
+        "patterns": [
+          { "keyword": "flightsuit", "subtype": "Flight" },
+          { "keyword": "racer", "subtype": "Flight" },
+          { "keyword": "undersuit", "subtype": "Light" },
+          { "keyword": "medium", "subtype": "Medium" },
+          { "keyword": "heavy", "subtype": "Heavy" }
+        ]
+      },
+      "notes": [
+        "Armor type detection based on keywords in path/name",
+        "Flight suits are categorized separately"
+      ]
+    }
+  },
+  
+  "generalRules": {
+    "caseHandling": {
+      "description": "All lookups should be case-insensitive",
+      "implementation": "Build lowercase lookup map (_lowerMap) alongside original localization"
+    },
+    "fallbackChain": {
+      "description": "Order of properties to try for display name",
+      "order": [
+        "Direct localization match",
+        "Case-insensitive localization match",
+        "Pattern-based localization lookup",
+        "Generated fallback name"
+      ]
+    },
+    "idNormalization": {
+      "description": "All identifiers stored/compared as lowercase",
+      "applyTo": ["internalName", "file", "itemName", "factionId", "blueprintId"]
+    }
+  },
+  
+  "priorityRule": {
+    "description": "Validation rule for blueprint names based on reward status",
+    "rules": [
+      {
+        "condition": "isReward === true AND usedFallbackName === true",
+        "severity": "WARNING",
+        "message": "Reward blueprints MUST have proper localization - investigate"
+      },
+      {
+        "condition": "isReward === false AND usedFallbackName === true", 
+        "severity": "INFO",
+        "message": "Non-reward blueprints may use fallback names - expected for unreleased items"
+      }
+    ]
+  }
+}
