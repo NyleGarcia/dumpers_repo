@@ -10,10 +10,16 @@ export const FPS_WEAPON_TYPE_OPTIONS = [
 
 export interface BlueprintTaxonomyInput {
   file?: string
+  internalName?: string
   blueprintName?: string
   categoryName?: string
   subCategoryName?: string
+  subtype?: string | null
+  armorWeight?: string | null
+  armorSlot?: string | null
 }
+
+const ARMOR_SLOT_SUBTYPES = new Set(['helmet', 'arms', 'core', 'legs', 'backpack'])
 
 function getFpsWeaponTypeFromFilename(filename: string): string | null {
   const fn = filename.toLowerCase()
@@ -29,53 +35,119 @@ export function formatTaxonomyLabel(value: string | null | undefined): string | 
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
-export function getBlueprintSubType(bp: BlueprintTaxonomyInput): string | null {
-  if (!bp.file) return null
-  const parts = bp.file.split('\\')
-  const filename = parts[parts.length - 1] || ''
+/** Subtype chip labels (matches blueprint filter formatting). */
+export function formatSubtypeLabel(sub: string | null | undefined): string | null {
+  if (!sub) return null
+  return sub.charAt(0).toUpperCase() + sub.slice(1).replace(/([A-Z])/g, ' $1')
+}
 
-  for (let i = 0; i < parts.length - 1; i++) {
-    if (parts[i] === 'vehiclegear' && parts[i + 1] === 'weapons') {
-      let next = parts[i + 2]?.replace('$', '')
-      if (next === 'templates' && parts[i + 3]) next = parts[i + 3]
-      return next || null
-    }
-    if (parts[i] === 'weapons' && parts[i - 1] === 'fpsgear') {
-      const sub = parts[i + 1]?.replace('$', '')
-      if (sub === 'templates') {
-        return getFpsWeaponTypeFromFilename(filename)
+export type BlueprintTagKind = 'category' | 'size' | 'armorWeight' | 'armorSlot' | 'subtype'
+
+export interface BlueprintDisplayTag {
+  kind: BlueprintTagKind
+  label: string
+}
+
+/** Tailwind chip classes aligned with blueprint filter chip colors. */
+export const BLUEPRINT_TAG_CHIP_CLASS: Record<BlueprintTagKind, string> = {
+  category: 'bg-slate-800 text-slate-400 border-slate-700',
+  size: 'bg-blue-950/50 text-blue-400 border-blue-500/30',
+  armorWeight: 'bg-blue-950/50 text-blue-400 border-blue-500/30',
+  armorSlot: 'bg-green-950/50 text-green-400 border-green-500/30',
+  subtype: 'bg-orange-950/50 text-orange-400 border-orange-500/30',
+}
+
+/** Ordered taxonomy tags for blueprint cards and detail views. */
+export function getBlueprintDisplayTags(bp: BlueprintTaxonomyInput): BlueprintDisplayTag[] {
+  const tags: BlueprintDisplayTag[] = []
+  const size = extractComponentSize(bp.categoryName)
+  const baseCategory =
+    size && bp.categoryName ? bp.categoryName.replace(/\s+S\d+$/i, '').trim() : bp.categoryName
+
+  if (baseCategory) {
+    tags.push({ kind: 'category', label: baseCategory })
+  }
+  if (size) {
+    tags.push({ kind: 'size', label: size })
+  }
+
+  const armorWeight = getArmorWeight(bp)
+  if (armorWeight) {
+    const label = formatTaxonomyLabel(armorWeight)
+    if (label) tags.push({ kind: 'armorWeight', label })
+  }
+
+  const armorSlot = getArmorSlot(bp)
+  if (armorSlot) {
+    const label = formatTaxonomyLabel(armorSlot)
+    if (label) tags.push({ kind: 'armorSlot', label })
+  }
+
+  const subType = getBlueprintSubType(bp)
+  if (subType) {
+    const label = formatSubtypeLabel(subType)
+    if (label) tags.push({ kind: 'subtype', label })
+  }
+
+  return tags
+}
+
+export function getBlueprintSubType(bp: BlueprintTaxonomyInput): string | null {
+  const pathKey = bp.file?.includes('\\') ? bp.file : null
+  if (pathKey) {
+    const parts = pathKey.split('\\')
+    const filename = parts[parts.length - 1] || ''
+
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (parts[i] === 'vehiclegear' && parts[i + 1] === 'weapons') {
+        let next = parts[i + 2]?.replace('$', '')
+        if (next === 'templates' && parts[i + 3]) next = parts[i + 3]
+        if (next) return next
       }
-      return sub
-    }
-    if (parts[i] === 'ammo' && parts[i - 1] === 'fpsgear') {
-      const fromFilename = getFpsWeaponTypeFromFilename(filename)
-      if (fromFilename) return fromFilename
-      const folderType = parts[i + 1]?.replace('$', '')
-      if (folderType && FPS_WEAPON_TYPE_OPTIONS.includes(folderType as (typeof FPS_WEAPON_TYPE_OPTIONS)[number])) {
-        return folderType
+      if (parts[i] === 'weapons' && parts[i - 1] === 'fpsgear') {
+        const sub = parts[i + 1]?.replace('$', '')
+        if (sub === 'templates') {
+          const fromFile = getFpsWeaponTypeFromFilename(filename)
+          if (fromFile) return fromFile
+        } else if (sub) {
+          return sub
+        }
       }
-      return null
-    }
-    if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
-      let sub = parts[i + 1]?.replace('$', '')
-      if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
-      if (sub === 'combat') return 'standard'
-      if (sub === 'flightsuit') {
-        if (filename.includes('_helmet')) return 'standard'
-        return 'flightsuit'
+      if (parts[i] === 'ammo' && parts[i - 1] === 'fpsgear') {
+        const fromFilename = getFpsWeaponTypeFromFilename(filename)
+        if (fromFilename) return fromFilename
+        const folderType = parts[i + 1]?.replace('$', '')
+        if (folderType && FPS_WEAPON_TYPE_OPTIONS.includes(folderType as (typeof FPS_WEAPON_TYPE_OPTIONS)[number])) {
+          return folderType
+        }
       }
-      return sub
-    }
-    if (parts[i] === 'vehiclegear' && parts[i + 1] !== 'weapons') {
-      return parts[i + 1]?.replace('$', '') ?? null
+      if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
+        let sub = parts[i + 1]?.replace('$', '')
+        if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
+        if (sub === 'combat') return 'standard'
+        if (sub === 'flightsuit') {
+          if (filename.includes('_helmet')) return 'standard'
+          return 'flightsuit'
+        }
+        if (sub) return sub
+      }
+      if (parts[i] === 'vehiclegear' && parts[i + 1] !== 'weapons') {
+        const sub = parts[i + 1]?.replace('$', '')
+        if (sub) return sub
+      }
     }
   }
+
+  const subtype = bp.subtype?.trim()
+  if (subtype && !ARMOR_SLOT_SUBTYPES.has(subtype)) return subtype
   return null
 }
 
 export function getAmmoDamageType(bp: BlueprintTaxonomyInput): string | null {
-  if (!bp.file || bp.categoryName !== 'Ammo') return null
-  const parts = bp.file.split('\\')
+  if (bp.categoryName !== 'Ammo') return null
+  const pathKey = bp.file?.includes('\\') ? bp.file : null
+  if (!pathKey) return null
+  const parts = pathKey.split('\\')
   const ammoIdx = parts.indexOf('ammo')
   if (ammoIdx < 0) return null
   const segment = parts[ammoIdx + 1]?.replace('$', '')?.toLowerCase()
@@ -104,8 +176,10 @@ function isFlightArmor(parts: string[], filename: string, blueprintName = ''): b
 }
 
 export function getArmorWeight(bp: BlueprintTaxonomyInput): string | null {
-  if (!bp.file) return null
-  const parts = bp.file.split('\\')
+  if (bp.armorWeight) return bp.armorWeight
+  const pathKey = bp.file?.includes('\\') ? bp.file : null
+  if (!pathKey) return null
+  const parts = pathKey.split('\\')
   const filename = parts[parts.length - 1]?.toLowerCase() || ''
   const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
   if (!isArmor) return null
@@ -124,8 +198,10 @@ export function getArmorWeight(bp: BlueprintTaxonomyInput): string | null {
 }
 
 export function getArmorSlot(bp: BlueprintTaxonomyInput): string | null {
-  if (!bp.file) return null
-  const parts = bp.file.split('\\')
+  if (bp.armorSlot) return bp.armorSlot
+  const pathKey = bp.file?.includes('\\') ? bp.file : null
+  if (!pathKey) return null
+  const parts = pathKey.split('\\')
   const filename = parts[parts.length - 1]?.toLowerCase() || ''
   const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
   if (!isArmor) return null

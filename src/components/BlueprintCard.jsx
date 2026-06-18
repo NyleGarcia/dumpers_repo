@@ -1,12 +1,8 @@
 import { useMemo } from 'react'
 import { resourceChipClassName } from '../config/resourceTypes'
 import { slugifyResourceName } from '../lib/blueprintResources'
-import {
-  formatTaxonomyLabel,
-  getArmorSlot,
-  getArmorWeight,
-  getBlueprintSubType,
-} from '../lib/blueprintTaxonomy'
+import { getBlueprintDisplayTags } from '../lib/blueprintTaxonomy'
+import BlueprintCategoryTags from './BlueprintCategoryTags'
 import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
 import { calculateBlueprintDfpWithParts, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
 import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
@@ -42,9 +38,7 @@ export default function BlueprintCard({
   if (!(blueprint.internalName || blueprint.file) || !blueprint.blueprintName) return null
 
   const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
-  const subType = getBlueprintSubType(blueprint)
-  const armorWeight = getArmorWeight(blueprint)
-  const armorSlot = getArmorSlot(blueprint)
+  const categoryTags = getBlueprintDisplayTags(blueprint)
   const dfpLabel = formatDfpLabel(dfp.total)
   const dfpBreakdown = formatCraftDfpBreakdown(dfp)
   const specLine = formatBlueprintSpecLine(blueprint)
@@ -71,7 +65,7 @@ export default function BlueprintCard({
   }
 
   const hasOverride = isSuperAdmin && effectiveIsOrderable !== catalogIsReward
-  const hasCategoryTags = !!(blueprint.categoryName || subType || armorWeight || armorSlot)
+  const hasCategoryTags = categoryTags.length > 0
   const hasRewardLabel = typeof blueprint.isReward === 'boolean' || isSuperAdmin
   const showFooter = showTargetControl || hasCategoryTags || hasRewardLabel
 
@@ -183,30 +177,7 @@ export default function BlueprintCard({
             <div className="mt-3 pt-2.5 border-t border-slate-700">
               <div className="flex items-end justify-between gap-2">
                 <div className="flex-1 min-w-0 space-y-1.5">
-                  {hasCategoryTags && (
-                    <div className="flex flex-wrap gap-1">
-                      {blueprint.categoryName && (
-                        <span className="px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded text-[10px] border border-slate-700">
-                          {blueprint.categoryName}
-                        </span>
-                      )}
-                      {armorWeight && (
-                        <span className="px-1.5 py-0.5 bg-blue-950/50 text-blue-400 rounded text-[10px] border border-blue-500/30">
-                          {formatTaxonomyLabel(armorWeight)}
-                        </span>
-                      )}
-                      {armorSlot && (
-                        <span className="px-1.5 py-0.5 bg-green-950/50 text-green-400 rounded text-[10px] border border-green-500/30">
-                          {formatTaxonomyLabel(armorSlot)}
-                        </span>
-                      )}
-                      {subType && (
-                        <span className="px-1.5 py-0.5 bg-orange-950/50 text-orange-400 rounded text-[10px] border border-orange-500/30">
-                          {formatTaxonomyLabel(subType)}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  {hasCategoryTags && <BlueprintCategoryTags blueprint={blueprint} size="sm" />}
                   {hasRewardLabel && (
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                       <span className="text-xs text-slate-500">

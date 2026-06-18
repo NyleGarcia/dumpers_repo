@@ -19,6 +19,7 @@ import {
 import { pricingForBlueprintLine } from '../lib/orderPricing'
 import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
+import BlueprintCategoryTags from './BlueprintCategoryTags'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
 import AppModal from './layout/AppModal'
 
@@ -55,6 +56,9 @@ interface BlueprintRecord {
   internalName?: string
   blueprintName?: string
   categoryName?: string
+  subtype?: string | null
+  armorWeight?: string | null
+  armorSlot?: string | null
   isReward?: boolean
   craftTime?: { hours?: number; minutes?: number; seconds?: number }
   slots?: BlueprintSlot[]
@@ -66,7 +70,6 @@ interface BlueprintRecord {
 
 interface BlueprintDetailsModalProps {
   blueprint: BlueprintRecord
-  subTypeLabel?: string | null
   onClose: () => void
   isApproved: boolean
   isGuest?: boolean
@@ -81,7 +84,6 @@ interface BlueprintDetailsModalProps {
 
 export default function BlueprintDetailsModal({
   blueprint,
-  subTypeLabel,
   onClose,
   isApproved,
   isGuest = false,
@@ -192,13 +194,8 @@ export default function BlueprintDetailsModal({
       zIndex={60}
     >
       <div className="space-y-4">
-        <div className="flex flex-wrap gap-2 text-sm">
-          <span className="px-2.5 py-1 bg-slate-800 rounded-lg text-slate-300">
-            {blueprint.categoryName || 'Unknown'}
-          </span>
-          {subTypeLabel && (
-            <span className="px-2.5 py-1 bg-slate-800 rounded-lg text-slate-300">{subTypeLabel}</span>
-          )}
+        <div className="flex flex-wrap gap-2 text-sm items-center">
+          <BlueprintCategoryTags blueprint={blueprint} size="md" />
           {effectiveIsOrderable ? (
             <span className="px-2.5 py-1 bg-amber-900/50 text-amber-400 rounded-lg">★ Reward</span>
           ) : (

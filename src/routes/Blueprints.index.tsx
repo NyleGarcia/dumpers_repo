@@ -14,6 +14,7 @@ import {
   resolveIsOrderable,
 } from '../lib/blueprintOrderable'
 import {
+  formatSubtypeLabel,
   getArmorSlot as getArmorSlotFromPath,
   getArmorWeight as getArmorWeightFromTaxonomy,
   getBlueprintSubType,
@@ -21,17 +22,11 @@ import {
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
-const getSubType = (bp) => {
-  const fromPath = getBlueprintSubType(bp)
-  if (fromPath) return fromPath
-  // Ignore body-slot values wrongly stored as subtype in generated data
-  if (bp.subtype && !ARMOR_SLOT_OPTIONS.includes(bp.subtype)) return bp.subtype
-  return null
-}
+const getSubType = (bp) => getBlueprintSubType(bp)
 
-const getArmorWeight = (bp) => getArmorWeightFromTaxonomy(bp) || bp.armorWeight || null
+const getArmorWeight = (bp) => getArmorWeightFromTaxonomy(bp)
 
-const getArmorSlot = (bp) => getArmorSlotFromPath(bp) || bp.armorSlot || null
+const getArmorSlot = (bp) => getArmorSlotFromPath(bp)
 
 const MAIN_CATEGORY_GROUPS = {
   'FPS Weapons': ['FPSWeapons'],
@@ -54,10 +49,7 @@ const STATIC_SUBTYPE_OPTIONS = {
   'FPS Armour': ['standard', 'flightsuit', 'undersuit', 'explorer', 'salvager', 'stealth'],
 }
 
-const formatSubType = (sub) => {
-  if (!sub) return sub
-  return sub.charAt(0).toUpperCase() + sub.slice(1).replace(/([A-Z])/g, ' $1')
-}
+const formatSubType = formatSubtypeLabel
 
 export default function BlueprintsRoute() {
   const { 
@@ -713,7 +705,6 @@ export default function BlueprintsRoute() {
       {selectedBlueprint && (
         <BlueprintDetailsModal
           blueprint={selectedBlueprint}
-          subTypeLabel={formatSubType(getSubType(selectedBlueprint))}
           onClose={() => setSelectedBlueprint(null)}
           isApproved={isApproved}
           isGuest={isGuest}
