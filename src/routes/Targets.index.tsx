@@ -21,7 +21,7 @@ function formatDropChance(chance: number | null | undefined): string | null {
   return `${Math.round(chance * 100)}% BP drop`
 }
 
-function MissionRegionBadge({ regions, subRegion }: { regions: Region[]; subRegion?: string | null }) {
+function MissionRegionBadge({ regions, subRegion, category }: { regions: Region[]; subRegion?: string | null; category?: string | null }) {
   // Build display: "Pyro A" or just "Pyro" if no subRegion
   const systemLabel = regions.length === 0
     ? 'Unknown'
@@ -35,14 +35,24 @@ function MissionRegionBadge({ regions, subRegion }: { regions: Region[]; subRegi
     ? getRegionInfo(regions[0], subRegion) 
     : null
   
-  // Build tooltip
-  let tooltip: string | undefined
+  // Build tooltip lines
+  const tooltipLines: string[] = []
+  
+  // Add category if available
+  if (category) {
+    tooltipLines.push(`Category: ${category}`)
+  }
+  
+  // Add region/location info
   if (regionInfo) {
-    tooltip = `${regionInfo.label}\nLocations: ${regionInfo.locations.join(', ')}`
+    tooltipLines.push(`${regionInfo.label}`)
+    tooltipLines.push(`Locations: ${regionInfo.locations.join(', ')}`)
   } else if (!subRegion && regions.includes('pyro')) {
     // Pyro without sub-region - likely system-wide
-    tooltip = 'Likely available system-wide'
+    tooltipLines.push('Likely available system-wide')
   }
+  
+  const tooltip = tooltipLines.length > 0 ? tooltipLines.join('\n') : undefined
 
   return (
     <span
@@ -151,7 +161,7 @@ function MissionMetaLine({
         </span>
       )}
       <MissionCategoryBadge category={category} />
-      <MissionRegionBadge regions={regions} subRegion={subRegion} />
+      <MissionRegionBadge regions={regions} subRegion={subRegion} category={category} />
       <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} />
       {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
       {aUecText && <span className="text-[10px] text-yellow-400/90">{aUecText}</span>}

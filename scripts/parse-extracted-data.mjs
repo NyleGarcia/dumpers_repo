@@ -1082,9 +1082,22 @@ function parseContractGenerators(localization) {
         if (missionTypeFile) {
           const catMatch = missionTypeFile.match(/missiontype\/pu\/([^/]+)\.json$/i)
           if (catMatch) {
-            category = catMatch[1].replace(/_/g, ' ')
-            // Capitalize first letter of each word
-            category = category.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+            let catName = catMatch[1].replace(/_/g, ' ')
+            // Handle compound words (bountyhunter -> Bounty Hunter, shipmining -> Ship Mining)
+            catName = catName
+              .replace(/bountyhunter/i, 'Bounty Hunter')
+              .replace(/shipmining/i, 'Ship Mining')
+              .replace(/groundmining/i, 'Ground Vehicle Mining')
+              .replace(/fpsmining/i, 'Hand Mining')
+              .replace(/hauling interstellar/i, 'Hauling - Interstellar')
+              .replace(/hauling local/i, 'Hauling - Local')
+              .replace(/hauling planetary/i, 'Hauling - Planetary')
+              .replace(/hauling solar/i, 'Hauling - Solar')
+            // Capitalize first letter of each word if not already handled
+            if (!/[A-Z]/.test(catName)) {
+              catName = catName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+            }
+            category = catName
           }
         }
         // Fallback: infer from file path or debugName

@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-06-18T04:06:37.631Z",
+  "_extracted": "2026-06-18T04:59:00.031Z",
   "missionBlueprints": {
     "AdagioResourceGatheringShipSalvage": [
       {
@@ -7479,7 +7479,7 @@
       "factionKey": "unknown",
       "system": "Unknown",
       "region": null,
-      "category": "Bountyhunter",
+      "category": "Bounty Hunter",
       "blueprintPools": [
         {
           "key": "bountyhuntersguild_paf_eliminatespecific",
@@ -7500,7 +7500,7 @@
       "factionKey": "unknown",
       "system": "Unknown",
       "region": null,
-      "category": "Bountyhunter",
+      "category": "Bounty Hunter",
       "blueprintPools": [
         {
           "key": "bhg_asdfacilitydelving_researchwing_eliminatespecific",
@@ -7521,7 +7521,7 @@
       "factionKey": "unknown",
       "system": "Unknown",
       "region": null,
-      "category": "Bountyhunter",
+      "category": "Bounty Hunter",
       "blueprintPools": [
         {
           "key": "bhg_asdfacilitydelving_engineeringwing_eliminatespecific",
@@ -20165,7 +20165,7 @@
       "factionKey": "unknown",
       "system": "Unknown",
       "region": null,
-      "category": "Shipmining",
+      "category": "Ship Mining",
       "blueprintPools": [
         {
           "key": "rdc_exclusive",
@@ -20186,7 +20186,7 @@
       "factionKey": "unknown",
       "system": "Unknown",
       "region": null,
-      "category": "Shipmining",
+      "category": "Ship Mining",
       "blueprintPools": [
         {
           "key": "rdc_exclusive",
@@ -25862,7 +25862,7 @@
         "faction": "Bounty Hunters Guild",
         "system": "Unknown",
         "region": null,
-        "category": "Bountyhunter",
+        "category": "Bounty Hunter",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 0
@@ -26733,7 +26733,7 @@
         "faction": "Bounty Hunters Guild",
         "system": "Unknown",
         "region": null,
-        "category": "Bountyhunter",
+        "category": "Bounty Hunter",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 50
@@ -26746,7 +26746,7 @@
         "faction": "Bounty Hunters Guild",
         "system": "Unknown",
         "region": null,
-        "category": "Bountyhunter",
+        "category": "Bounty Hunter",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 50
@@ -31258,7 +31258,7 @@
         "faction": "Shubin Interstellar",
         "system": "Unknown",
         "region": null,
-        "category": "Shipmining",
+        "category": "Ship Mining",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 0
@@ -31269,7 +31269,7 @@
         "faction": "Shubin Interstellar",
         "system": "Unknown",
         "region": null,
-        "category": "Shipmining",
+        "category": "Ship Mining",
         "minStanding": null,
         "maxStanding": null,
         "repPoints": 0
