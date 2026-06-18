@@ -315,12 +315,11 @@ export function formatBlueprintUnlockBadge(blueprintFileId: string, isReward?: b
   }
 
   if (info.unlockStandingName && info.unlockMinReputation != null && info.unlockMinReputation > 0) {
-    const factionPrefix = info.factionName ? `${info.factionName}: ` : ''
-    return `${factionPrefix}${info.unlockStandingName} (${info.unlockMinReputation.toLocaleString()} rep)`
+    return `${info.unlockStandingName} (${info.unlockMinReputation.toLocaleString()} rep)`
   }
 
-  if (info.factionName) {
-    return `${info.factionName}: Neutral (0 rep)`
+  if (info.unlockMinReputation === 0 || info.unlockStandingName) {
+    return `Neutral (0 rep)`
   }
 
   return 'Vendor / default — no rep required'
