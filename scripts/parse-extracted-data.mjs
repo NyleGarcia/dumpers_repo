@@ -1068,6 +1068,48 @@ function parseContractGenerators(localization) {
           }
         }
         
+        // Extract region from debugName (e.g., RegionA, RegionB, RegionC, RegionD)
+        let region = null
+        const debugName = contract.debugName || ''
+        const regionMatch = debugName.match(/Region([A-Z])/i)
+        if (regionMatch) {
+          region = regionMatch[1].toUpperCase() // Just the letter: A, B, C, D
+        }
+        
+        // Extract mission category from missionTypeOverride or paramOverrides
+        let category = null
+        const missionTypeFile = contract.paramOverrides?.missionTypeOverride || contract.missionTypeOverride
+        if (missionTypeFile) {
+          const catMatch = missionTypeFile.match(/missiontype\/pu\/([^/]+)\.json$/i)
+          if (catMatch) {
+            category = catMatch[1].replace(/_/g, ' ')
+            // Capitalize first letter of each word
+            category = category.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+          }
+        }
+        // Fallback: infer from file path or debugName
+        if (!category) {
+          const pathLower = (contract.__path || '').toLowerCase()
+          const debugLower = debugName.toLowerCase()
+          if (pathLower.includes('bountyhunter') || debugLower.includes('bhg_') || debugLower.includes('bounty')) {
+            category = 'Bounty Hunter'
+          } else if (pathLower.includes('mercenary') || debugLower.includes('merc')) {
+            category = 'Mercenary'
+          } else if (pathLower.includes('salvage') || debugLower.includes('salvage')) {
+            category = 'Salvage'
+          } else if (pathLower.includes('shipmining') || debugLower.includes('shipmining')) {
+            category = 'Ship Mining'
+          } else if (pathLower.includes('groundmining') || debugLower.includes('groundmining')) {
+            category = 'Ground Vehicle Mining'
+          } else if (pathLower.includes('fpsmining') || debugLower.includes('handmin')) {
+            category = 'Hand Mining'
+          } else if (pathLower.includes('hauling') || debugLower.includes('hauling')) {
+            category = 'Hauling'
+          } else if (pathLower.includes('investigation') || debugLower.includes('investigation')) {
+            category = 'Investigation'
+          }
+        }
+        
         if (blueprintPools.length > 0) {
           contractsWithBlueprints++
           
@@ -1079,6 +1121,8 @@ function parseContractGenerators(localization) {
             faction: factionName,
             factionKey,
             system,
+            region,
+            category,
             blueprintPools,
             minStanding,
             maxStanding,
@@ -1097,6 +1141,8 @@ function parseContractGenerators(localization) {
               titleKey,
               faction: factionName,
               system,
+              region,
+              category,
               minStanding,
               maxStanding,
               repPoints

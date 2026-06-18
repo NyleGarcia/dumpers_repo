@@ -11,6 +11,7 @@ import {
   formatRepReward,
   getBlueprintUnlockInfo,
 } from '../lib/missionAcquisition'
+import { getRegionInfo } from '../lib/missionConstants'
 import BrowseMissionsView from '../components/BrowseMissionsView'
 
 type ViewMode = 'tracker' | 'browse'
@@ -20,23 +21,45 @@ function formatDropChance(chance: number | null | undefined): string | null {
   return `${Math.round(chance * 100)}% BP drop`
 }
 
-function MissionRegionBadge({ regions }: { regions: Region[] }) {
-  const label =
-    regions.length === 0
-      ? 'Unknown'
-      : regions.map((r) => r.charAt(0).toUpperCase() + r.slice(1)).join(', ')
-
+function MissionRegionBadge({ regions, subRegion }: { regions: Region[]; subRegion?: string | null }) {
+  // Build display: "Pyro A" or just "Pyro" if no subRegion
+  const systemLabel = regions.length === 0
+    ? 'Unknown'
+    : regions.map((r) => r.charAt(0).toUpperCase() + r.slice(1)).join(', ')
+  
+  const label = subRegion ? `${systemLabel} ${subRegion}` : systemLabel
   const isUnknown = regions.length === 0
+
+  // Get tooltip info for subRegion
+  const regionInfo = subRegion && regions.length === 1 
+    ? getRegionInfo(regions[0], subRegion) 
+    : null
+  const tooltip = regionInfo 
+    ? `${regionInfo.label}\nLocations: ${regionInfo.locations.join(', ')}${regionInfo.terminalLocations.length > 0 ? `\nTerminals: ${regionInfo.terminalLocations.join(', ')}` : ''}`
+    : undefined
 
   return (
     <span
-      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border ${
+      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border cursor-help ${
         isUnknown
           ? 'bg-slate-800/60 text-slate-500 border-slate-600/40'
           : 'bg-violet-950/50 text-violet-300 border-violet-500/40'
       }`}
+      title={tooltip}
     >
       {label}
+    </span>
+  )
+}
+
+function MissionCategoryBadge({ category }: { category?: string | null }) {
+  if (!category) return null
+  
+  return (
+    <span
+      className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/40"
+    >
+      {category}
     </span>
   )
 }
@@ -80,6 +103,8 @@ function MissionRepBadge({
 
 function MissionMetaLine({
   regions,
+  subRegion,
+  category,
   repMin,
   repMax,
   minStandingName,
@@ -90,6 +115,8 @@ function MissionMetaLine({
   aUecMax = 0,
 }: {
   regions: Region[]
+  subRegion?: string | null
+  category?: string | null
   repMin?: number | null
   repMax?: number | null
   minStandingName?: string | null
@@ -117,7 +144,8 @@ function MissionMetaLine({
           Illegal
         </span>
       )}
-      <MissionRegionBadge regions={regions} />
+      <MissionCategoryBadge category={category} />
+      <MissionRegionBadge regions={regions} subRegion={subRegion} />
       <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} />
       {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
       {aUecText && <span className="text-[10px] text-yellow-400/90">{aUecText}</span>}
@@ -198,6 +226,8 @@ function MissionChecklistGroups({
                       <p className={`text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>{mission.mission}</p>
                       <MissionMetaLine
                         regions={mission.regions}
+                        subRegion={mission.subRegion}
+                        category={mission.category}
                         repMin={mission.repMin}
                         repMax={mission.repMax}
                         minStandingName={mission.minStandingName}
@@ -552,6 +582,8 @@ export default function TargetsRoute() {
                                   <p className={`text-xs leading-snug ${m.isLawful ? 'text-green-300' : 'text-red-400'}`}>{m.mission}</p>
                                   <MissionMetaLine
                                     regions={m.regions}
+                                    subRegion={m.subRegion}
+                                    category={m.category}
                                     repMin={m.repMin}
                                     repMax={m.repMax}
                                     minStandingName={m.minStandingName}

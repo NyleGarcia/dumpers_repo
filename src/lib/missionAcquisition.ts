@@ -14,6 +14,8 @@ export interface MissionRepInfo {
   missionType: string | null
   missionLocations: string[]
   repPoints: number
+  region: string | null
+  category: string | null
 }
 
 export interface BlueprintUnlockInfo {
@@ -40,6 +42,8 @@ type MissionPoolEntry = {
   titleKey: string
   faction: string
   system: string
+  region: string | null
+  category: string | null
   minStanding: { name: string; minReputation: number } | null
   maxStanding: { name: string; minReputation: number } | null
   repPoints: number
@@ -144,6 +148,8 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     missionType: null,
     missionLocations: [],
     repPoints: 0,
+    region: null,
+    category: null,
   }
 
   // Normalize pool key - strip BP_MISSIONREWARD_ or BP_REWARDS_ prefix and lowercase
@@ -185,6 +191,8 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     missionType: null,
     missionLocations: mission.system ? [mission.system] : [],
     repPoints: mission.repPoints,
+    region: mission.region ?? null,
+    category: mission.category ?? null,
   }
 }
 
@@ -207,6 +215,8 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     missionType: null,
     missionLocations: [],
     repPoints: 0,
+    region: null,
+    category: null,
   }
 
   if (/uninitialized/i.test(missionLabel)) {
@@ -232,6 +242,8 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
           missionType: null,
           missionLocations: mission.system ? [mission.system] : [],
           repPoints: mission.repPoints,
+          region: mission.region ?? null,
+          category: mission.category ?? null,
         }
       }
     }
