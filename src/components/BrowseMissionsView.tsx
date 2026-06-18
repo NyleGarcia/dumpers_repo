@@ -123,8 +123,12 @@ export default function BrowseMissionsView({
       if (bps.length === 0) continue
       
       for (const mission of missionEntries) {
-        // Skip placeholder titles first
-        if (!mission.title || mission.title.includes('~mission') || mission.title.startsWith('@')) continue
+        // Skip placeholder/unlocalized titles
+        if (!mission.title || 
+            mission.title.includes('~mission') || 
+            mission.title.startsWith('@') ||
+            mission.title.includes('UNINITIALIZED') ||
+            mission.title.includes('PLACEHOLDER')) continue
         
         // Dedupe by title + faction + system (same mission can appear in multiple systems)
         const dedupeKey = `${mission.title}|${mission.faction}|${mission.system || 'unknown'}`
