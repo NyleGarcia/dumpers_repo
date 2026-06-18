@@ -1199,19 +1199,22 @@ function parseBlueprintDefinitions(localization = {}) {
       .replace(/_scitem$/i, '')
     
     // Look up display name from localization
-    // Keys vary by item type:
-    //   Vehicle weapons: item_NameAMRS_LaserCannon_S1 (no underscore after Name)
-    //   Armor/gear: item_Name_ccc_medium_armor_arms_01_01_01 (underscore after Name_)
-    //   Mission items: item_Name_Carryable_2H_CY_CollectorMaterial_001 (mixed case with underscore)
+    // Keys vary by item type - try multiple patterns
     let blueprintName = null
-    const locKeyPatterns = [
-      `item_Name${internalName}`,                           // AMRS_LaserCannon_S1
-      `item_Name_${internalName}`,                          // item_Name_Carryable_2H... (mission items, mixed case)
-      `item_Name_${internalName?.toLowerCase()}`,           // item_Name_ccc_medium_armor... (armor, lowercase)
-      `item_Name${entityClass}`,                            // amrs_lasercannon_s1
-      `item_Name_${entityClass}`,                           // item_Name_entityclass (armor pattern)
-      `item_Name${internalName?.toLowerCase()}`,            // lowercase version
-    ]
+    const namesToTry = [internalName, entityClass].filter(Boolean)
+    const locKeyPatterns = []
+    
+    for (const name of namesToTry) {
+      // Try different key formats
+      locKeyPatterns.push(
+        `item_Name${name}`,                    // item_NamePOWR_ACOM_S01_SunFlare
+        `item_Name${name}_SCItem`,             // item_NamePOWR_ACOM_S01_SunFlare_SCItem  
+        `item_Name_${name}`,                   // item_Name_Carryable_2H...
+        `item_Name${name?.toLowerCase()}`,     // lowercase
+        `item_Name_${name?.toLowerCase()}`,    // item_Name_ccc_medium_armor...
+      )
+    }
+    
     for (const key of locKeyPatterns) {
       if (key && localization[key]) {
         blueprintName = localization[key]
@@ -1269,12 +1272,18 @@ function parseBlueprintDefinitions(localization = {}) {
       
       subtype = armorSlot // Use slot as subtype for armor
     }
-    // Vehicle component types
+    // Vehicle component types - detect from internalName prefix
     if (category.startsWith('VehicleComponent')) {
-      if (ecLower.includes('cooler')) subtype = 'cooler'
-      else if (ecLower.includes('power')) subtype = 'power_plant'
-      else if (ecLower.includes('shield')) subtype = 'shield'
-      else if (ecLower.includes('quantum')) subtype = 'quantum_drive'
+      const nameLower = (internalName || '').toLowerCase()
+      if (nameLower.startsWith('cool_') || nameLower.includes('cooler')) subtype = 'cooler'
+      else if (nameLower.startsWith('powr_') || nameLower.includes('powerplant')) subtype = 'powerplant'
+      else if (nameLower.startsWith('shld_') || nameLower.includes('shield')) subtype = 'shield'
+      else if (nameLower.startsWith('qdrv_') || nameLower.includes('quantum')) subtype = 'quantumdrive'
+      else if (nameLower.startsWith('radr_') || nameLower.includes('radar')) subtype = 'radar'
+      else if (nameLower.startsWith('mining_laser') || nameLower.includes('mininglaser')) subtype = 'mininglaser'
+      else if (nameLower.startsWith('tractor_beam') || nameLower.includes('tractorbeam')) subtype = 'tractorbeam'
+      else if (nameLower.includes('refuel') || nameLower.includes('fuel_') || nameLower.includes('fuelgiver') || nameLower.includes('nozzle')) subtype = 'refuelling'
+      else if (nameLower.includes('salvage')) subtype = 'salvage'
     }
     // Vehicle weapon types - detect damage type from internal name
     if (category.startsWith('VehicleWeapons')) {
