@@ -381,19 +381,22 @@ function ResourceSlotCard({
   onQualityChange,
   modifierResults,
 }: ResourceSlotCardProps) {
-  const hasModifiers = modifierResults.length > 0
   const option = slot.options?.[0]
   
   // Get resource-specific quality bands if available
   const resourceName = option?.resourceName || option?.entityName || ''
   const bands = getResourceBands(resourceName)
   
+  // Check if this slot has modifiers defined in the blueprint data
+  const hasModifiers = (option?.modifiers?.length ?? 0) > 0
+  
   // Check if this is a mineable resource (has SCU measurement) vs a manufactured item
   const isMineable = (option?.standardCargoUnits ?? 0) > 0
   // Items (non-mineable) like commodities have no quality
   const isItem = option?.type === 'item'
-  // Show quality selector if it's a mineable resource (even without modifiers)
-  const showQualitySelector = isMineable && !isItem
+  
+  // Show quality selector if: has modifiers OR is a mineable resource (not an item)
+  const showQualitySelector = hasModifiers || (isMineable && !isItem)
 
   return (
     <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">

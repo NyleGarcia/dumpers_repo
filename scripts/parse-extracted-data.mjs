@@ -1250,6 +1250,32 @@ function parseBlueprintDefinitions(localization = {}) {
             const locKey = slotDisplayName.slice(1)
             slotDisplayName = localization[locKey] || slotDebugName
           }
+          
+          // Extract modifiers from slot context
+          const slotModifiers = []
+          const contextModifiers = option.context?.find(c => c && c._Type_ === 'CraftingCostContext_ResultGameplayPropertyModifiers')
+          if (contextModifiers?.gameplayPropertyModifiers?.gameplayPropertyModifiers) {
+            for (const mod of contextModifiers.gameplayPropertyModifiers.gameplayPropertyModifiers) {
+              // Extract property name from record path
+              const propPath = mod.gameplayPropertyRecord || ''
+              const propMatch = propPath.match(/gpp_([^/]+)\.json$/i)
+              const property = propMatch ? propMatch[1] : 'unknown'
+              
+              // Extract value ranges
+              for (const range of (mod.valueRanges || [])) {
+                if (range && range._Type_ === 'CraftingGameplayPropertyModifierValueRange_Linear') {
+                  slotModifiers.push({
+                    property,
+                    startQuality: range.startQuality ?? 0,
+                    endQuality: range.endQuality ?? 1000,
+                    baseAmount: range.modifierAtStart ?? 1.0,
+                    perQuality: ((range.modifierAtEnd ?? 1.0) - (range.modifierAtStart ?? 1.0)) / ((range.endQuality ?? 1000) - (range.startQuality ?? 0))
+                  })
+                }
+              }
+            }
+          }
+          
           const slotOptions = []
           
           for (const slotOption of option.options) {
@@ -1262,7 +1288,8 @@ function parseBlueprintDefinitions(localization = {}) {
                 resourceName,
                 quantity,
                 standardCargoUnits: quantity,
-                minQuality: slotOption.minQuality || 1
+                minQuality: slotOption.minQuality || 1,
+                modifiers: slotModifiers.length > 0 ? slotModifiers : undefined
               })
             }
           }
