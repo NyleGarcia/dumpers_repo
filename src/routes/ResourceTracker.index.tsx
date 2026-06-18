@@ -728,7 +728,7 @@ export default function ResourceTrackerRoute() {
             <div>
               <p className="text-slate-300 text-sm font-medium">Sync Resource Catalog</p>
               <p className="text-slate-500 text-xs mt-1">
-                Import resources from <code className="text-slate-400">Blueprints.json</code> and extra catalog.
+                Import resources from game data and extra catalog.
                 {syncResult && (
                   <span className="text-emerald-400 ml-2">
                     Last sync: {syncResult.inserted} added, {syncResult.updated} updated

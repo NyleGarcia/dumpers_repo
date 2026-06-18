@@ -14,7 +14,7 @@ import {
 } from '../lib/operations'
 
 interface UseResourceCatalogOptions {
-  /** Super-admin only: import blueprint_resources from Blueprints.json */
+  /** Super-admin only: sync blueprint_resources from game data */
   enableCatalogSync?: boolean
   includeInactive?: boolean
   withInventory?: boolean

@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
+import gameBlueprintsData from '../data/game-blueprints.json'
 
 interface BlueprintLookupEntry {
   internalName: string
@@ -6,74 +7,30 @@ interface BlueprintLookupEntry {
   categoryName: string
 }
 
-let blueprintCache: BlueprintLookupEntry[] | null = null
-let blueprintByNameMap: Map<string, BlueprintLookupEntry> | null = null
+// Build the lookup map once at module load time (data is static)
+const blueprintEntries: BlueprintLookupEntry[] = gameBlueprintsData.blueprints.map((bp) => ({
+  internalName: bp.internalName,
+  blueprintName: bp.blueprintName,
+  categoryName: bp.categoryName,
+}))
+
+const blueprintByNameMap = new Map<string, BlueprintLookupEntry>()
+for (const entry of blueprintEntries) {
+  blueprintByNameMap.set(entry.blueprintName.toLowerCase(), entry)
+}
 
 export function useBlueprintLookup() {
-  const [data, setData] = useState<BlueprintLookupEntry[]>(blueprintCache || [])
-  const [loading, setLoading] = useState(!blueprintCache)
-
-  useEffect(() => {
-    if (blueprintCache) {
-      setData(blueprintCache)
-      setLoading(false)
-      return
-    }
-
-    const fetchBlueprints = async () => {
-      try {
-        const response = await fetch('/data/Blueprints.json')
-        const json = await response.json()
-        
-        const entries: BlueprintLookupEntry[] = (json.blueprints || []).map((bp: {
-          internalName: string
-          blueprintName: string
-          categoryName: string
-        }) => ({
-          internalName: bp.internalName,
-          blueprintName: bp.blueprintName,
-          categoryName: bp.categoryName,
-        }))
-
-        blueprintCache = entries
-        
-        // Build lookup map
-        blueprintByNameMap = new Map()
-        for (const entry of entries) {
-          // Use lowercase for case-insensitive matching
-          blueprintByNameMap.set(entry.blueprintName.toLowerCase(), entry)
-        }
-
-        setData(entries)
-      } catch (error) {
-        console.error('Failed to load blueprints for lookup:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchBlueprints()
-  }, [])
-
-  // Build the map from our data if not cached
-  const byNameMap = useMemo(() => {
-    if (blueprintByNameMap) return blueprintByNameMap
-    
-    const map = new Map<string, BlueprintLookupEntry>()
-    for (const entry of data) {
-      map.set(entry.blueprintName.toLowerCase(), entry)
-    }
-    return map
-  }, [data])
+  // Data is loaded synchronously from the bundled JSON, no async needed
+  const byNameMap = useMemo(() => blueprintByNameMap, [])
 
   return {
-    loading,
-    
+    loading: false, // Always loaded since it's bundled
+
     // Look up a blueprint by the crafted item name (e.g., "Glacier")
     getBlueprintByItemName: (itemName: string): BlueprintLookupEntry | undefined => {
       return byNameMap.get(itemName.toLowerCase())
     },
-    
+
     // Check if a blueprint exists for an item name
     hasBlueprintForItem: (itemName: string): boolean => {
       return byNameMap.has(itemName.toLowerCase())
@@ -81,11 +38,11 @@ export function useBlueprintLookup() {
   }
 }
 
-// Standalone function for quick checks (requires cache to be populated)
+// Standalone function for quick checks (no hook needed)
 export function getBlueprintForItem(itemName: string): BlueprintLookupEntry | undefined {
-  return blueprintByNameMap?.get(itemName.toLowerCase())
+  return blueprintByNameMap.get(itemName.toLowerCase())
 }
 
 export function hasBlueprintForItem(itemName: string): boolean {
-  return blueprintByNameMap?.has(itemName.toLowerCase()) ?? false
+  return blueprintByNameMap.has(itemName.toLowerCase())
 }
