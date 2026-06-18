@@ -1460,6 +1460,36 @@ function parseContractGenerators(localization) {
   return { contracts, missionsByPool, poolsByBlueprint }
 }
 
+/** Prefer canonical base names for *_01_01_01 variants when a shorter in-game key exists. */
+function resolveCanonicalBaseBlueprintName(internalName, localization) {
+  if (!internalName) return null
+  const n = internalName.toLowerCase()
+
+  let m = n.match(/^(\w+)_legacy_armor_(\w+)_(\w+)_01_01_01$/)
+  if (m) {
+    const key = `item_Name_${m[1]}_legacy_${m[2]}_armor_01_${m[3]}`
+    if (localization[key]) return localization[key]
+  }
+
+  m = n.match(/^(\w+)_explorer_armor_(\w+)_(\w+)_01_01_01$/)
+  if (m) {
+    for (const key of [
+      `item_Name_${m[1]}_explorer_01_${m[3]}`,
+      `item_Name_${m[1]}_explorer_${m[2]}_armor_01_${m[3]}`,
+    ]) {
+      if (localization[key]) return localization[key]
+    }
+  }
+
+  m = n.match(/^(\w+)_armor_(\w+)_(\w+)_01_01_01$/)
+  if (m) {
+    const key = `item_Name_${m[1]}_${m[2]}_armor_01_${m[3]}`
+    if (localization[key]) return localization[key]
+  }
+
+  return null
+}
+
 function parseBlueprintDefinitions(localization = {}) {
   console.log('\n[2/7] Parsing blueprint definitions (crafting recipes)...')
   
@@ -1742,16 +1772,10 @@ function parseBlueprintDefinitions(localization = {}) {
       }
     }
 
-    // Prefer canonical legacy base names over *_01_01_01 variant labels (Woodland, etc.)
-    if (internalName) {
-      const legacyBaseMatch = internalName.toLowerCase().match(/^(\w+)_legacy_armor_(\w+)_(\w+)_01_01_01$/)
-      if (legacyBaseMatch) {
-        const [, mfg, weight, slot] = legacyBaseMatch
-        const legacyBaseKey = `item_Name_${mfg}_legacy_${weight}_armor_01_${slot}`
-        if (localization[legacyBaseKey]) {
-          blueprintName = localization[legacyBaseKey]
-        }
-      }
+    // Prefer canonical base names over *_01_01_01 variant labels (Woodland, Base, etc.)
+    const canonicalBaseName = resolveCanonicalBaseBlueprintName(internalName, localization)
+    if (canonicalBaseName) {
+      blueprintName = canonicalBaseName
     }
     
     // Special handling for vehicle components with manufacturer prefixes (COOL_, POWR_, QDRV_, SHLD_, RADR_)
