@@ -1223,6 +1223,20 @@ function parseBlueprintDefinitions(localization = {}) {
         `item_name${name}_SCItem`,             // lowercase item_name prefix
       )
       
+      // Handle manufacturer prefixes that need to be UPPERCASE in localization (e.g., gmni -> GMNI)
+      if (name) {
+        const parts = name.split('_')
+        if (parts.length > 1) {
+          const upperMfgName = parts[0].toUpperCase() + '_' + parts.slice(1).join('_')
+          locKeyPatterns.push(`item_Name${upperMfgName}`)
+          locKeyPatterns.push(`item_Name${upperMfgName}_SCItem`)
+        }
+        // Handle variant suffixes like _blue_gold -> _blue_gold_01
+        if (name.includes('_blue_gold') && !name.endsWith('_01')) {
+          locKeyPatterns.push(`item_Name${name}_01`)
+        }
+      }
+      
       // Try with uppercase manufacturer prefix (e.g., GRIN_utility_medium_arms)
       if (name) {
         const parts = name.split('_')
@@ -1402,13 +1416,25 @@ function parseBlueprintDefinitions(localization = {}) {
       }
     }
     
-    // Special handling for Salvage Modifiers
+    // Special handling for Salvage Modifiers - use proper localization keys
     if (!blueprintName && internalName?.includes('Salvage_Modifier')) {
-      const salvageMatch = internalName.match(/Salvage_Modifier_Scraper_(?:Salvation_)?(\w+)/i)
-      if (salvageMatch) {
-        const [full, size] = salvageMatch
-        const isSalvation = full.includes('Salvation')
-        blueprintName = isSalvation ? `Reclaimer ${size} Scraper` : `${size} Scraper`
+      // Map internal names to localization keys
+      const scraperNameMap = {
+        'Salvage_Modifier_Scraper_Small': 'item_scraper_GRIN_Small_Name',
+        'Salvage_Modifier_Scraper_Medium': 'item_scraper_GRIN_Standard_Name',
+        'Salvage_Modifier_Scraper_Large': 'item_scraper_GRIN_Large_Name',
+        'Salvage_Modifier_Scraper_Salvation_Small': 'item_scraper_GRIN_Small_Name',  // Reclaimer variant
+        'Salvage_Modifier_Scraper_Salvation_Medium': 'item_scraper_GRIN_Standard_Name',
+      }
+      const locKey = scraperNameMap[internalName]
+      if (locKey && localization[locKey]) {
+        const baseName = localization[locKey]
+        // Add Reclaimer prefix for Salvation variants
+        if (internalName.includes('Salvation')) {
+          blueprintName = `Reclaimer ${baseName}`
+        } else {
+          blueprintName = baseName
+        }
       }
     }
     
@@ -2791,7 +2817,12 @@ async function main() {
     // Build rewardMissions from contract data
     const rewardMissions = []
     for (const poolKey of poolKeys) {
-      const missions = contractData.missionsByPool[poolKey] || contractData.missionsByPool[poolKey.toLowerCase()] || []
+      // Normalize pool key to match missionsByPool format
+      const normalizedKey = poolKey
+        .replace(/^bp_missionreward_/i, '')
+        .replace(/^bp_rewards_/i, '')
+        .toLowerCase()
+      const missions = contractData.missionsByPool[normalizedKey] || contractData.missionsByPool[poolKey.toLowerCase()] || []
       for (const m of missions) {
         rewardMissions.push({
           mission: m.faction && m.title ? `${m.faction}: ${m.title}` : m.title,
