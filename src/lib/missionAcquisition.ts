@@ -93,6 +93,17 @@ function extractBlueprintInternalName(fileId: string): string | null {
   return null
 }
 
+/** Resolve blueprint ID from file path or direct internalName. */
+function resolveBlueprintInternalName(blueprintId: string | null | undefined): string | null {
+  if (!blueprintId?.trim()) return null
+
+  const fromPath = extractBlueprintInternalName(blueprintId)
+  if (fromPath) return fromPath
+
+  // Post-migration IDs are stored as lowercase internalName keys
+  return blueprintId.replace(/\\/g, '/').toLowerCase().trim()
+}
+
 export function normalizeMissionTitle(title: string): string {
   return title
     .replace(/~mission\s*\([^)]*\)/gi, '[param]')
@@ -255,7 +266,7 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
 }
 
 export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlockInfo {
-  const internalName = extractBlueprintInternalName(blueprintFileId)
+  const internalName = resolveBlueprintInternalName(blueprintFileId)
   
   const defaultReturn: BlueprintUnlockInfo = {
     unlockMinReputation: null,
@@ -292,15 +303,17 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
     if (!poolMissions || poolMissions.length === 0) continue
     
     matchedCount++
-    const mission = poolMissions[0]
-    factionName = mission.faction
-    bestPoolName = poolKey
-    repPoints = mission.repPoints
-    
-    const minRep = mission.minStanding?.minReputation ?? 0
-    if (lowestReputation === null || minRep < lowestReputation) {
-      lowestReputation = minRep
-      lowestStandingName = mission.minStanding?.name ?? 'Neutral'
+    if (!bestPoolName) bestPoolName = poolKey
+
+    for (const mission of poolMissions) {
+      if (!factionName) factionName = mission.faction
+      if (mission.repPoints > repPoints) repPoints = mission.repPoints
+
+      const minRep = mission.minStanding?.minReputation ?? 0
+      if (lowestReputation === null || minRep < lowestReputation) {
+        lowestReputation = minRep
+        lowestStandingName = mission.minStanding?.name ?? (minRep === 0 ? 'Neutral' : null)
+      }
     }
   }
   
@@ -325,18 +338,24 @@ export function formatBlueprintUnlockBadge(blueprintFileId: string, isReward?: b
 
   if (!info.matched) {
     if (isReward === false) return 'Craft-only — no mission unlock'
-    return 'Vendor / default — no rep required'
+    return 'Rep unknown'
   }
 
-  if (info.unlockStandingName && info.unlockMinReputation != null && info.unlockMinReputation > 0) {
-    return `${info.unlockStandingName} (${info.unlockMinReputation.toLocaleString()} rep)`
+  if (info.unlockMinReputation != null && info.unlockMinReputation > 0) {
+    return info.unlockStandingName
+      ? `${info.unlockStandingName} (${info.unlockMinReputation.toLocaleString()} rep)`
+      : `${info.unlockMinReputation.toLocaleString()} rep`
   }
 
-  if (info.unlockMinReputation === 0 || info.unlockStandingName) {
-    return `Neutral (0 rep)`
+  if (info.unlockMinReputation === 0) {
+    return 'Neutral (0 rep)'
   }
 
-  return 'Vendor / default — no rep required'
+  if (info.unlockStandingName) {
+    return info.unlockStandingName
+  }
+
+  return 'Rep unknown'
 }
 
 /**
@@ -355,7 +374,7 @@ export function getMissionsForPool(poolKey: string): MissionPoolEntry[] {
  * Get all pool keys that contain a specific blueprint
  */
 export function getPoolsForBlueprint(blueprintFileId: string): string[] {
-  const internalName = extractBlueprintInternalName(blueprintFileId)
+  const internalName = resolveBlueprintInternalName(blueprintFileId)
   if (!internalName) return []
   return blueprintToPoolIndex.get(internalName) || []
 }
