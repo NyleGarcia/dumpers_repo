@@ -9,7 +9,6 @@ import {
   readMissionTrackerUiState,
   writeMissionTrackerUiState,
   type BrowseSystem,
-  type BrowseViewMode,
 } from '../lib/missionTrackerUiState'
 
 type BlueprintRecord = {
@@ -37,17 +36,14 @@ type MissionEntry = {
   repPoints: number
 }
 
-type System = BrowseSystem
-type ViewMode = BrowseViewMode
-
-const SYSTEM_LABELS: Record<System, string> = {
+const SYSTEM_LABELS: Record<BrowseSystem, string> = {
   stanton: 'Stanton',
   pyro: 'Pyro',
   nyx: 'Nyx',
   unknown: 'Unknown Location',
 }
 
-const SYSTEM_COLORS: Record<System, { bg: string; border: string; text: string }> = {
+const SYSTEM_COLORS: Record<BrowseSystem, { bg: string; border: string; text: string }> = {
   stanton: { bg: 'bg-blue-950/50', border: 'border-blue-500/40', text: 'text-blue-300' },
   pyro: { bg: 'bg-orange-950/50', border: 'border-orange-500/40', text: 'text-orange-300' },
   nyx: { bg: 'bg-purple-950/50', border: 'border-purple-500/40', text: 'text-purple-300' },
@@ -56,20 +52,12 @@ const SYSTEM_COLORS: Record<System, { bg: string; border: string; text: string }
 
 const UNLAWFUL_FACTIONS = [
   'headhunters', 'xenothreat', 'ruto', 'vaughn', 'ninetails',
-  'tarpits', 'bitzeros', 'dead saints'
+  'tarpits', 'bitzeros', 'dead saints',
 ]
 
 function isUnlawfulFaction(faction: string): boolean {
   const lower = faction.toLowerCase()
   return UNLAWFUL_FACTIONS.some(f => lower.includes(f))
-}
-
-function getMissionBrowseSystems(mission: Pick<MissionDisplay, 'poolKey' | 'sourceSystem' | 'region'>): System[] {
-  return getBrowseSystemsForMission({
-    poolKey: mission.poolKey,
-    system: mission.sourceSystem,
-    subRegion: mission.region,
-  })
 }
 
 interface MissionDisplay {
@@ -85,10 +73,53 @@ interface MissionDisplay {
   blueprintCount: number
 }
 
+interface MissionGroup {
+  title: string
+  isLawful: boolean
+  category: string | null
+  variants: MissionDisplay[]
+}
+
 interface BrowseMissionsViewProps {
   acquiredBlueprints: Record<string, boolean>
   onAddToTracker: (blueprintId: string) => void
   isOnTargetList: (blueprintId: string) => boolean
+}
+
+function getMissionBrowseSystems(mission: Pick<MissionDisplay, 'poolKey' | 'sourceSystem' | 'region'>): BrowseSystem[] {
+  return getBrowseSystemsForMission({
+    poolKey: mission.poolKey,
+    system: mission.sourceSystem,
+    subRegion: mission.region,
+  })
+}
+
+function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
+  const map = new Map<string, MissionGroup>()
+
+  for (const mission of missions) {
+    const existing = map.get(mission.title)
+    if (existing) {
+      existing.variants.push(mission)
+    } else {
+      map.set(mission.title, {
+        title: mission.title,
+        isLawful: mission.isLawful,
+        category: mission.category,
+        variants: [mission],
+      })
+    }
+  }
+
+  for (const group of map.values()) {
+    group.variants.sort((a, b) => {
+      const regionCompare = (a.region || '').localeCompare(b.region || '')
+      if (regionCompare !== 0) return regionCompare
+      return a.poolKey.localeCompare(b.poolKey)
+    })
+  }
+
+  return [...map.values()].sort((a, b) => a.title.localeCompare(b.title))
 }
 
 export default function BrowseMissionsView({
@@ -97,10 +128,6 @@ export default function BrowseMissionsView({
   isOnTargetList,
 }: BrowseMissionsViewProps) {
   const { data: blueprints = [] } = useBlueprintData()
-  const [viewMode, setViewMode] = useState<ViewMode>(() => readMissionTrackerUiState().browse.viewMode)
-  const [selectedSystem, setSelectedSystem] = useState<System | null>(
-    () => readMissionTrackerUiState().browse.selectedSystem
-  )
   const [selectedFaction, setSelectedFaction] = useState<string | null>(
     () => readMissionTrackerUiState().browse.selectedFaction
   )
@@ -126,23 +153,20 @@ export default function BrowseMissionsView({
     return map
   }, [blueprints])
 
-  // Build list of missions with actual titles from missionsByPool
   const missions = useMemo((): MissionDisplay[] => {
     const result: MissionDisplay[] = []
-    
+
     for (const [poolKey, missionEntries] of Object.entries(missionsByPool)) {
-      // Get blueprint count for this pool
       const bps = missionBlueprints[poolKey] || missionBlueprints[poolKey.toLowerCase()] || []
       if (bps.length === 0) continue
-      
+
       missionEntries.forEach((mission, entryIndex) => {
-        // Skip placeholder/unlocalized titles
-        if (!mission.title || 
-            mission.title.includes('~mission') || 
+        if (!mission.title ||
+            mission.title.includes('~mission') ||
             mission.title.startsWith('@') ||
             mission.title.includes('UNINITIALIZED') ||
             mission.title.includes('PLACEHOLDER')) return
-        
+
         result.push({
           entryKey: `${poolKey}|${entryIndex}|${mission.title}|${mission.faction}|${mission.system || 'unknown'}`,
           poolKey,
@@ -157,68 +181,13 @@ export default function BrowseMissionsView({
         })
       })
     }
-    
+
     return result.sort((a, b) => a.title.localeCompare(b.title))
   }, [missionsByPool, missionBlueprints])
 
-  const selectedMission = useMemo(() => {
-    if (!selectedMissionKey) return null
-    return missions.find((mission) => makeBrowseMissionKey(mission) === selectedMissionKey) ?? null
-  }, [missions, selectedMissionKey])
-
-  useEffect(() => {
-    writeMissionTrackerUiState({
-      browse: {
-        viewMode,
-        selectedSystem,
-        selectedFaction,
-        selectedMissionKey,
-        searchTerm,
-      },
-    })
-  }, [viewMode, selectedSystem, selectedFaction, selectedMissionKey, searchTerm])
-
-  const systemStats = useMemo(() => {
-    const stats: Record<System, { factions: Set<string>; missions: number }> = {
-      stanton: { factions: new Set(), missions: 0 },
-      pyro: { factions: new Set(), missions: 0 },
-      nyx: { factions: new Set(), missions: 0 },
-      unknown: { factions: new Set(), missions: 0 },
-    }
-    
-    for (const m of missions) {
-      for (const system of getMissionBrowseSystems(m)) {
-        stats[system].factions.add(m.faction)
-        stats[system].missions++
-      }
-    }
-    
-    return stats
-  }, [missions])
-
-  const missionsBySystem = useMemo(() => {
-    const map: Record<System, Record<string, MissionDisplay[]>> = {
-      stanton: {},
-      pyro: {},
-      nyx: {},
-      unknown: {},
-    }
-    
-    for (const m of missions) {
-      for (const system of getMissionBrowseSystems(m)) {
-        if (!map[system][m.faction]) {
-          map[system][m.faction] = []
-        }
-        map[system][m.faction].push(m)
-      }
-    }
-    
-    return map
-  }, [missions])
-
   const missionsByFaction = useMemo(() => {
-    const map: Record<string, { missions: MissionDisplay[]; isLawful: boolean; systems: Set<System> }> = {}
-    
+    const map: Record<string, { missions: MissionDisplay[]; isLawful: boolean; systems: Set<BrowseSystem> }> = {}
+
     for (const m of missions) {
       if (!map[m.faction]) {
         map[m.faction] = { missions: [], isLawful: m.isLawful, systems: new Set() }
@@ -228,64 +197,77 @@ export default function BrowseMissionsView({
         map[m.faction].systems.add(system)
       }
     }
-    
+
     return map
   }, [missions])
 
-  const filteredFactions = useMemo(() => {
-    if (!selectedSystem) return {}
-    const factions = missionsBySystem[selectedSystem]
-    
-    if (!searchTerm) return factions
-    
-    const term = searchTerm.toLowerCase()
-    const filtered: Record<string, MissionDisplay[]> = {}
-    for (const [faction, missionList] of Object.entries(factions)) {
-      const matching = missionList.filter(m => 
-        m.title.toLowerCase().includes(term) ||
-        faction.toLowerCase().includes(term) ||
-        (m.category && m.category.toLowerCase().includes(term))
-      )
-      if (matching.length > 0) {
-        filtered[faction] = matching
-      }
-    }
-    return filtered
-  }, [selectedSystem, missionsBySystem, searchTerm])
+  const selectedMission = useMemo(() => {
+    if (!selectedMissionKey) return null
+    return missions.find((mission) => makeBrowseMissionKey(mission) === selectedMissionKey) ?? null
+  }, [missions, selectedMissionKey])
+
+  useEffect(() => {
+    writeMissionTrackerUiState({
+      browse: {
+        selectedFaction,
+        selectedMissionKey,
+        searchTerm,
+      },
+    })
+  }, [selectedFaction, selectedMissionKey, searchTerm])
 
   const filteredFactionList = useMemo(() => {
     const entries = Object.entries(missionsByFaction)
-    
+
     if (!searchTerm) return entries
-    
+
     const term = searchTerm.toLowerCase()
-    return entries.filter(([faction, data]) => 
+    return entries.filter(([faction, data]) =>
       faction.toLowerCase().includes(term) ||
-      data.missions.some(m => m.title.toLowerCase().includes(term) || (m.category && m.category.toLowerCase().includes(term)))
+      data.missions.some(m =>
+        m.title.toLowerCase().includes(term) ||
+        (m.category && m.category.toLowerCase().includes(term))
+      )
     )
   }, [missionsByFaction, searchTerm])
 
-  const selectedFactionMissions = useMemo((): MissionDisplay[] => {
-    if (viewMode === 'system' && selectedSystem && selectedFaction) {
-      return missionsBySystem[selectedSystem][selectedFaction] || []
+  const selectedFactionMissionGroups = useMemo((): MissionGroup[] => {
+    if (!selectedFaction) return []
+    const factionMissions = missionsByFaction[selectedFaction]?.missions || []
+
+    let filtered = factionMissions
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase()
+      filtered = factionMissions.filter(m =>
+        m.title.toLowerCase().includes(term) ||
+        (m.category && m.category.toLowerCase().includes(term))
+      )
     }
-    if (viewMode === 'faction' && selectedFaction) {
-      return missionsByFaction[selectedFaction]?.missions || []
-    }
-    return []
-  }, [viewMode, selectedSystem, selectedFaction, missionsBySystem, missionsByFaction])
+
+    return groupMissionsByTitle(filtered)
+  }, [selectedFaction, missionsByFaction, searchTerm])
+
+  const getMissionBlueprintStats = (mission: MissionDisplay) => {
+    const poolBps = missionBlueprints[mission.poolKey] || missionBlueprints[mission.poolKey.toLowerCase()] || []
+    const acquiredCount = poolBps.filter(bp => {
+      const bpName = bp.name.toLowerCase()
+      const fullBp = blueprintsByInternalName[bpName]
+      return fullBp && acquiredBlueprints[fullBp.internalName]
+    }).length
+    return { poolBps, acquiredCount, total: poolBps.length }
+  }
 
   const selectedMissionBlueprints = useMemo(() => {
     if (!selectedMission) return []
-    
+
     const poolBps = missionBlueprints[selectedMission.poolKey] || missionBlueprints[selectedMission.poolKey.toLowerCase()] || []
-    
+
     return poolBps.map(bp => {
       const bpName = bp.name.toLowerCase()
       const fullBp = blueprintsByInternalName[bpName]
       const isAcquired = fullBp ? !!acquiredBlueprints[fullBp.internalName] : false
       const isTracked = fullBp ? isOnTargetList(fullBp.internalName) : false
-      
+
       return {
         ...bp,
         fullBlueprint: fullBp,
@@ -310,207 +292,186 @@ export default function BrowseMissionsView({
       setSelectedMissionKey(null)
     } else if (selectedFaction) {
       setSelectedFaction(null)
-    } else if (selectedSystem) {
-      setSelectedSystem(null)
     }
-  }
-
-  const handleViewModeChange = (mode: ViewMode) => {
-    setViewMode(mode)
-    setSelectedSystem(null)
-    setSelectedFaction(null)
-    setSelectedMissionKey(null)
-    setSearchTerm('')
   }
 
   const breadcrumbs = useMemo(() => {
-    const crumbs: { label: string; onClick: () => void }[] = []
-    
-    if (viewMode === 'system') {
-      crumbs.push({ label: 'Systems', onClick: () => { setSelectedSystem(null); setSelectedFaction(null); setSelectedMissionKey(null) } })
-      
-      if (selectedSystem) {
-        crumbs.push({
-          label: SYSTEM_LABELS[selectedSystem],
-          onClick: () => { setSelectedFaction(null); setSelectedMissionKey(null) },
-        })
-      }
-      
-      if (selectedFaction) {
-        crumbs.push({
-          label: selectedFaction,
-          onClick: () => { setSelectedMissionKey(null) },
-        })
-      }
-    } else {
-      crumbs.push({ label: 'Factions', onClick: () => { setSelectedFaction(null); setSelectedMissionKey(null) } })
-      
-      if (selectedFaction) {
-        crumbs.push({
-          label: selectedFaction,
-          onClick: () => { setSelectedMissionKey(null) },
-        })
-      }
+    const crumbs: { label: string; onClick: () => void }[] = [
+      { label: 'Factions', onClick: () => { setSelectedFaction(null); setSelectedMissionKey(null) } },
+    ]
+
+    if (selectedFaction) {
+      crumbs.push({
+        label: selectedFaction,
+        onClick: () => { setSelectedMissionKey(null) },
+      })
     }
-    
+
     if (selectedMission) {
       crumbs.push({
         label: selectedMission.title.length > 40 ? selectedMission.title.slice(0, 40) + '...' : selectedMission.title,
         onClick: () => {},
       })
     }
-    
-    return crumbs
-  }, [viewMode, selectedSystem, selectedFaction, selectedMission])
 
-  const renderMissionCard = (mission: MissionDisplay) => {
-    const poolBps = missionBlueprints[mission.poolKey] || missionBlueprints[mission.poolKey.toLowerCase()] || []
-    const acquiredCount = poolBps.filter(bp => {
-      const bpName = bp.name.toLowerCase()
-      const fullBp = blueprintsByInternalName[bpName]
-      return fullBp && acquiredBlueprints[fullBp.internalName]
-    }).length
-    
+    return crumbs
+  }, [selectedFaction, selectedMission])
+
+  const renderMissionTags = (mission: MissionDisplay) => {
     const systemRegion = mission.sourceSystem?.toLowerCase()
     const regions: Region[] =
       systemRegion === 'stanton' || systemRegion === 'pyro' || systemRegion === 'nyx'
         ? [systemRegion]
         : []
-    
+
+    return (
+      <>
+        {!mission.isLawful && (
+          <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
+            Illegal
+          </span>
+        )}
+        {mission.category && (
+          <span className="text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
+            {mission.category}
+          </span>
+        )}
+        <MissionLocationTags
+          regions={regions}
+          subRegion={mission.region}
+          system={mission.sourceSystem}
+          poolKey={mission.poolKey}
+        />
+        {mission.minStanding && mission.minStanding.minReputation > 0 && (
+          <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">
+            {mission.minStanding.name} ({mission.minStanding.minReputation.toLocaleString()})
+          </span>
+        )}
+      </>
+    )
+  }
+
+  const renderVariantRow = (mission: MissionDisplay) => {
+    const { acquiredCount, total } = getMissionBlueprintStats(mission)
+
     return (
       <button
         key={mission.entryKey}
         onClick={() => setSelectedMissionKey(makeBrowseMissionKey(mission))}
-        className={`w-full p-3 rounded-lg border text-left transition-all hover:bg-slate-800/50 ${
-          mission.isLawful 
-            ? 'border-green-500/20 hover:border-green-500/40'
-            : 'border-red-500/20 hover:border-red-500/40'
-        }`}
+        className="w-full px-3 py-2.5 text-left transition-all hover:bg-slate-800/50 flex items-start justify-between gap-3"
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <h4 className={`font-medium text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>
-              {mission.title}
-            </h4>
-            <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-              {!mission.isLawful && (
-                <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
-                  Illegal
-                </span>
-              )}
-              {mission.category && (
-                <span className="text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
-                  {mission.category}
-                </span>
-              )}
-              <MissionLocationTags
-                regions={regions}
-                subRegion={mission.region}
-                system={mission.sourceSystem}
-                poolKey={mission.poolKey}
-              />
-              {mission.minStanding && mission.minStanding.minReputation > 0 && (
-                <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">
-                  {mission.minStanding.name} ({mission.minStanding.minReputation.toLocaleString()})
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="shrink-0 text-right">
-            <span className={`text-sm font-medium ${
-              acquiredCount === poolBps.length ? 'text-green-400' : 'text-amber-400'
-            }`}>
-              {acquiredCount}/{poolBps.length}
-            </span>
-            <p className="text-[10px] text-slate-500">blueprints</p>
-          </div>
+        <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+          {renderMissionTags(mission)}
+        </div>
+        <div className="shrink-0 text-right">
+          <span className={`text-sm font-medium ${
+            acquiredCount === total ? 'text-green-400' : 'text-amber-400'
+          }`}>
+            {acquiredCount}/{total}
+          </span>
+          <p className="text-[10px] text-slate-500">blueprints</p>
         </div>
       </button>
     )
   }
 
+  const renderMissionGroup = (group: MissionGroup) => {
+    if (group.variants.length === 1) {
+      const mission = group.variants[0]
+      const { acquiredCount, total } = getMissionBlueprintStats(mission)
+
+      return (
+        <button
+          key={mission.entryKey}
+          onClick={() => setSelectedMissionKey(makeBrowseMissionKey(mission))}
+          className={`w-full p-3 rounded-lg border text-left transition-all hover:bg-slate-800/50 ${
+            mission.isLawful
+              ? 'border-green-500/20 hover:border-green-500/40'
+              : 'border-red-500/20 hover:border-red-500/40'
+          }`}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <h4 className={`font-medium text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>
+                {mission.title}
+              </h4>
+              <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                {renderMissionTags(mission)}
+              </div>
+            </div>
+            <div className="shrink-0 text-right">
+              <span className={`text-sm font-medium ${
+                acquiredCount === total ? 'text-green-400' : 'text-amber-400'
+              }`}>
+                {acquiredCount}/{total}
+              </span>
+              <p className="text-[10px] text-slate-500">blueprints</p>
+            </div>
+          </div>
+        </button>
+      )
+    }
+
+    return (
+      <div
+        key={group.title}
+        className={`rounded-lg border overflow-hidden ${
+          group.isLawful ? 'border-green-500/20' : 'border-red-500/20'
+        }`}
+      >
+        <div className={`px-3 py-2.5 border-b ${
+          group.isLawful ? 'border-green-500/10 bg-green-950/10' : 'border-red-500/10 bg-red-950/10'
+        }`}>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h4 className={`font-medium text-sm ${group.isLawful ? 'text-green-300' : 'text-red-400'}`}>
+                {group.title}
+              </h4>
+              {group.category && (
+                <span className="inline-block mt-1 text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
+                  {group.category}
+                </span>
+              )}
+            </div>
+            <span className="shrink-0 text-[10px] text-slate-500 pt-0.5">
+              {group.variants.length} locations
+            </span>
+          </div>
+        </div>
+        <div className="divide-y divide-slate-800/80">
+          {group.variants.map(mission => renderVariantRow(mission))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4">
-      {/* Breadcrumbs + View Toggle */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm">
-          {breadcrumbs.map((crumb, idx) => (
-            <React.Fragment key={idx}>
-              {idx > 0 && <span className="text-slate-600">›</span>}
-              <button
-                onClick={crumb.onClick}
-                className={`${
-                  idx === breadcrumbs.length - 1
-                    ? 'text-orange-400 cursor-default'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-                disabled={idx === breadcrumbs.length - 1}
-              >
-                {crumb.label}
-              </button>
-            </React.Fragment>
-          ))}
-        </div>
-        
-        {!selectedFaction && !selectedMission && (
-          <div className="flex items-center gap-1 bg-slate-800/60 rounded-lg p-0.5 border border-slate-700/50">
+      <div className="flex items-center gap-2 text-sm">
+        {breadcrumbs.map((crumb, idx) => (
+          <React.Fragment key={idx}>
+            {idx > 0 && <span className="text-slate-600">›</span>}
             <button
-              onClick={() => handleViewModeChange('system')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                viewMode === 'system'
-                  ? 'bg-orange-500/20 text-orange-300 border border-orange-500/40'
+              onClick={crumb.onClick}
+              className={`${
+                idx === breadcrumbs.length - 1
+                  ? 'text-orange-400 cursor-default'
                   : 'text-slate-400 hover:text-white'
               }`}
+              disabled={idx === breadcrumbs.length - 1}
             >
-              By System
+              {crumb.label}
             </button>
-            <button
-              onClick={() => handleViewModeChange('faction')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                viewMode === 'faction'
-                  ? 'bg-orange-500/20 text-orange-300 border border-orange-500/40'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              By Faction
-            </button>
-          </div>
-        )}
+          </React.Fragment>
+        ))}
       </div>
 
-      {/* ========== SYSTEM VIEW ========== */}
-      
-      {/* System Selection */}
-      {viewMode === 'system' && !selectedSystem && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {(['stanton', 'pyro', 'nyx', 'unknown'] as System[]).map(system => {
-            const stats = systemStats[system]
-            const colors = SYSTEM_COLORS[system]
-            if (stats.missions === 0) return null
-            
-            return (
-              <button
-                key={system}
-                onClick={() => setSelectedSystem(system)}
-                className={`p-4 rounded-xl border transition-all hover:scale-[1.02] ${colors.bg} ${colors.border}`}
-              >
-                <h3 className={`text-lg font-semibold ${colors.text}`}>{SYSTEM_LABELS[system]}</h3>
-                <p className="text-sm text-slate-400 mt-1">
-                  {stats.factions.size} faction{stats.factions.size !== 1 ? 's' : ''} • {stats.missions} mission{stats.missions !== 1 ? 's' : ''}
-                </p>
-              </button>
-            )
-          })}
-        </div>
-      )}
-
-      {/* Faction Selection (System View) */}
-      {viewMode === 'system' && selectedSystem && !selectedFaction && (
+      {!selectedFaction && !selectedMission && (
         <>
           <div className="relative">
             <input
               type="text"
-              placeholder="Search missions, factions, or categories..."
+              placeholder="Search missions or factions..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="site-input w-full pl-9 pr-4 py-2 text-sm"
@@ -519,71 +480,19 @@ export default function BrowseMissionsView({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {Object.entries(filteredFactions)
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([faction, missionList]) => {
-                const isLawful = !isUnlawfulFaction(faction)
-                return (
-                  <button
-                    key={faction}
-                    onClick={() => setSelectedFaction(faction)}
-                    className={`p-3 rounded-lg border text-left transition-all hover:scale-[1.01] ${
-                      isLawful 
-                        ? 'bg-green-950/30 border-green-500/30 hover:border-green-500/50'
-                        : 'bg-red-950/30 border-red-500/30 hover:border-red-500/50'
-                    }`}
-                  >
-                    <h4 className={`font-medium ${isLawful ? 'text-green-300' : 'text-red-400'}`}>
-                      {faction}
-                    </h4>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      {missionList.length} mission{missionList.length !== 1 ? 's' : ''} with blueprints
-                    </p>
-                  </button>
-                )
-              })}
-          </div>
-        </>
-      )}
 
-      {/* Mission Selection (System View) */}
-      {viewMode === 'system' && selectedSystem && selectedFaction && !selectedMission && (
-        <div className="space-y-2">
-          {selectedFactionMissions.map(mission => renderMissionCard(mission))}
-        </div>
-      )}
-
-      {/* ========== FACTION VIEW ========== */}
-      
-      {/* Faction List (Faction View) */}
-      {viewMode === 'faction' && !selectedFaction && (
-        <>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search missions, factions, or categories..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="site-input w-full pl-9 pr-4 py-2 text-sm"
-            />
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredFactionList
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([faction, data]) => {
+                const uniqueTitles = new Set(data.missions.map(m => m.title)).size
                 const systemsArray = Array.from(data.systems)
                 return (
                   <button
                     key={faction}
                     onClick={() => setSelectedFaction(faction)}
                     className={`p-3 rounded-lg border text-left transition-all hover:scale-[1.01] ${
-                      data.isLawful 
+                      data.isLawful
                         ? 'bg-green-950/30 border-green-500/30 hover:border-green-500/50'
                         : 'bg-red-950/30 border-red-500/30 hover:border-red-500/50'
                     }`}
@@ -602,7 +511,7 @@ export default function BrowseMissionsView({
                       ))}
                     </div>
                     <p className="text-xs text-slate-500 mt-1">
-                      {data.missions.length} mission{data.missions.length !== 1 ? 's' : ''} with blueprints
+                      {uniqueTitles} mission{uniqueTitles !== 1 ? 's' : ''} with blueprints
                     </p>
                   </button>
                 )
@@ -611,24 +520,41 @@ export default function BrowseMissionsView({
         </>
       )}
 
-      {/* Mission Selection (Faction View) */}
-      {viewMode === 'faction' && selectedFaction && !selectedMission && (
-        <div className="space-y-2">
-          {selectedFactionMissions
-            .sort((a, b) => a.title.localeCompare(b.title))
-            .map(mission => renderMissionCard(mission))}
-        </div>
+      {selectedFaction && !selectedMission && (
+        <>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search missions in this faction..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="site-input w-full pl-9 pr-4 py-2 text-sm"
+            />
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          <div className="space-y-2">
+            {selectedFactionMissionGroups.map(group => renderMissionGroup(group))}
+          </div>
+        </>
       )}
 
-      {/* ========== SHARED: Blueprint View ========== */}
-      
-      {/* Blueprint View */}
       {selectedMission && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-400">Blueprints from this mission</p>
-              <p className="text-lg font-semibold">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h3 className={`text-base font-semibold ${selectedMission.isLawful ? 'text-green-300' : 'text-red-400'}`}>
+                {selectedMission.title}
+              </h3>
+              <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                {renderMissionTags(selectedMission)}
+              </div>
+              <p className="text-sm text-slate-400 mt-3">
+                Blueprints from this location
+              </p>
+              <p className="text-lg font-semibold mt-0.5">
                 <span className={blueprintStats.acquired === blueprintStats.total ? 'text-green-400' : 'text-amber-400'}>
                   {blueprintStats.acquired}
                 </span>
@@ -638,12 +564,12 @@ export default function BrowseMissionsView({
             </div>
             <button
               onClick={handleBack}
-              className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg"
+              className="shrink-0 px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg"
             >
               ← Back
             </button>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {selectedMissionBlueprints.map(bp => (
               <div
