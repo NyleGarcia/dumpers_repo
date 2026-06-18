@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { resourceChipClassName } from '../config/resourceTypes'
 import { slugifyResourceName } from '../lib/blueprintResources'
 import {
@@ -7,7 +8,8 @@ import {
   getBlueprintSubType,
 } from '../lib/blueprintTaxonomy'
 import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
-import { calculateBlueprintDfp, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
+import { calculateBlueprintDfpWithParts, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
+import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function BlueprintCard({
@@ -34,7 +36,14 @@ export default function BlueprintCard({
   const subType = getBlueprintSubType(blueprint)
   const armorWeight = getArmorWeight(blueprint)
   const armorSlot = getArmorSlot(blueprint)
-  const dfp = calculateBlueprintDfp(blueprint)
+  const defaultSlotQualities = useMemo(
+    () => buildDefaultSlotQualities(blueprint),
+    [blueprint]
+  )
+  const dfp = useMemo(
+    () => calculateBlueprintDfpWithParts(blueprint, defaultSlotQualities),
+    [blueprint, defaultSlotQualities]
+  )
   const dfpLabel = formatDfpLabel(dfp.total)
   const dfpBreakdown = formatCraftDfpBreakdown(dfp)
   const specLine = formatBlueprintSpecLine(blueprint)

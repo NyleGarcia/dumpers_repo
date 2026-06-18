@@ -1,6 +1,7 @@
 import { isSalvageResource } from '../config/extraResources'
 import { isHarvestResource } from '../config/resourceTypes'
 import { AMMO_ORDER_MIN_QUALITY } from '../config/dfp'
+import { slotQualitiesToParts } from './blueprintQuality'
 import { getDfpEngine } from './dfpEngine'
 
 const MIN_SCU = 0.001
@@ -108,28 +109,20 @@ export function calculateMaterialDfpLine(
   }
 }
 
-function normalizeDfpResult(
-  raw: {
-    materialTotal: number
-    acquisitionPremium?: number
-    craftLaborPremium?: number
-    typeModifier: number
-    total: number
-    lines: unknown[]
-  },
+export function calculateBlueprintDfpWithParts(
   blueprint: BlueprintDfpInput,
-  craftQuantity = 1
+  slotQualities?: Record<number, number> | null,
+  craftQuantity = 1,
 ): DfpResult {
-  const qty = Math.max(1, craftQuantity)
-  const acquisitionPremium = Math.round((raw.acquisitionPremium ?? 0) * qty)
-  const craftLaborPremium = Math.round((raw.craftLaborPremium ?? 0) * qty)
+  const parts = slotQualities ? slotQualitiesToParts(slotQualities) : undefined
+  const raw = getDfpEngine().calculateBlueprintDfp(blueprint, { parts, craftQuantity })
   return {
-    materialTotal: Math.round(raw.materialTotal * qty),
-    acquisitionPremium,
-    craftLaborPremium,
+    materialTotal: raw.materialTotal,
+    acquisitionPremium: raw.acquisitionPremium ?? 0,
+    craftLaborPremium: raw.craftLaborPremium ?? 0,
     typeModifier: raw.typeModifier,
     typeKey: resolveDfpTypeKey(blueprint),
-    total: Math.round(raw.materialTotal * qty) + acquisitionPremium + craftLaborPremium,
+    total: raw.total,
     lines: raw.lines as DfpLineItem[],
   }
 }
@@ -139,19 +132,12 @@ export function calculateBlueprintDfpForOrder(
   orderMinQuality: number,
   craftQuantity = 1
 ): DfpResult {
-  const raw = getDfpEngine().calculateBlueprintDfpForOrder(blueprint, orderMinQuality, craftQuantity)
-  if (raw.acquisitionPremium != null || raw.craftLaborPremium != null) {
-    return {
-      materialTotal: raw.materialTotal,
-      acquisitionPremium: raw.acquisitionPremium ?? 0,
-      craftLaborPremium: raw.craftLaborPremium ?? 0,
-      typeModifier: raw.typeModifier,
-      typeKey: resolveDfpTypeKey(blueprint),
-      total: raw.total,
-      lines: raw.lines as DfpLineItem[],
-    }
+  const slotCount = blueprint.slots?.length ?? 0
+  const slotQualities: Record<number, number> = {}
+  for (let i = 0; i < slotCount; i++) {
+    slotQualities[i] = orderMinQuality
   }
-  return normalizeDfpResult(raw, blueprint, craftQuantity)
+  return calculateBlueprintDfpWithParts(blueprint, slotQualities, craftQuantity)
 }
 
 export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {

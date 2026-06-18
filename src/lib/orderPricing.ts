@@ -1,8 +1,9 @@
 import { AMMO_ORDER_MIN_QUALITY, orderMinQualityForResource } from '../config/dfp'
+import { minSlotQuality } from './blueprintQuality'
 import { extractOrderLineItemsFromBlueprints, type BlueprintWithSlots } from './blueprintResources'
 import {
   calculateBlueprintDfp,
-  calculateBlueprintDfpForOrder,
+  calculateBlueprintDfpWithParts,
   calculateMaterialDfpPrice,
   isAmmoBlueprint,
 } from './dfp'
@@ -38,29 +39,21 @@ export interface OrderResourceLine {
   lineDfpAuec: number
 }
 
-export function orderMinQualityForBlueprint(
-  blueprint: BlueprintWithSlots,
-  selectedQuality: number
-): number {
-  if (isAmmoBlueprint(blueprint)) return AMMO_ORDER_MIN_QUALITY
-  return selectedQuality
-}
-
 export function pricingForBlueprintLine(
   blueprint: BlueprintWithSlots,
-  minQuality: number,
+  slotQualities: Record<number, number>,
   quantity: number
 ): { unitDfpAuec: number; lineDfpAuec: number; orderMinQuality: number } {
   const qty = Math.max(1, quantity)
-  const orderMinQuality = orderMinQualityForBlueprint(blueprint, minQuality)
+  const orderMinQuality = isAmmoBlueprint(blueprint)
+    ? AMMO_ORDER_MIN_QUALITY
+    : minSlotQuality(slotQualities)
 
   const dfp = isAmmoBlueprint(blueprint)
     ? calculateBlueprintDfp(blueprint)
-    : calculateBlueprintDfpForOrder(blueprint, orderMinQuality, qty)
+    : calculateBlueprintDfpWithParts(blueprint, slotQualities, qty)
 
-  const lineDfpAuec = isAmmoBlueprint(blueprint)
-    ? Math.round(dfp.total * qty)
-    : dfp.total
+  const lineDfpAuec = dfp.total
   const unitDfpAuec = Math.round(lineDfpAuec / qty)
 
   return { unitDfpAuec, lineDfpAuec, orderMinQuality }

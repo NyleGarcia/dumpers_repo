@@ -2,7 +2,13 @@ import { DFP_CANONICAL_BASE_URL, DFP_OFFICIAL_HOSTS } from '../config/site'
 
 export interface DfpEngineApi {
   calculateMaterialDfpPrice: (resourceName: string, minQuality: number, scuQuantity: number) => number
-  calculateBlueprintDfp: (blueprint: unknown) => {
+  calculateBlueprintDfp: (
+    blueprint: unknown,
+    options?: {
+      parts?: { slotIndex: number; quality: number }[]
+      craftQuantity?: number
+    },
+  ) => {
     materialTotal: number
     acquisitionPremium?: number
     craftLaborPremium?: number

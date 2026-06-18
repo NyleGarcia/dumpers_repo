@@ -12,7 +12,7 @@ import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpRequiredPrice } from '../lib/dfp'
 import { SITE_SLOGAN } from '../config/site'
 import { canRequesterModifyOrder } from '../lib/orderEdit'
-import { orderTotalDfp } from '../lib/orderPricing'
+import { orderTotalDfp, pricingForBlueprintLine } from '../lib/orderPricing'
 import { resourceChipClassName } from '../config/resourceTypes'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
@@ -292,20 +292,26 @@ export default function CustomOrdersRoute() {
 
   const totalOrderCount = openOrderCount + completedOrderCount
 
-  // Convert draft items to cart blueprint lines format
+  // Convert draft items to cart blueprint lines format (recompute DFP from slot qualities)
   const draftCartLines = useMemo(
     () =>
-      draftItems.map((item) => ({
-        cartKey: item.cartKey,
-        blueprintId: item.blueprintId,
-        blueprintTitle: item.blueprintTitle,
-        minQuality: Math.min(...Object.values(item.slotQualities), 500),
-        quantity: item.quantity,
-        unitDfpAuec: item.unitDfpAuec,
-        lineDfpAuec: item.lineDfpAuec,
-        slotQualities: item.slotQualities,
-      })),
-    [draftItems]
+      draftItems.map((item) => {
+        const bp = blueprintById.get(item.blueprintId)
+        const pricing = bp
+          ? pricingForBlueprintLine(bp, item.slotQualities, item.quantity)
+          : null
+        return {
+          cartKey: item.cartKey,
+          blueprintId: item.blueprintId,
+          blueprintTitle: item.blueprintTitle,
+          minQuality: pricing?.orderMinQuality ?? Math.min(...Object.values(item.slotQualities), 500),
+          quantity: item.quantity,
+          unitDfpAuec: pricing?.unitDfpAuec ?? item.unitDfpAuec,
+          lineDfpAuec: pricing?.lineDfpAuec ?? item.lineDfpAuec,
+          slotQualities: item.slotQualities,
+        }
+      }),
+    [draftItems, blueprintById]
   )
 
   return (

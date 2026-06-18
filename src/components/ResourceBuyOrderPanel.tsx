@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { Link } from '@tanstack/react-router'
 import BlueprintTypeahead from './BlueprintTypeahead'
+import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
 import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import {
@@ -9,8 +10,14 @@ import {
   resourceLabelClassName,
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
-import { DEFAULT_STOCK_QUALITY, ORDER_QUALITY_TIERS } from '../config/dfp'
+import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import { getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
+import {
+  buildDefaultSlotQualities,
+  formatSlotQualitySummary,
+  isUniformSlotQuality,
+  mergeSlotQualities,
+} from '../lib/blueprintQuality'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
@@ -76,21 +83,11 @@ function nextCartKey() {
   return `cart-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
-function isUniformSlotQuality(slotQualities?: Record<number, number>): boolean {
-  if (!slotQualities) return true
-  const values = Object.values(slotQualities)
-  if (values.length <= 1) return true
-  return values.every((v) => v === values[0])
-}
-
 function formatSlotQualityLabel(line: CartBlueprintLine): string {
   if (!line.slotQualities || isUniformSlotQuality(line.slotQualities)) {
     return `Q${line.minQuality}`
   }
-  const values = Object.values(line.slotQualities)
-  const min = Math.min(...values)
-  const max = Math.max(...values)
-  return `Q${min}–Q${max} mix`
+  return formatSlotQualitySummary(line.slotQualities)
 }
 
 export default function ResourceBuyOrderPanel({
@@ -114,7 +111,7 @@ export default function ResourceBuyOrderPanel({
   const isEditing = Boolean(editOrder?.id)
   const [mode, setMode] = useState<'blueprint' | 'resource'>('blueprint')
   const [selectedBlueprintId, setSelectedBlueprintId] = useState('')
-  const [bpQuality, setBpQuality] = useState(String(DEFAULT_STOCK_QUALITY))
+  const [bpSlotQualities, setBpSlotQualities] = useState<Record<number, number>>({})
   const [bpQty, setBpQty] = useState('1')
   const [resourceKey, setResourceKey] = useState('')
   const [resQuality, setResQuality] = useState(String(DEFAULT_STOCK_QUALITY))
@@ -187,6 +184,25 @@ export default function ResourceBuyOrderPanel({
   const selectedCanOrder = selectedBlueprint
     ? canAddBlueprintToOrder(selectedBlueprint, orderOverridesMap)
     : false
+
+  useEffect(() => {
+    if (selectedBlueprint) {
+      setBpSlotQualities(buildDefaultSlotQualities(selectedBlueprint))
+    } else {
+      setBpSlotQualities({})
+    }
+  }, [selectedBlueprintId, selectedBlueprint])
+
+  const effectiveBpSlotQualities = useMemo(() => {
+    if (!selectedBlueprint) return {}
+    return mergeSlotQualities(selectedBlueprint, bpSlotQualities)
+  }, [selectedBlueprint, bpSlotQualities])
+
+  const selectedBlueprintPricing = useMemo(() => {
+    if (!selectedBlueprint || selectedIsAmmo) return null
+    const qty = Math.max(1, Number(bpQty) || 1)
+    return pricingForBlueprintLine(selectedBlueprint, effectiveBpSlotQualities, qty)
+  }, [selectedBlueprint, selectedIsAmmo, effectiveBpSlotQualities, bpQty])
   const selectedResource = activeCatalog.find((r) => r.resource_key === resourceKey)
   const selectedResourceLabel = selectedResource?.label ?? ''
   const selectedResIsSalvage = selectedResource
@@ -248,8 +264,9 @@ export default function ResourceBuyOrderPanel({
       return
     }
     const qty = Math.max(1, Number(bpQty) || 1)
-    const selectedQuality = Number(bpQuality) || DEFAULT_STOCK_QUALITY
-    const pricing = pricingForBlueprintLine(selectedBlueprint, selectedQuality, qty)
+    const pricing = selectedIsAmmo
+      ? pricingForBlueprintLine(selectedBlueprint, {}, qty)
+      : pricingForBlueprintLine(selectedBlueprint, effectiveBpSlotQualities, qty)
     setBpCart((prev) => [
       ...prev,
       {
@@ -257,6 +274,7 @@ export default function ResourceBuyOrderPanel({
         blueprintId: selectedBlueprint.internalName,
         blueprintTitle: selectedBlueprint.blueprintName || selectedBlueprint.internalName,
         minQuality: pricing.orderMinQuality,
+        slotQualities: selectedIsAmmo ? undefined : effectiveBpSlotQualities,
         quantity: qty,
         unitDfpAuec: pricing.unitDfpAuec,
         lineDfpAuec: pricing.lineDfpAuec,
@@ -463,21 +481,24 @@ export default function ResourceBuyOrderPanel({
                     hand (in-game, ammo craft quality does not matter).
                   </p>
                 )}
-                <div className={`grid gap-2 ${selectedIsAmmo ? 'grid-cols-2' : 'grid-cols-3'}`}>
-                  {!selectedIsAmmo && (
-                    <select
-                      value={bpQuality}
-                      onChange={(e) => setBpQuality(e.target.value)}
-                      className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-                      aria-label="Min quality tier"
-                    >
-                      {ORDER_QUALITY_TIERS.map((tier) => (
-                        <option key={tier} value={tier}>
-                          Q{tier}
-                        </option>
-                      ))}
-                    </select>
-                  )}
+                {!selectedIsAmmo && selectedBlueprint.slots && selectedBlueprint.slots.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-slate-400 text-xs">Set quality per craft slot (Band 4 default).</p>
+                    {selectedBlueprint.slots.map((slot, idx) => (
+                      <BlueprintSlotQualityCard
+                        key={idx}
+                        slot={slot}
+                        slotIndex={idx}
+                        quality={effectiveBpSlotQualities[idx]}
+                        onQualityChange={(slotIndex, quality) =>
+                          setBpSlotQualities((prev) => ({ ...prev, [slotIndex]: quality }))
+                        }
+                        compact
+                      />
+                    ))}
+                  </div>
+                )}
+                <div className={`grid gap-2 ${selectedIsAmmo ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'}`}>
                   <input
                     type="number"
                     min={1}
@@ -495,6 +516,12 @@ export default function ResourceBuyOrderPanel({
                     Add
                   </button>
                 </div>
+                {dfpDisplayEnabled && selectedBlueprintPricing && (
+                  <p className="text-amber-200/90 text-xs">
+                    Craft DFP: {formatDfpLabel(selectedBlueprintPricing.lineDfpAuec)} (
+                    {formatSlotQualitySummary(effectiveBpSlotQualities)})
+                  </p>
+                )}
               </>
             )}
           </div>

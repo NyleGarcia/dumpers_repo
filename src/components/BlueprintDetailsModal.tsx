@@ -1,20 +1,25 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
-import { resourceLabelClassName } from '../config/resourceTypes'
-import { slugifyResourceName, type BlueprintWithSlots } from '../lib/blueprintResources'
+import { type BlueprintWithSlots } from '../lib/blueprintResources'
 import {
   calculateSlotModifiers,
   aggregateModifiers,
   formatModifierPercent,
   getModifierColorClass,
   formatStatValue,
-  SlotModifierResult,
   getPropertyLabel,
 } from '../lib/qualityModifiers'
-import { DEFAULT_QUALITY, getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
+import {
+  buildDefaultSlotQualities,
+  formatSlotQualitySummary,
+  isUniformSlotQuality,
+  mergeSlotQualities,
+  minSlotQuality,
+} from '../lib/blueprintQuality'
 import { pricingForBlueprintLine } from '../lib/orderPricing'
 import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
+import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
 import AppModal from './layout/AppModal'
 
 interface SlotOption {
@@ -93,6 +98,17 @@ export default function BlueprintDetailsModal({
   const [addedToOrder, setAddedToOrder] = useState(false)
   const { addToDraft, draftCount } = useOrderDraft()
 
+  const blueprintWithSlots = blueprint as BlueprintWithSlots
+
+  useEffect(() => {
+    setSlotQualities(buildDefaultSlotQualities(blueprintWithSlots))
+  }, [blueprint.internalName])
+
+  const effectiveSlotQualities = useMemo(
+    () => mergeSlotQualities(blueprintWithSlots, slotQualities),
+    [blueprintWithSlots, slotQualities]
+  )
+
   // Check if any slot has modifiers
   const hasModifiers = useMemo(() => {
     return blueprint.slots?.some(slot =>
@@ -121,11 +137,11 @@ export default function BlueprintDetailsModal({
     if (!blueprint.slots) return []
     
     return blueprint.slots.map((slot, idx) => {
-      const quality = slotQualities[idx] ?? DEFAULT_QUALITY
+      const quality = effectiveSlotQualities[idx] ?? buildDefaultSlotQualities(blueprintWithSlots)[idx]
       const modifiers = slot.options?.[0]?.modifiers
       return calculateSlotModifiers(quality, modifiers)
     })
-  }, [blueprint.slots, slotQualities])
+  }, [blueprint.slots, effectiveSlotQualities, blueprintWithSlots])
 
   // Aggregate all modifiers across slots
   const aggregatedModifiers = useMemo(() => {
@@ -137,37 +153,20 @@ export default function BlueprintDetailsModal({
     setSlotQualities(prev => ({ ...prev, [slotIndex]: quality }))
   }
 
-  // Get effective slot qualities (using defaults for unset slots)
-  const effectiveSlotQualities = useMemo(() => {
-    const qualities: Record<number, number> = {}
-    const slotCount = blueprint.slots?.length ?? 0
-    for (let i = 0; i < slotCount; i++) {
-      qualities[i] = slotQualities[i] ?? DEFAULT_QUALITY
-    }
-    return qualities
-  }, [blueprint.slots?.length, slotQualities])
+  const minSlotQualityValue = useMemo(
+    () => minSlotQuality(effectiveSlotQualities),
+    [effectiveSlotQualities]
+  )
 
-  // Calculate the minimum quality across all slots (floor for order matching)
-  const minSlotQuality = useMemo(() => {
-    const values = Object.values(effectiveSlotQualities)
-    return values.length > 0 ? Math.min(...values) : DEFAULT_QUALITY
-  }, [effectiveSlotQualities])
+  const isUniformQuality = useMemo(
+    () => isUniformSlotQuality(effectiveSlotQualities),
+    [effectiveSlotQualities]
+  )
 
-  // Check if all slots have the same quality (uniform vs mixed)
-  const isUniformQuality = useMemo(() => {
-    const values = Object.values(effectiveSlotQualities)
-    return values.length <= 1 || values.every((v) => v === values[0])
-  }, [effectiveSlotQualities])
-
-  // Calculate pricing for the current quality settings
   const orderPricing = useMemo(() => {
     if (!canAddToOrder) return null
-    return pricingForBlueprintLine(
-      blueprint as BlueprintWithSlots,
-      minSlotQuality,
-      1
-    )
-  }, [blueprint, minSlotQuality, canAddToOrder])
+    return pricingForBlueprintLine(blueprintWithSlots, effectiveSlotQualities, 1)
+  }, [blueprintWithSlots, effectiveSlotQualities, canAddToOrder])
 
   const handleAddToOrder = () => {
     if (!orderPricing || !canAddToOrder) return
@@ -250,11 +249,11 @@ export default function BlueprintDetailsModal({
             <h3 className="text-slate-400 text-sm mb-3">Required Resources</h3>
             <div className="space-y-3">
               {blueprint.slots.map((slot, idx) => (
-                <ResourceSlotCard
+                <BlueprintSlotQualityCard
                   key={idx}
                   slot={slot}
                   slotIndex={idx}
-                  quality={slotQualities[idx] ?? DEFAULT_QUALITY}
+                  quality={effectiveSlotQualities[idx]}
                   onQualityChange={handleQualityChange}
                   modifierResults={allSlotModifiers[idx] ?? []}
                 />
@@ -317,15 +316,9 @@ export default function BlueprintDetailsModal({
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span className="text-slate-400">Quality:</span>
-                {isUniformQuality ? (
-                  <span className="px-2 py-0.5 bg-slate-800 rounded text-orange-300 font-mono">
-                    Q{minSlotQuality}
-                  </span>
-                ) : (
-                  <span className="px-2 py-0.5 bg-slate-800 rounded text-orange-300 font-mono">
-                    Q{minSlotQuality}–Q{Math.max(...Object.values(effectiveSlotQualities))} mix
-                  </span>
-                )}
+                <span className="px-2 py-0.5 bg-slate-800 rounded text-orange-300 font-mono">
+                  {formatSlotQualitySummary(effectiveSlotQualities)}
+                </span>
                 <span className="text-slate-500">·</span>
                 <span className="text-amber-300 font-medium">
                   {formatDfpAuec(orderPricing.unitDfpAuec)}
@@ -344,8 +337,8 @@ export default function BlueprintDetailsModal({
               </div>
               {!isUniformQuality && (
                 <p className="text-xs text-slate-500">
-                  Mixed quality — fulfiller will use minimum Q{minSlotQuality} for all slots.
-                  Per-slot quality preferences are saved for your reference.
+                  Mixed quality — DFP prices each slot at its selected band. Minimum Q
+                  {minSlotQualityValue} is the fulfiller matching floor.
                 </p>
               )}
               <div className="flex items-center gap-3">
@@ -374,135 +367,6 @@ export default function BlueprintDetailsModal({
         )}
       </div>
     </AppModal>
-  )
-}
-
-interface ResourceSlotCardProps {
-  slot: BlueprintSlot
-  slotIndex: number
-  quality: number
-  onQualityChange: (slotIndex: number, quality: number) => void
-  modifierResults: SlotModifierResult[]
-}
-
-function ResourceSlotCard({
-  slot,
-  slotIndex,
-  quality,
-  onQualityChange,
-  modifierResults,
-}: ResourceSlotCardProps) {
-  const option = slot.options?.[0]
-  
-  // Get resource-specific quality bands if available
-  const resourceName = option?.resourceName || option?.entityName || option?.displayName || option?.itemName || ''
-  const bands = getResourceBands(resourceName)
-  
-  // Check if this slot has modifiers defined in the blueprint data
-  const hasModifiers = (option?.modifiers?.length ?? 0) > 0
-  
-  // Check if this is a mineable resource (has SCU measurement) vs a manufactured item
-  const isMineable = (option?.standardCargoUnits ?? 0) > 0
-  // Items (non-mineable) like commodities have no quality
-  const isItem = option?.type === 'item'
-  
-  // Show quality selector if: has modifiers OR is a mineable resource (not an item)
-  const showQualitySelector = hasModifiers || (isMineable && !isItem)
-
-  return (
-    <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
-      <div className="flex justify-between items-center gap-2 mb-2">
-        <span className="text-white font-medium text-sm">{slot.slotDisplayName}</span>
-        <span className="text-slate-400 text-sm shrink-0">×{slot.requiredCount || 1}</span>
-      </div>
-      
-      {slot.options && slot.options.length > 0 && (
-        <div className="space-y-2">
-          {slot.options.map((opt, optIdx) => {
-            const name = opt.resourceName || opt.entityName || opt.displayName || opt.itemName || 'Unknown'
-            const resourceKey = slugifyResourceName(name)
-            const isItem = opt.type === 'item'
-            const labelClass = isItem ? 'text-purple-400' : resourceLabelClassName(resourceKey)
-            return (
-              <div key={optIdx} className="flex justify-between gap-2 text-sm min-w-0">
-                <span className={`min-w-0 break-words ${labelClass}`}>{name}</span>
-                {(opt.standardCargoUnits ?? 0) > 0 ? (
-                  <span className="text-slate-500 shrink-0">{opt.standardCargoUnits} SCU</span>
-                ) : (opt.quantity ?? 0) > 0 ? (
-                  <span className="text-slate-500 shrink-0">×{opt.quantity}</span>
-                ) : null}
-              </div>
-            )
-          })}
-        </div>
-      )}
-
-      {showQualitySelector && (
-        <div className="mt-3 pt-3 border-t border-slate-700/50">
-          <div className="flex items-center gap-3 mb-2">
-            <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
-              Quality
-            </label>
-            {bands ? (
-              // Resource has known quality bands - show dropdown
-              <select
-                value={quality}
-                onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-                className="flex-1 px-2 py-1 bg-slate-700/80 border border-slate-500 rounded text-sm font-mono text-white cursor-pointer hover:bg-slate-600/80 focus:border-orange-500/50 focus:outline-none"
-              >
-                {bands.map((bandValue, idx) => {
-                  const tier = getQualityTier(bandValue)
-                  return (
-                    <option key={idx} value={bandValue} className={getQualityTierColor(tier)}>
-                      Band {idx + 1}: Q{bandValue}
-                    </option>
-                  )
-                })}
-              </select>
-            ) : (
-              // No known bands - show full slider
-              <>
-                <input
-                  type="range"
-                  min={1}
-                  max={1000}
-                  step={1}
-                  value={quality}
-                  onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-                  className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
-                />
-                <input
-                  type="number"
-                  min={1}
-                  max={1000}
-                  value={quality}
-                  onChange={(e) => {
-                    const val = parseInt(e.target.value, 10)
-                    if (!isNaN(val) && val >= 1 && val <= 1000) {
-                      onQualityChange(slotIndex, val)
-                    }
-                  }}
-                  className="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
-                />
-              </>
-            )}
-          </div>
-          
-          {hasModifiers && (
-            <div className="space-y-1">
-              {modifierResults.map((result, idx) => (
-                <div key={idx} className="flex justify-between items-center text-xs">
-                  <span className="text-slate-400">{result.propertyLabel}</span>
-                  <span className={getModifierColorClass(result.modifier, result.property)}>
-                    {formatModifierPercent(result.modifier)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
   )
 }
 
