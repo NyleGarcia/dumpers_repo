@@ -70,40 +70,11 @@ export const PYRO_REGIONS: Record<string, SystemRegion> = {
 }
 
 /**
- * Stanton system regions (less region-specific, most missions available everywhere)
+ * Nyx system - no sub-regions in game data (missions available system-wide)
+ * Stanton system - no sub-regions in game data (missions available system-wide)
+ * 
+ * Only Pyro currently uses the region system (A, B, C, D)
  */
-export const STANTON_REGIONS: Record<string, SystemRegion> = {
-  A: {
-    system: 'Stanton',
-    region: 'A',
-    label: 'Stanton Region A (Hurston/Crusader)',
-    locations: [
-      'Hurston',
-      'Crusader',
-      'Port Olisar',
-      'Everus Harbor',
-    ],
-    terminalLocations: [
-      'Everus Harbor',
-      'Port Olisar',
-    ],
-  },
-  B: {
-    system: 'Stanton',
-    region: 'B',
-    label: 'Stanton Region B (ArcCorp/microTech)',
-    locations: [
-      'ArcCorp',
-      'microTech',
-      'Baijini Point',
-      'Port Tressler',
-    ],
-    terminalLocations: [
-      'Baijini Point',
-      'Port Tressler',
-    ],
-  },
-}
 
 /**
  * Get region info by system and region letter
@@ -115,9 +86,7 @@ export function getRegionInfo(system: string, region: string): SystemRegion | nu
   if (sysLower === 'pyro' && PYRO_REGIONS[regionUpper]) {
     return PYRO_REGIONS[regionUpper]
   }
-  if (sysLower === 'stanton' && STANTON_REGIONS[regionUpper]) {
-    return STANTON_REGIONS[regionUpper]
-  }
+  // Stanton and Nyx don't use sub-regions - missions available system-wide
   return null
 }
 
