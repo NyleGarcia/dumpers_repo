@@ -1106,11 +1106,96 @@ function parseBlueprintDefinitions() {
     // Extract category
     const category = bp.category?._RecordName_?.replace('BlueprintCategoryRecord.', '') || 'Unknown'
     
+    // Generate names
+    const fullName = recordName.replace('CraftingBlueprintRecord.', '')
+    // internalName is the short form (without BP_CRAFT_ prefix) used for matching
+    const internalName = fullName
+      .replace(/^BP_CRAFT_/i, '')
+      .replace(/_scitem$/i, '')
+    // blueprintName is the human-readable display name
+    const blueprintName = internalName
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase()) // Title case
+      .replace(/(\d+)x(\d+)/gi, '$1x$2') // Fix dimensions like 2x2
+      .trim()
+    
+    // Derive subtype from entityClass for filtering (pistol, rifle, cooler, etc.)
+    let subtype = null
+    const ecLower = (entityClass || '').toLowerCase()
+    // FPS weapon types
+    if (category === 'FPSWeapons') {
+      for (const t of ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']) {
+        if (ecLower.includes(`_${t}_`) || ecLower.includes(`_${t}`)) {
+          subtype = t
+          break
+        }
+      }
+      if (!subtype && ecLower.includes('mag')) subtype = 'magazine'
+      if (!subtype && ecLower.includes('frag')) subtype = 'grenade'
+    }
+    // FPS armor - detect slot and weight
+    let armorSlot = null
+    let armorWeight = null
+    if (category === 'FPSArmours') {
+      // Detect armor slot
+      if (ecLower.includes('helmet')) armorSlot = 'helmet'
+      else if (ecLower.includes('torso') || ecLower.includes('core') || ecLower.includes('jacket')) armorSlot = 'core'
+      else if (ecLower.includes('arm')) armorSlot = 'arms'
+      else if (ecLower.includes('leg') || ecLower.includes('pants')) armorSlot = 'legs'
+      else if (ecLower.includes('undersuit')) armorSlot = 'undersuit'
+      else if (ecLower.includes('backpack')) armorSlot = 'backpack'
+      
+      // Detect armor weight
+      if (ecLower.includes('flightsuit') || ecLower.includes('racer') || ecLower.includes('racing') || ecLower.includes('flight')) {
+        armorWeight = 'flight'
+      } else if (ecLower.includes('_superheavy_') || ecLower.includes('_superheavy')) {
+        armorWeight = 'superheavy'
+      } else if (ecLower.includes('_heavy_') || ecLower.includes('_heavy')) {
+        armorWeight = 'heavy'
+      } else if (ecLower.includes('_medium_') || ecLower.includes('_medium')) {
+        armorWeight = 'medium'
+      } else if (ecLower.includes('_light_') || ecLower.includes('_light') || ecLower.includes('undersuit')) {
+        armorWeight = 'light'
+      }
+      
+      subtype = armorSlot // Use slot as subtype for armor
+    }
+    // Vehicle component types
+    if (category.startsWith('VehicleComponent')) {
+      if (ecLower.includes('cooler')) subtype = 'cooler'
+      else if (ecLower.includes('power')) subtype = 'power_plant'
+      else if (ecLower.includes('shield')) subtype = 'shield'
+      else if (ecLower.includes('quantum')) subtype = 'quantum_drive'
+    }
+    // Vehicle weapon types
+    if (category.startsWith('VehicleWeapons')) {
+      if (ecLower.includes('turret')) subtype = 'turret'
+      else if (ecLower.includes('missile') || ecLower.includes('rack')) subtype = 'missile'
+      else if (ecLower.includes('gatling') || ecLower.includes('cannon') || ecLower.includes('repeater')) subtype = 'gun'
+    }
+    
+    // Map category to the display format expected by the website
+    let categoryName = category
+    if (category.startsWith('VehicleComponent')) {
+      const size = category.replace('VehicleComponent', '')
+      categoryName = `Veh. Comp. ${size}`
+    } else if (category.startsWith('VehicleWeapons')) {
+      const size = category.replace('VehicleWeapons', '')
+      categoryName = `Veh. Weapons ${size}`
+    }
+    
     blueprints.push({
       id: json._RecordId_,
-      name: recordName.replace('CraftingBlueprintRecord.', ''),
+      file: json._RecordId_, // Alias for backwards compatibility
+      name: fullName,
+      internalName,
+      blueprintName,
       entityClass,
       category,
+      categoryName,
+      subtype,
+      armorSlot,
+      armorWeight,
       craftTimeMinutes: Math.round(craftTimeMinutes * 10) / 10,
       slots
     })

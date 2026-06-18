@@ -25,7 +25,11 @@ const getFpsWeaponTypeFromFilename = (filename) => {
 }
 
 const getSubType = (bp) => {
-  const parts = bp.file.split('\\')
+  // Use pre-computed subtype from game data
+  if (bp.subtype) return bp.subtype
+  
+  // Fallback for legacy behavior
+  const parts = (bp.file || '').split('\\')
   const filename = parts[parts.length - 1] || ''
   
   for (let i = 0; i < parts.length - 1; i++) {
@@ -98,50 +102,13 @@ const isFlightArmor = (parts, filename, blueprintName = '') => {
 }
 
 const getArmorWeight = (bp) => {
-  const parts = bp.file.split('\\')
-  const filename = parts[parts.length - 1]?.toLowerCase() || ''
-  
-  // Check if this is FPS armor
-  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
-  if (!isArmor) return null
-  
-  // Flight suits, racing gear, and flight/racing helmets
-  if (isFlightArmor(parts, filename, bp.blueprintName)) return 'flight'
-  
-  // Extract weight from filename (works for both combat and template armor)
-  // Patterns: armor_heavy_arms, utility_light_backpack, combat_medium_core, etc.
-  if (filename.includes('_superheavy_') || filename.includes('_superheavy.')) return 'superheavy'
-  if (filename.includes('_heavy_') || filename.includes('_heavy.')) return 'heavy'
-  if (filename.includes('_medium_') || filename.includes('_medium.')) return 'medium'
-  if (filename.includes('_light_') || filename.includes('_light.')) return 'light'
-  
-  // Fallback: weight from folder path (e.g. combat\light\bp_craft_gys_jacket_01_01_01.json)
-  const fromPath = getArmorWeightFromPath(parts)
-  if (fromPath) return fromPath
-
-  // Undersuits are the lightest base layer
-  if (parts.some(p => p.toLowerCase() === 'undersuit')) return 'light'
-  
-  return null
+  // Use pre-computed armorWeight from game data
+  return bp.armorWeight || null
 }
 
 const getArmorSlot = (bp) => {
-  const parts = bp.file.split('\\')
-  const filename = parts[parts.length - 1]?.toLowerCase() || ''
-  
-  // Check if this is FPS armor
-  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
-  if (!isArmor) return null
-  
-  // Extract slot from filename
-  // Patterns: armor_heavy_helmet, armor_heavy_arms, armor_heavy_core, armor_heavy_legs, combat_heavy_backpack
-  if (filename.includes('_helmet')) return 'helmet'
-  if (filename.includes('_arms')) return 'arms'
-  if (filename.includes('_core') || filename.includes('_jacket')) return 'core'
-  if (filename.includes('_legs') || filename.includes('_pants')) return 'legs'
-  if (filename.includes('_backpack') || filename.includes('backpack_')) return 'backpack'
-  
-  return null
+  // Use pre-computed armorSlot from game data
+  return bp.armorSlot || null
 }
 
 const MAIN_CATEGORY_GROUPS = {
