@@ -42,7 +42,7 @@ export function extractBlueprintResources(
   for (const blueprint of blueprints) {
     for (const slot of blueprint.slots ?? []) {
       for (const option of slot.options ?? []) {
-        const label = option.resourceName || option.entityName
+        const label = option.resourceName || option.entityName || option.itemName
         if (!label) continue
 
         const resourceKey = slugifyResourceName(label)
@@ -103,7 +103,7 @@ export function extractOrderLineItemsFromBlueprint(
     for (const option of slot.options ?? []) {
       if (option.type && option.type !== 'resource') continue
 
-      const label = option.resourceName || option.entityName
+      const label = option.resourceName || option.entityName || option.itemName
       if (!label) continue
 
       const resourceKey = slugifyResourceName(label)

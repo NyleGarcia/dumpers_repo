@@ -147,7 +147,7 @@ export default function BlueprintCard({
               <div className="flex flex-wrap gap-1">
                 {blueprint.slots.flatMap((slot, slotIdx) => 
                   (slot.options || []).map((opt, optIdx) => {
-                    const name = opt.resourceName || opt.entityName
+                    const name = opt.resourceName || opt.entityName || opt.itemName
                     if (!name) return null
                     const chipClass = opt.type === 'item'
                       ? 'bg-purple-950/30 text-purple-400 border-purple-500/20'
@@ -162,8 +162,8 @@ export default function BlueprintCard({
                     )
                   })
                 ).slice(0, 6)}
-                {blueprint.slots.flatMap(s => s.options || []).filter(o => o.resourceName || o.entityName).length > 6 && (
-                  <span className="text-slate-500 text-xs">+{blueprint.slots.flatMap(s => s.options || []).filter(o => o.resourceName || o.entityName).length - 6} more</span>
+                {blueprint.slots.flatMap(s => s.options || []).filter(o => o.resourceName || o.entityName || o.itemName).length > 6 && (
+                  <span className="text-slate-500 text-xs">+{blueprint.slots.flatMap(s => s.options || []).filter(o => o.resourceName || o.entityName || o.itemName).length - 6} more</span>
                 )}
               </div>
             </div>
