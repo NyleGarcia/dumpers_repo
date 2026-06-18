@@ -198,6 +198,14 @@ function parseLocalization() {
     // Store all localization, but track description keys specifically
     localization[key] = value
     
+    // Also store without trailing tags like ,P ,M etc (platform/variant tags)
+    if (key.includes(',')) {
+      const baseKey = key.split(',')[0]
+      if (!localization[baseKey]) {
+        localization[baseKey] = value
+      }
+    }
+    
     if (key.includes('_desc') || key.includes('_Desc') || key.includes('Description')) {
       descCount++
     }
@@ -1213,12 +1221,202 @@ function parseBlueprintDefinitions(localization = {}) {
         `item_Name${name?.toLowerCase()}`,     // lowercase
         `item_Name_${name?.toLowerCase()}`,    // item_Name_ccc_medium_armor...
       )
+      
+      // Try with uppercase manufacturer prefix (e.g., GRIN_utility_medium_arms)
+      if (name) {
+        const parts = name.split('_')
+        if (parts.length > 1) {
+          // Uppercase just the manufacturer prefix
+          const upperMfg = parts[0].toUpperCase() + '_' + parts.slice(1).join('_')
+          locKeyPatterns.push(`item_Name_${upperMfg}`)
+        }
+      }
     }
     
     for (const key of locKeyPatterns) {
       if (key && localization[key]) {
         blueprintName = localization[key]
         break
+      }
+    }
+    
+    // Special handling for armor items with complex naming patterns
+    // Pattern: {mfg}_armor_{weight}_{slot}_{variant} or {mfg}_{type}_armor_{slot}_{variant}
+    if (!blueprintName) {
+      const nameLower = (internalName || '').toLowerCase()
+      const MFG_UPPER = (internalName || '').split('_')[0]?.toUpperCase() || ''
+      
+      // Helper to get slot display name
+      const getSlotName = (s) => {
+        const map = { arms: 'Arms', core: 'Core', helmet: 'Helmet', legs: 'Legs', backpack: 'Backpack', suit: 'Suit' }
+        return map[s] || s.charAt(0).toUpperCase() + s.slice(1)
+      }
+      
+      // Try armor-specific patterns
+      // e.g., cds_armor_heavy_arms_01_01_01 -> try item_Name_cds_heavy_armor_01_arms
+      const armorMatch = nameLower.match(/^(\w+?)_(?:legacy_)?armor_(\w+?)_(\w+?)_(\d+)_(\d+)_(\d+)/)
+      if (armorMatch) {
+        const [, mfg, weight, slot, v1, v2, v3] = armorMatch
+        const keysToTry = [
+          `item_Name_${mfg}_armor_${weight}_${slot}_${v1}_${v2}_${v3}`,
+          `item_Name_${MFG_UPPER}_armor_${weight}_${slot}_${v1}_${v2}_${v3}`,
+          `item_Name_${mfg}_${weight}_armor_${v1}_${slot}`,
+          `item_Name_${mfg}_${weight}_armor_0${v1}_${slot}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+        
+        // Try using short name + slot
+        if (!blueprintName) {
+          const shortKeys = [
+            `item_Name_${mfg}_armor_${weight}_0${v1}_short`,
+            `item_Name_${mfg}_armor_${weight}_${v1}_short`,
+            `item_Name_${mfg}_${weight}_armor_0${v1}_short`,
+            `item_Name_${mfg}_armor_${weight}_armor_0${v1}_short`,
+          ]
+          for (const sk of shortKeys) {
+            if (localization[sk]) {
+              blueprintName = `${localization[sk]} ${getSlotName(slot)}`
+              break
+            }
+          }
+        }
+      }
+      
+      // Try {mfg}_{type}_{weight}_{slot} patterns (e.g., grin_utility_medium_arms, qrt_combat_medium_arms)
+      const typeMatch = nameLower.match(/^(\w+?)_(combat|utility|env|specialist)_(\w+?)_(\w+?)_(\d+)_(\d+)_(\d+)/)
+      if (!blueprintName && typeMatch) {
+        const [, mfg, type, weight, slot, v1, v2, v3] = typeMatch
+        const keysToTry = [
+          `item_Name_${mfg}_${type}_${weight}_${slot}_${v1}_${v2}_${v3}`,
+          `item_Name_${MFG_UPPER}_${type}_${weight}_${slot}_${v1}_${v2}_${v3}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+        
+        // Try short name
+        if (!blueprintName) {
+          const shortKeys = [
+            `item_Name_${mfg}_${type}_${weight}_0${v1}_short`,
+            `item_Name_${mfg}_${type}_${weight}_armor_0${v1}_short`,
+            `item_Name_${MFG_UPPER}_${type}_${weight}_0${v1}_short`,
+          ]
+          for (const sk of shortKeys) {
+            if (localization[sk]) {
+              blueprintName = `${localization[sk]} ${getSlotName(slot)}`
+              break
+            }
+          }
+        }
+      }
+      
+      // Try legacy armor patterns: cds_legacy_armor_heavy_arms_01_01_01
+      const legacyMatch = nameLower.match(/^(\w+?)_legacy_armor_(\w+?)_(\w+?)_(\d+)_(\d+)_(\d+)/)
+      if (!blueprintName && legacyMatch) {
+        const [, mfg, weight, slot, v1, v2, v3] = legacyMatch
+        const keysToTry = [
+          `item_Name_${mfg}_legacy_armor_${weight}_${slot}_${v1}_${v2}_${v3}`,
+          `item_Name_${MFG_UPPER}_legacy_armor_${weight}_${slot}_${v1}_${v2}_${v3}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+      
+      // Try undersuit patterns: cds_undersuit_01_01_01
+      const undersuitMatch = nameLower.match(/^(\w+?)_undersuit(?:_helmet)?_(\d+)_(\d+)_(\d+)/)
+      if (!blueprintName && undersuitMatch) {
+        const [full, mfg, v1, v2, v3] = undersuitMatch
+        const isHelmet = full.includes('helmet')
+        const keysToTry = [
+          `item_Name_${MFG_UPPER}_Undersuit_Armor_${v1}_${v2}_${v3}`,
+          `item_Name_${mfg}_undersuit_${v1}_${v2}_${v3}`,
+          `item_Name_${MFG_UPPER}_undersuit_${v1}_${v2}_${v3}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+      
+      // Try reversed patterns: ksar_armor_light_arms -> ksar_light_armor_arms
+      // Pattern: {mfg}_armor_{weight}_{slot} -> {mfg}_{weight}_armor_{slot}
+      const reversedMatch = nameLower.match(/^(\w+?)_armor_(\w+?)_(\w+?)_(\d+)_(\d+)_(\d+)/)
+      if (!blueprintName && reversedMatch) {
+        const [, mfg, weight, slot, v1, v2, v3] = reversedMatch
+        const keysToTry = [
+          `item_Name_${mfg}_${weight}_armor_${slot}_0${v1}`,
+          `item_Name_${mfg}_${weight}_armor_${slot}_${v1}`,
+          `item_Name_${mfg}_${weight}_armor_${slot}_${v1}_${v2}_${v3}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+      
+      // Try env armor patterns: clda_env_armor_heavy_helmet -> clda_env_heavy_helmet
+      const envMatch = nameLower.match(/^(\w+?)_env_armor_(\w+?)_(\w+?)_(\d+)/)
+      if (!blueprintName && envMatch) {
+        const [, mfg, weight, slot, v1] = envMatch
+        const keysToTry = [
+          `item_Name_${mfg}_env_${weight}_${slot}_0${v1}`,
+          `item_Name_${mfg}_env_${weight}_${slot}_${v1}`,
+          `item_Name_${mfg}_env_armor_${weight}_${slot}_0${v1}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+        // Try short name
+        if (!blueprintName) {
+          const shortKey = `item_Name_${mfg}_env_armor_0${v1}_short`
+          if (localization[shortKey]) {
+            blueprintName = `${localization[shortKey]} ${getSlotName(slot)}`
+          }
+        }
+      }
+      
+      // Try 9tails variants: _01_9tails_01 -> _01_01_9tails01
+      const ninetailsMatch = nameLower.match(/^(.+?)_(\d+)_9tails_(\d+)$/)
+      if (!blueprintName && ninetailsMatch) {
+        const [, prefix, v1, v2] = ninetailsMatch
+        const keysToTry = [
+          `item_Name_${prefix}_0${v1}_0${v2}_9tails0${v2}`,
+          `item_Name_${prefix}_${v1}_${v2}_9tails0${v2}`,
+          `item_Name_${prefix}_${v1}_01_9tails0${v2}`,
+          `item_Name_${prefix}_0${v1}_01_9tails0${v2}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+      
+      // Try specialist armor patterns: qrt_specialist_medium_arms -> qrt_specialist_heavy_arms
+      const specialistMatch = nameLower.match(/^(\w+?)_specialist_(\w+?)_(\w+?)_(\d+)_(\d+)_(\d+)/)
+      if (!blueprintName && specialistMatch) {
+        const [, mfg, weight, slot, v1, v2, v3] = specialistMatch
+        const keysToTry = [
+          `item_Name_${mfg}_specialist_${weight}_${slot}_0${v1}_0${v2}_0${v3}`,
+          `item_Name_${mfg}_specialist_${weight}_${slot}_${v1}_${v2}_${v3}`,
+          `item_Name_${mfg}_specialist_heavy_${slot}_0${v1}_0${v2}_0${v3}`,  // Some medium might map to heavy
+          `item_Name_${mfg}_specialist_heavy_${slot}_${v1}_${v2}_${v3}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+        // Try short name
+        if (!blueprintName) {
+          const shortKeys = [
+            `item_Name_${mfg}_specialist_${weight}_armor_0${v1}_short`,
+            `item_Name_${mfg}_specialist_heavy_armor_0${v1}_short`,
+          ]
+          for (const sk of shortKeys) {
+            if (localization[sk]) {
+              blueprintName = `${localization[sk]} ${getSlotName(slot)}`
+              break
+            }
+          }
+        }
       }
     }
     

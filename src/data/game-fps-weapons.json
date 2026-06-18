@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-06-18T01:32:26.128Z",
+  "_extracted": "2026-06-18T01:48:22.616Z",
   "weapons": [
     {
       "id": "699db405-4ca1-4993-ba58-a9f90001ae6b",
@@ -3047,7 +3047,7 @@
     {
       "id": "53309dc8-6988-4923-b765-d0846542e27f",
       "name": "utfl_crossbow_ballistic_01_tint01",
-      "displayName": "@item_Nameutfl_crossbow_ballistic_01_tint01",
+      "displayName": "Novian \"Nighthunter\" Crossbow",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -3060,7 +3060,7 @@
     {
       "id": "aa5b80da-8bb8-4712-9277-e2cb3a052d4c",
       "name": "utfl_crossbow_ballistic_01_tint02",
-      "displayName": "@item_Nameutfl_crossbow_ballistic_01_tint02",
+      "displayName": "Novian \"Ghostmaker\" Crossbow",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -3073,7 +3073,7 @@
     {
       "id": "d0e8d997-381b-44fe-a098-3c3ba6293b18",
       "name": "utfl_crossbow_ballistic_01_tint03",
-      "displayName": "@item_Nameutfl_crossbow_ballistic_01_tint03",
+      "displayName": "Novian \"Wildshot\" Crossbow",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,

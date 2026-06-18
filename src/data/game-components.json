@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-06-18T01:32:26.101Z",
+  "_extracted": "2026-06-18T01:48:22.589Z",
   "components": [
     {
       "id": "f59a0b33-5bbe-439e-8bd5-111db00b5ff6",
@@ -8310,7 +8310,7 @@
       "id": "7775ba87-03ef-4df0-84ca-7222848ceac3",
       "name": "SHLD_VNCL_S04_Mauler",
       "type": "shieldgenerator",
-      "displayName": "@item_NameSHLD_VNCL_S04_Mauler",
+      "displayName": "Mauler Shield Generator",
       "size": 4,
       "grade": 1,
       "manufacturerCode": "GODI",

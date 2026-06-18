@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-18T01:32:26.078Z",
+  "_extracted": "2026-06-18T01:48:22.567Z",
   "resources": {
     "987_shirt_04": {
       "key": "Item_Desc_987_shirt_04",
@@ -566,6 +566,10 @@
       "key": "item_Desc_ELD_Shirt_03_01_01",
       "description": "A partial zip pullover shirt with mesh arm accents and a button collar. Escar Limited's Balboa line delivers cutting edge style suitable for any system or situation. \\n\\nWomen's sizes currently out of stock."
     },
+    "eld_shirt_04_01_01": {
+      "key": "item_Desc_ELD_Shirt_04_01_01",
+      "description": "ELD - shirt (04) - description"
+    },
     "eld_shirt_04_assistance_dec": {
       "key": "item_Desc_ELD_Shirt_04_assistance_dec",
       "description": "In space, no one can hear your scream. That's why they created ECN alerts. Commemorate the kindness of strangers with the Rescue Required shirt, featuring an astronaut fleeing from danger."
@@ -962,6 +966,14 @@
       "key": "item_Desc_Keycard_OLP_PAF_BunkerCard",
       "description": "This encoded keycard is required to activate an orbital mining laser. Security protocols require this single-use keycard be stored at orbital laser platforms until all pre-firing procedures have been met. The keycard must then be inserted into a terminal at a ground-based Laser Activation Bunker to activate the mining laser."
     },
+    "m116a_s1_q1": {
+      "key": "item_Desc_M116A_S1_Q1",
+      "description": "Hydra Propulsion M1-16A Thruster"
+    },
+    "m116b_s1_q1": {
+      "key": "item_Desc_M116B_S1_Q1",
+      "description": "Hydra Propulsion M1-16B Thruster"
+    },
     "mym_shirt_02_01_01": {
       "key": "item_Desc_MYM_Shirt_02_01_01",
       "description": "MuyMuy's Atavi line of casual shirts are comfortable enough to wear at home, but stylish enough for a night out. They are made with EasyCare technology to maintain the colors during repeated washes."
@@ -969,6 +981,10 @@
     "mym_shirt_01_01_01": {
       "key": "item_Desc_MYM_shirt_01_01_01",
       "description": "Live in comfort with MuyMuy's Davlos line of cotton-synthetic shirts. The durable, yet soft, fabric contains a patented SweatGuard technology that not only whisks away perspiration but helps prevent stains."
+    },
+    "mym_shirt_02_01_imperator": {
+      "key": "item_Desc_MYM_shirt_02_01_imperator",
+      "description": "A casual and comfortable grey long sleeve shirt that looks good whether you're out and about or just lounging at home. MuyMuy's exclusive Pathfinder edition of the Atavi steps up the style by including striking silver sleeves."
     },
     "moss_head": {
       "key": "item_Desc_Moss_Head",
@@ -1106,6 +1122,10 @@
       "key": "item_Desc_POWR_AMRS_S03_SmartGen",
       "description": "Item Type: Power Plant\\nManufacturer: Amon & Reese Co.\\nSize: 3\\nGrade: D\\nClass: Military\\n\\nThe no-frills SmartGen is A&R’s entry-level large power plant that delivers solid performance for the price."
     },
+    "powr_default": {
+      "key": "item_Desc_POWR_Default",
+      "description": "Default Description space for power plant."
+    },
     "powr_just_s00_defiant": {
       "key": "item_Desc_POWR_JUST_S00_Defiant",
       "description": "Item Type: Power Plant\\nManufacturer: Juno Starwerk\\nSize: 0\\nGrade: B\\nClass: Industrial\\n\\nIn this cutthroat universe, the competition doesn’t stop when you do. That’s why you need the Defiant industrial power plant equipped in your vehicle. It’s optimized by the experts at Juno Starwerk to provide unmatched performance compared to other components in its class."
@@ -1221,6 +1241,10 @@
     "qdrv_arcc_s02_torrent": {
       "key": "item_Desc_QDRV_ARCC_S02_Torrent",
       "description": "Item Type: Quantum Drive\\nManufacturer: ArcCorp\\nSize: 2\\nGrade: C\\nClass: Civilian\\n\\nWhatever destination you choose, the ArcCorp Torrent quantum drive is a solid choice to help get you there direct and hassle-free."
+    },
+    "qdrv_default": {
+      "key": "item_Desc_QDRV_Default",
+      "description": "Default description for quantum drive component."
     },
     "qdrv_just_s01_colossus": {
       "key": "item_Desc_QDRV_JUST_S01_Colossus",
@@ -1642,6 +1666,10 @@
       "key": "item_Desc_SHLD_BEHR_S03_7CA",
       "description": "Item Type: Shield Generator\\nManufacturer: Behring\\nSize: 3\\nGrade: A\\nClass: Civilian\\n\\nCommercial-grade shield generators don’t get any better than the 7CA ‘Nargun’. The component utilizes Behring’s patented ‘Freeze Flow’ tech to keep its heat signature in check while increasing both its overall performance and durability."
     },
+    "shld_default": {
+      "key": "item_Desc_SHLD_Default",
+      "description": "Default Description for the ship generator component."
+    },
     "shld_godi_s01_fr66": {
       "key": "item_Desc_SHLD_GODI_S01_FR66",
       "description": "Item Type: Shield Generator\\nManufacturer: Gorgon Defender Industries\\nSize: 1\\nGrade: A\\nClass: Military\\n\\nThe FR-66 is one of the most versatile small shield generator currently on the market. Get military strength protection and performance from Gorgon Defender Industries to ensure your ship can survive any onslaught."
@@ -1986,9 +2014,17 @@
       "key": "item_Desc_banu_lum_jacket_01_02_01",
       "description": "Carrying Capacity: 1K µSCU\\n\\nThis Banu-made mock turtleneck lets you celebrate Luminalia in comfort and style. Cozy up around the lamp with this luxurious blue and grey fabric blend with an asymmetrical front and three adjustable straps that guarantee the perfect fit. Banu phrases calling for merriment and a prosperous future adorn the front and back in white script."
     },
+    "basl_combat_light_flightsuit_01": {
+      "key": "item_Desc_basl_combat_light_flightsuit_01",
+      "description": "PH - basl_combat_light_flightsuit_01"
+    },
     "basl_combat_light_flightsuit_02_01_01": {
       "key": "item_Desc_basl_combat_light_flightsuit_02_01_01",
       "description": "Item Type: Racing Flight Suit\\nDamage Reduction: 5%\\nTemp. Rating: -30 / 60 °C\\nRadiation Protection: 15200 REM\\nRadiation Scrub Rate: 81 REM/s\\nG-Force Tolerance: +100%\\nCarrying Capacity: 8.0 µSCU\\n\\nFeaturing a deceptively simple design, the Ace Interceptor flight suit is jet black with reinforced grey protective padding on the arms and legs. Basilisk's renowned craftsmanship make this flight suit durable and supremely comfortable, leaving no mystery as to why it's widely used by top pilots across the empire."
+    },
+    "basl_combat_light_helmet_01": {
+      "key": "item_Desc_basl_combat_light_helmet_01",
+      "description": "PH - basl_combat_light_helmet_01"
     },
     "basl_combat_light_helmet_02_01_01": {
       "key": "item_Desc_basl_combat_light_helmet_02_01_01",
@@ -2110,6 +2146,10 @@
       "key": "item_Desc_cba_surgeon_shoes_01_01_01",
       "description": "The Lister surgical shoes are designed to provide comfort and support even after hours on your feet. Made out of a crisp white material for easy identification of contamination, the shoes feature padded insoles and are made from a proprietary material that's both breathable and antibacterial."
     },
+    "cbd_boots_01_01_01": {
+      "key": "item_Desc_cbd_boots_01_01_01",
+      "description": "Placeholder CBD Boots Desc."
+    },
     "cbd_gloves_01": {
       "key": "item_Desc_cbd_gloves_01",
       "description": "Originally made for open-canopy racers, the Grappler gloves became beloved for their versatility and durability. Their mix of leather and synthetic fabrics make for a lightweight and warm wear. They also feature an adjustable strap to guarantee the perfect fit, and a special tactile fingertip design so wearers don't have to remove the gloves to interact with screens."
@@ -2137,6 +2177,10 @@
     "cbd_hat_03_01_fleetweek2021": {
       "key": "item_Desc_cbd_hat_03_01_fleetweek2021",
       "description": "Show your support for the Navy and the brave souls that serve the Empire with this classic cadet hat commemorating Invictus Launch Week."
+    },
+    "cbd_hat_03_01_fleetweek2022": {
+      "key": "item_Desc_cbd_hat_03_01_fleetweek2022",
+      "description": "PH - cbd_hat_03_01_fleetweek2022"
     },
     "cbd_hat_03_arccorp_01": {
       "key": "item_Desc_cbd_hat_03_ArcCorp_01",
@@ -2317,6 +2361,10 @@
     "cbd_hat_03_unified_01": {
       "key": "item_Desc_cbd_hat_03_unified_01",
       "description": "A blue and red cadet hat with Unified Distribution Management's name and logo emblazoned across the front and back panels."
+    },
+    "cbd_jacket_02_01_01": {
+      "key": "item_Desc_cbd_jacket_02_01_01",
+      "description": "Placeholder - CBD Jacket Desc\\n\\nCarrying Capacity: 1K µSCU"
     },
     "cbd_jacket_05": {
       "key": "item_Desc_cbd_jacket_05",
@@ -3334,6 +3382,10 @@
       "key": "item_Desc_ctl_shirt_07_nvy01_02_no_decal",
       "description": "The Performance t-shirt from City Lights is made from 100% dryweave synthetics, keeping the fabric soft, comfortable and sweat-free.\\n\\nWomen's sizes currently out of stock."
     },
+    "dmc_boots_04_01_01": {
+      "key": "item_Desc_dmc_boots_04_01_01",
+      "description": "Walk to the ends of the earth with DMC's Hardy line of rugged all-terrain boots. Featuring increased ankle support and waterproof materials, you can trudge through desert or mountain in comfort."
+    },
     "dmc_frontier_gloves_01_01_01": {
       "key": "item_Desc_dmc_frontier_gloves_01_01_01",
       "description": "Lightweight, quick-drying, and durable, the Adroit fingerless gloves keep your hands warm while giving your fingers the freedom to perform delicate work. The material on the wrist extends to meet long-sleeved apparel, cutting down on places that might be exposed to the elements."
@@ -3474,6 +3526,10 @@
       "key": "item_Desc_dmc_shirt_01",
       "description": "The Greenwater is a long-sleeved shirt tailor-made to be worn underneath most standard sets of armor. Crafted with a durable mix of natural and synthetic fibers, it stands up to daily wear and tear without sacrificing comfort."
     },
+    "dnn_shoes_03_01_01": {
+      "key": "item_Desc_dnn_shoes_03_01_01",
+      "description": "PH - dnn_shoes_03_01_01"
+    },
     "doom_armor_medium_arms_02_01_01": {
       "key": "item_Desc_doom_armor_medium_arms_02_01_01",
       "description": "Item Type: Medium Armor\\nDamage Reduction: 30%\\nTemp. Rating: -52 / 82 °C\\nRadiation Protection: 26400 REM\\nRadiation Scrub Rate: 145.8 REM/s\\n\\nDress to impress in scrapheap chic! The Stitcher armor might look like it's held together with tape and good intentions but we swear it's space safe. The intentional ramshackle design features a funky double collar, plenty of storage, and a ribbed industrial hose attached to a metal cylinder on the back just for the hell of it."
@@ -3486,9 +3542,29 @@
       "key": "item_Desc_doom_armor_medium_legs_02_01_01",
       "description": "Item Type: Medium Armor\\nDamage Reduction: 30%\\nTemp. Rating: -52 / 82 °C\\nRadiation Protection: 26400 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 4.0 µSCU\\n\\nDress to impress in scrapheap chic! The Stitcher armor might look like it's held together with tape and good intentions but we swear it's space safe. The intentional ramshackle design features a funky double collar, plenty of storage, and a ribbed industrial hose attached to a metal cylinder on the back just for the hell of it."
     },
+    "doom_combat_medium_arms_01_01_01": {
+      "key": "item_Desc_doom_combat_medium_arms_01_01_01",
+      "description": "Item Type: Medium Armor\\nDamage Reduction: 30%\\nTemp. Rating: -52 / 82 °C\\nRadiation Protection: 26400 REM\\nRadiation Scrub Rate: 145.8 REM/s\\n\\nSometimes all you gotta do is put on the right piece of armor to make your message loud and clear. Clash armor first started popping up when the Dredge got strong-armed into mass-producing their armor and it's been scaring everyone stupid since. Now everybody's stealing it. Clash features a reinforced medium plating to get you a good balance of protection without giving up too much speed."
+    },
     "doom_combat_medium_backpack_01": {
       "key": "item_Desc_doom_combat_medium_backpack_01",
       "description": "Item Type: Medium Backpack\\nCarrying Capacity: 105K µSCU\\nCore Compatibility: Medium & Heavy\\n\\nStop lugging all your loot by hand. The Sinkhole backpack gives you plenty of space to store everything you need, while leaving your hands free for whatever mischief you have in mind."
+    },
+    "doom_combat_medium_core_01_01_01": {
+      "key": "item_Desc_doom_combat_medium_core_01_01_01",
+      "description": "Item Type: Medium Armor\\nDamage Reduction: 30%\\nTemp. Rating: -52 / 82 °C\\nRadiation Protection: 26400 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 7.5K µSCU\\nBackpacks: Medium, Light\\n\\nSometimes all you gotta do is put on the right piece of armor to make your message loud and clear. Clash armor first started popping up when the Dredge got strong-armed into mass-producing their armor and it's been scaring everyone stupid since. Now everybody's stealing it. Clash features a reinforced medium plating to get you a good balance of protection without giving up too much speed."
+    },
+    "doom_combat_medium_helmet_01_01_01": {
+      "key": "item_Desc_doom_combat_medium_helmet_01_01_01",
+      "description": "Item Type: Medium Armor\\nDamage Reduction: 30%\\nTemp. Rating: -56 / 86 °C\\nRadiation Protection: 26400 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 4.0 µSCU\\n\\nBuilt using high quality scavenge with a molded faceplate, the Death's Head is built to take an absolute beating. Visor is AR crosshair compatible."
+    },
+    "doom_combat_medium_legs_01_01_01": {
+      "key": "item_Desc_doom_combat_medium_legs_01_01_01",
+      "description": "Item Type: Medium Armor\\nDamage Reduction: 30%\\nTemp. Rating: -52 / 82 °C\\nRadiation Protection: 26400 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 4.5K µSCU\\n\\nSometimes all you gotta do is put on the right piece of armor to make your message loud and clear. Clash armor first started popping up when the Dredge got strong-armed into mass-producing their armor and it's been scaring everyone stupid since. Now everybody's stealing it. Clash features a reinforced medium plating to get you a good balance of protection without giving up too much speed."
+    },
+    "doom_light_armor_helmet_01": {
+      "key": "item_Desc_doom_light_armor_helmet_01",
+      "description": "Visor is AR crosshair compatible."
     },
     "doom_medium_armor_helmet_02": {
       "key": "item_Desc_doom_medium_armor_helmet_02",
@@ -3562,6 +3638,10 @@
       "key": "item_Desc_dyl_gloves_02_01_01",
       "description": "The Ahmanson gloves achieve elegance with an edge thanks to Dyna Lei. These leather opera gloves have a sumptuous black patina that will become more spectacular with time, and are made with a comfortable cashmere lining.  \\n\\nMen sizes are currently unavailable."
     },
+    "dyl_jacket_02_01_01": {
+      "key": "item_Desc_dyl_jacket_02_01_01",
+      "description": "DYL - jacket - description"
+    },
     "dyl_pants_02_01_01": {
       "key": "item_Desc_dyl_pants_02_01_01",
       "description": "Carrying Capacity: 3K µSCU\\n\\nDyna Lei updates an old classic with the Koal black leather pants that feature metallic trim along each leg for a thoroughly modern, dynamic look.\\n\\nMen's sizes currently not available."
@@ -3577,6 +3657,14 @@
     "dyl_shoes_02_01_01": {
       "key": "item_Desc_dyl_shoes_02_01_01",
       "description": "The Barrymore pumps are part of the Dyna Lei essentials collection. The shoes feature classic yet subtle curves and supportive insoles for an ultra-comfortable fit ideal for all day wear.\\n\\nMen sizes are currently unavailable."
+    },
+    "eld_glasses_01_01_01": {
+      "key": "item_Desc_eld_glasses_01_01_01",
+      "description": "PH - eld_glasses_01_01_01"
+    },
+    "eld_jacket_04_01_01": {
+      "key": "item_Desc_eld_jacket_04_01_01",
+      "description": "PH - eld_jacket_04_01_01"
     },
     "eld_jacket_05_01_01": {
       "key": "item_Desc_eld_jacket_05_01_01",
@@ -3598,13 +3686,29 @@
       "key": "item_Desc_eld_jacket_05_01_13",
       "description": "Carrying Capacity: 2K µSCU\\n\\nThis maroon and brown collarless synth-leather jacket from Escar Limited features quilted detailing around the opening and down the sleeves, and pairs effortlessly with a bold button-down, tropical-print shirt in light brown."
     },
+    "eld_pants_07_01_01": {
+      "key": "item_Desc_eld_pants_07_01_01",
+      "description": "PH - eld_pants_07_01_01"
+    },
     "eld_shirt_04_01_fleetweek2021": {
       "key": "item_Desc_eld_shirt_04_01_fleetweek2021",
       "description": "Few things are as awe-inspiring as a UEE Navy fleet flyby. This comfortable, cotton blend Invictus Launch Week t-shirt celebrates that memorable sight."
     },
+    "eld_shirt_04_01_fleetweek2022": {
+      "key": "item_Desc_eld_shirt_04_01_fleetweek2022",
+      "description": "PH - eld_shirt_04_01_fleetweek2022"
+    },
     "eld_shirt_04_01_subfeb25": {
       "key": "item_Desc_eld_shirt_04_01_subfeb25",
       "description": "Featuring a stylized, neon-green X on the front and the phrase \"Big winner!\" on the back, when you wear this T-shirt, everyone will know that you're going places."
+    },
+    "eld_shirt_04_1million_01": {
+      "key": "item_Desc_eld_shirt_04_1million_01",
+      "description": "Placeholder - eld_shirt_04_1million_01"
+    },
+    "eld_shirt_04_2million_01": {
+      "key": "item_Desc_eld_shirt_04_2million_01",
+      "description": "Placeholder - eld_shirt_04_2million_01"
     },
     "eld_shirt_04_aegis_dec": {
       "key": "item_Desc_eld_shirt_04_aegis_dec",
@@ -3797,6 +3901,10 @@
     "eld_shirt_07_01_01": {
       "key": "item_Desc_eld_shirt_07_01_01",
       "description": "A simple, light grey, long-sleeved shirt constructed from moisture wicking fabric ideal for keeping you comfortable during work and play."
+    },
+    "eld_shirt_09_01_01": {
+      "key": "item_Desc_eld_shirt_09_01_01",
+      "description": "PH - eld_shirt_09_01_01"
     },
     "eld_shirt_10_02_01": {
       "key": "item_Desc_eld_shirt_10_02_01",
@@ -4022,6 +4130,10 @@
       "key": "item_Desc_gsb_boots_06",
       "description": "Whether you're charting new territory on an untouched world or fixing fences at your homestead, Grindstone's TrailTuff boots are sturdy enough to take on the toughest terrain. Made with a proprietary synthetic leather that has all the qualities you love of the real thing and none of the downsides."
     },
+    "gsb_boots_07_01_01": {
+      "key": "item_Desc_gsb_boots_07_01_01",
+      "description": "PH - gsb_boots_07_01_01"
+    },
     "gsb_boots_08_01_01": {
       "key": "item_Desc_gsb_boots_08_01_01",
       "description": "The SafeCore boots are a soft-shelled offering from Grindstone intended to provide more flexibility while traversing in adverse conditions."
@@ -4122,6 +4234,10 @@
       "key": "item_Desc_gys_jacket_01",
       "description": "Item Type: Light Armor\\nDamage Reduction: 20%\\nTemp. Rating: -5 / 38 °C\\nRadiation Protection: 26000 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nBackpack Compatibility: Light\\n\\nThis homemade armor provides a marginal amount of protection but maximum attitude. It's aggressively styled with skulls and other intimidating accessories associated with those living on the edge. Wearing such a distinct look may either keep people away... or draw them to you."
     },
+    "gys_jacket_01_01_02": {
+      "key": "item_Desc_gys_jacket_01_01_02",
+      "description": "PH - gys_jacket_01_01_02"
+    },
     "gys_mask_01_01_01": {
       "key": "item_Desc_gys_mask_01_01_01",
       "description": "Temp. Rating: -5 / 50 °C\\n\\nEnsure every breath you take is crisp and clean with the Purifier mask. It features a wide faceplate rimmed with a special synthetic rubber to provide an airtight fit, while two small lights on each side deliver a clear view ahead. \\n\\nThe AA Support edition is sharp red, blue, and black. An Alliance Aid decal on the front guarantees that the filter is certified to purify the air of Molina Mold."
@@ -4129,6 +4245,10 @@
     "gys_pants_01": {
       "key": "item_Desc_gys_pants_01",
       "description": "Item Type: Light Armor\\nDamage Reduction: 20%\\nTemp. Rating: -5 / 35 °C\\nRadiation Protection: 26000 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 2.0 µSCU\\n\\nThis homemade armor provides a marginal amount of protection but maximum attitude. It's aggressively styled with skulls and other intimidating accessories associated with those living on the edge. Wearing such a distinct look may either keep people away... or draw them to you."
+    },
+    "gys_pants_01_01_02": {
+      "key": "item_Desc_gys_pants_01_01_02",
+      "description": "PH - gys_pants_01_01_02"
     },
     "gys_undersuit_01": {
       "key": "item_Desc_gys_undersuit_01",
@@ -4578,6 +4698,10 @@
       "key": "item_Desc_mrai_flightsuit_01_01_01",
       "description": "Item Type: Racing Flight Suit\\nDamage Reduction: 5%\\nTemp. Rating: -30 / 60 °C\\nRadiation Protection: 15200 REM\\nRadiation Scrub Rate: 81 REM/s\\nG-Force Tolerance: +100%\\nCarrying Capacity: 8.0 µSCU\\n\\nMirai’s Racing Flight Suit uses synthetic fabrics sourced from the Xi’an to create a comfortable flight suit durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the stark red stripe across the body of the flight suit results in a striking but elegant design."
     },
+    "mrai_flightsuit_01_02_01": {
+      "key": "item_Desc_mrai_flightsuit_01_02_01",
+      "description": "PH - mrai_flightsuit_01_02_01"
+    },
     "mrai_flightsuit_01_03_01": {
       "key": "item_Desc_mrai_flightsuit_01_03_01",
       "description": "Item Type: Flight Suit\\nDamage Reduction: 5%\\nTemp. Rating: -30 / 60 °C\\nRadiation Protection: 15200 REM\\nRadiation Scrub Rate: 81 REM/s\\nG-Force Tolerance: +100%\\nCarrying Capacity: 8.0 µSCU\\n\\nEmbody luxury, style, and speed by stepping into the flight suit worn by the Origin racing team. This crisp white flight suit features blue and grey highlight and the Origin logo in several prominent places."
@@ -4609,6 +4733,10 @@
     "mrai_flightsuit_helmet_01_01_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_01_01",
       "description": "Item Type: Racing Helmet\\nDamage Reduction: 5%\\nTemp. Rating: -30 / 60 °C\\nRadiation Protection: 15200 REM\\nRadiation Scrub Rate: 81 REM/s\\n\\nMirai’s Racing helmets uses advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the stark red highlight and bold Mirai branding results in a striking but elegant design."
+    },
+    "mrai_flightsuit_helmet_01_02_01": {
+      "key": "item_Desc_mrai_flightsuit_helmet_01_02_01",
+      "description": "PH - mrai_flightsuit_helmet_01_02_01"
     },
     "mrai_flightsuit_helmet_01_03_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_03_01",
@@ -4765,6 +4893,14 @@
     "nvy_shoes_01_01_shared": {
       "key": "item_Desc_nvy_shoes_01_01_Shared",
       "description": "Stay on your feet all day with Northstar's Waylite. These slip resistant shoes utilize comfortable memory foam and shock absorbent technology to make these casual sneakers perfect for the office or home.\\n\\nWomen's sizes currently out of stock."
+    },
+    "nvy_shoes_02": {
+      "key": "item_Desc_nvy_shoes_02",
+      "description": "PH - Standard issue sneaker for recruits and training, DF80s feature increased arch support for long runs and a polyweave material that keeps your feet dry."
+    },
+    "nvy_training_pants_01": {
+      "key": "item_Desc_nvy_training_pants_01",
+      "description": "PH - nvy_training_pants_01"
     },
     "nvy_training_shirt_01": {
       "key": "item_Desc_nvy_training_shirt_01",
@@ -4989,6 +5125,10 @@
     "ops_pants_06_01_01": {
       "key": "item_Desc_ops_pants_06_01_01",
       "description": "Carrying Capacity: 0.5K µSCU\\n\\nThe Waldron suit fuses classic style with contemporary flourishes in a way that's become definitively OpalSky. The repeating geometric pattern travels the length of the jacket and pants to create a cutting edge look that will turn heads wherever you go."
+    },
+    "ops_shirt_03_01_01": {
+      "key": "item_Desc_ops_shirt_03_01_01",
+      "description": "Placeholder - OPS Shirt Desc"
     },
     "ops_shirt_04_01_01": {
       "key": "item_Desc_ops_shirt_04_01_01",
@@ -5450,6 +5590,14 @@
       "key": "item_Desc_qrt_utility_heavy_arms_01_01_04",
       "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s \\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
     },
+    "qrt_utility_heavy_arms_01_01_10": {
+      "key": "item_Desc_qrt_utility_heavy_arms_01_01_10",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s \\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
+    },
+    "qrt_utility_heavy_arms_01_01_12": {
+      "key": "item_Desc_qrt_utility_heavy_arms_01_01_12",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s \\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
+    },
     "qrt_utility_heavy_arms_01_01_17": {
       "key": "item_Desc_qrt_utility_heavy_arms_01_01_17",
       "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s \\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
@@ -5476,6 +5624,14 @@
     },
     "qrt_utility_heavy_backpack_01_01_04": {
       "key": "item_Desc_qrt_utility_heavy_backpack_01_01_04",
+      "description": "Item Type: Heavy Backpack\\nCarrying Capacity: 180K µSCU\\nCore Compatibility: Heavy\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. The associated backpack seamlessly integrates into the armor, matching its silhouette while also providing ample storage."
+    },
+    "qrt_utility_heavy_backpack_01_01_10": {
+      "key": "item_Desc_qrt_utility_heavy_backpack_01_01_10",
+      "description": "Item Type: Heavy Backpack\\nCarrying Capacity: 180K µSCU\\nCore Compatibility: Heavy\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. The associated backpack seamlessly integrates into the armor, matching its silhouette while also providing ample storage."
+    },
+    "qrt_utility_heavy_backpack_01_01_12": {
+      "key": "item_Desc_qrt_utility_heavy_backpack_01_01_12",
       "description": "Item Type: Heavy Backpack\\nCarrying Capacity: 180K µSCU\\nCore Compatibility: Heavy\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. The associated backpack seamlessly integrates into the armor, matching its silhouette while also providing ample storage."
     },
     "qrt_utility_heavy_backpack_01_01_17": {
@@ -5506,6 +5662,14 @@
       "key": "item_Desc_qrt_utility_heavy_core_01_01_04",
       "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8K µSCU\\nBackpacks: All\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
     },
+    "qrt_utility_heavy_core_01_01_10": {
+      "key": "item_Desc_qrt_utility_heavy_core_01_01_10",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8K µSCU\\nBackpacks: All\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
+    },
+    "qrt_utility_heavy_core_01_01_12": {
+      "key": "item_Desc_qrt_utility_heavy_core_01_01_12",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8K µSCU\\nBackpacks: All\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
+    },
     "qrt_utility_heavy_core_01_01_17": {
       "key": "item_Desc_qrt_utility_heavy_core_01_01_17",
       "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8K µSCU\\nBackpacks: All\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
@@ -5534,6 +5698,14 @@
       "key": "item_Desc_qrt_utility_heavy_helmet_01_01_04",
       "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s \\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. The fully-enclosed helmet comes equipped with a suite of sensors that connects the wearer to the wider world while providing supreme protection. Visor is AR crosshair compatible."
     },
+    "qrt_utility_heavy_helmet_01_01_10": {
+      "key": "item_Desc_qrt_utility_heavy_helmet_01_01_10",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s \\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. The fully-enclosed helmet comes equipped with a suite of sensors that connects the wearer to the wider world while providing supreme protection. Visor is AR crosshair compatible."
+    },
+    "qrt_utility_heavy_helmet_01_01_12": {
+      "key": "item_Desc_qrt_utility_heavy_helmet_01_01_12",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s \\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. The fully-enclosed helmet comes equipped with a suite of sensors that connects the wearer to the wider world while providing supreme protection. Visor is AR crosshair compatible."
+    },
     "qrt_utility_heavy_helmet_01_01_17": {
       "key": "item_Desc_qrt_utility_heavy_helmet_01_01_17",
       "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s \\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. The fully-enclosed helmet comes equipped with a suite of sensors that connects the wearer to the wider world while providing supreme protection. Visor is AR crosshair compatible."
@@ -5560,6 +5732,14 @@
     },
     "qrt_utility_heavy_legs_01_01_04": {
       "key": "item_Desc_qrt_utility_heavy_legs_01_01_04",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8K µSCU\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
+    },
+    "qrt_utility_heavy_legs_01_01_10": {
+      "key": "item_Desc_qrt_utility_heavy_legs_01_01_10",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8K µSCU\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
+    },
+    "qrt_utility_heavy_legs_01_01_12": {
+      "key": "item_Desc_qrt_utility_heavy_legs_01_01_12",
       "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -70 / 100 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8K µSCU\\n\\nElegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower."
     },
     "qrt_utility_heavy_legs_01_01_17": {
@@ -5865,6 +6045,10 @@
     "rrs_specialist_light_legs_01_coramor_01": {
       "key": "item_Desc_rrs_specialist_light_legs_01_coramor_01",
       "description": "Item Type: Light Armor\\nDamage Reduction: 20%\\nTemp. Rating: -38 / 68 °C\\nRadiation Protection: 26000 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 2.0 µSCU\\n\\nWith its excellent design and eye-catching style, the Arden-SL armor exemplifies why security specialists love Roussimoff Rehabilitation Systems. This versatile armor set lets the wearer stay agile but safe thanks to the precise placement of special composite armor plating and fabrics. The special Coramor Fate edition been updated with vibrant pink and light grey coloring."
+    },
+    "rrs_specialist_light_legs_01_coramor_02": {
+      "key": "item_Desc_rrs_specialist_light_legs_01_coramor_02",
+      "description": "Item Type: Light Armor\\nDamage Reduction: 20%\\nTemp. Rating: -38 / 68 °C\\nRadiation Protection: 26000 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 2.0 µSCU\\n\\nWith its excellent design and eye-catching style, the Arden-SL armor exemplifies why security specialists love Roussimoff Rehabilitation Systems. This versatile armor set lets the wearer stay agile but safe thanks to the precise placement of special composite armor plating and fabrics. The special Kismet edition of this armor features black and pink coloration in honor of the ship Yuri Ilyin flew in the classic vid 'Coramor' while he searched for his lost lover Corazon Tan."
     },
     "rsi_deckcrew_light_armor_01_shared": {
       "key": "item_Desc_rsi_deckcrew_light_armor_01_Shared",
@@ -6358,6 +6542,14 @@
       "key": "item_Desc_scu_service_pants_01",
       "description": "Carrying Capacity: 2K µSCU\\n\\nWith an attached apron and deep side pockets, the TopLine pants from Stegman's make even the toughest service jobs a little bit easier."
     },
+    "scu_service_shirt_01": {
+      "key": "item_Desc_scu_service_shirt_01",
+      "description": "PH - scu service shirt 01"
+    },
+    "scu_service_shirt_02": {
+      "key": "item_Desc_scu_service_shirt_02",
+      "description": "PH - scu service shirt 02"
+    },
     "scu_shirt_01_01_01": {
       "key": "item_Desc_scu_shirt_01_01_01",
       "description": "This Henley shirt from Stegman's is made with AirFlow technology, a stain-resistant, air-cooled fabric that keeps you comfortable and dry."
@@ -6470,6 +6662,10 @@
       "key": "item_Desc_spv_bioticorp_rep_heels_01_01_01",
       "description": "Classic. Elegant. Spar Van Miles' low-heel slip-on shoe is reinforced for durability and comfort. Perfect for the professional on the go."
     },
+    "spv_bioticorp_rep_jacket_01_01_01": {
+      "key": "item_Desc_spv_bioticorp_rep_jacket_01_01_01",
+      "description": "Placeholder - SPV Jacket Desc"
+    },
     "spv_bioticorp_rep_pants_01_01_01": {
       "key": "item_Desc_spv_bioticorp_rep_pants_01_01_01",
       "description": "Carrying Capacity: 3K µSCU\\n\\nFeaturing a slim fit for a stunning silhouette, the Aego pants from Spar Van Miles keep you looking top dollar without sacrificing comfort."
@@ -6485,6 +6681,10 @@
     "srvl_armor_heavy_core_02_02_01": {
       "key": "item_Desc_srvl_armor_heavy_core_02_02_01",
       "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -85 / 115 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8.0 µSCU\\nBackpacks: All\\n\\nReinforced alloys are carefully layered to recreate the appearance of warriors from Humanity's past to create an armor that's intimidating and functional. The cape adds an elegant finishing touch.\\n\\nThe Epoque edition features a navy and black coloring, finished with baroque gold detailing."
+    },
+    "srvl_armor_heavy_legs_02": {
+      "key": "item_Desc_srvl_armor_heavy_legs_02",
+      "description": "Item Type: Heavy Armor\\nDamage Reduction: 40%\\nTemp. Rating: -85 / 115 °C\\nRadiation Protection: 26800 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 8.0 µSCU\\n\\nSalvaged ship parts and pieces of disused protective gear were welded together to make this intimidating armor set. Paired with a decorated leather belt."
     },
     "srvl_armor_heavy_legs_02_02_01": {
       "key": "item_Desc_srvl_armor_heavy_legs_02_02_01",
@@ -6754,6 +6954,10 @@
       "key": "item_Desc_srvl_jacket_01_01_01",
       "description": "Carrying Capacity: 1K µSCU\\n\\nAssembled from an old Dusters flag, salvaged armor, and derelict ship parts, this serviceable jacket is secured to its wearer via sturdy leather straps."
     },
+    "srvl_mask_01_01_01": {
+      "key": "item_Desc_srvl_mask_01_01_01",
+      "description": "This white ablative ceramic mask is as intimidating as it is striking, with embedded scars to let them know that you aren't just another pretty face."
+    },
     "srvl_mask_01_02_01": {
       "key": "item_Desc_srvl_mask_01_02_01",
       "description": "This white ablative ceramic mask is as intimidating as it is striking, with embedded scars to let them know that you aren't just another pretty face. The Red Menace edition features bold markings across the faceplate."
@@ -6861,6 +7065,18 @@
     "srvl_utility_light_legs_01_01_15": {
       "key": "item_Desc_srvl_utility_light_legs_01_01_15",
       "description": "Item Type: Light Armor\\nDamage Reduction: 20%\\nTemp. Rating: -65 / 61 °C\\nRadiation Protection: 26000 REM\\nRadiation Scrub Rate: 145.8 REM/s\\nCarrying Capacity: 2k µSCU\\n\\nThese durable, reinforced leather pants are not only practical for traversal through inhospitable territory, the metal plated boots will keep you protected along the long road ahead. The Molehill version is dyed a neutral brown to keep you subtle, but not unsightly."
+    },
+    "sw_hdh_large_pouch_01": {
+      "key": "item_Desc_sw_hdh_large_pouch_01",
+      "description": "[PH] HDH large pouch desc."
+    },
+    "sw_hdh_moderate_pouch_01": {
+      "key": "item_Desc_sw_hdh_moderate_pouch_01",
+      "description": "[PH] HDH moderate pouch desc."
+    },
+    "sw_hdh_small_pouch_01": {
+      "key": "item_Desc_sw_hdh_small_pouch_01",
+      "description": "[PH] HDH small pouch desc."
     },
     "syfb_combat_light_arms_01_01_01": {
       "key": "item_Desc_syfb_combat_light_arms_01_01_01",
@@ -8034,6 +8250,14 @@
       "key": "items_commodities_corundum_raw_desc",
       "description": "The crystalline form of aluminum oxide. Used as a gem. Varieties include ruby, sapphire, and padparadscha."
     },
+    "countermeasures_decoy": {
+      "key": "items_commodities_countermeasures_decoy_desc",
+      "description": "Flares, decoys and other countermeasure supplies for ships of any size"
+    },
+    "countermeasures_noise": {
+      "key": "items_commodities_countermeasures_noise_desc",
+      "description": "Noise, chaff and other countermeasure supplies for ships of any size"
+    },
     "crudeoil": {
       "key": "items_commodities_crudeOil_desc",
       "description": "A compound composed of hydrocarbons and other organic molecules. Also referred to as unprocessed petroleum."
@@ -8254,6 +8478,10 @@
       "key": "items_commodities_maze_desc",
       "description": "Street name for a tranquilizer and knock-out hallucinogen that's Tevarin in origin. Dosing up is like taking a massive journey into your own mind. To the outside world, you’re nearly comatose, but to you, it’s a wild trip. A handful of religions have been started after a user took a trip into the maze. Aside from the toxic element, there’s a chance you won’t come down from the high. They call this ‘getting disconnected.’ Users stay locked in their own head until their brain decays. Maze was originally used as a near religious experience for Tevarin warriors to find their path in life. Since the fall of the Tevarin empire, it's become corrupted into a purely recreational drug. The Tevarin who once treated this drug with reverence and ritual, now make boatloads of credits selling it to anyone who wants to risk a potentially dangerous trip."
     },
+    "medgel": {
+      "key": "items_commodities_medGel_desc",
+      "description": "Consumed by medical beds, MedGel provides the key resources needed for cloning and healing."
+    },
     "medpens": {
       "key": "items_commodities_medPens_desc",
       "description": "The MedPen from CureLife is a complete multi-function individual first-aid system designed and constructed for the rigors of field use."
@@ -8265,6 +8493,10 @@
     "methane": {
       "key": "items_commodities_methane_desc",
       "description": "A highly flammable gas composed of carbon and hydrogen. It is colorless and odorless in its natural state."
+    },
+    "militarysupplies": {
+      "key": "items_commodities_militarySupplies_desc",
+      "description": "A variety of items assembled to support combat forces, such as ammunition, structural repair tools and clothing."
     },
     "mixedmining": {
       "key": "items_commodities_mixedMining_desc",
@@ -8298,6 +8530,10 @@
       "key": "items_commodities_omnapoxy_desc",
       "description": "Durable and resistant, this resin quickly sets when applied to form a hardened polymer."
     },
+    "organimass": {
+      "key": "items_commodities_organimass_desc",
+      "description": "PH - Organics are formerly living organisms that have been prepared for other purposes. This includes meat, plant and animal parts, biofuel, and other such items."
+    },
     "osionhides": {
       "key": "items_commodities_osionHides_desc",
       "description": "The tanned skins from Osoians, a Fair Chance protected species from Oso II."
@@ -8318,6 +8554,10 @@
       "key": "items_commodities_oza_desc",
       "description": "NDR: 09\\nHEI: 07\\nEffects: Hydrating\\n\\nA hybrid citrus first grown in Croshaw, it's hardiness, ease of transport, and juice yield has seen it rapidly spread across the Empire. It features thick, bumpy dark green skin, bright orange flesh ribbed with heavy pithing, and no seeds. \\n\\nTart, sweet and bitter, the taste of Oza often described as being a combination of all the other citrus types rolled into one fruit. Difficult to peel and fibrous, its pulp is not often eaten. Typically it is split open and sucked on, its flesh being discarded. It is also popularly used in many cocktail recipes."
     },
+    "partillium": {
+      "key": "items_commodities_partillium_desc",
+      "description": "Partillium description."
+    },
     "phosphorus": {
       "key": "items_commodities_phosphorus_desc",
       "description": "Elemental phosphorous is highly flammable and volatile. It readily forms compounds with other materials."
@@ -8334,9 +8574,17 @@
       "key": "items_commodities_polonium_desc",
       "description": "A volatile, highly radioactive metal with no stable isotopes. It has a half-life of around 138 days."
     },
+    "potassium": {
+      "key": "items_commodities_potassium_desc",
+      "description": "Potassium description."
+    },
     "praseodymium": {
       "key": "items_commodities_praseodymium_desc",
       "description": "A malleable and ductile rare earth metal. Highly reactive. Pure praseodymium develops a green coat upon oxidizing."
+    },
+    "pressurized_ice": {
+      "key": "items_commodities_pressurized_ice_desc",
+      "description": "Ice that has been purified and compressed to transparent by restricting natural expansion. This allows for more efficient transport in bulk."
     },
     "processedfood": {
       "key": "items_commodities_processedFood_desc",
@@ -8374,9 +8622,17 @@
       "key": "items_commodities_rantadung_desc",
       "description": "A dry cube-shaped dung that comes from a large isopod-like crustacean known as a Ranta. It has recently been discovered that the dung contains a unique bacterial biome that helps the Ranta process and digest minerals and some researches are hopeful will lead to industrial or medical innovations."
     },
+    "raw_ice": {
+      "key": "items_commodities_raw_ice_desc",
+      "description": "Raw Ice can be refined into Hydrogen and Oxygen"
+    },
     "raw_ouratite": {
       "key": "items_commodities_raw_ouratite_desc",
       "description": "Notable for its ability to withstand kinetic impacts, ouratite is a solid hydrocarbon that is found only in the Stanton system. Once refined, this rare material can be used as combat armor plating."
+    },
+    "raw_silicon": {
+      "key": "items_commodities_raw_silicon_desc",
+      "description": "A strong and brittle element with good thermal conductivity. Crystalizes in a diamond form."
     },
     "revenantpod": {
       "key": "items_commodities_revenantpod_desc",
@@ -8405,6 +8661,42 @@
     "selenium": {
       "key": "items_commodities_selenium_desc",
       "description": "A chalcogen often found in combination with heavy metals. In its refined form, it increases in electrical conductivity when exposed to light."
+    },
+    "shipammo_size_1": {
+      "key": "items_commodities_shipammo_size_1_desc",
+      "description": "Bulk ammunition servicing size 1 ship weaponry, based on volume."
+    },
+    "shipammo_size_2": {
+      "key": "items_commodities_shipammo_size_2_desc",
+      "description": "Bulk ammunition servicing size 2 ship weaponry, based on volume."
+    },
+    "shipammo_size_3": {
+      "key": "items_commodities_shipammo_size_3_desc",
+      "description": "Bulk ammunition servicing size 3 ship weaponry, based on volume."
+    },
+    "shipammo_size_4": {
+      "key": "items_commodities_shipammo_size_4_desc",
+      "description": "Bulk ammunition servicing size 4 ship weaponry, based on volume."
+    },
+    "shipammo_size_5": {
+      "key": "items_commodities_shipammo_size_5_desc",
+      "description": "Bulk ammunition servicing size 5 ship weaponry, based on volume."
+    },
+    "shipammo_size_6": {
+      "key": "items_commodities_shipammo_size_6_desc",
+      "description": "Bulk ammunition servicing size 6 ship weaponry, based on volume."
+    },
+    "shipammo_size_7": {
+      "key": "items_commodities_shipammo_size_7_desc",
+      "description": "Bulk ammunition servicing size 7 ship weaponry, based on volume."
+    },
+    "shipammo_size_8": {
+      "key": "items_commodities_shipammo_size_8_desc",
+      "description": "Bulk ammunition servicing size 8 ship weaponry, based on volume."
+    },
+    "shipammo_size_9": {
+      "key": "items_commodities_shipammo_size_9_desc",
+      "description": "Bulk ammunition servicing size 9 ship weaponry, based on volume."
     },
     "silicon": {
       "key": "items_commodities_silicon_desc",
@@ -8570,6 +8862,10 @@
       "key": "items_commodities_type_metal_desc",
       "description": "A solid material that typically shiny and opaque and possesses good electrical and thermal conductivity."
     },
+    "type_militarysupply": {
+      "key": "items_commodities_type_militarySupply_desc",
+      "description": "A variety of items assembled to support combat forces, including ammunition, structural repair tools and clothing."
+    },
     "type_natural": {
       "key": "items_commodities_type_natural_desc",
       "description": "Materials that are naturally occurring and can be extracted directly from the environment."
@@ -8672,6 +8968,6 @@
     }
   },
   "summary": {
-    "totalDescriptions": 2167
+    "totalDescriptions": 2241
   }
 }

@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-06-18T01:32:26.100Z",
+  "_extracted": "2026-06-18T01:48:22.588Z",
   "mineableElements": [
     {
       "id": "d61d6c33-e428-4014-9326-0b06034de16a",
@@ -788,7 +788,7 @@
     {
       "id": "1c2bab01-941b-4515-a6a4-5845aaa95696",
       "name": "Mining_Laser_SHIN_Hofstede_S0",
-      "displayName": "@item_NameMining_Head_S00_Hofstede_SCItem",
+      "displayName": "S00 Hofstede",
       "size": 0,
       "laserPower": 0.8,
       "optimalRange": 8,
@@ -924,7 +924,7 @@
     {
       "id": "8c95c978-9e47-46ec-88e3-a0662c13d76a",
       "name": "Mining_Laser_THCN_Helix_S0",
-      "displayName": "@item_NameMining_Head_S00_Helix_SCItem",
+      "displayName": "S0 Helix",
       "size": 0,
       "laserPower": 1,
       "optimalRange": 8,

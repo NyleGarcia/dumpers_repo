@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-06-18T01:32:26.124Z",
+  "_extracted": "2026-06-18T01:48:22.611Z",
   "missionBlueprints": {
     "AdagioResourceGatheringShipSalvage": [
       {
@@ -12383,7 +12383,7 @@
     {
       "id": "e98fd56d-624c-4d32-a582-0fc5511a1ce6",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_VeryEasy_From",
-      "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+      "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12402,7 +12402,7 @@
     {
       "id": "e2ab634e-2c4b-453f-93e4-5d8360d8b507",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_VeryEasy_To",
-      "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+      "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12421,7 +12421,7 @@
     {
       "id": "05052ef1-d6ad-41e7-93eb-bd31ef99b055",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_Easy",
-      "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
+      "title": "Yellow Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12440,7 +12440,7 @@
     {
       "id": "128b6848-f56e-4880-a66c-f269f268495c",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_Medium",
-      "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
+      "title": "Orange Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12459,7 +12459,7 @@
     {
       "id": "1aa27fc8-08fe-4410-8f7a-79f09b64e2a0",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_Hard",
-      "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+      "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12483,7 +12483,7 @@
     {
       "id": "c3969f5d-942e-4b32-a065-4ceb97ae971a",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_VeryHard",
-      "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+      "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12507,7 +12507,7 @@
     {
       "id": "6d1aacc1-5c0c-433a-bfa9-6f3d3a425a1b",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Stanton_Super",
-      "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+      "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12531,7 +12531,7 @@
     {
       "id": "f3293ec9-3120-413c-81dc-6edebb49593c",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_VeryEasy_From",
-      "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+      "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12550,7 +12550,7 @@
     {
       "id": "1909b168-0abc-4ebc-99cc-f489a53078e2",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_VeryEasy_To",
-      "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+      "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12569,7 +12569,7 @@
     {
       "id": "aeb8462c-ac70-4861-8f23-e60c99c1c02c",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_Easy",
-      "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
+      "title": "Yellow Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12588,7 +12588,7 @@
     {
       "id": "b1b9630e-06d9-4760-a2be-1899fdb97fb7",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_Medium",
-      "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
+      "title": "Orange Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12607,7 +12607,7 @@
     {
       "id": "22a5240e-d007-40b7-a2e3-027065c19537",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_Hard",
-      "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+      "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12631,7 +12631,7 @@
     {
       "id": "3bff1eba-cb09-412c-a755-42292b3e0679",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_VeryHard",
-      "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+      "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12655,7 +12655,7 @@
     {
       "id": "a5de5995-825a-408b-bedb-3e386192c8b1",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Pyro_Super",
-      "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+      "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12679,7 +12679,7 @@
     {
       "id": "dcc895fc-a9f5-4374-bd18-95c6ce20000c",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_VeryEasy_From",
-      "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+      "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12698,7 +12698,7 @@
     {
       "id": "05634133-77cf-47aa-8a94-bc8e436029d3",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_VeryEasy_To",
-      "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+      "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12717,7 +12717,7 @@
     {
       "id": "0e558915-e797-4ebc-b49c-5bace9ca6405",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_Easy",
-      "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
+      "title": "Yellow Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12736,7 +12736,7 @@
     {
       "id": "cccbe08f-e098-4ca4-ba12-774d16e68e6e",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_Medium",
-      "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
+      "title": "Orange Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12755,7 +12755,7 @@
     {
       "id": "26c217bd-922e-49c6-9b7c-d95a11178b20",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_Hard",
-      "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+      "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12779,7 +12779,7 @@
     {
       "id": "bfd0c42f-ad46-480f-8b73-d82236499dd3",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_VeryHard",
-      "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+      "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -12803,7 +12803,7 @@
     {
       "id": "9785cd75-415d-4cdf-98d6-d66e0b957813",
       "debugName": "Foxwell_DefendEntitiesAndEscort_Nyx_Super",
-      "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+      "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
       "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
       "faction": "Foxwell Enforcement",
       "factionKey": "unknown",
@@ -13529,7 +13529,7 @@
     {
       "id": "6c88a1b4-493c-47f7-bfde-bbd7fcde8d2a",
       "debugName": "BitZeros_BlackBoxRecovery_Stanton_Intro",
-      "title": "@blackbox_recover_title_intro_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleIntro)",
       "titleKey": "@blackbox_recover_title_intro_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13554,7 +13554,7 @@
     {
       "id": "b90bd8e0-f6e0-4129-8909-91fb6dafa978",
       "debugName": "BitZeros_BlackBoxRecovery_Stanton_VeryEasy",
-      "title": "@blackbox_recover_title_VE_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleVeryEasy)",
       "titleKey": "@blackbox_recover_title_VE_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13579,7 +13579,7 @@
     {
       "id": "5c2ef7a2-8b4f-457f-b3df-55663e7d567d",
       "debugName": "BitZeros_BlackBoxRecovery_Stanton_Easy",
-      "title": "@blackbox_recover_title_E_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleEasy)",
       "titleKey": "@blackbox_recover_title_E_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13604,7 +13604,7 @@
     {
       "id": "e0d17791-d049-4de2-b9b3-e1bc7e090b04",
       "debugName": "BitZeros_BlackBoxRecovery_Stanton_Medium",
-      "title": "@blackbox_recover_title_M_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleMedium)",
       "titleKey": "@blackbox_recover_title_M_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13629,7 +13629,7 @@
     {
       "id": "7f233479-eb61-460c-b2d1-d855ce64a5d9",
       "debugName": "BitZeros_BlackBoxRecovery_Stanton_Hard",
-      "title": "@blackbox_recover_title_H_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleHard)",
       "titleKey": "@blackbox_recover_title_H_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13654,7 +13654,7 @@
     {
       "id": "9277c342-efc1-4b6c-9919-4bf7343b96d9",
       "debugName": "BitZeros_BlackBoxRecovery_Stanton_VeryHard",
-      "title": "@blackbox_recover_title_VH_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleVeryHard)",
       "titleKey": "@blackbox_recover_title_VH_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13679,7 +13679,7 @@
     {
       "id": "c498dac9-9849-4ab3-bf25-2f554a935d7a",
       "debugName": "BitZeros_BlackBoxRecovery_Stanton_Super",
-      "title": "@blackbox_recover_title_S_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleSuper)",
       "titleKey": "@blackbox_recover_title_S_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13704,7 +13704,7 @@
     {
       "id": "288f190b-045a-486f-b800-b88fe1a81ee9",
       "debugName": "BitZeros_BlackBoxRecovery_Nyx_Intro",
-      "title": "@blackbox_recover_title_intro_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleIntro)",
       "titleKey": "@blackbox_recover_title_intro_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13729,7 +13729,7 @@
     {
       "id": "f4ee5c4c-db01-4b6c-930e-b266ce5b39db",
       "debugName": "BitZeros_BlackBoxRecovery_Nyx_VeryEasy",
-      "title": "@blackbox_recover_title_VE_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleVeryEasy)",
       "titleKey": "@blackbox_recover_title_VE_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13754,7 +13754,7 @@
     {
       "id": "00bd1ecc-c6df-4a7c-accf-3483eb0ee469",
       "debugName": "BitZeros_BlackBoxRecovery_Nyx_Easy",
-      "title": "@blackbox_recover_title_E_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleEasy)",
       "titleKey": "@blackbox_recover_title_E_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13779,7 +13779,7 @@
     {
       "id": "4cd6d0e4-dd24-446f-9160-e8127d89bb47",
       "debugName": "BitZeros_BlackBoxRecovery_Nyx_Medium",
-      "title": "@blackbox_recover_title_M_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleMedium)",
       "titleKey": "@blackbox_recover_title_M_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13804,7 +13804,7 @@
     {
       "id": "43a88af1-e644-480f-b0fa-928a61d3941c",
       "debugName": "BitZeros_BlackBoxRecovery_Nyx_Hard",
-      "title": "@blackbox_recover_title_H_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleHard)",
       "titleKey": "@blackbox_recover_title_H_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13829,7 +13829,7 @@
     {
       "id": "8c9b2f0e-6dae-4e6d-a3ab-b414eeec9861",
       "debugName": "BitZeros_BlackBoxRecovery_Nyx_VeryHard",
-      "title": "@blackbox_recover_title_VH_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleVeryHard)",
       "titleKey": "@blackbox_recover_title_VH_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -13854,7 +13854,7 @@
     {
       "id": "92e538af-c256-412a-98c8-d75115f8f39c",
       "debugName": "BitZeros_BlackBoxRecovery_Nyx_Super",
-      "title": "@blackbox_recover_title_S_001",
+      "title": "~mission(Contractor|BlackBoxRecoverTitleSuper)",
       "titleKey": "@blackbox_recover_title_S_001",
       "faction": "Bit Zeros",
       "factionKey": "unlawful_bitzeros",
@@ -18493,7 +18493,7 @@
     {
       "id": "9ff34277-7cba-441d-ac0f-1fcfc9d6e16c",
       "debugName": "Adagio_RG_ShipSalvage_Stanton_Rank0_RMC_Rubble_Parts_Salvage_Choice",
-      "title": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
+      "title": "Salvager Needed (Small Supply of RMC / UCM)",
       "titleKey": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18518,7 +18518,7 @@
     {
       "id": "e4853f9d-f027-4f83-bd82-1835cc2f6409",
       "debugName": "Adagio_RG_ShipSalvage_Pyro_Rank0_RMC_Rubble_Parts_Salvage_Choice",
-      "title": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
+      "title": "Salvager Needed (Small Supply of RMC / UCM)",
       "titleKey": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18543,7 +18543,7 @@
     {
       "id": "67608eaf-63b0-4d4f-9103-7960eeeb9166",
       "debugName": "Adagio_RG_ShipSalvage_Nyx_Rank0_RMC_Rubble_Parts_Salvage_Choice",
-      "title": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
+      "title": "Salvager Needed (Small Supply of RMC / UCM)",
       "titleKey": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18743,7 +18743,7 @@
     {
       "id": "de9667b3-3142-46a3-80ae-f101c338ed4b",
       "debugName": "Adagio_RG_ShipSalvage_Stanton_Rank1_RMC_CMats_S1Component",
-      "title": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
+      "title": "Salvager Needed (Med. Supply of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18768,7 +18768,7 @@
     {
       "id": "a2e30021-9bbd-4cbe-a014-3a851c86331c",
       "debugName": "Adagio_RG_ShipSalvage_Pyro_Rank1_RMC_CMats_S1Component",
-      "title": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
+      "title": "Salvager Needed (Med. Supply of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18793,7 +18793,7 @@
     {
       "id": "813ea00d-3766-46fd-802f-a9e5775de6b3",
       "debugName": "Adagio_RG_ShipSalvage_Nyx_Rank1_RMC_CMats_S1Components",
-      "title": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
+      "title": "Salvager Needed (Med. Supply of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18818,7 +18818,7 @@
     {
       "id": "fe5b519c-1149-454c-a680-8d2788c3f487",
       "debugName": "Adagio_RG_ShipSalvage_Stanton_Rank1_RMC_CMats_Component_Unique",
-      "title": "@Adagio_Industrial_Component_Salvage_Stanton_M_Title_001",
+      "title": "Salvager Needed (Med. Special Order of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Stanton_M_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18843,7 +18843,7 @@
     {
       "id": "28e535c8-740f-47cc-adcb-6238a0b5b724",
       "debugName": "Adagio_RG_ShipSalvage_Pyro_Rank1_RMC_CMats_Component_Unique",
-      "title": "@Adagio_Industrial_Component_Salvage_Pyro_M_Title_001",
+      "title": "Salvager Needed (Med. Special Order of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Pyro_M_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18868,7 +18868,7 @@
     {
       "id": "44b632f2-e2e2-42e3-b0d5-a19889263c15",
       "debugName": "Adagio_RG_ShipSalvage_Nyx_Rank1_RMC_CMats_Components_Unique",
-      "title": "@Adagio_Industrial_Component_Salvage_Levski_M_Title_001",
+      "title": "Salvager Needed (Med. Special Order of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Levski_M_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18893,7 +18893,7 @@
     {
       "id": "9e4c8123-07ef-490a-9dee-f397e54fcbc0",
       "debugName": "Adagio_RG_ShipSalvage_Stanton_Rank1_RMC_CMats_Component_Unique (DISABLED)",
-      "title": "@Adagio_Industrial_Component_Salvage_Stanton_M_Title_001",
+      "title": "Salvager Needed (Med. Special Order of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Stanton_M_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18918,7 +18918,7 @@
     {
       "id": "1331671c-4bbd-47bc-b71e-c19def138faa",
       "debugName": "Adagio_RG_ShipSalvage_Stanton_Rank2_RMC_CMats_CivilianComponents",
-      "title": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
+      "title": "Salvager Needed (Lrg. Supply of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18943,7 +18943,7 @@
     {
       "id": "7858db48-7eb6-4a6c-b56b-5df1c5235d1d",
       "debugName": "Adagio_RG_ShipSalvage_Pyro_Rank2_RMC_CMats_MilitaryComponents",
-      "title": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
+      "title": "Salvager Needed (Lrg. Supply of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18968,7 +18968,7 @@
     {
       "id": "acf17ba4-4007-466c-9081-72aee28232b3",
       "debugName": "Adagio_RG_ShipSalvage_Nyx_Rank2_RMC_CMats_IndustrialComponents",
-      "title": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
+      "title": "Salvager Needed (Lrg. Supply of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -18993,7 +18993,7 @@
     {
       "id": "993fbe39-f45a-456a-a94a-a65714c1db49",
       "debugName": "Adagio_RG_ShipSalvage_Stanton_Rank2_Components_Unique",
-      "title": "@Adagio_Industrial_Component_Salvage_Stanton_H_Title_001",
+      "title": "Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Stanton_H_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -19018,7 +19018,7 @@
     {
       "id": "c2bf4edf-eb40-4abb-a81d-03bac07badd8",
       "debugName": "Adagio_RG_ShipSalvage_Pyro_Rank2_RMC_CMats_Components_Unique",
-      "title": "@Adagio_Industrial_Component_Salvage_Pyro_H_Title_001",
+      "title": "Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Pyro_H_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -19043,7 +19043,7 @@
     {
       "id": "09f5d6ae-c1a2-4dba-ba0d-886c33ea1af6",
       "debugName": "Adagio_RG_ShipSalvage_Nyx_Rank2_RMC_CMats_Components_Unique",
-      "title": "@Adagio_Industrial_Component_Salvage_Levski_H_Title_001",
+      "title": "Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Levski_H_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -19068,7 +19068,7 @@
     {
       "id": "3b19ec12-1267-4cc7-be0e-7c0c5273fb81",
       "debugName": "Adagio_RG_ShipSalvage_Nyx_Rank2_RMC_CMats_IndustrialComponents (DISABLED)",
-      "title": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
+      "title": "Salvager Needed (Lrg. Supply of RMC / UCM / Components)",
       "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
       "faction": "Adagio Holdings",
       "factionKey": "lawful_adagioholdings",
@@ -28124,7 +28124,7 @@
     ],
     "stantonfoxwelleasy": [
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+        "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28133,7 +28133,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+        "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28142,7 +28142,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
+        "title": "Yellow Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28151,7 +28151,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
+        "title": "Orange Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28160,7 +28160,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+        "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28169,7 +28169,7 @@
         "repPoints": 200
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+        "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28178,7 +28178,7 @@
         "repPoints": 250
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+        "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28189,7 +28189,7 @@
     ],
     "stantonfoxwellhard": [
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+        "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28198,7 +28198,7 @@
         "repPoints": 200
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+        "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28207,7 +28207,7 @@
         "repPoints": 250
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+        "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "faction": "Foxwell Enforcement",
         "system": "Stanton",
@@ -28218,7 +28218,7 @@
     ],
     "pyrofoxwelleasy": [
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+        "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28227,7 +28227,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+        "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28236,7 +28236,7 @@
         "repPoints": 0
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
+        "title": "Yellow Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28245,7 +28245,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
+        "title": "Orange Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28254,7 +28254,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+        "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28263,7 +28263,7 @@
         "repPoints": 200
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+        "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28272,7 +28272,7 @@
         "repPoints": 250
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+        "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28283,7 +28283,7 @@
     ],
     "pyrofoxwellhard": [
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+        "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28292,7 +28292,7 @@
         "repPoints": 200
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+        "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28301,7 +28301,7 @@
         "repPoints": 250
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+        "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "faction": "Foxwell Enforcement",
         "system": "Pyro",
@@ -28312,7 +28312,7 @@
     ],
     "nyxfoxwelleasy": [
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+        "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28321,7 +28321,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VE_Title",
+        "title": "Yellow Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VE_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28330,7 +28330,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_E_Title",
+        "title": "Yellow Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_E_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28339,7 +28339,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_M_Title",
+        "title": "Orange Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_M_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28348,7 +28348,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+        "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28357,7 +28357,7 @@
         "repPoints": 200
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+        "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28366,7 +28366,7 @@
         "repPoints": 250
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+        "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28377,7 +28377,7 @@
     ],
     "nyxfoxwellhard": [
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_H_Title",
+        "title": "Orange Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_H_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28386,7 +28386,7 @@
         "repPoints": 200
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_VH_Title",
+        "title": "Red Lvl. Contract: Defend ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_VH_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28395,7 +28395,7 @@
         "repPoints": 250
       },
       {
-        "title": "@Foxwell_DefendEntitesAndEscort_S_Title",
+        "title": "Red Lvl. Contract: Protect ~mission(Objects) and Escort Employees",
         "titleKey": "@Foxwell_DefendEntitesAndEscort_S_Title",
         "faction": "Foxwell Enforcement",
         "system": "Nyx",
@@ -28792,7 +28792,7 @@
     ],
     "bitzeros_blackboxrecovery": [
       {
-        "title": "@blackbox_recover_title_intro_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleIntro)",
         "titleKey": "@blackbox_recover_title_intro_001",
         "faction": "Bit Zeros",
         "system": "Stanton",
@@ -28807,7 +28807,7 @@
         "repPoints": 100
       },
       {
-        "title": "@blackbox_recover_title_VE_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleVeryEasy)",
         "titleKey": "@blackbox_recover_title_VE_001",
         "faction": "Bit Zeros",
         "system": "Stanton",
@@ -28822,7 +28822,7 @@
         "repPoints": 100
       },
       {
-        "title": "@blackbox_recover_title_E_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleEasy)",
         "titleKey": "@blackbox_recover_title_E_001",
         "faction": "Bit Zeros",
         "system": "Stanton",
@@ -28837,7 +28837,7 @@
         "repPoints": 100
       },
       {
-        "title": "@blackbox_recover_title_M_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleMedium)",
         "titleKey": "@blackbox_recover_title_M_001",
         "faction": "Bit Zeros",
         "system": "Stanton",
@@ -28852,7 +28852,7 @@
         "repPoints": 150
       },
       {
-        "title": "@blackbox_recover_title_H_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleHard)",
         "titleKey": "@blackbox_recover_title_H_001",
         "faction": "Bit Zeros",
         "system": "Stanton",
@@ -28867,7 +28867,7 @@
         "repPoints": 200
       },
       {
-        "title": "@blackbox_recover_title_VH_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleVeryHard)",
         "titleKey": "@blackbox_recover_title_VH_001",
         "faction": "Bit Zeros",
         "system": "Stanton",
@@ -28882,7 +28882,7 @@
         "repPoints": 250
       },
       {
-        "title": "@blackbox_recover_title_S_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleSuper)",
         "titleKey": "@blackbox_recover_title_S_001",
         "faction": "Bit Zeros",
         "system": "Stanton",
@@ -28897,7 +28897,7 @@
         "repPoints": 300
       },
       {
-        "title": "@blackbox_recover_title_intro_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleIntro)",
         "titleKey": "@blackbox_recover_title_intro_001",
         "faction": "Bit Zeros",
         "system": "Nyx",
@@ -28912,7 +28912,7 @@
         "repPoints": 100
       },
       {
-        "title": "@blackbox_recover_title_VE_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleVeryEasy)",
         "titleKey": "@blackbox_recover_title_VE_001",
         "faction": "Bit Zeros",
         "system": "Nyx",
@@ -28927,7 +28927,7 @@
         "repPoints": 100
       },
       {
-        "title": "@blackbox_recover_title_E_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleEasy)",
         "titleKey": "@blackbox_recover_title_E_001",
         "faction": "Bit Zeros",
         "system": "Nyx",
@@ -28942,7 +28942,7 @@
         "repPoints": 100
       },
       {
-        "title": "@blackbox_recover_title_M_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleMedium)",
         "titleKey": "@blackbox_recover_title_M_001",
         "faction": "Bit Zeros",
         "system": "Nyx",
@@ -28957,7 +28957,7 @@
         "repPoints": 150
       },
       {
-        "title": "@blackbox_recover_title_H_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleHard)",
         "titleKey": "@blackbox_recover_title_H_001",
         "faction": "Bit Zeros",
         "system": "Nyx",
@@ -28972,7 +28972,7 @@
         "repPoints": 200
       },
       {
-        "title": "@blackbox_recover_title_VH_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleVeryHard)",
         "titleKey": "@blackbox_recover_title_VH_001",
         "faction": "Bit Zeros",
         "system": "Nyx",
@@ -28987,7 +28987,7 @@
         "repPoints": 250
       },
       {
-        "title": "@blackbox_recover_title_S_001",
+        "title": "~mission(Contractor|BlackBoxRecoverTitleSuper)",
         "titleKey": "@blackbox_recover_title_S_001",
         "faction": "Bit Zeros",
         "system": "Nyx",
@@ -31807,7 +31807,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
+        "title": "Salvager Needed (Small Supply of RMC / UCM)",
         "titleKey": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
         "faction": "Adagio Holdings",
         "system": "Stanton",
@@ -31822,7 +31822,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
+        "title": "Salvager Needed (Small Supply of RMC / UCM)",
         "titleKey": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
         "faction": "Adagio Holdings",
         "system": "Pyro",
@@ -31837,7 +31837,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
+        "title": "Salvager Needed (Small Supply of RMC / UCM)",
         "titleKey": "@Adagio_Industrial_Salvage_Universal_E_Title_002",
         "faction": "Adagio Holdings",
         "system": "Nyx",
@@ -31957,7 +31957,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
+        "title": "Salvager Needed (Med. Supply of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
         "faction": "Adagio Holdings",
         "system": "Stanton",
@@ -31972,7 +31972,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
+        "title": "Salvager Needed (Med. Supply of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
         "faction": "Adagio Holdings",
         "system": "Pyro",
@@ -31987,7 +31987,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
+        "title": "Salvager Needed (Med. Supply of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_M_Title_001",
         "faction": "Adagio Holdings",
         "system": "Nyx",
@@ -32002,7 +32002,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Stanton_M_Title_001",
+        "title": "Salvager Needed (Med. Special Order of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Stanton_M_Title_001",
         "faction": "Adagio Holdings",
         "system": "Stanton",
@@ -32017,7 +32017,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Pyro_M_Title_001",
+        "title": "Salvager Needed (Med. Special Order of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Pyro_M_Title_001",
         "faction": "Adagio Holdings",
         "system": "Pyro",
@@ -32032,7 +32032,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Levski_M_Title_001",
+        "title": "Salvager Needed (Med. Special Order of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Levski_M_Title_001",
         "faction": "Adagio Holdings",
         "system": "Nyx",
@@ -32047,7 +32047,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Stanton_M_Title_001",
+        "title": "Salvager Needed (Med. Special Order of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Stanton_M_Title_001",
         "faction": "Adagio Holdings",
         "system": "Stanton",
@@ -32062,7 +32062,7 @@
         "repPoints": 100
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
+        "title": "Salvager Needed (Lrg. Supply of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
         "faction": "Adagio Holdings",
         "system": "Stanton",
@@ -32077,7 +32077,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
+        "title": "Salvager Needed (Lrg. Supply of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
         "faction": "Adagio Holdings",
         "system": "Pyro",
@@ -32092,7 +32092,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
+        "title": "Salvager Needed (Lrg. Supply of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
         "faction": "Adagio Holdings",
         "system": "Nyx",
@@ -32107,7 +32107,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Stanton_H_Title_001",
+        "title": "Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Stanton_H_Title_001",
         "faction": "Adagio Holdings",
         "system": "Stanton",
@@ -32122,7 +32122,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Pyro_H_Title_001",
+        "title": "Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Pyro_H_Title_001",
         "faction": "Adagio Holdings",
         "system": "Pyro",
@@ -32137,7 +32137,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Levski_H_Title_001",
+        "title": "Salvager Needed (Lrg. Special Order of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Levski_H_Title_001",
         "faction": "Adagio Holdings",
         "system": "Nyx",
@@ -32152,7 +32152,7 @@
         "repPoints": 150
       },
       {
-        "title": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
+        "title": "Salvager Needed (Lrg. Supply of RMC / UCM / Components)",
         "titleKey": "@Adagio_Industrial_Component_Salvage_Universal_H_Title_001",
         "faction": "Adagio Holdings",
         "system": "Nyx",

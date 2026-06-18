@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-18T01:32:26.084Z",
+  "_extracted": "2026-06-18T01:48:22.572Z",
   "manufacturers": {
     "987": {
       "code": "987",
@@ -72,6 +72,11 @@
       "name": "ArmaMod",
       "descKey": "manufacturer_DescARMA"
     },
+    "ASAD": {
+      "code": "ASAD",
+      "name": "PH Associated Science and Development",
+      "descKey": "manufacturer_DescASAD"
+    },
     "ASAS": {
       "code": "ASAS",
       "name": "Ascension Astro",
@@ -121,6 +126,11 @@
       "code": "CBD",
       "name": "CBD",
       "descKey": "manufacturer_DescCBD"
+    },
+    "CCC": {
+      "code": "CCC",
+      "name": "CC's Conversions",
+      "descKey": "manufacturer_DescCCC"
     },
     "CDS": {
       "code": "CDS",
@@ -231,6 +241,16 @@
       "code": "GATS",
       "name": "Gallenson Tactical Systems",
       "descKey": "manufacturer_DescGATS"
+    },
+    "GEND": {
+      "code": "GEND",
+      "name": "Consumable",
+      "descKey": "manufacturer_DescGEND"
+    },
+    "GENF": {
+      "code": "GENF",
+      "name": "Consumable",
+      "descKey": "manufacturer_DescGENF"
     },
     "GMNI": {
       "code": "GMNI",
@@ -604,6 +624,6 @@
     }
   },
   "summary": {
-    "totalManufacturers": 120
+    "totalManufacturers": 124
   }
 }
