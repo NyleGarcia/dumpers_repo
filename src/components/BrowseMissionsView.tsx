@@ -123,13 +123,13 @@ export default function BrowseMissionsView({
       if (bps.length === 0) continue
       
       for (const mission of missionEntries) {
-        // Dedupe by title + faction
-        const dedupeKey = `${mission.title}|${mission.faction}`
+        // Skip placeholder titles first
+        if (!mission.title || mission.title.includes('~mission') || mission.title.startsWith('@')) continue
+        
+        // Dedupe by title + faction + system (same mission can appear in multiple systems)
+        const dedupeKey = `${mission.title}|${mission.faction}|${mission.system || 'unknown'}`
         if (seen.has(dedupeKey)) continue
         seen.add(dedupeKey)
-        
-        // Skip placeholder titles
-        if (!mission.title || mission.title.includes('~mission') || mission.title.startsWith('@')) continue
         
         result.push({
           poolKey,
