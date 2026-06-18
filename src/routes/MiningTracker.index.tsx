@@ -234,7 +234,7 @@ export default function MiningTrackerRoute() {
       }
     >
       {/* View Mode Switcher */}
-      <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit mb-6">
+      <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit mb-4">
         <button
           onClick={() => setViewMode('tracker')}
           className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
@@ -276,15 +276,9 @@ export default function MiningTrackerRoute() {
       )}
 
       {!loading && !error && data && viewMode === 'tracker' && (
-        <div className="space-y-8">
-          <section className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/20 space-y-4">
-            <h2 className="text-sm font-semibold text-white">Add to tracker</h2>
-            <p className="text-xs text-slate-500">
-              Search for an ore by name (minimum 2 characters).
-            </p>
-
-            <div className="max-w-md">
-              <label className="block text-xs text-slate-500 mb-1">Search ore</label>
+        <div className="space-y-6">
+          <section className="flex flex-wrap items-end gap-3">
+            <div className="flex-1 min-w-[200px] max-w-sm">
               <input
                 type="text"
                 value={oreSearch}
@@ -292,52 +286,46 @@ export default function MiningTrackerRoute() {
                   setOreSearch(e.target.value)
                   setSelectedOreName('')
                 }}
-                placeholder="Type ore name..."
+                placeholder="Search ore to add..."
                 className="site-input w-full px-3 py-2 text-sm"
               />
               {oreSearch.length >= 2 && searchOreResults.length > 0 && (
                 <select
                   value={selectedOreName}
                   onChange={(e) => setSelectedOreName(e.target.value)}
-                  className="site-input w-full px-3 py-2 text-sm mt-2"
+                  className="site-input w-full px-3 py-1.5 text-sm mt-1"
+                  size={Math.min(searchOreResults.length + 1, 6)}
                 >
-                  <option value="">Select from matches...</option>
+                  <option value="">Select ore...</option>
                   {searchOreResults.map((ore) => {
                     const alreadyTracked = isTracked(ore.ore_name)
                     return (
                       <option key={ore.id} value={ore.ore_name} disabled={alreadyTracked}>
                         {ore.ore_name} ({MINING_RARITY_LABELS[ore.rarity] ?? ore.rarity})
-                        {alreadyTracked ? ' — already tracked' : ''}
+                        {alreadyTracked ? ' — tracked' : ''}
                       </option>
                     )
                   })}
                 </select>
               )}
               {oreSearch.length >= 2 && searchOreResults.length === 0 && (
-                <p className="text-xs text-slate-500 mt-1">No matching ores.</p>
-              )}
-              {oreSearch.length > 0 && oreSearch.length < 2 && (
-                <p className="text-xs text-slate-500 mt-1">
-                  Enter {2 - oreSearch.length} more character{2 - oreSearch.length !== 1 ? 's' : ''}...
-                </p>
+                <p className="text-xs text-slate-500 mt-1">No matches</p>
               )}
             </div>
-
             <button
               type="button"
               onClick={handleAdd}
               disabled={!canAdd}
               className="px-4 py-2 text-sm font-medium rounded-lg bg-orange-600 hover:bg-orange-500 disabled:opacity-40 disabled:cursor-not-allowed text-white transition-colors"
             >
-              Add to tracker
+              Add
             </button>
           </section>
 
-          <section className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <section className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold text-white">
-                Tracked ({sortedEntries.length}
-                {sortedEntries.length !== entries.length ? ` of ${entries.length}` : ''})
+                Tracked ({sortedEntries.length}{sortedEntries.length !== entries.length ? `/${entries.length}` : ''})
               </h2>
               {entries.length > 0 && (
                 <select
@@ -345,7 +333,7 @@ export default function MiningTrackerRoute() {
                   onChange={(e) => setListRarityFilter(e.target.value)}
                   className="site-input px-2 py-1 text-xs"
                 >
-                  <option value="">All rarities</option>
+                  <option value="">All</option>
                   {MINING_RARITY_ORDER.map((r) => (
                     <option key={r} value={r}>
                       {MINING_RARITY_LABELS[r]}
@@ -356,22 +344,21 @@ export default function MiningTrackerRoute() {
             </div>
 
             {sortedEntries.length === 0 ? (
-              <div className="text-center py-12 rounded-xl border border-dashed border-slate-700/50">
+              <div className="text-center py-6 rounded-lg border border-dashed border-slate-700/50">
                 <p className="text-slate-500 text-sm">
                   {entries.length === 0 ? (
                     <>
-                      Nothing tracked yet. Add ores above or browse the{' '}
+                      No ores tracked.{' '}
                       <button
                         type="button"
                         onClick={() => setViewMode('guide')}
                         className="text-orange-400 hover:text-orange-300 underline"
                       >
-                        Mining Guide
+                        Browse Mining Guide
                       </button>
-                      .
                     </>
                   ) : (
-                    'No entries match your filter.'
+                    'No entries match filter.'
                   )}
                 </p>
               </div>
