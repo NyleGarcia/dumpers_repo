@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import blueprintMissionData from '../data/game-blueprint-missions.json'
 import { useBlueprintData } from '../routes/blueprints'
+import { getRegionInfo } from '../lib/missionConstants'
 
 type BlueprintRecord = {
   file: string
@@ -15,18 +16,21 @@ type MissionPoolBlueprint = {
   path: string
 }
 
+type MissionEntry = {
+  title: string
+  titleKey: string
+  faction: string
+  system: string
+  region: string | null
+  category: string | null
+  minStanding: { name: string; minReputation: number } | null
+  maxStanding: { name: string; minReputation: number } | null
+  repPoints: number
+}
+
 type System = 'stanton' | 'pyro' | 'nyx' | 'unknown'
 
 type ViewMode = 'system' | 'faction'
-
-type MissionPool = {
-  key: string
-  displayName: string
-  faction: string
-  system: System
-  isLawful: boolean
-  blueprintCount: number
-}
 
 const SYSTEM_LABELS: Record<System, string> = {
   stanton: 'Stanton',
@@ -42,80 +46,35 @@ const SYSTEM_COLORS: Record<System, { bg: string; border: string; text: string }
   unknown: { bg: 'bg-slate-800/50', border: 'border-slate-600/40', text: 'text-slate-400' },
 }
 
-const FACTION_PATTERNS: Record<string, { name: string; isLawful: boolean }> = {
-  'shubin': { name: 'Shubin Interstellar', isLawful: true },
-  'adagio': { name: 'Adagio Holdings', isLawful: true },
-  'covalex': { name: 'Covalex', isLawful: true },
-  'eckhart': { name: 'Eckhart Security', isLawful: true },
-  'northrock': { name: 'Northrock Service Group', isLawful: true },
-  'crusader': { name: 'Crusader Security', isLawful: true },
-  'hurston': { name: 'Hurston Security', isLawful: true },
-  'microtech': { name: 'microTech', isLawful: true },
-  'citizensforprosperity': { name: 'Citizens for Prosperity', isLawful: true },
-  'cfp': { name: 'Citizens for Prosperity', isLawful: true },
-  'headhunter': { name: 'Headhunters', isLawful: false },
-  'ninetail': { name: 'Nine Tails', isLawful: false },
-  'bountyhunter': { name: 'Bounty Hunters Guild', isLawful: true },
-  'cdf': { name: 'Civilian Defense Force', isLawful: true },
-  'xenothreat': { name: 'Xenothreat', isLawful: false },
-  'rayari': { name: 'Rayari Deltana', isLawful: true },
+const UNLAWFUL_FACTIONS = [
+  'headhunters', 'xenothreat', 'ruto', 'vaughn', 'ninetails',
+  'tarpits', 'bitzeros', 'dead saints'
+]
+
+function isUnlawfulFaction(faction: string): boolean {
+  const lower = faction.toLowerCase()
+  return UNLAWFUL_FACTIONS.some(f => lower.includes(f))
 }
 
-const FACTION_DEFAULT_SYSTEMS: Record<string, System> = {
-  'Shubin Interstellar': 'stanton',
-  'Adagio Holdings': 'stanton',
-  'Covalex': 'stanton',
-  'Eckhart Security': 'stanton',
-  'Northrock Service Group': 'stanton',
-  'Crusader Security': 'stanton',
-  'microTech': 'stanton',
-  'Bounty Hunters Guild': 'stanton',
-  'Civilian Defense Force': 'stanton',
-  'Citizens for Prosperity': 'pyro',
-  'Headhunters': 'pyro',
-  'Xenothreat': 'pyro',
-  'Rayari Deltana': 'nyx',
+function normalizeSystem(sys: string | undefined): System {
+  if (!sys) return 'unknown'
+  const lower = sys.toLowerCase()
+  if (lower === 'stanton') return 'stanton'
+  if (lower === 'pyro') return 'pyro'
+  if (lower === 'nyx') return 'nyx'
+  return 'unknown'
 }
 
-function parseMissionPoolKey(key: string): { faction: string; system: System; isLawful: boolean; displayName: string } {
-  const keyLower = key.toLowerCase()
-  
-  let faction = 'Unknown'
-  let isLawful = true
-  
-  for (const [pattern, info] of Object.entries(FACTION_PATTERNS)) {
-    if (keyLower.includes(pattern)) {
-      faction = info.name
-      isLawful = info.isLawful
-      break
-    }
-  }
-  
-  let system: System = 'unknown'
-  
-  if (keyLower.includes('stanton')) {
-    system = 'stanton'
-  } else if (keyLower.includes('pyronyx')) {
-    system = 'pyro'
-  } else if (keyLower.includes('pyro')) {
-    system = 'pyro'
-  } else if (keyLower.includes('nyx')) {
-    system = 'nyx'
-  } else if (/region[a-d]/i.test(keyLower)) {
-    system = 'pyro'
-  } else if (faction !== 'Unknown' && FACTION_DEFAULT_SYSTEMS[faction]) {
-    system = FACTION_DEFAULT_SYSTEMS[faction]
-  }
-  
-  const displayName = key
-    .replace(/^BP_MISSIONREWARD_/i, '')
-    .replace(/_/g, ' ')
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .replace(/\b(Stanton|Pyro|Nyx|PyroNyx)\b/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-  
-  return { faction, system, isLawful, displayName }
+interface MissionDisplay {
+  poolKey: string
+  title: string
+  faction: string
+  system: System
+  region: string | null
+  category: string | null
+  isLawful: boolean
+  minStanding: { name: string; minReputation: number } | null
+  blueprintCount: number
 }
 
 interface BrowseMissionsViewProps {
@@ -133,10 +92,11 @@ export default function BrowseMissionsView({
   const [viewMode, setViewMode] = useState<ViewMode>('system')
   const [selectedSystem, setSelectedSystem] = useState<System | null>(null)
   const [selectedFaction, setSelectedFaction] = useState<string | null>(null)
-  const [selectedMissionPool, setSelectedMissionPool] = useState<string | null>(null)
+  const [selectedMission, setSelectedMission] = useState<MissionDisplay | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
 
   const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
+  const missionsByPool = blueprintMissionData.missionsByPool as Record<string, MissionEntry[]>
 
   const blueprintsByInternalName = useMemo(() => {
     const map: Record<string, BlueprintRecord> = {}
@@ -152,110 +112,137 @@ export default function BrowseMissionsView({
     return map
   }, [blueprints])
 
-  const missionPools = useMemo((): MissionPool[] => {
-    return Object.entries(missionBlueprints).map(([key, bps]) => {
-      const parsed = parseMissionPoolKey(key)
-      return {
-        key,
-        displayName: parsed.displayName,
-        faction: parsed.faction,
-        system: parsed.system,
-        isLawful: parsed.isLawful,
-        blueprintCount: bps.length,
+  // Build list of missions with actual titles from missionsByPool
+  const missions = useMemo((): MissionDisplay[] => {
+    const result: MissionDisplay[] = []
+    const seen = new Set<string>()
+    
+    for (const [poolKey, missionEntries] of Object.entries(missionsByPool)) {
+      // Get blueprint count for this pool
+      const bps = missionBlueprints[poolKey] || missionBlueprints[poolKey.toLowerCase()] || []
+      if (bps.length === 0) continue
+      
+      for (const mission of missionEntries) {
+        // Dedupe by title + faction
+        const dedupeKey = `${mission.title}|${mission.faction}`
+        if (seen.has(dedupeKey)) continue
+        seen.add(dedupeKey)
+        
+        // Skip placeholder titles
+        if (!mission.title || mission.title.includes('~mission') || mission.title.startsWith('@')) continue
+        
+        result.push({
+          poolKey,
+          title: mission.title,
+          faction: mission.faction || 'Unknown',
+          system: normalizeSystem(mission.system),
+          region: mission.region,
+          category: mission.category,
+          isLawful: !isUnlawfulFaction(mission.faction || ''),
+          minStanding: mission.minStanding,
+          blueprintCount: bps.length,
+        })
       }
-    })
-  }, [missionBlueprints])
-
-  const systemStats = useMemo(() => {
-    const stats: Record<System, { factions: Set<string>; pools: number }> = {
-      stanton: { factions: new Set(), pools: 0 },
-      pyro: { factions: new Set(), pools: 0 },
-      nyx: { factions: new Set(), pools: 0 },
-      unknown: { factions: new Set(), pools: 0 },
     }
     
-    for (const pool of missionPools) {
-      stats[pool.system].factions.add(pool.faction)
-      stats[pool.system].pools++
+    return result.sort((a, b) => a.title.localeCompare(b.title))
+  }, [missionsByPool, missionBlueprints])
+
+  const systemStats = useMemo(() => {
+    const stats: Record<System, { factions: Set<string>; missions: number }> = {
+      stanton: { factions: new Set(), missions: 0 },
+      pyro: { factions: new Set(), missions: 0 },
+      nyx: { factions: new Set(), missions: 0 },
+      unknown: { factions: new Set(), missions: 0 },
+    }
+    
+    for (const m of missions) {
+      stats[m.system].factions.add(m.faction)
+      stats[m.system].missions++
     }
     
     return stats
-  }, [missionPools])
+  }, [missions])
 
-  const factionsBySystem = useMemo(() => {
-    const map: Record<System, Record<string, MissionPool[]>> = {
+  const missionsBySystem = useMemo(() => {
+    const map: Record<System, Record<string, MissionDisplay[]>> = {
       stanton: {},
       pyro: {},
       nyx: {},
       unknown: {},
     }
     
-    for (const pool of missionPools) {
-      if (!map[pool.system][pool.faction]) {
-        map[pool.system][pool.faction] = []
+    for (const m of missions) {
+      if (!map[m.system][m.faction]) {
+        map[m.system][m.faction] = []
       }
-      map[pool.system][pool.faction].push(pool)
+      map[m.system][m.faction].push(m)
     }
     
     return map
-  }, [missionPools])
+  }, [missions])
 
-  // For faction view: group all pools by faction (across all systems)
-  const poolsByFaction = useMemo(() => {
-    const map: Record<string, { pools: MissionPool[]; isLawful: boolean; systems: Set<System> }> = {}
+  const missionsByFaction = useMemo(() => {
+    const map: Record<string, { missions: MissionDisplay[]; isLawful: boolean; systems: Set<System> }> = {}
     
-    for (const pool of missionPools) {
-      if (!map[pool.faction]) {
-        map[pool.faction] = { pools: [], isLawful: pool.isLawful, systems: new Set() }
+    for (const m of missions) {
+      if (!map[m.faction]) {
+        map[m.faction] = { missions: [], isLawful: m.isLawful, systems: new Set() }
       }
-      map[pool.faction].pools.push(pool)
-      map[pool.faction].systems.add(pool.system)
+      map[m.faction].missions.push(m)
+      map[m.faction].systems.add(m.system)
     }
     
     return map
-  }, [missionPools])
+  }, [missions])
 
-  const filteredFactionsList = useMemo(() => {
-    const entries = Object.entries(poolsByFaction)
+  const filteredFactions = useMemo(() => {
+    if (!selectedSystem) return {}
+    const factions = missionsBySystem[selectedSystem]
+    
+    if (!searchTerm) return factions
+    
+    const term = searchTerm.toLowerCase()
+    const filtered: Record<string, MissionDisplay[]> = {}
+    for (const [faction, missionList] of Object.entries(factions)) {
+      const matching = missionList.filter(m => 
+        m.title.toLowerCase().includes(term) ||
+        faction.toLowerCase().includes(term) ||
+        (m.category && m.category.toLowerCase().includes(term))
+      )
+      if (matching.length > 0) {
+        filtered[faction] = matching
+      }
+    }
+    return filtered
+  }, [selectedSystem, missionsBySystem, searchTerm])
+
+  const filteredFactionList = useMemo(() => {
+    const entries = Object.entries(missionsByFaction)
     
     if (!searchTerm) return entries
     
     const term = searchTerm.toLowerCase()
     return entries.filter(([faction, data]) => 
       faction.toLowerCase().includes(term) ||
-      data.pools.some(p => p.displayName.toLowerCase().includes(term))
+      data.missions.some(m => m.title.toLowerCase().includes(term) || (m.category && m.category.toLowerCase().includes(term)))
     )
-  }, [poolsByFaction, searchTerm])
+  }, [missionsByFaction, searchTerm])
 
-  const filteredFactions = useMemo(() => {
-    if (!selectedSystem) return {}
-    const factions = factionsBySystem[selectedSystem]
-    
-    if (!searchTerm) return factions
-    
-    const term = searchTerm.toLowerCase()
-    const filtered: Record<string, MissionPool[]> = {}
-    for (const [faction, pools] of Object.entries(factions)) {
-      const matchingPools = pools.filter(p => 
-        p.displayName.toLowerCase().includes(term) ||
-        faction.toLowerCase().includes(term)
-      )
-      if (matchingPools.length > 0) {
-        filtered[faction] = matchingPools
-      }
+  const selectedFactionMissions = useMemo((): MissionDisplay[] => {
+    if (viewMode === 'system' && selectedSystem && selectedFaction) {
+      return missionsBySystem[selectedSystem][selectedFaction] || []
     }
-    return filtered
-  }, [selectedSystem, factionsBySystem, searchTerm])
+    if (viewMode === 'faction' && selectedFaction) {
+      return missionsByFaction[selectedFaction]?.missions || []
+    }
+    return []
+  }, [viewMode, selectedSystem, selectedFaction, missionsBySystem, missionsByFaction])
 
-  const selectedFactionPools = useMemo((): MissionPool[] => {
-    if (!selectedSystem || !selectedFaction) return []
-    return factionsBySystem[selectedSystem][selectedFaction] || []
-  }, [selectedSystem, selectedFaction, factionsBySystem])
-
-  const selectedPoolBlueprints = useMemo(() => {
-    if (!selectedMissionPool) return []
+  const selectedMissionBlueprints = useMemo(() => {
+    if (!selectedMission) return []
     
-    const poolBps = missionBlueprints[selectedMissionPool] || []
+    const poolBps = missionBlueprints[selectedMission.poolKey] || missionBlueprints[selectedMission.poolKey.toLowerCase()] || []
     
     return poolBps.map(bp => {
       const bpName = bp.name.toLowerCase()
@@ -274,17 +261,17 @@ export default function BrowseMissionsView({
       if (a.isAcquired !== b.isAcquired) return a.isAcquired ? 1 : -1
       return a.displayName.localeCompare(b.displayName)
     })
-  }, [selectedMissionPool, missionBlueprints, blueprintsByInternalName, acquiredBlueprints, isOnTargetList])
+  }, [selectedMission, missionBlueprints, blueprintsByInternalName, acquiredBlueprints, isOnTargetList])
 
-  const poolStats = useMemo(() => {
-    const total = selectedPoolBlueprints.length
-    const acquired = selectedPoolBlueprints.filter(b => b.isAcquired).length
+  const blueprintStats = useMemo(() => {
+    const total = selectedMissionBlueprints.length
+    const acquired = selectedMissionBlueprints.filter(b => b.isAcquired).length
     return { total, acquired }
-  }, [selectedPoolBlueprints])
+  }, [selectedMissionBlueprints])
 
   const handleBack = () => {
-    if (selectedMissionPool) {
-      setSelectedMissionPool(null)
+    if (selectedMission) {
+      setSelectedMission(null)
     } else if (selectedFaction) {
       setSelectedFaction(null)
     } else if (selectedSystem) {
@@ -296,7 +283,7 @@ export default function BrowseMissionsView({
     setViewMode(mode)
     setSelectedSystem(null)
     setSelectedFaction(null)
-    setSelectedMissionPool(null)
+    setSelectedMission(null)
     setSearchTerm('')
   }
 
@@ -304,46 +291,111 @@ export default function BrowseMissionsView({
     const crumbs: { label: string; onClick: () => void }[] = []
     
     if (viewMode === 'system') {
-      crumbs.push({ label: 'Systems', onClick: () => { setSelectedSystem(null); setSelectedFaction(null); setSelectedMissionPool(null) } })
+      crumbs.push({ label: 'Systems', onClick: () => { setSelectedSystem(null); setSelectedFaction(null); setSelectedMission(null) } })
       
       if (selectedSystem) {
         crumbs.push({
           label: SYSTEM_LABELS[selectedSystem],
-          onClick: () => { setSelectedFaction(null); setSelectedMissionPool(null) },
+          onClick: () => { setSelectedFaction(null); setSelectedMission(null) },
         })
       }
       
       if (selectedFaction) {
         crumbs.push({
           label: selectedFaction,
-          onClick: () => { setSelectedMissionPool(null) },
+          onClick: () => { setSelectedMission(null) },
         })
       }
     } else {
-      crumbs.push({ label: 'Factions', onClick: () => { setSelectedFaction(null); setSelectedMissionPool(null) } })
+      crumbs.push({ label: 'Factions', onClick: () => { setSelectedFaction(null); setSelectedMission(null) } })
       
       if (selectedFaction) {
         crumbs.push({
           label: selectedFaction,
-          onClick: () => { setSelectedMissionPool(null) },
+          onClick: () => { setSelectedMission(null) },
         })
       }
     }
     
-    if (selectedMissionPool) {
-      const pool = missionPools.find(p => p.key === selectedMissionPool)
+    if (selectedMission) {
       crumbs.push({
-        label: pool?.displayName || selectedMissionPool,
+        label: selectedMission.title.length > 40 ? selectedMission.title.slice(0, 40) + '...' : selectedMission.title,
         onClick: () => {},
       })
     }
     
     return crumbs
-  }, [viewMode, selectedSystem, selectedFaction, selectedMissionPool, missionPools])
+  }, [viewMode, selectedSystem, selectedFaction, selectedMission])
+
+  const renderMissionCard = (mission: MissionDisplay) => {
+    const poolBps = missionBlueprints[mission.poolKey] || missionBlueprints[mission.poolKey.toLowerCase()] || []
+    const acquiredCount = poolBps.filter(bp => {
+      const bpName = bp.name.toLowerCase()
+      const fullBp = blueprintsByInternalName[bpName]
+      return fullBp && acquiredBlueprints[fullBp.file]
+    }).length
+    
+    const regionInfo = mission.region && mission.system === 'pyro' 
+      ? getRegionInfo('pyro', mission.region)
+      : null
+    
+    return (
+      <button
+        key={`${mission.poolKey}-${mission.title}`}
+        onClick={() => setSelectedMission(mission)}
+        className={`w-full p-3 rounded-lg border text-left transition-all hover:bg-slate-800/50 ${
+          mission.isLawful 
+            ? 'border-green-500/20 hover:border-green-500/40'
+            : 'border-red-500/20 hover:border-red-500/40'
+        }`}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <h4 className={`font-medium text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>
+              {mission.title}
+            </h4>
+            <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+              {!mission.isLawful && (
+                <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
+                  Illegal
+                </span>
+              )}
+              {mission.category && (
+                <span className="text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
+                  {mission.category}
+                </span>
+              )}
+              {mission.region && (
+                <span 
+                  className="text-[10px] px-1.5 py-0.5 bg-violet-950/50 text-violet-300 border border-violet-500/40 rounded cursor-help"
+                  title={regionInfo ? `${regionInfo.label}\nLocations: ${regionInfo.locations.join(', ')}` : undefined}
+                >
+                  {SYSTEM_LABELS[mission.system]} {mission.region}
+                </span>
+              )}
+              {mission.minStanding && mission.minStanding.minReputation > 0 && (
+                <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">
+                  {mission.minStanding.name} ({mission.minStanding.minReputation.toLocaleString()})
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="shrink-0 text-right">
+            <span className={`text-sm font-medium ${
+              acquiredCount === poolBps.length ? 'text-green-400' : 'text-amber-400'
+            }`}>
+              {acquiredCount}/{poolBps.length}
+            </span>
+            <p className="text-[10px] text-slate-500">blueprints</p>
+          </div>
+        </div>
+      </button>
+    )
+  }
 
   return (
     <div className="space-y-4">
-      {/* View Mode Switcher */}
+      {/* Breadcrumbs + View Toggle */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm">
           {breadcrumbs.map((crumb, idx) => (
@@ -364,8 +416,7 @@ export default function BrowseMissionsView({
           ))}
         </div>
         
-        {/* View toggle - only show when at top level */}
-        {!selectedFaction && !selectedMissionPool && (
+        {!selectedFaction && !selectedMission && (
           <div className="flex items-center gap-1 bg-slate-800/60 rounded-lg p-0.5 border border-slate-700/50">
             <button
               onClick={() => handleViewModeChange('system')}
@@ -399,7 +450,7 @@ export default function BrowseMissionsView({
           {(['stanton', 'pyro', 'nyx', 'unknown'] as System[]).map(system => {
             const stats = systemStats[system]
             const colors = SYSTEM_COLORS[system]
-            if (stats.pools === 0) return null
+            if (stats.missions === 0) return null
             
             return (
               <button
@@ -409,7 +460,7 @@ export default function BrowseMissionsView({
               >
                 <h3 className={`text-lg font-semibold ${colors.text}`}>{SYSTEM_LABELS[system]}</h3>
                 <p className="text-sm text-slate-400 mt-1">
-                  {stats.factions.size} faction{stats.factions.size !== 1 ? 's' : ''} • {stats.pools} mission pool{stats.pools !== 1 ? 's' : ''}
+                  {stats.factions.size} faction{stats.factions.size !== 1 ? 's' : ''} • {stats.missions} mission{stats.missions !== 1 ? 's' : ''}
                 </p>
               </button>
             )
@@ -423,7 +474,7 @@ export default function BrowseMissionsView({
           <div className="relative">
             <input
               type="text"
-              placeholder="Search factions or mission pools..."
+              placeholder="Search missions, factions, or categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="site-input w-full pl-9 pr-4 py-2 text-sm"
@@ -436,8 +487,8 @@ export default function BrowseMissionsView({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {Object.entries(filteredFactions)
               .sort(([a], [b]) => a.localeCompare(b))
-              .map(([faction, pools]) => {
-                const isLawful = pools[0]?.isLawful ?? true
+              .map(([faction, missionList]) => {
+                const isLawful = !isUnlawfulFaction(faction)
                 return (
                   <button
                     key={faction}
@@ -452,7 +503,7 @@ export default function BrowseMissionsView({
                       {faction}
                     </h4>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      {pools.length} mission pool{pools.length !== 1 ? 's' : ''} with blueprints
+                      {missionList.length} mission{missionList.length !== 1 ? 's' : ''} with blueprints
                     </p>
                   </button>
                 )
@@ -461,50 +512,10 @@ export default function BrowseMissionsView({
         </>
       )}
 
-      {/* Mission Pool Selection (System View) */}
-      {viewMode === 'system' && selectedSystem && selectedFaction && !selectedMissionPool && (
+      {/* Mission Selection (System View) */}
+      {viewMode === 'system' && selectedSystem && selectedFaction && !selectedMission && (
         <div className="space-y-2">
-          {selectedFactionPools.map(pool => {
-            const poolBps = missionBlueprints[pool.key] || []
-            const acquiredCount = poolBps.filter(bp => {
-              const bpName = bp.name.toLowerCase()
-              const fullBp = blueprintsByInternalName[bpName]
-              return fullBp && acquiredBlueprints[fullBp.file]
-            }).length
-            
-            return (
-              <button
-                key={pool.key}
-                onClick={() => setSelectedMissionPool(pool.key)}
-                className={`w-full p-3 rounded-lg border text-left transition-all hover:bg-slate-800/50 ${
-                  pool.isLawful 
-                    ? 'border-green-500/20 hover:border-green-500/40'
-                    : 'border-red-500/20 hover:border-red-500/40'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
-                    <h4 className={`font-medium text-sm ${pool.isLawful ? 'text-green-300' : 'text-red-400'}`}>
-                      {pool.displayName}
-                    </h4>
-                    {!pool.isLawful && (
-                      <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded mt-1 inline-block">
-                        Illegal
-                      </span>
-                    )}
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <span className={`text-sm font-medium ${
-                      acquiredCount === poolBps.length ? 'text-green-400' : 'text-amber-400'
-                    }`}>
-                      {acquiredCount}/{poolBps.length}
-                    </span>
-                    <p className="text-[10px] text-slate-500">blueprints</p>
-                  </div>
-                </div>
-              </button>
-            )
-          })}
+          {selectedFactionMissions.map(mission => renderMissionCard(mission))}
         </div>
       )}
 
@@ -516,7 +527,7 @@ export default function BrowseMissionsView({
           <div className="relative">
             <input
               type="text"
-              placeholder="Search factions or mission pools..."
+              placeholder="Search missions, factions, or categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="site-input w-full pl-9 pr-4 py-2 text-sm"
@@ -527,7 +538,7 @@ export default function BrowseMissionsView({
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filteredFactionsList
+            {filteredFactionList
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([faction, data]) => {
                 const systemsArray = Array.from(data.systems)
@@ -555,7 +566,7 @@ export default function BrowseMissionsView({
                       ))}
                     </div>
                     <p className="text-xs text-slate-500 mt-1">
-                      {data.pools.length} mission pool{data.pools.length !== 1 ? 's' : ''} with blueprints
+                      {data.missions.length} mission{data.missions.length !== 1 ? 's' : ''} with blueprints
                     </p>
                   </button>
                 )
@@ -564,74 +575,28 @@ export default function BrowseMissionsView({
         </>
       )}
 
-      {/* Mission Pool Selection (Faction View) */}
-      {viewMode === 'faction' && selectedFaction && !selectedMissionPool && (
+      {/* Mission Selection (Faction View) */}
+      {viewMode === 'faction' && selectedFaction && !selectedMission && (
         <div className="space-y-2">
-          {poolsByFaction[selectedFaction]?.pools
-            .sort((a, b) => a.displayName.localeCompare(b.displayName))
-            .map(pool => {
-              const poolBps = missionBlueprints[pool.key] || []
-              const acquiredCount = poolBps.filter(bp => {
-                const bpName = bp.name.toLowerCase()
-                const fullBp = blueprintsByInternalName[bpName]
-                return fullBp && acquiredBlueprints[fullBp.file]
-              }).length
-              const colors = SYSTEM_COLORS[pool.system]
-              
-              return (
-                <button
-                  key={pool.key}
-                  onClick={() => setSelectedMissionPool(pool.key)}
-                  className={`w-full p-3 rounded-lg border text-left transition-all hover:bg-slate-800/50 ${
-                    pool.isLawful 
-                      ? 'border-green-500/20 hover:border-green-500/40'
-                      : 'border-red-500/20 hover:border-red-500/40'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h4 className={`font-medium text-sm ${pool.isLawful ? 'text-green-300' : 'text-red-400'}`}>
-                          {pool.displayName}
-                        </h4>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${colors.bg} ${colors.border} ${colors.text}`}>
-                          {SYSTEM_LABELS[pool.system]}
-                        </span>
-                      </div>
-                      {!pool.isLawful && (
-                        <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded mt-1 inline-block">
-                          Illegal
-                        </span>
-                      )}
-                    </div>
-                    <div className="shrink-0 text-right">
-                      <span className={`text-sm font-medium ${
-                        acquiredCount === poolBps.length ? 'text-green-400' : 'text-amber-400'
-                      }`}>
-                        {acquiredCount}/{poolBps.length}
-                      </span>
-                      <p className="text-[10px] text-slate-500">blueprints</p>
-                    </div>
-                  </div>
-                </button>
-              )
-            })}
+          {selectedFactionMissions
+            .sort((a, b) => a.title.localeCompare(b.title))
+            .map(mission => renderMissionCard(mission))}
         </div>
       )}
 
-      {/* ========== SHARED: Blueprint Pool View ========== */}
+      {/* ========== SHARED: Blueprint View ========== */}
       
-      {/* Blueprint Pool View */}
-      {selectedMissionPool && (
+      {/* Blueprint View */}
+      {selectedMission && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-400">Blueprints in this mission pool</p>
+              <p className="text-sm text-slate-400">Blueprints from this mission</p>
               <p className="text-lg font-semibold">
-                <span className={poolStats.acquired === poolStats.total ? 'text-green-400' : 'text-amber-400'}>
-                  {poolStats.acquired}
+                <span className={blueprintStats.acquired === blueprintStats.total ? 'text-green-400' : 'text-amber-400'}>
+                  {blueprintStats.acquired}
                 </span>
-                <span className="text-slate-500">/{poolStats.total}</span>
+                <span className="text-slate-500">/{blueprintStats.total}</span>
                 <span className="text-slate-500 text-sm ml-2">acquired</span>
               </p>
             </div>
@@ -644,7 +609,7 @@ export default function BrowseMissionsView({
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {selectedPoolBlueprints.map(bp => (
+            {selectedMissionBlueprints.map(bp => (
               <div
                 key={bp.name}
                 className={`p-3 rounded-lg border transition-all ${
