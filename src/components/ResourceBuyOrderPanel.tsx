@@ -10,6 +10,7 @@ import {
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
 import { DEFAULT_STOCK_QUALITY, ORDER_QUALITY_TIERS } from '../config/dfp'
+import { getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
@@ -187,6 +188,7 @@ export default function ResourceBuyOrderPanel({
     ? canAddBlueprintToOrder(selectedBlueprint, orderOverridesMap)
     : false
   const selectedResource = activeCatalog.find((r) => r.resource_key === resourceKey)
+  const selectedResourceLabel = selectedResource?.label ?? ''
   const selectedResIsSalvage = selectedResource
     ? isSalvageResource(selectedResource.resource_key)
     : false
@@ -197,6 +199,10 @@ export default function ResourceBuyOrderPanel({
     ? resourceQuantityUnitLabel(selectedResource.resource_key)
     : 'SCU'
   const selectedResNoQuality = selectedResIsSalvage || selectedResIsHarvest
+  const resourceBands = useMemo(
+    () => (resourceKey && !selectedResNoQuality ? getResourceBands(selectedResourceLabel) : undefined),
+    [resourceKey, selectedResourceLabel, selectedResNoQuality]
+  )
 
   const cartTotalDfp = useMemo(
     () =>
@@ -226,8 +232,14 @@ export default function ResourceBuyOrderPanel({
   }, [activeCatalog, resourceKey])
 
   useEffect(() => {
-    if (selectedResNoQuality) setResQuality(String(SALVAGE_ORDER_MIN_QUALITY))
-  }, [resourceKey, selectedResNoQuality])
+    if (selectedResNoQuality) {
+      setResQuality(String(SALVAGE_ORDER_MIN_QUALITY))
+    } else if (resourceBands && resourceBands.length > 0) {
+      setResQuality(String(resourceBands[3] ?? resourceBands[0]))
+    } else {
+      setResQuality(String(DEFAULT_STOCK_QUALITY))
+    }
+  }, [resourceKey, selectedResNoQuality, resourceBands])
 
   const addBlueprint = () => {
     if (!selectedBlueprint?.internalName) return
@@ -511,18 +523,50 @@ export default function ResourceBuyOrderPanel({
             )}
             <div className={`grid gap-2 ${selectedResNoQuality ? 'grid-cols-2' : 'grid-cols-3'}`}>
               {!selectedResNoQuality && (
-                <select
-                  value={resQuality}
-                  onChange={(e) => setResQuality(e.target.value)}
-                  className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-                  aria-label="Min quality tier"
-                >
-                  {ORDER_QUALITY_TIERS.map((tier) => (
-                    <option key={tier} value={tier}>
-                      Q{tier}
-                    </option>
-                  ))}
-                </select>
+                resourceBands ? (
+                  <select
+                    value={resQuality}
+                    onChange={(e) => setResQuality(e.target.value)}
+                    className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                    aria-label="Quality band"
+                  >
+                    {resourceBands.map((bandValue, idx) => {
+                      const tier = getQualityTier(bandValue)
+                      return (
+                        <option key={idx} value={bandValue} className={getQualityTierColor(tier)}>
+                          Band {idx + 1}: Q{bandValue}
+                        </option>
+                      )
+                    })}
+                  </select>
+                ) : (
+                  <div className="flex items-center gap-2 min-w-0">
+                    <input
+                      type="range"
+                      min={1}
+                      max={1000}
+                      step={1}
+                      value={resQuality}
+                      onChange={(e) => setResQuality(e.target.value)}
+                      className="flex-1 min-w-0 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                      aria-label="Quality slider"
+                    />
+                    <input
+                      type="number"
+                      min={1}
+                      max={1000}
+                      value={resQuality}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value, 10)
+                        if (!isNaN(val) && val >= 1 && val <= 1000) {
+                          setResQuality(String(val))
+                        }
+                      }}
+                      className="w-16 px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center shrink-0"
+                      aria-label="Quality value"
+                    />
+                  </div>
+                )
               )}
               <ResourceQuantityInput
                 resourceKey={selectedResource?.resource_key}
