@@ -783,7 +783,7 @@ function parseBlueprintRewards() {
     if (!json?._RecordValue_?.blueprintRewards) continue
     
     const recordName = json._RecordName_ || basename(file, '.json')
-    const missionKey = recordName.replace('BlueprintPoolRecord.', '').replace('BP_REWARDS_', '')
+    const missionKey = recordName.replace('BlueprintPoolRecord.', '').replace('BP_REWARDS_', '').toLowerCase()
     
     const blueprints = []
     for (const reward of json._RecordValue_.blueprintRewards) {
@@ -986,8 +986,9 @@ function parseContractGenerators(localization) {
               const poolMatch = result.blueprintPool.match(/([^/]+)\.json$/i)
               if (poolMatch) {
                 const poolKey = poolMatch[1]
-                  .replace('bp_rewards_', '')
-                  .replace('bp_missionreward_', '')
+                  .replace(/bp_rewards_/i, '')
+                  .replace(/bp_missionreward_/i, '')
+                  .toLowerCase()
                 blueprintPools.push({
                   key: poolKey,
                   chance: result.chance || 1.0,
@@ -1120,6 +1121,35 @@ function parseContractGenerators(localization) {
             category = 'Hauling'
           } else if (pathLower.includes('investigation') || debugLower.includes('investigation')) {
             category = 'Investigation'
+          }
+        }
+        
+        // Second fallback: infer from mission title
+        if (!category && title) {
+          const titleLower = title.toLowerCase()
+          // Combat/Elimination missions
+          if (titleLower.includes('bounty') || titleLower.includes('hunt')) {
+            category = 'Bounty Hunter'
+          } else if (titleLower.includes('destroy') || titleLower.includes('eliminate') || titleLower.includes('kill')) {
+            category = 'Combat'
+          } else if (titleLower.includes('disable') || titleLower.includes('intercept')) {
+            category = 'Combat'
+          // Protection/Escort missions
+          } else if (titleLower.includes('escort') || titleLower.includes('protect') || titleLower.includes('defend')) {
+            category = 'Security Escort'
+          // Cargo/Recovery missions
+          } else if (titleLower.includes('recover') || titleLower.includes('cargo') || titleLower.includes('retrieve')) {
+            category = 'Cargo Recovery'
+          } else if (titleLower.includes('deliver') || titleLower.includes('transport') || titleLower.includes('supply')) {
+            category = 'Delivery'
+          // Support missions
+          } else if (titleLower.includes('distress') || titleLower.includes('rescue') || titleLower.includes('aid') || titleLower.includes('save')) {
+            category = 'Search & Rescue'
+          } else if (titleLower.includes('support') || titleLower.includes('assist')) {
+            category = 'Combat Support'
+          // Attack missions
+          } else if (titleLower.includes('attack') || titleLower.includes('assault') || titleLower.includes('raid')) {
+            category = 'Mercenary'
           }
         }
         
