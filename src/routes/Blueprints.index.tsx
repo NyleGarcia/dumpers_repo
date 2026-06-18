@@ -13,103 +13,25 @@ import {
   canAddBlueprintToTargetList,
   resolveIsOrderable,
 } from '../lib/blueprintOrderable'
-import { fetchBlueprintOwnerCounts } from '../lib/operations'
+import {
+  getArmorSlot as getArmorSlotFromPath,
+  getArmorWeight as getArmorWeightFromTaxonomy,
+  getBlueprintSubType,
+} from '../lib/blueprintTaxonomy'
+
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
-const getFpsWeaponTypeFromFilename = (filename) => {
-  const fn = (filename || '').toLowerCase()
-  for (const type of FPS_WEAPON_TYPE_OPTIONS) {
-    if (fn.includes(`_${type}_`) || fn.includes(`_${type}.`)) return type
-  }
-  return null
-}
-
 const getSubType = (bp) => {
-  // Use pre-computed subtype from game data
-  if (bp.subtype) return bp.subtype
-  
-  // Fallback for legacy behavior
-  const parts = (bp.file || '').split('\\')
-  const filename = parts[parts.length - 1] || ''
-  
-  for (let i = 0; i < parts.length - 1; i++) {
-    // Vehicle weapons: vehiclegear\weapons\[type] or vehiclegear\weapons\$templates\[type]
-    if (parts[i] === 'vehiclegear' && parts[i + 1] === 'weapons') {
-      let next = parts[i + 2]?.replace('$', '')
-      if (next === 'templates' && parts[i + 3]) next = parts[i + 3]
-      return next || null
-    }
-    
-    // FPS weapons: fpsgear\weapons\[type] or fpsgear\weapons\$templates\...
-    if (parts[i] === 'weapons' && parts[i - 1] === 'fpsgear') {
-      const sub = parts[i + 1]?.replace('$', '')
-      // If in templates folder, extract type from filename
-      if (sub === 'templates') {
-        return getFpsWeaponTypeFromFilename(filename) || 'other'
-      }
-      return sub
-    }
-    
-    // FPS ammo: categorize by weapon type (pistol, rifle, etc.) like FPS weapons
-    if (parts[i] === 'ammo' && parts[i - 1] === 'fpsgear') {
-      const fromFilename = getFpsWeaponTypeFromFilename(filename)
-      if (fromFilename) return fromFilename
-      const folderType = parts[i + 1]?.replace('$', '')
-      if (FPS_WEAPON_TYPE_OPTIONS.includes(folderType)) return folderType
-      return null
-    }
-    
-    // FPS armour: fpsgear\armour\[type] or fpsgear\armour\combat\[weight] or fpsgear\armour\$templates\[type]
-    // Combat armor gets "standard" as type, template armor gets its specific type
-    if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
-      const rawSub = parts[i + 1]?.replace('$', '')
-      const sub = rawSub === 'templates' && parts[i + 2] ? parts[i + 2] : rawSub
-      // For combat armor, return 'standard' as the type - weight is a separate filter
-      if (sub === 'combat') return 'standard'
-      // For flightsuit: helmets are "standard" type, bodies are "flightsuit" type
-      if (sub === 'flightsuit') {
-        if (filename.includes('_helmet')) return 'standard'
-        return 'flightsuit'
-      }
-      return sub
-    }
-    
-    // Vehicle components: vehiclegear\[type]
-    if (parts[i] === 'vehiclegear' && parts[i + 1] !== 'weapons') {
-      return parts[i + 1]?.replace('$', '')
-    }
-  }
+  const fromPath = getBlueprintSubType(bp)
+  if (fromPath) return fromPath
+  // Ignore body-slot values wrongly stored as subtype in generated data
+  if (bp.subtype && !ARMOR_SLOT_OPTIONS.includes(bp.subtype)) return bp.subtype
   return null
 }
 
-const getArmorWeightFromPath = (parts) => {
-  const armourIdx = parts.indexOf('armour')
-  if (armourIdx < 0) return null
-  for (let i = armourIdx + 1; i < parts.length - 1; i++) {
-    const segment = parts[i]?.toLowerCase()
-    if (['superheavy', 'heavy', 'medium', 'light'].includes(segment)) return segment
-  }
-  return null
-}
+const getArmorWeight = (bp) => getArmorWeightFromTaxonomy(bp) || bp.armorWeight || null
 
-const isFlightArmor = (parts, filename, blueprintName = '') => {
-  if (parts.some(p => p.toLowerCase() === 'flightsuit')) return true
-  if (parts.some(p => p.toLowerCase() === 'racer')) return true
-  if (filename.includes('flightsuit')) return true
-  const name = (blueprintName || '').toLowerCase()
-  if (name.includes('flight') || name.includes('racing')) return true
-  return false
-}
-
-const getArmorWeight = (bp) => {
-  // Use pre-computed armorWeight from game data
-  return bp.armorWeight || null
-}
-
-const getArmorSlot = (bp) => {
-  // Use pre-computed armorSlot from game data
-  return bp.armorSlot || null
-}
+const getArmorSlot = (bp) => getArmorSlotFromPath(bp) || bp.armorSlot || null
 
 const MAIN_CATEGORY_GROUPS = {
   'FPS Weapons': ['FPSWeapons'],

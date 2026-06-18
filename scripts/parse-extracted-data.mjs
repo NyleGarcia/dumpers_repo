@@ -2342,13 +2342,14 @@ function parseBlueprintDefinitions(localization = {}) {
     let armorSlot = null
     let armorWeight = null
     if (category === 'FPSArmours') {
-      // Detect armor slot
-      if (ecLower.includes('helmet')) armorSlot = 'helmet'
-      else if (ecLower.includes('torso') || ecLower.includes('core') || ecLower.includes('jacket')) armorSlot = 'core'
-      else if (ecLower.includes('arm')) armorSlot = 'arms'
-      else if (ecLower.includes('leg') || ecLower.includes('pants')) armorSlot = 'legs'
-      else if (ecLower.includes('undersuit')) armorSlot = 'undersuit'
-      else if (ecLower.includes('backpack')) armorSlot = 'backpack'
+      const nameForSlot = (internalName || entityClass || '').toLowerCase()
+      // Use _arms_ / _legs_ tokens — includes('arm') falsely matches "armor" in leg items
+      if (/_helmet(?:_|$)/.test(nameForSlot)) armorSlot = 'helmet'
+      else if (/_backpack(?:_|$)/.test(nameForSlot)) armorSlot = 'backpack'
+      else if (/_legs(?:_|$)/.test(nameForSlot)) armorSlot = 'legs'
+      else if (/_arms(?:_|$)/.test(nameForSlot)) armorSlot = 'arms'
+      else if (/_core(?:_|$)|_torso(?:_|$)|_jacket(?:_|$)/.test(nameForSlot)) armorSlot = 'core'
+      else if (/_undersuit(?:_|$)/.test(nameForSlot)) armorSlot = 'undersuit'
       
       // Detect armor weight
       if (ecLower.includes('flightsuit') || ecLower.includes('racer') || ecLower.includes('racing') || ecLower.includes('flight')) {
@@ -2362,8 +2363,28 @@ function parseBlueprintDefinitions(localization = {}) {
       } else if (ecLower.includes('_light_') || ecLower.includes('_light') || ecLower.includes('undersuit')) {
         armorWeight = 'light'
       }
-      
-      subtype = armorSlot // Use slot as subtype for armor
+
+      // Armor style subtype (standard, flightsuit, explorer, etc.) — not body slot
+      const pathParts = legacyFilePath.split('\\').map(p => p.toLowerCase())
+      const pathFilename = pathParts[pathParts.length - 1] || ''
+      for (let i = 0; i < pathParts.length - 1; i++) {
+        if (pathParts[i] === 'armour' && pathParts[i - 1] === 'fpsgear') {
+          let style = pathParts[i + 1]?.replace('$', '')
+          if (style === 'templates' && pathParts[i + 2]) style = pathParts[i + 2]
+          if (style === 'combat') subtype = 'standard'
+          else if (style === 'flightsuit') subtype = pathFilename.includes('_helmet') ? 'standard' : 'flightsuit'
+          else subtype = style || 'standard'
+          break
+        }
+      }
+      if (!subtype) {
+        const n = nameForSlot
+        if (n.includes('explorer')) subtype = 'explorer'
+        else if (n.includes('undersuit')) subtype = 'undersuit'
+        else if (n.includes('stealth')) subtype = 'stealth'
+        else if (n.includes('salvag')) subtype = 'salvager'
+        else subtype = 'standard'
+      }
     }
     // Vehicle component types - detect from internalName prefix
     if (category.startsWith('VehicleComponent')) {
