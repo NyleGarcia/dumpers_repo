@@ -1046,7 +1046,7 @@ function parseContractGenerators(localization) {
   return { contracts, missionsByPool, poolsByBlueprint }
 }
 
-function parseBlueprintDefinitions() {
+function parseBlueprintDefinitions(localization = {}) {
   console.log('\n[2/7] Parsing blueprint definitions (crafting recipes)...')
   
   const blueprintFiles = findJsonFiles(EXPECTED_PATHS.blueprints)
@@ -1112,12 +1112,20 @@ function parseBlueprintDefinitions() {
     const internalName = fullName
       .replace(/^BP_CRAFT_/i, '')
       .replace(/_scitem$/i, '')
-    // blueprintName is the human-readable display name
-    const blueprintName = internalName
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, c => c.toUpperCase()) // Title case
-      .replace(/(\d+)x(\d+)/gi, '$1x$2') // Fix dimensions like 2x2
-      .trim()
+    
+    // Look up display name from localization using entityClass
+    // Keys are like: item_Namebehr_lmg_ballistic_01_mag
+    const locKey = `item_Name${entityClass || internalName}`
+    let blueprintName = localization[locKey]
+    
+    // Fallback: generate from internal name if not in localization
+    if (!blueprintName) {
+      blueprintName = internalName
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase()) // Title case
+        .replace(/(\d+)x(\d+)/gi, '$1x$2') // Fix dimensions like 2x2
+        .trim()
+    }
     
     // Derive subtype from entityClass for filtering (pistol, rifle, cooler, etc.)
     let subtype = null
@@ -1182,6 +1190,11 @@ function parseBlueprintDefinitions() {
     } else if (category.startsWith('VehicleWeapons')) {
       const size = category.replace('VehicleWeapons', '')
       categoryName = `Veh. Weapons ${size}`
+    }
+    // Magazines from FPSWeapons should be categorized as Ammo
+    // Check entityClass for 'mag' since subtype is set to weapon type
+    if (category === 'FPSWeapons' && ecLower.includes('_mag')) {
+      categoryName = 'Ammo'
     }
     
     blueprints.push({
@@ -2120,7 +2133,7 @@ async function main() {
   
   // Parse all data
   const { missionBlueprints, blueprintMissions } = parseBlueprintRewards()
-  const blueprintDefs = parseBlueprintDefinitions()
+  const blueprintDefs = parseBlueprintDefinitions(localization)
   const mineableElements = parseMineableElements()
   const miningLasers = parseMiningLasers(localization)
   const components = parseShipComponents(localization)
