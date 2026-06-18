@@ -34,9 +34,15 @@ function MissionRegionBadge({ regions, subRegion }: { regions: Region[]; subRegi
   const regionInfo = subRegion && regions.length === 1 
     ? getRegionInfo(regions[0], subRegion) 
     : null
-  const tooltip = regionInfo 
-    ? `${regionInfo.label}\nLocations: ${regionInfo.locations.join(', ')}${regionInfo.terminalLocations.length > 0 ? `\nTerminals: ${regionInfo.terminalLocations.join(', ')}` : ''}`
-    : undefined
+  
+  // Build tooltip
+  let tooltip: string | undefined
+  if (regionInfo) {
+    tooltip = `${regionInfo.label}\nLocations: ${regionInfo.locations.join(', ')}`
+  } else if (!subRegion && regions.includes('pyro')) {
+    // Pyro without sub-region - likely system-wide
+    tooltip = 'Likely available system-wide'
+  }
 
   return (
     <span
