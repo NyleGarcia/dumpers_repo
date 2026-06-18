@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import type { ArchiveSection } from '../../routes/Archive.index'
+import { MISSION_LOCATION_TAG_STYLES } from '../../lib/missionLocations'
 
 interface QuickLink {
   id: string
@@ -45,6 +46,97 @@ const QUICK_LINKS: QuickLink[] = [
   },
 ]
 
+function TagSample({
+  label,
+  className,
+}: {
+  label: string
+  className: string
+}) {
+  return (
+    <span
+      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border ${className}`}
+    >
+      {label}
+    </span>
+  )
+}
+
+function MissionTagLegend() {
+  return (
+    <div className="rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 space-y-4">
+      <div>
+        <h5 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">
+          Location tags
+        </h5>
+        <p className="text-xs text-slate-500 mb-3">
+          Missions show where to pull contracts. Hover is not required — everything is visible on the tags.
+        </p>
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs text-slate-400 mb-1.5">System-wide (available across the whole system)</p>
+            <div className="flex flex-wrap gap-1.5">
+              <TagSample label="Pyro" className={MISSION_LOCATION_TAG_STYLES.system} />
+              <TagSample label="Stanton" className={MISSION_LOCATION_TAG_STYLES.system} />
+              <TagSample label="Nyx" className={MISSION_LOCATION_TAG_STYLES.system} />
+            </div>
+          </div>
+          <div>
+            <p className="text-xs text-slate-400 mb-1.5">Region-specific (pull contracts in that sub-area)</p>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <TagSample label="Pyro A" className={MISSION_LOCATION_TAG_STYLES.region} />
+              <TagSample label="Monox" className={MISSION_LOCATION_TAG_STYLES.location} />
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">
+              Violet = region letter · Green = planets/moons in that region
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-slate-400 mb-1.5">Another region example</p>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <TagSample label="Pyro B" className={MISSION_LOCATION_TAG_STYLES.region} />
+              <TagSample label="Bloom" className={MISSION_LOCATION_TAG_STYLES.location} />
+              <TagSample label="Ignis" className={MISSION_LOCATION_TAG_STYLES.location} />
+            </div>
+          </div>
+        </div>
+        <ul className="mt-3 space-y-1 text-[11px] text-slate-500">
+          <li>• Pyro A = Monox · Pyro B = Bloom, Ignis · Pyro C = Fairo · Pyro D = Terminus, Vatra</li>
+          <li>• Stanton region tags will appear here as game data adds them</li>
+        </ul>
+      </div>
+
+      <div className="pt-3 border-t border-slate-700/40">
+        <h5 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">
+          Other mission tags
+        </h5>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <TagSample label="Cargo Recovery" className="bg-amber-950/50 text-amber-300 border-amber-500/40" />
+          <TagSample label="Jr. Contractor (800)" className="bg-cyan-950/50 text-cyan-300 border-cyan-500/40" />
+          <TagSample label="Neutral (0)" className="bg-slate-800/60 text-slate-400 border-slate-600/40" />
+          <TagSample label="Illegal" className="bg-red-950/50 text-red-400 border-red-500/40" />
+        </div>
+        <p className="text-[11px] text-slate-500 mt-2">
+          Amber = contract category · Cyan = rep required · Grey = neutral/no rep gate · Red = unlawful faction
+        </p>
+      </div>
+
+      <div className="pt-3 border-t border-slate-700/40">
+        <h5 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">
+          Blueprint unlock badge
+        </h5>
+        <TagSample
+          label="Neutral (0 rep)"
+          className="text-purple-300 border-purple-500/40 bg-purple-950/30"
+        />
+        <p className="text-[11px] text-slate-500 mt-2">
+          Shown under each tracked blueprint — the lowest rep standing needed to start seeing that blueprint drop from missions.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 const PAGE_GUIDES = [
   {
     id: 'blueprints',
@@ -83,6 +175,10 @@ const PAGE_GUIDES = [
       'See X/X progress (owned vs total) for each mission pool',
       'Add unowned blueprints to your tracker directly from the browse view',
       'My Tracker: view your tracked blueprints and build a mission checklist',
+      'Mission rows use color-coded tags — see the legend below when this section is expanded',
+      'Location tags: violet system/region tags plus green planet/moon tags (no tooltips)',
+      'System-wide missions show only the system name (e.g. Pyro); region missions add Pyro A/B/C/D plus locations',
+      'Other tags: amber category, cyan rep requirement, red illegal, purple unlock level under blueprint names',
       'Prioritize which factions to grind based on your goals',
       'Offline Mode: list saves locally until you sign in (then migrates automatically)',
     ],
@@ -843,6 +939,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                       </li>
                     ))}
                   </ul>
+                  {guide.id === 'targets' && <MissionTagLegend />}
                   {guide.relatesTo.length > 0 && (
                     <div className="pt-2 border-t border-slate-700/30">
                       <p className="text-xs text-slate-500">
