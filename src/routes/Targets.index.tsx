@@ -425,7 +425,23 @@ export default function TargetsRoute() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,360px)_1fr] gap-6 items-start">
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-white">Your targets</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-white">Your targets</h2>
+              <button
+                type="button"
+                onClick={() => {
+                  const allCollapsed = targetBlueprintRecords.every(bp => collapsedIds.has(bp.file))
+                  if (allCollapsed) {
+                    setCollapsedIds(new Set())
+                  } else {
+                    setCollapsedIds(new Set(targetBlueprintRecords.map(bp => bp.file)))
+                  }
+                }}
+                className="px-2 py-1 text-xs text-slate-400 hover:text-white border border-slate-600 hover:border-slate-500 rounded transition-colors"
+              >
+                {targetBlueprintRecords.every(bp => collapsedIds.has(bp.file)) ? 'Open All' : 'Close All'}
+              </button>
+            </div>
             <div className="space-y-4">
               {targetBlueprintRecords.map((bp) => {
                 const missions = getMissionsForBlueprint(
