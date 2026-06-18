@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import blueprintMissionData from '../data/game-blueprint-missions.json'
 import { useBlueprintData } from '../routes/blueprints'
 import MissionLocationTags from './MissionLocationTags'
+import { getBrowseSystemsForMission } from '../lib/missionLocations'
 import type { Region } from '../lib/missions'
 import {
   makeBrowseMissionKey,
@@ -43,7 +44,7 @@ const SYSTEM_LABELS: Record<System, string> = {
   stanton: 'Stanton',
   pyro: 'Pyro',
   nyx: 'Nyx',
-  unknown: 'Unknown / Multiple',
+  unknown: 'Unknown Location',
 }
 
 const SYSTEM_COLORS: Record<System, { bg: string; border: string; text: string }> = {
@@ -63,20 +64,20 @@ function isUnlawfulFaction(faction: string): boolean {
   return UNLAWFUL_FACTIONS.some(f => lower.includes(f))
 }
 
-function normalizeSystem(sys: string | undefined): System {
-  if (!sys) return 'unknown'
-  const lower = sys.toLowerCase()
-  if (lower === 'stanton') return 'stanton'
-  if (lower === 'pyro') return 'pyro'
-  if (lower === 'nyx') return 'nyx'
-  return 'unknown'
+function getMissionBrowseSystems(mission: Pick<MissionDisplay, 'poolKey' | 'sourceSystem' | 'region'>): System[] {
+  return getBrowseSystemsForMission({
+    poolKey: mission.poolKey,
+    system: mission.sourceSystem,
+    subRegion: mission.region,
+  })
 }
 
 interface MissionDisplay {
+  entryKey: string
   poolKey: string
   title: string
   faction: string
-  system: System
+  sourceSystem: string | null
   region: string | null
   category: string | null
   isLawful: boolean
@@ -128,38 +129,33 @@ export default function BrowseMissionsView({
   // Build list of missions with actual titles from missionsByPool
   const missions = useMemo((): MissionDisplay[] => {
     const result: MissionDisplay[] = []
-    const seen = new Set<string>()
     
     for (const [poolKey, missionEntries] of Object.entries(missionsByPool)) {
       // Get blueprint count for this pool
       const bps = missionBlueprints[poolKey] || missionBlueprints[poolKey.toLowerCase()] || []
       if (bps.length === 0) continue
       
-      for (const mission of missionEntries) {
+      missionEntries.forEach((mission, entryIndex) => {
         // Skip placeholder/unlocalized titles
         if (!mission.title || 
             mission.title.includes('~mission') || 
             mission.title.startsWith('@') ||
             mission.title.includes('UNINITIALIZED') ||
-            mission.title.includes('PLACEHOLDER')) continue
-        
-        // Dedupe by title + faction + system (same mission can appear in multiple systems)
-        const dedupeKey = `${mission.title}|${mission.faction}|${mission.system || 'unknown'}`
-        if (seen.has(dedupeKey)) continue
-        seen.add(dedupeKey)
+            mission.title.includes('PLACEHOLDER')) return
         
         result.push({
+          entryKey: `${poolKey}|${entryIndex}|${mission.title}|${mission.faction}|${mission.system || 'unknown'}`,
           poolKey,
           title: mission.title,
           faction: mission.faction || 'Unknown',
-          system: normalizeSystem(mission.system),
+          sourceSystem: mission.system || null,
           region: mission.region,
           category: mission.category,
           isLawful: !isUnlawfulFaction(mission.faction || ''),
           minStanding: mission.minStanding,
           blueprintCount: bps.length,
         })
-      }
+      })
     }
     
     return result.sort((a, b) => a.title.localeCompare(b.title))
@@ -191,8 +187,10 @@ export default function BrowseMissionsView({
     }
     
     for (const m of missions) {
-      stats[m.system].factions.add(m.faction)
-      stats[m.system].missions++
+      for (const system of getMissionBrowseSystems(m)) {
+        stats[system].factions.add(m.faction)
+        stats[system].missions++
+      }
     }
     
     return stats
@@ -207,10 +205,12 @@ export default function BrowseMissionsView({
     }
     
     for (const m of missions) {
-      if (!map[m.system][m.faction]) {
-        map[m.system][m.faction] = []
+      for (const system of getMissionBrowseSystems(m)) {
+        if (!map[system][m.faction]) {
+          map[system][m.faction] = []
+        }
+        map[system][m.faction].push(m)
       }
-      map[m.system][m.faction].push(m)
     }
     
     return map
@@ -224,7 +224,9 @@ export default function BrowseMissionsView({
         map[m.faction] = { missions: [], isLawful: m.isLawful, systems: new Set() }
       }
       map[m.faction].missions.push(m)
-      map[m.faction].systems.add(m.system)
+      for (const system of getMissionBrowseSystems(m)) {
+        map[m.faction].systems.add(system)
+      }
     }
     
     return map
@@ -369,7 +371,7 @@ export default function BrowseMissionsView({
       return fullBp && acquiredBlueprints[fullBp.internalName]
     }).length
     
-    const systemRegion = mission.system?.toLowerCase()
+    const systemRegion = mission.sourceSystem?.toLowerCase()
     const regions: Region[] =
       systemRegion === 'stanton' || systemRegion === 'pyro' || systemRegion === 'nyx'
         ? [systemRegion]
@@ -377,7 +379,7 @@ export default function BrowseMissionsView({
     
     return (
       <button
-        key={`${mission.poolKey}-${mission.title}`}
+        key={mission.entryKey}
         onClick={() => setSelectedMissionKey(makeBrowseMissionKey(mission))}
         className={`w-full p-3 rounded-lg border text-left transition-all hover:bg-slate-800/50 ${
           mission.isLawful 
@@ -404,7 +406,8 @@ export default function BrowseMissionsView({
               <MissionLocationTags
                 regions={regions}
                 subRegion={mission.region}
-                system={mission.system}
+                system={mission.sourceSystem}
+                poolKey={mission.poolKey}
               />
               {mission.minStanding && mission.minStanding.minReputation > 0 && (
                 <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">

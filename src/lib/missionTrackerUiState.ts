@@ -89,11 +89,6 @@ export function writeMissionTrackerUiState(
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
 }
 
-export function makeBrowseMissionKey(mission: {
-  poolKey: string
-  title: string
-  faction: string
-  system: string
-}): string {
-  return `${mission.poolKey}|${mission.title}|${mission.faction}|${mission.system}`
+export function makeBrowseMissionKey(mission: { entryKey: string }): string {
+  return mission.entryKey
 }

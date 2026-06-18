@@ -113,17 +113,53 @@ export function formatRegionLabel(system: string | Region, region: string): stri
   return `${formatSystemLabel(system)} ${region.toUpperCase()}`
 }
 
+function inferSystemFromPoolKey(poolKey: string): MissionStarSystem | null {
+  const lower = poolKey.toLowerCase()
+  if (!/region[a-d]/i.test(lower)) return null
+
+  // Pyro regional contract pools (CFP outposts, Headhunters mercenary, etc.)
+  if (lower.includes('cfp') || lower.includes('headhunter')) {
+    return 'pyro'
+  }
+
+  return null
+}
+
+function buildRegionTags(sys: MissionStarSystem, regionCode: SystemRegionCode): MissionLocationTag[] {
+  const tags: MissionLocationTag[] = [
+    {
+      key: `${sys}-${regionCode}`,
+      label: formatRegionLabel(sys, regionCode),
+      kind: 'region',
+    },
+  ]
+
+  const regionDef = getSystemRegionDefinition(sys, regionCode)
+  for (const location of regionDef?.locations ?? []) {
+    tags.push({
+      key: `${sys}-${regionCode}-${location.toLowerCase()}`,
+      label: location,
+      kind: 'location',
+    })
+  }
+
+  return tags
+}
+
+export type MissionBrowseSystem = 'stanton' | 'pyro' | 'nyx' | 'unknown'
+
 /** Build visible location tags for mission UI (no tooltips). */
 export function buildMissionLocationTags(options: {
   regions?: Region[]
   subRegion?: string | null
   system?: string | null
+  poolKey?: string | null
 }): MissionLocationTag[] {
-  const { regions = [], subRegion, system } = options
+  const { regions = [], subRegion, system, poolKey } = options
   const regionCode = normalizeRegionCode(subRegion)
-  const tags: MissionLocationTag[] = []
+  const poolRegionCodes = poolKey ? parseRegionCodesFromPoolKey(poolKey) : []
 
-  const systems: MissionStarSystem[] =
+  let systems: MissionStarSystem[] =
     regions.length > 0
       ? regions
           .map((r) => normalizeSystem(r))
@@ -132,40 +168,64 @@ export function buildMissionLocationTags(options: {
         ? [normalizeSystem(system)!]
         : []
 
+  if (systems.length === 0 && poolKey) {
+    const inferred = inferSystemFromPoolKey(poolKey)
+    if (inferred) systems = [inferred]
+  }
+
   if (systems.length === 0) {
     return [{ key: 'unknown', label: 'Unknown', kind: 'system' }]
   }
 
-  // Region-specific: single system + sub-region letter
   if (regionCode && systems.length === 1) {
-    const sys = systems[0]
-    tags.push({
-      key: `${sys}-${regionCode}`,
-      label: formatRegionLabel(sys, regionCode),
-      kind: 'region',
-    })
+    return buildRegionTags(systems[0], regionCode)
+  }
 
-    const regionDef = getSystemRegionDefinition(sys, regionCode)
-    for (const location of regionDef?.locations ?? []) {
-      tags.push({
-        key: `${sys}-${regionCode}-${location.toLowerCase()}`,
-        label: location,
-        kind: 'location',
-      })
+  if (!regionCode && poolRegionCodes.length === 1 && systems.length === 1) {
+    return buildRegionTags(systems[0], poolRegionCodes[0])
+  }
+
+  if (!regionCode && poolRegionCodes.length > 1 && systems.length === 1) {
+    const tags: MissionLocationTag[] = []
+    for (const reg of poolRegionCodes) {
+      tags.push(...buildRegionTags(systems[0], reg))
     }
     return tags
   }
 
-  // System-wide (or multi-system): one tag per system, no sub-locations
-  for (const sys of systems) {
-    tags.push({
-      key: sys,
-      label: SYSTEM_LABELS[sys],
-      kind: 'system',
-    })
+  return systems.map((sys) => ({
+    key: sys,
+    label: SYSTEM_LABELS[sys],
+    kind: 'system' as const,
+  }))
+}
+
+/** Browse buckets: unknown only when location tags cannot resolve anywhere. */
+export function getBrowseSystemsForMission(options: {
+  regions?: Region[]
+  subRegion?: string | null
+  system?: string | null
+  poolKey?: string | null
+}): MissionBrowseSystem[] {
+  const tags = buildMissionLocationTags(options)
+
+  if (tags.length === 1 && tags[0].key === 'unknown') {
+    return ['unknown']
   }
 
-  return tags
+  const systems = new Set<MissionBrowseSystem>()
+  for (const tag of tags) {
+    if (tag.kind === 'system') {
+      const sys = normalizeSystem(tag.key)
+      if (sys) systems.add(sys)
+      continue
+    }
+
+    const sys = normalizeSystem(tag.key.split('-')[0])
+    if (sys) systems.add(sys)
+  }
+
+  return systems.size > 0 ? [...systems] : ['unknown']
 }
 
 export const MISSION_LOCATION_TAG_STYLES: Record<MissionLocationTagKind, string> = {
