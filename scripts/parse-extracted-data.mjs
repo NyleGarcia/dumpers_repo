@@ -1230,6 +1230,15 @@ function parseBlueprintDefinitions(localization = {}) {
           const upperMfg = parts[0].toUpperCase() + '_' + parts.slice(1).join('_')
           locKeyPatterns.push(`item_Name_${upperMfg}`)
         }
+        
+        // For BP_ prefixed items (blueprints), try without BP_ prefix
+        if (name.toUpperCase().startsWith('BP_')) {
+          const withoutBP = name.substring(3) // Remove "BP_"
+          locKeyPatterns.push(`item_Name${withoutBP}`)
+          // Also try with different casing (LaserScattergun vs LaserScatterGun)
+          const fixedCase = withoutBP.replace(/scattergun/i, 'Scattergun')
+          locKeyPatterns.push(`item_Name${fixedCase}`)
+        }
       }
     }
     
@@ -1396,14 +1405,73 @@ function parseBlueprintDefinitions(localization = {}) {
       }
       
       // Try 9tails variants: _01_9tails_01 -> _01_01_9tails01
+      // Blueprint: cds_legacy_armor_heavy_arms_01_9tails_01
+      // Localization: item_Name_cds_legacy_armor_heavy_arms_01_01_9tails01
       const ninetailsMatch = nameLower.match(/^(.+?)_(\d+)_9tails_(\d+)$/)
       if (!blueprintName && ninetailsMatch) {
         const [, prefix, v1, v2] = ninetailsMatch
+        // v1 and v2 are already "01" format, so don't prepend 0
         const keysToTry = [
-          `item_Name_${prefix}_0${v1}_0${v2}_9tails0${v2}`,
-          `item_Name_${prefix}_${v1}_${v2}_9tails0${v2}`,
-          `item_Name_${prefix}_${v1}_01_9tails0${v2}`,
-          `item_Name_${prefix}_0${v1}_01_9tails0${v2}`,
+          // _01_9tails_01 -> _01_01_9tails01
+          `item_Name_${prefix}_${v1}_${v2}_9tails${v2}`,
+          `item_Name_${prefix}_${v1}_01_9tails${v2}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+      
+      // Try undersuit patterns: ksar_undersuit_01_01_01 -> ksar_undersuit_01
+      const undersuitMatch2 = nameLower.match(/^(\w+?)_undersuit(?:_helmet)?_(\d+)_(\d+)_(\d+)$/)
+      if (!blueprintName && undersuitMatch2) {
+        const [full, mfg, v1] = undersuitMatch2
+        const isHelmet = full.includes('helmet')
+        const keysToTry = isHelmet ? [
+          `item_Name_${mfg}_undersuit_helmet_0${v1}`,
+          `item_Name_${mfg}_undersuit_helmet_${v1}`,
+        ] : [
+          `item_Name_${mfg}_undersuit_0${v1}`,
+          `item_Name_${mfg}_undersuit_${v1}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+      
+      // Try CCC medium armor helmet: ccc_medium_armor_helmet_01_01_01 -> ccc_medium_armor_helmet_01
+      const cccHelmetMatch = nameLower.match(/^(ccc)_medium_armor_helmet_(\d+)_(\d+)_(\d+)$/)
+      if (!blueprintName && cccHelmetMatch) {
+        const [, mfg, v1] = cccHelmetMatch
+        const keysToTry = [
+          `item_Name_${mfg}_medium_armor_helmet_0${v1}`,
+          `item_Name_${mfg}_medium_armor_helmet_${v1}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+      
+      // Try RRS specialist with unusual version numbers (drops last version)
+      const rrsSpecialistMatch = nameLower.match(/^(rrs)_specialist_(\w+?)_(\w+?)_(\d+)_(\d+)_(\d+)$/)
+      if (!blueprintName && rrsSpecialistMatch) {
+        const [, mfg, weight, slot, v1, v2, v3] = rrsSpecialistMatch
+        const keysToTry = [
+          `item_Name_${mfg}_specialist_${weight}_${slot}_0${v1}_0${v2}`,
+          `item_Name_${mfg}_specialist_${weight}_${slot}_${v1}_${v2}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+      }
+      
+      // Try CDS armor light helmet pattern
+      const cdsLightHelmetMatch = nameLower.match(/^(cds)_armor_light_helmet_(\d+)_(\d+)_(\d+)$/)
+      if (!blueprintName && cdsLightHelmetMatch) {
+        const [, mfg, v1, v2, v3] = cdsLightHelmetMatch
+        // Try legacy pattern: cds_legacy_armor_light_helmet_01_01_01
+        const keysToTry = [
+          `item_Name_${mfg}_legacy_armor_light_helmet_0${v1}_0${v2}_0${v3}`,
+          `item_Name_${mfg}_legacy_armor_light_helmet_${v1}_${v2}_${v3}`,
         ]
         for (const k of keysToTry) {
           if (localization[k]) { blueprintName = localization[k]; break }
