@@ -1790,6 +1790,7 @@ function parseBlueprintDefinitions(localization = {}) {
           'broadspecgo': 'BroadSpec-Go',
           'broadspeclite': 'Broadspec-Lite',
           'broadspec': 'BroadSpec',
+          'broudspec': 'BroadSpec',
           'broadspecmax': 'BroadSpec-Max',
           'broadspec_lite': 'Broadspec-Lite',
           'fullspecgo': 'FullSpec-Go',
