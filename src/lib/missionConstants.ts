@@ -16,51 +16,41 @@ export type SystemRegion = {
 /**
  * Pyro system regions and their known locations
  * Region data derived from game files (contract debugNames)
+ * Lists planets/moons only - stations orbit these bodies
  */
 export const PYRO_REGIONS: Record<string, SystemRegion> = {
   A: {
     system: 'Pyro',
     region: 'A',
-    label: 'Pyro I (Monox)',
+    label: 'Pyro I',
     locations: [
-      'Ruin Station',
-      'Rustville',
-      'Last Ditch',
+      'Monox',
     ],
-    terminalLocations: [
-      'Ruin Station',
-    ],
+    terminalLocations: [],
   },
   B: {
     system: 'Pyro',
     region: 'B',
-    label: 'Pyro II (Bloom/Ignis)',
+    label: 'Pyro II',
     locations: [
-      'Checkmate Station',
-      'The Golden Riviera',
-      'The Yard',
-      'Windfall',
-      "Carver's Ridge",
-      'Shadowfall',
+      'Bloom',
+      'Ignis',
     ],
-    terminalLocations: [
-      'Checkmate Station',
-    ],
+    terminalLocations: [],
   },
   C: {
     system: 'Pyro',
     region: 'C',
-    label: 'Pyro III (Fairo)',
+    label: 'Pyro III',
     locations: [
       'Fairo',
-      'Various outposts',
     ],
     terminalLocations: [],
   },
   D: {
     system: 'Pyro',
     region: 'D',
-    label: 'Pyro IV/V (Terminus/Vatra)',
+    label: 'Pyro IV/V',
     locations: [
       'Terminus',
       'Vatra',
