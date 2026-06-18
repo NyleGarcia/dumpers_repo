@@ -783,7 +783,11 @@ function parseBlueprintRewards() {
     if (!json?._RecordValue_?.blueprintRewards) continue
     
     const recordName = json._RecordName_ || basename(file, '.json')
-    const missionKey = recordName.replace('BlueprintPoolRecord.', '').replace('BP_REWARDS_', '').toLowerCase()
+    const missionKey = recordName
+      .replace('BlueprintPoolRecord.', '')
+      .replace(/^BP_REWARDS_/i, '')
+      .replace(/^BP_MISSIONREWARD_/i, '')
+      .toLowerCase()
     
     const blueprints = []
     for (const reward of json._RecordValue_.blueprintRewards) {

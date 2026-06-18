@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-06-18T05:37:11.119Z",
+  "_extracted": "2026-06-18T05:45:48.844Z",
   "missionBlueprints": {
     "adagioresourcegatheringshipsalvage": [
       {
@@ -1532,7 +1532,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/radar/bp_craft_radr_grnp_s01_tige.json"
       }
     ],
-    "bp_missionreward_asd2a": [
+    "asd2a": [
       {
         "name": "volt_lmg_energy_01",
         "weight": 1,
@@ -1594,7 +1594,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_env_heavy_backpack_01_02_16.json"
       }
     ],
-    "bp_missionreward_asd2b": [
+    "asd2b": [
       {
         "name": "volt_lmg_energy_01_tint03",
         "weight": 1,
@@ -1656,7 +1656,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_env_heavy_backpack_01_02_17.json"
       }
     ],
-    "bp_missionreward_asd2c": [
+    "asd2c": [
       {
         "name": "volt_sniper_energy_01_tint03",
         "weight": 1,
@@ -1733,7 +1733,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_env_heavy_backpack_01_02_04.json"
       }
     ],
-    "bp_missionreward_asd2d": [
+    "asd2d": [
       {
         "name": "volt_lmg_energy_01_tint02",
         "weight": 1,
@@ -1810,7 +1810,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_env_heavy_backpack_01_02_01.json"
       }
     ],
-    "bp_missionreward_asd3": [
+    "asd3": [
       {
         "name": "volt_sniper_energy_01_tint01",
         "weight": 1,
@@ -1847,7 +1847,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_volt_sniper_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_bhg_asdfacilitydelving_engineeringwing_eliminatespecific": [
+    "bhg_asdfacilitydelving_engineeringwing_eliminatespecific": [
       {
         "name": "qrt_utility_heavy_arms_01_01_03",
         "weight": 1,
@@ -1869,7 +1869,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_helmet_01_01_03.json"
       }
     ],
-    "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific": [
+    "bhg_asdfacilitydelving_researchwing_eliminatespecific": [
       {
         "name": "qrt_utility_heavy_arms_01_01_17",
         "weight": 1,
@@ -1911,7 +1911,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_helmet_01_01_04.json"
       }
     ],
-    "bp_missionreward_bitzeros_blackboxrecovery": [
+    "bitzeros_blackboxrecovery": [
       {
         "name": "klwe_smg_energy_01",
         "weight": 1,
@@ -1973,7 +1973,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_sniper_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_bitzeros_recoveritem_pyronyx": [
+    "bitzeros_recoveritem_pyronyx": [
       {
         "name": "ksar_smg_energy_01",
         "weight": 1,
@@ -2015,7 +2015,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_ksar_smg_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_bitzeros_recoveritem_stanton": [
+    "bitzeros_recoveritem_stanton": [
       {
         "name": "klwe_smg_energy_01",
         "weight": 1,
@@ -2062,7 +2062,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_smg_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_bountyhuntersguild_paf_eliminatespecific": [
+    "bountyhuntersguild_paf_eliminatespecific": [
       {
         "name": "behr_rifle_ballistic_02_civilian",
         "weight": 1,
@@ -2114,14 +2114,14 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/ballistic/bp_craft_behr_rifle_ballistic_02_mag_civilian.json"
       }
     ],
-    "bp_missionreward_carryable_2h_fl_missionitem_microsatellite_a": [
+    "carryable_2h_fl_missionitem_microsatellite_a": [
       {
         "name": "carryable_2h_fl_missionitem_microsatellite_a",
         "weight": 1,
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/missionitems/bp_craft_carryable_2h_fl_missionitem_microsatellite_a.json"
       }
     ],
-    "bp_missionreward_cfp_chainelim_1and2": [
+    "cfp_chainelim_1and2": [
       {
         "name": "ksar_rifle_energy_01_red01",
         "weight": 1,
@@ -2153,7 +2153,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/plasma/bp_craft_ksar_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_cfp_chainelim_3": [
+    "cfp_chainelim_3": [
       {
         "name": "ksar_rifle_energy_01_pink_red01",
         "weight": 1,
@@ -2175,7 +2175,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/plasma/bp_craft_ksar_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_cfp_outpost_regionab": [
+    "cfp_outpost_regionab": [
       {
         "name": "ksar_rifle_energy_01",
         "weight": 1,
@@ -2207,7 +2207,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/plasma/bp_craft_ksar_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_cfp_outpost_regionc": [
+    "cfp_outpost_regionc": [
       {
         "name": "ksar_rifle_energy_01_blue_gold",
         "weight": 1,
@@ -2239,7 +2239,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/plasma/bp_craft_ksar_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_cfp_outpost_regiond": [
+    "cfp_outpost_regiond": [
       {
         "name": "ksar_rifle_energy_01_cian_black01",
         "weight": 1,
@@ -2271,7 +2271,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/plasma/bp_craft_ksar_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_citizensforprosperitydestroyitems_ab": [
+    "citizensforprosperitydestroyitems_ab": [
       {
         "name": "behr_lmg_ballistic_01",
         "weight": 1,
@@ -2343,7 +2343,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_citizensforprosperitydestroyitems_cd": [
+    "citizensforprosperitydestroyitems_cd": [
       {
         "name": "behr_sniper_ballistic_01",
         "weight": 1,
@@ -2405,7 +2405,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/ballistic/bp_craft_behr_sniper_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_citizensforprosperityrecovercargo_pyro": [
+    "citizensforprosperityrecovercargo_pyro": [
       {
         "name": "behr_smg_ballistic_01",
         "weight": 1,
@@ -2477,7 +2477,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/ballistic/bp_craft_gmni_rifle_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_foxwellenforcement_ambush": [
+    "foxwellenforcement_ambush": [
       {
         "name": "volt_rifle_energy_01_tint01",
         "weight": 1,
@@ -2509,7 +2509,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_volt_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_foxwellenforcement_escortships": [
+    "foxwellenforcement_escortships": [
       {
         "name": "volt_rifle_energy_01_camo01",
         "weight": 1,
@@ -2541,7 +2541,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_volt_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_foxwellenforcement_generator": [
+    "foxwellenforcement_generator": [
       {
         "name": "qrt_specialist_heavy_arms_01_01_13",
         "weight": 1,
@@ -2583,7 +2583,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/hunter/heavy/bp_craft_qrt_specialist_heavy_legs_01_02_16.json"
       }
     ],
-    "bp_missionreward_foxwellenforcement_patrol": [
+    "foxwellenforcement_patrol": [
       {
         "name": "volt_rifle_energy_01_tint02",
         "weight": 1,
@@ -2615,7 +2615,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_volt_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_foxwell_defendentitiesandescort": [
+    "foxwell_defendentitiesandescort": [
       {
         "name": "volt_rifle_energy_01",
         "weight": 1,
@@ -2647,7 +2647,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_volt_rifle_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab": [
+    "headhunters_mercenaryfps_eliminateall_regionab": [
       {
         "name": "lbco_sniper_energy_01",
         "weight": 1,
@@ -2689,7 +2689,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_lbco_sniper_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd": [
+    "headhunters_mercenaryfps_eliminateall_regioncd": [
       {
         "name": "lbco_pistol_energy_01",
         "weight": 1,
@@ -2731,7 +2731,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_lbco_pistol_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_headhunters_mercenaryfps_eliminateboss": [
+    "headhunters_mercenaryfps_eliminateboss": [
       {
         "name": "ksar_shotgun_ballistic_01",
         "weight": 1,
@@ -2773,7 +2773,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/shotgun/bp_craft_none_shotgun_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab": [
+    "headhunters_mercenaryfps_eliminatespecific_regionab": [
       {
         "name": "ksar_sniper_ballistic_01",
         "weight": 1,
@@ -2825,7 +2825,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/ballistic/bp_craft_ksar_pistol_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd": [
+    "headhunters_mercenaryfps_eliminatespecific_regioncd": [
       {
         "name": "ksar_shotgun_energy_01",
         "weight": 1,
@@ -2867,7 +2867,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/plasma/bp_craft_ksar_shotgun_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_ids_recoverencrypteddata": [
+    "ids_recoverencrypteddata": [
       {
         "name": "volt_pistol_energy_01_tint01",
         "weight": 1,
@@ -2939,7 +2939,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_backpack_01_01_01.json"
       }
     ],
-    "bp_missionreward_intersec_defendship": [
+    "intersec_defendship": [
       {
         "name": "volt_pistol_energy_01_tint02",
         "weight": 1,
@@ -2976,7 +2976,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_backpack_01_01_02.json"
       }
     ],
-    "bp_missionreward_intersec_patrol": [
+    "intersec_patrol": [
       {
         "name": "volt_smg_energy_01_tint03",
         "weight": 1,
@@ -3043,7 +3043,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_backpack_01_01_10.json"
       }
     ],
-    "bp_missionreward_intersec_resourcegathering": [
+    "intersec_resourcegathering": [
       {
         "name": "volt_pistol_energy_01",
         "weight": 1,
@@ -3080,7 +3080,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_backpack_01_01_15.json"
       }
     ],
-    "bp_missionreward_northrockfpskill_eliminateboss": [
+    "northrockfpskill_eliminateboss": [
       {
         "name": "gmni_lmg_ballistic_01",
         "weight": 1,
@@ -3142,7 +3142,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/ballistic/bp_craft_gmni_lmg_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_rayari_recoveritem_hathorloot": [
+    "rayari_recoveritem_hathorloot": [
       {
         "name": "volt_pistol_energy_01",
         "weight": 1,
@@ -3189,7 +3189,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_volt_pistol_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_rayari_recoveritem_irradiated": [
+    "rayari_recoveritem_irradiated": [
       {
         "name": "volt_shotgun_energy_01_tint02",
         "weight": 1,
@@ -3226,7 +3226,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/plasma/bp_craft_volt_shotgun_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_rdc_boss": [
+    "rdc_boss": [
       {
         "name": "gmni_shotgun_ballistic_01",
         "weight": 1,
@@ -3283,7 +3283,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/shotgun/bp_craft_gmni_shotgun_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_rdc_exclusive": [
+    "rdc_exclusive": [
       {
         "name": "gmni_shotgun_ballistic_01_pink_red01",
         "weight": 1,
@@ -3340,7 +3340,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/shotgun/bp_craft_gmni_shotgun_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_rdc_generic": [
+    "rdc_generic": [
       {
         "name": "gmni_shotgun_ballistic_01",
         "weight": 1,
@@ -3392,7 +3392,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/shotgun/bp_craft_gmni_shotgun_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_shubin_resourcegathering_fpsmining_pyro": [
+    "shubin_resourcegathering_fpsmining_pyro": [
       {
         "name": "klwe_pistol_energy_01_engraved01",
         "weight": 1,
@@ -3429,7 +3429,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_pistol_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_shubin_resourcegathering_fpsmining_stanton": [
+    "shubin_resourcegathering_fpsmining_stanton": [
       {
         "name": "klwe_pistol_energy_01_black01",
         "weight": 1,
@@ -3461,7 +3461,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_pistol_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_shubin_resourcegathering_shipmining_pyronyx": [
+    "shubin_resourcegathering_shipmining_pyronyx": [
       {
         "name": "klwe_pistol_energy_01_white01",
         "weight": 1,
@@ -3498,7 +3498,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_pistol_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_shubin_resourcegathering_shipmining_stanton": [
+    "shubin_resourcegathering_shipmining_stanton": [
       {
         "name": "klwe_pistol_energy_01_black02",
         "weight": 1,
@@ -3535,7 +3535,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_pistol_energy_01_mag.json"
       }
     ],
-    "bp_missionreward_vaughngenerator_eliminateboss": [
+    "vaughngenerator_eliminateboss": [
       {
         "name": "none_lmg_ballistic_01",
         "weight": 1,
@@ -3592,7 +3592,7 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/shotgun/bp_craft_none_pistol_ballistic_01_mag.json"
       }
     ],
-    "bp_missionreward_vaughngenerator_eliminatespecific": [
+    "vaughngenerator_eliminatespecific": [
       {
         "name": "none_rifle_multi_01",
         "weight": 1,
@@ -4726,1148 +4726,1148 @@
       "stantonheadhuntershard"
     ],
     "volt_lmg_energy_01": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "volt_sniper_energy_01": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "kap_combat_light_arms_01_01_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "kap_combat_light_core_01_01_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "kap_combat_light_legs_01_01_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "kap_combat_light_helmet_01_01_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "omc_utility_heavy_arms_01_01_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "omc_utility_heavy_core_01_01_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "omc_utility_heavy_legs_01_01_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "omc_utility_heavy_helmet_01_01_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "volt_lmg_energy_01_mag": [
-      "bp_missionreward_asd2a",
-      "bp_missionreward_asd2b",
-      "bp_missionreward_asd2d"
+      "asd2a",
+      "asd2b",
+      "asd2d"
     ],
     "clda_env_heavy_backpack_01_02_16": [
-      "bp_missionreward_asd2a"
+      "asd2a"
     ],
     "volt_lmg_energy_01_tint03": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "volt_sniper_energy_01_tint02": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "kap_combat_light_arms_01_01_01": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "kap_combat_light_core_01_01_01": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "kap_combat_light_legs_01_01_01": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "kap_combat_light_helmet_01_01_01": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "omc_utility_heavy_arms_01_01_17": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "omc_utility_heavy_core_01_01_17": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "omc_utility_heavy_legs_01_01_17": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "omc_utility_heavy_helmet_01_01_17": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "clda_env_heavy_backpack_01_02_17": [
-      "bp_missionreward_asd2b"
+      "asd2b"
     ],
     "volt_sniper_energy_01_tint03": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "kap_combat_light_helmet_01_01_15": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "kap_combat_light_arms_01_01_15": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "kap_combat_light_core_01_01_15": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "kap_combat_light_legs_01_01_15": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "kap_combat_light_arms_01_01_10": [
-      "bp_missionreward_asd2c",
-      "bp_missionreward_asd2d"
+      "asd2c",
+      "asd2d"
     ],
     "kap_combat_light_core_01_01_10": [
-      "bp_missionreward_asd2c",
-      "bp_missionreward_asd2d"
+      "asd2c",
+      "asd2d"
     ],
     "kap_combat_light_legs_01_01_10": [
-      "bp_missionreward_asd2c",
-      "bp_missionreward_asd2d"
+      "asd2c",
+      "asd2d"
     ],
     "kap_combat_light_helmet_01_01_10": [
-      "bp_missionreward_asd2c",
-      "bp_missionreward_asd2d"
+      "asd2c",
+      "asd2d"
     ],
     "omc_utility_heavy_arms_01_01_04": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "omc_utility_heavy_core_01_01_04": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "omc_utility_heavy_legs_01_01_04": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "omc_utility_heavy_helmet_01_01_04": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "volt_sniper_energy_01_mag": [
-      "bp_missionreward_asd2c",
-      "bp_missionreward_asd3"
+      "asd2c",
+      "asd3"
     ],
     "clda_env_heavy_backpack_01_02_04": [
-      "bp_missionreward_asd2c"
+      "asd2c"
     ],
     "volt_lmg_energy_01_tint02": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "kap_combat_light_arms_01_01_02": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "kap_combat_light_core_01_01_02": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "kap_combat_light_legs_01_01_02": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "kap_combat_light_helmet_01_01_02": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "omc_utility_heavy_arms_01_01_01": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "omc_utility_heavy_core_01_01_01": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "omc_utility_heavy_legs_01_01_01": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "omc_utility_heavy_helmet_01_01_01": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "clda_env_heavy_backpack_01_02_01": [
-      "bp_missionreward_asd2d"
+      "asd2d"
     ],
     "volt_sniper_energy_01_tint01": [
-      "bp_missionreward_asd3"
+      "asd3"
     ],
     "volt_lmg_energy_01_tint01": [
-      "bp_missionreward_asd3"
+      "asd3"
     ],
     "kap_combat_light_arms_02_01_01": [
-      "bp_missionreward_asd3"
+      "asd3"
     ],
     "kap_combat_light_core_02_01_01": [
-      "bp_missionreward_asd3"
+      "asd3"
     ],
     "kap_combat_light_legs_02_01_01": [
-      "bp_missionreward_asd3"
+      "asd3"
     ],
     "kap_combat_light_helmet_02_01_01": [
-      "bp_missionreward_asd3"
+      "asd3"
     ],
     "qrt_utility_heavy_arms_01_01_03": [
-      "bp_missionreward_bhg_asdfacilitydelving_engineeringwing_eliminatespecific"
+      "bhg_asdfacilitydelving_engineeringwing_eliminatespecific"
     ],
     "qrt_utility_heavy_core_01_01_03": [
-      "bp_missionreward_bhg_asdfacilitydelving_engineeringwing_eliminatespecific"
+      "bhg_asdfacilitydelving_engineeringwing_eliminatespecific"
     ],
     "qrt_utility_heavy_legs_01_01_03": [
-      "bp_missionreward_bhg_asdfacilitydelving_engineeringwing_eliminatespecific"
+      "bhg_asdfacilitydelving_engineeringwing_eliminatespecific"
     ],
     "qrt_utility_heavy_helmet_01_01_03": [
-      "bp_missionreward_bhg_asdfacilitydelving_engineeringwing_eliminatespecific"
+      "bhg_asdfacilitydelving_engineeringwing_eliminatespecific"
     ],
     "qrt_utility_heavy_arms_01_01_17": [
-      "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific"
+      "bhg_asdfacilitydelving_researchwing_eliminatespecific"
     ],
     "qrt_utility_heavy_core_01_01_17": [
-      "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific"
+      "bhg_asdfacilitydelving_researchwing_eliminatespecific"
     ],
     "qrt_utility_heavy_legs_01_01_17": [
-      "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific"
+      "bhg_asdfacilitydelving_researchwing_eliminatespecific"
     ],
     "qrt_utility_heavy_helmet_01_01_17": [
-      "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific"
+      "bhg_asdfacilitydelving_researchwing_eliminatespecific"
     ],
     "qrt_utility_heavy_arms_01_01_04": [
-      "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific"
+      "bhg_asdfacilitydelving_researchwing_eliminatespecific"
     ],
     "qrt_utility_heavy_core_01_01_04": [
-      "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific"
+      "bhg_asdfacilitydelving_researchwing_eliminatespecific"
     ],
     "qrt_utility_heavy_legs_01_01_04": [
-      "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific"
+      "bhg_asdfacilitydelving_researchwing_eliminatespecific"
     ],
     "qrt_utility_heavy_helmet_01_01_04": [
-      "bp_missionreward_bhg_asdfacilitydelving_researchwing_eliminatespecific"
+      "bhg_asdfacilitydelving_researchwing_eliminatespecific"
     ],
     "klwe_smg_energy_01": [
-      "bp_missionreward_bitzeros_blackboxrecovery",
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_blackboxrecovery",
+      "bitzeros_recoveritem_stanton"
     ],
     "klwe_sniper_energy_01": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ccc_medium_armor_arms_01_01_01": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ccc_medium_armor_core_01_01_01": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ccc_medium_armor_legs_01_01_01": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ccc_medium_armor_helmet_01_01_01": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ccc_medium_armor_core_01_01_shrike": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ccc_medium_armor_arms_01_01_shrike": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ccc_medium_armor_legs_01_01_shrike": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ccc_medium_armor_helmet_01_01_shrike": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "klwe_smg_energy_01_mag": [
-      "bp_missionreward_bitzeros_blackboxrecovery",
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_blackboxrecovery",
+      "bitzeros_recoveritem_stanton"
     ],
     "klwe_sniper_energy_01_mag": [
-      "bp_missionreward_bitzeros_blackboxrecovery"
+      "bitzeros_blackboxrecovery"
     ],
     "ksar_smg_energy_01": [
-      "bp_missionreward_bitzeros_recoveritem_pyronyx"
+      "bitzeros_recoveritem_pyronyx"
     ],
     "ksar_smg_energy_01_black01": [
-      "bp_missionreward_bitzeros_recoveritem_pyronyx"
+      "bitzeros_recoveritem_pyronyx"
     ],
     "ksar_smg_energy_01_firerats01": [
-      "bp_missionreward_bitzeros_recoveritem_pyronyx"
+      "bitzeros_recoveritem_pyronyx"
     ],
     "rrs_specialist_light_arms_01_01_01": [
-      "bp_missionreward_bitzeros_recoveritem_pyronyx"
+      "bitzeros_recoveritem_pyronyx"
     ],
     "rrs_specialist_light_core_01_01_01": [
-      "bp_missionreward_bitzeros_recoveritem_pyronyx"
+      "bitzeros_recoveritem_pyronyx"
     ],
     "rrs_specialist_light_legs_01_01_01": [
-      "bp_missionreward_bitzeros_recoveritem_pyronyx"
+      "bitzeros_recoveritem_pyronyx"
     ],
     "rrs_specialist_light_helmet_01_01_01": [
-      "bp_missionreward_bitzeros_recoveritem_pyronyx"
+      "bitzeros_recoveritem_pyronyx"
     ],
     "ksar_smg_energy_01_mag": [
-      "bp_missionreward_bitzeros_recoveritem_pyronyx"
+      "bitzeros_recoveritem_pyronyx"
     ],
     "outlaw_legacy_armor_medium_core_01_01_12": [
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_recoveritem_stanton"
     ],
     "outlaw_legacy_armor_medium_arms_01_01_12": [
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_recoveritem_stanton"
     ],
     "outlaw_legacy_armor_medium_legs_01_01_12": [
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_recoveritem_stanton"
     ],
     "outlaw_legacy_medium_armor_helmet_01_02_01": [
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_recoveritem_stanton"
     ],
     "outlaw_legacy_armor_medium_core_01_01_11": [
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_recoveritem_stanton"
     ],
     "outlaw_legacy_armor_medium_arms_01_01_11": [
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_recoveritem_stanton"
     ],
     "outlaw_legacy_armor_medium_legs_01_01_11": [
-      "bp_missionreward_bitzeros_recoveritem_stanton"
+      "bitzeros_recoveritem_stanton"
     ],
     "behr_rifle_ballistic_02_civilian": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "qrt_utility_heavy_arms_01_01_01": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "qrt_utility_heavy_core_01_01_01": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "qrt_utility_heavy_legs_01_01_01": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "qrt_utility_heavy_helmet_01_01_01": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "qrt_utility_heavy_arms_01_01_10": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "qrt_utility_heavy_core_01_01_10": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "qrt_utility_heavy_legs_01_01_10": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "qrt_utility_heavy_helmet_01_01_10": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "behr_rifle_ballistic_02_mag_civilian": [
-      "bp_missionreward_bountyhuntersguild_paf_eliminatespecific"
+      "bountyhuntersguild_paf_eliminatespecific"
     ],
     "carryable_2h_fl_missionitem_microsatellite_a": [
-      "bp_missionreward_carryable_2h_fl_missionitem_microsatellite_a"
+      "carryable_2h_fl_missionitem_microsatellite_a"
     ],
     "ksar_rifle_energy_01_red01": [
-      "bp_missionreward_cfp_chainelim_1and2"
+      "cfp_chainelim_1and2"
     ],
     "qrt_specialist_medium_core_01_01_15": [
-      "bp_missionreward_cfp_chainelim_1and2"
+      "cfp_chainelim_1and2"
     ],
     "qrt_specialist_medium_arms_01_01_15": [
-      "bp_missionreward_cfp_chainelim_1and2"
+      "cfp_chainelim_1and2"
     ],
     "qrt_specialist_medium_legs_01_01_15": [
-      "bp_missionreward_cfp_chainelim_1and2"
+      "cfp_chainelim_1and2"
     ],
     "qrt_specialist_medium_helmet_01_01_15": [
-      "bp_missionreward_cfp_chainelim_1and2"
+      "cfp_chainelim_1and2"
     ],
     "ksar_rifle_energy_01_mag": [
-      "bp_missionreward_cfp_chainelim_1and2",
-      "bp_missionreward_cfp_chainelim_3",
-      "bp_missionreward_cfp_outpost_regionab",
-      "bp_missionreward_cfp_outpost_regionc",
-      "bp_missionreward_cfp_outpost_regiond"
+      "cfp_chainelim_1and2",
+      "cfp_chainelim_3",
+      "cfp_outpost_regionab",
+      "cfp_outpost_regionc",
+      "cfp_outpost_regiond"
     ],
     "ksar_rifle_energy_01_pink_red01": [
-      "bp_missionreward_cfp_chainelim_3"
+      "cfp_chainelim_3"
     ],
     "qrt_specialist_medium_core_01_9tails_01": [
-      "bp_missionreward_cfp_chainelim_3"
+      "cfp_chainelim_3"
     ],
     "qrt_specialist_medium_arms_01_9tails_01": [
-      "bp_missionreward_cfp_chainelim_3"
+      "cfp_chainelim_3"
     ],
     "ksar_rifle_energy_01": [
-      "bp_missionreward_cfp_outpost_regionab"
+      "cfp_outpost_regionab"
     ],
     "qrt_specialist_medium_arms_01_01_01": [
-      "bp_missionreward_cfp_outpost_regionab"
+      "cfp_outpost_regionab"
     ],
     "qrt_specialist_medium_core_01_01_01": [
-      "bp_missionreward_cfp_outpost_regionab"
+      "cfp_outpost_regionab"
     ],
     "qrt_specialist_medium_legs_01_01_01": [
-      "bp_missionreward_cfp_outpost_regionab"
+      "cfp_outpost_regionab"
     ],
     "qrt_specialist_medium_helmet_01_01_01": [
-      "bp_missionreward_cfp_outpost_regionab"
+      "cfp_outpost_regionab"
     ],
     "ksar_rifle_energy_01_blue_gold": [
-      "bp_missionreward_cfp_outpost_regionc"
+      "cfp_outpost_regionc"
     ],
     "qrt_specialist_medium_core_01_01_10": [
-      "bp_missionreward_cfp_outpost_regionc"
+      "cfp_outpost_regionc"
     ],
     "qrt_specialist_medium_arms_01_01_10": [
-      "bp_missionreward_cfp_outpost_regionc"
+      "cfp_outpost_regionc"
     ],
     "qrt_specialist_medium_legs_01_01_10": [
-      "bp_missionreward_cfp_outpost_regionc"
+      "cfp_outpost_regionc"
     ],
     "qrt_specialist_medium_helmet_01_01_10": [
-      "bp_missionreward_cfp_outpost_regionc"
+      "cfp_outpost_regionc"
     ],
     "ksar_rifle_energy_01_cian_black01": [
-      "bp_missionreward_cfp_outpost_regiond"
+      "cfp_outpost_regiond"
     ],
     "qrt_specialist_medium_core_01_01_16": [
-      "bp_missionreward_cfp_outpost_regiond"
+      "cfp_outpost_regiond"
     ],
     "qrt_specialist_medium_arms_01_01_16": [
-      "bp_missionreward_cfp_outpost_regiond"
+      "cfp_outpost_regiond"
     ],
     "qrt_specialist_medium_legs_01_01_16": [
-      "bp_missionreward_cfp_outpost_regiond"
+      "cfp_outpost_regiond"
     ],
     "qrt_specialist_medium_helmet_01_01_16": [
-      "bp_missionreward_cfp_outpost_regiond"
+      "cfp_outpost_regiond"
     ],
     "behr_lmg_ballistic_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "behr_shotgun_ballistic_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "klwe_rifle_energy_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "cds_legacy_armor_heavy_arms_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "cds_legacy_armor_heavy_core_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "cds_legacy_armor_heavy_legs_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "cds_legacy_armor_heavy_helmet_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "cds_armor_heavy_arms_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "cds_armor_heavy_legs_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "cds_armor_heavy_core_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "cds_armor_heavy_helmet_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "behr_lmg_ballistic_01_mag": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "behr_shotgun_ballistic_01_mag": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "klwe_rifle_energy_01_mag": [
-      "bp_missionreward_citizensforprosperitydestroyitems_ab"
+      "citizensforprosperitydestroyitems_ab"
     ],
     "behr_sniper_ballistic_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "gmni_sniper_ballistic_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "cds_legacy_armor_light_helmet_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "cds_legacy_armor_light_arms_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "cds_legacy_armor_light_core_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "cds_legacy_armor_light_legs_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "vgl_armor_light_arms_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "vgl_armor_light_core_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "vgl_armor_light_helmet_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "vgl_armor_light_legs_01_01_01": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "gmni_sniper_ballistic_01_mag": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "behr_sniper_ballistic_01_mag": [
-      "bp_missionreward_citizensforprosperitydestroyitems_cd"
+      "citizensforprosperitydestroyitems_cd"
     ],
     "behr_smg_ballistic_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "gmni_smg_ballistic_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "gmni_rifle_ballistic_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "cds_armor_medium_arms_01_01_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "cds_armor_medium_legs_01_01_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "cds_armor_medium_core_01_01_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "cds_armor_medium_helmet_01_01_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "cds_legacy_armor_medium_arms_01_01_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "cds_legacy_armor_medium_legs_01_01_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "cds_legacy_armor_medium_core_01_01_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "cds_legacy_armor_medium_helmet_01_01_01": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "behr_smg_ballistic_01_mag": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "gmni_smg_ballistic_01_mag": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "gmni_rifle_ballistic_01_mag": [
-      "bp_missionreward_citizensforprosperityrecovercargo_pyro"
+      "citizensforprosperityrecovercargo_pyro"
     ],
     "volt_rifle_energy_01_tint01": [
-      "bp_missionreward_foxwellenforcement_ambush"
+      "foxwellenforcement_ambush"
     ],
     "qrt_specialist_heavy_arms_01_01_12": [
-      "bp_missionreward_foxwellenforcement_ambush"
+      "foxwellenforcement_ambush"
     ],
     "qrt_specialist_heavy_core_01_01_12": [
-      "bp_missionreward_foxwellenforcement_ambush"
+      "foxwellenforcement_ambush"
     ],
     "qrt_specialist_heavy_legs_01_01_12": [
-      "bp_missionreward_foxwellenforcement_ambush"
+      "foxwellenforcement_ambush"
     ],
     "qrt_specialist_heavy_helmet_01_01_12": [
-      "bp_missionreward_foxwellenforcement_ambush"
+      "foxwellenforcement_ambush"
     ],
     "volt_rifle_energy_01_mag": [
-      "bp_missionreward_foxwellenforcement_ambush",
-      "bp_missionreward_foxwellenforcement_escortships",
-      "bp_missionreward_foxwellenforcement_patrol",
-      "bp_missionreward_foxwell_defendentitiesandescort"
+      "foxwellenforcement_ambush",
+      "foxwellenforcement_escortships",
+      "foxwellenforcement_patrol",
+      "foxwell_defendentitiesandescort"
     ],
     "volt_rifle_energy_01_camo01": [
-      "bp_missionreward_foxwellenforcement_escortships"
+      "foxwellenforcement_escortships"
     ],
     "qrt_specialist_heavy_arms_01_01_10": [
-      "bp_missionreward_foxwellenforcement_escortships"
+      "foxwellenforcement_escortships"
     ],
     "qrt_specialist_heavy_core_01_01_10": [
-      "bp_missionreward_foxwellenforcement_escortships"
+      "foxwellenforcement_escortships"
     ],
     "qrt_specialist_heavy_legs_01_01_10": [
-      "bp_missionreward_foxwellenforcement_escortships"
+      "foxwellenforcement_escortships"
     ],
     "qrt_specialist_heavy_helmet_01_01_10": [
-      "bp_missionreward_foxwellenforcement_escortships"
+      "foxwellenforcement_escortships"
     ],
     "qrt_specialist_heavy_arms_01_01_13": [
-      "bp_missionreward_foxwellenforcement_generator"
+      "foxwellenforcement_generator"
     ],
     "qrt_specialist_heavy_core_01_01_13": [
-      "bp_missionreward_foxwellenforcement_generator"
+      "foxwellenforcement_generator"
     ],
     "qrt_specialist_heavy_legs_01_01_13": [
-      "bp_missionreward_foxwellenforcement_generator"
+      "foxwellenforcement_generator"
     ],
     "qrt_specialist_heavy_helmet_01_01_13": [
-      "bp_missionreward_foxwellenforcement_generator"
+      "foxwellenforcement_generator"
     ],
     "qrt_specialist_heavy_helmet_01_02_16": [
-      "bp_missionreward_foxwellenforcement_generator"
+      "foxwellenforcement_generator"
     ],
     "qrt_specialist_heavy_arms_01_02_16": [
-      "bp_missionreward_foxwellenforcement_generator"
+      "foxwellenforcement_generator"
     ],
     "qrt_specialist_heavy_core_01_02_16": [
-      "bp_missionreward_foxwellenforcement_generator"
+      "foxwellenforcement_generator"
     ],
     "qrt_specialist_heavy_legs_01_02_16": [
-      "bp_missionreward_foxwellenforcement_generator"
+      "foxwellenforcement_generator"
     ],
     "volt_rifle_energy_01_tint02": [
-      "bp_missionreward_foxwellenforcement_patrol"
+      "foxwellenforcement_patrol"
     ],
     "qrt_specialist_heavy_arms_01_01_15": [
-      "bp_missionreward_foxwellenforcement_patrol"
+      "foxwellenforcement_patrol"
     ],
     "qrt_specialist_heavy_core_01_01_15": [
-      "bp_missionreward_foxwellenforcement_patrol"
+      "foxwellenforcement_patrol"
     ],
     "qrt_specialist_heavy_legs_01_01_15": [
-      "bp_missionreward_foxwellenforcement_patrol"
+      "foxwellenforcement_patrol"
     ],
     "qrt_specialist_heavy_helmet_01_01_15": [
-      "bp_missionreward_foxwellenforcement_patrol"
+      "foxwellenforcement_patrol"
     ],
     "volt_rifle_energy_01": [
-      "bp_missionreward_foxwell_defendentitiesandescort"
+      "foxwell_defendentitiesandescort"
     ],
     "qrt_specialist_heavy_arms_01_01_01": [
-      "bp_missionreward_foxwell_defendentitiesandescort"
+      "foxwell_defendentitiesandescort"
     ],
     "qrt_specialist_heavy_core_01_01_01": [
-      "bp_missionreward_foxwell_defendentitiesandescort"
+      "foxwell_defendentitiesandescort"
     ],
     "qrt_specialist_heavy_legs_01_01_01": [
-      "bp_missionreward_foxwell_defendentitiesandescort"
+      "foxwell_defendentitiesandescort"
     ],
     "qrt_specialist_heavy_helmet_01_01_01": [
-      "bp_missionreward_foxwell_defendentitiesandescort"
+      "foxwell_defendentitiesandescort"
     ],
     "lbco_sniper_energy_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab"
+      "headhunters_mercenaryfps_eliminateall_regionab"
     ],
     "lbco_sniper_energy_01_sunset01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab"
+      "headhunters_mercenaryfps_eliminateall_regionab"
     ],
     "lbco_sniper_energy_01_chromic01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab"
+      "headhunters_mercenaryfps_eliminateall_regionab"
     ],
     "slaver_armor_light_arms_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab"
+      "headhunters_mercenaryfps_eliminateall_regionab"
     ],
     "slaver_armor_light_core_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab"
+      "headhunters_mercenaryfps_eliminateall_regionab"
     ],
     "slaver_armor_light_legs_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab"
+      "headhunters_mercenaryfps_eliminateall_regionab"
     ],
     "slaver_armor_light_helmet_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab"
+      "headhunters_mercenaryfps_eliminateall_regionab"
     ],
     "lbco_sniper_energy_01_mag": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regionab"
+      "headhunters_mercenaryfps_eliminateall_regionab"
     ],
     "lbco_pistol_energy_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd"
+      "headhunters_mercenaryfps_eliminateall_regioncd"
     ],
     "lbco_pistol_energy_01_chromic01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd"
+      "headhunters_mercenaryfps_eliminateall_regioncd"
     ],
     "lbco_pistol_energy_01_sunset01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd"
+      "headhunters_mercenaryfps_eliminateall_regioncd"
     ],
     "slaver_armor_medium_arms_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd"
+      "headhunters_mercenaryfps_eliminateall_regioncd"
     ],
     "slaver_armor_medium_core_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd"
+      "headhunters_mercenaryfps_eliminateall_regioncd"
     ],
     "slaver_armor_medium_legs_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd"
+      "headhunters_mercenaryfps_eliminateall_regioncd"
     ],
     "slaver_armor_medium_helmet_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd"
+      "headhunters_mercenaryfps_eliminateall_regioncd"
     ],
     "lbco_pistol_energy_01_mag": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateall_regioncd"
+      "headhunters_mercenaryfps_eliminateall_regioncd"
     ],
     "ksar_shotgun_ballistic_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateboss"
+      "headhunters_mercenaryfps_eliminateboss"
     ],
     "none_smg_energy_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateboss"
+      "headhunters_mercenaryfps_eliminateboss"
     ],
     "srvl_armor_heavy_arms_02_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateboss"
+      "headhunters_mercenaryfps_eliminateboss"
     ],
     "srvl_armor_heavy_core_02_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateboss"
+      "headhunters_mercenaryfps_eliminateboss"
     ],
     "srvl_armor_heavy_legs_02_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateboss"
+      "headhunters_mercenaryfps_eliminateboss"
     ],
     "ksar_armor_heavy_helmet_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateboss"
+      "headhunters_mercenaryfps_eliminateboss"
     ],
     "ksar_shotgun_ballistic_01_mag": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateboss"
+      "headhunters_mercenaryfps_eliminateboss"
     ],
     "none_shotgun_ballistic_01_mag": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminateboss",
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "headhunters_mercenaryfps_eliminateboss",
+      "vaughngenerator_eliminatespecific"
     ],
     "ksar_sniper_ballistic_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "ksar_pistol_ballistic_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "ksar_pistol_ballistic_01_headhunters01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "ksar_pistol_ballistic_01_yellow_black01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "rrs_specialist_heavy_arms_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "rrs_specialist_heavy_core_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "rrs_specialist_heavy_legs_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "rrs_specialist_heavy_helmet_01_01_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "ksar_sniper_ballistic_01_mag": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "ksar_pistol_ballistic_01_mag": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regionab"
+      "headhunters_mercenaryfps_eliminatespecific_regionab"
     ],
     "ksar_shotgun_energy_01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd"
+      "headhunters_mercenaryfps_eliminatespecific_regioncd"
     ],
     "ksar_shotgun_energy_01_green01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd"
+      "headhunters_mercenaryfps_eliminatespecific_regioncd"
     ],
     "ksar_shotgun_energy_01_black01": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd"
+      "headhunters_mercenaryfps_eliminatespecific_regioncd"
     ],
     "rrs_specialist_heavy_core_01_01_10": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd"
+      "headhunters_mercenaryfps_eliminatespecific_regioncd"
     ],
     "rrs_specialist_heavy_arms_01_01_10": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd"
+      "headhunters_mercenaryfps_eliminatespecific_regioncd"
     ],
     "rrs_specialist_heavy_legs_01_01_10": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd"
+      "headhunters_mercenaryfps_eliminatespecific_regioncd"
     ],
     "rrs_specialist_heavy_helmet_01_01_10": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd"
+      "headhunters_mercenaryfps_eliminatespecific_regioncd"
     ],
     "ksar_shotgun_energy_01_mag": [
-      "bp_missionreward_headhunters_mercenaryfps_eliminatespecific_regioncd"
+      "headhunters_mercenaryfps_eliminatespecific_regioncd"
     ],
     "volt_pistol_energy_01_tint01": [
-      "bp_missionreward_ids_recoverencrypteddata",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "ids_recoverencrypteddata",
+      "rayari_recoveritem_hathorloot"
     ],
     "volt_smg_energy_01": [
-      "bp_missionreward_ids_recoverencrypteddata",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "ids_recoverencrypteddata",
+      "rayari_recoveritem_hathorloot"
     ],
     "volt_smg_energy_01_tint02": [
-      "bp_missionreward_ids_recoverencrypteddata",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "ids_recoverencrypteddata",
+      "rayari_recoveritem_hathorloot"
     ],
     "qrt_combat_medium_arms_01_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "qrt_combat_medium_core_01_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "qrt_combat_medium_legs_01_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "qrt_combat_medium_helmet_01_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "qrt_combat_medium_helmet_02_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "qrt_combat_medium_core_02_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "qrt_combat_medium_legs_02_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "qrt_combat_medium_arms_02_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "volt_smg_energy_01_mag": [
-      "bp_missionreward_ids_recoverencrypteddata",
-      "bp_missionreward_intersec_patrol",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "ids_recoverencrypteddata",
+      "intersec_patrol",
+      "rayari_recoveritem_hathorloot"
     ],
     "volt_pistol_energy_01_mag": [
-      "bp_missionreward_ids_recoverencrypteddata",
-      "bp_missionreward_intersec_defendship",
-      "bp_missionreward_intersec_resourcegathering",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "ids_recoverencrypteddata",
+      "intersec_defendship",
+      "intersec_resourcegathering",
+      "rayari_recoveritem_hathorloot"
     ],
     "qrt_combat_medium_backpack_01_01_01": [
-      "bp_missionreward_ids_recoverencrypteddata"
+      "ids_recoverencrypteddata"
     ],
     "volt_pistol_energy_01_tint02": [
-      "bp_missionreward_intersec_defendship",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "intersec_defendship",
+      "rayari_recoveritem_hathorloot"
     ],
     "qrt_combat_medium_arms_01_01_02": [
-      "bp_missionreward_intersec_defendship"
+      "intersec_defendship"
     ],
     "qrt_combat_medium_core_01_01_02": [
-      "bp_missionreward_intersec_defendship"
+      "intersec_defendship"
     ],
     "qrt_combat_medium_legs_01_01_02": [
-      "bp_missionreward_intersec_defendship"
+      "intersec_defendship"
     ],
     "qrt_combat_medium_helmet_01_01_02": [
-      "bp_missionreward_intersec_defendship"
+      "intersec_defendship"
     ],
     "qrt_combat_medium_backpack_01_01_02": [
-      "bp_missionreward_intersec_defendship"
+      "intersec_defendship"
     ],
     "volt_smg_energy_01_tint03": [
-      "bp_missionreward_intersec_patrol",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "intersec_patrol",
+      "rayari_recoveritem_hathorloot"
     ],
     "qrt_combat_medium_arms_01_01_10": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "qrt_combat_medium_core_01_01_10": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "qrt_combat_medium_legs_01_01_10": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "qrt_combat_medium_helmet_01_01_10": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "volt_smg_energy_01_tint01": [
-      "bp_missionreward_intersec_patrol",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "intersec_patrol",
+      "rayari_recoveritem_hathorloot"
     ],
     "qrt_combat_medium_arms_01_01_16": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "qrt_combat_medium_core_01_01_16": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "qrt_combat_medium_legs_01_01_16": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "qrt_combat_medium_helmet_01_01_16": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "qrt_combat_medium_backpack_01_01_16": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "qrt_combat_medium_backpack_01_01_10": [
-      "bp_missionreward_intersec_patrol"
+      "intersec_patrol"
     ],
     "volt_pistol_energy_01": [
-      "bp_missionreward_intersec_resourcegathering",
-      "bp_missionreward_rayari_recoveritem_hathorloot"
+      "intersec_resourcegathering",
+      "rayari_recoveritem_hathorloot"
     ],
     "qrt_combat_medium_arms_01_01_15": [
-      "bp_missionreward_intersec_resourcegathering"
+      "intersec_resourcegathering"
     ],
     "qrt_combat_medium_core_01_01_15": [
-      "bp_missionreward_intersec_resourcegathering"
+      "intersec_resourcegathering"
     ],
     "qrt_combat_medium_legs_01_01_15": [
-      "bp_missionreward_intersec_resourcegathering"
+      "intersec_resourcegathering"
     ],
     "qrt_combat_medium_helmet_01_01_15": [
-      "bp_missionreward_intersec_resourcegathering"
+      "intersec_resourcegathering"
     ],
     "qrt_combat_medium_backpack_01_01_15": [
-      "bp_missionreward_intersec_resourcegathering"
+      "intersec_resourcegathering"
     ],
     "gmni_lmg_ballistic_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "gmni_pistol_ballistic_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "slaver_armor_heavy_arms_01_01_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "slaver_armor_heavy_core_01_01_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "slaver_armor_heavy_legs_01_01_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "slaver_armor_heavy_helmet_01_01_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "outlaw_legacy_armor_light_arms_01_01_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "outlaw_legacy_armor_light_legs_01_01_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "outlaw_legacy_armor_light_core_01_01_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "outlaw_legacy_armor_light_helmet_01_01_01": [
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss"
     ],
     "gmni_lmg_ballistic_01_mag": [
-      "bp_missionreward_northrockfpskill_eliminateboss",
-      "bp_missionreward_northrockfpskill_eliminateboss"
+      "northrockfpskill_eliminateboss",
+      "northrockfpskill_eliminateboss"
     ],
     "volt_shotgun_energy_01_tint02": [
-      "bp_missionreward_rayari_recoveritem_irradiated"
+      "rayari_recoveritem_irradiated"
     ],
     "volt_shotgun_energy_01_tint01": [
-      "bp_missionreward_rayari_recoveritem_irradiated"
+      "rayari_recoveritem_irradiated"
     ],
     "volt_shotgun_energy_01_tint03": [
-      "bp_missionreward_rayari_recoveritem_irradiated"
+      "rayari_recoveritem_irradiated"
     ],
     "volt_shotgun_energy_01": [
-      "bp_missionreward_rayari_recoveritem_irradiated"
+      "rayari_recoveritem_irradiated"
     ],
     "clda_utility_heavy_suit_03_01_01": [
-      "bp_missionreward_rayari_recoveritem_irradiated"
+      "rayari_recoveritem_irradiated"
     ],
     "clda_utility_heavy_helmet_03_01_01": [
-      "bp_missionreward_rayari_recoveritem_irradiated"
+      "rayari_recoveritem_irradiated"
     ],
     "volt_shotgun_energy_01_mag": [
-      "bp_missionreward_rayari_recoveritem_irradiated"
+      "rayari_recoveritem_irradiated"
     ],
     "gmni_shotgun_ballistic_01": [
-      "bp_missionreward_rdc_boss",
-      "bp_missionreward_rdc_generic"
+      "rdc_boss",
+      "rdc_generic"
     ],
     "gmni_shotgun_ballistic_01_firerats01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "kap_combat_heavy_arms_02_05_01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "kap_combat_heavy_core_02_05_01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "kap_combat_heavy_legs_02_05_01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "kap_combat_heavy_helmet_02_05_01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "kap_combat_heavy_arms_02_06_01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "kap_combat_heavy_core_02_06_01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "kap_combat_heavy_legs_02_06_01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "kap_combat_heavy_helmet_02_06_01": [
-      "bp_missionreward_rdc_boss"
+      "rdc_boss"
     ],
     "gmni_shotgun_ballistic_01_mag": [
-      "bp_missionreward_rdc_boss",
-      "bp_missionreward_rdc_exclusive",
-      "bp_missionreward_rdc_generic"
+      "rdc_boss",
+      "rdc_exclusive",
+      "rdc_generic"
     ],
     "gmni_shotgun_ballistic_01_pink_red01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "gmni_shotgun_ballistic_01_red_black01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_arms_02_07_01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_legs_02_07_01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_core_02_07_01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_helmet_02_07_01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_helmet_02_04_01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_legs_02_04_01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_core_02_04_01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_arms_02_04_01": [
-      "bp_missionreward_rdc_exclusive"
+      "rdc_exclusive"
     ],
     "kap_combat_heavy_arms_02_01_01": [
-      "bp_missionreward_rdc_generic"
+      "rdc_generic"
     ],
     "kap_combat_heavy_core_02_01_01": [
-      "bp_missionreward_rdc_generic"
+      "rdc_generic"
     ],
     "kap_combat_heavy_legs_02_01_01": [
-      "bp_missionreward_rdc_generic"
+      "rdc_generic"
     ],
     "kap_combat_heavy_helmet_02_01_01": [
-      "bp_missionreward_rdc_generic"
+      "rdc_generic"
     ],
     "kap_combat_heavy_arms_02_08_01": [
-      "bp_missionreward_rdc_generic"
+      "rdc_generic"
     ],
     "kap_combat_heavy_core_02_08_01": [
-      "bp_missionreward_rdc_generic"
+      "rdc_generic"
     ],
     "kap_combat_heavy_legs_02_08_01": [
-      "bp_missionreward_rdc_generic"
+      "rdc_generic"
     ],
     "kap_combat_heavy_helmet_02_08_01": [
-      "bp_missionreward_rdc_generic"
+      "rdc_generic"
     ],
     "klwe_pistol_energy_01_engraved01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_pyro"
+      "shubin_resourcegathering_fpsmining_pyro"
     ],
     "klwe_pistol_energy_01_tan01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_pyro"
+      "shubin_resourcegathering_fpsmining_pyro"
     ],
     "clda_utility_heavy_suit_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_pyro"
+      "shubin_resourcegathering_fpsmining_pyro"
     ],
     "clda_utility_heavy_helmet_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_pyro"
+      "shubin_resourcegathering_fpsmining_pyro"
     ],
     "clda_env_armor_heavy_suit_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_pyro"
+      "shubin_resourcegathering_fpsmining_pyro"
     ],
     "clda_env_armor_heavy_helmet_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_pyro"
+      "shubin_resourcegathering_fpsmining_pyro"
     ],
     "klwe_pistol_energy_01_mag": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_pyro",
-      "bp_missionreward_shubin_resourcegathering_fpsmining_stanton",
-      "bp_missionreward_shubin_resourcegathering_shipmining_pyronyx",
-      "bp_missionreward_shubin_resourcegathering_shipmining_stanton"
+      "shubin_resourcegathering_fpsmining_pyro",
+      "shubin_resourcegathering_fpsmining_stanton",
+      "shubin_resourcegathering_shipmining_pyronyx",
+      "shubin_resourcegathering_shipmining_stanton"
     ],
     "klwe_pistol_energy_01_black01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_stanton"
+      "shubin_resourcegathering_fpsmining_stanton"
     ],
     "grin_utility_medium_arms_02_01_01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_stanton"
+      "shubin_resourcegathering_fpsmining_stanton"
     ],
     "grin_utility_medium_core_02_01_01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_stanton"
+      "shubin_resourcegathering_fpsmining_stanton"
     ],
     "grin_utility_medium_legs_02_01_01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_stanton"
+      "shubin_resourcegathering_fpsmining_stanton"
     ],
     "fta_medium_helmet_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_fpsmining_stanton"
+      "shubin_resourcegathering_fpsmining_stanton"
     ],
     "klwe_pistol_energy_01_white01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_pyronyx"
+      "shubin_resourcegathering_shipmining_pyronyx"
     ],
     "klwe_pistol_energy_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_pyronyx"
+      "shubin_resourcegathering_shipmining_pyronyx"
     ],
     "rsi_explorer_armor_light_arms_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_pyronyx"
+      "shubin_resourcegathering_shipmining_pyronyx"
     ],
     "rsi_explorer_armor_light_core_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_pyronyx"
+      "shubin_resourcegathering_shipmining_pyronyx"
     ],
     "rsi_explorer_armor_light_legs_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_pyronyx"
+      "shubin_resourcegathering_shipmining_pyronyx"
     ],
     "rsi_deckcrew_armor_light_helmet_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_pyronyx"
+      "shubin_resourcegathering_shipmining_pyronyx"
     ],
     "klwe_pistol_energy_01_black02": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_stanton"
+      "shubin_resourcegathering_shipmining_stanton"
     ],
     "grin_utility_medium_arms_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_stanton"
+      "shubin_resourcegathering_shipmining_stanton"
     ],
     "grin_utility_medium_core_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_stanton"
+      "shubin_resourcegathering_shipmining_stanton"
     ],
     "grin_utility_medium_legs_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_stanton"
+      "shubin_resourcegathering_shipmining_stanton"
     ],
     "grin_utility_medium_helmet_01_01_01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_stanton"
+      "shubin_resourcegathering_shipmining_stanton"
     ],
     "klwe_pistol_energy_01_green01": [
-      "bp_missionreward_shubin_resourcegathering_shipmining_stanton"
+      "shubin_resourcegathering_shipmining_stanton"
     ],
     "none_lmg_ballistic_01": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "none_pistol_ballistic_01": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "outlaw_legacy_armor_heavy_arms_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "outlaw_legacy_armor_heavy_legs_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "outlaw_legacy_armor_heavy_core_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "outlaw_legacy_armor_heavy_helmet_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "gys_jacket_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "gys_pants_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminateboss",
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss",
+      "vaughngenerator_eliminateboss"
     ],
     "none_lmg_ballistic_01_mag": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "none_pistol_ballistic_01_mag": [
-      "bp_missionreward_vaughngenerator_eliminateboss"
+      "vaughngenerator_eliminateboss"
     ],
     "none_rifle_multi_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "none_shotgun_ballistic_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "srvl_armor_heavy_arms_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "srvl_armor_heavy_core_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "srvl_armor_heavy_legs_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "srvl_armor_heavy_helmet_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "srvl_combat_light_arms_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "srvl_combat_light_core_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "srvl_combat_light_legs_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "clda_combat_light_helmet_01_01_01": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "none_rifle_multi_01_mag": [
-      "bp_missionreward_vaughngenerator_eliminatespecific"
+      "vaughngenerator_eliminatespecific"
     ],
     "carryable_2h_cy_collectormaterial_001": [
       "bp_reward_collectormaterial_001"
