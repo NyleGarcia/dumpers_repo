@@ -146,7 +146,12 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     repPoints: 0,
   }
 
-  const poolMissions = missionsByPool[poolKey] || missionsByPool[poolKey.toLowerCase()]
+  // Normalize pool key - strip BP_MISSIONREWARD_ or BP_REWARDS_ prefix and lowercase
+  const normalizedKey = poolKey
+    .replace(/^BP_MISSIONREWARD_/i, '')
+    .replace(/^BP_REWARDS_/i, '')
+    .toLowerCase()
+  const poolMissions = missionsByPool[normalizedKey] || missionsByPool[poolKey.toLowerCase()]
   if (!poolMissions || poolMissions.length === 0) {
     return defaultReturn
   }
@@ -264,7 +269,12 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
   let repPoints = 0
   
   for (const poolKey of poolKeys) {
-    const poolMissions = missionsByPool[poolKey] || missionsByPool[poolKey.toLowerCase()]
+    // Normalize pool key - strip BP_MISSIONREWARD_ or BP_REWARDS_ prefix and lowercase
+    const normalizedKey = poolKey
+      .replace(/^BP_MISSIONREWARD_/i, '')
+      .replace(/^BP_REWARDS_/i, '')
+      .toLowerCase()
+    const poolMissions = missionsByPool[normalizedKey] || missionsByPool[poolKey.toLowerCase()]
     if (!poolMissions || poolMissions.length === 0) continue
     
     matchedCount++
@@ -320,7 +330,12 @@ export function formatBlueprintUnlockBadge(blueprintFileId: string, isReward?: b
  * Get all missions that reward a specific blueprint pool
  */
 export function getMissionsForPool(poolKey: string): MissionPoolEntry[] {
-  return missionsByPool[poolKey] || missionsByPool[poolKey.toLowerCase()] || []
+  // Normalize pool key - strip BP_MISSIONREWARD_ or BP_REWARDS_ prefix and lowercase
+  const normalizedKey = poolKey
+    .replace(/^BP_MISSIONREWARD_/i, '')
+    .replace(/^BP_REWARDS_/i, '')
+    .toLowerCase()
+  return missionsByPool[normalizedKey] || missionsByPool[poolKey.toLowerCase()] || []
 }
 
 /**
