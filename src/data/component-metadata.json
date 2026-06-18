@@ -1,1665 +1,1665 @@
 {
-  "generatedAt": "2026-06-15T01:07:23.761Z",
+  "generatedAt": "2026-06-18T22:33:20.546Z",
   "source": "api.star-citizen.wiki",
   "blueprints": {
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_acom_s01_iceplunge_scitem.json": {
+    "cool_acom_s01_iceplunge": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_acom_s01_quickcool_scitem.json": {
+    "cool_acom_s01_quickcool": {
       "itemClass": "competition",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_acom_s01_zerorush_scitem.json": {
+    "cool_acom_s01_zerorush": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_acom_s02_absolutezero_scitem.json": {
+    "cool_acom_s02_absolutezero": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_acom_s02_icedive_scitem.json": {
+    "cool_acom_s02_icedive": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_acom_s02_rapidcool_scitem.json": {
+    "cool_acom_s02_rapidcool": {
       "itemClass": "competition",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s01_bracer_scitem.json": {
+    "cool_aegs_s01_bracer": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s01_glacier_scitem.json": {
-      "itemClass": "military",
-      "grade": "A"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s01_polar_scitem.json": {
-      "itemClass": "military",
-      "grade": "B"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s01_tundra_scitem.json": {
-      "itemClass": "military",
-      "grade": "D"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s02_arctic_scitem.json": {
-      "itemClass": "military",
-      "grade": "C"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s02_avalanche_scitem.json": {
+    "cool_aegs_s01_glacier": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s02_boreal_scitem.json": {
-      "itemClass": "military",
-      "grade": "D"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s02_permafrost_scitem.json": {
+    "cool_aegs_s01_polar": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s03_blizzard_scitem.json": {
-      "itemClass": "military",
-      "grade": "A"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s03_galinstan_scitem.json": {
+    "cool_aegs_s01_tundra": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s03_mercury_scitem.json": {
+    "cool_aegs_s02_arctic": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s03_tempest_scitem.json": {
+    "cool_aegs_s02_avalanche": {
+      "itemClass": "military",
+      "grade": "A"
+    },
+    "cool_aegs_s02_boreal": {
+      "itemClass": "military",
+      "grade": "D"
+    },
+    "cool_aegs_s02_permafrost": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s04_idris_scitem.json": {
+    "cool_aegs_s03_blizzard": {
+      "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_aegs_s04_reclaimer.json": {
-      "itemClass": "industrial",
+    "cool_aegs_s03_galinstan": {
+      "itemClass": "military",
+      "grade": "D"
+    },
+    "cool_aegs_s03_mercury": {
+      "itemClass": "military",
+      "grade": "C"
+    },
+    "cool_aegs_s03_tempest": {
+      "itemClass": "military",
+      "grade": "B"
+    },
+    "cool_aegs_s04_idris": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s00_cryostarsl_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "B"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s00_froststarsl_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "C"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s00_winterstarsl_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "D"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s01_cryostar_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "B"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s01_froststar_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "C"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s01_winterstar_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "D"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s02_cryostarex_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "B"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s02_froststarex_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "C"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s02_winterstarex_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "D"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s03_cryostarxl_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "B"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s03_froststarxl_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "C"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_jspn_s03_winterstarxl_scitem.json": {
-      "itemClass": "civilian",
-      "grade": "D"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s01_ecoflow_scitem.json": {
-      "itemClass": "industrial",
-      "grade": "B"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s01_hydrocel_scitem.json": {
-      "itemClass": "industrial",
-      "grade": "D"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s01_thermax_scitem.json": {
-      "itemClass": "industrial",
-      "grade": "C"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s01_ultraflow_scitem.json": {
+    "cool_aegs_s04_reclaimer": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s02_coolcore_scitem.json": {
-      "itemClass": "industrial",
+    "cool_jspn_s00_cryostarsl": {
+      "itemClass": "civilian",
+      "grade": "B"
+    },
+    "cool_jspn_s00_froststarsl": {
+      "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s02_hydrojet_scitem.json": {
-      "itemClass": "industrial",
+    "cool_jspn_s00_winterstarsl": {
+      "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s02_snowfall_scitem.json": {
+    "cool_jspn_s01_cryostar": {
+      "itemClass": "civilian",
+      "grade": "B"
+    },
+    "cool_jspn_s01_froststar": {
+      "itemClass": "civilian",
+      "grade": "C"
+    },
+    "cool_jspn_s01_winterstar": {
+      "itemClass": "civilian",
+      "grade": "D"
+    },
+    "cool_jspn_s02_cryostarex": {
+      "itemClass": "civilian",
+      "grade": "B"
+    },
+    "cool_jspn_s02_froststarex": {
+      "itemClass": "civilian",
+      "grade": "C"
+    },
+    "cool_jspn_s02_winterstarex": {
+      "itemClass": "civilian",
+      "grade": "D"
+    },
+    "cool_jspn_s03_cryostarxl": {
+      "itemClass": "civilian",
+      "grade": "B"
+    },
+    "cool_jspn_s03_froststarxl": {
+      "itemClass": "civilian",
+      "grade": "C"
+    },
+    "cool_jspn_s03_winterstarxl": {
+      "itemClass": "civilian",
+      "grade": "D"
+    },
+    "cool_just_s01_ecoflow": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s02_snowpack_scitem.json": {
+    "cool_just_s01_hydrocel": {
+      "itemClass": "industrial",
+      "grade": "D"
+    },
+    "cool_just_s01_thermax": {
+      "itemClass": "industrial",
+      "grade": "C"
+    },
+    "cool_just_s01_ultraflow": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s03_chillmax_scitem.json": {
+    "cool_just_s02_coolcore": {
+      "itemClass": "industrial",
+      "grade": "C"
+    },
+    "cool_just_s02_hydrojet": {
+      "itemClass": "industrial",
+      "grade": "D"
+    },
+    "cool_just_s02_snowfall": {
+      "itemClass": "industrial",
+      "grade": "B"
+    },
+    "cool_just_s02_snowpack": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s03_hydropulse_scitem.json": {
+    "cool_just_s03_chillmax": {
+      "itemClass": "industrial",
+      "grade": "A"
+    },
+    "cool_just_s03_hydropulse": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s03_iceflush_scitem.json": {
+    "cool_just_s03_iceflush": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_just_s03_thermalcore_scitem.json": {
+    "cool_just_s03_thermalcore": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s01_arcticstorm_scitem.json": {
+    "cool_lplt_s01_arcticstorm": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s01_blastchill_scitem.json": {
+    "cool_lplt_s01_blastchill": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s01_flashfreeze_scitem.json": {
+    "cool_lplt_s01_flashfreeze": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s02_coldsnap_scitem.json": {
+    "cool_lplt_s02_coldsnap": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s02_fullfrost_scitem.json": {
+    "cool_lplt_s02_fullfrost": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s02_whiteout_scitem.json": {
+    "cool_lplt_s02_whiteout": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s03_coldsurge_scitem.json": {
+    "cool_lplt_s03_coldsurge": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s03_frostbite_scitem.json": {
+    "cool_lplt_s03_frostbite": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_lplt_s03_frostburn_scitem.json": {
+    "cool_lplt_s03_frostburn": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_orig_s04_890j_scitem.json": {
+    "cool_orig_s04_890j": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_rsi_s04_polaris_scitem.json": {
+    "cool_rsi_s04_polaris": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_tydt_s01_heatsafe_scitem.json": {
+    "cool_tydt_s01_heatsafe": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_tydt_s01_snowblind_scitem.json": {
+    "cool_tydt_s01_snowblind": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_tydt_s01_vaporblock_scitem.json": {
+    "cool_tydt_s01_vaporblock": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_tydt_s02_heatsink_scitem.json": {
+    "cool_tydt_s02_heatsink": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_tydt_s02_icebox_scitem.json": {
+    "cool_tydt_s02_icebox": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_tydt_s02_nightfall_scitem.json": {
+    "cool_tydt_s02_nightfall": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s00_fridan_scitem.json": {
+    "cool_wcpr_s00_fridan": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s00_kelvid_scitem.json": {
+    "cool_wcpr_s00_kelvid": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s00_tepilo_scitem.json": {
+    "cool_wcpr_s00_tepilo": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s01_berian_scitem.json": {
+    "cool_wcpr_s01_berian": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s01_endo_scitem.json": {
+    "cool_wcpr_s01_endo": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s01_gelid_scitem.json": {
+    "cool_wcpr_s01_gelid": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s02_aufeis_scitem.json": {
+    "cool_wcpr_s02_aufeis": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s02_graupel_scitem.json": {
+    "cool_wcpr_s02_graupel": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s02_taiga_scitem.json": {
+    "cool_wcpr_s02_taiga": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s03_draug_scitem.json": {
+    "cool_wcpr_s03_draug": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s03_elsen_scitem.json": {
+    "cool_wcpr_s03_elsen": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\cooler\\bp_craft_cool_wcpr_s03_kragen_scitem.json": {
+    "cool_wcpr_s03_kragen": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_drak_golem_s1.json": {
+    "mining_laser_drak_golem_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_arbor_s0.json": {
+    "mining_laser_grin_arbor_s0": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_arbor_s1.json": {
+    "mining_laser_grin_arbor_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_arbor_s2.json": {
+    "mining_laser_grin_arbor_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_lancet_s1.json": {
+    "mining_laser_grin_lancet_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_grin_lancet_s2.json": {
+    "mining_laser_grin_lancet_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_hofstede_s0.json": {
+    "mining_laser_shin_hofstede_s0": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_hofstede_s1.json": {
+    "mining_laser_shin_hofstede_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_hofstede_s2.json": {
+    "mining_laser_shin_hofstede_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_klein_s0.json": {
+    "mining_laser_shin_klein_s0": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_klein_s1.json": {
+    "mining_laser_shin_klein_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_shin_klein_s2.json": {
+    "mining_laser_shin_klein_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_helix_s0.json": {
+    "mining_laser_thcn_helix_s0": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_helix_s1.json": {
+    "mining_laser_thcn_helix_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_helix_s2.json": {
+    "mining_laser_thcn_helix_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_impact_s1.json": {
+    "mining_laser_thcn_impact_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\mininglaser\\bp_craft_mining_laser_thcn_impact_s2.json": {
+    "mining_laser_thcn_impact_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_acom_s01_lumacore_scitem.json": {
+    "powr_acom_s01_lumacore": {
       "itemClass": "competition",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_acom_s01_starheart_scitem.json": {
+    "powr_acom_s01_starheart": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_acom_s01_sunflare_scitem.json": {
+    "powr_acom_s01_sunflare": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_acom_s02_luxcore_scitem.json": {
+    "powr_acom_s02_luxcore": {
       "itemClass": "competition",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_acom_s02_solarflare_scitem.json": {
+    "powr_acom_s02_solarflare": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_acom_s02_starburn_scitem.json": {
+    "powr_acom_s02_starburn": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s01_charger_scitem.json": {
+    "powr_aegs_s01_charger": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s01_fierellcascade_scitem.json": {
+    "powr_aegs_s01_fierellcascade": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s01_quadracell_scitem.json": {
+    "powr_aegs_s01_quadracell": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s01_regulus_scitem.json": {
+    "powr_aegs_s01_regulus": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s02_bolide_scitem.json": {
+    "powr_aegs_s02_bolide": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s02_maelstrom_scitem.json": {
+    "powr_aegs_s02_maelstrom": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s02_quadracellmt_scitem.json": {
+    "powr_aegs_s02_quadracellmt": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s02_vortex_scitem.json": {
+    "powr_aegs_s02_vortex": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s03_centurion_scitem.json": {
+    "powr_aegs_s03_centurion": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s03_drassik_scitem.json": {
+    "powr_aegs_s03_drassik": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s03_fulgur_scitem.json": {
+    "powr_aegs_s03_fulgur": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s03_quadracellmx_scitem.json": {
+    "powr_aegs_s03_quadracellmx": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s04_idris_scitem.json": {
+    "powr_aegs_s04_idris": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_aegs_s04_reclaimer_scitem.json": {
+    "powr_aegs_s04_reclaimer": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s01_dynaflux_scitem.json": {
+    "powr_amrs_s01_dynaflux": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s01_hypergen_scitem.json": {
-      "itemClass": "military",
-      "grade": "D"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s01_js300_scitem.json": {
-      "itemClass": "military",
-      "grade": "A"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s01_overdrive_scitem.json": {
-      "itemClass": "military",
-      "grade": "C"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s02_exogen_scitem.json": {
+    "powr_amrs_s01_hypergen": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s02_js400_scitem.json": {
+    "powr_amrs_s01_js300": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s02_turbodrive_scitem.json": {
+    "powr_amrs_s01_overdrive": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s02_ultraflux_scitem.json": {
-      "itemClass": "military",
-      "grade": "B"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s03_js500_scitem.json": {
-      "itemClass": "military",
-      "grade": "A"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s03_megaflux_scitem.json": {
-      "itemClass": "military",
-      "grade": "B"
-    },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s03_smartgen_scitem.json": {
+    "powr_amrs_s02_exogen": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_amrs_s03_superdrive_scitem.json": {
+    "powr_amrs_s02_js400": {
+      "itemClass": "military",
+      "grade": "A"
+    },
+    "powr_amrs_s02_turbodrive": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s00_defiant_scitem.json": {
+    "powr_amrs_s02_ultraflux": {
+      "itemClass": "military",
+      "grade": "B"
+    },
+    "powr_amrs_s03_js500": {
+      "itemClass": "military",
+      "grade": "A"
+    },
+    "powr_amrs_s03_megaflux": {
+      "itemClass": "military",
+      "grade": "B"
+    },
+    "powr_amrs_s03_smartgen": {
+      "itemClass": "military",
+      "grade": "D"
+    },
+    "powr_amrs_s03_superdrive": {
+      "itemClass": "military",
+      "grade": "C"
+    },
+    "powr_just_s00_defiant": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s00_jennet_scitem.json": {
+    "powr_just_s00_jennet": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s00_steadfast_scitem.json": {
+    "powr_just_s00_steadfast": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s01_breton_scitem.json": {
+    "powr_just_s01_breton": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s01_endurance_scitem.json": {
+    "powr_just_s01_endurance": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s01_fortitude_scitem.json": {
+    "powr_just_s01_fortitude": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s01_roughneck_scitem.json": {
+    "powr_just_s01_roughneck": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s02_diligence_scitem.json": {
+    "powr_just_s02_diligence": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s02_genoa_scitem.json": {
+    "powr_just_s02_genoa": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s02_sedulity_scitem.json": {
+    "powr_just_s02_sedulity": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s02_trommel_scitem.json": {
+    "powr_just_s02_trommel": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s03_durango_scitem.json": {
+    "powr_just_s03_durango": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s03_ginzel_scitem.json": {
+    "powr_just_s03_ginzel": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_just_s03_reliance_scitem.json": {
+    "powr_just_s03_reliance": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s00_durajet_scitem.json": {
+    "powr_lplt_s00_durajet": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s00_ionwave_scitem.json": {
+    "powr_lplt_s00_ionwave": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s00_radix_scitem.json": {
+    "powr_lplt_s00_radix": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s01_ionburst_scitem.json": {
+    "powr_lplt_s01_ionburst": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s01_powerbolt_scitem.json": {
+    "powr_lplt_s01_powerbolt": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s01_zapjet_scitem.json": {
+    "powr_lplt_s01_zapjet": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s02_fullforce_scitem.json": {
+    "powr_lplt_s02_fullforce": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s02_ionsurge_scitem.json": {
+    "powr_lplt_s02_ionsurge": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s02_sparkjet_scitem.json": {
+    "powr_lplt_s02_sparkjet": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s03_fullforcepro_scitem.json": {
+    "powr_lplt_s03_fullforcepro": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s03_ionsurgepro_scitem.json": {
+    "powr_lplt_s03_ionsurgepro": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_lplt_s03_sparkjetpro_scitem.json": {
+    "powr_lplt_s03_sparkjetpro": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_orig_s04_890j_scitem.json": {
+    "powr_orig_s04_890j": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_rsi_s04_polaris_scitem.json": {
+    "powr_rsi_s04_polaris": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s01_lightblossom_scitem.json": {
+    "powr_sasu_s01_lightblossom": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s01_magnabloom_scitem.json": {
+    "powr_sasu_s01_magnabloom": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s01_whiterose_scitem.json": {
+    "powr_sasu_s01_whiterose": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s02_daybreak_scitem.json": {
+    "powr_sasu_s02_daybreak": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s02_lotus_scitem.json": {
+    "powr_sasu_s02_lotus": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s02_radiance_scitem.json": {
+    "powr_sasu_s02_radiance": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s03_celestial_scitem.json": {
+    "powr_sasu_s03_celestial": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s03_newdawn_scitem.json": {
+    "powr_sasu_s03_newdawn": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_sasu_s03_tigerlilly_scitem.json": {
+    "powr_sasu_s03_tigerlilly": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_tydt_s01_deltamax_scitem.json": {
+    "powr_tydt_s01_deltamax": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_tydt_s01_slipstream_scitem.json": {
+    "powr_tydt_s01_slipstream": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_tydt_s01_soniclite_scitem.json": {
+    "powr_tydt_s01_soniclite": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_tydt_s02_cirrus_scitem.json": {
+    "powr_tydt_s02_cirrus": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_tydt_s02_eclipse_scitem.json": {
+    "powr_tydt_s02_eclipse": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\powerplant\\bp_craft_powr_tydt_s02_gammamax_scitem.json": {
+    "powr_tydt_s02_gammamax": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_acas_s01_foxfire_scitem.json": {
+    "qdrv_acas_s01_foxfire": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_acas_s01_lightfire_scitem.json": {
+    "qdrv_acas_s01_lightfire": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_arcc_s01_burst_scitem.json": {
+    "qdrv_arcc_s01_burst": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_arcc_s01_flood_scitem.json": {
+    "qdrv_arcc_s01_flood": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_arcc_s01_rush_scitem.json": {
+    "qdrv_arcc_s01_rush": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_just_s01_colossus_scitem.json": {
+    "qdrv_just_s01_colossus": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_just_s01_goliath_scitem.json": {
+    "qdrv_just_s01_goliath": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_just_s01_vulcan_scitem.json": {
+    "qdrv_just_s01_vulcan": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_raco_s01_drift_scitem.json": {
+    "qdrv_raco_s01_drift": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_raco_s01_spectre_scitem.json": {
+    "qdrv_raco_s01_spectre": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_raco_s01_zephyr_scitem.json": {
+    "qdrv_raco_s01_zephyr": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_rsi_s01_atlas_scitem.json": {
+    "qdrv_rsi_s01_atlas": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_rsi_s01_eos_scitem.json": {
+    "qdrv_rsi_s01_eos": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_rsi_s01_hyperion_scitem.json": {
+    "qdrv_rsi_s01_hyperion": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_tars_s01_expedition_scitem.json": {
+    "qdrv_tars_s01_expedition": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_tars_s01_voyage_scitem.json": {
+    "qdrv_tars_s01_voyage": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_tars_s01_wayfare_scitem.json": {
+    "qdrv_tars_s01_wayfare": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_wetk_s01_beacon_scitem.json": {
+    "qdrv_wetk_s01_beacon": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_wetk_s01_siren_scitem.json": {
+    "qdrv_wetk_s01_siren": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size1\\bp_craft_qdrv_wetk_s01_vk00_scitem.json": {
+    "qdrv_wetk_s01_vk00": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_acas_s02_sparkfire_scitem.json": {
+    "qdrv_acas_s02_sparkfire": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_acas_s02_sunfire_scitem.json": {
+    "qdrv_acas_s02_sunfire": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_arcc_s02_cascade_scitem.json": {
+    "qdrv_arcc_s02_cascade": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_arcc_s02_flash_scitem.json": {
+    "qdrv_arcc_s02_flash": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_arcc_s02_torrent_scitem.json": {
+    "qdrv_arcc_s02_torrent": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_just_s02_bolon_scitem.json": {
+    "qdrv_just_s02_bolon": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_just_s02_huracan_scitem.json": {
+    "qdrv_just_s02_huracan": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_just_s02_yaluk_scitem.json": {
+    "qdrv_just_s02_yaluk": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_raco_s02_bolt_scitem.json": {
+    "qdrv_raco_s02_bolt": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_raco_s02_nova_scitem.json": {
+    "qdrv_raco_s02_nova": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_raco_s02_spicule_scitem.json": {
+    "qdrv_raco_s02_spicule": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_rsi_s02_aither_scitem.json": {
+    "qdrv_rsi_s02_aither": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_rsi_s02_hemera_scitem.json": {
+    "qdrv_rsi_s02_hemera": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_rsi_s02_khaos_scitem.json": {
+    "qdrv_rsi_s02_khaos": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_tars_s02_odyssey_scitem.json": {
+    "qdrv_tars_s02_odyssey": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_tars_s02_quest_scitem.json": {
+    "qdrv_tars_s02_quest": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_tars_s02_sojourn_scitem.json": {
+    "qdrv_tars_s02_sojourn": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_wetk_s02_crossfield_scitem.json": {
+    "qdrv_wetk_s02_crossfield": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_wetk_s02_xl1_scitem.json": {
+    "qdrv_wetk_s02_xl1": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size2\\bp_craft_qdrv_wetk_s02_yeager_scitem.json": {
+    "qdrv_wetk_s02_yeager": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_arcc_s03_echo_scitem.json": {
+    "qdrv_arcc_s03_echo": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_arcc_s03_fissure_scitem.json": {
+    "qdrv_arcc_s03_fissure": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_arcc_s03_impulse_scitem.json": {
+    "qdrv_arcc_s03_impulse": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_just_s03_agni_scitem.json": {
+    "qdrv_just_s03_agni": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_just_s03_kama_scitem.json": {
+    "qdrv_just_s03_kama": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_just_s03_vesta_scitem.json": {
+    "qdrv_just_s03_vesta": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_rsi_s03_erebos_scitem.json": {
+    "qdrv_rsi_s03_erebos": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_rsi_s03_metis_scitem.json": {
+    "qdrv_rsi_s03_metis": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_rsi_s03_tyche_scitem.json": {
+    "qdrv_rsi_s03_tyche": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_tars_s03_drifter_scitem.json": {
+    "qdrv_tars_s03_drifter": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_tars_s03_ranger_scitem.json": {
+    "qdrv_tars_s03_ranger": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_tars_s03_wanderer_scitem.json": {
+    "qdrv_tars_s03_wanderer": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_wetk_s03_balandin_scitem.json": {
+    "qdrv_wetk_s03_balandin": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_wetk_s03_pontes_scitem.json": {
+    "qdrv_wetk_s03_pontes": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size3\\bp_craft_qdrv_wetk_s03_ts2_scitem.json": {
+    "qdrv_wetk_s03_ts2": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\quantumdrive\\size4\\bp_craft_qdrv_orig_s04_890j_scitem.json": {
+    "qdrv_orig_s04_890j": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_bltr_s01_hunter.json": {
+    "radr_bltr_s01_hunter": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_bltr_s01_pelerous.json": {
+    "radr_bltr_s01_pelerous": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_bltr_s01_prophet.json": {
+    "radr_bltr_s01_prophet": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_bltr_s02_cassandra.json": {
+    "radr_bltr_s02_cassandra": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_bltr_s02_predator.json": {
+    "radr_bltr_s02_predator": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_bltr_s02_spyglass.json": {
+    "radr_bltr_s02_spyglass": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s00_broadspecgo.json": {
+    "radr_chco_s00_broadspecgo": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s00_fullspecgo.json": {
+    "radr_chco_s00_fullspecgo": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s00_observergo.json": {
+    "radr_chco_s00_observergo": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s00_surveyorgo.json": {
+    "radr_chco_s00_surveyorgo": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s01_observerlite.json": {
+    "radr_chco_s01_observerlite": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s01_surveyorlite.json": {
+    "radr_chco_s01_surveyorlite": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s02_broadspec_lite.json": {
+    "radr_chco_s02_broadspec_lite": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s02_fullspec.json": {
+    "radr_chco_s02_fullspec": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s02_observer.json": {
+    "radr_chco_s02_observer": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s02_surveyor.json": {
+    "radr_chco_s02_surveyor": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s03_broudspec.json": {
+    "radr_chco_s03_broudspec": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s03_fullspecmax.json": {
+    "radr_chco_s03_fullspecmax": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s03_observermax.json": {
+    "radr_chco_s03_observermax": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s03_surveyormax.json": {
+    "radr_chco_s03_surveyormax": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_chco_s04_broadspecmax.json": {
+    "radr_chco_s04_broadspecmax": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grno_s00_agure.json": {
+    "radr_grno_s00_agure": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s00_prevenir.json": {
+    "radr_grnp_s00_prevenir": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s00_sens.json": {
+    "radr_grnp_s00_sens": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s00_v6026.json": {
+    "radr_grnp_s00_v6026": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s01_ecouter.json": {
+    "radr_grnp_s01_ecouter": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s01_tige.json": {
+    "radr_grnp_s01_tige": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s01_v80111.json": {
+    "radr_grnp_s01_v80111": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s01_voir.json": {
+    "radr_grnp_s01_voir": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s02_epier.json": {
+    "radr_grnp_s02_epier": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s02_savoir.json": {
+    "radr_grnp_s02_savoir": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s02_vb80112.json": {
+    "radr_grnp_s02_vb80112": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s02_vigilance.json": {
+    "radr_grnp_s02_vigilance": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s03_devoue.json": {
+    "radr_grnp_s03_devoue": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s03_fidele.json": {
+    "radr_grnp_s03_fidele": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s03_resolu.json": {
+    "radr_grnp_s03_resolu": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_grnp_s03_v880.json": {
+    "radr_grnp_s03_v880": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_nave_s01_snsr5.json": {
+    "radr_nave_s01_snsr5": {
       "itemClass": "competition",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_nave_s01_snsr6.json": {
+    "radr_nave_s01_snsr6": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_nave_s01_snsr7.json": {
+    "radr_nave_s01_snsr7": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_nave_s02_snsr5x.json": {
+    "radr_nave_s02_snsr5x": {
       "itemClass": "competition",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_nave_s02_snsr7x.json": {
+    "radr_nave_s02_snsr7x": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_nave_s02_sns_r6x.json": {
+    "radr_nave_s02_sns_r6x": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_rsi_s04_polaris.json": {
+    "radr_rsi_s04_polaris": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s00_denning.json": {
+    "radr_wlop_s00_denning": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s00_fabian.json": {
+    "radr_wlop_s00_fabian": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s00_vogel.json": {
+    "radr_wlop_s00_vogel": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s01_abetti.json": {
+    "radr_wlop_s01_abetti": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s01_backlund.json": {
+    "radr_wlop_s01_backlund": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s01_capstan.json": {
+    "radr_wlop_s01_capstan": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s01_fleming.json": {
+    "radr_wlop_s01_fleming": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s02_agrippa.json": {
+    "radr_wlop_s02_agrippa": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s02_battani.json": {
+    "radr_wlop_s02_battani": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s02_chernykh.json": {
+    "radr_wlop_s02_chernykh": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s02_fawad.json": {
+    "radr_wlop_s02_fawad": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s03_anysta.json": {
+    "radr_wlop_s03_anysta": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s03_capsulo.json": {
+    "radr_wlop_s03_capsulo": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s03_lephari.json": {
+    "radr_wlop_s03_lephari": {
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\radar\\bp_craft_radr_wlop_s03_socoria.json": {
+    "radr_wlop_s03_socoria": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_aegs_s04_reclaimer_scitem.json": {
+    "shld_aegs_s04_reclaimer": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s01_cloak_scitem.json": {
+    "shld_asas_s01_cloak": {
       "itemClass": "stealth",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s01_mirage_scitem.json": {
+    "shld_asas_s01_mirage": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s01_shimmer_scitem.json": {
+    "shld_asas_s01_shimmer": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s01_veil_scitem.json": {
+    "shld_asas_s01_veil": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s02_obscura_scitem.json": {
+    "shld_asas_s02_obscura": {
       "itemClass": "stealth",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s02_sheut_scitem.json": {
+    "shld_asas_s02_sheut": {
       "itemClass": "stealth",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s02_shroud_scitem.json": {
+    "shld_asas_s02_shroud": {
       "itemClass": "stealth",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_asas_s02_umbra_scitem.json": {
+    "shld_asas_s02_umbra": {
       "itemClass": "stealth",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s00_castra_scitem.json": {
+    "shld_basl_s00_castra": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s01_bulwark_scitem.json": {
+    "shld_basl_s01_bulwark": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s01_guardian_scitem.json": {
+    "shld_basl_s01_guardian": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s01_palisade_scitem.json": {
+    "shld_basl_s01_palisade": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s01_steward_scitem.json": {
+    "shld_basl_s01_steward": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s02_armada_scitem.json": {
+    "shld_basl_s02_armada": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s02_aspis_scitem.json": {
+    "shld_basl_s02_aspis": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s02_citadel_scitem.json": {
+    "shld_basl_s02_citadel": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s02_rampart_scitem.json": {
+    "shld_basl_s02_rampart": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s03_barbican_scitem.json": {
+    "shld_basl_s03_barbican": {
       "itemClass": "industrial",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s03_parapet_scitem.json": {
+    "shld_basl_s03_parapet": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s03_stronghold_scitem.json": {
+    "shld_basl_s03_stronghold": {
       "itemClass": "industrial",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_basl_s03_ward_scitem.json": {
+    "shld_basl_s03_ward": {
       "itemClass": "industrial",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s01_5sa_scitem.json": {
+    "shld_behr_s01_5sa": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s01_6sa_scitem.json": {
+    "shld_behr_s01_6sa": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s01_7sa_scitem.json": {
+    "shld_behr_s01_7sa": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s02_5ma_scitem.json": {
+    "shld_behr_s02_5ma": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s02_6ma_scitem.json": {
+    "shld_behr_s02_6ma": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s02_7ma_scitem.json": {
+    "shld_behr_s02_7ma": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s03_5ca_scitem.json": {
+    "shld_behr_s03_5ca": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s03_6ca_scitem.json": {
+    "shld_behr_s03_6ca": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_behr_s03_7ca_scitem.json": {
+    "shld_behr_s03_7ca": {
       "itemClass": "civilian",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s01_allstop_scitem.json": {
+    "shld_godi_s01_allstop": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s01_forcewall_scitem.json": {
+    "shld_godi_s01_forcewall": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s01_fr66_scitem.json": {
+    "shld_godi_s01_fr66": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s01_securehyde_scitem.json": {
+    "shld_godi_s01_securehyde": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s02_coverall_scitem.json": {
+    "shld_godi_s02_coverall": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s02_fr76_scitem.json": {
+    "shld_godi_s02_fr76": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s02_fullstop_scitem.json": {
+    "shld_godi_s02_fullstop": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s02_secureshield_scitem.json": {
+    "shld_godi_s02_secureshield": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s03_fr86_scitem.json": {
+    "shld_godi_s03_fr86": {
       "itemClass": "military",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s03_fullblock_scitem.json": {
+    "shld_godi_s03_fullblock": {
       "itemClass": "military",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s03_securescreen_scitem.json": {
+    "shld_godi_s03_securescreen": {
       "itemClass": "military",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s03_surestop_scitem.json": {
+    "shld_godi_s03_surestop": {
       "itemClass": "military",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_godi_s04_idris_scitem.json": {
+    "shld_godi_s04_idris": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_orig_s04_890j_scitem.json": {
+    "shld_orig_s04_890j": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_rsi_s04_polaris_scitem.json": {
+    "shld_rsi_s04_polaris": {
       "itemClass": "industrial",
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s00_pin_scitem.json": {
+    "shld_seco_s00_pin": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s01_hex_scitem.json": {
+    "shld_seco_s01_hex": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s01_ink_scitem.json": {
+    "shld_seco_s01_ink": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s01_web_scitem.json": {
+    "shld_seco_s01_web": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s02_bloc_scitem.json": {
+    "shld_seco_s02_bloc": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s02_rpel_scitem.json": {
+    "shld_seco_s02_rpel": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s02_stop_scitem.json": {
+    "shld_seco_s02_stop": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s03_armor_scitem.json": {
+    "shld_seco_s03_armor": {
       "itemClass": "civilian",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s03_guard_scitem.json": {
+    "shld_seco_s03_guard": {
       "itemClass": "civilian",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_seco_s03_haven_scitem.json": {
+    "shld_seco_s03_haven": {
       "itemClass": "civilian",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_yorm_s01_falco_scitem.json": {
+    "shld_yorm_s01_falco": {
       "itemClass": "competition",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_yorm_s01_jaghte_scitem.json": {
+    "shld_yorm_s01_jaghte": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_yorm_s01_targa_scitem.json": {
+    "shld_yorm_s01_targa": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_yorm_s02_bamoty_scitem.json": {
+    "shld_yorm_s02_bamoty": {
       "itemClass": "competition",
       "grade": "D"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_yorm_s02_haltur_scitem.json": {
+    "shld_yorm_s02_haltur": {
       "itemClass": "competition",
       "grade": "B"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\shield\\bp_craft_shld_yorm_s02_trenta_scitem.json": {
+    "shld_yorm_s02_trenta": {
       "itemClass": "competition",
       "grade": "C"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_grin_tractorbeam_s1.json": {
+    "grin_tractorbeam_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_grin_tractorbeam_s2.json": {
+    "grin_tractorbeam_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_grin_tractorbeam_s3.json": {
+    "grin_tractorbeam_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s1_military_1.json": {
+    "wep_tractorbeam_s1_military_1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s1_utility_1.json": {
+    "wep_tractorbeam_s1_utility_1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s1_utility_2.json": {
+    "wep_tractorbeam_s1_utility_2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s2_military_1.json": {
+    "wep_tractorbeam_s2_military_1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s2_utility_1.json": {
+    "wep_tractorbeam_s2_utility_1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s2_utility_2.json": {
+    "wep_tractorbeam_s2_utility_2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s3_military_1.json": {
+    "wep_tractorbeam_s3_military_1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s3_utility_1.json": {
+    "wep_tractorbeam_s3_utility_1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\tractorbeam\\bp_craft_wep_tractorbeam_s3_utility_2.json": {
+    "wep_tractorbeam_s3_utility_2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_banu_tachyoncannon_s1.json": {
+    "banu_tachyoncannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_banu_tachyoncannon_s2.json": {
+    "banu_tachyoncannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_banu_tachyoncannon_s3.json": {
+    "banu_tachyoncannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_mxox_neutroncannon_s1.json": {
+    "mxox_neutroncannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_mxox_neutroncannon_s2.json": {
+    "mxox_neutroncannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_mxox_neutroncannon_s3.json": {
+    "mxox_neutroncannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_mxox_neutronrepeater_s1.json": {
+    "mxox_neutronrepeater_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_mxox_neutronrepeater_s2.json": {
+    "mxox_neutronrepeater_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_mxox_neutronrepeater_s3.json": {
+    "mxox_neutronrepeater_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\$templates\\ballistic\\bp_craft_toag_lasergatling_s2.json": {
+    "toag_lasergatling_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_behr_ballisticcannon_s4.json": {
+    "behr_ballisticcannon_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_behr_ballisticcannon_vng_s2.json": {
+    "behr_ballisticcannon_vng_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_espr_ballisticcannon_s1.json": {
+    "espr_ballisticcannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_espr_ballisticcannon_s2.json": {
+    "espr_ballisticcannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_espr_ballisticcannon_s3.json": {
+    "espr_ballisticcannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_espr_ballisticcannon_s4.json": {
+    "espr_ballisticcannon_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_espr_ballisticcannon_s5.json": {
+    "espr_ballisticcannon_s5": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_espr_ballisticcannon_s6.json": {
+    "espr_ballisticcannon_s6": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_gats_ballisticcannon_s1.json": {
+    "gats_ballisticcannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_gats_ballisticcannon_s2.json": {
+    "gats_ballisticcannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_gats_ballisticcannon_s3.json": {
+    "gats_ballisticcannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_kbar_ballisticcannon_s1.json": {
+    "kbar_ballisticcannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_kbar_ballisticcannon_s2.json": {
+    "kbar_ballisticcannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\cannon\\bp_craft_kbar_ballisticcannon_s3.json": {
+    "kbar_ballisticcannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_apar_ballisticgatling_s4.json": {
+    "apar_ballisticgatling_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_apar_ballisticgatling_s6.json": {
+    "apar_ballisticgatling_s6": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_behr_ballisticgatling_s4.json": {
+    "behr_ballisticgatling_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_behr_ballisticgatling_s5.json": {
+    "behr_ballisticgatling_s5": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_behr_ballisticgatling_s6.json": {
+    "behr_ballisticgatling_s6": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_gats_ballisticgatling_s1.json": {
+    "gats_ballisticgatling_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_gats_ballisticgatling_s2.json": {
+    "gats_ballisticgatling_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_gats_ballisticgatling_s3.json": {
+    "gats_ballisticgatling_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\gatling\\bp_craft_krig_ballisticgatling_s2.json": {
+    "krig_ballisticgatling_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\massdriver\\bp_craft_apar_massdriver_s2.json": {
+    "apar_massdriver_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\massdriver\\bp_craft_klwe_massdriver_s1.json": {
+    "klwe_massdriver_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\massdriver\\bp_craft_klwe_massdriver_s2.json": {
+    "klwe_massdriver_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\massdriver\\bp_craft_klwe_massdriver_s3.json": {
+    "klwe_massdriver_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\repeater\\bp_craft_behr_ballisticrepeater_s1.json": {
+    "behr_ballisticrepeater_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\repeater\\bp_craft_behr_ballisticrepeater_s2.json": {
+    "behr_ballisticrepeater_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\repeater\\bp_craft_behr_ballisticrepeater_s3.json": {
+    "behr_ballisticrepeater_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\repeater\\bp_craft_behr_ballisticrepeater_vng_s2.json": {
+    "behr_ballisticrepeater_vng_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\scatter\\bp_craft_apar_ballisticscattergun_s1.json": {
+    "apar_ballisticscattergun_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\scatter\\bp_craft_apar_ballisticscattergun_s2.json": {
+    "apar_ballisticscattergun_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\ballistic\\scatter\\bp_craft_apar_ballisticscattergun_s3.json": {
+    "apar_ballisticscattergun_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\distortion\\cannon\\bp_craft_behr_distortioncannon_vng_s2.json": {
+    "behr_distortioncannon_vng_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\distortion\\cannon\\bp_craft_jokr_distortioncannon_s1.json": {
+    "jokr_distortioncannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\distortion\\cannon\\bp_craft_jokr_distortioncannon_s2.json": {
+    "jokr_distortioncannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\distortion\\cannon\\bp_craft_jokr_distortioncannon_s3.json": {
+    "jokr_distortioncannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\distortion\\repeater\\bp_craft_asad_distortionrepeater_s1.json": {
+    "asad_distortionrepeater_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\distortion\\repeater\\bp_craft_asad_distortionrepeater_s2.json": {
+    "asad_distortionrepeater_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\distortion\\repeater\\bp_craft_asad_distortionrepeater_s3.json": {
+    "asad_distortionrepeater_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\distortion\\repeater\\bp_craft_behr_distortionrepeater_vng_s2.json": {
+    "behr_distortionrepeater_vng_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_amrs_lasercannon_s1.json": {
+    "amrs_lasercannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_amrs_lasercannon_s2.json": {
+    "amrs_lasercannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_amrs_lasercannon_s3.json": {
+    "amrs_lasercannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_amrs_lasercannon_s4.json": {
+    "amrs_lasercannon_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_amrs_lasercannon_s5.json": {
+    "amrs_lasercannon_s5": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_amrs_lasercannon_s6.json": {
+    "amrs_lasercannon_s6": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_behr_lasercannon_s1.json": {
+    "behr_lasercannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_behr_lasercannon_s2.json": {
+    "behr_lasercannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_behr_lasercannon_s3.json": {
+    "behr_lasercannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_behr_lasercannon_s4.json": {
+    "behr_lasercannon_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_behr_lasercannon_s5.json": {
+    "behr_lasercannon_s5": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_behr_lasercannon_s6.json": {
+    "behr_lasercannon_s6": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_behr_lasercannon_vng_s2.json": {
+    "behr_lasercannon_vng_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_espr_lasercannon_s1.json": {
+    "espr_lasercannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_espr_lasercannon_s2.json": {
+    "espr_lasercannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_espr_lasercannon_s3.json": {
+    "espr_lasercannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_espr_lasercannon_s4.json": {
+    "espr_lasercannon_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_espr_lasercannon_s5.json": {
+    "espr_lasercannon_s5": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_espr_lasercannon_s6.json": {
+    "espr_lasercannon_s6": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_krig_lasercannon_s3.json": {
+    "krig_lasercannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_kron_lasercannon_s1.json": {
+    "kron_lasercannon_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_kron_lasercannon_s2.json": {
+    "kron_lasercannon_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\cannon\\bp_craft_kron_lasercannon_s3.json": {
+    "kron_lasercannon_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_behr_laserrepeater_vng_s2.json": {
+    "behr_laserrepeater_vng_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_hrst_laserrepeater_s1.json": {
+    "hrst_laserrepeater_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_hrst_laserrepeater_s2.json": {
+    "hrst_laserrepeater_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_hrst_laserrepeater_s3.json": {
+    "hrst_laserrepeater_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_hrst_laserrepeater_s4.json": {
+    "hrst_laserrepeater_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_hrst_laserrepeater_s5.json": {
+    "hrst_laserrepeater_s5": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_hrst_laserrepeater_s6.json": {
+    "hrst_laserrepeater_s6": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_hrst_storm_laserrepeater_s3.json": {
+    "hrst_storm_laserrepeater_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_klwe_laserrepeater_s1.json": {
+    "klwe_laserrepeater_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_klwe_laserrepeater_s2.json": {
+    "klwe_laserrepeater_s2": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_klwe_laserrepeater_s3.json": {
+    "klwe_laserrepeater_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_klwe_laserrepeater_s4.json": {
+    "klwe_laserrepeater_s4": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_klwe_laserrepeater_s5.json": {
+    "klwe_laserrepeater_s5": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\repeater\\bp_craft_klwe_laserrepeater_s6.json": {
+    "klwe_laserrepeater_s6": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\scatter\\bp_craft_amrs_scattergun_s3.json": {
+    "amrs_scattergun_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\scatter\\bp_craft_hrst_laserscattergun_s1.json": {
+    "hrst_laserscattergun_s1": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\scatter\\bp_craft_hrst_laserscattergun_s3.json": {
+    "hrst_laserscattergun_s3": {
       "grade": "A"
     },
-    "livefiles\\libs\\foundry\\records\\crafting\\blueprints\\crafting\\vehiclegear\\weapons\\laser\\scatter\\bp_hrst_laserscattergun_s2.json": {
+    "bp_hrst_laserscattergun_s2": {
       "grade": "A"
     }
   }

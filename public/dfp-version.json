@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-type-modifiers",
-  "sha256": "08d1380103d1e47388a5b44e20b74ff2b563ccdbca574aed2d0a05f18edb5118",
+  "version": "1.2.0-parsed-catalog-compat",
+  "sha256": "b411430823780312b42ff395aaff03ca7d77771236a5ec6248336c29f6ac16c6",
   "module": "dfp-engine.js"
 }

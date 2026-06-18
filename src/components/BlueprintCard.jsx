@@ -28,7 +28,7 @@ export default function BlueprintCard({
 }) {
   const { dfpDisplayEnabled } = useAuth()
 
-  if (!blueprint.file || !blueprint.blueprintName) return null
+  if (!(blueprint.internalName || blueprint.file) || !blueprint.blueprintName) return null
 
   const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
   const subType = getBlueprintSubType(blueprint)

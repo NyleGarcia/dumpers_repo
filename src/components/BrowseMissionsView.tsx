@@ -145,6 +145,9 @@ export default function BrowseMissionsView({
       if (bp.internalName) {
         map[bp.internalName.toLowerCase()] = bp
       }
+      if (bp.file) {
+        map[bp.file.toLowerCase()] = bp
+      }
       const fileMatch = bp.file?.match(/bp_craft_([^/\\]+?)(?:_scitem)?\.json$/i)
       if (fileMatch) {
         map[fileMatch[1].toLowerCase()] = bp

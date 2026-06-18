@@ -89,8 +89,8 @@ function quantityPerCraftForOption(
   if (isWholeUnitResource(resourceKey)) {
     return slotCount * optQty
   }
-  const units = option.standardCargoUnits ?? 0
-  return fromMilliScu(toMilliScu(units) * slotCount * optQty)
+  const units = option.standardCargoUnits ?? option.quantity ?? 0
+  return fromMilliScu(toMilliScu(units) * slotCount)
 }
 
 /** Derive resource requirements from blueprint slots × craft quantity. */

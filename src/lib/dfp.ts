@@ -26,6 +26,7 @@ export interface DfpResult {
 
 export interface BlueprintDfpInput {
   file?: string
+  internalName?: string
   categoryName?: string
   subCategoryName?: string
   slots?: {
@@ -34,6 +35,7 @@ export interface BlueprintDfpInput {
       type?: string
       resourceName?: string
       entityName?: string
+      displayName?: string
       minQuality?: number
       standardCargoUnits?: number
       quantity?: number

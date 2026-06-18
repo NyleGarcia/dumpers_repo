@@ -2,7 +2,7 @@
   "name": "dumpers-repo",
   "private": true,
   "version": "1.0.0",
-  "dfpEngineVersion": "1.4.0-high-q-scaling",
+  "dfpEngineVersion": "1.2.0-parsed-catalog-compat",
   "license": "LicenseRef-Dumpers-Repo-Franchise",
   "type": "module",
   "scripts": {

@@ -1580,7 +1580,6 @@ function parseBlueprintDefinitions(localization = {}) {
               slotOptions.push({
                 type: 'resource',
                 resourceName,
-                quantity,
                 standardCargoUnits: quantity,
                 minQuality: slotOption.minQuality || 1,
                 modifiers: slotModifiers.length > 0 ? slotModifiers : undefined
@@ -1598,6 +1597,7 @@ function parseBlueprintDefinitions(localization = {}) {
                 type: 'item',
                 itemName,
                 displayName,
+                entityName: displayName,
                 itemPath: itemPath.toLowerCase(),
                 quantity: slotOption.quantity || 1,
                 minQuality: slotOption.minQuality || 1,
@@ -2436,7 +2436,7 @@ function parseBlueprintDefinitions(localization = {}) {
     
     blueprints.push({
       id: json._RecordId_,
-      file: legacyFilePath, // Path format matching database keys
+      file: internalName,
       name: fullName,
       internalName,
       blueprintName,
