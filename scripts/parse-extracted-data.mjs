@@ -256,6 +256,14 @@ function parseLocalization() {
   console.log(`  Loaded ${Object.keys(localization).length} localization strings`)
   console.log(`  Found ${descCount} description entries`)
   
+  // Build a case-insensitive lookup map (lowercase key -> original value)
+  // This allows us to find "item_Name_RADR_CHCO_S00_BroadSpecGo" even if we search for lowercase
+  const locLowerMap = {}
+  for (const [key, value] of Object.entries(localization)) {
+    locLowerMap[key.toLowerCase()] = value
+  }
+  localization._lowerMap = locLowerMap
+  
   return localization
 }
 
@@ -1524,17 +1532,131 @@ function parseBlueprintDefinitions(localization = {}) {
         blueprintName = localization[key]
         break
       }
+      // Try case-insensitive lookup
+      if (key && localization._lowerMap?.[key.toLowerCase()]) {
+        blueprintName = localization._lowerMap[key.toLowerCase()]
+        break
+      }
     }
     
     // Special handling for vehicle components with manufacturer prefixes (COOL_, POWR_, QDRV_, SHLD_, RADR_)
+    // In-game names are just the product name, e.g., "Broadspec Go" not "ChengCo broadspecgo Radar (S00)"
     if (!blueprintName && internalName) {
+      // Helper to format product names like "broadspecgo" -> "Broadspec Go"
+      const formatProductName = (rawName) => {
+        let name = rawName.toLowerCase()
+        
+        // Known product name mappings (internal -> display) - using hyphen format like game
+        const knownNames = {
+          'broadspecgo': 'BroadSpec-Go',
+          'broadspeclite': 'Broadspec-Lite',
+          'broadspec': 'BroadSpec',
+          'broadspecmax': 'BroadSpec-Max',
+          'broadspec_lite': 'Broadspec-Lite',
+          'fullspecgo': 'FullSpec-Go',
+          'fullspeclite': 'FullSpec-Lite',
+          'fullspec': 'FullSpec',
+          'fullspecmax': 'FullSpec-Max',
+          'observergo': 'Observer-Go',
+          'observerlite': 'Observer-Lite',
+          'observer': 'Observer',
+          'observermax': 'Observer-Max',
+          'surveyorgo': 'Surveyor-Go',
+          'surveyorlite': 'Surveyor-Lite',
+          'surveyor': 'Surveyor',
+          'surveyormax': 'Surveyor-Max',
+          'surveyormax_temp': 'Surveyor-Max',
+          // Coolers
+          'iceplunge': 'Iceplunge',
+          'quickcool': 'Quickcool',
+          'zerorush': 'Zerorush',
+          'absolutezero': 'Absolute Zero',
+          'icedive': 'Icedive',
+          'thermalcore': 'Thermalcore',
+          'cryostar': 'Cryostar',
+          'frostbite': 'Frostbite',
+          'snowblind': 'Snowblind',
+          'blizzard': 'Blizzard',
+          'avalanche': 'Avalanche',
+          'glacier': 'Glacier',
+          'nordictundra': 'Nordic Tundra',
+          'polarwind': 'Polar Wind',
+          'ultraflow': 'Ultraflow',
+          'bracer': 'Bracer',
+          'wen': 'Wen',
+          'wen_caledonia': 'Wen Caledonia',
+          // Shields
+          'forcewall': 'Forcewall',
+          'shadebloom': 'Shadebloom',
+          'shimmer': 'Shimmer',
+          'guardian': 'Guardian',
+          'bulwark': 'Bulwark',
+          'rampart': 'Rampart',
+          'mirage': 'Mirage',
+          'palisade': 'Palisade',
+          'secureshield': 'Secureshield',
+          'stopnik': 'Stopnik',
+          'sukoran': 'Sukoran',
+          'umbrapoise': 'Umbra Poise',
+          // Power plants
+          'js300': 'JS-300',
+          'js400': 'JS-400',
+          'regulus': 'Regulus',
+          'bolide': 'Bolide',
+          'quadracell': 'Quadracell',
+          'fierell': 'Fierell',
+          'genoa': 'Genoa',
+          'slipstream': 'Slipstream',
+          'maelstrom': 'Maelstrom',
+          // Quantum drives  
+          'beacon': 'Beacon',
+          'expedition': 'Expedition',
+          'yeager': 'Yeager',
+          'vk00': 'VK-00',
+          'atlas': 'Atlas',
+          'voyage': 'Voyage',
+          'odyssey': 'Odyssey',
+          'crossfield': 'Crossfield',
+          'vanguard': 'Vanguard',
+          'pontes': 'Pontes',
+          'goliath': 'Goliath',
+          // Generic fallback processing for unknown names
+        }
+        
+        // Check for known name
+        if (knownNames[name]) {
+          return knownNames[name]
+        }
+        
+        // Fallback: split on common suffix boundaries and title case
+        // Insert space before common suffixes: Go, Lite, Max, Pro, XL
+        name = name.replace(/(go|lite|max|pro|xl)$/i, ' $1')
+        // Insert spaces at camelCase boundaries
+        name = name.replace(/([a-z])([A-Z])/g, '$1 $2')
+        // Clean up and title case
+        name = name.replace(/\s+/g, ' ').trim()
+        name = name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')
+        // Fix common abbreviations
+        name = name.replace(/\b(Xl|Js|Vk|Em)\b/gi, m => m.toUpperCase())
+        return name
+      }
+      
       // Handle alternate pattern like COOL_S04_CNOU_Pioneer
       const altMatch = internalName.match(/^(COOL|POWR|QDRV|SHLD|RADR)_S(\d+)_(\w+)_(.+)$/i)
       if (altMatch) {
         const [, type, size, mfg, name] = altMatch
-        const typeNames = { COOL: 'Cooler', POWR: 'Power Plant', QDRV: 'Quantum Drive', SHLD: 'Shield', RADR: 'Radar' }
-        const mfgNames = { CNOU: 'Crusader', AEGS: 'Aegis', RSI: 'RSI', ORIG: 'Origin' }
-        blueprintName = `${mfgNames[mfg.toUpperCase()] || mfg} ${name} ${typeNames[type.toUpperCase()] || type}`
+        // Try localization first
+        const keysToTry = [
+          `item_Name${type}_${mfg}_S0${size}_${name}`,
+          `item_Name${type.toUpperCase()}_${mfg.toUpperCase()}_S0${size}_${name}`,
+        ]
+        for (const k of keysToTry) {
+          if (localization[k]) { blueprintName = localization[k]; break }
+        }
+        // Fallback: just use the product name
+        if (!blueprintName) {
+          blueprintName = formatProductName(name)
+        }
       }
       
       const componentMatch = internalName.match(/^(COOL|POWR|QDRV|SHLD|RADR)_(\w+)_S(\d+)_(.+)$/i)
@@ -1560,12 +1682,9 @@ function parseBlueprintDefinitions(localization = {}) {
           if (localization[k]) { blueprintName = localization[k]; break }
         }
         
-        // If still no localization, generate a descriptive name for capital ship components
+        // Fallback: just use the product name (like the game does)
         if (!blueprintName) {
-          const typeNames = { COOL: 'Cooler', POWR: 'Power Plant', QDRV: 'Quantum Drive', SHLD: 'Shield', RADR: 'Radar' }
-          const mfgNames = { AEGS: 'Aegis', RSI: 'RSI', CNOU: 'Crusader', ORIG: 'Origin', WCPR: 'Wildcat', WETK: 'Wei-Tek', ACAS: 'Acas', ARCC: 'ArcCorp', TARS: 'Tarsus', CHCO: 'ChengCo', GRNP: 'Grinp', GRNO: 'Grino', GNRP: 'Gnrp', NAVE: 'Navex', WLOP: 'Wulop', GODI: 'Godenicht' }
-          const cleanName = name.replace(/_/g, ' ').replace(/TEMP$/i, '').trim()
-          blueprintName = `${mfgNames[mfg.toUpperCase()] || mfg} ${cleanName} ${typeNames[type.toUpperCase()] || type} (S${size})`
+          blueprintName = formatProductName(name)
         }
       }
     }
