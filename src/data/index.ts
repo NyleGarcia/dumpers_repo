@@ -105,14 +105,57 @@ export interface GameBlueprintMission {
   path: string
 }
 
+export interface StandingThreshold {
+  name: string
+  minReputation: number
+}
+
+export interface BlueprintPool {
+  key: string
+  chance: number
+  path: string
+}
+
+export interface MissionContract {
+  id: string
+  debugName: string
+  title: string
+  titleKey: string
+  faction: string
+  factionKey: string
+  system: string
+  region: string | null
+  category: string | null
+  blueprintPools: BlueprintPool[]
+  minStanding: StandingThreshold | null
+  maxStanding: StandingThreshold | null
+  repPoints: number
+}
+
+export interface MissionPoolEntry {
+  title: string
+  titleKey: string
+  faction: string
+  system: string
+  region: string | null
+  category: string | null
+  minStanding: StandingThreshold | null
+  maxStanding: StandingThreshold | null
+  repPoints: number
+}
+
 export interface GameBlueprintMissionsData {
   _source: string
   _extracted: string
   missionBlueprints: Record<string, GameBlueprintMission[]>
   blueprintMissions: Record<string, string[]>
+  contracts: MissionContract[]
+  missionsByPool: Record<string, MissionPoolEntry[]>
   summary: {
-    missionsWithBlueprints: number
-    uniqueBlueprints: number
+    totalPools: number
+    totalBlueprints: number
+    contractsWithBlueprints: number
+    poolsWithMissionData: number
   }
 }
 
@@ -166,10 +209,22 @@ export interface GameFactionStanding {
   }>
 }
 
+export interface FactionContext {
+  primaryScope: {
+    scopeKey: string
+    standings: GameReputationStanding[]
+  }
+  careerScopes: Array<{
+    scopeKey: string
+    standings: GameReputationStanding[]
+  }>
+}
+
 export interface GameReputationData {
   _source: string
   _extracted: string
   factions: Record<string, GameFaction>
+  factionContexts: Record<string, FactionContext>
   factionStandings: Record<string, GameFactionStanding>
   standingsByCategory: Record<string, GameReputationStanding[]>
   scopes: Record<string, unknown>
@@ -180,6 +235,7 @@ export interface GameReputationData {
     totalStandings: number
     totalScopes: number
     totalFactions: number
+    totalContexts: number
     totalRewardTypes: number
     totalMissions: number
     missionsWithBlueprints: number
@@ -196,6 +252,74 @@ export interface GameLoreData {
   }
 }
 
+export interface MineableElement {
+  id: string
+  name: string
+  recordName: string
+  instability: number
+  resistance: number
+  optimalWindowMidpoint: number
+  optimalWindowRandomness: number
+  optimalWindowThinness: number
+  explosionMultiplier: number
+  clusterFactor: number
+  isFPS: boolean
+  isGroundVehicle: boolean
+  isShip: boolean
+}
+
+export interface MiningLaser {
+  id: string
+  name: string
+  displayName: string
+  size: number
+  laserPower: number
+  optimalRange: number
+  maxRange: number
+  extractionEfficiency: number
+  instabilityModifier: number
+  resistanceModifier: number
+  optimalWindowModifier: number
+  filterModifier: number
+  throttleLerpSpeed: number
+  throttleMinimum: number
+  tags: string
+}
+
+export interface GameMiningData {
+  _source: string
+  _extracted: string
+  mineableElements: MineableElement[]
+  miningLasers: MiningLaser[]
+  summary: {
+    elements: number
+    lasers: number
+  }
+}
+
+export interface FpsWeapon {
+  id: string
+  name: string
+  displayName: string
+  type: string
+  size: number
+  fireRate: number
+  idealCombatRange: number
+  maxFiringRange: number
+  damageMultiplier: number
+  combatRangeCategory: string
+  tags: string
+}
+
+export interface GameFpsWeaponsData {
+  _source: string
+  _extracted: string
+  weapons: FpsWeapon[]
+  summary: {
+    totalWeapons: number
+  }
+}
+
 // ============================================================================
 // DATA IMPORTS
 // ============================================================================
@@ -207,6 +331,8 @@ import gameBlueprintMissionsData from './game-blueprint-missions.json'
 import gameManufacturersData from './game-manufacturers.json'
 import gameReputationData from './game-reputation.json'
 import gameLoreData from './game-lore.json'
+import gameMiningData from './game-mining.json'
+import gameFpsWeaponsData from './game-fps-weapons.json'
 
 // Cast to proper types
 export const miningLocations = gameMiningLocationsData as MiningLocationsData
@@ -216,6 +342,8 @@ export const blueprintMissions = gameBlueprintMissionsData as GameBlueprintMissi
 export const manufacturers = gameManufacturersData as GameManufacturersData
 export const reputation = gameReputationData as GameReputationData
 export const lore = gameLoreData as GameLoreData
+export const gameMining = gameMiningData as GameMiningData
+export const fpsWeapons = gameFpsWeaponsData as GameFpsWeaponsData
 
 // Legacy aliases for backward compatibility
 export const ordnance = gameOrdnance
@@ -388,6 +516,10 @@ export const dataSummary = {
     totalOres: miningLocations.summary.totalOres,
     totalLocations: miningLocations.summary.totalLocations,
   },
+  miningStats: {
+    elements: gameMining.summary.elements,
+    lasers: gameMining.summary.lasers,
+  },
   components: {
     total: gameComponents.summary.totalComponents,
     byType: gameComponents.summary.byType,
@@ -411,5 +543,8 @@ export const dataSummary = {
   },
   lore: {
     totalDescriptions: lore.summary.totalDescriptions,
+  },
+  fpsWeapons: {
+    total: fpsWeapons.summary.totalWeapons,
   },
 }

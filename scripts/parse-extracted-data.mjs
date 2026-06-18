@@ -1261,7 +1261,7 @@ function parseBlueprintDefinitions(localization = {}) {
               const propMatch = propPath.match(/gpp_([^/]+)\.json$/i)
               const property = propMatch ? propMatch[1] : 'unknown'
               
-              // Extract value ranges
+              // Extract value ranges (both Linear and LinearIntegerAdditive types)
               for (const range of (mod.valueRanges || [])) {
                 if (range && range._Type_ === 'CraftingGameplayPropertyModifierValueRange_Linear') {
                   slotModifiers.push({
@@ -1270,6 +1270,16 @@ function parseBlueprintDefinitions(localization = {}) {
                     endQuality: range.endQuality ?? 1000,
                     baseAmount: range.modifierAtStart ?? 1.0,
                     perQuality: ((range.modifierAtEnd ?? 1.0) - (range.modifierAtStart ?? 1.0)) / ((range.endQuality ?? 1000) - (range.startQuality ?? 0))
+                  })
+                } else if (range && range._Type_ === 'CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive') {
+                  // Integer additive modifiers (e.g., power generation on ship components)
+                  slotModifiers.push({
+                    property,
+                    startQuality: range.startQuality ?? 0,
+                    endQuality: range.endQuality ?? 1000,
+                    baseAmount: range.modifierAtStart ?? 0,
+                    perQuality: ((range.modifierAtEnd ?? 0) - (range.modifierAtStart ?? 0)) / ((range.endQuality ?? 1000) - (range.startQuality ?? 0)),
+                    isIntegerAdditive: true
                   })
                 }
               }
@@ -1288,6 +1298,20 @@ function parseBlueprintDefinitions(localization = {}) {
                 resourceName,
                 quantity,
                 standardCargoUnits: quantity,
+                minQuality: slotOption.minQuality || 1,
+                modifiers: slotModifiers.length > 0 ? slotModifiers : undefined
+              })
+            } else if (slotOption._Type_ === 'CraftingCost_Item' && slotOption.entityClass) {
+              // Handle item-type slots (e.g., LENSES, REGULATOR, FILTER with weapon_damage modifiers)
+              const itemPath = slotOption.entityClass || ''
+              const itemMatch = itemPath.match(/([^/\\]+)\.json$/i)
+              const itemName = itemMatch ? itemMatch[1] : 'Unknown'
+              
+              slotOptions.push({
+                type: 'item',
+                itemName,
+                itemPath,
+                quantity: slotOption.quantity || 1,
                 minQuality: slotOption.minQuality || 1,
                 modifiers: slotModifiers.length > 0 ? slotModifiers : undefined
               })

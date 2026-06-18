@@ -61,7 +61,7 @@ const PAGE_GUIDES = [
       'Mark blueprints as "acquired" to track your collection progress',
       'View the resources and components required to craft each item',
       'Click any blueprint to see detailed crafting requirements and DFP values',
-      'Use the Quality Simulator to preview how resource quality affects final stats',
+      'Use the quality sliders to preview how resource quality affects final stats and DFP pricing',
       'Offline Mode: acquired marks save locally until you sign in',
     ],
     relatesTo: ['Mission Tracker', 'Resource Tracker'],
@@ -226,6 +226,97 @@ const PAGE_GUIDES = [
     ],
     relatesTo: ['Settings', 'Blueprints'],
   },
+  {
+    id: 'components',
+    title: 'Component Database',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+    description: 'Browse ship components by type, size, grade, and manufacturer.',
+    details: [
+      'Filter by component type: coolers, power plants, shields, quantum drives',
+      'Browse by size (S1-S4) and grade (A-D)',
+      'See manufacturer information for each component',
+      'Click any component to view detailed stats and shop prices',
+      'Find where components are sold across Stanton, Pyro, and Nyx',
+      'Compare upgrade paths between similar components',
+    ],
+    relatesTo: ['Shops', 'Blueprints'],
+  },
+  {
+    id: 'ordnance',
+    title: 'Ordnance Reference',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+    description: 'Compare missiles and torpedoes by size, guidance type, and manufacturer.',
+    details: [
+      'Browse all missiles and torpedoes in the game',
+      'Filter by guidance type: Cross-Section (CS), Electromagnetic (EM), Infrared (IR)',
+      'Filter by size (S1-S9) to find compatible ordnance for your ship',
+      'See manufacturer and full designation for each missile',
+      'Understand guidance system differences for combat effectiveness',
+    ],
+    relatesTo: ['Blueprints', 'Component Database'],
+  },
+  {
+    id: 'factions',
+    title: 'Faction Reference',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    ),
+    description: 'Understand reputation systems, standing tiers, and blueprint rewards.',
+    details: [
+      'View all factions and their reputation tiers',
+      'See the reputation points required for each standing level',
+      'Understand how faction standing affects blueprint availability',
+      'Plan your reputation grind based on desired blueprints',
+      'Cross-reference with Mission Tracker for efficient progression',
+    ],
+    relatesTo: ['Mission Tracker', 'Blueprints'],
+  },
+  {
+    id: 'lore',
+    title: 'Resource Lore',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+    ),
+    description: 'In-game flavor text and descriptions for Star Citizen commodities.',
+    details: [
+      'Browse lore descriptions for ores, minerals, and commodities',
+      'Search for specific resources by name',
+      'Filter by category to explore related materials',
+      'Learn the in-universe backstory for resources you mine and trade',
+      'Data sourced directly from Star Citizen game files',
+    ],
+    relatesTo: ['Resource Tracker', 'Mining Tracker'],
+  },
+  {
+    id: 'general',
+    title: 'General Archive',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+      </svg>
+    ),
+    description: 'External resources, quick tips, and data attribution.',
+    details: [
+      'Links to useful Star Citizen community resources',
+      'Quick tips for mining, trading, and crafting',
+      'Data source attribution and acknowledgments',
+      'Information about how Dumper\'s Repo data is sourced and updated',
+    ],
+    relatesTo: ['Component Database', 'Resource Lore'],
+  },
 ]
 
 export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
@@ -321,7 +412,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             </h4>
             <p className="text-xs text-slate-400">
               When you decide to sign in, <strong className="text-blue-300">all your offline data migrates automatically</strong>. 
-              Your acquired blueprints, tracked missions, resource inventory, and mission checklist preferences 
+              Your acquired blueprints, tracked missions, resource inventory, mining tracker entries, and mission checklist preferences 
               transfer to your account — nothing is lost.
             </p>
           </div>
