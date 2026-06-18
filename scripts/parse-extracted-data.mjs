@@ -841,15 +841,21 @@ function parseContractGenerators(localization) {
   }
   console.log(`  Cached ${Object.keys(repRewardAmounts).length} reputation reward amounts`)
   
-  // Build standing definitions cache
+  // Build standing definitions cache (resolve displayName from localization)
   const standingDefs = {}
   const standingFiles = findJsonFiles(EXPECTED_PATHS.reputation)
   for (const file of standingFiles) {
     const json = readJson(file)
     if (json?._RecordName_) {
       const name = json._RecordName_.toLowerCase()
+      let displayName = json._RecordValue_?.displayName || 'Unknown'
+      // Resolve localization key (e.g., "@RepScope_Contractor_Rank4" -> "Veteran Contractor")
+      if (displayName.startsWith('@')) {
+        const locKey = displayName.slice(1) // Remove @ prefix
+        displayName = localization[locKey] || localization[locKey.toLowerCase()] || displayName.slice(1)
+      }
       standingDefs[name] = {
-        displayName: json._RecordValue_?.displayName || 'Unknown',
+        displayName,
         minReputation: json._RecordValue_?.minReputation || 0,
         gated: json._RecordValue_?.gated || false
       }
@@ -966,23 +972,35 @@ function parseContractGenerators(localization) {
         if (contract.minStanding) {
           const minMatch = contract.minStanding.match(/([^/]+)\.json$/i)
           if (minMatch) {
-            const standingKey = `reputationstanding.${minMatch[1]}`.toLowerCase()
+            // Standing key format: "sreputationstandingparams.reputationstanding_factionrep_rank0"
+            const standingKey = `sreputationstandingparams.${minMatch[1]}`.toLowerCase()
             const def = standingDefs[standingKey]
-            minStanding = def ? {
-              name: def.displayName,
-              minReputation: def.minReputation
-            } : { name: minMatch[1], minReputation: 0 }
+            if (def) {
+              minStanding = { name: def.displayName, minReputation: def.minReputation }
+            } else {
+              // Try to derive name from localization or create readable fallback
+              const rankMatch = minMatch[1].match(/rank(\d+)$/i)
+              const rankNum = rankMatch ? rankMatch[1] : '0'
+              const locKey = `RepScope_Contractor_Rank${rankNum}`
+              const resolvedName = localization[locKey] || `Rank ${rankNum}`
+              minStanding = { name: resolvedName, minReputation: 0 }
+            }
           }
         }
         if (contract.maxStanding) {
           const maxMatch = contract.maxStanding.match(/([^/]+)\.json$/i)
           if (maxMatch) {
-            const standingKey = `reputationstanding.${maxMatch[1]}`.toLowerCase()
+            const standingKey = `sreputationstandingparams.${maxMatch[1]}`.toLowerCase()
             const def = standingDefs[standingKey]
-            maxStanding = def ? {
-              name: def.displayName,
-              minReputation: def.minReputation
-            } : { name: maxMatch[1], minReputation: 0 }
+            if (def) {
+              maxStanding = { name: def.displayName, minReputation: def.minReputation }
+            } else {
+              const rankMatch = maxMatch[1].match(/rank(\d+)$/i)
+              const rankNum = rankMatch ? rankMatch[1] : '0'
+              const locKey = `RepScope_Contractor_Rank${rankNum}`
+              const resolvedName = localization[locKey] || `Rank ${rankNum}`
+              maxStanding = { name: resolvedName, minReputation: 0 }
+            }
           }
         }
         
@@ -1077,23 +1095,42 @@ function parseBlueprintDefinitions(localization = {}) {
     }
     
     // Parse crafting slots from tiers
+    // Parse slots in the format expected by the UI
     const slots = []
     if (bp.tiers?.[0]?.recipe?.costs?.mandatoryCost?.options) {
       for (const option of bp.tiers[0].recipe.costs.mandatoryCost.options) {
         if (option.options) {
+          let slotDisplayName = option.nameInfo?.displayName || option.nameInfo?.debugName || 'Unknown'
+          const slotDebugName = option.nameInfo?.debugName || 'Unknown'
+          // Resolve localization key for slot name
+          if (slotDisplayName.startsWith('@')) {
+            const locKey = slotDisplayName.slice(1)
+            slotDisplayName = localization[locKey] || slotDebugName
+          }
+          const slotOptions = []
+          
           for (const slotOption of option.options) {
             if (slotOption._Type_ === 'CraftingCost_Resource' && slotOption.resource) {
               const resourceName = slotOption.resource._RecordName_?.replace('ResourceType.', '') || 'Unknown'
               const quantity = slotOption.quantity?.standardCargoUnits || 0
-              const slotName = option.nameInfo?.debugName || option.nameInfo?.displayName || 'Unknown'
               
-              slots.push({
-                slotName,
-                resource: resourceName,
+              slotOptions.push({
+                type: 'resource',
+                resourceName,
                 quantity,
+                standardCargoUnits: quantity,
                 minQuality: slotOption.minQuality || 1
               })
             }
+          }
+          
+          if (slotOptions.length > 0) {
+            slots.push({
+              slotDisplayName,
+              slotDebugName,
+              requiredCount: 1,
+              options: slotOptions
+            })
           }
         }
       }
@@ -1119,10 +1156,21 @@ function parseBlueprintDefinitions(localization = {}) {
       .replace(/^BP_CRAFT_/i, '')
       .replace(/_scitem$/i, '')
     
-    // Look up display name from localization using entityClass
-    // Keys are like: item_Namebehr_lmg_ballistic_01_mag
-    const locKey = `item_Name${entityClass || internalName}`
-    let blueprintName = localization[locKey]
+    // Look up display name from localization
+    // Keys are like: item_NameAMRS_LaserCannon_S1 (case-sensitive!)
+    // Try internalName first (preserves casing), then entityClass patterns
+    let blueprintName = null
+    const locKeyPatterns = [
+      `item_Name${internalName}`,                           // AMRS_LaserCannon_S1
+      `item_Name${entityClass}`,                            // amrs_lasercannon_s1
+      `item_Name${internalName?.toLowerCase()}`,            // lowercase version
+    ]
+    for (const key of locKeyPatterns) {
+      if (key && localization[key]) {
+        blueprintName = localization[key]
+        break
+      }
+    }
     
     // Fallback: generate from internal name if not in localization
     if (!blueprintName) {
@@ -1181,11 +1229,18 @@ function parseBlueprintDefinitions(localization = {}) {
       else if (ecLower.includes('shield')) subtype = 'shield'
       else if (ecLower.includes('quantum')) subtype = 'quantum_drive'
     }
-    // Vehicle weapon types
+    // Vehicle weapon types - detect damage type from internal name
     if (category.startsWith('VehicleWeapons')) {
-      if (ecLower.includes('turret')) subtype = 'turret'
+      const nameLower = internalName.toLowerCase()
+      if (nameLower.includes('laser')) subtype = 'laser'
+      else if (nameLower.includes('ballistic') || nameLower.includes('scattergun')) subtype = 'ballistic'
+      else if (nameLower.includes('distortion')) subtype = 'distortion'
+      else if (nameLower.includes('neutron')) subtype = 'neutron'
+      else if (nameLower.includes('tachyon')) subtype = 'tachyon'
+      else if (nameLower.includes('mass')) subtype = 'mass'
+      else if (nameLower.includes('plasma')) subtype = 'plasma'
       else if (ecLower.includes('missile') || ecLower.includes('rack')) subtype = 'missile'
-      else if (ecLower.includes('gatling') || ecLower.includes('cannon') || ecLower.includes('repeater')) subtype = 'gun'
+      else if (ecLower.includes('turret')) subtype = 'turret'
     }
     
     // Map category to the display format expected by the website
@@ -1203,6 +1258,12 @@ function parseBlueprintDefinitions(localization = {}) {
       categoryName = 'Ammo'
     }
     
+    // Convert craftTimeMinutes to craftTime object for UI compatibility
+    const totalMinutes = Math.round(craftTimeMinutes * 10) / 10
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = Math.floor(totalMinutes % 60)
+    const seconds = Math.round((totalMinutes * 60) % 60)
+    
     blueprints.push({
       id: json._RecordId_,
       file: legacyFilePath, // Path format matching database keys
@@ -1215,7 +1276,8 @@ function parseBlueprintDefinitions(localization = {}) {
       subtype,
       armorSlot,
       armorWeight,
-      craftTimeMinutes: Math.round(craftTimeMinutes * 10) / 10,
+      craftTimeMinutes: totalMinutes,
+      craftTime: { hours, minutes, seconds },
       slots
     })
   }
