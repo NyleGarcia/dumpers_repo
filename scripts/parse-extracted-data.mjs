@@ -1741,6 +1741,18 @@ function parseBlueprintDefinitions(localization = {}) {
         break
       }
     }
+
+    // Prefer canonical legacy base names over *_01_01_01 variant labels (Woodland, etc.)
+    if (internalName) {
+      const legacyBaseMatch = internalName.toLowerCase().match(/^(\w+)_legacy_armor_(\w+)_(\w+)_01_01_01$/)
+      if (legacyBaseMatch) {
+        const [, mfg, weight, slot] = legacyBaseMatch
+        const legacyBaseKey = `item_Name_${mfg}_legacy_${weight}_armor_01_${slot}`
+        if (localization[legacyBaseKey]) {
+          blueprintName = localization[legacyBaseKey]
+        }
+      }
+    }
     
     // Special handling for vehicle components with manufacturer prefixes (COOL_, POWR_, QDRV_, SHLD_, RADR_)
     // In-game names are just the product name, e.g., "Broadspec Go" not "ChengCo broadspecgo Radar (S00)"
