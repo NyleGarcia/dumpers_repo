@@ -387,6 +387,13 @@ function ResourceSlotCard({
   // Get resource-specific quality bands if available
   const resourceName = option?.resourceName || option?.entityName || ''
   const bands = getResourceBands(resourceName)
+  
+  // Check if this is a mineable resource (has SCU measurement) vs a manufactured item
+  const isMineable = (option?.standardCargoUnits ?? 0) > 0
+  // Items (non-mineable) like commodities have no quality
+  const isItem = option?.type === 'item'
+  // Show quality selector if it's a mineable resource (even without modifiers)
+  const showQualitySelector = isMineable && !isItem
 
   return (
     <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
@@ -416,7 +423,7 @@ function ResourceSlotCard({
         </div>
       )}
 
-      {hasModifiers && (
+      {showQualitySelector && (
         <div className="mt-3 pt-3 border-t border-slate-700/50">
           <div className="flex items-center gap-3 mb-2">
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
@@ -467,16 +474,18 @@ function ResourceSlotCard({
             )}
           </div>
           
-          <div className="space-y-1">
-            {modifierResults.map((result, idx) => (
-              <div key={idx} className="flex justify-between items-center text-xs">
-                <span className="text-slate-400">{result.propertyLabel}</span>
-                <span className={getModifierColorClass(result.modifier, result.property)}>
-                  {formatModifierPercent(result.modifier)}
-                </span>
-              </div>
-            ))}
-          </div>
+          {hasModifiers && (
+            <div className="space-y-1">
+              {modifierResults.map((result, idx) => (
+                <div key={idx} className="flex justify-between items-center text-xs">
+                  <span className="text-slate-400">{result.propertyLabel}</span>
+                  <span className={getModifierColorClass(result.modifier, result.property)}>
+                    {formatModifierPercent(result.modifier)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
