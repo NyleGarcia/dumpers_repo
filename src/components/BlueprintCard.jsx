@@ -30,12 +30,6 @@ export default function BlueprintCard({
 }) {
   const { dfpDisplayEnabled } = useAuth()
 
-  if (!(blueprint.internalName || blueprint.file) || !blueprint.blueprintName) return null
-
-  const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
-  const subType = getBlueprintSubType(blueprint)
-  const armorWeight = getArmorWeight(blueprint)
-  const armorSlot = getArmorSlot(blueprint)
   const defaultSlotQualities = useMemo(
     () => buildDefaultSlotQualities(blueprint),
     [blueprint]
@@ -44,6 +38,13 @@ export default function BlueprintCard({
     () => calculateBlueprintDfpWithParts(blueprint, defaultSlotQualities),
     [blueprint, defaultSlotQualities]
   )
+
+  if (!(blueprint.internalName || blueprint.file) || !blueprint.blueprintName) return null
+
+  const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
+  const subType = getBlueprintSubType(blueprint)
+  const armorWeight = getArmorWeight(blueprint)
+  const armorSlot = getArmorSlot(blueprint)
   const dfpLabel = formatDfpLabel(dfp.total)
   const dfpBreakdown = formatCraftDfpBreakdown(dfp)
   const specLine = formatBlueprintSpecLine(blueprint)
