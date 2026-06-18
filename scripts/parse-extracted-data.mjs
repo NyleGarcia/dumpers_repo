@@ -190,6 +190,19 @@ function resolveFactionDisplayName({ rawName, factionKey, recordName, hints = ''
   return humanizeFactionKey(recordName || factionKey || 'Unknown')
 }
 
+const NYX_LOCATION_MARKERS = ['levski', 'rockcracker', 'keeger', 'claw salamander']
+
+function inferSystemFromContractSignals(contractSignals) {
+  const lower = contractSignals.toLowerCase()
+  if (NYX_LOCATION_MARKERS.some((marker) => lower.includes(marker))) {
+    return 'Nyx'
+  }
+  if (lower.includes('_nyx_') || lower.includes('/nyx/') || lower.includes('nyx_')) {
+    return 'Nyx'
+  }
+  return null
+}
+
 /**
  * Resolve item internal filename to display name using localization
  * Examples:
@@ -1256,21 +1269,31 @@ function parseContractGenerators(localization) {
           }
         }
         
-        // Extract system from title or debugName
+        // Extract system from title, debugName, localization keys, or template path
         let system = 'Unknown'
-        const systemPatterns = [
-          /stanton/i, /pyro/i, /nyx/i, /terra/i, /sol/i
-        ]
-        const nameToCheck = (title + ' ' + (contract.debugName || '')).toLowerCase()
-        for (const pattern of systemPatterns) {
-          if (pattern.test(nameToCheck)) {
-            system = nameToCheck.match(pattern)[0]
-            system = system.charAt(0).toUpperCase() + system.slice(1)
-            break
+        const nameToCheck = `${title} ${debugName} ${titleKey} ${templatePath} ${file}`.toLowerCase()
+
+        const inferredNyx = inferSystemFromContractSignals(nameToCheck)
+        if (inferredNyx) {
+          system = inferredNyx
+        } else {
+          const systemPatterns = [
+            { pattern: /(?:^|[^a-z])stanton(?:\d|\b|\/)/i, name: 'Stanton' },
+            { pattern: /(?:^|[^a-z])pyro(?:\d|\b|\/)/i, name: 'Pyro' },
+            { pattern: /(?:^|[^a-z])nyx(?:\d|\b|\/)/i, name: 'Nyx' },
+            { pattern: /(?:^|[^a-z])terra(?:\d|\b)/i, name: 'Terra' },
+            { pattern: /\bsol\b/i, name: 'Sol' },
+          ]
+          for (const { pattern, name } of systemPatterns) {
+            if (pattern.test(nameToCheck)) {
+              system = name
+              break
+            }
           }
         }
+
         if (system === 'Unknown') {
-          const contractSignals = `${debugName} ${titleKey} ${templatePath}`.toLowerCase()
+          const contractSignals = nameToCheck
           if (
             factionKey === 'wikelo' ||
             contractSignals.includes('thecollector') ||
@@ -1283,6 +1306,9 @@ function parseContractGenerators(localization) {
             contractSignals.includes('asdfacilitydelve')
           ) {
             system = 'Stanton'
+          } else {
+            const inferredSystem = inferSystemFromContractSignals(contractSignals)
+            if (inferredSystem) system = inferredSystem
           }
         }
         
