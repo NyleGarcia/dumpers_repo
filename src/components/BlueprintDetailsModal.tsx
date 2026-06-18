@@ -162,8 +162,8 @@ export default function BlueprintDetailsModal({
     if (!orderPricing || !canAddToOrder) return
 
     addToDraft({
-      blueprintId: blueprint.file,
-      blueprintTitle: blueprint.blueprintName || blueprint.file,
+      blueprintId: blueprint.internalName,
+      blueprintTitle: blueprint.blueprintName || blueprint.internalName,
       slotQualities: effectiveSlotQualities,
       quantity: 1,
       unitDfpAuec: orderPricing.unitDfpAuec,

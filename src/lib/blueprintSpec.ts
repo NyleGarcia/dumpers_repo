@@ -35,7 +35,7 @@ function isShipBlueprint(categoryName?: string): boolean {
 export function formatBlueprintSpecLine(bp: BlueprintSpecInput): string | null {
   if (!bp.file || !isShipBlueprint(bp.categoryName)) return null
 
-  const meta = metadataByFile[bp.file]
+  const meta = metadataByFile[bp.file.toLowerCase()]
   if (!meta?.itemClass || !meta?.grade) return null
 
   return `${formatItemClass(meta.itemClass)} ${meta.grade}`
