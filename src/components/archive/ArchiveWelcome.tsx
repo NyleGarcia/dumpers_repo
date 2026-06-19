@@ -198,9 +198,9 @@ const PAGE_GUIDES = [
     description: 'Track your personal inventory of mined and refined resources.',
     details: [
       'Log quantities and quality levels of resources you\'ve collected',
-      'Quality ranges from 500 (base) to 1000 (perfect) — higher quality = exponentially higher value',
-      'DFP automatically calculates fair market values for your resources',
-      'See your total inventory value at a glance',
+      'Track store-purchased refined materials at Purchased (Q0)',
+      'Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value',
+      'Salvage and trade goods use fixed Q0 tiers',
       'Perfect for tracking what you have available for crafting or trading',
       'Offline Mode: inventory saves locally until you sign in (then migrates automatically)',
     ],

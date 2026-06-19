@@ -161,7 +161,7 @@ export function clearGuestResources(): void {
 const MAX_BLUEPRINT_ID_LENGTH = 500
 const MAX_RESOURCE_KEY_LENGTH = 200
 const MAX_RESOURCE_QUANTITY = 100000
-const MIN_QUALITY = 500
+const MIN_QUALITY = 0
 const MAX_QUALITY = 1000
 const MAX_MIGRATION_BATCH = 1000
 

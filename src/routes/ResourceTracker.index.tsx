@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
-import { isSalvageResource } from '../config/extraResources'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import {
-  isHarvestResource,
   resourceLabelClassName,
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
@@ -18,6 +16,7 @@ import {
   readGuestResources,
   writeGuestResources,
 } from '../lib/localGuestCache'
+import { formatInventoryQualityLabel } from '../lib/qualityBands'
 import { adjustInventoryQuantity, setInventoryQuantity, updateInventoryNote } from '../lib/operations'
 import type { InventoryScope } from '../lib/operations'
 import ResourceQuantityInput from '../components/ResourceQuantityInput'
@@ -28,141 +27,6 @@ import {
   formatResourceQuantity,
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
-import type { BlueprintResourceRow } from '../lib/operations'
-
-interface GuestStockAddPanelProps {
-  catalog: BlueprintResourceRow[]
-  labelMap: Record<string, string>
-  existingKeys: Set<string>
-  onAdd: (resourceKey: string, quality: number, quantity: number) => void
-}
-
-function GuestStockAddPanel({ catalog, labelMap, existingKeys, onAdd }: GuestStockAddPanelProps) {
-  const [selectedResource, setSelectedResource] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [search, setSearch] = useState('')
-
-  const quality = DEFAULT_STOCK_QUALITY
-
-  const filteredCatalog = useMemo(() => {
-    if (search.length < 2) return []
-    const lowerSearch = search.toLowerCase()
-    return catalog
-      .filter(
-        (c) =>
-          c.is_active &&
-          (c.label.toLowerCase().includes(lowerSearch) ||
-            c.resource_key.toLowerCase().includes(lowerSearch))
-      )
-      .slice(0, 20)
-  }, [catalog, search])
-
-  const handleAdd = () => {
-    if (!selectedResource) return
-    const qty = parseQuantityForResource(selectedResource, quantity)
-    if (qty == null || qty <= 0) return
-
-    onAdd(selectedResource, quality, qty)
-    setSelectedResource('')
-    setQuantity('')
-    setSearch('')
-  }
-
-  const selectedLabel = labelMap[selectedResource] ?? selectedResource
-
-  return (
-    <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-slate-300">Add Material Stock</h3>
-        <a
-          href="/archive#page-guides"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-orange-400/70 hover:text-orange-300"
-        >
-          How does this work?
-        </a>
-      </div>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex-1 relative">
-          {!selectedResource ? (
-            <>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Type to search resources..."
-                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50"
-              />
-              {filteredCatalog.length > 0 && (
-                <div className="absolute z-10 mt-1 w-full bg-slate-800 border border-slate-600 rounded-lg shadow-xl max-h-48 overflow-y-auto">
-                  {filteredCatalog.map((c) => {
-                    const lineKey = inventoryLineKey(c.resource_key, quality)
-                    const alreadyExists = existingKeys.has(lineKey)
-                    return (
-                      <button
-                        key={c.resource_key}
-                        type="button"
-                        disabled={alreadyExists}
-                        onClick={() => {
-                          setSelectedResource(c.resource_key)
-                          setSearch('')
-                        }}
-                        className={`w-full text-left px-3 py-2 text-sm ${
-                          alreadyExists
-                            ? 'text-slate-500 cursor-not-allowed'
-                            : 'text-white hover:bg-slate-700'
-                        }`}
-                      >
-                        {c.label}
-                        {alreadyExists && (
-                          <span className="ml-2 text-xs text-slate-500">(already added)</span>
-                        )}
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span className={`text-sm ${resourceLabelClassName(selectedResource)}`}>
-                {selectedLabel}
-              </span>
-              <button
-                type="button"
-                onClick={() => setSelectedResource('')}
-                className="text-slate-400 hover:text-white text-xs"
-              >
-                (change)
-              </button>
-            </div>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <ResourceQuantityInput
-            resourceKey={selectedResource}
-            value={quantity}
-            onValueChange={setQuantity}
-            placeholder="Qty"
-            className="w-24 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50"
-          />
-          <span className="text-slate-500 text-sm">
-            {resourceQuantityUnitLabel(selectedResource)}
-          </span>
-          <button
-            type="button"
-            onClick={handleAdd}
-            disabled={!selectedResource || !quantity}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-500 transition-colors"
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 export default function ResourceTrackerRoute() {
   const { user, visibilityContext, isSuperAdmin, isGhostMode, isGuestPreview } = useAuth()
@@ -227,28 +91,31 @@ export default function ResourceTrackerRoute() {
     setSyncing(false)
   }
 
-  // Build stock cards: for guests, merge catalog with localStorage resources
+  // Build stock cards: guests mirror logged-in — one card per (resource_key, quality) row
   const stockCards = useMemo(() => {
     if (!isGuest) return catalogWithInventory
 
-    // For guests: merge catalog with their localStorage resources
-    const guestQtyMap = new Map<string, GuestResourceEntry>()
-    guestResources.forEach((r) => {
-      guestQtyMap.set(`${r.resource_key}::${r.quality}`, r)
-    })
+    const catalogByKey = new Map(catalog.map((c) => [c.resource_key, c]))
 
-    return catalog.map((c) => {
-      const quality = DEFAULT_STOCK_QUALITY
-      const entry = guestQtyMap.get(`${c.resource_key}::${quality}`)
-      return {
-        resource_key: c.resource_key,
-        label: c.label,
-        is_active: c.is_active,
-        synced_at: c.synced_at,
-        quantity: entry?.quantity ?? 0,
-        quality,
-      }
-    })
+    return guestResources
+      .filter((row) => row.quantity > 0)
+      .map((row) => {
+        const catalogEntry = catalogByKey.get(row.resource_key)
+        return {
+          resource_key: row.resource_key,
+          label: catalogEntry?.label ?? row.resource_key,
+          is_active: catalogEntry?.is_active ?? true,
+          synced_at: catalogEntry?.synced_at ?? '',
+          quantity: row.quantity,
+          quality: row.quality,
+          note: null,
+        }
+      })
+      .sort((a, b) => {
+        const labelCmp = a.label.localeCompare(b.label)
+        if (labelCmp !== 0) return labelCmp
+        return a.quality - b.quality
+      })
   }, [isGuest, catalog, catalogWithInventory, guestResources])
 
   const existingLineKeys = useMemo(() => {
@@ -362,12 +229,17 @@ export default function ResourceTrackerRoute() {
     await refresh()
   }
 
-  // Guest add resource handler
+  // Guest add resource handler — adds to existing card quantity like logged-in flow
   const handleGuestAddResource = useCallback(
     (resourceKey: string, quality: number, quantity: number) => {
-      updateGuestResource(resourceKey, quality, quantity)
+      const existing = guestResources.find(
+        (r) => r.resource_key === resourceKey && r.quality === quality
+      )
+      const newQty = addResourceQuantities(existing?.quantity ?? 0, quantity)
+      updateGuestResource(resourceKey, quality, newQty)
+      setStockError(null)
     },
-    [updateGuestResource]
+    [guestResources, updateGuestResource]
   )
 
   const tabLabel = activeTab === 'personal' ? 'My stock cards' : 'Site Total'
@@ -413,22 +285,25 @@ export default function ResourceTrackerRoute() {
       </div>
 
       <div className="mb-6 min-h-[11.5rem] w-full min-w-0">
-        {isPersonalTab && user?.id ? (
-          <PersonalStockAddPanel
-            userId={user.id}
-            catalog={catalog}
-            labelMap={labelMap}
-            existingKeys={existingLineKeys}
-            onAdded={() => void refresh()}
-            onError={setStockError}
-          />
-        ) : isPersonalTab && isGuest ? (
-          <GuestStockAddPanel
-            catalog={catalog}
-            labelMap={labelMap}
-            existingKeys={existingLineKeys}
-            onAdd={handleGuestAddResource}
-          />
+        {isPersonalTab && (user?.id || isGuest) ? (
+          user?.id ? (
+            <PersonalStockAddPanel
+              userId={user.id}
+              catalog={catalog}
+              labelMap={labelMap}
+              existingKeys={existingLineKeys}
+              onAdded={() => void refresh()}
+              onError={setStockError}
+            />
+          ) : (
+            <PersonalStockAddPanel
+              catalog={catalog}
+              labelMap={labelMap}
+              existingKeys={existingLineKeys}
+              onAdd={handleGuestAddResource}
+              onError={setStockError}
+            />
+          )
         ) : readOnly ? (
           <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
             Site Total is a read-only rollup — summed from every approved member&apos;s My
@@ -526,8 +401,7 @@ export default function ResourceTrackerRoute() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 w-full min-w-0">
           {filteredCards.map((card) => {
             const quality = card.quality ?? DEFAULT_STOCK_QUALITY
-            const isSalvage = isSalvageResource(card.resource_key)
-            const isHarvest = isHarvestResource(card.resource_key)
+            const qualityLabel = formatInventoryQualityLabel(card.resource_key, quality)
             const qtyUnit = resourceQuantityUnitLabel(card.resource_key)
             const adjustSteps = adjustStepsForResource(card.resource_key)
             const lineKey = inventoryLineKey(card.resource_key, quality)
@@ -548,7 +422,7 @@ export default function ResourceTrackerRoute() {
                     <p className="text-slate-500 text-xs mt-0.5">
                       {card.is_active
                         ? isPersonalTab
-                          ? `${isSalvage ? 'Q0 (salvage)' : isHarvest ? 'Harvest' : `Q${quality}`} · ${qtyUnit} on hand`
+                          ? `${qualityLabel} · ${qtyUnit} on hand`
                           : `${qtyUnit} site-wide total`
                         : 'Retired — no longer in blueprints'}
                     </p>
@@ -562,7 +436,7 @@ export default function ResourceTrackerRoute() {
                       }`}
                       aria-hidden={!isPersonalTab}
                     >
-                      {isSalvage ? 'Q0 (salvage)' : isHarvest ? 'Harvest' : `Q${quality}`}
+                      {qualityLabel}
                     </span>
                     <span
                       className={`px-2 py-0.5 rounded text-xs border ${

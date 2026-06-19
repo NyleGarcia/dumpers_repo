@@ -1,37 +1,33 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
-import { DEFAULT_STOCK_QUALITY, stockQualityTiersForResource } from '../config/dfp'
-import {
-  isHarvestResource,
-  resourceLabelClassName,
-  resourceQuantityUnitLabel,
-} from '../config/resourceTypes'
+import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
+import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { addPersonalInventoryLine, type BlueprintResourceRow } from '../lib/operations'
 import ResourceQuantityInput from './ResourceQuantityInput'
+import ResourceQualitySelect, { getDefaultQualityForResource } from './ResourceQualitySelect'
 import {
   formatQuantityForResource,
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
-import { getDefaultBandQuality, getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
+import { formatInventoryQualityLabel } from '../lib/qualityBands'
 
-interface PersonalStockAddPanelProps {
-  userId: string
+type PersonalStockAddPanelBaseProps = {
   catalog: BlueprintResourceRow[]
   labelMap: Record<string, string>
   existingKeys: Set<string>
-  onAdded: () => void
   onError?: (message: string) => void
 }
 
-export default function PersonalStockAddPanel({
-  userId,
-  catalog,
-  labelMap,
-  existingKeys,
-  onAdded,
-  onError,
-}: PersonalStockAddPanelProps) {
+type PersonalStockAddPanelProps = PersonalStockAddPanelBaseProps &
+  (
+    | { userId: string; onAdded: () => void; onAdd?: never }
+    | { onAdd: (resourceKey: string, quality: number, quantity: number) => void; userId?: never; onAdded?: never }
+  )
+
+export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps) {
+  const { catalog, labelMap, existingKeys, onError } = props
+  const isGuestMode = 'onAdd' in props && props.onAdd != null
+
   const [search, setSearch] = useState('')
   const [resourceKey, setResourceKey] = useState('')
   const [quality, setQuality] = useState(String(DEFAULT_STOCK_QUALITY))
@@ -56,30 +52,19 @@ export default function PersonalStockAddPanel({
   }, [activeCatalog, search])
 
   const selectedLabel = resourceKey ? getResourceLabel(resourceKey, labelMap) : ''
-  const qualityTiers = useMemo(
-    () => stockQualityTiersForResource(resourceKey, selectedLabel),
-    [resourceKey, selectedLabel]
-  )
-  const selectedIsSalvage = qualityTiers.length === 1 && qualityTiers[0] === SALVAGE_ORDER_MIN_QUALITY
-  const selectedIsHarvest = resourceKey ? isHarvestResource(resourceKey) : false
   const qtyUnit = resourceKey ? resourceQuantityUnitLabel(resourceKey) : 'SCU'
-  
-  // Get resource-specific quality bands if available
-  const resourceBands = useMemo(
-    () => (resourceKey && !selectedIsSalvage ? getResourceBands(selectedLabel) : undefined),
-    [resourceKey, selectedLabel, selectedIsSalvage]
-  )
 
   useEffect(() => {
-    if (selectedIsSalvage) {
-      setQuality(String(SALVAGE_ORDER_MIN_QUALITY))
-    } else if (resourceBands && resourceBands.length > 0) {
-      setQuality(String(getDefaultBandQuality(selectedLabel)))
-    }
-  }, [resourceKey, selectedIsSalvage, resourceBands])
+    if (!resourceKey) return
+    setQuality(getDefaultQualityForResource(resourceKey, selectedLabel))
+  }, [resourceKey, selectedLabel])
 
   const lineKey = resourceKey && quality ? `${resourceKey}::${quality}` : ''
   const lineExists = lineKey ? existingKeys.has(lineKey) : false
+  const qualityLabel =
+    resourceKey && quality
+      ? formatInventoryQualityLabel(resourceKey, Number(quality))
+      : ''
 
   const handleAdd = async () => {
     const qty = parseQuantityForResource(resourceKey, quantity)
@@ -91,8 +76,15 @@ export default function PersonalStockAddPanel({
     setSubmitting(true)
     onError?.('')
 
+    if (isGuestMode) {
+      props.onAdd(resourceKey, Number(quality), qty)
+      setSubmitting(false)
+      setQuantity('0')
+      return
+    }
+
     const result = await addPersonalInventoryLine({
-      userId,
+      userId: props.userId,
       resourceKey,
       quality: Number(quality),
       quantityScu: qty,
@@ -106,7 +98,7 @@ export default function PersonalStockAddPanel({
     }
 
     setQuantity('0')
-    onAdded()
+    props.onAdded()
   }
 
   return (
@@ -114,9 +106,9 @@ export default function PersonalStockAddPanel({
       <div>
         <h2 className="text-white font-medium text-sm">Add material stock</h2>
         <p className="text-slate-500 text-xs mt-1">
-          Create a card per resource and quality tier — Q0 for store-bought and salvage (RMC,
-          construction material), Q100–Q1000 for mined/refined ore. Use the buttons on each card to
-          adjust in-game.{' '}
+          Create a card per resource and quality tier — Purchased (Q0) for store-bought refined
+          materials, Q0 for salvage (RMC, construction material), Q100–Q1000 for mined/refined ore.
+          Use the buttons on each card to adjust in-game.{' '}
           <a
             href="/archive#dfp"
             target="_blank"
@@ -150,52 +142,16 @@ export default function PersonalStockAddPanel({
           ))}
         </select>
 
-        {selectedIsSalvage ? (
-          <div className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-300 text-sm">
-            Q0 (no quality)
-          </div>
-        ) : resourceBands ? (
-          <select
-            value={quality}
-            onChange={(e) => setQuality(e.target.value)}
-            className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-            aria-label="Quality band"
-          >
-            {resourceBands.map((bandValue, idx) => {
-              const tier = getQualityTier(bandValue)
-              return (
-                <option key={idx} value={bandValue} className={getQualityTierColor(tier)}>
-                  Band {idx + 1}: Q{bandValue}
-                </option>
-              )
-            })}
-          </select>
+        {resourceKey ? (
+          <ResourceQualitySelect
+            resourceKey={resourceKey}
+            resourceLabel={selectedLabel}
+            quality={quality}
+            onQualityChange={setQuality}
+          />
         ) : (
-          <div className="flex items-center gap-2">
-            <input
-              type="range"
-              min={1}
-              max={1000}
-              step={1}
-              value={quality}
-              onChange={(e) => setQuality(e.target.value)}
-              className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
-              aria-label="Quality slider"
-            />
-            <input
-              type="number"
-              min={1}
-              max={1000}
-              value={quality}
-              onChange={(e) => {
-                const val = parseInt(e.target.value, 10)
-                if (!isNaN(val) && val >= 1 && val <= 1000) {
-                  setQuality(e.target.value)
-                }
-              }}
-              className="w-16 px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
-              aria-label="Quality value"
-            />
+          <div className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-500 text-sm">
+            Quality
           </div>
         )}
 
@@ -210,18 +166,9 @@ export default function PersonalStockAddPanel({
 
       {resourceKey && (
         <p className="text-slate-400 text-xs">
-          <span className={resourceKey ? resourceLabelClassName(resourceKey) : ''}>
-            {selectedLabel}
-          </span>{' '}
-          ·{' '}
-          {selectedIsSalvage
-            ? 'Q0 (salvage)'
-            : selectedIsHarvest
-              ? 'Harvest'
-              : `Q${quality}`}
-          {lineExists
-            ? ' — adds to your existing card'
-            : ' — creates a new card'}
+          <span className={resourceLabelClassName(resourceKey)}>{selectedLabel}</span> ·{' '}
+          {qualityLabel}
+          {lineExists ? ' — adds to your existing card' : ' — creates a new card'}
         </p>
       )}
 

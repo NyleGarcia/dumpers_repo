@@ -6,7 +6,13 @@
  * Data is now extracted directly from game files via parse-extracted-data.mjs
  */
 
+import { stockQualityTiersForResource } from '../config/dfp'
+import { isSalvageResource } from '../config/extraResources'
+import { isHarvestResource } from '../config/resourceTypes'
 import qualityBandsData from '../data/game-quality-bands.json'
+
+/** In-game quality for terminal-purchased refined materials (distinct from mined band thresholds). */
+export const PURCHASED_STOCK_QUALITY = 0
 
 /**
  * Resource-specific quality bands (8 bands per resource)
@@ -168,4 +174,17 @@ export function getBandRange(resourceName: string, quality: number): { start: nu
  */
 export function getAllResourcesWithBands(): string[] {
   return Object.keys(RESOURCE_QUALITY_BANDS)
+}
+
+/** True when a resource normally has mined/refined quality tiers (not salvage-only Q0). */
+export function supportsPurchasedQuality(resourceKey: string, label?: string): boolean {
+  return stockQualityTiersForResource(resourceKey, label).length > 1
+}
+
+/** User-facing quality label for Resource Tracker stock cards and add panel preview. */
+export function formatInventoryQualityLabel(resourceKey: string, quality: number): string {
+  if (isSalvageResource(resourceKey)) return 'Q0 (salvage)'
+  if (isHarvestResource(resourceKey)) return 'Harvest'
+  if (quality === PURCHASED_STOCK_QUALITY) return 'Purchased (Q0)'
+  return `Q${quality}`
 }
