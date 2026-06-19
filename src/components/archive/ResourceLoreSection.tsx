@@ -1,68 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { getResourceType } from '../../config/resourceTypes'
 import { getResourceLoreEntries, lore } from '../../data/index'
+import {
+  getGameLoreCategory,
+  LORE_CATEGORY_ORDER,
+  mergeSmallLoreCategories,
+} from '../../lib/loreCategories'
 import {
   hasResourceLoreUiState,
   readResourceLoreUiState,
   writeResourceLoreUiState,
 } from '../../lib/resourceLoreUiState'
 
-const CATEGORY_ORDER = [
-  'Ores & Minerals',
-  'Refined Materials',
-  'Gems & Hand Mineables',
-  'Gases',
-  'Contraband',
-  'Trade Goods',
-  'Medical',
-  'Industrial',
-  'Other',
-]
-
-function getResourceLoreCategory(resourceKey: string, label: string): string {
-  const lowerLabel = label.toLowerCase()
-
-  if (
-    lowerLabel.includes('medical') ||
-    lowerLabel.includes('medstick') ||
-    lowerLabel.includes('kopion') ||
-    lowerLabel.includes('molina')
-  ) {
-    return 'Medical'
-  }
-
-  if (
-    lowerLabel.includes('refined') ||
-    ['diamond', 'silnex', 'neograph', 'thermalfoam'].includes(resourceKey)
-  ) {
-    return 'Refined Materials'
-  }
-
-  switch (getResourceType(resourceKey)) {
-    case 'ore':
-      return 'Ores & Minerals'
-    case 'gem':
-      return 'Gems & Hand Mineables'
-    case 'gas':
-    case 'halogen':
-      return 'Gases'
-    case 'fuel':
-    case 'salvage':
-      return 'Industrial'
-    case 'contraband':
-      return 'Contraband'
-    case 'trade_good':
-    case 'harvest':
-    case 'shop_special':
-      return 'Trade Goods'
-    default:
-      return 'Other'
-  }
-}
-
 function readInitialCollapsedCategories(): Set<string> {
   if (!hasResourceLoreUiState()) {
-    return new Set(CATEGORY_ORDER)
+    return new Set(LORE_CATEGORY_ORDER)
   }
   return new Set(readResourceLoreUiState().collapsedCategoryIds)
 }
@@ -88,7 +39,12 @@ export default function ResourceLoreSection() {
         continue
       }
 
-      const category = getResourceLoreCategory(entry.resourceKey, entry.label)
+      const category = getGameLoreCategory(
+        entry.resourceKey,
+        entry.label,
+        entry.locKey,
+        entry.kind
+      )
       if (!categories.has(category)) {
         categories.set(category, [])
       }
@@ -99,11 +55,11 @@ export default function ResourceLoreSection() {
       entries.sort((a, b) => a.label.localeCompare(b.label))
     }
 
-    return categories
+    return mergeSmallLoreCategories(categories)
   }, [loreEntries, search])
 
   const visibleCategories = useMemo(
-    () => CATEGORY_ORDER.filter((category) => (categorizedResources.get(category)?.length ?? 0) > 0),
+    () => LORE_CATEGORY_ORDER.filter((category) => (categorizedResources.get(category)?.length ?? 0) > 0),
     [categorizedResources]
   )
 
@@ -136,9 +92,9 @@ export default function ResourceLoreSection() {
   if (loreEntries.length === 0) {
     return (
       <div className="p-4 bg-amber-900/30 border border-amber-500/30 rounded-lg">
-        <h3 className="text-sm font-medium text-amber-300 mb-2">Resource Lore Not Available</h3>
+        <h3 className="text-sm font-medium text-amber-300 mb-2">Game Lore Not Available</h3>
         <p className="text-xs text-amber-200/70">
-          Commodity lore has not been extracted yet. Run the game data pipeline locally:
+          Game lore has not been extracted yet. Run the game data pipeline locally:
         </p>
         <ul className="text-xs text-slate-400 mt-2 list-disc list-inside space-y-1">
           <li>
@@ -156,8 +112,8 @@ export default function ResourceLoreSection() {
     <div className="space-y-6">
       <div>
         <p className="text-sm text-slate-400 mb-4">
-          Lore and flavor text for Star Citizen commodities, sourced directly from game localization files
-          extracted via StarBreaker.
+          Lore and flavor text from Star Citizen game files — commodities, ship components, armor,
+          weapons, flair items, and more — extracted via StarBreaker.
         </p>
 
         <div className="relative">
@@ -165,7 +121,7 @@ export default function ResourceLoreSection() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search resources..."
+            placeholder="Search lore entries..."
             className="w-full px-4 py-2 pl-10 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-orange-500/50"
           />
           <svg
@@ -184,7 +140,7 @@ export default function ResourceLoreSection() {
         </div>
 
         <p className="text-xs text-slate-500 mt-2">
-          Showing {totalVisible} of {lore.summary.totalDescriptions} resources with lore
+          Showing {totalVisible} of {lore.summary.totalDescriptions} lore entries
         </p>
       </div>
 
@@ -212,7 +168,7 @@ export default function ResourceLoreSection() {
       )}
 
       <div className="space-y-4">
-        {CATEGORY_ORDER.map((category) => {
+        {LORE_CATEGORY_ORDER.map((category) => {
           const entries = categorizedResources.get(category)
           if (!entries || entries.length === 0) return null
 
@@ -246,7 +202,9 @@ export default function ResourceLoreSection() {
                   {entries.map((entry) => (
                     <div key={entry.resourceKey} className="p-4 bg-slate-900/30">
                       <h4 className="text-sm font-medium text-orange-300 mb-2">{entry.label}</h4>
-                      <p className="text-xs text-slate-400 leading-relaxed">{entry.description}</p>
+                      <p className="text-xs text-slate-400 leading-relaxed whitespace-pre-line">
+                        {entry.description.replace(/\\n/g, '\n')}
+                      </p>
                     </div>
                   ))}
                 </div>

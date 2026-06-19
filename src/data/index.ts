@@ -247,6 +247,7 @@ export interface GameLoreResourceEntry {
   key: string
   label: string
   description: string
+  kind?: 'commodity' | 'item'
 }
 
 export interface GameLoreData {
@@ -518,10 +519,11 @@ export interface ResourceLoreListEntry {
   label: string
   description: string
   locKey: string
+  kind?: 'commodity' | 'item'
 }
 
 /**
- * All commodity lore entries for Archive display.
+ * All game lore entries for Archive display.
  */
 export function getResourceLoreEntries(): ResourceLoreListEntry[] {
   return Object.entries(lore.resources)
@@ -530,6 +532,7 @@ export function getResourceLoreEntries(): ResourceLoreListEntry[] {
       label: entry.label,
       description: entry.description,
       locKey: entry.key,
+      kind: entry.kind,
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
 }

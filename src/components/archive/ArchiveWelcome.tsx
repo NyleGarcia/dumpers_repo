@@ -35,7 +35,7 @@ const QUICK_LINKS: QuickLink[] = [
   {
     id: 'lore',
     label: 'Resource Lore',
-    description: 'In-game flavor text and descriptions for Star Citizen commodities and materials.',
+    description: 'In-game flavor text and descriptions for Star Citizen commodities, items, and components.',
     section: 'lore',
   },
   {
@@ -389,12 +389,12 @@ const PAGE_GUIDES = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
       </svg>
     ),
-    description: 'In-game flavor text and descriptions for Star Citizen commodities.',
+    description: 'In-game flavor text and descriptions for commodities, ship components, armor, weapons, and more.',
     details: [
-      'Browse lore descriptions for ores, minerals, and commodities',
-      'Search for specific resources by name',
-      'Filter by category to explore related materials',
-      'Learn the in-universe backstory for resources you mine and trade',
+      'Browse lore for ores, commodities, ship components, armor, weapons, and flair items',
+      'Search entries by name or description text',
+      'Filter by category to explore related items and materials',
+      'Learn the in-universe backstory for gear you use and resources you trade',
       'Data sourced directly from Star Citizen game files',
     ],
     relatesTo: ['Resource Tracker', 'Mining Tracker'],

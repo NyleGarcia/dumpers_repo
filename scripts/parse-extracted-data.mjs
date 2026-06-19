@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
 import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
-import { extractCommodityLore } from './lib/commodityLocalization.mjs'
+import { extractAllGameLore } from './lib/gameLore.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -401,9 +401,12 @@ function parseLocalization() {
 }
 
 function extractResourceLore(localization) {
-  console.log('  Extracting resource/commodity lore...')
-  const lore = extractCommodityLore(localization)
-  console.log(`  Extracted ${Object.keys(lore).length} commodity lore descriptions`)
+  console.log('  Extracting game lore (commodities + item descriptions)...')
+  const lore = extractAllGameLore(localization)
+
+  const commodityCount = Object.values(lore).filter((entry) => entry.kind === 'commodity').length
+  const itemCount = Object.values(lore).filter((entry) => entry.kind === 'item').length
+  console.log(`  Extracted ${Object.keys(lore).length} lore descriptions (${commodityCount} commodities, ${itemCount} items)`)
 
   const spotCheckKeys = [
     'hephaestanite',
