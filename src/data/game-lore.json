@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-19T02:20:29.326Z",
+  "_extracted": "2026-06-19T02:28:02.664Z",
   "resources": {
     "audio_visual_equipment": {
       "key": "items_commodities_AudioVisualEquipment_desc",
@@ -7448,18 +7448,6 @@
       "description": "Get closer than you’d ever want with this stunning replica Vanduul Warrior. Meticulously sculpted with a keen attention to detail, this poseable fighter was released as part of Takuetsu’s Universe Series of replica figures and comes with a fearsome lance used during Vanduul boarding attacks.",
       "kind": "item"
     },
-    "flair_badges": {
-      "key": "item_DescFlair_Badges",
-      "label": "Badges Plaque",
-      "description": "(PH) Plaque: Badges Description",
-      "kind": "item"
-    },
-    "flair_calendar": {
-      "key": "item_DescFlair_Calendar",
-      "label": "Calendar",
-      "description": "(PH) Calendar Description",
-      "kind": "item"
-    },
     "flair_coin_1_levski_a": {
       "key": "item_DescFlair_Coin_1_Levski_a",
       "label": "Levski Coin",
@@ -7550,12 +7538,6 @@
       "description": "Catch a few Z's between flights with this stylish Star Citizen cot!",
       "kind": "item"
     },
-    "flair_donation_plaque": {
-      "key": "item_DescFlair_Donation_Plaque",
-      "label": "Donation Plaque",
-      "description": "(PH) Plaque: Donation Description",
-      "kind": "item"
-    },
     "flair_double_bed_basebuilding_citcon_1": {
       "key": "item_DescFlair_Double_Bed_Basebuilding_Citcon_1",
       "label": "CitizenCon 2954 Double Bed",
@@ -7580,12 +7562,6 @@
       "description": "This beautifully decorated tank comes from the Ten Thousand Seas Corporation. Stock it with exotic fish from across the 'verse to build a collection that will be the envy of all your friends.",
       "kind": "item"
     },
-    "flair_fishtank_gold": {
-      "key": "item_DescFlair_FishTank_Gold",
-      "label": "Fish Tank (Gold)",
-      "description": "(PH) Fish Tank (Gold) Description",
-      "kind": "item"
-    },
     "flair_fishtank_referral": {
       "key": "item_DescFlair_FishTank_Referral",
       "label": "Kai Habitats",
@@ -7598,22 +7574,10 @@
       "description": "Manufacturer: RSI Utilizing multiple vibrant lights housed in a compact durable frame, the Rescue Light is capable at being seen from all directions in all kinds of hazardous atmospheric conditions, letting rescue teams know exactly where you are.",
       "kind": "item"
     },
-    "flair_generic_horizontal_display": {
-      "key": "item_DescFlair_Generic_Horizontal_Display",
-      "label": "Generic Horizontal Display",
-      "description": "(PH) Generic Display Case Description",
-      "kind": "item"
-    },
     "flair_glowstick_luminalia": {
       "key": "item_DescFlair_Glowstick_Luminalia",
       "label": "Luminalia Light Stick",
       "description": "Put the glow into \"Glow Festival\" with this festive Luminalia light stick. Turn it on and watch any room magically transform into a holiday wonderland.",
-      "kind": "item"
-    },
-    "flair_gold_display": {
-      "key": "item_DescFlair_Gold_Display",
-      "label": "Gold Display Case",
-      "description": "(PH) Gold Display Case Description",
       "kind": "item"
     },
     "flair_hanger_flag_uee_1": {
@@ -7628,46 +7592,16 @@
       "description": "Light your way with this reproduction of the iconic Headhunter seal of authority. Crafted at the promotion of a new Chief, this lamp is constructed using four skulls, one provided by each of the Chief's four Counselors as a sign of their loyalty, and serves as a symbol of the Chief's new authority.",
       "kind": "item"
     },
-    "flair_holiday_tree": {
-      "key": "item_DescFlair_Holiday_Tree",
-      "label": "Holiday Tree",
-      "description": "(PH) Holiday Tree Description",
-      "kind": "item"
-    },
-    "flair_holiday_wreath": {
-      "key": "item_DescFlair_Holiday_Wreath",
-      "label": "Holiday Wreath",
-      "description": "(PH) Holiday Wreath Description",
-      "kind": "item"
-    },
     "flair_hologram_selfie_standee_1_a": {
       "key": "item_DescFlair_Hologram_Selfie_Standee_1_a",
       "label": "Pink Heart Hologram",
       "description": "Let your love proudly shine with this deployable hologram that displays a large, glowing pink heart. Makes an ideal backdrop for your next romantic evening or Coramor photoshoot.",
       "kind": "item"
     },
-    "flair_jukebox": {
-      "key": "item_DescFlair_Jukebox",
-      "label": "Jukebox",
-      "description": "(PH) Jukebox Description",
-      "kind": "item"
-    },
     "flair_lamp_001": {
       "key": "item_DescFlair_Lamp_001",
       "label": "Lamp",
       "description": "Get your own Lamp from the original 24 hour livestream!",
-      "kind": "item"
-    },
-    "flair_liquorcabinet": {
-      "key": "item_DescFlair_LiquorCabinet",
-      "label": "Liquor Cabinet",
-      "description": "(PH) Liquor Cabinet Description",
-      "kind": "item"
-    },
-    "flair_locker_collection": {
-      "key": "item_DescFlair_Locker_Collection",
-      "label": "Locker from Another Universe",
-      "description": "(PH) Locker from Another Universe Description",
       "kind": "item"
     },
     "flair_m50_display": {
@@ -7680,66 +7614,6 @@
       "key": "item_DescFlair_Miningdrill",
       "label": "Retired Drill Head",
       "description": "While this retired drill head may no longer be boring holes in asteroids, mounted on a secure frame, guests are sure to \"dig\" this conversation piece when displayed in your personal space.",
-      "kind": "item"
-    },
-    "flair_model_350r": {
-      "key": "item_DescFlair_Model_350r",
-      "label": "350r Model",
-      "description": "(PH) Model: 350r Description",
-      "kind": "item"
-    },
-    "flair_model_350r_box": {
-      "key": "item_DescFlair_Model_350r_Box",
-      "label": "350r Model Box",
-      "description": "(PH) Box: Model 350r Description",
-      "kind": "item"
-    },
-    "flair_model_aegis_avenger": {
-      "key": "item_DescFlair_Model_Aegis_Avenger",
-      "label": "Avenger Model",
-      "description": "(PH) Model: Aegis Avenger Description",
-      "kind": "item"
-    },
-    "flair_model_aegis_avenger_box": {
-      "key": "item_DescFlair_Model_Aegis_Avenger_Box",
-      "label": "Avenger Model Box",
-      "description": "(PH) Box: Model Aegis Avenger",
-      "kind": "item"
-    },
-    "flair_model_aegis_gladius": {
-      "key": "item_DescFlair_Model_Aegis_Gladius",
-      "label": "Gladius Model",
-      "description": "(PH) Model: Aegis Gladius Description",
-      "kind": "item"
-    },
-    "flair_model_aegis_gladius_box": {
-      "key": "item_DescFlair_Model_Aegis_Gladius_Box",
-      "label": "Gladius Model Box",
-      "description": "(PH) Box: Model Gladius Description",
-      "kind": "item"
-    },
-    "flair_model_auroraln": {
-      "key": "item_DescFlair_Model_AuroraLN",
-      "label": "Aurora ES Model",
-      "description": "(PH) Model: Aurora ES Description",
-      "kind": "item"
-    },
-    "flair_model_auroraln_box": {
-      "key": "item_DescFlair_Model_AuroraLN_Box",
-      "label": "Aurora ES Model Box",
-      "description": "(PH) Box: Model Aurora ES Description",
-      "kind": "item"
-    },
-    "flair_model_aurora_gold": {
-      "key": "item_DescFlair_Model_Aurora_Gold",
-      "label": "Aurora Model \"Gold\"",
-      "description": "(PH) Model: Gold Aurora Description",
-      "kind": "item"
-    },
-    "flair_model_avenger_gold": {
-      "key": "item_DescFlair_Model_Avenger_Gold",
-      "label": "Avenger Model \"Gold\"",
-      "description": "(PH) Model: Gold Avenger Description",
       "kind": "item"
     },
     "flair_model_carrack_b": {
@@ -7766,54 +7640,6 @@
       "description": "This Caterpillar model celebrates the venerated hauler being voted Best in Show at the 2949 Intergalactic Aerospace Expo. Now your hangar can display this highly detailed scale replica of the popular mercantile vessel adorned with the 2949 IAE logo and accompanying pink accent line across the top of the ship.",
       "kind": "item"
     },
-    "flair_model_constellation": {
-      "key": "item_DescFlair_Model_Constellation",
-      "label": "Constellation Model",
-      "description": "(PH) Model: Constellation Description",
-      "kind": "item"
-    },
-    "flair_model_constellation_box": {
-      "key": "item_DescFlair_Model_Constellation_Box",
-      "label": "Constellation Model Box",
-      "description": "(PH) Box: Model Constellation Description",
-      "kind": "item"
-    },
-    "flair_model_constellation_gold": {
-      "key": "item_DescFlair_Model_Constellation_Gold",
-      "label": "Constellation Model \"Gold\"",
-      "description": "(PH) Model: Gold Constellation Description",
-      "kind": "item"
-    },
-    "flair_model_freelancer": {
-      "key": "item_DescFlair_Model_Freelancer",
-      "label": "Freelancer Model",
-      "description": "(PH) Model: Freelancer Description",
-      "kind": "item"
-    },
-    "flair_model_freelancer_box": {
-      "key": "item_DescFlair_Model_Freelancer_Box",
-      "label": "Freelancer Model Box",
-      "description": "(PH) Box: Model Freelancer Description",
-      "kind": "item"
-    },
-    "flair_model_freelancer_gold": {
-      "key": "item_DescFlair_Model_Freelancer_Gold",
-      "label": "Freelancer Model \"Gold\"",
-      "description": "(PH) Model: Gold Freelancer Description",
-      "kind": "item"
-    },
-    "flair_model_herald_gold": {
-      "key": "item_DescFlair_Model_Herald_Gold",
-      "label": "Herald Model \"Gold\"",
-      "description": "(PH) Model: Gold Herald Description",
-      "kind": "item"
-    },
-    "flair_model_hornet_gold": {
-      "key": "item_DescFlair_Model_Hornet_Gold",
-      "label": "Hornet Model \"Gold\"",
-      "description": "(PH) Model: Gold Hornet Description",
-      "kind": "item"
-    },
     "flair_model_hullc_1_a": {
       "key": "item_DescFlair_Model_HullC_1_a",
       "label": "Hull C Model \"Extended\"",
@@ -7836,156 +7662,6 @@
       "key": "item_DescFlair_Model_HullC_toy_a_1H",
       "label": "Hull C Miniature",
       "description": "Hold an iconic hauling ship in the palm of your hand with this Hull C miniature. Takuetsu carefully recreated the Hull C with exacting detail to honor what is believed to be the most common ship in the galaxy.",
-      "kind": "item"
-    },
-    "flair_model_khartu_prestige_series_2941": {
-      "key": "item_DescFlair_Model_Khartu_Prestige_Series_2941",
-      "label": "Khartu-al Model \"Prestige Series\"",
-      "description": "(PH) Model: Khartu-al Prestige Series Description",
-      "kind": "item"
-    },
-    "flair_model_khartu_prestige_series_2941_box": {
-      "key": "item_DescFlair_Model_Khartu_Prestige_Series_2941_Box",
-      "label": "Khartu-al Model \"Prestige Series\" Box",
-      "description": "(PH) Box: Model Khartu-al Prestige Series Description",
-      "kind": "item"
-    },
-    "flair_model_khartu_prestige_series_2941_display": {
-      "key": "item_DescFlair_Model_Khartu_Prestige_Series_2941_Display",
-      "label": "Khartu-al Display Case \"Prestige Series\"",
-      "description": "(PH) Khartu-al Prestige Series Display Case Description",
-      "kind": "item"
-    },
-    "flair_model_m50": {
-      "key": "item_DescFlair_Model_M50",
-      "label": "M50 Model",
-      "description": "(PH) Model: M50 Description",
-      "kind": "item"
-    },
-    "flair_model_m50_box": {
-      "key": "item_DescFlair_Model_M50_Box",
-      "label": "M50 Model Box",
-      "description": "(PH) Box: Model M50 Description",
-      "kind": "item"
-    },
-    "flair_model_mustang_alpha": {
-      "key": "item_DescFlair_Model_Mustang_Alpha",
-      "label": "Mustang Alpha Model",
-      "description": "(PH) Model: Mustang Alpha Description",
-      "kind": "item"
-    },
-    "flair_model_mustang_alpha_box": {
-      "key": "item_DescFlair_Model_Mustang_Alpha_Box",
-      "label": "Mustang Alpha Model Box",
-      "description": "(PH) Box: Model Mustang Alpha Description",
-      "kind": "item"
-    },
-    "flair_model_mustang_beta": {
-      "key": "item_DescFlair_Model_Mustang_Beta",
-      "label": "Mustang Beta Model",
-      "description": "(PH) Model: Mustang Beta Description",
-      "kind": "item"
-    },
-    "flair_model_mustang_beta_box": {
-      "key": "item_DescFlair_Model_Mustang_Beta_Box",
-      "label": "Mustang Beta Model Box",
-      "description": "(PH) Box: Model Mustang Beta Description",
-      "kind": "item"
-    },
-    "flair_model_mustang_delta": {
-      "key": "item_DescFlair_Model_Mustang_Delta",
-      "label": "Mustang Delta Model",
-      "description": "(PH) Model: Mustang Delta Description",
-      "kind": "item"
-    },
-    "flair_model_mustang_delta_box": {
-      "key": "item_DescFlair_Model_Mustang_Delta_Box",
-      "label": "Mustang Delta Model Box",
-      "description": "(PH) Box: Model Mustang Delta Description",
-      "kind": "item"
-    },
-    "flair_model_mustang_gamma": {
-      "key": "item_DescFlair_Model_Mustang_Gamma",
-      "label": "Mustang Gamma Model",
-      "description": "(PH) Model Mustang Gamma Description",
-      "kind": "item"
-    },
-    "flair_model_mustang_gamma_box": {
-      "key": "item_DescFlair_Model_Mustang_Gamma_Box",
-      "label": "Mustang Gamma Model Box",
-      "description": "(PH) Box: Model Mustang Gamma Description",
-      "kind": "item"
-    },
-    "flair_model_reliant": {
-      "key": "item_DescFlair_Model_Reliant",
-      "label": "Reliant Model",
-      "description": "(PH) Model: Reliant Description",
-      "kind": "item"
-    },
-    "flair_model_reliant_box": {
-      "key": "item_DescFlair_Model_Reliant_Box",
-      "label": "Reliant Model Box",
-      "description": "(PH) Box: Model Reliant Description",
-      "kind": "item"
-    },
-    "flair_model_sabre": {
-      "key": "item_DescFlair_Model_Sabre",
-      "label": "Sabre Model",
-      "description": "(PH) Model: Sabre Description",
-      "kind": "item"
-    },
-    "flair_model_sabre_box": {
-      "key": "item_DescFlair_Model_Sabre_Box",
-      "label": "Sabre Model Box",
-      "description": "(PH) Box: Model Sabre Description",
-      "kind": "item"
-    },
-    "flair_model_starfarer": {
-      "key": "item_DescFlair_Model_Starfarer",
-      "label": "Starfarer Model",
-      "description": "(PH) Model: Starfarer Description",
-      "kind": "item"
-    },
-    "flair_model_starfarer_box": {
-      "key": "item_DescFlair_Model_Starfarer_Box",
-      "label": "Starfarer Model Box",
-      "description": "(PH) Box: Model Starfarer Description",
-      "kind": "item"
-    },
-    "flair_model_station_icc_probe_a": {
-      "key": "item_DescFlair_Model_Station_ICC_Probe_a",
-      "label": "ICC Probe - Stanton",
-      "description": "(PH) Holographic representation of the ICC Probe Station.",
-      "kind": "item"
-    },
-    "flair_model_station_ims_bolliver_a": {
-      "key": "item_DescFlair_Model_Station_IMS_Bolliver_a",
-      "label": "IMS Bolliver - Sol",
-      "description": "(PH) Holographic representation of the IMS Bolliver Station.",
-      "kind": "item"
-    },
-    "flair_model_station_port_olisar_a": {
-      "key": "item_DescFlair_Model_Station_Port_Olisar_a",
-      "label": "Port Olisar - Stanton",
-      "description": "(PH) Holographic representation of the Port Olisar Station.",
-      "kind": "item"
-    },
-    "flair_model_tmbl_nova_dsrt": {
-      "key": "item_DescFlair_Model_Tmbl_Nova_Dsrt",
-      "label": "Tumbril Nova Model \"Badland\"",
-      "description": "(PH) Description for Model: Tumbril Nova Badlands",
-      "kind": "item"
-    },
-    "flair_model_tmbl_nova_green": {
-      "key": "item_DescFlair_Model_Tmbl_Nova_Green",
-      "label": "Tumbril Nova Model \"UEE Army\"",
-      "description": "(PH) Description for Model: Tumbril Nova UEE Army",
-      "kind": "item"
-    },
-    "flair_model_tmbl_nova_snow": {
-      "key": "item_DescFlair_Model_Tmbl_Nova_Snow",
-      "label": "Tumbril Nova Model \"Snowblind\"",
-      "description": "(PH) Description for Model: Tumbril Nova Snowblind",
       "kind": "item"
     },
     "flair_multitoolbox_citizencon_2023": {
@@ -8036,36 +7712,6 @@
       "description": "The F7A Hornet is one of the most iconic space superiority fighters ever developed. Celebrate its heritage with this fantastic poster!",
       "kind": "item"
     },
-    "flair_poster_007": {
-      "key": "item_DescFlair_Poster_007",
-      "label": "Gladiator Poster",
-      "description": "(PH) Poster: Gladiator Description",
-      "kind": "item"
-    },
-    "flair_poster_008": {
-      "key": "item_DescFlair_Poster_008",
-      "label": "Retaliator Poster",
-      "description": "(PH) Poster: Retaliator Description",
-      "kind": "item"
-    },
-    "flair_poster_citizencon": {
-      "key": "item_DescFlair_Poster_CitizenCon",
-      "label": "CitizenCon Poster",
-      "description": "(PH) Poster: CitizenCon Description",
-      "kind": "item"
-    },
-    "flair_poster_constellation": {
-      "key": "item_DescFlair_Poster_Constellation",
-      "label": "Constellation Poster",
-      "description": "(PH) Poster: Constellation Description",
-      "kind": "item"
-    },
-    "flair_poster_gamescom": {
-      "key": "item_DescFlair_Poster_Gamescom",
-      "label": "Gamescom Poster",
-      "description": "(PH) Poster: Gamescom Description",
-      "kind": "item"
-    },
     "flair_poster_ht_bis_1_a": {
       "key": "item_DescFlair_Poster_HT_BIS_1_a",
       "label": "Vulture 2953 Ship Showdown Poster",
@@ -8108,58 +7754,10 @@
       "description": "Honor an industrial workhorse with this unique and visually stunning poster of the MISC Hull C. Featuring the ship's silhouette set against a colorful swirling spacescape, the poster highlights the Hull C's iconic design by having its spindle extended.",
       "kind": "item"
     },
-    "flair_poster_murray_cup": {
-      "key": "item_DescFlair_Poster_Murray_Cup",
-      "label": "Murray Cup Poster",
-      "description": "(PH) Poster: Murray Cup Description",
-      "kind": "item"
-    },
-    "flair_poster_sm_mag_cover": {
-      "key": "item_DescFlair_Poster_SM_Mag_Cover",
-      "label": "Hitbox \"Star Marine\" Poster",
-      "description": "(PH) Poster showing the initial magazine coverage that detailed the release of Star Marine.",
-      "kind": "item"
-    },
-    "flair_poster_tears_of_fire": {
-      "key": "item_DescFlair_Poster_Tears_Of_Fire",
-      "label": "Tears of Fire Poster",
-      "description": "(PH) Inducted into the UPE Historical Vault for Antiquity in 2633, Aaron Fring immortalized the last moments of the Second Tevarin War in his iconic painting “Tears of Fire.” Fring was on Elysium when Warlord Corath’Thal and the remaining members of his Tevarin fleet incinerated themselves in the atmosphere of their homeworld.",
-      "kind": "item"
-    },
-    "flair_poster_nvidia": {
-      "key": "item_DescFlair_Poster_nVidia",
-      "label": "nVidia Poster",
-      "description": "(PH) Poster: nVidia Description",
-      "kind": "item"
-    },
-    "flair_puglisi_armor": {
-      "key": "item_DescFlair_Puglisi_Armor",
-      "label": "Puglisi Collection: Armor",
-      "description": "(PH) Puglisi Collection: Armor Description",
-      "kind": "item"
-    },
-    "flair_puglisi_skull": {
-      "key": "item_DescFlair_Puglisi_Skull",
-      "label": "Puglisi Collection: Skull",
-      "description": "(PH) Puglisi Collection: Skull Description",
-      "kind": "item"
-    },
-    "flair_rsi_display": {
-      "key": "item_DescFlair_RSI_Display",
-      "label": "RSI Display Case",
-      "description": "(PH) RSI Display Case Description",
-      "kind": "item"
-    },
     "flair_radegast_whiskey_concierge": {
       "key": "item_DescFlair_Radegast_Whiskey_Concierge",
       "label": "Radegast Distillery 2947 Homeward Collection",
       "description": "With an unparalleled reputation for crafting phenomenal whiskeys of uncompromising quality for over four centuries, Radegast Distillery is proud to announce the 2947 release of its Homeward Limited-Edition Collection 40 SEY. Award-winning Master Distiller Hanshi Wilkes skillfully hand-blends the Martian spirit before it is re-barreled in Angeli casks and transported along a unique homeward flight path to maximize specific astronomical conditions which develop a peppery smoke-forward expression underpinned with charcoal, mace, ripe gooseberries, and citron notes. Once it has safely returned to Mars, the blend is aged for several more years to ensure it has the distinct smooth and mellow profile Radegast is known for. The result is a 40-year-old dram that embraces the adventurous flavor profiles of Angeli with the traditional personality of a Martian whiskey; a drink worthy of coming home for.",
-      "kind": "item"
-    },
-    "flair_rockcontainer": {
-      "key": "item_DescFlair_RockContainer",
-      "label": "Puglisi Collection: Artifact",
-      "description": "(PH) Puglisi Collection: Artifact Description",
       "kind": "item"
     },
     "flair_sf54_coin": {
@@ -8306,36 +7904,6 @@
       "description": "Created by a team of genetic researchers at the University of Rhetor, the opera mushroom is unique in the fungus genus for the various audible tones that it produces. The hollow central chamber of the cap acts as a reverberation chamber amplifying the sounds caused by it’s unique cell structure stretching and compressing as water moves through its mycelium.",
       "kind": "item"
     },
-    "flair_space_shelf": {
-      "key": "item_DescFlair_Space_Shelf",
-      "label": "Plant Shelf",
-      "description": "(PH) Plant Shelf Description",
-      "kind": "item"
-    },
-    "flair_spaceglobe_evade": {
-      "key": "item_DescFlair_Spaceglobe_Evade",
-      "label": "Evade Spaceglobe",
-      "description": "(PH) Spaceglobe: Evade Description",
-      "kind": "item"
-    },
-    "flair_spaceglobe_moments": {
-      "key": "item_DescFlair_Spaceglobe_Moments",
-      "label": "Moments Spaceglobe",
-      "description": "(PH) Spaceglobe: Moments Description",
-      "kind": "item"
-    },
-    "flair_spaceglobe_salvage": {
-      "key": "item_DescFlair_Spaceglobe_Salvage",
-      "label": "Salvage Spaceglobe",
-      "description": "(PH) Spaceglobe: Salvage Description",
-      "kind": "item"
-    },
-    "flair_takuetsu_display": {
-      "key": "item_DescFlair_Takuetsu_Display",
-      "label": "Takuetsu Display Case",
-      "description": "(PH) Takuetsu Display Case Description",
-      "kind": "item"
-    },
     "flair_tephra_mine": {
       "key": "item_DescFlair_Tephra_Mine",
       "label": "Deactivated Tephra Mine",
@@ -8438,46 +8006,10 @@
       "description": "A special edition silver trophy celebrating Gamescom with a solid central column flanked by fluting. Etched into the central column is the Star Citizen logo and year.",
       "kind": "item"
     },
-    "flair_trophy_golden_ticket": {
-      "key": "item_DescFlair_Trophy_Golden_Ticket",
-      "label": "Golden Ticket Trophy",
-      "description": "(PH) Trophy: Golden Ticket Description",
-      "kind": "item"
-    },
-    "flair_trophy_pax": {
-      "key": "item_DescFlair_Trophy_PAX",
-      "label": "PAX Trophy",
-      "description": "(PH) Trophy: PAX Description",
-      "kind": "item"
-    },
     "flair_trophy_zeus": {
       "key": "item_DescFlair_Trophy_Zeus",
       "label": "Zeus Trophy",
       "description": "Commemorate the legendary flight of the RSI Zeus with this superbly detailed scale model. A must-have for any serious collection.",
-      "kind": "item"
-    },
-    "flair_vanduul_armor": {
-      "key": "item_DescFlair_Vanduul_Armor",
-      "label": "Puglisi Collection: Scythe Plating",
-      "description": "(PH) Puglisi Collection: Scythe Plating Description",
-      "kind": "item"
-    },
-    "flair_vasli_fragment_stone": {
-      "key": "item_DescFlair_Vasli_Fragment_Stone",
-      "label": "Puglisi Collection: Vasli Fragment",
-      "description": "(PH) Puglisi Collection: Vasli Fragment Description",
-      "kind": "item"
-    },
-    "flair_vending_big_benny": {
-      "key": "item_DescFlair_Vending_Big_Benny",
-      "label": "Big Benny's Vending Machine",
-      "description": "(PH) This Big Benny's vending machine is a favorite among citizens around the 'verse.",
-      "kind": "item"
-    },
-    "flair_weapon_knife_citizencon2018": {
-      "key": "item_DescFlair_Weapon_Knife_CitizenCon2018",
-      "label": "CitizenCon 2018 Knife Display",
-      "description": "(PH) CitizenCon 2018 Knife Display Description",
       "kind": "item"
     },
     "flair_workbench": {
@@ -9354,12 +8886,6 @@
       "key": "item_DescFood_tin_uee_01_paneer_a",
       "label": "Sag Paneer Combat Ration",
       "description": "NDR: 64 Effects: Hypertrophic, Hypo-Metabolic, Cognitive Boosting A single serving combat ration specially formulated to provide complete high-performance nutrition for UEE Army personnel.",
-      "kind": "item"
-    },
-    "footlocker": {
-      "key": "item_DescFootlocker",
-      "label": "Footlocker",
-      "description": "(PH) Footlocker Description",
       "kind": "item"
     },
     "fortune_paint_2955redfestival_red_gold_pig": {
@@ -13292,12 +12818,6 @@
       "description": "Designed to endure when others fail, Virgil's Achilles personal heavy armor features full body protection and multiple attachment points for added loadout customization, so that you can focus on standing your ground and defending what's important.",
       "kind": "item"
     },
-    "marine_heavy_helmet": {
-      "key": "item_DescMarine_Heavy_Helmet",
-      "label": "Marine Heavy Helmet",
-      "description": "(PH) Marine Heavy Helmet Description",
-      "kind": "item"
-    },
     "marine_light_armor": {
       "key": "item_DescMarine_Light_Armor",
       "label": "PAB-4 Light Armor",
@@ -13322,12 +12842,6 @@
       "description": "Marine Light Armour with Cap",
       "kind": "item"
     },
-    "marine_light_helmet": {
-      "key": "item_DescMarine_Light_Helmet",
-      "label": "Marine Light Helmet",
-      "description": "(PH) Marine Light Helmet Description",
-      "kind": "item"
-    },
     "marine_light_helmet_blackedout": {
       "key": "item_DescMarine_Light_Helmet_Blackedout",
       "label": "Marine Light Helmet (Blacked Out)",
@@ -13350,12 +12864,6 @@
       "key": "item_DescMarine_Medium_Armor_PU",
       "label": "MCA-mk2 Medium Armor",
       "description": "Clark Defense Systems’ MCA-mk2 armor is a composite mesh of fibers reinforced with ablative plates, offering modest protection against both energy and kinetic weapons. The armor is a baseline solution for any number of situations the average Marine will encounter on a given day.",
-      "kind": "item"
-    },
-    "marine_medium_helmet": {
-      "key": "item_DescMarine_Medium_Helmet",
-      "label": "Marine Medium Helmet",
-      "description": "(PH) Marine Medium Helmet Description",
       "kind": "item"
     },
     "medal_1_damaged_a": {
@@ -14702,12 +14210,6 @@
       "description": "Proclaim the presence of the Perseus with the Incite livery, featuring a bold red front and grey and black rear.",
       "kind": "item"
     },
-    "pirate_light_m_outfit": {
-      "key": "item_DescPirate_light_m_outfit",
-      "label": "Pirate Light Armor",
-      "description": "(PH) Pirate Light Armor",
-      "kind": "item"
-    },
     "pisces_paint_2953redfestival_red_gold": {
       "key": "item_DescPisces_Paint_2953RedFestival_Red_Gold",
       "label": "Pisces 2953 Auspicious Red Rooster Livery",
@@ -16038,60 +15540,6 @@
       "key": "item_DescRSI_LaserRepeater_S5",
       "label": "Echion Repeater",
       "description": "Manufacturer: Robert Space Industries Item Type: Laser Repeater Size: 5 Designed to overwhelm shields with a barrage of laserfire, this custom-made RSI Echion laser repeater will strip enemies of their defenses leaving them vulnerable to more devastating attacks.",
-      "kind": "item"
-    },
-    "rsi_light_helmet_01": {
-      "key": "item_DescRSI_Light_Helmet_01",
-      "label": "RSI Default Helmet",
-      "description": "(PH) RSI Default Helmet Description",
-      "kind": "item"
-    },
-    "rsi_light_helmet_02": {
-      "key": "item_DescRSI_Light_Helmet_02",
-      "label": "RSI Default Helmet 2",
-      "description": "(PH) RSI Default Helmet 2 Description",
-      "kind": "item"
-    },
-    "rsi_light_helmet_03": {
-      "key": "item_DescRSI_Light_Helmet_03",
-      "label": "RSI Default Helmet 3",
-      "description": "(PH) RSI Default Helmet 3 Description",
-      "kind": "item"
-    },
-    "rsi_light_helmet_04": {
-      "key": "item_DescRSI_Light_Helmet_04",
-      "label": "RSI Default Helmet 4",
-      "description": "(PH) RSI Default Helmet 4 Description",
-      "kind": "item"
-    },
-    "rsi_light_helmet_05": {
-      "key": "item_DescRSI_Light_Helmet_05",
-      "label": "RSI Default Helmet 5",
-      "description": "(PH) RSI Default Helmet 5 Description",
-      "kind": "item"
-    },
-    "rsi_light_helmet_06": {
-      "key": "item_DescRSI_Light_Helmet_06",
-      "label": "RSI Default Helmet 6",
-      "description": "(PH) RSI Default Helmet 6 Description",
-      "kind": "item"
-    },
-    "rsi_light_helmet_07": {
-      "key": "item_DescRSI_Light_Helmet_07",
-      "label": "RSI Default Helmet 7",
-      "description": "(PH) RSI Default Helmet 7 Description",
-      "kind": "item"
-    },
-    "rsi_light_helmet_08": {
-      "key": "item_DescRSI_Light_Helmet_08",
-      "label": "RSI Default Helmet 8",
-      "description": "(PH) RSI Default Helmet 8 Description",
-      "kind": "item"
-    },
-    "rsi_light_helmet_09": {
-      "key": "item_DescRSI_Light_Helmet_09",
-      "label": "RSI Default Helmet 9",
-      "description": "(PH) RSI Default Helmet 9 Description",
       "kind": "item"
     },
     "rsi_light_helmet_purple": {
@@ -18026,12 +17474,6 @@
       "description": "Considered to be quite a delicacy in many restaurants due to the tender meat, the Thorshu can be found in the colder climates of southern Terra. Also was the basis of Waka Grey, the sidekick from a 27th century children’s show.",
       "kind": "item"
     },
-    "trophycase_12ports": {
-      "key": "item_DescTrophyCase_12Ports",
-      "label": "Trophy Case",
-      "description": "(PH) Trophy Case Description",
-      "kind": "item"
-    },
     "turret_pdc_behr_g": {
       "key": "item_DescTurret_PDC_BEHR_G",
       "label": "MRX \"Torrent\"",
@@ -18066,12 +17508,6 @@
       "key": "item_DescTyilui_Paint_White_Grey_Gold",
       "label": "Tyilui Ch.iing Livery",
       "description": "The Ch.iing edition boasts a bold white base with eye-catching gold highlights that flow down the ship's hull.",
-      "kind": "item"
-    },
-    "uee_medium_m_outfit": {
-      "key": "item_DescUEE_medium_m_outfit",
-      "label": "Medium Marine Armor",
-      "description": "(PH) Medium Marine Armor Description",
       "kind": "item"
     },
     "umnt_anvl_s5_cap": {
@@ -19598,30 +19034,6 @@
       "description": "Enhance your basic t-shirt game with this stylish short sleeve t-shirt from City Lights, which features a dynamic, asymmetrical line across the front. Women's sizes currently out of stock.",
       "kind": "item"
     },
-    "ctl_torso_jacket_01_01": {
-      "key": "item_Desc_CTL_Torso_Jacket_01_01",
-      "label": "(PH) F_CTL_Jacket_04_01",
-      "description": "(PH) F_CTL_Jacket_01_01 Item Description. Description",
-      "kind": "item"
-    },
-    "ctl_torso_jacket_04_01": {
-      "key": "item_Desc_CTL_Torso_Jacket_04_01",
-      "label": "(PH) F_CTL_Jacket_04_01",
-      "description": "(PH) F_CTL_Jacket_04_01 Item Description. Description",
-      "kind": "item"
-    },
-    "ctl_torso_shirt_03_01": {
-      "key": "item_Desc_CTL_Torso_Shirt_03_01",
-      "label": "Ctl Torso Shirt 03 01",
-      "description": "(PH) F_CTL_Shirt_03_01 Item Description. Description",
-      "kind": "item"
-    },
-    "ctl_torso_shirt_03_02": {
-      "key": "item_Desc_CTL_Torso_Shirt_03_02",
-      "label": "Ctl Torso Shirt 03 02",
-      "description": "(PH) F_CTL_Shirt_03_02 Item Description. Description",
-      "kind": "item"
-    },
     "carryable_2h_cy_collectormaterial_001": {
       "key": "item_Desc_Carryable_2H_CY_CollectorMaterial_001",
       "label": "Metamaterial Test #146",
@@ -19692,12 +19104,6 @@
       "key": "item_Desc_DMC_Jacket_13_02_01",
       "label": "Wikelo Emporium Jacket",
       "description": "Carrying Capacity: 2K µSCU Super style! Supreme comfort! The Wikelo Emporium jacket is made with premium synthetic leather for a resilient and fashionable exterior, and an ultra-soft lining that enwraps the Human body like friend. Expect nothing less than the absolute best when Wikelo put their name on it.",
-      "kind": "item"
-    },
-    "dmc_legs_pants_02_01": {
-      "key": "item_Desc_DMC_Legs_Pants_02_01",
-      "label": "(PH) F_DMC_Pants_02_01",
-      "description": "(PH) F_DMC_Pants_02_01 Item Description. Description",
       "kind": "item"
     },
     "dmc_pants_01_01_01": {
@@ -20496,12 +19902,6 @@
       "key": "item_Desc_OPS_Shirt_01_01_01",
       "label": "Thorby Shirt",
       "description": "OpalSky's Thorby features a classic asymmetrical design and high collar that evokes timeless style and elegance.",
-      "kind": "item"
-    },
-    "ops_torso_jacket_01_01": {
-      "key": "item_Desc_OPS_Torso_Jacket_01_01",
-      "label": "(PH) F_OPS_Torso_Jacket_01_01",
-      "description": "(PH) F_OPS_Torso_Jacket_01_01 Item Description. Description",
       "kind": "item"
     },
     "outlaw_heavy_helmet": {
@@ -34594,6 +33994,6 @@
     }
   },
   "summary": {
-    "totalDescriptions": 5765
+    "totalDescriptions": 5665
   }
 }

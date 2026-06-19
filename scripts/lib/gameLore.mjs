@@ -76,9 +76,15 @@ function titleCaseWords(text) {
 function isPlaceholderDescription(description) {
   const trimmed = description.trim()
   return (
-    /^\(PH\)/i.test(trimmed) ||
-    /\(PH\).*(?:Description|Item Description)/i.test(trimmed)
+    /\(PH\)/i.test(trimmed) ||
+    /^@LOC_/i.test(trimmed) ||
+    /Item Description\.\s*Description$/i.test(trimmed)
   )
+}
+
+function isPlaceholderLabel(label) {
+  if (!label) return true
+  return /^\(PH\)/i.test(label.trim())
 }
 
 function labelFromShopStem(stem) {
@@ -301,6 +307,7 @@ export function resolveItemLabel(stem, nameIndex, description) {
 function isMeaningfulDescription(description) {
   if (!description || description.length <= 20) return false
   if (description === '@LOC_PLACEHOLDER' || description === '@LOC_UNINITIALIZED') return false
+  if (isPlaceholderDescription(description)) return false
   return true
 }
 
@@ -328,10 +335,12 @@ export function extractItemLore(localization) {
 
       const stem = match[1]
       const resourceKey = stem.toLowerCase()
+      const label = resolveItemLabel(stem, nameIndex, description)
+      if (isPlaceholderLabel(label)) continue
 
       lore[resourceKey] = {
         key,
-        label: resolveItemLabel(stem, nameIndex, description),
+        label,
         description,
         kind: 'item',
       }
