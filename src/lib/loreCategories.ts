@@ -26,6 +26,7 @@ export const ITEM_LORE_CATEGORY_ORDER = [
   'Armor & Clothing',
   'Character Customization',
   'Food & Drink',
+  'Wildlife',
   'Flair & Collectibles',
   'Salvage & Industrial',
   'Ground Vehicles',
@@ -92,7 +93,7 @@ const FPS_WEAPON_KEYWORDS = [
 ]
 
 const FLAIR_LABEL_PATTERN =
-  /\b(plushie|poster|trophy|display|bobblehead|fish tank|fishtank|banner|holiday tree|holiday wreath|tankard|replica|figurine|coin|sculpture|hologram|artifact fragment|lockbox replica|container model|bar hologram|jet \(|\bchess\b|painting|statue|holographic flag|\bmug\b|\blamp\b|basketball|insulated cup|gift box)\b/i
+  /\b(plushie|poster|trophy|display|bobblehead|fish tank|fishtank|banner|holiday tree|holiday wreath|tankard|replica|figurine|coin|sculpture|hologram|artifact fragment|lockbox replica|container model|bar hologram|jet \(|\bchess\b|painting|statue|holographic flag|\bmug\b|\blamp\b|basketball|insulated cup|gift box|\bskull\b)\b/i
 
 const ORDNANCE_LABEL_PATTERN =
   /\b(missile rack|bomb rack|missile|torpedo|torp\b|warhead|ordnance|rocket\b|countermeasure|chaff launcher|flare launcher|decoy launcher|noise launcher|ammobox|ammo box|decoy ammo|ship ammunition|flares\b|noise\b|platform\b|pulse slug|ammunition\b|\d+mm\b|\bps-\d+\b|\bgauss\b|\bpc-ff\b|quikflare)\b/i
@@ -134,7 +135,18 @@ const SHIP_COMPONENT_STEM_PREFIXES = new Set([
 ])
 
 const SHIP_COMPONENT_LABEL_PATTERN =
-  /\b(quantum drive|jump drive|thruster|retro thruster|mav thruster|main engine|main thruster|twin main|hammer propulsion|origin jump|cooler|shield|soloshield|power plant|radar|life support|quantum enforcement|qed\b|\bqd\b|fuel intake|fuel tank|landing system|ejection seat|copilot seat|pilot seat|emp generator|tractor beam|computer|sensor suite|wing mount|mount cap)\b/i
+  /\b(quantum drive|jump drive|thruster|retro thruster|mav thruster|main engine|main thruster|twin main|hammer propulsion|origin jump|cooler|shield|soloshield|power plant|powerbolt|radar|life support|quantum enforcement|qed\b|\bqd\b|fuel intake|fuel tank|landing system|ejection seat|copilot seat|pilot seat|emp generator|tractor beam|computer|sensor suite|wing mount|mount cap)\b/i
+
+const WILDLIFE_STEMS = new Set([
+  'alienfish',
+  'stripedfish',
+  'goldfish',
+  'smallfish',
+  'cleanerfish',
+  'torshucrab',
+  'crab',
+  'jellyfish',
+])
 
 const ARMOR_PIECE_STEM_PATTERN =
   /_(combat|env|explorer|specialist|utility)_(heavy|light|medium).*(arms|core|legs|suit|helmet)/i
@@ -234,7 +246,32 @@ function getItemLoreCategory(resourceKey: string, locKey: string, label: string)
   if (first === 'srvl' || stem.includes('salvage')) return 'Salvage & Industrial'
   if (first === 'cbd') return 'Consumables'
 
+  if (WILDLIFE_STEMS.has(stem)) {
+    return 'Wildlife'
+  }
+
+  if (
+    stem.includes('medical_canister') ||
+    stem.includes('medical_case') ||
+    /\bmedical case\b/i.test(lowerLabel) ||
+    (/\bmedical\b/i.test(lowerLabel) && /\b(container|case|canister)\b/i.test(lowerLabel))
+  ) {
+    return 'Medical'
+  }
+
+  if (stem.includes('microwave_energy') || stem.includes('uranium_core')) {
+    return 'Ordnance & Missiles'
+  }
+
+  if (first === 'lplt' || stem.startsWith('powr_lplt')) {
+    return SHIP_COMPONENTS
+  }
+
   if (first === 'modu' || stem.startsWith('modu_')) {
+    return SHIP_COMPONENTS
+  }
+
+  if (/\bmount\b/i.test(lowerLabel) && (stem.includes('placeholder') || stem.includes('class_2b'))) {
     return SHIP_COMPONENTS
   }
 
@@ -273,11 +310,11 @@ function getItemLoreCategory(resourceKey: string, locKey: string, label: string)
   if (
     first === 'glass' ||
     stem.startsWith('ht_glass_') ||
-    /\b(fish|crab|jellyfish|plant|planter|cactus|vine|bloom)\b/i.test(lowerLabel) ||
-    stem.includes('_fish') ||
+    /\b(plant|planter|cactus|vine|bloom)\b/i.test(lowerLabel) ||
     stem.includes('_plant') ||
     first === 'dead_tree' ||
-    first === 'xian_plant'
+    first === 'xian_plant' ||
+    first === 'space_cactus'
   ) {
     return 'Flair & Collectibles'
   }
@@ -296,6 +333,7 @@ function getItemLoreCategory(resourceKey: string, locKey: string, label: string)
 
   if (
     first === 'datapad' ||
+    stem.includes('datapad') ||
     stem.startsWith('accesscard') ||
     stem.includes('hexpenetrator') ||
     stem.includes('powerbank') ||
