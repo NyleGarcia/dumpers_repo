@@ -92,6 +92,18 @@ export function hasKnownBands(resourceName: string): boolean {
  */
 export const DEFAULT_QUALITY = 500
 
+/** 0-based index into band threshold arrays; Band 2 is the default picker tier. */
+export const DEFAULT_QUALITY_BAND_INDEX = 1
+
+/** Default quality value for a resource (Band 2 when bands are known). */
+export function getDefaultBandQuality(resourceName: string): number {
+  const bands = getResourceBands(resourceName)
+  if (bands && bands.length > 0) {
+    return bands[DEFAULT_QUALITY_BAND_INDEX] ?? bands[0]
+  }
+  return DEFAULT_QUALITY
+}
+
 /**
  * Quality tier classification based on approximate ranges
  */

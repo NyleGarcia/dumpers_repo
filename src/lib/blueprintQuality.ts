@@ -1,4 +1,4 @@
-import { DEFAULT_QUALITY, getResourceBands } from './qualityBands'
+import { DEFAULT_QUALITY, getDefaultBandQuality } from './qualityBands'
 import type { BlueprintSlot, BlueprintWithSlots } from './blueprintResources'
 
 export function resolveSlotResourceName(slot: BlueprintSlot | undefined): string {
@@ -12,13 +12,9 @@ export function resolveSlotResourceName(slot: BlueprintSlot | undefined): string
   )
 }
 
-/** Band 4 default per resource (matches PersonalStockAddPanel). */
+/** Band 2 default per resource (matches PersonalStockAddPanel). */
 export function defaultQualityForSlotResource(resourceName: string): number {
-  const bands = getResourceBands(resourceName)
-  if (bands && bands.length > 0) {
-    return bands[3] ?? bands[0]
-  }
-  return DEFAULT_QUALITY
+  return getDefaultBandQuality(resourceName)
 }
 
 export function buildDefaultSlotQualities(blueprint: BlueprintWithSlots): Record<number, number> {

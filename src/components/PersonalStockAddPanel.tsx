@@ -13,7 +13,7 @@ import {
   formatQuantityForResource,
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
-import { getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
+import { getDefaultBandQuality, getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
 
 interface PersonalStockAddPanelProps {
   userId: string
@@ -74,8 +74,7 @@ export default function PersonalStockAddPanel({
     if (selectedIsSalvage) {
       setQuality(String(SALVAGE_ORDER_MIN_QUALITY))
     } else if (resourceBands && resourceBands.length > 0) {
-      // Set to band 4 as default (the "Good" tier - higher bands are much rarer)
-      setQuality(String(resourceBands[3] ?? resourceBands[0]))
+      setQuality(String(getDefaultBandQuality(selectedLabel)))
     }
   }, [resourceKey, selectedIsSalvage, resourceBands])
 

@@ -483,7 +483,7 @@ export default function ResourceBuyOrderPanel({
                 )}
                 {!selectedIsAmmo && selectedBlueprint.slots && selectedBlueprint.slots.length > 0 && (
                   <div className="space-y-2">
-                    <p className="text-slate-400 text-xs">Set quality per craft slot (Band 4 default).</p>
+                    <p className="text-slate-400 text-xs">Set quality per craft slot (Band 2 default).</p>
                     {selectedBlueprint.slots.map((slot, idx) => (
                       <BlueprintSlotQualityCard
                         key={idx}
