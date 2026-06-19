@@ -73,18 +73,67 @@ function titleCaseWords(text) {
     .join(' ')
 }
 
+function normalizeComparableText(text) {
+  return text
+    .toLowerCase()
+    .replace(/^@+/, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+function isUnresolvedLocalizationText(text) {
+  if (!text) return true
+  const trimmed = text.trim()
+  return (
+    /^@LOC_/i.test(trimmed) ||
+    /^@[A-Za-z]/.test(trimmed) ||
+    /<=-?\s*MISSING\s*-?=>/i.test(trimmed)
+  )
+}
+
 function isPlaceholderDescription(description) {
   const trimmed = description.trim()
   return (
     /\(PH\)/i.test(trimmed) ||
-    /^@LOC_/i.test(trimmed) ||
+    /\[PH\]/i.test(trimmed) ||
+    isUnresolvedLocalizationText(trimmed) ||
     /Item Description\.\s*Description$/i.test(trimmed)
   )
 }
 
 function isPlaceholderLabel(label) {
   if (!label) return true
-  return /^\(PH\)/i.test(label.trim())
+  const trimmed = label.trim()
+  return (
+    /^\(PH\)/i.test(trimmed) ||
+    /\[PH\]/i.test(trimmed) ||
+    isUnresolvedLocalizationText(trimmed)
+  )
+}
+
+function isDuplicateOfLabel(label, description) {
+  const normalizedLabel = normalizeComparableText(label)
+  const normalizedDescription = normalizeComparableText(description)
+  if (!normalizedLabel || !normalizedDescription) return true
+  if (normalizedLabel === normalizedDescription) return true
+
+  const labelWords = normalizedLabel.split(' ').filter(Boolean)
+  const descriptionWords = normalizedDescription.split(' ').filter(Boolean)
+  if (labelWords.length === 0 || descriptionWords.length === 0) return true
+
+  const sharedWords = labelWords.filter((word) => descriptionWords.includes(word)).length
+  const minWords = Math.min(labelWords.length, descriptionWords.length)
+  const maxWords = Math.max(labelWords.length, descriptionWords.length)
+
+  // Same item name with trivial wording differences (light vs lighting).
+  return sharedWords >= minWords - 1 && maxWords - minWords <= 1
+}
+
+function shouldSkipLoreEntry(label, description) {
+  if (isPlaceholderLabel(label)) return true
+  if (isPlaceholderDescription(description)) return true
+  if (isDuplicateOfLabel(label, description)) return true
+  return false
 }
 
 function labelFromShopStem(stem) {
@@ -205,7 +254,7 @@ export function buildItemNameIndex(localization) {
     if (!match) continue
 
     const label = normalizeDescriptionText(rawValue)
-    if (!label || label.startsWith('@LOC')) continue
+    if (!label || label.startsWith('@LOC') || isPlaceholderLabel(label)) continue
 
     const body = match[1]
     const bodyLower = body.toLowerCase()
@@ -336,7 +385,7 @@ export function extractItemLore(localization) {
       const stem = match[1]
       const resourceKey = stem.toLowerCase()
       const label = resolveItemLabel(stem, nameIndex, description)
-      if (isPlaceholderLabel(label)) continue
+      if (shouldSkipLoreEntry(label, description)) continue
 
       lore[resourceKey] = {
         key,

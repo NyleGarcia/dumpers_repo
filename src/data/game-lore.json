@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-19T02:28:02.664Z",
+  "_extracted": "2026-06-19T02:42:43.516Z",
   "resources": {
     "audio_visual_equipment": {
       "key": "items_commodities_AudioVisualEquipment_desc",
@@ -1922,58 +1922,10 @@
       "description": "The Meridian livery gives the 890 Jump a simple yet stylish metallic silver finish.",
       "kind": "item"
     },
-    "aegs_3dradardisplay": {
-      "key": "item_DescAEGS_3DRadarDisplay",
-      "label": "Aegis 3D Radar Display",
-      "description": "Aegis 3D Radar Display",
-      "kind": "item"
-    },
-    "aegs_avenger_cml_chaff": {
-      "key": "item_DescAEGS_Avenger_CML_Chaff",
-      "label": "Aegis Avenger - Noise Launcher",
-      "description": "Aegis Avenger - Noise Launcher",
-      "kind": "item"
-    },
-    "aegs_avenger_cml_flare": {
-      "key": "item_DescAEGS_Avenger_CML_Flare",
-      "label": "Aegis Avenger - Decoy Launcher",
-      "description": "Aegis Avenger - Decoy Launcher",
-      "kind": "item"
-    },
-    "aegs_avenger_ejection_seat": {
-      "key": "item_DescAEGS_Avenger_Ejection_Seat",
-      "label": "Aegis Avenger Ejection Seat",
-      "description": "Aegis Avenger Ejection Seat",
-      "kind": "item"
-    },
-    "aegs_avenger_landingsystem": {
-      "key": "item_DescAEGS_Avenger_LandingSystem",
-      "label": "Aegis Avenger Landing System",
-      "description": "Aegis Avenger Landing System",
-      "kind": "item"
-    },
-    "aegs_avenger_multilight": {
-      "key": "item_DescAEGS_Avenger_MultiLight",
-      "label": "Aegis Avenger External Lights",
-      "description": "Aegis Avenger External Lighting",
-      "kind": "item"
-    },
-    "aegs_avenger_titan_seat": {
-      "key": "item_DescAEGS_Avenger_Titan_Seat",
-      "label": "Aegis Avenger Titan Seat",
-      "description": "Aegis Avenger Titan Seat",
-      "kind": "item"
-    },
     "aegs_avenger_shop": {
       "key": "item_DescAEGS_Avenger_shop",
       "label": "Aegis Avenger",
       "description": "Manufacturer: Aegis Dynamic Focus: Interdiction The Aegis Avenger has had a long and storied life as the standard patrol craft of the UEE Advocacy. Although aging, the Avenger features a sturdy, reliable hull and the capacity for larger-than-expected engine mounts.",
-      "kind": "item"
-    },
-    "aegs_ballisticrepeater_s5": {
-      "key": "item_DescAEGS_BallisticRepeater_S5",
-      "label": "Aegis Ballistic Repeater",
-      "description": "Aegis Ballistic Repeater",
       "kind": "item"
     },
     "aegs_emp_device": {
@@ -2006,78 +1958,6 @@
       "description": "Item Type: Bomb Rack Manufacturer: Aegis Dynamics Size: S10 Built specifically for the Eclipse, this bomb rack carries 1 S10 bombs.",
       "kind": "item"
     },
-    "aegs_eclipse_cml_chaff": {
-      "key": "item_DescAEGS_Eclipse_CML_Chaff",
-      "label": "Aegis Eclipse - Noise Launcher",
-      "description": "Aegis Eclipse - Noise Launcher",
-      "kind": "item"
-    },
-    "aegs_eclipse_cml_flare": {
-      "key": "item_DescAEGS_Eclipse_CML_Flare",
-      "label": "Aegis Eclipse - Decoy Launcher",
-      "description": "Aegis Eclipse - Decoy Launcher",
-      "kind": "item"
-    },
-    "aegs_engine_double_idris": {
-      "key": "item_DescAEGS_Engine_Double_Idris",
-      "label": "Aegis Idris Double Engine",
-      "description": "Aegis Idris Double Engine",
-      "kind": "item"
-    },
-    "aegs_engine_single_idris": {
-      "key": "item_DescAEGS_Engine_Single_Idris",
-      "label": "Aegis Idris Single Engine",
-      "description": "Aegis Idris Single Engine",
-      "kind": "item"
-    },
-    "aegs_fuelintake_idris": {
-      "key": "item_DescAEGS_FuelIntake_Idris",
-      "label": "Aegis Idris Fuel Intake",
-      "description": "Aegis Idris Fuel Intake",
-      "kind": "item"
-    },
-    "aegs_fueltank_idris": {
-      "key": "item_DescAEGS_FuelTank_Idris",
-      "label": "Aegis Idris Fuel Tank",
-      "description": "Aegis Idris Fuel Tank",
-      "kind": "item"
-    },
-    "aegs_gemini_s6_q1": {
-      "key": "item_DescAEGS_Gemini_S6_Q1",
-      "label": "Aegis Starfarer Gemini Thruster",
-      "description": "Aegis Starfarer Gemini Thruster",
-      "kind": "item"
-    },
-    "aegs_gemini_s7_q1": {
-      "key": "item_DescAEGS_Gemini_S7_Q1",
-      "label": "Aegis Starfarer Gemini Thruster",
-      "description": "Aegis Starfarer Gemini Thruster",
-      "kind": "item"
-    },
-    "aegs_gladius_cml_chaff": {
-      "key": "item_DescAEGS_Gladius_CML_Chaff",
-      "label": "Aegis Gladius - Noise Launcher",
-      "description": "Aegis Gladius - Noise Launcher",
-      "kind": "item"
-    },
-    "aegs_gladius_cml_flare": {
-      "key": "item_DescAEGS_Gladius_CML_Flare",
-      "label": "Aegis Gladius - Decoy Launcher",
-      "description": "Aegis Gladius - Decoy Launcher",
-      "kind": "item"
-    },
-    "aegs_gladius_ejection_seat": {
-      "key": "item_DescAEGS_Gladius_Ejection_Seat",
-      "label": "Aegis Gladius Ejection Seat",
-      "description": "Aegis Gladius Ejection Seat",
-      "kind": "item"
-    },
-    "aegs_gladius_landingsystem": {
-      "key": "item_DescAEGS_Gladius_LandingSystem",
-      "label": "Aegis Gladius Landing System",
-      "description": "Aegis Gladius Landing System",
-      "kind": "item"
-    },
     "aegs_gladius_main": {
       "key": "item_DescAEGS_Gladius_Main",
       "label": "Main Thruster",
@@ -2096,88 +1976,16 @@
       "description": "Aegis Winnowing D1 Rotational Thruster",
       "kind": "item"
     },
-    "aegs_gladius_multilight": {
-      "key": "item_DescAEGS_Gladius_MultiLight",
-      "label": "Aegis Gladius External Lights",
-      "description": "Aegis Gladius External Lights",
-      "kind": "item"
-    },
     "aegs_gladius_nose_s2": {
       "key": "item_DescAEGS_Gladius_Nose_S2",
       "label": "S3 Gimbal - Nose",
       "description": "Class 2 Scorpion GT-215 turret mount description",
       "kind": "item"
     },
-    "aegs_gladius_lights": {
-      "key": "item_DescAEGS_Gladius_lights",
-      "label": "Aegis Gladius Light Set",
-      "description": "Aegis Gladius Light Set",
-      "kind": "item"
-    },
     "aegs_gladius_shop": {
       "key": "item_DescAEGS_Gladius_shop",
       "label": "Aegis Dynamics Gladius",
       "description": "Manufacturer: Aegis Dynamics Focus: Light Fighter The Gladius is an older design which has been updated over the years to keep up with modern technology. In military circles, the Gladius is beloved for its performance and its simplicity. A fast, light fighter with a laser-focus on dogfighting, the Gladius is an ideal interceptor or escort ship.",
-      "kind": "item"
-    },
-    "aegs_hammerhead_cml_chaff": {
-      "key": "item_DescAEGS_Hammerhead_CML_Chaff",
-      "label": "Aegis Hammerhead - Noise Launcher",
-      "description": "Aegis Hammerhead - Noise Launcher",
-      "kind": "item"
-    },
-    "aegs_hammerhead_cml_flare": {
-      "key": "item_DescAEGS_Hammerhead_CML_Flare",
-      "label": "Aegis Hammerhead - Decoy Launcher",
-      "description": "Aegis Hammerhead - Decoy Launcher",
-      "kind": "item"
-    },
-    "aegs_idris_ballisticrepeater_s5": {
-      "key": "item_DescAEGS_Idris_BallisticRepeater_S5",
-      "label": "Aegis Idris Ballistic Repeater",
-      "description": "Aegis Idris Ballistic Repeater",
-      "kind": "item"
-    },
-    "aegs_idris_copilot_seat_left": {
-      "key": "item_DescAEGS_Idris_Copilot_Seat_Left",
-      "label": "Aegis Idris Left Copilot Seat",
-      "description": "Aegis Idris Left Copilot Seat",
-      "kind": "item"
-    },
-    "aegs_idris_copilot_seat_right": {
-      "key": "item_DescAEGS_Idris_Copilot_Seat_Right",
-      "label": "Aegis Idris Right Copilot Seat",
-      "description": "Aegis Idris Right Copilot Seat",
-      "kind": "item"
-    },
-    "aegs_idris_large_turret": {
-      "key": "item_DescAEGS_Idris_Large_Turret",
-      "label": "Aegis Idris Front Turret",
-      "description": "Aegis Idris Front Turret",
-      "kind": "item"
-    },
-    "aegs_idris_large_turret_base": {
-      "key": "item_DescAEGS_Idris_Large_Turret_Base",
-      "label": "Aegis Idris Front Turret",
-      "description": "Aegis Idris Front Turret",
-      "kind": "item"
-    },
-    "aegs_idris_large_turret_seat": {
-      "key": "item_DescAEGS_Idris_Large_Turret_Seat",
-      "label": "Aegis Idris Front Turret Seat",
-      "description": "Aegis Idris Front Turret Seat",
-      "kind": "item"
-    },
-    "aegs_idris_pilot_seat": {
-      "key": "item_DescAEGS_Idris_Pilot_seat",
-      "label": "Aegis Idris Pilot Seat",
-      "description": "Aegis Idris Pilot Seat",
-      "kind": "item"
-    },
-    "aegs_idris_rack": {
-      "key": "item_DescAEGS_Idris_Rack",
-      "label": "Aegis Idris Missile Rack",
-      "description": "Aegis Idris Missile Rack",
       "kind": "item"
     },
     "aegs_idris_scitem_turret_large": {
@@ -2190,60 +1998,6 @@
       "key": "item_DescAEGS_Idris_SCItem_Turret_Large_P",
       "label": "IFR-W57 Turret",
       "description": "Item Type: Turret Manufacturer: Aegis Dynamics Size: 7 This manned turret, designed by Aegis to be equipped with two size 5 weapons, is bespoke to the Idris frigate.",
-      "kind": "item"
-    },
-    "aegs_idris_turret_seat": {
-      "key": "item_DescAEGS_Idris_Turret_Seat",
-      "label": "Aegis Idris Turret Seat",
-      "description": "Aegis Idris Turret Seat",
-      "kind": "item"
-    },
-    "aegs_idris_weapons_seat": {
-      "key": "item_DescAEGS_Idris_Weapons_Seat",
-      "label": "Aegis Idris Weapons Seat",
-      "description": "Aegis Idris Weapons Seat",
-      "kind": "item"
-    },
-    "aegs_javelin_copilot_seat": {
-      "key": "item_DescAEGS_Javelin_Copilot_Seat",
-      "label": "Aegis Javelin Co-Pilot Seat",
-      "description": "Aegis Javelin Co-Pilot Seat",
-      "kind": "item"
-    },
-    "aegs_javelin_joint_thruster": {
-      "key": "item_DescAEGS_Javelin_Joint_Thruster",
-      "label": "Aegis Javelin Joint Thruster",
-      "description": "Aegis Javelin Joint Thruster",
-      "kind": "item"
-    },
-    "aegs_javelin_joint_thruster_small": {
-      "key": "item_DescAEGS_Javelin_Joint_Thruster_Small",
-      "label": "Aegis Javelin Small Joint Thruster",
-      "description": "Aegis Javelin Small Joint Thruster",
-      "kind": "item"
-    },
-    "aegs_javelin_mainengine": {
-      "key": "item_DescAEGS_Javelin_MainEngine",
-      "label": "Aegis Javelin Main Engine",
-      "description": "Aegis Javelin Main Engine",
-      "kind": "item"
-    },
-    "aegs_javelin_pilot_seat": {
-      "key": "item_DescAEGS_Javelin_Pilot_Seat",
-      "label": "Aegis Javelin Pilot Seat",
-      "description": "Aegis Javelin Pilot Seat",
-      "kind": "item"
-    },
-    "aegs_javelin_retro_thruster": {
-      "key": "item_DescAEGS_Javelin_Retro_Thruster",
-      "label": "Aegis Javelin Retro Thruster",
-      "description": "Aegis Javelin Retro Thruster",
-      "kind": "item"
-    },
-    "aegs_javelin_supportengine": {
-      "key": "item_DescAEGS_Javelin_SupportEngine",
-      "label": "Aegis Javelin Support Engine",
-      "description": "Aegis Javelin Support Engine",
       "kind": "item"
     },
     "aegs_mrck_s05_bespoke": {
@@ -2262,18 +2016,6 @@
       "key": "item_DescAEGS_Manned_Turret_S07_Ballistic_Cannon_Bespoke",
       "label": "IFR-BC7 Turret",
       "description": "Item Type: Turret Manufacturer: Aegis Dynamics Size: 7 This manned turret, designed by Aegis to be used with ballistic cannons, is bespoke to the Idris frigate.",
-      "kind": "item"
-    },
-    "aegs_raven_cml_chaff": {
-      "key": "item_DescAEGS_Raven_CML_Chaff",
-      "label": "Aegis Sabre Raven - Noise Launcher",
-      "description": "Aegis Sabre Raven - Noise Launcher",
-      "kind": "item"
-    },
-    "aegs_raven_cml_flare": {
-      "key": "item_DescAEGS_Raven_CML_Flare",
-      "label": "Aegis Sabre Raven - Decoy Launcher",
-      "description": "Aegis Sabre Raven - Decoy Launcher",
       "kind": "item"
     },
     "aegs_redeemer_shop": {
@@ -2304,48 +2046,6 @@
       "key": "item_DescAEGS_Retaliator_BombRack_S05_Rear",
       "label": "Aegis Retaliator 8xS5 Rear Bomb Rack",
       "description": "Item Type: Bomb Rack Manufacturer: Aegis Dynamics Size: S5 Made to fit the rear of the Retaliator, this rack can carry 8 S5 bombs.",
-      "kind": "item"
-    },
-    "aegs_retaliator_cockpit_seat": {
-      "key": "item_DescAEGS_Retaliator_Cockpit_Seat",
-      "label": "Aegis Retaliator Cockpit Seat",
-      "description": "Aegis Retaliator Cockpit Seat",
-      "kind": "item"
-    },
-    "aegs_retaliator_engineer_console": {
-      "key": "item_DescAEGS_Retaliator_Engineer_Console",
-      "label": "Aegis Retaliator Engineering Control Station",
-      "description": "Aegis Retaliator Engineering Control Station",
-      "kind": "item"
-    },
-    "aegs_retaliator_landingsystem": {
-      "key": "item_DescAEGS_Retaliator_LandingSystem",
-      "label": "Aegis Retaliator Landing System",
-      "description": "Aegis Retaliator Landing System",
-      "kind": "item"
-    },
-    "aegs_retaliator_multilight": {
-      "key": "item_DescAEGS_Retaliator_MultiLight",
-      "label": "Aegis Retaliator External Lights",
-      "description": "Aegis Retaliator External Lights",
-      "kind": "item"
-    },
-    "aegs_retaliator_turret": {
-      "key": "item_DescAEGS_Retaliator_Turret",
-      "label": "Aegis Retaliator Turret",
-      "description": "Aegis Retaliator Turret",
-      "kind": "item"
-    },
-    "aegs_retaliator_turret_base": {
-      "key": "item_DescAEGS_Retaliator_Turret_Base",
-      "label": "Aegis Retaliator Turret",
-      "description": "Aegis Retaliator Turret",
-      "kind": "item"
-    },
-    "aegs_retaliator_turret_seat": {
-      "key": "item_DescAEGS_Retaliator_Turret_Seat",
-      "label": "Aegis Retaliator Turret Seat",
-      "description": "Aegis Retaliator Turret Seat",
       "kind": "item"
     },
     "aegs_retaliator_shop": {
@@ -2390,40 +2090,10 @@
       "description": "Designed for compatible Aegis ships, the Single Platform will carry one S3 missile.",
       "kind": "item"
     },
-    "aegs_sabre_cml_chaff": {
-      "key": "item_DescAEGS_Sabre_CML_Chaff",
-      "label": "Aegis Sabre - Noise Launcher",
-      "description": "Aegis Sabre - Noise Launcher",
-      "kind": "item"
-    },
-    "aegs_sabre_cml_flare": {
-      "key": "item_DescAEGS_Sabre_CML_Flare",
-      "label": "Aegis Sabre - Decoy Launcher",
-      "description": "Aegis Sabre - Decoy Launcher",
-      "kind": "item"
-    },
-    "aegs_sabre_cockpit_seat": {
-      "key": "item_DescAEGS_Sabre_Cockpit_Seat",
-      "label": "Aegis Sabre Cockpit Seat",
-      "description": "Aegis Sabre Cockpit Seat",
-      "kind": "item"
-    },
-    "aegs_sabre_landingsystem": {
-      "key": "item_DescAEGS_Sabre_LandingSystem",
-      "label": "Aegis Sabre Landing System",
-      "description": "Aegis Sabre Landing System",
-      "kind": "item"
-    },
     "aegs_sabre_main": {
       "key": "item_DescAEGS_Sabre_Main",
       "label": "Main Thruster",
       "description": "Aegis Sabre Main Thruster",
-      "kind": "item"
-    },
-    "aegs_sabre_multilight": {
-      "key": "item_DescAEGS_Sabre_MultiLight",
-      "label": "Aegis Sabre External Lights",
-      "description": "Aegis Sabre External Lights",
       "kind": "item"
     },
     "aegs_sabre_retro": {
@@ -2442,174 +2112,6 @@
       "key": "item_DescAEGS_Sabre_mav_Joint_02",
       "label": "Rotational Thruster",
       "description": "Aegis Sabre Rotational Thruster",
-      "kind": "item"
-    },
-    "aegs_test_ads": {
-      "key": "item_DescAEGS_Test_ADS",
-      "label": "Aegis 1000 ADS Computer",
-      "description": "Aegis 1000 ADS Computer",
-      "kind": "item"
-    },
-    "aegs_test_motherboard": {
-      "key": "item_DescAEGS_Test_Motherboard",
-      "label": "Aegis 1000 Motherboard",
-      "description": "Aegis 1000 Motherboard",
-      "kind": "item"
-    },
-    "aegs_test_tc": {
-      "key": "item_DescAEGS_Test_TC",
-      "label": "Aegis 1000 Targeting Computer",
-      "description": "Aegis 1000 Targeting Computer",
-      "kind": "item"
-    },
-    "aegs_test_wc": {
-      "key": "item_DescAEGS_Test_WC",
-      "label": "Aegis Weapons Control",
-      "description": "Aegis Weapons Control",
-      "kind": "item"
-    },
-    "aegs_thruster_fixed_antaeus": {
-      "key": "item_DescAEGS_Thruster_Fixed_Antaeus",
-      "label": "Aegis Antaeus Main Engine",
-      "description": "Aegis Antaeus Main Engine",
-      "kind": "item"
-    },
-    "aegs_thruster_fixed_hermes": {
-      "key": "item_DescAEGS_Thruster_Fixed_Hermes",
-      "label": "Aegis Hermes Fixed Thruster",
-      "description": "Aegis Hermes Fixed Thruster",
-      "kind": "item"
-    },
-    "aegs_thruster_fixed_idris": {
-      "key": "item_DescAEGS_Thruster_Fixed_Idris",
-      "label": "Aegis Idris Fixed Thruster",
-      "description": "Aegis Idris Fixed Thruster",
-      "kind": "item"
-    },
-    "aegs_thruster_fixed_vanguard": {
-      "key": "item_DescAEGS_Thruster_Fixed_Vanguard",
-      "label": "Aegis Vanguard Fixed Thruster",
-      "description": "Aegis Vanguard Fixed Thruster",
-      "kind": "item"
-    },
-    "aegs_thruster_joint_hercules": {
-      "key": "item_DescAEGS_Thruster_Joint_Hercules",
-      "label": "Aegis Hercules Thruster",
-      "description": "Aegis Hercules Thruster",
-      "kind": "item"
-    },
-    "aegs_thruster_joint_samson": {
-      "key": "item_DescAEGS_Thruster_Joint_Samson",
-      "label": "Aegis Samson Thruster",
-      "description": "Aegis Samson Thruster",
-      "kind": "item"
-    },
-    "aegs_thruster_joint_vanguard": {
-      "key": "item_DescAEGS_Thruster_Joint_Vanguard",
-      "label": "Aegis Vanguard Joint Thruster",
-      "description": "Aegis Vanguard Joint Thruster",
-      "kind": "item"
-    },
-    "aegs_thruster_retro_idris": {
-      "key": "item_DescAEGS_Thruster_Retro_Idris",
-      "label": "Aegis Idris Retro Thruster",
-      "description": "Aegis Idris Retro Thruster",
-      "kind": "item"
-    },
-    "aegs_thruster_retro_ixion": {
-      "key": "item_DescAEGS_Thruster_Retro_Ixion",
-      "label": "Aegis Ixion Retro Thruster",
-      "description": "Aegis Ixion Retro Thruster",
-      "kind": "item"
-    },
-    "aegs_vanguard_cockpit_seat": {
-      "key": "item_DescAEGS_Vanguard_Cockpit_Seat",
-      "label": "Aegis Vanguard Cockpit Seat",
-      "description": "Aegis Vanguard Cockpit Seat",
-      "kind": "item"
-    },
-    "aegs_vanguard_jump_seat": {
-      "key": "item_DescAEGS_Vanguard_Jump_Seat",
-      "label": "Aegis Vanguard Jump Seat",
-      "description": "Aegis Vanguard Jump Seat",
-      "kind": "item"
-    },
-    "aegs_vanguard_landingsystem": {
-      "key": "item_DescAEGS_Vanguard_LandingSystem",
-      "label": "Aegis Vanguard Landing System",
-      "description": "Aegis Vanguard Landing System",
-      "kind": "item"
-    },
-    "aegs_vanguard_retro_thruster": {
-      "key": "item_DescAEGS_Vanguard_Retro_Thruster",
-      "label": "Aegis Vanguard Retro Thruster",
-      "description": "Aegis Vanguard Retro Thruster",
-      "kind": "item"
-    },
-    "aegs_vanguard_turret": {
-      "key": "item_DescAEGS_Vanguard_Turret",
-      "label": "Aegis Vanguard Turret",
-      "description": "Aegis Vanguard Turret",
-      "kind": "item"
-    },
-    "aegs_vanguard_turret_base": {
-      "key": "item_DescAEGS_Vanguard_Turret_Base",
-      "label": "Aegis Vanguard Turret",
-      "description": "Aegis Vanguard Turret",
-      "kind": "item"
-    },
-    "aegs_vanguard_turret_seat": {
-      "key": "item_DescAEGS_Vanguard_Turret_Seat",
-      "label": "Aegis Vanguard Turret Seat",
-      "description": "Aegis Vanguard Turret Seat",
-      "kind": "item"
-    },
-    "aegs_xitech_pro_fixed_s3_q3": {
-      "key": "item_DescAEGS_XiTech_Pro_Fixed_S3_Q3",
-      "label": "Aegis XiTech Pro Fixed Thruster",
-      "description": "Aegis XiTech Pro Fixed Thruster",
-      "kind": "item"
-    },
-    "aegs_xitech_pro_joint_s3_q3": {
-      "key": "item_DescAEGS_XiTech_Pro_Joint_S3_Q3",
-      "label": "Aegis XiTech Pro Joint Thruster",
-      "description": "Aegis XiTech Pro Joint Thruster",
-      "kind": "item"
-    },
-    "aegs_xitech_pro_retro_s3_q3": {
-      "key": "item_DescAEGS_XiTech_Pro_Retro_S3_Q3",
-      "label": "Aegis XiTech Pro Retro Thruster",
-      "description": "Aegis XiTech Pro Retro Thruster",
-      "kind": "item"
-    },
-    "alst_retro_s3": {
-      "key": "item_DescALST_Retro_S3",
-      "label": "Alliance Startech Retro Thruster",
-      "description": "Alliance Startech Retro Thruster",
-      "kind": "item"
-    },
-    "alst_stamina_s2_q3": {
-      "key": "item_DescALST_Stamina_S2_Q3",
-      "label": "Alliance Startech Stamina Thruster S2",
-      "description": "Alliance Startech Stamina Thruster S2",
-      "kind": "item"
-    },
-    "alst_stamina_s4_q4": {
-      "key": "item_DescALST_Stamina_S4_Q4",
-      "label": "Alliance Startech Stamina Thruster S4",
-      "description": "Alliance Startech Stamina Thruster S4",
-      "kind": "item"
-    },
-    "ambx_apar_ballisticgatling_s4": {
-      "key": "item_DescAMBX_APAR_BallisticGatling_S4",
-      "label": "Apocalypse Arms Ballistic Gatling S4 Ammo Box",
-      "description": "Ammunition box for Apocalypse Arms' Ballistic Gatling S4.",
-      "kind": "item"
-    },
-    "ambx_apar_massdriver_s2": {
-      "key": "item_DescAMBX_APAR_MassDriver_S2",
-      "label": "Apocalypse Arms Mass Driver S2 Ammo Box",
-      "description": "Ammunition box for Apocalypse Arms' Mass Driver S2.",
       "kind": "item"
     },
     "ambx_behr_ballisticcannon_s4_he": {
@@ -2762,12 +2264,6 @@
       "description": "Ammunition case for the KnightBridge Arms Ballistic Autocannon S1.",
       "kind": "item"
     },
-    "ambx_kbar_ballisticcannon_s2": {
-      "key": "item_DescAMBX_KBAR_BallisticCannon_S2",
-      "label": "KnightBridge Arms Ballistic Autocannon S2 Ammo Box",
-      "description": "KnightBridge Arms Ballistic Autocannon S2 Ammo Box",
-      "kind": "item"
-    },
     "ambx_kbar_ballisticcannon_s3": {
       "key": "item_DescAMBX_KBAR_BallisticCannon_S3",
       "label": "KnightBridge Arms Ballistic Autocannon S3 Ammo Box",
@@ -2790,12 +2286,6 @@
       "key": "item_DescAMBX_KRIG_BallisticGatling_S2",
       "label": "Kruger Intergalactic Ballistic Gatling S2 Ammo Box",
       "description": "Ammunition case for the Kruger Intergalactic Ballistic Gatling S2",
-      "kind": "item"
-    },
-    "ambx_krig_ballisticgatling_s3": {
-      "key": "item_DescAMBX_KRIG_BallisticGatling_S3",
-      "label": "Ammunition case for Kruger Intergalactic Ballistic Gatling S3",
-      "description": "Ammunition case for the Kruger Intergalactic Ballistic Gatling S3",
       "kind": "item"
     },
     "ambx_rsi_ballisticrepeater_s9": {
@@ -2894,46 +2384,10 @@
       "description": "Manufacturer: Anvil Aerospace The Gestonne turret system for Anvil's Arrow allows precise independent tracking of targets and features mounts for two Size-1 weapons.",
       "kind": "item"
     },
-    "anvl_f7a_cml_chaff": {
-      "key": "item_DescANVL_F7A_CML_Chaff",
-      "label": "Anvil Hornet F7A - Noise Launcher",
-      "description": "Anvil Hornet F7A - Noise Launcher",
-      "kind": "item"
-    },
-    "anvl_f7a_cml_flare": {
-      "key": "item_DescANVL_F7A_CML_Flare",
-      "label": "Anvil Hornet F7A - Decoy Launcher",
-      "description": "Anvil Hornet F7A - Decoy Launcher",
-      "kind": "item"
-    },
-    "anvl_f7a_fuelintake": {
-      "key": "item_DescANVL_F7A_FuelIntake",
-      "label": "Anvil Hornet F7A Fuel Intake",
-      "description": "Anvil Hornet F7A Fuel Intake",
-      "kind": "item"
-    },
     "anvl_fixed_mount_hornet_ball_s4": {
       "key": "item_DescANVL_Fixed_Mount_Hornet_Ball_S4",
       "label": "Specialty Hornet S5 VariPuck Mount",
       "description": "Manufacturer: Flashfire Systems Item Type: Weapon Mount Size: 5 A ‘special mission’ weapon mount from Flashfire Systems designed to allow the Hornet to attach weapons the same size as the hardpoint the VariPuck is mounting to.",
-      "kind": "item"
-    },
-    "anvl_flex_mk2": {
-      "key": "item_DescANVL_Flex_MK2",
-      "label": "Anvil Flex MK2 Thruster",
-      "description": "Anvil Flex MK2 Thruster",
-      "kind": "item"
-    },
-    "anvl_flex_mk3": {
-      "key": "item_DescANVL_Flex_MK3",
-      "label": "Anvil Flex MK3 Thruster",
-      "description": "Anvil Flex MK3 Thruster",
-      "kind": "item"
-    },
-    "anvl_fueltank_f7a": {
-      "key": "item_DescANVL_FuelTank_F7A",
-      "label": "Anvil Hornet F7A Fuel Tank",
-      "description": "Anvil Hornet F7A Fuel Tank",
       "kind": "item"
     },
     "anvl_gladiator_bombrack_s3": {
@@ -2946,72 +2400,6 @@
       "key": "item_DescANVL_Gladiator_BombRack_S5",
       "label": "Anvil Gladiator S5 Bomb Rack",
       "description": "Item Type: Bomb Rack Manufacturer: Anvil Aerospace Size: S5 Outfit the Gladiator with this S5 bomb rack that carries 2 payloads.",
-      "kind": "item"
-    },
-    "anvl_gladiator_cml_chaff": {
-      "key": "item_DescANVL_Gladiator_CML_Chaff",
-      "label": "Anvil Gladiator - Noise Launcher",
-      "description": "Anvil Gladiator - Noise Launcher",
-      "kind": "item"
-    },
-    "anvl_gladiator_cml_flare": {
-      "key": "item_DescANVL_Gladiator_CML_Flare",
-      "label": "Anvil Gladiator - Decoy Launcher",
-      "description": "Anvil Gladiator - Decoy Launcher",
-      "kind": "item"
-    },
-    "anvl_gladiator_copilot_ejection_seat": {
-      "key": "item_DescANVL_Gladiator_CoPilot_Ejection_Seat",
-      "label": "Anvil Gladiator Co-Pilot Ejection Seat",
-      "description": "Anvil Gladiator Co-Pilot Ejection Seat",
-      "kind": "item"
-    },
-    "anvl_gladiator_ejection_seat": {
-      "key": "item_DescANVL_Gladiator_Ejection_Seat",
-      "label": "Anvil Gladiator Pilot Ejection Seat",
-      "description": "Anvil Gladiator Pilot Ejection Seat",
-      "kind": "item"
-    },
-    "anvl_gladiator_landingsystem": {
-      "key": "item_DescANVL_Gladiator_LandingSystem",
-      "label": "Anvil Gladiator Landing System",
-      "description": "Anvil Gladiator Landing System",
-      "kind": "item"
-    },
-    "anvl_gladiator_multilight": {
-      "key": "item_DescANVL_Gladiator_Multilight",
-      "label": "Anvil Gladiator External Lights",
-      "description": "Anvil Gladiator External Lights",
-      "kind": "item"
-    },
-    "anvl_gladiator_turret_ball_s2_q2": {
-      "key": "item_DescANVL_Gladiator_Turret_Ball_S2_Q2",
-      "label": "Anvil Gladiator Turret",
-      "description": "Anvil Gladiator ball turret",
-      "kind": "item"
-    },
-    "anvl_hornet_ballturret_lights": {
-      "key": "item_DescANVL_Hornet_BallTurret_Lights",
-      "label": "Anvil Hornet Ball Turret External Lights",
-      "description": "Anvil Hornet Ball Turret External Lights",
-      "kind": "item"
-    },
-    "anvl_hornet_ejection_seat": {
-      "key": "item_DescANVL_Hornet_Ejection_Seat",
-      "label": "Anvil Hornet Ejection Seat",
-      "description": "Anvil Hornet Ejection Seat",
-      "kind": "item"
-    },
-    "anvl_hornet_ejection_seat_copilot": {
-      "key": "item_DescANVL_Hornet_Ejection_Seat_CoPilot",
-      "label": "Anvil Hornet Co-Pilot Ejection Seat",
-      "description": "Anvil Hornet Co-Pilot Ejection Seat",
-      "kind": "item"
-    },
-    "anvl_hornet_ejection_seat_f7a": {
-      "key": "item_DescANVL_Hornet_Ejection_Seat_F7A",
-      "label": "Anvil Hornet F7A Ejection Seat",
-      "description": "Anvil Hornet F7A Ejection Seat",
       "kind": "item"
     },
     "anvl_hornet_f7a_mk1_ball_turret": {
@@ -3092,100 +2480,16 @@
       "description": "Item Type: Turret Manufacturer: Anvil Aerospace Size: 3 This nose turret was designed specifically for Anvil's F7C Hornet to allow for mounting two Size-1 weapons and precise gimbaled tracking of targets.",
       "kind": "item"
     },
-    "anvl_hornet_landingsystem": {
-      "key": "item_DescANVL_Hornet_LandingSystem",
-      "label": "Anvil Hornet Landing System",
-      "description": "Anvil Hornet Landing System",
-      "kind": "item"
-    },
-    "anvl_hornet_lights": {
-      "key": "item_DescANVL_Hornet_Lights",
-      "label": "Anvil Hornet External Lights",
-      "description": "Anvil Hornet External Lights",
-      "kind": "item"
-    },
-    "anvl_hornet_multilight": {
-      "key": "item_DescANVL_Hornet_Multilight",
-      "label": "Anvil Hornet External Lights",
-      "description": "Anvil Hornet External Lights",
-      "kind": "item"
-    },
-    "anvl_joint_mk2": {
-      "key": "item_DescANVL_Joint_MK2",
-      "label": "Anvil Joint MK2 Thruster",
-      "description": "Anvil Joint MK2 Thruster",
-      "kind": "item"
-    },
-    "anvl_joint_mk3": {
-      "key": "item_DescANVL_Joint_MK3",
-      "label": "Anvil Joint MK3 Thruster",
-      "description": "Anvil Joint MK3 Thruster",
-      "kind": "item"
-    },
     "anvl_lightning_f8c_turret": {
       "key": "item_DescANVL_Lightning_F8C_Turret",
       "label": "Anvil Lightning F8C Turret",
       "description": "This remote turret provides mounts for two Size 2 weapons, an expansive field of fire, and precise control to give F8C pilots a comprehensive weapon system to get out of any situation.",
       "kind": "item"
     },
-    "anvl_lightning_f8_turret": {
-      "key": "item_DescANVL_Lightning_F8_Turret",
-      "label": "Anvil Lightning F8 Turret",
-      "description": "Anvil Lightning F8 Turret",
-      "kind": "item"
-    },
-    "anvl_s1_rack_x4": {
-      "key": "item_DescANVL_S1_Rack_x4",
-      "label": "Anvil Quad S1 Missile Rack",
-      "description": "Anvil Quad S1 Missile Rack",
-      "kind": "item"
-    },
-    "anvl_s2_rack_x2": {
-      "key": "item_DescANVL_S2_Rack_x2",
-      "label": "Anvil Double S2 Missile Rack",
-      "description": "Anvil Double S2 Missile Rack",
-      "kind": "item"
-    },
-    "anvl_s3_rack_x1": {
-      "key": "item_DescANVL_S3_Rack_x1",
-      "label": "Anvil Single S3 Missile Platform",
-      "description": "Anvil Single S3 Missile Platform",
-      "kind": "item"
-    },
     "anvl_s5_rack_x2": {
       "key": "item_DescANVL_S5_Rack_x2",
       "label": "Anvil Gladiator Double Torpedo Mount",
       "description": "Talon Weapon Systems Belly Bay Pylon Mount, Max Size 5",
-      "kind": "item"
-    },
-    "anvl_terrapin_nose_turret": {
-      "key": "item_DescANVL_Terrapin_Nose_Turret",
-      "label": "Anvil Terrapin Nose Mount",
-      "description": "Anvil Terrapin Nose Mount",
-      "kind": "item"
-    },
-    "anvl_test_ads": {
-      "key": "item_DescANVL_Test_ADS",
-      "label": "Anvil 1000 ADS Computer",
-      "description": "Anvil 1000 ADS Computer",
-      "kind": "item"
-    },
-    "anvl_test_motherboard": {
-      "key": "item_DescANVL_Test_Motherboard",
-      "label": "Anvil 1000 Motherboard",
-      "description": "Anvil 1000 Motherboard",
-      "kind": "item"
-    },
-    "anvl_test_tc": {
-      "key": "item_DescANVL_Test_TC",
-      "label": "Anvil 1000 Targeting Computer",
-      "description": "Anvil 1000 Targeting Computer",
-      "kind": "item"
-    },
-    "anvl_test_wc": {
-      "key": "item_DescANVL_Test_WC",
-      "label": "Anvil Weapons Control",
-      "description": "Anvil Weapons Control",
       "kind": "item"
     },
     "apar_ballisticgatling_s4": {
@@ -3266,214 +2570,16 @@
       "description": "ArcCorp's Arc Duo 400 was recently named one of Whitley's Ten Best Commercial Grade Thruster value buys. Designed to handle the payload requirements of larger class vessels, the Arc Duo 400 continues ArcCorp's design philosophy of lower signature and better efficiency.",
       "kind": "item"
     },
-    "argo_mpuv_landingsystem": {
-      "key": "item_DescARGO_MPUV_LandingSystem",
-      "label": "Argo MPUV Landing System",
-      "description": "Argo MPUV Landing System",
-      "kind": "item"
-    },
     "argo_tractorbeam_s1_cargo": {
       "key": "item_DescARGO_TractorBeam_S1_Cargo",
       "label": "Durus Tractor Beam",
       "description": "Manufacturer: Argo Astronautics Item Type: Tractor Beam Max Angle: 60° Max Range: 150 m Full Strength Distance: 75 m Made specifically for the ATLS power suit, the Durus tractor beam from Argo Astronautics has been carefully tuned for loading and unloading cargo.",
       "kind": "item"
     },
-    "armr_aegs_avenger_stalker": {
-      "key": "item_DescARMR_AEGS_Avenger_Stalker",
-      "label": "Avenger Stalker Ship Armor",
-      "description": "Avenger Stalker Ship Armor",
-      "kind": "item"
-    },
-    "armr_aegs_avenger_titan": {
-      "key": "item_DescARMR_AEGS_Avenger_Titan",
-      "label": "Avenger Titan Ship Armor",
-      "description": "Avenger Titan Ship Armor",
-      "kind": "item"
-    },
-    "armr_aegs_avenger_warlock": {
-      "key": "item_DescARMR_AEGS_Avenger_Warlock",
-      "label": "Avenger Warlock Ship Armor",
-      "description": "Avenger Warlock Ship Armor",
-      "kind": "item"
-    },
-    "armr_aegs_hammerhead": {
-      "key": "item_DescARMR_AEGS_Hammerhead",
-      "label": "Hammerhead Ship Armor",
-      "description": "Hammerhead Ship Armor",
-      "kind": "item"
-    },
-    "armr_aegs_redeemer": {
-      "key": "item_DescARMR_AEGS_Redeemer",
-      "label": "Aegis Redeemer Ship Armor",
-      "description": "Aegis Redeemer Ship Armor",
-      "kind": "item"
-    },
-    "armr_aegs_retaliator": {
-      "key": "item_DescARMR_AEGS_Retaliator",
-      "label": "Retaliator Ship Armor",
-      "description": "Retaliator Ship Armor",
-      "kind": "item"
-    },
-    "armr_aegs_sabreraven": {
-      "key": "item_DescARMR_AEGS_SabreRaven",
-      "label": "Sabre Raven Ship Armor",
-      "description": "Sabre Raven Ship Armor",
-      "kind": "item"
-    },
-    "armr_anvl_hornet_f7a": {
-      "key": "item_DescARMR_ANVL_Hornet_F7A",
-      "label": "Hornet F7A Ship Armor",
-      "description": "Hornet F7A Ship Armor",
-      "kind": "item"
-    },
-    "armr_anvl_hornet_f7c": {
-      "key": "item_DescARMR_ANVL_Hornet_F7C",
-      "label": "Hornet F7C Ship Armor",
-      "description": "Hornet F7C Ship Armor",
-      "kind": "item"
-    },
-    "armr_anvl_hornet_f7cm": {
-      "key": "item_DescARMR_ANVL_Hornet_F7CM",
-      "label": "Anvil Bastion Ship Armor",
-      "description": "Anvil Bastion Ship Armor",
-      "kind": "item"
-    },
-    "armr_anvl_hornet_f7cr": {
-      "key": "item_DescARMR_ANVL_Hornet_F7CR",
-      "label": "Hornet F7CR Ship Armor",
-      "description": "Hornet F7CR Ship Armor",
-      "kind": "item"
-    },
-    "armr_anvl_hornet_f7cs": {
-      "key": "item_DescARMR_ANVL_Hornet_F7CS",
-      "label": "Anvil Void Ship Armor",
-      "description": "Anvil Void Ship Armor",
-      "kind": "item"
-    },
-    "armr_cnou_mustang_alpha": {
-      "key": "item_DescARMR_CNOU_Mustang_Alpha",
-      "label": "Mustang Alpha Ship Armor",
-      "description": "Mustang Alpha Ship Armor",
-      "kind": "item"
-    },
-    "armr_cnou_mustang_beta": {
-      "key": "item_DescARMR_CNOU_Mustang_Beta",
-      "label": "Mustang Beta Ship Armor",
-      "description": "Mustang Beta Ship Armor",
-      "kind": "item"
-    },
-    "armr_cnou_mustang_delta": {
-      "key": "item_DescARMR_CNOU_Mustang_Delta",
-      "label": "Consolidated Outland Cavalry Ship Armor",
-      "description": "Consolidated Outland Cavalry Ship Armor",
-      "kind": "item"
-    },
-    "armr_cnou_mustang_gamma": {
-      "key": "item_DescARMR_CNOU_Mustang_Gamma",
-      "label": "Mustang Gamma Ship Armor",
-      "description": "Mustang Gamma Ship Armor",
-      "kind": "item"
-    },
-    "armr_cnou_mustang_omega": {
-      "key": "item_DescARMR_CNOU_Mustang_Omega",
-      "label": "Mustang Omega Ship Armor",
-      "description": "Mustang Omega Ship Armor",
-      "kind": "item"
-    },
-    "armr_drak_cutlass_black": {
-      "key": "item_DescARMR_DRAK_Cutlass_Black",
-      "label": "Cutlass Black Ship Armor",
-      "description": "Cutlass Black Ship Armor",
-      "kind": "item"
-    },
-    "armr_misc_freelancer": {
-      "key": "item_DescARMR_MISC_Freelancer",
-      "label": "Freelancer Ship Armor",
-      "description": "Freelancer Ship Armor",
-      "kind": "item"
-    },
-    "armr_misc_reliant": {
-      "key": "item_DescARMR_MISC_Reliant",
-      "label": "MISC Reliant Ship Armor",
-      "description": "MISC Reliant Ship Armor",
-      "kind": "item"
-    },
-    "armr_misc_starfarer_gemini": {
-      "key": "item_DescARMR_MISC_Starfarer_Gemini",
-      "label": "Starfarer Gemini Ship Armor",
-      "description": "Starfarer Gemini Ship Armor",
-      "kind": "item"
-    },
-    "armr_orig_100i": {
-      "key": "item_DescARMR_ORIG_100i",
-      "label": "Origin Jumpworks 100i Ship Armor",
-      "description": "Origin Jumpworks 100i Ship Armor",
-      "kind": "item"
-    },
-    "armr_orig_125a": {
-      "key": "item_DescARMR_ORIG_125a",
-      "label": "Origin Jumpworks 125a Ship Armor",
-      "description": "Origin Jumpworks 125a Ship Armor",
-      "kind": "item"
-    },
-    "armr_orig_135c": {
-      "key": "item_DescARMR_ORIG_135c",
-      "label": "Origin Jumpworks 135c Ship Armor",
-      "description": "Origin Jumpworks 135c Ship Armor",
-      "kind": "item"
-    },
     "armr_orig_315p": {
       "key": "item_DescARMR_ORIG_315p",
       "label": "315p Ship Armor",
       "description": "Origin Jumpworks 315p Ship Armor",
-      "kind": "item"
-    },
-    "armr_orig_325a": {
-      "key": "item_DescARMR_ORIG_325a",
-      "label": "Talisman R5 Ship Armor",
-      "description": "Talisman R5 Ship Armor",
-      "kind": "item"
-    },
-    "armr_rsi_aurora_cl": {
-      "key": "item_DescARMR_RSI_Aurora_CL",
-      "label": "Aurora Mk I CL Ship Armor",
-      "description": "Aurora Mk I CL Ship Armor",
-      "kind": "item"
-    },
-    "armr_rsi_aurora_es": {
-      "key": "item_DescARMR_RSI_Aurora_ES",
-      "label": "Aurora Mk I ES Ship Armor",
-      "description": "Aurora Mk I ES Ship Armor",
-      "kind": "item"
-    },
-    "armr_rsi_aurora_ln": {
-      "key": "item_DescARMR_RSI_Aurora_LN",
-      "label": "RSI Lorica Ship Armor",
-      "description": "RSI Lorica Ship Armor",
-      "kind": "item"
-    },
-    "armr_rsi_aurora_lx": {
-      "key": "item_DescARMR_RSI_Aurora_LX",
-      "label": "Aurora Mk I LX Ship Armor",
-      "description": "Aurora Mk I LX Ship Armor",
-      "kind": "item"
-    },
-    "armr_rsi_aurora_mr": {
-      "key": "item_DescARMR_RSI_Aurora_MR",
-      "label": "Aurora Mk I MR Ship Armor",
-      "description": "Aurora Mk I MR Ship Armor",
-      "kind": "item"
-    },
-    "armr_rsi_constellation_andromeda": {
-      "key": "item_DescARMR_RSI_Constellation_Andromeda",
-      "label": "Constellation Andromeda Ship Armor",
-      "description": "Constellation Andromeda Ship Armor",
-      "kind": "item"
-    },
-    "armr_rsi_polaris": {
-      "key": "item_DescARMR_RSI_Polaris",
-      "label": "RSI Polaris Ship Armor",
-      "description": "RSI Polaris Ship Armor",
       "kind": "item"
     },
     "asad_distortionrepeater_s1": {
@@ -3498,12 +2604,6 @@
       "key": "item_DescASAS_SoloShield",
       "label": "Ascension Astro Soloshield",
       "description": "Manufacturer: Ascension Astro Ascension Astro's Soloshield is a baseline shield generator, projecting a single-field bubble to offer an additional layer of protection for your ship's hull and armor. The low electromagnetic emissions will also help minimize your ship's presence on scans.",
-      "kind": "item"
-    },
-    "asas_soloshield_survival": {
-      "key": "item_DescASAS_Soloshield_Survival",
-      "label": "Ascension Astro Soloshield Survival",
-      "description": "Ascension Astro Soloshield Survival",
       "kind": "item"
     },
     "atls_paint_2956redfestival_red_gold_rat": {
@@ -3594,60 +2694,6 @@
       "key": "item_DescATLS_Paint_WorkersWeek_White_Blue_Blue",
       "label": "ATLS Keystone Livery",
       "description": "Crisp white with blue accents, the Keystone livery celebrates the workers whose mining, refining, hauling, salvaging, and more have made the empire what it is today.",
-      "kind": "item"
-    },
-    "avio_behr_s01_csr_rp": {
-      "key": "item_DescAVIO_BEHR_S01_CSR_RP",
-      "label": "Behring Avionics Motherboard",
-      "description": "Behring Avionics Motherboard",
-      "kind": "item"
-    },
-    "avio_cpub_mite_memvio_10b": {
-      "key": "item_DescAVIO_CPUB_MITE_Memvio_10b",
-      "label": "memVio 1.0b CPU Booster",
-      "description": "memVio 1.0b CPU Booster",
-      "kind": "item"
-    },
-    "avio_tgtc_behr_tm_4ab": {
-      "key": "item_DescAVIO_TGTC_BEHR_TM_4AB",
-      "label": "TM-4AB Targeting Computer",
-      "description": "TM-4AB Targeting Computer",
-      "kind": "item"
-    },
-    "avio_tgtc_behr_tm_4gs": {
-      "key": "item_DescAVIO_TGTC_BEHR_TM_4GS",
-      "label": "TM-4GS Targeting Computer",
-      "description": "TM-4GS Targeting Computer",
-      "kind": "item"
-    },
-    "avio_tgtc_behr_tm_4wl": {
-      "key": "item_DescAVIO_TGTC_BEHR_TM_4WL",
-      "label": "TM-4WL Targeting Computer",
-      "description": "TM-4WL Targeting Computer",
-      "kind": "item"
-    },
-    "avio_tgtc_wlop_f7a": {
-      "key": "item_DescAVIO_TGTC_WLOP_F7A",
-      "label": "F7A Targeting Computer",
-      "description": "F7A Targeting Computer",
-      "kind": "item"
-    },
-    "avio_tgtc_wlop_p1_omnitrack": {
-      "key": "item_DescAVIO_TGTC_WLOP_P1_Omnitrack",
-      "label": "P1 Omnitrack Targeting Computer",
-      "description": "P1 Omnitrack Targeting Computer",
-      "kind": "item"
-    },
-    "avio_tgtc_wlop_p3x_multilock": {
-      "key": "item_DescAVIO_TGTC_WLOP_P3X_Multilock",
-      "label": "P3X Multilock Targeting Computer",
-      "description": "P3X Multilock Targeting Computer",
-      "kind": "item"
-    },
-    "avio_tgtc_wlop_p3_autocompensator": {
-      "key": "item_DescAVIO_TGTC_WLOP_P3_Autocompensator",
-      "label": "P3 Autocompensator Targeting Computer",
-      "description": "P3 Autocompensator Targeting Computer",
       "kind": "item"
     },
     "alienaa_fragment_1_large_damaged_a": {
@@ -3752,82 +2798,10 @@
       "description": "Contains 60mm ammunition for ballistic weapons.",
       "kind": "item"
     },
-    "ammobox_orig_flares": {
-      "key": "item_DescAmmoBox_ORIG_Flares",
-      "label": "Origin Jumpworks Decoy Ammo Box",
-      "description": "Origin Jumpworks Decoy Ammo Box",
-      "kind": "item"
-    },
     "ammocrate": {
       "key": "item_DescAmmoCrate",
       "label": "Ship Ammunition",
       "description": "Refill your ship's ballistic ammunition.",
-      "kind": "item"
-    },
-    "ammocrate_s1": {
-      "key": "item_DescAmmoCrate_S1",
-      "label": "Size 1 Vehicle Weapon Ammuniton",
-      "description": "Size 1 Vehicle Weapon Ammuniton",
-      "kind": "item"
-    },
-    "ammocrate_s2": {
-      "key": "item_DescAmmoCrate_S2",
-      "label": "Size 2 Vehicle Weapon Ammuniton",
-      "description": "Size 2 Vehicle Weapon Ammuniton",
-      "kind": "item"
-    },
-    "ammocrate_s3": {
-      "key": "item_DescAmmoCrate_S3",
-      "label": "Size 3 Vehicle Weapon Ammuniton",
-      "description": "Size 3 Vehicle Weapon Ammuniton",
-      "kind": "item"
-    },
-    "ammocrate_s4": {
-      "key": "item_DescAmmoCrate_S4",
-      "label": "Size 4 Vehicle Weapon Ammuniton",
-      "description": "Size 4 Vehicle Weapon Ammuniton",
-      "kind": "item"
-    },
-    "ammocrate_s5": {
-      "key": "item_DescAmmoCrate_S5",
-      "label": "Size 5 Vehicle Weapon Ammuniton",
-      "description": "Size 5 Vehicle Weapon Ammuniton",
-      "kind": "item"
-    },
-    "ammocrate_s6": {
-      "key": "item_DescAmmoCrate_S6",
-      "label": "Size 6 Vehicle Weapon Ammuniton",
-      "description": "Size 6 Vehicle Weapon Ammuniton",
-      "kind": "item"
-    },
-    "ammocrate_s7": {
-      "key": "item_DescAmmoCrate_S7",
-      "label": "Size 7 Vehicle Weapon Ammuniton",
-      "description": "Size 7 Vehicle Weapon Ammuniton",
-      "kind": "item"
-    },
-    "ammobox_aegs_avenger_flares": {
-      "key": "item_DescAmmobox_AEGS_Avenger_Flares",
-      "label": "Aegis Avenger Flares Ammo",
-      "description": "Aegis Avenger Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_anvl_hornet_f7cm_flares": {
-      "key": "item_DescAmmobox_ANVL_Hornet_F7CM_Flares",
-      "label": "Anvil Hornet F7CM Flares Ammo",
-      "description": "Anvil Hornet F7CM Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_anvl_hornet_f7c_flares": {
-      "key": "item_DescAmmobox_ANVL_Hornet_F7C_Flares",
-      "label": "Anvil Hornet F7C Flares Ammo",
-      "description": "Anvil Hornet F7C Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_anvl_hornet_fc7r_flares": {
-      "key": "item_DescAmmobox_ANVL_Hornet_FC7R_Flares",
-      "label": "Anvil Hornet F7CR Flares Ammo",
-      "description": "Anvil Hornet F7CR Flares Ammo",
       "kind": "item"
     },
     "ammobox_ballistic_1000rd_20mm": {
@@ -3950,12 +2924,6 @@
       "description": "Ballistic explosive ammo, 500 20mm rounds",
       "kind": "item"
     },
-    "ammobox_ballistic_50mm": {
-      "key": "item_DescAmmobox_Ballistic_50mm",
-      "label": "Ammo Box Ballistic 50mm",
-      "description": "Ballistic ammo, 50mm rounds",
-      "kind": "item"
-    },
     "ammobox_ballistic_600rd_25mm": {
       "key": "item_DescAmmobox_Ballistic_600rd_25mm",
       "label": "Ammo Box Ballistic 25mm 600rd",
@@ -4004,82 +2972,10 @@
       "description": "Ballistic ammo, 800 25mm rounds",
       "kind": "item"
     },
-    "ammobox_ballistic_krig_20mm": {
-      "key": "item_DescAmmobox_Ballistic_KRIG_20mm",
-      "label": "Kruger Intergalactic Ammo Box Ballistic 20mm",
-      "description": "Ammunition box for Kruger Intergalactic 20mm Ballistic.",
-      "kind": "item"
-    },
     "ammobox_ballistic_krig_25mm": {
       "key": "item_DescAmmobox_Ballistic_KRIG_25mm",
       "label": "Kruger Intergalactic Ammo Box Ballistic 25mm",
       "description": "Ammunition box for the Kruger Intergalactic 25mm Ballistic.",
-      "kind": "item"
-    },
-    "ammobox_jokr_defcon_flares": {
-      "key": "item_DescAmmobox_JOKR_Defcon_Flares",
-      "label": "Joker Defcon Flares Ammo",
-      "description": "Joker Defcon Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_orig_300i_flares": {
-      "key": "item_DescAmmobox_ORIG_300i_Flares",
-      "label": "Origin Jumpworks 300i Flares Ammo",
-      "description": "Origin Jumpworks 300i Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_orig_315p_flares": {
-      "key": "item_DescAmmobox_ORIG_315p_Flares",
-      "label": "Origin Jumpworks 315p Flares Ammo",
-      "description": "Origin Jumpworks 315p Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_orig_325a_flares": {
-      "key": "item_DescAmmobox_ORIG_325a_Flares",
-      "label": "Origin Jumpworks 325a Flares Ammo",
-      "description": "Origin Jumpworks 325a Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_orig_350r_flares": {
-      "key": "item_DescAmmobox_ORIG_350r_Flares",
-      "label": "Origin Jumpworks 350r Flares Ammo",
-      "description": "Origin Jumpworks 350r Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_orig_m50_flares": {
-      "key": "item_DescAmmobox_ORIG_M50_Flares",
-      "label": "Origin Jumpworks M50 Flares Ammo",
-      "description": "Origin Jumpworks M50 Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_rsi_aurora_cl_flares": {
-      "key": "item_DescAmmobox_RSI_Aurora_CL_Flares",
-      "label": "RSI Aurora Mk I CL Flares Ammo",
-      "description": "RSI Aurora Mk I CL Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_rsi_aurora_es_flares": {
-      "key": "item_DescAmmobox_RSI_Aurora_ES_Flares",
-      "label": "RSI Aurora Mk I ES Flares Ammo",
-      "description": "RSI Aurora Mk I ES Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_rsi_aurora_ln_flares": {
-      "key": "item_DescAmmobox_RSI_Aurora_LN_Flares",
-      "label": "RSI Aurora Mk I LN Flares Ammo",
-      "description": "RSI Aurora Mk I LN Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_rsi_aurora_lx_flares": {
-      "key": "item_DescAmmobox_RSI_Aurora_LX_Flares",
-      "label": "RSI Aurora Mk I LX Flares Ammo",
-      "description": "RSI Aurora Mk I LX Flares Ammo",
-      "kind": "item"
-    },
-    "ammobox_rsi_aurora_mr_flares": {
-      "key": "item_DescAmmobox_RSI_Aurora_MR_Flares",
-      "label": "RSI Aurora Mk I MR Flares Ammo",
-      "description": "RSI Aurora Mk I MR Flares Ammo",
       "kind": "item"
     },
     "ammobox_vncl_glaive_flares": {
@@ -4910,12 +3806,6 @@
       "description": "Use the Scrubland Camo livery to outfit the C8 Pisces in green camo. A classic and commanding look that's also ideal for excursions across forests and grasslands.",
       "kind": "item"
     },
-    "cnou_cockpit_audio": {
-      "key": "item_DescCNOU_Cockpit_Audio",
-      "label": "Consolidated Outland Cockpit Audio",
-      "description": "Consolidated Outland Cockpit Audio",
-      "kind": "item"
-    },
     "cnou_delta_rocketpod_x18": {
       "key": "item_DescCNOU_Delta_RocketPod_x18",
       "label": "R-18 rocket pod",
@@ -4946,40 +3836,10 @@
       "description": "Manufacturer: Consolidated Outland Focus: Pathfinder The Mustang Beta, with its unprecedented range, is made for long duration flights. The factory standard Tarsus Leaper Jump Engine enables the Beta to travel to the galaxy’s farthest systems with ease, while the ship’s unique Com4T living quarters will make the journey feel like you never left home.",
       "kind": "item"
     },
-    "cnou_mustang_defaultseat": {
-      "key": "item_DescCNOU_Mustang_DefaultSeat",
-      "label": "Consolidated Outland Mustang Pilot Seat",
-      "description": "Consolidated Outland Mustang Pilot Seat",
-      "kind": "item"
-    },
-    "cnou_mustang_ejection_seat": {
-      "key": "item_DescCNOU_Mustang_Ejection_Seat",
-      "label": "Consolidated Outland Mustang Pilot Ejection Seat",
-      "description": "Consolidated Outland Mustang Pilot Ejection Seat",
-      "kind": "item"
-    },
     "cnou_mustang_gamma_shop": {
       "key": "item_DescCNOU_Mustang_Gamma_shop",
       "label": "Consolidated Outland Mustang Gamma",
       "description": "Manufacturer: Consolidated Outland Focus: Racing Consolidated Outland’s design and engineering teams have managed to tweak and refine the Mustang into an admirable racer. The end result, the Mustang Gamma, has smooth acceleration, and power on demand thanks to an innovative package featuring three powerful Magma Jet engines for maximum thrust.",
-      "kind": "item"
-    },
-    "cnou_mustang_landingsystem": {
-      "key": "item_DescCNOU_Mustang_LandingSystem",
-      "label": "Consolidated Outland Mustang Landing System",
-      "description": "Consolidated Outland Mustang Landing System",
-      "kind": "item"
-    },
-    "cnou_mustang_multilight": {
-      "key": "item_DescCNOU_Mustang_MultiLight",
-      "label": "Consolidated Outland Mustang Exterior Lights",
-      "description": "Consolidated Outland Mustang Exterior Lights",
-      "kind": "item"
-    },
-    "cnou_mustang_nose_turret": {
-      "key": "item_DescCNOU_Mustang_Nose_Turret",
-      "label": "Consolidated Outland Mustang Nose Turret",
-      "description": "Consolidated Outland Mustang Nose Turret",
       "kind": "item"
     },
     "cool_acom_s01_iceplunge": {
@@ -5274,12 +4134,6 @@
       "key": "item_DescCOOL_TYDT_S02_NightFall_SCItem",
       "label": "NightFall",
       "description": "Item Type: Cooler Manufacturer: Tyler Design & Tech Size: 2 Grade: A Class: Stealth Run silent and safe with the NightFall from Tyler Design & Tech. Few coolers can match the way this component manages your ship's heat while also keeping its signatures low.",
-      "kind": "item"
-    },
-    "cool_v01_civ_wcpr_tepilo": {
-      "key": "item_DescCOOL_V01_CIV_WCPR_Tepilo",
-      "label": "WCPR-Made XIAN Nox Cooler Name [PH]",
-      "description": "WCPR-Made XIAN Nox Cooler Desc [PH]",
       "kind": "item"
     },
     "cool_vncl_s01_blade": {
@@ -5846,12 +4700,6 @@
       "description": "Give the gift of good fortune and prosperity with this charm, handcarved by frontier settlers in honor of the Year of the Rooster. This generous gift is crafted from wood to represent one's efforts to put down roots in a new world while the robust and ornate rooster design represents those with ambition and fierce loyalty.",
       "kind": "item"
     },
-    "class_2_krig_bg_s3_q3_mount": {
-      "key": "item_DescClass_2_KRIG_BG_S3_Q3_Mount",
-      "label": "Kruger Intergalactic Tigerstrike T-21 Mount",
-      "description": "Kruger Intergalactic Tigerstrike T-21 Mount",
-      "kind": "item"
-    },
     "class_2a_placeholder": {
       "key": "item_DescClass_2a_Placeholder",
       "label": "Class 2a Mount",
@@ -5934,18 +4782,6 @@
       "key": "item_DescConstellation_Bottom_Turret",
       "label": "RSI Constellation Bottom Turret",
       "description": "Manufacturer: Klaus & Werner Item Type: Laser Repeater Size: 0 Featuring a three-barrel sequential fire design, the Klaus & Werner CF-007 Bulldog repeater is capable of high rates of fire while maintaining accuracy. It has low damage per projectile and, although it has relatively low power consumption over-all, several publications have commented on its somewhat lackluster efficiency. Even so, the CF-007 remains a favorite among new pilots who are outfitting their first ship.",
-      "kind": "item"
-    },
-    "constellation_cargo_prototype": {
-      "key": "item_DescConstellation_Cargo_Prototype",
-      "label": "<-=MISSING=->",
-      "description": "@Constellation Cargo for PU Demo",
-      "kind": "item"
-    },
-    "constellation_interior": {
-      "key": "item_DescConstellation_Interior",
-      "label": "RSI Constellation Interior",
-      "description": "RSI Constellation Interior",
       "kind": "item"
     },
     "constellation_paint_2950invictus_1": {
@@ -6470,76 +5306,16 @@
       "description": "Base livery for the Cyclone TR.",
       "kind": "item"
     },
-    "drak_3dradardisplay": {
-      "key": "item_DescDRAK_3DRadarDisplay",
-      "label": "Drake 3D Radar Display",
-      "description": "Drake 3D Radar Display",
-      "kind": "item"
-    },
     "drak_buccaneer_dual_s2": {
       "key": "item_DescDRAK_Buccaneer_Dual_S2",
       "label": "Drake Buccaneer Spinal Mount",
       "description": "Ward off attacks from any angle by installing this gimballed spinal mount. Designed by Drake for the Buccaneer, this S4 turret can equip two S2 weapons to keep the heat on aggressors.",
       "kind": "item"
     },
-    "drak_caterpillar_selfdestruct": {
-      "key": "item_DescDRAK_Caterpillar_SelfDestruct",
-      "label": "Drake Caterpillar Self Destruct",
-      "description": "Drake Caterpillar Self Destruct",
-      "kind": "item"
-    },
-    "drak_cutlass_black_bump_seat": {
-      "key": "item_DescDRAK_Cutlass_Black_Bump_Seat",
-      "label": "Drake Cutlass Black Jump Seat",
-      "description": "Drake Cutlass Black Jump Seat",
-      "kind": "item"
-    },
-    "drak_cutlass_black_multilight": {
-      "key": "item_DescDRAK_Cutlass_Black_MultiLight",
-      "label": "Drake Cutlass Black External Lights",
-      "description": "Drake Cutlass Black External Lights",
-      "kind": "item"
-    },
     "drak_cutlass_black_shop": {
       "key": "item_DescDRAK_Cutlass_Black_shop",
       "label": "Drake Cutlass Black",
       "description": "Manufacturer: Drake Interplanetary Focus: Medium Fighter / Medium Freight Drake Interplanetary claims that the Cutlass Black is a low-cost, easy-to-maintain solution for local in-system militia units. The larger-than-average cargo hold, RIO seat and dedicated tractor mount are, the company literature insists, for facilitating search and rescue operations.",
-      "kind": "item"
-    },
-    "drak_cutlass_blue_transport_copilot_seat": {
-      "key": "item_DescDRAK_Cutlass_Blue_Transport_Copilot_Seat",
-      "label": "Drake Cutlass Blue Co-Pilot Seat",
-      "description": "Drake Cutlass Blue Co-Pilot Seat",
-      "kind": "item"
-    },
-    "drak_cutlass_blue_transport_passenger_seat": {
-      "key": "item_DescDRAK_Cutlass_Blue_Transport_Passenger_Seat",
-      "label": "Drake Cutlass Blue Passenger Seat",
-      "description": "Drake Cutlass Blue Passenger Seat",
-      "kind": "item"
-    },
-    "drak_cutlass_blue_transport_pilot_seat": {
-      "key": "item_DescDRAK_Cutlass_Blue_Transport_Pilot_Seat",
-      "label": "Drake Cutlass Blue Pilot Seat",
-      "description": "Drake Cutlass Blue Pilot Seat",
-      "kind": "item"
-    },
-    "drak_cutlass_bump_seat": {
-      "key": "item_DescDRAK_Cutlass_Bump_Seat",
-      "label": "Drake Cutlass Jump Seat",
-      "description": "Drake Cutlass Jump Seat",
-      "kind": "item"
-    },
-    "drak_cutlass_ejection_seat": {
-      "key": "item_DescDRAK_Cutlass_Ejection_Seat",
-      "label": "Drake Cutlass Ejection Seat",
-      "description": "Drake Cutlass Ejection Seat",
-      "kind": "item"
-    },
-    "drak_cutlass_landingsystem": {
-      "key": "item_DescDRAK_Cutlass_LandingSystem",
-      "label": "Drake Cutlass Landing System",
-      "description": "Drake Cutlass Landing System",
       "kind": "item"
     },
     "drak_cutlass_red_sensor_turret": {
@@ -6560,114 +5336,6 @@
       "description": "Item Type: Turret Manufacturer: Drake Interplanetary Size: 2 This remote-operated turret comes factory-equipped with two Klaus & Werner laser repeaters.",
       "kind": "item"
     },
-    "drak_cutlass_turret_seat": {
-      "key": "item_DescDRAK_Cutlass_Turret_Seat",
-      "label": "Drake Cutlass Turret Seat",
-      "description": "Drake Cutlass Turret Seat",
-      "kind": "item"
-    },
-    "drak_cutlass_lights": {
-      "key": "item_DescDRAK_Cutlass_lights",
-      "label": "Drake Cutlass External Lights",
-      "description": "Drake Cutlass External Lights",
-      "kind": "item"
-    },
-    "drak_dragonfly_copilot_seat": {
-      "key": "item_DescDRAK_Dragonfly_Copilot_Seat",
-      "label": "Drake Dragonfly Co-Pilot Seat",
-      "description": "Drake Dragonfly Co-Pilot Seat",
-      "kind": "item"
-    },
-    "drak_dragonfly_grav_plate": {
-      "key": "item_DescDRAK_Dragonfly_Grav_Plate",
-      "label": "Drake Dragonfly Gravity Plate",
-      "description": "Drake Dragonfly Gravity Plate",
-      "kind": "item"
-    },
-    "drak_dragonfly_main_engine": {
-      "key": "item_DescDRAK_Dragonfly_Main_Engine",
-      "label": "Drake Dragonfly Main Engine",
-      "description": "Drake Dragonfly Main Engine",
-      "kind": "item"
-    },
-    "drak_dragonfly_retro": {
-      "key": "item_DescDRAK_Dragonfly_Retro",
-      "label": "Drake Dragonfly Retro Thruster",
-      "description": "Drake Dragonfly Retro Thruster",
-      "kind": "item"
-    },
-    "drak_dragonfly_tr1_joint": {
-      "key": "item_DescDRAK_Dragonfly_TR1_Joint",
-      "label": "Drake Dragonfly Joint Thruster",
-      "description": "Drake Dragonfly Joint Thruster",
-      "kind": "item"
-    },
-    "drak_dual_s1": {
-      "key": "item_DescDRAK_Dual_S1",
-      "label": "Drake Caterpillar Weapon Mount",
-      "description": "Drake Caterpillar Weapon Mount",
-      "kind": "item"
-    },
-    "drak_emerald_arm_s1": {
-      "key": "item_DescDRAK_Emerald_Arm_S1",
-      "label": "Dragon Stellar Transit Company Emerald Arm Thruster",
-      "description": "Dragon Stellar Transit Company Emerald Arm Thruster",
-      "kind": "item"
-    },
-    "drak_emerald_main_s1": {
-      "key": "item_DescDRAK_Emerald_Main_S1",
-      "label": "Dragon Stellar Transit Company Emerald Main Thruster",
-      "description": "Dragon Stellar Transit Company Emerald Main Thruster",
-      "kind": "item"
-    },
-    "drak_emerald_retro_s1": {
-      "key": "item_DescDRAK_Emerald_Retro_S1",
-      "label": "Dragon Stellar Transit Company Emerald Retro Thruster",
-      "description": "Dragon Stellar Transit Company Emerald Retro Thruster",
-      "kind": "item"
-    },
-    "drak_fixed_mount_s4": {
-      "key": "item_DescDRAK_Fixed_Mount_S4",
-      "label": "Cutlass Flashfire Specialty Mount",
-      "description": "Cutlass Flashfire Specialty Mount Description",
-      "kind": "item"
-    },
-    "drak_fueltank_buccaneer": {
-      "key": "item_DescDRAK_FuelTank_Buccaneer",
-      "label": "Drake Buccaneer Fuel Tank",
-      "description": "Drake Buccaneer Fuel Tank",
-      "kind": "item"
-    },
-    "drak_fueltank_herald": {
-      "key": "item_DescDRAK_FuelTank_Herald",
-      "label": "Drake Herald Fuel Tank",
-      "description": "Drake Herald Fuel Tank",
-      "kind": "item"
-    },
-    "drak_herald_hangar_landingsystem": {
-      "key": "item_DescDRAK_Herald_Hangar_LandingSystem",
-      "label": "Drake Herald Landing System",
-      "description": "Drake Herald Landing System",
-      "kind": "item"
-    },
-    "drak_herald_seat_pilot": {
-      "key": "item_DescDRAK_Herald_Seat_Pilot",
-      "label": "Drake Herald Pilot Seat",
-      "description": "Drake Herald Pilot Seat",
-      "kind": "item"
-    },
-    "drak_herald_seat_station": {
-      "key": "item_DescDRAK_Herald_Seat_Station",
-      "label": "Drake Herald Station Seat",
-      "description": "Drake Herald Station Seat",
-      "kind": "item"
-    },
-    "drak_missile_rack_s1_x2": {
-      "key": "item_DescDRAK_Missile_Rack_S1_x2",
-      "label": "Drake S1 Double Missile Rack",
-      "description": "Drake S1 Double Missile Rack",
-      "kind": "item"
-    },
     "drak_s2_rack_x2": {
       "key": "item_DescDRAK_S2_Rack_x2",
       "label": "Drake Double Platform",
@@ -6680,12 +5348,6 @@
       "description": "Drake's proprietary Trireme S Series of maneuvering thrusters is a low emission propulsion system to give pilots absolute control of their ship while minimizing your profile on outside scanners.",
       "kind": "item"
     },
-    "drak_trireme_herald_s1_q1": {
-      "key": "item_DescDRAK_Trireme_Herald_S1_Q1",
-      "label": "Drake Herald Trireme Thruster",
-      "description": "Drake Herald Trireme Thruster",
-      "kind": "item"
-    },
     "drak_trireme_s1_q1": {
       "key": "item_DescDRAK_Trireme_S1_Q1",
       "label": "Drake Trireme S-1",
@@ -6696,12 +5358,6 @@
       "key": "item_DescDRAK_Trireme_S3_Q1",
       "label": "Drake Trireme Thruster",
       "description": "Drake's proprietary Trieme S Series of maneuvering thrusters is a low emission propulsion system to give pilots absolute control of their ship while minimizing your profile on outside scanners.",
-      "kind": "item"
-    },
-    "drak_twinlink_gimbal_s1": {
-      "key": "item_DescDRAK_twinLink_gimbal_S1",
-      "label": "Drake Cutlass Weapon Mount",
-      "description": "Drake Cutlass Weapon Mount",
       "kind": "item"
     },
     "dstc_fp_g4gi_s2_q1": {
@@ -7128,42 +5784,6 @@
       "key": "item_DescDrink_glass_tumbler_01_a",
       "label": "Whiskey (Glass)",
       "description": "HEI: 5 Effects: Cognitive Impairment, Dehydrating Distilled from fermented grains, whiskey is carefully aged to produce the drink's signature flavor.",
-      "kind": "item"
-    },
-    "engn_rsi_bengal_aux": {
-      "key": "item_DescENGN_RSI_Bengal_Aux",
-      "label": "RSI Bengal Auxiliary Thruster",
-      "description": "RSI Bengal Auxiliary Thruster",
-      "kind": "item"
-    },
-    "engn_rsi_bengal_main": {
-      "key": "item_DescENGN_RSI_Bengal_Main",
-      "label": "RSI Bengal Main Thruster",
-      "description": "RSI Bengal Main Thruster",
-      "kind": "item"
-    },
-    "engn_rsi_bengal_retro": {
-      "key": "item_DescENGN_RSI_Bengal_Retro",
-      "label": "RSI Bengal Retro Thruster",
-      "description": "RSI Bengal Retro Thruster",
-      "kind": "item"
-    },
-    "engn_vncl_stinger": {
-      "key": "item_DescENGN_VNCL_Stinger",
-      "label": "Vanduul Stinger Engine",
-      "description": "Vanduul Stinger Engine",
-      "kind": "item"
-    },
-    "engn_vncl_stinger_wing": {
-      "key": "item_DescENGN_VNCL_Stinger_Wing",
-      "label": "Vanduul Stinger Wing Engine",
-      "description": "Vanduul Stinger Wing Engine",
-      "kind": "item"
-    },
-    "engn_xian_scout_s3_engine": {
-      "key": "item_DescENGN_XIAN_Scout_S3_Engine",
-      "label": "Khartu-al Scout Engine",
-      "description": "Khartu-al Scout Engine",
       "kind": "item"
     },
     "espr_ballisticcannon_s1": {
@@ -7602,12 +6222,6 @@
       "key": "item_DescFlair_Lamp_001",
       "label": "Lamp",
       "description": "Get your own Lamp from the original 24 hour livestream!",
-      "kind": "item"
-    },
-    "flair_m50_display": {
-      "key": "item_DescFlair_M50_Display",
-      "label": "ORIG M50 Display Case",
-      "description": "ORIG M50 Display Case",
       "kind": "item"
     },
     "flair_miningdrill": {
@@ -8840,12 +7454,6 @@
       "description": "NDR: 35 Effects: Fatiguing, Hypometabolic Thick starch noodles tossed with oil and pieces of carafi, an flavorless jelly, for extra nutrition.",
       "kind": "item"
     },
-    "food_tin_noodle_2_a": {
-      "key": "item_DescFood_tin_noodle_2_a",
-      "label": "[PH] Noodles v2",
-      "description": "[PH] Needs Description from Narrative",
-      "kind": "item"
-    },
     "food_tin_omni_01_a": {
       "key": "item_DescFood_tin_omni_01_a",
       "label": "Boumbo Stew Omni Pack",
@@ -9042,12 +7650,6 @@
       "key": "item_DescFreelancer_Paint_White_Red",
       "label": "Freelancer Ellroy's Livery",
       "description": "Ready to give your Freelancer a jolt of energy? The iconic, coffee serving mascot pops on the Ellroy's livery, which is primarily crisp white with red and black highlights.",
-      "kind": "item"
-    },
-    "freelancer_stock_missile_rack": {
-      "key": "item_DescFreelancer_Stock_Missile_Rack",
-      "label": "Freelancer Stock Missile Rack",
-      "description": "Freelancer Stock Missile Rack",
       "kind": "item"
     },
     "furylx_paint_black_black_black": {
@@ -9342,54 +7944,6 @@
       "key": "item_DescGMNT_MISC_S03_PL01",
       "label": "Reliant Gilroy Gimbal",
       "description": "Item Type: Weapon Mount (Reliant Exclusive) Manufacturer: MISC Size: 4 MISC built the Gilroy as a custom wing mounted gimbal for use exclusively with the Reliant. Standard on the Tana, it allows a S4 weapon better movement when tracking targets.",
-      "kind": "item"
-    },
-    "grin_cydnus_engine": {
-      "key": "item_DescGRIN_Cydnus_Engine",
-      "label": "Greycat Industrial Cydnus Engine",
-      "description": "Greycat Industrial Cydnus Engine",
-      "kind": "item"
-    },
-    "grin_cydnus_joint": {
-      "key": "item_DescGRIN_Cydnus_Joint",
-      "label": "Greycat Industrial Cydnus Joint Thruster",
-      "description": "Greycat Industrial Cydnus Joint Thruster",
-      "kind": "item"
-    },
-    "grin_cydnus_leg": {
-      "key": "item_DescGRIN_Cydnus_Leg",
-      "label": "Greycat Industrial Cydnus Leg Thruster",
-      "description": "Greycat Industrial Cydnus Leg Thruster",
-      "kind": "item"
-    },
-    "grin_cydnus_retro": {
-      "key": "item_DescGRIN_Cydnus_Retro",
-      "label": "Greycat Industrial Cydnus Retro Thruster",
-      "description": "Greycat Industrial Cydnus Retro Thruster",
-      "kind": "item"
-    },
-    "grin_cydnus_seat_pilot": {
-      "key": "item_DescGRIN_Cydnus_Seat_Pilot",
-      "label": "Greycat Industrial Cydnus Pilot Seat",
-      "description": "Greycat Industrial Cydnus Pilot Seat",
-      "kind": "item"
-    },
-    "grin_cydnus_support": {
-      "key": "item_DescGRIN_Cydnus_Support",
-      "label": "Greycat Industrial Cydnus Support Seat",
-      "description": "Greycat Industrial Cydnus Support Seat",
-      "kind": "item"
-    },
-    "grin_greycat_seat_driver": {
-      "key": "item_DescGRIN_Greycat_Seat_Driver",
-      "label": "Greycat Industrial Driver's Seat",
-      "description": "Greycat Industrial Driver's Seat",
-      "kind": "item"
-    },
-    "grin_greycat_seat_passenger": {
-      "key": "item_DescGRIN_Greycat_Seat_Passenger",
-      "label": "Greycat Industrial Passenger's Seat",
-      "description": "Greycat Industrial Passenger's Seat",
       "kind": "item"
     },
     "grin_roc_mining_turret": {
@@ -9734,40 +8288,10 @@
       "description": "Featuring a dramatically stark all-white finish, the Whiteout livery highlights the powerful form of the Guardian.",
       "kind": "item"
     },
-    "hapr_gladiator_he52_s2_q2": {
-      "key": "item_DescHAPR_Gladiator_HE52_S2_Q2",
-      "label": "Hammer Propulsion Gladiator HE52 Thruster",
-      "description": "Hammer Propulsion Gladiator HE52 Thruster",
-      "kind": "item"
-    },
     "hapr_hl24_s4_q2": {
       "key": "item_DescHAPR_HL24_S4_Q2",
       "label": "Hammer Propulsion HL 2.4 (TR4)",
       "description": "Hammer Propulsion's HL 2.4 utilizes award-winning Gated 4 Grid Iron technology to provide a high output thrust with minimal emissions.",
-      "kind": "item"
-    },
-    "hapr_p_esi_s2_q2": {
-      "key": "item_DescHAPR_P_ESI_S2_Q2",
-      "label": "Hammer Propulsion P ESI Thruster",
-      "description": "Hammer Propulsion P ESI Thruster",
-      "kind": "item"
-    },
-    "hapr_p_esi_s5_q2": {
-      "key": "item_DescHAPR_P_ESI_S5_Q2",
-      "label": "Hammer Propulsion P ESI Thruster",
-      "description": "Hammer Propulsion P ESI Thruster",
-      "kind": "item"
-    },
-    "hapr_p_esi_s5_q2_retro": {
-      "key": "item_DescHAPR_P_ESI_S5_Q2_Retro",
-      "label": "Hammer Propulsion P ESI Retro Thruster",
-      "description": "Hammer Propulsion P ESI Retro Thruster",
-      "kind": "item"
-    },
-    "hapr_vp_esi_s1_q2": {
-      "key": "item_DescHAPR_VP_ESI_S1_Q2",
-      "label": "Hammer Propulsion HM 4.1",
-      "description": "Hammer Propulsion HM 4.1",
       "kind": "item"
     },
     "hapr_vp_esi_s2_q2": {
@@ -9914,46 +8438,10 @@
       "description": "The Vanduul Mauler's Hydrogen Fuel Tank stores fuel to power the Mauler conventional engines and thrusters.",
       "kind": "item"
     },
-    "hypr_fm_esi_s3_q1": {
-      "key": "item_DescHYPR_FM_ESI_S3_Q1",
-      "label": "Origin Jumpworks Scalpel Precision Thruster",
-      "description": "Origin Jumpworks Scalpel Precision Thruster",
-      "kind": "item"
-    },
-    "hypr_fxp_esi_s1_q1": {
-      "key": "item_DescHYPR_FXP_ESI_S1_Q1",
-      "label": "Hydra Propulsion M1-16",
-      "description": "Hydra Propulsion M1-16",
-      "kind": "item"
-    },
-    "hypr_jm_esi_s3_q1": {
-      "key": "item_DescHYPR_JM_ESI_S3_Q1",
-      "label": "Origin Jumpworks Omni Precision Ball Thruster",
-      "description": "Origin Jumpworks Omni Precision Ball Thruster",
-      "kind": "item"
-    },
-    "hypr_m116a_s1_q1": {
-      "key": "item_DescHYPR_M116A_S1_Q1",
-      "label": "Hydra Propulsion M1-16A",
-      "description": "Hydra Propulsion M1-16A",
-      "kind": "item"
-    },
-    "hypr_m116b_s1_q1": {
-      "key": "item_DescHYPR_M116B_S1_Q1",
-      "label": "Hydra Propulsion M1-16B",
-      "description": "Hydra Propulsion M1-16B",
-      "kind": "item"
-    },
     "hypr_m116_s1_q1": {
       "key": "item_DescHYPR_M116_S1_Q1",
       "label": "8x Hydra Propulsion M1-16 (TR1)",
       "description": "Welcome to the next level of maneuverability. The M1-16 line of thrusters from Hydra Propulsion features ultra-fine precision bursts to allow pilots an unprecedented level of control.",
-      "kind": "item"
-    },
-    "hammer_propulsion_hmx_4_3": {
-      "key": "item_DescHammer_Propulsion_HMX_4_3",
-      "label": "Hammer Propulsion HMX 4.3 Thruster",
-      "description": "Hammer Propulsion HMX 4.3 Thruster",
       "kind": "item"
     },
     "hammer_propulsion_twin_hm_4_3": {
@@ -10376,24 +8864,6 @@
       "description": "This Fuel Intake replenishes the hydrogen fuel stores for the Mauler to keep its tanks full during combat maneuvers.",
       "kind": "item"
     },
-    "idris_fuelintake": {
-      "key": "item_DescIdris_FuelIntake",
-      "label": "Aegis Idris Fuel Intake",
-      "description": "Aegis Idris Fuel Intake",
-      "kind": "item"
-    },
-    "idris_fueltank": {
-      "key": "item_DescIdris_FuelTank",
-      "label": "Aegis Idris Fuel Tank",
-      "description": "Aegis Idris Fuel Tank",
-      "kind": "item"
-    },
-    "idris_mainengine": {
-      "key": "item_DescIdris_MainEngine",
-      "label": "Aegis Idris Main Engine",
-      "description": "Aegis Idris Main Engine",
-      "kind": "item"
-    },
     "idris_paint_beige_beige_black_shark": {
       "key": "item_DescIdris_Paint_Beige_Beige_Black_Shark",
       "label": "Idris Sharktooth Livery",
@@ -10440,18 +8910,6 @@
       "key": "item_DescIdris_Paint_Grey_Green_Tan_Camo",
       "label": "Idris Commando Camo Livery",
       "description": "The Commando Camo livery brings a classic green and tan camo look to the Idris.",
-      "kind": "item"
-    },
-    "idris_powerplant": {
-      "key": "item_DescIdris_PowerPlant",
-      "label": "Main Powerplant",
-      "description": "Aegis Idris Powerplant",
-      "kind": "item"
-    },
-    "idris_retro_thruster": {
-      "key": "item_DescIdris_Retro_Thruster",
-      "label": "Aegis Idris Retro Thruster",
-      "description": "Aegis Idris Retro Thruster",
       "kind": "item"
     },
     "intrepid_paint_black_blue": {
@@ -10532,18 +8990,6 @@
       "description": "Item Type: Jump Module Manufacturer: Aegis Dynamics Size: 4 This capital-class jump module was designed specifically for the Idris frigate.",
       "kind": "item"
     },
-    "jokr_defcon_cml_chaff": {
-      "key": "item_DescJOKR_Defcon_CML_Chaff",
-      "label": "Joker Defcon - Noise Launcher",
-      "description": "Joker Defcon - Noise Launcher",
-      "kind": "item"
-    },
-    "jokr_defcon_cml_flare": {
-      "key": "item_DescJOKR_Defcon_CML_Flare",
-      "label": "Joker Defcon - Decoy Launcher",
-      "description": "Joker Defcon - Decoy Launcher",
-      "kind": "item"
-    },
     "jokr_distortioncannon_s1": {
       "key": "item_DescJOKR_DistortionCannon_S1",
       "label": "Suckerpunch Cannon",
@@ -10602,24 +9048,6 @@
       "key": "item_DescKBAR_BallisticCannon_S3",
       "label": "11-Series Broadsword Cannon",
       "description": "Manufacturer: KnightBridge Arms Item Type: Ballistic Cannon Size: 3 The 11-Series Broadsword from KnightBridge Arms is the size three ballistic autocannon pilots come to when they want the 3 D’s: distance, dependability and damage.",
-      "kind": "item"
-    },
-    "kggr_generalnavlight_1": {
-      "key": "item_DescKGGR_GeneralNavLight_1",
-      "label": "@KGGR General Navigation Light",
-      "description": "@General Navigation light",
-      "kind": "item"
-    },
-    "kggr_generalnavlight_2": {
-      "key": "item_DescKGGR_GeneralNavLight_2",
-      "label": "@KGGR General Navigation Light",
-      "description": "@General Navigation light",
-      "kind": "item"
-    },
-    "kggr_strobelight": {
-      "key": "item_DescKGGR_Strobelight",
-      "label": "KEGR Strobe",
-      "description": "@Navigation Strobe light",
       "kind": "item"
     },
     "klwe_laserrepeater_s1": {
@@ -10700,12 +9128,6 @@
       "description": "The TM Series thrusters from Kosmicheskie Dvigateli Kunayeva (KDK) are high-power maneuvering thrusters built around cutting-edge Electrostatic ion technology to provide a heavy output without sacrificing precision.",
       "kind": "item"
     },
-    "kodk_tm8_rollflex_s3_q1": {
-      "key": "item_DescKODK_TM8_RollFlex_S3_Q1",
-      "label": "KDK TM-4 Slider Thruster",
-      "description": "KDK TM-4 Slider Thruster",
-      "kind": "item"
-    },
     "krig_ballisticgatling_s2": {
       "key": "item_DescKRIG_BallisticGatling_S2",
       "label": "Tigerstrike T-19P",
@@ -10718,34 +9140,10 @@
       "description": "Manufacturer: Kruger Intergalactic Item Type: Ballistic Gatling Size: 3 Simply put, the Tigerstrike T-21 from Kruger is an equalizer. This high-speed rotary cannon is capable of delivering a relentless stream of rounds on target with a minimal chance of weapon jam making it an essential addition to any arsenal.",
       "kind": "item"
     },
-    "krig_cockpit_audio": {
-      "key": "item_DescKRIG_Cockpit_Audio",
-      "label": "Kruger Intergalactic Cockpit Audio",
-      "description": "Kruger Intergalactic Cockpit Audio",
-      "kind": "item"
-    },
     "krig_lasercannon_s3": {
       "key": "item_DescKRIG_LaserCannon_S3",
       "label": "Quarreler Cannon",
       "description": "Manufacturer: Kruger Intergalactic Item Type: Laser Cannon Size: 3 Crafted with precision manufactured parts forged to extremely tight tolerances, designed for top-of-class heat management and assembled to exceed all industry standards, the Quarreler laser autocannon was created by Kruger Intergalactic for true defensive dependability.",
-      "kind": "item"
-    },
-    "krig_merlin_landingsystem": {
-      "key": "item_DescKRIG_Merlin_LandingSystem",
-      "label": "Kruger Intergalactic Merlin Landing System",
-      "description": "Kruger Intergalactic Merlin Landing System",
-      "kind": "item"
-    },
-    "krig_merlin_seat_pilot": {
-      "key": "item_DescKRIG_Merlin_Seat_Pilot",
-      "label": "Kruger Intergalactic Merlin Pilot Seat",
-      "description": "Kruger Intergalactic Merlin Pilot Seat",
-      "kind": "item"
-    },
-    "krig_p52_merlin_multilight": {
-      "key": "item_DescKRIG_P52_Merlin_MultiLight",
-      "label": "Kruger Intergalactic Merlin External Lights",
-      "description": "Kruger Intergalactic Merlin External Lights",
       "kind": "item"
     },
     "krig_wolf_ballisticgatling_s4": {
@@ -11312,22 +9710,10 @@
       "description": "Item Type: Missile Rack Manufacturer: Crusader Industries Size: 1 Missiles: 1xS1 Made to defend the Intrepid from unexpected trouble, Crusader developed this bespoke missile rack to carry and deploy an S1 missile.",
       "kind": "item"
     },
-    "misc_freelancer_copilot_seat": {
-      "key": "item_DescMISC_Freelancer_CoPilot_Seat",
-      "label": "MISC Freelancer Co-Pilot Seat",
-      "description": "MISC Freelancer Co-Pilot Seat",
-      "kind": "item"
-    },
     "misc_freelancer_dur_shop": {
       "key": "item_DescMISC_Freelancer_DUR_shop",
       "label": "MISC Freelancer DUR",
       "description": "Manufacturer: MISC Focus: Expedition The Freelancer DUR variant specializes in exploration. Sacrificing 25% cargo capacity of the standard Freelancer for an enhanced jump drive, a more advanced scanner, and an expanded fuel tank may seem like a bad call to some, but those who value discovery over profit will find it to be their ship of choice.",
-      "kind": "item"
-    },
-    "misc_freelancer_landingsystem": {
-      "key": "item_DescMISC_Freelancer_LandingSystem",
-      "label": "MISC Freelancer Landing System",
-      "description": "MISC Freelancer Landing System",
       "kind": "item"
     },
     "misc_freelancer_max_shop": {
@@ -11336,52 +9722,10 @@
       "description": "Manufacturer: MISC Focus: Medium Freight Freelancer variant with additional cargo capacity at the expense of weapons. The Freelancer MAX variant sacrifices weaponry for an increased cargo capacity making it ideal for equipment or raw materials transport.",
       "kind": "item"
     },
-    "misc_freelancer_rear_left_seat": {
-      "key": "item_DescMISC_Freelancer_Rear_Left_Seat",
-      "label": "MISC Freelancer Rear Left Seat",
-      "description": "MISC Freelancer Rear Left Seat",
-      "kind": "item"
-    },
-    "misc_freelancer_rear_right_seat": {
-      "key": "item_DescMISC_Freelancer_Rear_Right_Seat",
-      "label": "MISC Freelancer Rear Right Seat",
-      "description": "MISC Freelancer Rear Right Seat",
-      "kind": "item"
-    },
-    "misc_freelancer_retro_thruster": {
-      "key": "item_DescMISC_Freelancer_Retro_Thruster",
-      "label": "MISC Freelancer Retro Thruster",
-      "description": "MISC Freelancer Retro Thruster",
-      "kind": "item"
-    },
-    "misc_freelancer_turret": {
-      "key": "item_DescMISC_Freelancer_Turret",
-      "label": "MISC Freelancer Turret",
-      "description": "MISC Freelancer Turret",
-      "kind": "item"
-    },
-    "misc_freelancer_turret_base": {
-      "key": "item_DescMISC_Freelancer_Turret_Base",
-      "label": "MISC Freelancer Turret",
-      "description": "MISC Freelancer Turret",
-      "kind": "item"
-    },
-    "misc_freelancer_turret_seat": {
-      "key": "item_DescMISC_Freelancer_Turret_Seat",
-      "label": "MISC Freelancer Turret Seat",
-      "description": "MISC Freelancer Turret Seat",
-      "kind": "item"
-    },
     "misc_freelancer_shop": {
       "key": "item_DescMISC_Freelancer_shop",
       "label": "MISC Freelancer",
       "description": "Manufacturer: MISC Focus: Medium Freight Freelancers are used as long haul merchant ships by major corporations, but they are just as frequently repurposed as dedicated exploration vessels by independent captains who want to operate on the fringes of the galaxy.",
-      "kind": "item"
-    },
-    "misc_fuelrefinery": {
-      "key": "item_DescMISC_FuelRefinery",
-      "label": "MISC Fuel Refinery Pod",
-      "description": "MISC Fuel Refinery Pod",
       "kind": "item"
     },
     "misc_fury_s02_double_rack": {
@@ -11402,76 +9746,10 @@
       "description": "Item Type: Missile Rack Manufacturer: Mirai Size: 3 Missiles: 2xS2 To make the Fury a threat despite its small size, Mirai developed this bespoke missile rack, which can carry and deploy two S2 missiles without undermining the ship's compact profile.",
       "kind": "item"
     },
-    "misc_gemini_front_turret": {
-      "key": "item_DescMISC_Gemini_Front_Turret",
-      "label": "MISC Starfarer Gemini Main Turret",
-      "description": "MISC Starfarer Gemini Main Turret",
-      "kind": "item"
-    },
-    "misc_gemini_front_turret_base": {
-      "key": "item_DescMISC_Gemini_Front_Turret_Base",
-      "label": "MISC Starfarer Gemini Main Turret",
-      "description": "MISC Starfarer Gemini Main Turret",
-      "kind": "item"
-    },
-    "misc_gemini_rear_turret": {
-      "key": "item_DescMISC_Gemini_Rear_Turret",
-      "label": "MISC Starfarer Gemini Rear Turret",
-      "description": "MISC Starfarer Gemini Rear Turret",
-      "kind": "item"
-    },
-    "misc_gemini_rear_turret_base": {
-      "key": "item_DescMISC_Gemini_Rear_Turret_Base",
-      "label": "MISC Starfarer Gemini Rear Turret",
-      "description": "MISC Starfarer Gemini Rear Turret",
-      "kind": "item"
-    },
     "misc_hull_b_mrck_s06_bespoke": {
       "key": "item_DescMISC_Hull_B_MRCK_S06_Bespoke",
       "label": "Hull B Missile Rack",
       "description": "Item Type: Missile Rack Manufacturer: MISC Size: 6 Missiles: 8xS3 Bespoke missile rack for the MISC Hull B that fires eight S3 missiles.",
-      "kind": "item"
-    },
-    "misc_prospector_cml_chaff": {
-      "key": "item_DescMISC_Prospector_CML_Chaff",
-      "label": "MISC Prospector - Noise Launcher",
-      "description": "MISC Prospector - Noise Launcher",
-      "kind": "item"
-    },
-    "misc_prospector_cml_flare": {
-      "key": "item_DescMISC_Prospector_CML_Flare",
-      "label": "MISC Prospector - Decoy Launcher",
-      "description": "MISC Prospector - Decoy Launcher",
-      "kind": "item"
-    },
-    "misc_reliant_cml_chaff": {
-      "key": "item_DescMISC_Reliant_CML_Chaff",
-      "label": "MISC Reliant - Noise Launcher",
-      "description": "MISC Reliant - Noise Launcher",
-      "kind": "item"
-    },
-    "misc_reliant_cml_flare": {
-      "key": "item_DescMISC_Reliant_CML_Flare",
-      "label": "MISC Reliant - Decoy Launcher",
-      "description": "MISC Reliant - Decoy Launcher",
-      "kind": "item"
-    },
-    "misc_reliant_copilot_seat": {
-      "key": "item_DescMISC_Reliant_CoPilot_Seat",
-      "label": "MISC Reliant Co-Pilot Seat",
-      "description": "MISC Reliant Co-Pilot Seat",
-      "kind": "item"
-    },
-    "misc_reliant_landingsystem": {
-      "key": "item_DescMISC_Reliant_LandingSystem",
-      "label": "MISC Reliant Landing System",
-      "description": "MISC Reliant Landing System",
-      "kind": "item"
-    },
-    "misc_reliant_main_thrust": {
-      "key": "item_DescMISC_Reliant_Main_Thrust",
-      "label": "MISC Reliant Main Thruster",
-      "description": "MISC Reliant Main Thruster",
       "kind": "item"
     },
     "misc_reliant_mako_wing_mount": {
@@ -11486,18 +9764,6 @@
       "description": "Item Type: Missile Launcher Cap Manufacturer: MISC Size: 5 Bespoke missile launcher cap used by the MISC Reliant.",
       "kind": "item"
     },
-    "misc_reliant_multilight": {
-      "key": "item_DescMISC_Reliant_MultiLight",
-      "label": "MISC Reliant External Lights",
-      "description": "MISC Reliant External Lights",
-      "kind": "item"
-    },
-    "misc_reliant_sec_thrust": {
-      "key": "item_DescMISC_Reliant_Sec_Thrust",
-      "label": "MISC Reliant Secondary Thruster",
-      "description": "MISC Reliant Secondary Thruster",
-      "kind": "item"
-    },
     "misc_reliant_sen_wing_mount": {
       "key": "item_DescMISC_Reliant_Sen_Wing_Mount",
       "label": "Reliant Samos Sensor Suite",
@@ -11508,108 +9774,6 @@
       "key": "item_DescMISC_Reliant_Wing_Dual_Turret",
       "label": "Reliant Toshima Turret",
       "description": "Item Type: Turret (Reliant Exclusive) Manufacturer: MISC Size: 4 Specifically built to be used exclusively on the MISC Reliant, the Toshima turret system comes with a camera that can be remoted into while providing a wide range of motion for two Size-2 weapons.",
-      "kind": "item"
-    },
-    "misc_starfarer_bridge_rear_left_seat": {
-      "key": "item_DescMISC_Starfarer_Bridge_Rear_Left_Seat",
-      "label": "MISC Starfarer Support Seat",
-      "description": "MISC Starfarer Support Seat",
-      "kind": "item"
-    },
-    "misc_starfarer_bridge_rear_right_seat": {
-      "key": "item_DescMISC_Starfarer_Bridge_Rear_Right_Seat",
-      "label": "MISC Starfarer Support Seat",
-      "description": "MISC Starfarer Support Seat",
-      "kind": "item"
-    },
-    "misc_starfarer_captains_seat": {
-      "key": "item_DescMISC_Starfarer_Captains_Seat",
-      "label": "MISC Starfarer Captain's Seat",
-      "description": "MISC Starfarer Captain's Seat",
-      "kind": "item"
-    },
-    "misc_starfarer_copilot_seat": {
-      "key": "item_DescMISC_Starfarer_CoPilot_Seat",
-      "label": "MISC Starfarer Co-Pilot Seat",
-      "description": "MISC Starfarer Co-Pilot Seat",
-      "kind": "item"
-    },
-    "misc_starfarer_front_turret": {
-      "key": "item_DescMISC_Starfarer_Front_Turret",
-      "label": "MISC Starfarer Main Turret",
-      "description": "MISC Starfarer Main Turret",
-      "kind": "item"
-    },
-    "misc_starfarer_front_turret_base": {
-      "key": "item_DescMISC_Starfarer_Front_Turret_Base",
-      "label": "MISC Starfarer Main Turret",
-      "description": "MISC Starfarer Main Turret",
-      "kind": "item"
-    },
-    "misc_starfarer_front_turret_seat": {
-      "key": "item_DescMISC_Starfarer_Front_Turret_Seat",
-      "label": "MISC Starfarer Main Turret Seat",
-      "description": "MISC Starfarer Main Turret Seat",
-      "kind": "item"
-    },
-    "misc_starfarer_fuelintake": {
-      "key": "item_DescMISC_Starfarer_FuelIntake",
-      "label": "MISC Starfarer Fuel Intake",
-      "description": "MISC Starfarer Fuel Intake",
-      "kind": "item"
-    },
-    "misc_starfarer_landingsystem": {
-      "key": "item_DescMISC_Starfarer_LandingSystem",
-      "label": "MISC Starfarer Landing System",
-      "description": "MISC Starfarer Landing System",
-      "kind": "item"
-    },
-    "misc_starfarer_multilight": {
-      "key": "item_DescMISC_Starfarer_MultiLight",
-      "label": "MISC Starfarer External Lights",
-      "description": "MISC Starfarer External Lights",
-      "kind": "item"
-    },
-    "misc_starfarer_pilot_seat": {
-      "key": "item_DescMISC_Starfarer_Pilot_Seat",
-      "label": "MISC Starfarer Pilot Seat",
-      "description": "MISC Starfarer Pilot Seat",
-      "kind": "item"
-    },
-    "misc_starfarer_rear_turret": {
-      "key": "item_DescMISC_Starfarer_Rear_Turret",
-      "label": "MISC Starfarer Rear Turret",
-      "description": "MISC Starfarer Rear Turret",
-      "kind": "item"
-    },
-    "misc_starfarer_rear_turret_base": {
-      "key": "item_DescMISC_Starfarer_Rear_Turret_Base",
-      "label": "MISC Starfarer Rear Turret",
-      "description": "MISC Starfarer Rear Turret",
-      "kind": "item"
-    },
-    "misc_starfarer_rear_turret_seat": {
-      "key": "item_DescMISC_Starfarer_Rear_Turret_Seat",
-      "label": "MISC Starfarer Rear Turret Seat",
-      "description": "MISC Starfarer Rear Turret Seat",
-      "kind": "item"
-    },
-    "misc_xitech_pro_fixed_s3_q3": {
-      "key": "item_DescMISC_XiTech_Pro_Fixed_S3_Q3",
-      "label": "MISC XiTech Pro Fixed Thruster",
-      "description": "MISC XiTech Pro Fixed Thruster",
-      "kind": "item"
-    },
-    "misc_xitech_pro_joint_s3_q3": {
-      "key": "item_DescMISC_XiTech_Pro_Joint_S3_Q3",
-      "label": "MISC XiTech Pro Joint Thruster",
-      "description": "MISC XiTech Pro Joint Thruster",
-      "kind": "item"
-    },
-    "misc_xitech_pro_retro_s3_q3": {
-      "key": "item_DescMISC_XiTech_Pro_Retro_S3_Q3",
-      "label": "MISC XiTech Pro Retro Thruster",
-      "description": "MISC XiTech Pro Retro Thruster",
       "kind": "item"
     },
     "misl_s01_cs_behr_spearhead_ground": {
@@ -12224,12 +10388,6 @@
       "description": "Item Type: Missile Rack Manufacturer: Gatac Manufacture Size: 3 Missiles: 2xS2 Designed by Gatac, this missile rack is capable of storing two S2 missiles.",
       "kind": "item"
     },
-    "mrck_s03_vncl_quad_s01": {
-      "key": "item_DescMRCK_S03_VNCL_Quad_S01",
-      "label": "Vanduul S3 Quad Missile Rack",
-      "description": "Vanduul S3 Quad Missile Rack",
-      "kind": "item"
-    },
     "mrck_s03_xnaa_santokyai": {
       "key": "item_DescMRCK_S03_XNAA_SanTokYai",
       "label": "San'tok.yāi Missile Rack",
@@ -12284,18 +10442,6 @@
       "description": "Item Type: Missile Rack Manufacturer: Behring Size: 4 Missiles: 8xS1 To help defend the Origin 890 Jump, Behring built the SNT-481 \"Santoro\", which can carry and deploy eight S1 missiles.",
       "kind": "item"
     },
-    "mrck_s04_rsi_constellation": {
-      "key": "item_DescMRCK_S04_RSI_Constellation",
-      "label": "RSI Constellation Side Missile Rack",
-      "description": "RSI Constellation Side Missile Rack",
-      "kind": "item"
-    },
-    "mrck_s04_vncl_quad_s02": {
-      "key": "item_DescMRCK_S04_VNCL_Quad_S02",
-      "label": "Vanduul S4 Quad Missile Rack",
-      "description": "Vanduul S4 Quad Missile Rack",
-      "kind": "item"
-    },
     "mrck_s05_aegs_vanguard": {
       "key": "item_DescMRCK_S05_AEGS_Vanguard",
       "label": "Aegis Vanguard Torpedo Rack",
@@ -12344,12 +10490,6 @@
       "description": "Item Type: Missile Rack Manufacturer: Drake Interplanetary Size: 5 Missiles: 5xS5 This bespoke rack for the Drake Ironclad can carry and deploy five S5 torpedoes.",
       "kind": "item"
     },
-    "mrck_s05_misc_freelancer_mis": {
-      "key": "item_DescMRCK_S05_MISC_Freelancer_MIS",
-      "label": "MISC Freelancer MIS Missile Launcher",
-      "description": "MISC Freelancer MIS Missile Launcher",
-      "kind": "item"
-    },
     "mrck_s05_misc_reliant": {
       "key": "item_DescMRCK_S05_MISC_Reliant",
       "label": "Reliant Tana Missile Launcher",
@@ -12362,22 +10502,10 @@
       "description": "Item Type: Missile Rack Manufacturer: Behring Size: 5 Missiles: 4xS3 To help defend the Origin 890 Jump, Behring built the SNT-543 \"Santoro\", which can carry and deploy four S3 missiles.",
       "kind": "item"
     },
-    "mrck_s05_rsi_constellation": {
-      "key": "item_DescMRCK_S05_RSI_Constellation",
-      "label": "RSI Constellation Top Missile Rack",
-      "description": "RSI Constellation Top Missile Rack",
-      "kind": "item"
-    },
     "mrck_s05_vncl_stinger_s02": {
       "key": "item_DescMRCK_S05_VNCL_Stinger_S02",
       "label": "Esperia Stinger Missile Rack",
       "description": "Item Type: Missile Rack Manufacturer: Esperia Size: 5 Missiles: 8xS2 This S5 missile rack can be equipped with eight S2 missiles.",
-      "kind": "item"
-    },
-    "mrck_s06_anvl_gladiator": {
-      "key": "item_DescMRCK_S06_ANVL_Gladiator",
-      "label": "Anvil Gladiator Torpedo Rack",
-      "description": "Anvil Gladiator Torpedo Rack",
       "kind": "item"
     },
     "mrck_s06_behr_dual_s05": {
@@ -12404,12 +10532,6 @@
       "description": "Item Type: Missile Rack Manufacturer: Behring Size: 6 Missiles: 1xS6 Behring’s MSD-616 \"Marsden\" is a complete ordnance storage and deployment system that can be mounted on any compatible size 6 hardpoint for the reliable and effective launch of one S6 missile.",
       "kind": "item"
     },
-    "mrck_s06_misc_gemini": {
-      "key": "item_DescMRCK_S06_MISC_Gemini",
-      "label": "Aegis Gemini Missile Launcher",
-      "description": "Aegis Gemini Missile Launcher",
-      "kind": "item"
-    },
     "mrck_s07_anvl_ballista": {
       "key": "item_DescMRCK_S07_ANVL_Ballista",
       "label": "Anvil Ballista S07 Missile Rack",
@@ -12420,18 +10542,6 @@
       "key": "item_DescMRCK_S07_CRUS_Starfighter",
       "label": "Ares Star Fighter Missile Launcher",
       "description": "Item Type: Missile Launcher Manufacturer: Crusader Industries Size: 7 Missiles: 12xS3 Bespoke missile launcher built into the body of the Ares Star Fighter that can carry and deploy twelve S3 missiles.",
-      "kind": "item"
-    },
-    "mrck_s09_aegs_eclipse": {
-      "key": "item_DescMRCK_S09_AEGS_Eclipse",
-      "label": "Aegis Eclipse Torpedo Rack",
-      "description": "Aegis Eclipse Torpedo Rack",
-      "kind": "item"
-    },
-    "mrck_s09_aegs_retaliator": {
-      "key": "item_DescMRCK_S09_AEGS_Retaliator",
-      "label": "Aegis Retaliator Torpedo Rack",
-      "description": "Aegis Retaliator Torpedo Rack",
       "kind": "item"
     },
     "mrck_s10_rsi_polaris_side_missilerack": {
@@ -12830,30 +10940,6 @@
       "description": "When speed and mobility are essential, CDS’s PAB-4 light personal armor balances durability while still providing for maximum maneuverability. Widely used amongst the Advocacy, security forces, and discerning civilians.",
       "kind": "item"
     },
-    "marine_light_armor_sniper": {
-      "key": "item_DescMarine_Light_Armor_Sniper",
-      "label": "Marine Light Sniper Armour",
-      "description": "Marine Light Sniper Armour",
-      "kind": "item"
-    },
-    "marine_light_armor_with_cap": {
-      "key": "item_DescMarine_Light_Armor_With_Cap",
-      "label": "Marine Light Armour with Cap",
-      "description": "Marine Light Armour with Cap",
-      "kind": "item"
-    },
-    "marine_light_helmet_blackedout": {
-      "key": "item_DescMarine_Light_Helmet_Blackedout",
-      "label": "Marine Light Helmet (Blacked Out)",
-      "description": "Marine Light Helmet (Blacked Out)",
-      "kind": "item"
-    },
-    "marine_light_instructor_armor": {
-      "key": "item_DescMarine_Light_Instructor_Armor",
-      "label": "Marine Light Instructor Armour",
-      "description": "Marine Light Instructor Armour",
-      "kind": "item"
-    },
     "marine_medium_armor": {
       "key": "item_DescMarine_Medium_Armor",
       "label": "MCA-mk2 Medium Armor",
@@ -13112,12 +11198,6 @@
       "description": "The Mule Smokestack livery features various shades of grey for a sleek and subtle look that's sure to impress while on cargo runs.",
       "kind": "item"
     },
-    "murray_cup_display": {
-      "key": "item_DescMurray_Cup_Display",
-      "label": "Murray Cup Display Case",
-      "description": "Murray Cup Display Case",
-      "kind": "item"
-    },
     "mustang_paint_beta": {
       "key": "item_DescMustang_Paint_Beta",
       "label": "Mustang Beta Livery",
@@ -13182,12 +11262,6 @@
       "key": "item_DescMustang_Paint_Yellow_Blue_White",
       "label": "Mustang Murray Cup Livery",
       "description": "With a deep blue base and a bright yellow finish with chevron accents, this lively Murray Cup livery shows spectators that you've got a true competitor's spirit.",
-      "kind": "item"
-    },
-    "novp_rocket_venom_s1_strike_tl_ir": {
-      "key": "item_DescNOVP_Rocket_Venom_S1_Strike_TL_IR",
-      "label": "Nova Pyrotechnica Venom Rocket",
-      "description": "Nova Pyrotechnica Venom Rocket",
       "kind": "item"
     },
     "nvy_bdu_trousers_01": {
@@ -13370,30 +11444,6 @@
       "description": "The Silent IV Advanced from OKB Voskhod is a field emission ion engine optimized to provide a decreased heat signature, making the ship more difficult to track via conventional scans.",
       "kind": "item"
     },
-    "orig_300i_cargobay_front": {
-      "key": "item_DescORIG_300i_CargoBay_Front",
-      "label": "Origin Jumpworks 300i Front Cargo Bay",
-      "description": "Origin Jumpworks 300i Front Cargo Bay",
-      "kind": "item"
-    },
-    "orig_300i_landingsystem": {
-      "key": "item_DescORIG_300i_LandingSystem",
-      "label": "Origin Jumpworks 300i Landing System",
-      "description": "Origin Jumpworks 300i Landing System",
-      "kind": "item"
-    },
-    "orig_300i_multilight": {
-      "key": "item_DescORIG_300i_MultiLight",
-      "label": "Origin Jumpworks 300i External Lights",
-      "description": "Origin Jumpworks 300i External Lights",
-      "kind": "item"
-    },
-    "orig_300i_pilot_seat": {
-      "key": "item_DescORIG_300i_Pilot_Seat",
-      "label": "Origin Jumpworks 300i Pilot Seat",
-      "description": "Origin Jumpworks 300i Pilot Seat",
-      "kind": "item"
-    },
     "orig_300i_shop": {
       "key": "item_DescORIG_300i_shop",
       "label": "Origin Jumpworks 300i",
@@ -13416,96 +11466,6 @@
       "key": "item_DescORIG_350r_shop",
       "label": "Origin Jumpworks 350r",
       "description": "Manufacturer: Origin Jumpworks Focus: Racing The combination of a Gangleri BP 707 Standard powerplant with a 300i fuselage re-engineered to accommodate twin Hammer Propulsion HM 4.3 thrusters makes the 350r the fastest personal craft you'll ever call your own.",
-      "kind": "item"
-    },
-    "orig_3dradardisplay": {
-      "key": "item_DescORIG_3DRadarDisplay",
-      "label": "Origin Jumpworks 3D Radar Display",
-      "description": "Origin Jumpworks 3D Radar Display",
-      "kind": "item"
-    },
-    "orig_85x_turret": {
-      "key": "item_DescORIG_85X_Turret",
-      "label": "Origin Jumpworks 85X Remote Turret",
-      "description": "Origin Jumpworks 85X Remote Turret",
-      "kind": "item"
-    },
-    "orig_cml_chaff": {
-      "key": "item_DescORIG_CML_Chaff",
-      "label": "Origin Jumpworks Noise Launcher",
-      "description": "Origin Jumpworks Noise Launcher",
-      "kind": "item"
-    },
-    "orig_cml_flare": {
-      "key": "item_DescORIG_CML_Flare",
-      "label": "Origin Jumpworks Decoy Launcher",
-      "description": "Origin Jumpworks Decoy Launcher",
-      "kind": "item"
-    },
-    "orig_cockpit_audio": {
-      "key": "item_DescORIG_Cockpit_Audio",
-      "label": "Origin Jumpworks Cockpit Audio",
-      "description": "Origin Jumpworks Cockpit Audio",
-      "kind": "item"
-    },
-    "orig_fxm_esi_s1_q2": {
-      "key": "item_DescORIG_FXM_ESI_S1_Q2",
-      "label": "Origin Jumpworks Scalpel Precision Thruster",
-      "description": "Origin Jumpworks Scalpel Precision Thruster",
-      "kind": "item"
-    },
-    "orig_fxm_esi_s1_q3": {
-      "key": "item_DescORIG_FXM_ESI_S1_Q3",
-      "label": "Origin Jumpworks Scalpel Precision Thruster",
-      "description": "Origin Jumpworks Scalpel Precision Thruster",
-      "kind": "item"
-    },
-    "orig_fxm_esi_s2_q2": {
-      "key": "item_DescORIG_FXM_ESI_S2_Q2",
-      "label": "Origin Jumpworks Scalpel Precision Thruster",
-      "description": "Origin Jumpworks Scalpel Precision Thruster",
-      "kind": "item"
-    },
-    "orig_fxm_esi_s2_q2a": {
-      "key": "item_DescORIG_FXM_ESI_S2_Q2A",
-      "label": "Origin Jumpworks Scalpel Precision Thruster",
-      "description": "Origin Jumpworks Scalpel Precision Thruster",
-      "kind": "item"
-    },
-    "orig_fxm_esi_s2_q3": {
-      "key": "item_DescORIG_FXM_ESI_S2_Q3",
-      "label": "Origin Jumpworks Omni Precision Ball Thruster",
-      "description": "Origin Jumpworks Omni Precision Ball Thruster",
-      "kind": "item"
-    },
-    "orig_m50_cml_chaff": {
-      "key": "item_DescORIG_M50_CML_Chaff",
-      "label": "Origin Jumpworks M50 - Noise Launcher",
-      "description": "Origin Jumpworks M50 - Noise Launcher",
-      "kind": "item"
-    },
-    "orig_m50_cml_flare": {
-      "key": "item_DescORIG_M50_CML_Flare",
-      "label": "Origin Jumpworks M50 - Decoy Launcher",
-      "description": "Origin Jumpworks M50 - Decoy Launcher",
-      "kind": "item"
-    },
-    "orig_m50_ejection_seat": {
-      "key": "item_DescORIG_M50_Ejection_Seat",
-      "label": "Origin Jumpworks M50 Ejection Seat",
-      "description": "Origin Jumpworks M50 Ejection Seat",
-      "kind": "item"
-    },
-    "orig_m50_landingsystem": {
-      "key": "item_DescORIG_M50_LandingSystem",
-      "label": "Origin Jumpworks M50 Landing System",
-      "description": "Origin Jumpworks M50 Landing System",
-      "kind": "item"
-    },
-    "orig_m50_lights": {
-      "key": "item_DescORIG_M50_lights",
-      "label": "Origin Jumpworks M50 External Lights",
-      "description": "Origin Jumpworks M50 External Lights",
       "kind": "item"
     },
     "orig_m50_shop": {
@@ -13566,18 +11526,6 @@
       "key": "item_DescOutlaw_Medium_Armor_PU_lite",
       "label": "Brawler Medium Armor",
       "description": "The ideal balance of security and speed, Kastak Arm's Brawler armor is graded to be durable while also retaining combat flexibility, ensuring you can adapt your tactics to the situation at hand.",
-      "kind": "item"
-    },
-    "poir_fueltank_1000": {
-      "key": "item_DescPOIR_FuelTank_1000",
-      "label": "Polaris Ironworks 1000 Fuel Tank",
-      "description": "Polaris Ironworks 1000 Fuel Tank",
-      "kind": "item"
-    },
-    "poir_fueltank_3000": {
-      "key": "item_DescPOIR_FuelTank_3000",
-      "label": "Polaris Ironworks 3000 Fuel Tank",
-      "description": "Polaris Ironworks 3000 Fuel Tank",
       "kind": "item"
     },
     "powr_acom_s01_starheart": {
@@ -13862,12 +11810,6 @@
       "description": "Item Type: Power Plant Manufacturer: Tyler Design & Tech Size: 2 Grade: B Class: Stealth A complete overhaul of the materials in the heatsinks dramatically decreased the emission level of the GammaMax. Few medium power plants run as quiet at the same price point of this one from Tyler Design & Tech.",
       "kind": "item"
     },
-    "powr_v01_lplt_ionwave": {
-      "key": "item_DescPOWR_V01_LPLT_IonWave",
-      "label": "LPLT-Made XIAN Nox Powerplant Name[PH]",
-      "description": "LPLT-Made XIAN Nox Powerplant Description[PH]",
-      "kind": "item"
-    },
     "powr_vncl_s01_blade": {
       "key": "item_DescPOWR_VNCL_S01_Blade",
       "label": "Vanduul Blade Powerplant",
@@ -13932,12 +11874,6 @@
       "key": "item_DescPRAR_DistortionScatterGun_S6",
       "label": "Condemnation Distortion Scattergun",
       "description": "Manufacturer: Preacher Armaments Item Type: Distortion Scattergun Size: 6 The Condemnation is a massive size six scattergun from Preacher Armaments. Its high distortion damage incapacitates the electronics, though its wide spreads makes it less effective as the target gets farther away.",
-      "kind": "item"
-    },
-    "pudefenseturret_stock_missile_rack": {
-      "key": "item_DescPUDefenseTurret_Stock_Missile_Rack",
-      "label": "BEHR Defense Turret Missile Rack",
-      "description": "BEHR Defense Turret Missile Rack",
       "kind": "item"
     },
     "paint_300_series_metallic_blue": {
@@ -15038,114 +12974,6 @@
       "description": "Item Type: Quantum Enforcement Device Manufacturer: Wei-Tek Size: 3 Grade: C Class: Military This combination Quantum Enforcement Device from Wei-Tek contains both a Quantum Snare for pulling crafts out of quantum travel and a Quantum Dampener for preventing the engaging of quantum drives. With the ability to catch and hold, the Reynie offers an ideal all-in-one solution for security personnel.",
       "kind": "item"
     },
-    "qft_aegs_medi_pl01": {
-      "key": "item_DescQFT_AEGS_Medi_PL01",
-      "label": "Aegis Medium Quantum Fuel Tank",
-      "description": "Aegis Medium Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_aegs_medi_pl02": {
-      "key": "item_DescQFT_AEGS_Medi_PL02",
-      "label": "Aegis Medium Quantum Fuel Tank",
-      "description": "Aegis Medium Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_aegs_smal_pl01": {
-      "key": "item_DescQFT_AEGS_SMAL_PL01",
-      "label": "Aegis Small Quantum Fuel Tank",
-      "description": "Aegis Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_aegs_smal_pl02": {
-      "key": "item_DescQFT_AEGS_SMAL_PL02",
-      "label": "Aegis Small Quantum Fuel Tank",
-      "description": "Aegis Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_anvl_smal_f7a": {
-      "key": "item_DescQFT_ANVL_SMAL_F7A",
-      "label": "Anvil F7A Quantum Fuel Tank",
-      "description": "Anvil F7A Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_anvl_smal_pl01": {
-      "key": "item_DescQFT_ANVL_SMAL_PL01",
-      "label": "Anvil Small Quantum Fuel Tank",
-      "description": "Anvil Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_anvl_smal_pl02": {
-      "key": "item_DescQFT_ANVL_SMAL_PL02",
-      "label": "Anvil Small Quantum Fuel Tank",
-      "description": "Anvil Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_cnou_smal_pl01": {
-      "key": "item_DescQFT_CNOU_SMAL_PL01",
-      "label": "Consolidated Outland Small Quantum Fuel Tank",
-      "description": "Consolidated Outland Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_cnou_smal_pl02": {
-      "key": "item_DescQFT_CNOU_SMAL_PL02",
-      "label": "Consolidated Outland Small Quantum Fuel Tank",
-      "description": "Consolidated Outland Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_cnou_smal_pl03": {
-      "key": "item_DescQFT_CNOU_SMAL_PL03",
-      "label": "Consolidated Outland Small Quantum Fuel Tank",
-      "description": "Consolidated Outland Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_drak_medi_pl01": {
-      "key": "item_DescQFT_DRAK_MEDI_PL01",
-      "label": "Drake Medium Quantum Fuel Tank",
-      "description": "Drake Medium Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_orig_smal_pl01": {
-      "key": "item_DescQFT_ORIG_SMAL_PL01",
-      "label": "Origin Jumpworks Small Quantum Fuel Tank",
-      "description": "Origin Jumpworks Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_orig_smal_pl02": {
-      "key": "item_DescQFT_ORIG_SMAL_PL02",
-      "label": "Origin Jumpworks Small Quantum Fuel Tank",
-      "description": "Origin Jumpworks Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_orig_smal_pl03": {
-      "key": "item_DescQFT_ORIG_SMAL_PL03",
-      "label": "Origin Jumpworks Small Quantum Fuel Tank",
-      "description": "Origin Jumpworks Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_orig_smal_pl04": {
-      "key": "item_DescQFT_ORIG_SMAL_PL04",
-      "label": "Origin Jumpworks Small Quantum Fuel Tank",
-      "description": "Origin Jumpworks Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_rsi_medi_pl01": {
-      "key": "item_DescQFT_RSI_MEDI_PL01",
-      "label": "RSI Medium Quantum Fuel Tank",
-      "description": "RSI Medium Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_rsi_smal_pl01": {
-      "key": "item_DescQFT_RSI_SMAL_PL01",
-      "label": "RSI Small Quantum Fuel Tank",
-      "description": "RSI Small Quantum Fuel Tank",
-      "kind": "item"
-    },
-    "qft_rsi_smal_pl02": {
-      "key": "item_DescQFT_RSI_SMAL_PL02",
-      "label": "RSI Small Quantum Fuel Tank",
-      "description": "RSI Small Quantum Fuel Tank",
-      "kind": "item"
-    },
     "qft_vncl_smal_pl01": {
       "key": "item_DescQFT_VNCL_SMAL_PL01",
       "label": "Vanduul Small Quantum Fuel Tank",
@@ -15278,12 +13106,6 @@
       "description": "Manufacturer: RSI Focus: Pathfinder The Aurora is the modern day descendant of the Roberts Space Industries X-7 spacecraft which tested the very first jump engines. Utilitarian to a T, the Aurora is the perfect beginner's ship: what it lacks in style it makes up for in ample room for upgrade modules.",
       "kind": "item"
     },
-    "rsi_aurora_ln_pilot_seat": {
-      "key": "item_DescRSI_Aurora_LN_Pilot_Seat",
-      "label": "RSI Aurora Mk I LN Pilot Seat",
-      "description": "RSI Aurora Mk I LN Pilot Seat",
-      "kind": "item"
-    },
     "rsi_aurora_ln_shop": {
       "key": "item_DescRSI_Aurora_LN_shop",
       "label": "RSI Aurora LN",
@@ -15296,40 +13118,10 @@
       "description": "Manufacturer: RSI Focus: Pathfinder Be proud of your roots with the brand new Aurora Deluxe, built for the discerning pilot who never forgets where he or she came from. The LX features patent leather interior to guarantee comfort for those long stretches in the black.",
       "kind": "item"
     },
-    "rsi_aurora_landingsystem": {
-      "key": "item_DescRSI_Aurora_LandingSystem",
-      "label": "RSI Aurora Mk I Landing System",
-      "description": "RSI Aurora Mk I Landing System",
-      "kind": "item"
-    },
     "rsi_aurora_mr_shop": {
       "key": "item_DescRSI_Aurora_MR_shop",
       "label": "RSI Aurora MR",
       "description": "Manufacturer: RSI Focus: Light Fighter Perhaps you're looking for something that offers carrying capacity but has combat capabilities too? The Aurora Marque comes with a pair of Behring-quality lasers and a high quality gun cooler system.",
-      "kind": "item"
-    },
-    "rsi_aurora_multilight": {
-      "key": "item_DescRSI_Aurora_MultiLight",
-      "label": "RSI Aurora Mk I External Lights",
-      "description": "RSI Aurora Mk I External Lights",
-      "kind": "item"
-    },
-    "rsi_aurora_pilot_seat": {
-      "key": "item_DescRSI_Aurora_Pilot_Seat",
-      "label": "RSI Aurora Mk I Pilot Seat",
-      "description": "RSI Aurora Mk I Pilot Seat",
-      "kind": "item"
-    },
-    "rsi_aurora_pilot_seat_blue": {
-      "key": "item_DescRSI_Aurora_Pilot_Seat_Blue",
-      "label": "RSI Aurora Mk I Pilot Seat Blue",
-      "description": "RSI Aurora Mk I Pilot Seat Blue",
-      "kind": "item"
-    },
-    "rsi_aurora_pilot_seat_red": {
-      "key": "item_DescRSI_Aurora_Pilot_Seat_Red",
-      "label": "RSI Aurora Mk I Pilot Seat Red",
-      "description": "RSI Aurora Mk I Pilot Seat Red",
       "kind": "item"
     },
     "rsi_ballisticcannon_meteor_bespoke": {
@@ -15342,30 +13134,6 @@
       "key": "item_DescRSI_BallisticCannon_S8",
       "label": "RSI Medusa Cannon",
       "description": "Manufacturer: RSI Item Type: Ballistic Cannon Size: 8 Building on centuries of RSI weapon technology, the Perseus utilizes bespoke size 8 Medusa Cannons that deliver devastating salvos of ballistic fire, capable of starting fights just as easily as ending them. These custom made RSI cannons excel at punishing larger targets at long, making it a formidable battlefield equalizer.",
-      "kind": "item"
-    },
-    "rsi_ballisticrepeater_s9": {
-      "key": "item_DescRSI_BallisticRepeater_S9",
-      "label": "RSI Ballistic Repeater S9",
-      "description": "RSI Ballistic Repeater S9",
-      "kind": "item"
-    },
-    "rsi_bengal_seat_pilot": {
-      "key": "item_DescRSI_Bengal_Seat_Pilot",
-      "label": "RSI Bengal Pilot Seat",
-      "description": "RSI Bengal Pilot Seat",
-      "kind": "item"
-    },
-    "rsi_bengal_turret_aa_cockpit": {
-      "key": "item_DescRSI_Bengal_Turret_AA_Cockpit",
-      "label": "RSI Bengal AA Turret Cockpit",
-      "description": "RSI Bengal AA Turret Cockpit",
-      "kind": "item"
-    },
-    "rsi_bengal_turret_sts": {
-      "key": "item_DescRSI_Bengal_Turret_STS",
-      "label": "RSI Bengal STS Turret",
-      "description": "RSI Bengal STS Turret",
       "kind": "item"
     },
     "rsi_bespoke_ballisticcannon_a": {
@@ -15386,54 +13154,6 @@
       "description": "Manufacturer: RSI Focus: Expedition Explore any distant horizons! The Constellation Aquila features a redesigned cockpit for maximum visibility, advanced sensors and an onboard Ursa rover for planetary exploration. Let’s see what’s out there!",
       "kind": "item"
     },
-    "rsi_constellation_base_seat_copilot_left": {
-      "key": "item_DescRSI_Constellation_Base_Seat_Copilot_Left",
-      "label": "RSI Constellation Co-Pilot Left Seat",
-      "description": "RSI Constellation Co-Pilot Left Seat",
-      "kind": "item"
-    },
-    "rsi_constellation_base_seat_copilot_right": {
-      "key": "item_DescRSI_Constellation_Base_Seat_Copilot_Right",
-      "label": "RSI Constellation Co-Pilot Right Seat",
-      "description": "RSI Constellation Co-Pilot Right Seat",
-      "kind": "item"
-    },
-    "rsi_constellation_base_seat_pilot": {
-      "key": "item_DescRSI_Constellation_Base_Seat_Pilot",
-      "label": "RSI Constellation Pilot Seat",
-      "description": "RSI Constellation Pilot Seat",
-      "kind": "item"
-    },
-    "rsi_constellation_landingsystem": {
-      "key": "item_DescRSI_Constellation_LandingSystem",
-      "label": "RSI Constellation Landing System",
-      "description": "RSI Constellation Landing System",
-      "kind": "item"
-    },
-    "rsi_constellation_missilepod": {
-      "key": "item_DescRSI_Constellation_MissilePod",
-      "label": "RSI Constellation Missile Pod",
-      "description": "RSI Constellation Missile Pod",
-      "kind": "item"
-    },
-    "rsi_constellation_missilepod_s1_x7": {
-      "key": "item_DescRSI_Constellation_MissilePod_S1_x7",
-      "label": "RSI Constellation Side Missile Pod",
-      "description": "RSI Constellation Missile Pod",
-      "kind": "item"
-    },
-    "rsi_constellation_missilepod_s2_x3": {
-      "key": "item_DescRSI_Constellation_MissilePod_S2_x3",
-      "label": "RSI Constellation Top Missile Pod",
-      "description": "RSI Constellation Missile Pod",
-      "kind": "item"
-    },
-    "rsi_constellation_multilight": {
-      "key": "item_DescRSI_Constellation_MultiLight",
-      "label": "RSI Constellation External Lights",
-      "description": "RSI Constellation External Lights",
-      "kind": "item"
-    },
     "rsi_constellation_phoenixemerald_shop": {
       "key": "item_DescRSI_Constellation_PhoenixEmerald_shop",
       "label": "RSI Constellation Phoenixemerald",
@@ -15446,52 +13166,10 @@
       "description": "Manufacturer: RSI Focus: Medium Freight Enjoy the adventure of a multi-crew Constellation on a budget. The Constellation Taurus is a dedicated freighter. Fully configurable but without all the bells and whistles, the Taurus is a great way to get started with crewed ships.",
       "kind": "item"
     },
-    "rsi_constellation_seat_pilot": {
-      "key": "item_DescRSI_Constellation_Seat_Pilot",
-      "label": "RSI Constellation Pilot Seat",
-      "description": "RSI Constellation Pilot Seat",
-      "kind": "item"
-    },
-    "rsi_constellation_seat_turret": {
-      "key": "item_DescRSI_Constellation_Seat_Turret",
-      "label": "RSI Constellation Turret Seat",
-      "description": "RSI Constellation Turret Seat",
-      "kind": "item"
-    },
-    "rsi_constellation_seat_turret_bottom": {
-      "key": "item_DescRSI_Constellation_Seat_Turret_Bottom",
-      "label": "RSI Constellation Lower Turret Seat",
-      "description": "RSI Constellation Lower Turret Seat",
-      "kind": "item"
-    },
     "rsi_constellation_taurus_shop": {
       "key": "item_DescRSI_Constellation_Taurus_shop",
       "label": "RSI Constellation Taurus",
       "description": "Manufacturer: RSI Focus: Medium Freight Enjoy the adventure of a multi-crew Constellation on a budget! The Constellation Taurus is a dedicated freighter. Fully configurable but without all the bells-and-whistles, the Taurus is a great way to get started with crewed ships.",
-      "kind": "item"
-    },
-    "rsi_constellation_turret": {
-      "key": "item_DescRSI_Constellation_Turret",
-      "label": "RSI Constellation Turret",
-      "description": "RSI Constellation Turret description",
-      "kind": "item"
-    },
-    "rsi_constellation_turret_base_lower": {
-      "key": "item_DescRSI_Constellation_Turret_Base_Lower",
-      "label": "RSI Constellation Turret",
-      "description": "RSI Constellation Turret description",
-      "kind": "item"
-    },
-    "rsi_constellation_turret_base_upper": {
-      "key": "item_DescRSI_Constellation_Turret_Base_Upper",
-      "label": "RSI Constellation Turret",
-      "description": "RSI Constellation Turret description",
-      "kind": "item"
-    },
-    "rsi_constellation_lights": {
-      "key": "item_DescRSI_Constellation_lights",
-      "label": "RSI Constellation External Lights",
-      "description": "RSI Constellation External Lights",
       "kind": "item"
     },
     "rsi_defaultflashlight": {
@@ -15500,58 +13178,16 @@
       "description": "RSI's MicroTorch flashlight is a high-powered hands-free flashlight that clips onto standard accessory slots to provide consistent visibility in a variety of environmental conditions.",
       "kind": "item"
     },
-    "rsi_defaultradar_midrange": {
-      "key": "item_DescRSI_DefaultRadar_MidRange",
-      "label": "RSI Medium Range Radar",
-      "description": "RSI Medium Range Radar",
-      "kind": "item"
-    },
-    "rsi_defaultradar_shortrange": {
-      "key": "item_DescRSI_DefaultRadar_ShortRange",
-      "label": "RSI Short Range Radar",
-      "description": "RSI Short Range Radar",
-      "kind": "item"
-    },
-    "rsi_defaultsignaturereductor": {
-      "key": "item_DescRSI_DefaultSignatureReductor",
-      "label": "RSI Signature Reduction Device",
-      "description": "RSI Signature Reduction Device",
-      "kind": "item"
-    },
-    "rsi_defaulttargetselector": {
-      "key": "item_DescRSI_DefaultTargetSelector",
-      "label": "RSI Target Selection Device",
-      "description": "RSI Target Selection Device",
-      "kind": "item"
-    },
     "rsi_emp_magstrand_s4": {
       "key": "item_DescRSI_EMP_Magstrand_S4",
       "label": "Magstrand EMP Generator",
       "description": "Item Type: Burst Generator Manufacturer: RSI Size: 4 The Magstrand from RSI is an EMP burst generator designed specifically for the Scorpius Antares. When fully charged, the device creates a powerful wave of distortion damage that can disable electric components within its blast radius.",
       "kind": "item"
     },
-    "rsi_fxm_esi_lowerretro_s1": {
-      "key": "item_DescRSI_FXM_ESI_LowerRetro_S1",
-      "label": "RSI FXM ESA Retro Thruster",
-      "description": "RSI FXM ESA Retro Thruster",
-      "kind": "item"
-    },
     "rsi_laserrepeater_s5": {
       "key": "item_DescRSI_LaserRepeater_S5",
       "label": "Echion Repeater",
       "description": "Manufacturer: Robert Space Industries Item Type: Laser Repeater Size: 5 Designed to overwhelm shields with a barrage of laserfire, this custom-made RSI Echion laser repeater will strip enemies of their defenses leaving them vulnerable to more devastating attacks.",
-      "kind": "item"
-    },
-    "rsi_light_helmet_purple": {
-      "key": "item_DescRSI_Light_Helmet_Purple",
-      "label": "RSI Light Helmet - Purple",
-      "description": "RSI Light Helmet - Purple",
-      "kind": "item"
-    },
-    "rsi_light_helmet_yellow": {
-      "key": "item_DescRSI_Light_Helmet_Yellow",
-      "label": "RSI Light Helmet - Yellow",
-      "description": "RSI Light Helmet - Yellow",
       "kind": "item"
     },
     "rsi_orion_shop": {
@@ -15564,12 +13200,6 @@
       "key": "item_DescRSI_Scorpius_MissileTurret",
       "label": "RSI Lesath Missile Turret",
       "description": "Item Type: Missile Turret Manufacturer: RSI Perfect for producing a wave of rapid-fire destruction, this bespoke RSI Scorpius missile turret, the Lesath, holds up to sixteen S2 missiles and offers a powerful alternative to the gun turret that comes as standard.",
-      "kind": "item"
-    },
-    "rsi_selfdestruct_long": {
-      "key": "item_DescRSI_SelfDestruct_Long",
-      "label": "RSI Self Destruct Long",
-      "description": "RSI Self Destruct Long",
       "kind": "item"
     },
     "rsi_ursa_shop": {
@@ -16130,12 +13760,6 @@
       "description": "Item Type: Shield Generator Manufacturer: Seal Corporation Size: 2 Grade: C Class: Civilian Utilizing a design that has proven itself time and again, the STOP shield generator by Seal Corporation has featured the same classic design for years due to its consistent, stellar performance.",
       "kind": "item"
     },
-    "shld_seco_smal_pl01_pirate": {
-      "key": "item_DescSHLD_SECO_SMAL_PL01_Pirate",
-      "label": "SECO Shield Small (Pirate)",
-      "description": "SECO Shield Small (Pirate)",
-      "kind": "item"
-    },
     "shld_vncl_s04_mauler": {
       "key": "item_DescSHLD_VNCL_S04_Mauler",
       "label": "Mauler Shield Generator",
@@ -16536,12 +14160,6 @@
       "key": "item_DescShubinTurretItem",
       "label": "Class 2b Mount",
       "description": "Basic Class 2b turret mount",
-      "kind": "item"
-    },
-    "shubin_ballistic_unmanned_turret": {
-      "key": "item_DescShubin_Ballistic_Unmanned_Turret",
-      "label": "Shubin Unmanned Turret",
-      "description": "Shubin Unmanned Turret",
       "kind": "item"
     },
     "shubin_turretmissilerack": {
@@ -17228,12 +14846,6 @@
       "description": "Make your Syulen one worthy of admiration with the Xy'kara livery that provides the ship a rich bronze marbled look in shades of gray and red undertones.",
       "kind": "item"
     },
-    "taln_retaliator_s5_strike_tl_cs": {
-      "key": "item_DescTALN_Retaliator_S5_Strike_TL_CS",
-      "label": "Stalker V Torpedo",
-      "description": "Talon Stalker V Torpedo",
-      "kind": "item"
-    },
     "thcn_s1_rpod_4x_s2": {
       "key": "item_DescTHCN_S1_RPOD_4x_S2",
       "label": "Liberator",
@@ -17250,24 +14862,6 @@
       "key": "item_DescTHCN_S3_RPOD_12x_S2",
       "label": "Liberator Ultra",
       "description": "Item Type: Rocket Pod Manufacturer: Thermyte Concern Size: 3 Rockets: 12xS2 Thermyte Concern's Liberator Ultra rocket pod carries twelve S2 rockets and can be attached to any size three hardpoint.",
-      "kind": "item"
-    },
-    "thre_anvl_f7a_main": {
-      "key": "item_DescTHRE_ANVL_F7A_Main",
-      "label": "THRE F7A Main Thruster",
-      "description": "THRE F7A Main Thruster",
-      "kind": "item"
-    },
-    "thrm_anvl_flex_f7a": {
-      "key": "item_DescTHRM_ANVL_Flex_F7A",
-      "label": "THRM F7A Flex Thruster",
-      "description": "THRM F7A Flex Thruster",
-      "kind": "item"
-    },
-    "tmbl_emp_device": {
-      "key": "item_DescTMBL_EMP_Device",
-      "label": "Tumbril Cyclone EMP Device",
-      "description": "Tumbril Cyclone EMP Device",
       "kind": "item"
     },
     "tmbl_storm_aa_turret": {
@@ -17606,18 +15200,6 @@
       "description": "Announce your arrival with the Oasis livery for the Ursa, which is a vibrant teal tint with grey and white accents.",
       "kind": "item"
     },
-    "vncl_blade_cml_chaff": {
-      "key": "item_DescVNCL_Blade_CML_Chaff",
-      "label": "Vanduul Blade - Noise Launcher",
-      "description": "Vanduul Blade - Noise Launcher",
-      "kind": "item"
-    },
-    "vncl_blade_cml_flare": {
-      "key": "item_DescVNCL_Blade_CML_Flare",
-      "label": "Vanduul Blade - Decoy Launcher",
-      "description": "Vanduul Blade - Decoy Launcher",
-      "kind": "item"
-    },
     "vncl_blade_fuel_tank_s1": {
       "key": "item_DescVNCL_Blade_Fuel_Tank_S1",
       "label": "Vanduul Blade Fuel Tank",
@@ -17634,102 +15216,6 @@
       "key": "item_DescVNCL_Blade_PlasmaCannon_S2",
       "label": "Vanduul S2 Repeater",
       "description": "A Size 2 Plasma Repeater of Vanduul construction.",
-      "kind": "item"
-    },
-    "vncl_blade_platform_x2": {
-      "key": "item_DescVNCL_Blade_Platform_x2",
-      "label": "Vanduul Dual Missile Platform",
-      "description": "Vanduul Dual Missile Platform",
-      "kind": "item"
-    },
-    "vncl_blade_s1_strike_faf_ir": {
-      "key": "item_DescVNCL_Blade_S1_Strike_FAF_IR",
-      "label": "Vanduul Blade Strike Missile S1",
-      "description": "Vanduul Blade Strike Missile S1",
-      "kind": "item"
-    },
-    "vncl_blade_s1_tr4": {
-      "key": "item_DescVNCL_Blade_S1_TR4",
-      "label": "Vanduul Blade Thruster",
-      "description": "Vanduul Blade Thruster",
-      "kind": "item"
-    },
-    "vncl_blade_s2_tr4": {
-      "key": "item_DescVNCL_Blade_S2_TR4",
-      "label": "Vanduul Blade Thruster",
-      "description": "Vanduul Blade Thruster",
-      "kind": "item"
-    },
-    "vncl_blade_seat_pilot": {
-      "key": "item_DescVNCL_Blade_Seat_Pilot",
-      "label": "Vanduul Blade Pilot Seat",
-      "description": "Vanduul Blade Pilot Seat",
-      "kind": "item"
-    },
-    "vncl_blade_shield": {
-      "key": "item_DescVNCL_Blade_Shield",
-      "label": "Vanduul Blade Shield Generator",
-      "description": "Vanduul Blade Shield Generator",
-      "kind": "item"
-    },
-    "vncl_blade_tr1_joint": {
-      "key": "item_DescVNCL_Blade_TR1_Joint",
-      "label": "Vanduul Blade Joint Thruster",
-      "description": "Vanduul Blade Joint Thruster",
-      "kind": "item"
-    },
-    "vncl_blade_tr2_retro": {
-      "key": "item_DescVNCL_Blade_TR2_Retro",
-      "label": "Vanduul Blade Retro Thruster",
-      "description": "Vanduul Blade Retro Thruster",
-      "kind": "item"
-    },
-    "vncl_cml_chaff": {
-      "key": "item_DescVNCL_CML_Chaff",
-      "label": "Vanduul Noise Launcher",
-      "description": "Vanduul Noise Launcher",
-      "kind": "item"
-    },
-    "vncl_cml_flare": {
-      "key": "item_DescVNCL_CML_Flare",
-      "label": "Vanduul Decoy Launcher",
-      "description": "Vanduul Decoy Launcher",
-      "kind": "item"
-    },
-    "vncl_cleaver_engine": {
-      "key": "item_DescVNCL_Cleaver_Engine",
-      "label": "Vanduul Cleaver Engine",
-      "description": "Vanduul Cleaver Engine",
-      "kind": "item"
-    },
-    "vncl_cleaver_omni": {
-      "key": "item_DescVNCL_Cleaver_Omni",
-      "label": "Vanduul Cleaver Omni Thruster",
-      "description": "Vanduul Cleaver Omni Thruster",
-      "kind": "item"
-    },
-    "vncl_cleaver_retro": {
-      "key": "item_DescVNCL_Cleaver_Retro",
-      "label": "Vanduul Cleaver Retro Thruster",
-      "description": "Vanduul Cleaver Retro Thruster",
-      "kind": "item"
-    },
-    "vncl_cockpit_audio": {
-      "key": "item_DescVNCL_Cockpit_Audio",
-      "label": "Vanduul Cockpit Audio",
-      "description": "Vanduul Cockpit Audio",
-      "kind": "item"
-    },
-    "vncl_fuel_tank_stinger_s1": {
-      "key": "item_DescVNCL_Fuel_Tank_Stinger_S1",
-      "label": "Vanduul Stinger Fuel Tank",
-      "description": "Vanduul Stinger Fuel Tank",
-      "kind": "item"
-    },
-    "vncl_fuel_tank_void": {
-      "key": "item_DescVNCL_Fuel_Tank_Void",
-      "label": "Vanduul Void Fuel Tank",
-      "description": "Vanduul Void Fuel Tank",
       "kind": "item"
     },
     "vncl_gen2_laserbeam_s9": {
@@ -17760,18 +15246,6 @@
       "key": "item_DescVNCL_Gen2_TachyonCannon_S7",
       "label": "Vanduul Mauler 'ERADICATOR' Cannon",
       "description": "Manufacturer: Vanduul Item Type: Tachyon Cannon This powerful Tachyon cannon, prized on Vanduul warships for it's long range, is more commonly referred to by it's designated UEE designation of 'ERADICATOR'.",
-      "kind": "item"
-    },
-    "vncl_glaive_landingsystem": {
-      "key": "item_DescVNCL_Glaive_LandingSystem",
-      "label": "Vanduul Glaive Landing System",
-      "description": "Vanduul Glaive Landing System",
-      "kind": "item"
-    },
-    "vncl_glaive_multilight": {
-      "key": "item_DescVNCL_Glaive_MultiLight",
-      "label": "Vanduul Glaive External Lights",
-      "description": "Vanduul Glaive External Lights",
       "kind": "item"
     },
     "vncl_glaive_shield": {
@@ -17846,142 +15320,10 @@
       "description": "A Size 5 Plasma Autocannon of Vanduul construction.",
       "kind": "item"
     },
-    "vncl_scythe_cml_chaff": {
-      "key": "item_DescVNCL_SCYTHE_CML_Chaff",
-      "label": "Vanduul Scythe - Noise Launcher",
-      "description": "Vanduul Scythe - Noise Launcher",
-      "kind": "item"
-    },
-    "vncl_scythe_cml_flare": {
-      "key": "item_DescVNCL_SCYTHE_CML_Flare",
-      "label": "Vanduul Scythe - Decoy Launcher",
-      "description": "Vanduul Scythe - Decoy Launcher",
-      "kind": "item"
-    },
-    "vncl_scythe_landingsystem": {
-      "key": "item_DescVNCL_Scythe_LandingSystem",
-      "label": "Vanduul Scythe Landing System",
-      "description": "Vanduul Scythe Landing System",
-      "kind": "item"
-    },
-    "vncl_scythe_multilight": {
-      "key": "item_DescVNCL_Scythe_MultiLight",
-      "label": "Vanduul Scythe External Lights",
-      "description": "Vanduul Scythe External Lights",
-      "kind": "item"
-    },
-    "vncl_scythe_seat_pilot": {
-      "key": "item_DescVNCL_Scythe_Seat_Pilot",
-      "label": "Vanduul Scythe Pilot Seat",
-      "description": "Vanduul Scythe Pilot Seat",
-      "kind": "item"
-    },
-    "vncl_stinger_cml_chaff": {
-      "key": "item_DescVNCL_Stinger_CML_Chaff",
-      "label": "Vanduul Stinger - Noise Launcher",
-      "description": "Vanduul Stinger - Noise Launcher",
-      "kind": "item"
-    },
-    "vncl_stinger_cml_flare": {
-      "key": "item_DescVNCL_Stinger_CML_Flare",
-      "label": "Vanduul Stinger - Decoy Launcher",
-      "description": "Vanduul Stinger - Decoy Launcher",
-      "kind": "item"
-    },
-    "vncl_stinger_nc_s5": {
-      "key": "item_DescVNCL_Stinger_NC_S5",
-      "label": "Vanduul Stinger Neutron Cannon S5",
-      "description": "Vanduul Stinger Neutron Cannon S5",
-      "kind": "item"
-    },
-    "vncl_stinger_platform_x12": {
-      "key": "item_DescVNCL_Stinger_Platform_x12",
-      "label": "Vanduul Stinger Missile Rack x12",
-      "description": "Vanduul Stinger Missile Rack x12",
-      "kind": "item"
-    },
-    "vncl_stinger_s1_hs": {
-      "key": "item_DescVNCL_Stinger_S1_HS",
-      "label": "Vanduul Stinger S1 Missile",
-      "description": "Vanduul Stinger S1 Missile",
-      "kind": "item"
-    },
-    "vncl_stinger_seat_pilot": {
-      "key": "item_DescVNCL_Stinger_Seat_Pilot",
-      "label": "Vanduul Stinger Pilot Seat",
-      "description": "Vanduul Stinger Pilot Seat",
-      "kind": "item"
-    },
-    "vncl_stinger_shield_s3": {
-      "key": "item_DescVNCL_Stinger_Shield_S3",
-      "label": "Vanduul Stinger Shield Generator",
-      "description": "Vanduul Stinger Shield Generator",
-      "kind": "item"
-    },
-    "vncl_stinger_tr1_joint": {
-      "key": "item_DescVNCL_Stinger_TR1_Joint",
-      "label": "Vanduul Stinger Joint Thruster",
-      "description": "Vanduul Stinger Joint Thruster",
-      "kind": "item"
-    },
-    "vncl_stinger_tr2_retro": {
-      "key": "item_DescVNCL_Stinger_TR2_Retro",
-      "label": "Vanduul Stinger Retro Thruster",
-      "description": "Vanduul Stinger Retro Thruster",
-      "kind": "item"
-    },
     "vncl_tachyoncannon_kingship": {
       "key": "item_DescVNCL_TachyonCannon_Kingship",
       "label": "Kingship Tachyon",
       "description": "Manufacturer: Vanduul Item Type: Tachyon Cannon",
-      "kind": "item"
-    },
-    "vncl_throw_s3_tr4": {
-      "key": "item_DescVNCL_Throw_S3_TR4",
-      "label": "Vanbuul Throw Thruster",
-      "description": "Vanduul Throw Thruster",
-      "kind": "item"
-    },
-    "vncl_trap_tr1_fixed": {
-      "key": "item_DescVNCL_Trap_TR1_Fixed",
-      "label": "Vanduul Trap Fixed Thruster",
-      "description": "Vanduul Trap Fixed Thruster",
-      "kind": "item"
-    },
-    "vncl_trunk_tr2_retro": {
-      "key": "item_DescVNCL_Trunk_TR2_Retro",
-      "label": "Vanduul Trunk Retro Thruster",
-      "description": "Vanduul Trunk Retro Thruster",
-      "kind": "item"
-    },
-    "vncl_twist_tr1_joint": {
-      "key": "item_DescVNCL_Twist_TR1_Joint",
-      "label": "Vanduul Twist Joint Thruster",
-      "description": "Vanduul Twist Joint Thruster",
-      "kind": "item"
-    },
-    "vncl_vs_spark_shield_s3": {
-      "key": "item_DescVNCL_VS_Spark_Shield_S3",
-      "label": "Vanduul Spark Shield Generator",
-      "description": "Vanduul Spark Shield Generator",
-      "kind": "item"
-    },
-    "vncl_void_joint": {
-      "key": "item_DescVNCL_Void_Joint",
-      "label": "Vanduul Void Joint Thruster",
-      "description": "Vanduul Void Joint Thruster",
-      "kind": "item"
-    },
-    "vncl_void_retro": {
-      "key": "item_DescVNCL_Void_Retro",
-      "label": "Vanduul Void Retro Thruster",
-      "description": "Vanduul Void Retro Thruster",
-      "kind": "item"
-    },
-    "vncl_void_seat_pilot": {
-      "key": "item_DescVNCL_Void_Seat_Pilot",
-      "label": "Vanduul Void Pilot Seat",
-      "description": "Vanduul Void Pilot Seat",
       "kind": "item"
     },
     "valkyrie_paint_2950invictus_1": {
@@ -18158,12 +15500,6 @@
       "description": "Basic Class 1a fixed mount",
       "kind": "item"
     },
-    "willsop_tc": {
-      "key": "item_DescWillsOp_TC",
-      "label": "WillsOp Targeting Computer",
-      "description": "WillsOp Targeting Computer",
-      "kind": "item"
-    },
     "wolf_paint_black_black_red_camo": {
       "key": "item_DescWolf_Paint_Black_Black_Red_Camo",
       "label": "Wolf Nightbreak Livery",
@@ -18272,88 +15608,16 @@
       "description": "Infinity Custom worked closely with Origin to develop the exclusive Scarlet livery, which enhances the striking look of the X1 with bold red accents.",
       "kind": "item"
     },
-    "xfrg_e_655_engine_s6_q1": {
-      "key": "item_DescXFRG_E_655_Engine_S6_Q1",
-      "label": "XFRG E 655 Main Thruster",
-      "description": "X-Forge E 655 Main Thruster",
-      "kind": "item"
-    },
-    "xfrg_e_655_engine_s7_q1": {
-      "key": "item_DescXFRG_E_655_Engine_S7_Q1",
-      "label": "XFRG E 655 Main Thruster",
-      "description": "X-Forge E 655 Main Thruster",
-      "kind": "item"
-    },
     "xfrg_fp_rmi_s2_q1": {
       "key": "item_DescXFRG_FP_RMI_S2_Q1",
       "label": "XForge P/S2-80 Main Engine",
       "description": "The X-Forge P/S2-80 is a small thruster that mainly finds use on Aurora class starships. Boasting good thrust output and fuel efficiency, the P/S2-80 is an excellent choice for those with a bit of wanderlust.",
       "kind": "item"
     },
-    "xfrg_intakes_aurora": {
-      "key": "item_DescXFRG_Intakes_Aurora",
-      "label": "XFRG Aurora Mk I Fuel Intakes",
-      "description": "X-Forge Aurora Mk I Fuel Intakes",
-      "kind": "item"
-    },
-    "xfrg_vanguard_d_s4_320_aux": {
-      "key": "item_DescXFRG_Vanguard_D_S4_320_Aux",
-      "label": "XFRG Vanguard D 320 Auxiliary Thruster",
-      "description": "X-Forge Vanguard D 320 Auxiliary Thruster",
-      "kind": "item"
-    },
-    "xfrg_vanguard_d_s4_320_main": {
-      "key": "item_DescXFRG_Vanguard_D_S4_320_Main",
-      "label": "XFRG Vanguard D 320 Main Thruster",
-      "description": "X-Forge Vanguard D 320 Main Thruster",
-      "kind": "item"
-    },
     "xian_lasercannon_s3": {
       "key": "item_DescXIAN_LaserCannon_S3",
       "label": "XIAN S3 Cannon",
       "description": "A Size 3 Laser Autocannon S3 of Xi'an construction.",
-      "kind": "item"
-    },
-    "xian_scout_cml_chaff": {
-      "key": "item_DescXIAN_Scout_CML_Chaff",
-      "label": "Aopoa Khartu-al - Noise Launcher",
-      "description": "Aopoa Khartu-al- Noise Launcher",
-      "kind": "item"
-    },
-    "xian_scout_cml_flare": {
-      "key": "item_DescXIAN_Scout_CML_Flare",
-      "label": "Aopoa Khartu-al - Decoy Launcher",
-      "description": "Aopoa Khartu-al - Decoy Launcher",
-      "kind": "item"
-    },
-    "xian_scout_landingsystem": {
-      "key": "item_DescXIAN_Scout_LandingSystem",
-      "label": "Aopoa Khartu-al Landing System",
-      "description": "Aopoa Khartu-al Landing System",
-      "kind": "item"
-    },
-    "xian_scout_maneuvering": {
-      "key": "item_DescXIAN_Scout_Maneuvering",
-      "label": "Aopoa Khartu-al Thruster",
-      "description": "Aopoa Khartu-al Thruster",
-      "kind": "item"
-    },
-    "xian_scout_multilight": {
-      "key": "item_DescXIAN_Scout_MultiLight",
-      "label": "Aopoa Khartu-al External Lights",
-      "description": "Aopoa Khartu-al External Lights",
-      "kind": "item"
-    },
-    "xian_scout_retro": {
-      "key": "item_DescXIAN_Scout_Retro",
-      "label": "Aopoa Khartu-al Retro Thruster",
-      "description": "Aopoa Khartu-al Retro Thruster",
-      "kind": "item"
-    },
-    "xian_scout_seat_pilot": {
-      "key": "item_DescXIAN_Scout_Seat_Pilot",
-      "label": "Aopoa Khartu-al Pilot Seat",
-      "description": "Aopoa Khartu-al Pilot Seat",
       "kind": "item"
     },
     "xnaa_santokyai_mount_gimbal": {
@@ -19208,9 +16472,9 @@
       "description": "A partial zip pullover shirt with mesh arm accents and a button collar. Escar Limited's Balboa line delivers cutting edge style suitable for any system or situation. Women's sizes currently out of stock.",
       "kind": "item"
     },
-    "eld_shirt_04_01_01": {
+    "_eld_shirt_04_01_01": {
       "key": "item_Desc_ELD_Shirt_04_01_01",
-      "label": "ELD - shirt (04) - name",
+      "label": "Hannu Shirt",
       "description": "ELD - shirt (04) - description",
       "kind": "item"
     },
@@ -19806,18 +17070,6 @@
       "key": "item_Desc_Keycard_OLP_PAF_BunkerCard",
       "label": "Laser Activation Keycard",
       "description": "This encoded keycard is required to activate an orbital mining laser. Security protocols require this single-use keycard be stored at orbital laser platforms until all pre-firing procedures have been met. The keycard must then be inserted into a terminal at a ground-based Laser Activation Bunker to activate the mining laser.",
-      "kind": "item"
-    },
-    "m116a_s1_q1": {
-      "key": "item_Desc_M116A_S1_Q1",
-      "label": "Hydra Propulsion M1-16A Thruster",
-      "description": "Hydra Propulsion M1-16A Thruster",
-      "kind": "item"
-    },
-    "m116b_s1_q1": {
-      "key": "item_Desc_M116B_S1_Q1",
-      "label": "Hydra Propulsion M1-16B Thruster",
-      "description": "Hydra Propulsion M1-16B Thruster",
       "kind": "item"
     },
     "mym_shirt_02_01_01": {
@@ -20924,12 +18176,6 @@
       "description": "Carrying Capacity: 1K µSCU The Renegade Racing vest provides protection against road rash without adding to your lap time. Graphene-based nanocomposite plating makes the vest extremely light yet ultra-durable. Ideal for everything from idyllic rides to heart pounding last laps.",
       "kind": "item"
     },
-    "teststring01": {
-      "key": "item_Desc_TestString01",
-      "label": "TEST STRING NAME",
-      "description": "TEST STRING DESCRIPTION",
-      "kind": "item"
-    },
     "turret_remote": {
       "key": "item_Desc_Turret_Remote",
       "label": "Remote Turret",
@@ -21440,12 +18686,6 @@
       "description": "The Lister surgical shoes are designed to provide comfort and support even after hours on your feet. Made out of a crisp white material for easy identification of contamination, the shoes feature padded insoles and are made from a proprietary material that's both breathable and antibacterial.",
       "kind": "item"
     },
-    "cbd_boots_01_01_01": {
-      "key": "item_Desc_cbd_boots_01_01_01",
-      "label": "Placeholder - CBD Boots",
-      "description": "Placeholder CBD Boots Desc.",
-      "kind": "item"
-    },
     "cbd_gloves_01": {
       "key": "item_Desc_cbd_gloves_01",
       "label": "Grappler Gloves",
@@ -21486,12 +18726,6 @@
       "key": "item_Desc_cbd_hat_03_01_fleetweek2021",
       "label": "Invictus Hat Blue",
       "description": "Show your support for the Navy and the brave souls that serve the Empire with this classic cadet hat commemorating Invictus Launch Week.",
-      "kind": "item"
-    },
-    "cbd_hat_03_01_fleetweek2022": {
-      "key": "item_Desc_cbd_hat_03_01_fleetweek2022",
-      "label": "PH - cbd_hat_03_01_fleetweek2022",
-      "description": "PH - cbd_hat_03_01_fleetweek2022",
       "kind": "item"
     },
     "cbd_hat_03_arccorp_01": {
@@ -23510,12 +20744,6 @@
       "description": "The Greenwater is a long-sleeved shirt tailor-made to be worn underneath most standard sets of armor. Crafted with a durable mix of natural and synthetic fibers, it stands up to daily wear and tear without sacrificing comfort.",
       "kind": "item"
     },
-    "dnn_shoes_03_01_01": {
-      "key": "item_Desc_dnn_shoes_03_01_01",
-      "label": "PH - dnn_shoes_03_01_01",
-      "description": "PH - dnn_shoes_03_01_01",
-      "kind": "item"
-    },
     "doom_armor_medium_arms_02_01_01": {
       "key": "item_Desc_doom_armor_medium_arms_02_01_01",
       "label": "Stitcher Arms",
@@ -23678,12 +20906,6 @@
       "description": "The Ahmanson gloves achieve elegance with an edge thanks to Dyna Lei. These leather opera gloves have a sumptuous black patina that will become more spectacular with time, and are made with a comfortable cashmere lining. Men sizes are currently unavailable.",
       "kind": "item"
     },
-    "dyl_jacket_02_01_01": {
-      "key": "item_Desc_dyl_jacket_02_01_01",
-      "label": "DYL - jacket - name",
-      "description": "DYL - jacket - description",
-      "kind": "item"
-    },
     "dyl_pants_02_01_01": {
       "key": "item_Desc_dyl_pants_02_01_01",
       "label": "Koal Pants",
@@ -23708,15 +20930,9 @@
       "description": "The Barrymore pumps are part of the Dyna Lei essentials collection. The shoes feature classic yet subtle curves and supportive insoles for an ultra-comfortable fit ideal for all day wear. Men sizes are currently unavailable.",
       "kind": "item"
     },
-    "eld_glasses_01_01_01": {
-      "key": "item_Desc_eld_glasses_01_01_01",
-      "label": "PH - eld_glasses_01_01_01",
-      "description": "PH - eld_glasses_01_01_01",
-      "kind": "item"
-    },
-    "eld_jacket_04_01_01": {
+    "_eld_jacket_04_01_01": {
       "key": "item_Desc_eld_jacket_04_01_01",
-      "label": "PH - eld_jacket_04_01_01",
+      "label": "Archibald Jacket Cinder",
       "description": "PH - eld_jacket_04_01_01",
       "kind": "item"
     },
@@ -23750,9 +20966,9 @@
       "description": "Carrying Capacity: 2K µSCU This maroon and brown collarless synth-leather jacket from Escar Limited features quilted detailing around the opening and down the sleeves, and pairs effortlessly with a bold button-down, tropical-print shirt in light brown.",
       "kind": "item"
     },
-    "eld_pants_07_01_01": {
+    "_eld_pants_07_01_01": {
       "key": "item_Desc_eld_pants_07_01_01",
-      "label": "PH - eld_pants_07_01_01",
+      "label": "78-WH Pants",
       "description": "PH - eld_pants_07_01_01",
       "kind": "item"
     },
@@ -23762,28 +20978,10 @@
       "description": "Few things are as awe-inspiring as a UEE Navy fleet flyby. This comfortable, cotton blend Invictus Launch Week t-shirt celebrates that memorable sight.",
       "kind": "item"
     },
-    "eld_shirt_04_01_fleetweek2022": {
-      "key": "item_Desc_eld_shirt_04_01_fleetweek2022",
-      "label": "PH - eld_shirt_04_01_fleetweek2022",
-      "description": "PH - eld_shirt_04_01_fleetweek2022",
-      "kind": "item"
-    },
     "eld_shirt_04_01_subfeb25": {
       "key": "item_Desc_eld_shirt_04_01_subfeb25",
       "label": "Big Winner T-Shirt",
       "description": "Featuring a stylized, neon-green X on the front and the phrase \"Big winner!\" on the back, when you wear this T-shirt, everyone will know that you're going places.",
-      "kind": "item"
-    },
-    "eld_shirt_04_1million_01": {
-      "key": "item_Desc_eld_shirt_04_1million_01",
-      "label": "Placeholder - eld_shirt_04_1million_01",
-      "description": "Placeholder - eld_shirt_04_1million_01",
-      "kind": "item"
-    },
-    "eld_shirt_04_2million_01": {
-      "key": "item_Desc_eld_shirt_04_2million_01",
-      "label": "Placeholder - eld_shirt_04_2million_01",
-      "description": "Placeholder - eld_shirt_04_2million_01",
       "kind": "item"
     },
     "eld_shirt_04_aegis_dec": {
@@ -24074,9 +21272,9 @@
       "description": "A simple, light grey, long-sleeved shirt constructed from moisture wicking fabric ideal for keeping you comfortable during work and play.",
       "kind": "item"
     },
-    "eld_shirt_09_01_01": {
+    "_eld_shirt_09_01_01": {
       "key": "item_Desc_eld_shirt_09_01_01",
-      "label": "PH - eld_shirt_09_01_01",
+      "label": "Hannu Shirt",
       "description": "PH - eld_shirt_09_01_01",
       "kind": "item"
     },
@@ -24416,9 +21614,9 @@
       "description": "Whether you're charting new territory on an untouched world or fixing fences at your homestead, Grindstone's TrailTuff boots are sturdy enough to take on the toughest terrain. Made with a proprietary synthetic leather that has all the qualities you love of the real thing and none of the downsides.",
       "kind": "item"
     },
-    "gsb_boots_07_01_01": {
+    "_gsb_boots_07_01_01": {
       "key": "item_Desc_gsb_boots_07_01_01",
-      "label": "PH - gsb_boots_07_01_01",
+      "label": "Wanderer Boots Base",
       "description": "PH - gsb_boots_07_01_01",
       "kind": "item"
     },
@@ -25268,9 +22466,9 @@
       "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Mirai’s Racing Flight Suit uses synthetic fabrics sourced from the Xi’an to create a comfortable flight suit durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the stark red stripe across the body of the flight suit results in a striking but elegant design.",
       "kind": "item"
     },
-    "mrai_flightsuit_01_02_01": {
+    "_mrai_flightsuit_01_02_01": {
       "key": "item_Desc_mrai_flightsuit_01_02_01",
-      "label": "PH - mrai_flightsuit_01_02_01",
+      "label": "Mirai Racing Flight Suit",
       "description": "PH - mrai_flightsuit_01_02_01",
       "kind": "item"
     },
@@ -25322,9 +22520,9 @@
       "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Mirai’s Racing helmets uses advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the stark red highlight and bold Mirai branding results in a striking but elegant design.",
       "kind": "item"
     },
-    "mrai_flightsuit_helmet_01_02_01": {
+    "_mrai_flightsuit_helmet_01_02_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_02_01",
-      "label": "PH - mrai_flightsuit_helmet_01_02_01",
+      "label": "Mirai Racing Helmet",
       "description": "PH - mrai_flightsuit_helmet_01_02_01",
       "kind": "item"
     },
@@ -25910,9 +23108,9 @@
       "description": "Carrying Capacity: 0.5K µSCU The Waldron suit fuses classic style with contemporary flourishes in a way that's become definitively OpalSky. The repeating geometric pattern travels the length of the jacket and pants to create a cutting edge look that will turn heads wherever you go.",
       "kind": "item"
     },
-    "ops_shirt_03_01_01": {
+    "_ops_shirt_03_01_01": {
       "key": "item_Desc_ops_shirt_03_01_01",
-      "label": "Placeholder - OPS Shirt",
+      "label": "Thorby Shirt",
       "description": "Placeholder - OPS Shirt Desc",
       "kind": "item"
     },
@@ -28214,12 +25412,6 @@
       "description": "Classic. Elegant. Spar Van Miles' low-heel slip-on shoe is reinforced for durability and comfort. Perfect for the professional on the go.",
       "kind": "item"
     },
-    "spv_bioticorp_rep_jacket_01_01_01": {
-      "key": "item_Desc_spv_bioticorp_rep_jacket_01_01_01",
-      "label": "Placeholder - SPV Jacket",
-      "description": "Placeholder - SPV Jacket Desc",
-      "kind": "item"
-    },
     "spv_bioticorp_rep_pants_01_01_01": {
       "key": "item_Desc_spv_bioticorp_rep_pants_01_01_01",
       "label": "Aego Pants",
@@ -28818,24 +26010,6 @@
       "key": "item_Desc_srvl_utility_light_legs_01_01_15",
       "label": "Outback Legs Molehill Brown",
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -65 / 61 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2k µSCU These durable, reinforced leather pants are not only practical for traversal through inhospitable territory, the metal plated boots will keep you protected along the long road ahead. The Molehill version is dyed a neutral brown to keep you subtle, but not unsightly.",
-      "kind": "item"
-    },
-    "sw_hdh_large_pouch_01": {
-      "key": "item_Desc_sw_hdh_large_pouch_01",
-      "label": "[PH] HDH large pouch",
-      "description": "[PH] HDH large pouch desc.",
-      "kind": "item"
-    },
-    "sw_hdh_moderate_pouch_01": {
-      "key": "item_Desc_sw_hdh_moderate_pouch_01",
-      "label": "[PH] HDH moderate pouch",
-      "description": "[PH] HDH moderate pouch desc.",
-      "kind": "item"
-    },
-    "sw_hdh_small_pouch_01": {
-      "key": "item_Desc_sw_hdh_small_pouch_01",
-      "label": "[PH] HDH small pouch",
-      "description": "[PH] HDH small pouch desc.",
       "kind": "item"
     },
     "syfb_combat_light_arms_01_01_01": {
@@ -30510,12 +27684,6 @@
       "key": "item_Descdev_mount",
       "label": "Class 2b Mount",
       "description": "Basic Class 2b turret mount",
-      "kind": "item"
-    },
-    "drak_cutlass_s1_q2": {
-      "key": "item_Descdrak_cutlass_s1_q2",
-      "label": "Drake Cutlass Ball Turret",
-      "description": "Drake Cutlass Ball Turret",
       "kind": "item"
     },
     "flair_pot_col_medium_1_flair_a": {
@@ -32480,42 +29648,6 @@
       "description": "Manufacturer: UltiFlex Item Type: Knife Class: Melee Size: 16 cm The FSK-8 Combat Knife from UltiFlex is as sparse a weapon as you can get. While many become enamored with dazzling tech of modern weaponry, UltiFlex has focused on making a simple effective combat tool. Featuring a balanced 1055 carbon steel blade honed to a razor's edge, this knife is capable of handling all the abuse you can throw at it.",
       "kind": "item"
     },
-    "vncl_glaive_lights_cockpit_int": {
-      "key": "item_Descvncl_glaive_lights_cockpit_int",
-      "label": "@VNCL General Cockpit Lights",
-      "description": "@General Cockpit light",
-      "kind": "item"
-    },
-    "vncl_glaive_lights_engine": {
-      "key": "item_Descvncl_glaive_lights_engine",
-      "label": "@VNCL General Engine Light",
-      "description": "@General Engine light",
-      "kind": "item"
-    },
-    "vncl_glaive_lights_starboard_wing": {
-      "key": "item_Descvncl_glaive_lights_starboard_wing",
-      "label": "@VNCL Starboard Wing Light",
-      "description": "@Starboard Wing Light",
-      "kind": "item"
-    },
-    "vncl_lights_cockpit_int": {
-      "key": "item_Descvncl_lights_cockpit_int",
-      "label": "@VNCL General Cockpit Lights",
-      "description": "@General Cockpit light",
-      "kind": "item"
-    },
-    "vncl_lights_engine": {
-      "key": "item_Descvncl_lights_engine",
-      "label": "VNCL General Engine Light",
-      "description": "@General Engine light",
-      "kind": "item"
-    },
-    "vncl_lights_starboard_wing": {
-      "key": "item_Descvncl_lights_starboard_wing",
-      "label": "@VNCL Starboard Wing Light",
-      "description": "@Starboard Wing Light",
-      "kind": "item"
-    },
     "vncl_melee_01": {
       "key": "item_Descvncl_melee_01",
       "label": "VCK-1 Blade",
@@ -33994,6 +31126,6 @@
     }
   },
   "summary": {
-    "totalDescriptions": 5665
+    "totalDescriptions": 5187
   }
 }
