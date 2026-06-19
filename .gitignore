@@ -29,7 +29,11 @@ scripts/.cache/
 
 # Local backups
 dumpers-repo-backup.zip
+dumpers-repo-backup-*.zip
 DumpersRepo-backup.zip
+
+# Local probe/scratch files
+.tmp-*
 
 # DFP Engine source (proprietary - kept in private repo)
 dfp-engine/
