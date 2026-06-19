@@ -1,6 +1,7 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
 
 export interface BlueprintOrderableSource {
+  internalName?: string
   file?: string
   isReward?: boolean
   rewardMissions?: unknown[]
@@ -24,14 +25,23 @@ function extractBlueprintName(fileId: string): string | null {
   return null
 }
 
+/** Resolve catalog key from legacy file paths or post-migration internalName ids. */
+function resolveCatalogBlueprintKey(blueprintId: string): string | null {
+  const fromPath = extractBlueprintName(blueprintId)
+  if (fromPath) return fromPath
+
+  const trimmed = blueprintId.trim().toLowerCase()
+  return trimmed || null
+}
+
 export function catalogIsReward(blueprintId: string): boolean {
-  const name = extractBlueprintName(blueprintId)
+  const name = resolveCatalogBlueprintKey(blueprintId)
   if (!name) return false
   return rewardBlueprintNames.has(name)
 }
 
 export function getCatalogBlueprint(blueprintId: string) {
-  const name = extractBlueprintName(blueprintId)
+  const name = resolveCatalogBlueprintKey(blueprintId)
   if (!name) return undefined
   
   const pools = blueprintMissions[name]
