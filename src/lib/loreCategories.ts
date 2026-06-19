@@ -156,28 +156,253 @@ const SHIP_WEAPON_STEM_PATTERN =
 
 const FPS_WEAPON_STEM_PATTERN = /(glauncher_|apar_special)/i
 
-function getCommodityLoreCategory(resourceKey: string, label: string): string {
+const COMMODITY_TYPE_CATEGORIES: Record<string, string> = {
+  type_food: 'Food & Drink',
+  type_drink: 'Food & Drink',
+  type_gas: 'Gases',
+  type_mineral: 'Ores & Minerals',
+  type_metal: 'Ores & Minerals',
+  type_nonmetals: 'Ores & Minerals',
+  type_natural: 'Trade Goods',
+  type_scrap: 'Industrial',
+  type_waste: 'Industrial',
+  type_medicalsupply: 'Medical',
+  type_vice: 'Contraband',
+  type_militarysupply: 'Trade Goods',
+  type_consumergoods: 'Trade Goods',
+  type_processedgoods: 'Trade Goods',
+  type_manmade: 'Industrial',
+  type_alloy: 'Refined Materials',
+  type_hpmc: 'Refined Materials',
+}
+
+const COMMODITY_FOOD_KEYS = new Set([
+  'type_food',
+  'type_drink',
+  'fresh_food',
+  'processed_food',
+  'human_food_bars',
+  'distilled_spirits',
+  'bluebilva',
+  'blue_bilva',
+  'jumpinglimes',
+  'jumping_limes',
+  'golden_medmon',
+  'sunset_berries',
+  'spiral',
+  'lunes',
+  'oza',
+  'pitambu',
+  'decari_pod',
+  'wuotanseed',
+  'amiantpod',
+  'degnous_root',
+  'prota',
+  'gasping_weevil_eggs',
+])
+
+const COMMODITY_TRADE_KEYS = new Set([
+  'agriculturalgoods',
+  'agriculturalsupplies',
+  'agricultural_supplies',
+  'organimass',
+  'pingala',
+  'ck13_gid_seed_blend',
+  'flareweedstalk',
+  'fotiascrub',
+  'nereus',
+  'heart_of_the_woods',
+  'revenant_pod',
+  'altruciatoxin_unprocessed',
+  'osoian_hides',
+  'ventfilters',
+  'ventslug',
+  'moldsamples',
+  'moldtreatment',
+  'audio_visual_equipment',
+  'consumergoods',
+  'militarysupplies',
+  'mobyglass',
+  'hlx99hyperprocessors',
+  'rs1odyseyspacesuits',
+  'redfinenergymodulator',
+  'stonebugshell',
+  'sulfermoss',
+  'ranta_dung',
+  'quasigrazeregg',
+  'quasigrazertongue',
+  'valakkarfang',
+  'valakkarfang_irradiated',
+  'valakkarhide_irradiated',
+  'valakkarpearl_irradiated',
+  'yormandi_tongue',
+  'detatrine',
+  'dymantium',
+  'apoxygenite',
+  'marok_gem',
+])
+
+const COMMODITY_ORDNANCE_KEYS = new Set([
+  'countermeasures_decoy',
+  'countermeasures_noise',
+])
+
+const COMMODITY_FLAIR_KEYS = new Set(['souvenirs', 'fireworks', 'partyfavors', 'special_holidaybox'])
+
+const COMMODITY_MEDICAL_KEYS = new Set([
+  'medpens',
+  'oxypens',
+  'medgel',
+  'lifecure_medsticks',
+  'medical_supplies',
+  'kopionhorn',
+  'kopionhorn_irradiated',
+])
+
+const COMMODITY_REFINED_KEYS = new Set([
+  'diamond',
+  'silnex',
+  'neograph',
+  'thermalfoam',
+  'steel',
+  'diluthermex',
+  'dynaflex',
+  'elespo',
+  'lastaprene',
+  'lycara',
+  'omnapoxy',
+  'sarilus',
+  'zeta_prolanide',
+  'acryliplex',
+  'bioplastic',
+  'cadmiumallinide',
+  'diamond_laminate',
+  'carbonsilk',
+  'carinite_pure',
+])
+
+const HARVESTABLE_FOOD_DESCRIPTION =
+  /\bNDR:\s*\d+|\bHEI:\s*\d+|\bEffects:\s*(Hydrating|Energizing|Dehydrating)/i
+
+function normalizeCommodityKey(resourceKey: string): string {
+  const aliases: Record<string, string> = {
+    bluebilva: 'blue_bilva',
+    jumpinglimes: 'jumping_limes',
+    agriculturalsupplies: 'agricultural_supplies',
+    agriculturalgoods: 'agricultural_supplies',
+    partyfavors: 'party_favors',
+    redfinenergymodulator: 'redfin_energy_modulators',
+    moldsamples: 'molina_mold_samples',
+    moldtreatment: 'molina_mold_treatment',
+    ventfilters: 'molina_ventilation_filters',
+    kopionhorn: 'kopion_horn',
+    kopionhorn_irradiated: 'irradiated_kopion_horn',
+  }
+  return aliases[resourceKey.toLowerCase()] ?? resourceKey.toLowerCase()
+}
+
+function isShipAmmoCommodityKey(resourceKey: string): boolean {
+  return /^shipammo_size_\d+$/.test(resourceKey.toLowerCase())
+}
+
+function isLunarEnvelopeCommodityKey(resourceKey: string): boolean {
+  return resourceKey.toLowerCase().startsWith('special_lunar_envelope')
+}
+
+function isMiningOreCommodityKey(resourceKey: string): boolean {
+  const key = resourceKey.toLowerCase()
+  if (
+    key.endsWith('_ore') ||
+    key === 'quantainium' ||
+    key === 'mixedmining' ||
+    key === 'waste_rock' ||
+    key === 'raw_ice' ||
+    key === 'pressurized_ice' ||
+    key === 'raw_silicon' ||
+    key === 'raw_ouratite' ||
+    key === 'ouratite'
+  ) {
+    return true
+  }
+  if (
+    COMMODITY_FOOD_KEYS.has(key) ||
+    COMMODITY_TRADE_KEYS.has(key) ||
+    COMMODITY_ORDNANCE_KEYS.has(key) ||
+    COMMODITY_FLAIR_KEYS.has(key) ||
+    COMMODITY_MEDICAL_KEYS.has(key) ||
+    COMMODITY_TYPE_CATEGORIES[key] ||
+    isShipAmmoCommodityKey(key) ||
+    isLunarEnvelopeCommodityKey(key)
+  ) {
+    return false
+  }
+  return getResourceType(normalizeCommodityKey(key)) === 'ore'
+}
+
+function getCommodityLoreCategory(resourceKey: string, label: string, description: string): string {
+  const key = resourceKey.toLowerCase()
   const lowerLabel = label.toLowerCase()
+  const text = `${lowerLabel} ${description.toLowerCase()}`
+
+  if (COMMODITY_TYPE_CATEGORIES[key]) {
+    return COMMODITY_TYPE_CATEGORIES[key]
+  }
 
   if (
+    COMMODITY_MEDICAL_KEYS.has(key) ||
     lowerLabel.includes('medical') ||
     lowerLabel.includes('medstick') ||
     lowerLabel.includes('kopion') ||
-    lowerLabel.includes('molina')
+    lowerLabel.includes('molina') ||
+    lowerLabel.includes('medpen') ||
+    lowerLabel.includes('oxypen')
   ) {
     return 'Medical'
   }
 
   if (
+    COMMODITY_FOOD_KEYS.has(key) ||
+    HARVESTABLE_FOOD_DESCRIPTION.test(description) ||
+    /\b(fresh food|processed food|food bar|distilled spirit)\b/i.test(text) ||
+    (key.includes('food') && key !== 'organimass') ||
+    key.includes('drink') ||
+    key === 'distilled_spirits'
+  ) {
+    return 'Food & Drink'
+  }
+
+  if (
+    isShipAmmoCommodityKey(key) ||
+    COMMODITY_ORDNANCE_KEYS.has(key) ||
+    /\bship ammunition\b/i.test(lowerLabel)
+  ) {
+    return 'Ordnance & Missiles'
+  }
+
+  if (
+    COMMODITY_FLAIR_KEYS.has(key) ||
+    isLunarEnvelopeCommodityKey(key) ||
+    /\b(luminalia gift|souvenir|fireworks|party favor)\b/i.test(text)
+  ) {
+    return 'Flair & Collectibles'
+  }
+
+  if (COMMODITY_TRADE_KEYS.has(key) || /\b(agricultural goods|agricultural supplies|organics)\b/i.test(lowerLabel)) {
+    return 'Trade Goods'
+  }
+
+  if (
     lowerLabel.includes('refined') ||
-    ['diamond', 'silnex', 'neograph', 'thermalfoam'].includes(resourceKey)
+    COMMODITY_REFINED_KEYS.has(key) ||
+    key.includes('_laminate') ||
+    key.includes('composite')
   ) {
     return 'Refined Materials'
   }
 
-  switch (getResourceType(resourceKey)) {
+  switch (getResourceType(normalizeCommodityKey(key))) {
     case 'ore':
-      return 'Ores & Minerals'
+      return isMiningOreCommodityKey(key) ? 'Ores & Minerals' : 'Trade Goods'
     case 'gem':
       return 'Gems & Hand Mineables'
     case 'gas':
@@ -193,7 +418,7 @@ function getCommodityLoreCategory(resourceKey: string, label: string): string {
     case 'shop_special':
       return 'Trade Goods'
     default:
-      return 'Other'
+      return 'Trade Goods'
   }
 }
 
@@ -288,7 +513,7 @@ function getItemLoreCategory(resourceKey: string, locKey: string, label: string)
   }
 
   if (first === 'seco' || stem.startsWith('seco_')) {
-    return 'Ship Paints & Liveries'
+    return SHIP_COMPONENTS
   }
 
   if (first === 'hackingchip' || stem.startsWith('hackingchip_')) {
@@ -314,7 +539,7 @@ function getItemLoreCategory(resourceKey: string, locKey: string, label: string)
     stem.includes('_plant') ||
     first === 'dead_tree' ||
     first === 'xian_plant' ||
-    first === 'space_cactus'
+    stem === 'space_cactus'
   ) {
     return 'Flair & Collectibles'
   }
@@ -622,7 +847,8 @@ export function getGameLoreCategory(
   resourceKey: string,
   label: string,
   locKey: string,
-  kind?: 'commodity' | 'item'
+  kind?: 'commodity' | 'item',
+  description = ''
 ): string {
   const inferredKind =
     kind ??
@@ -632,7 +858,7 @@ export function getGameLoreCategory(
       : 'item')
 
   if (inferredKind === 'commodity') {
-    return getCommodityLoreCategory(resourceKey, label)
+    return getCommodityLoreCategory(resourceKey, label, description)
   }
 
   return getItemLoreCategory(resourceKey, locKey, label)

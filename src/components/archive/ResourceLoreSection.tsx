@@ -43,7 +43,8 @@ export default function ResourceLoreSection() {
         entry.resourceKey,
         entry.label,
         entry.locKey,
-        entry.kind
+        entry.kind,
+        entry.description
       )
       if (!categories.has(category)) {
         categories.set(category, [])
