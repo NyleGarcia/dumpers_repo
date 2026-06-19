@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-19T02:42:43.516Z",
+  "_extracted": "2026-06-19T02:50:53.948Z",
   "resources": {
     "audio_visual_equipment": {
       "key": "items_commodities_AudioVisualEquipment_desc",
@@ -1742,12 +1742,6 @@
       "description": "The mX-Shatter Rocket is a rocket that scatters small explosives on impact or after a very brief period of time. Whenever the rocket shoots out the smaller explosives fire off in random directions, excellent for clearing out areas. Every shatter rocket has a cluster of about 20 small explosives that aren't as powerful as frag grenades on their own, but combined are about the same as a frag grenade.",
       "kind": "item"
     },
-    "25mm_special_ballistic_fragment": {
-      "key": "item_Desc25mm_special_ballistic_fragment",
-      "label": "25mm mX Shatter Rocket Fragment",
-      "description": "The mX-Shatter Rocket is a rocket that scatters small explosives on impact or after a very brief period of time. Whenever the rocket shoots out the smaller explosives fire off in random directions, excellent for clearing out areas. Every shatter rocket has a cluster of about 20 small explosives that aren't as powerful as frag grenades on their own, but combined are about the same as a frag grenade.",
-      "kind": "item"
-    },
     "2ghz_microwave_energy": {
       "key": "item_Desc2ghz_microwave_energy",
       "label": "UC",
@@ -1958,12 +1952,6 @@
       "description": "Item Type: Bomb Rack Manufacturer: Aegis Dynamics Size: S10 Built specifically for the Eclipse, this bomb rack carries 1 S10 bombs.",
       "kind": "item"
     },
-    "aegs_gladius_main": {
-      "key": "item_DescAEGS_Gladius_Main",
-      "label": "Main Thruster",
-      "description": "The STC Blue by perrenial thruster manufacturer Dragon Stellar Transit Company offers high output and low emissions, great for pilots wishing to close the distance while maintaining a low profile. The smallest thruster in the STC lineup, the Blue has a thrust rating of 2.",
-      "kind": "item"
-    },
     "aegs_gladius_mav_joint_01": {
       "key": "item_DescAEGS_Gladius_Mav_Joint_01",
       "label": "Omni Mav Thruster",
@@ -2088,30 +2076,6 @@
       "key": "item_DescAEGS_S3_Rack_x1",
       "label": "Aegis Single Platform",
       "description": "Designed for compatible Aegis ships, the Single Platform will carry one S3 missile.",
-      "kind": "item"
-    },
-    "aegs_sabre_main": {
-      "key": "item_DescAEGS_Sabre_Main",
-      "label": "Main Thruster",
-      "description": "Aegis Sabre Main Thruster",
-      "kind": "item"
-    },
-    "aegs_sabre_retro": {
-      "key": "item_DescAEGS_Sabre_Retro",
-      "label": "Retro Thruster",
-      "description": "Aegis Sabre Retro Thruster",
-      "kind": "item"
-    },
-    "aegs_sabre_mav_joint_01": {
-      "key": "item_DescAEGS_Sabre_mav_Joint_01",
-      "label": "Omni Thruster",
-      "description": "Aegis Sabre Omni Thruster",
-      "kind": "item"
-    },
-    "aegs_sabre_mav_joint_02": {
-      "key": "item_DescAEGS_Sabre_mav_Joint_02",
-      "label": "Rotational Thruster",
-      "description": "Aegis Sabre Rotational Thruster",
       "kind": "item"
     },
     "ambx_behr_ballisticcannon_s4_he": {
@@ -2574,12 +2538,6 @@
       "key": "item_DescARGO_TractorBeam_S1_Cargo",
       "label": "Durus Tractor Beam",
       "description": "Manufacturer: Argo Astronautics Item Type: Tractor Beam Max Angle: 60° Max Range: 150 m Full Strength Distance: 75 m Made specifically for the ATLS power suit, the Durus tractor beam from Argo Astronautics has been carefully tuned for loading and unloading cargo.",
-      "kind": "item"
-    },
-    "armr_orig_315p": {
-      "key": "item_DescARMR_ORIG_315p",
-      "label": "315p Ship Armor",
-      "description": "Origin Jumpworks 315p Ship Armor",
       "kind": "item"
     },
     "asad_distortionrepeater_s1": {
@@ -3806,12 +3764,6 @@
       "description": "Use the Scrubland Camo livery to outfit the C8 Pisces in green camo. A classic and commanding look that's also ideal for excursions across forests and grasslands.",
       "kind": "item"
     },
-    "cnou_delta_rocketpod_x18": {
-      "key": "item_DescCNOU_Delta_RocketPod_x18",
-      "label": "R-18 rocket pod",
-      "description": "Behring R-18 - rocket pod description text",
-      "kind": "item"
-    },
     "cnou_magma_s2_q1": {
       "key": "item_DescCNOU_Magma_S2_Q1",
       "label": "Magma Jet (Outer Engines)",
@@ -4134,24 +4086,6 @@
       "key": "item_DescCOOL_TYDT_S02_NightFall_SCItem",
       "label": "NightFall",
       "description": "Item Type: Cooler Manufacturer: Tyler Design & Tech Size: 2 Grade: A Class: Stealth Run silent and safe with the NightFall from Tyler Design & Tech. Few coolers can match the way this component manages your ship's heat while also keeping its signatures low.",
-      "kind": "item"
-    },
-    "cool_vncl_s01_blade": {
-      "key": "item_DescCOOL_VNCL_S01_Blade",
-      "label": "Vanduul Blade Cooler",
-      "description": "Standard cooler for the Vanduul Blade.",
-      "kind": "item"
-    },
-    "cool_vncl_s01_stinger": {
-      "key": "item_DescCOOL_VNCL_S01_Stinger",
-      "label": "Vanduul Stinger Cooler",
-      "description": "Standard cooler for the Vanduul Stinger.",
-      "kind": "item"
-    },
-    "cool_vncl_s01_void": {
-      "key": "item_DescCOOL_VNCL_S01_Void",
-      "label": "Vanduul Void Cooler",
-      "description": "Standard cooler for Vanduul Void.",
       "kind": "item"
     },
     "cool_vncl_s04_mauler": {
@@ -4700,18 +4634,6 @@
       "description": "Give the gift of good fortune and prosperity with this charm, handcarved by frontier settlers in honor of the Year of the Rooster. This generous gift is crafted from wood to represent one's efforts to put down roots in a new world while the robust and ornate rooster design represents those with ambition and fierce loyalty.",
       "kind": "item"
     },
-    "class_2a_placeholder": {
-      "key": "item_DescClass_2a_Placeholder",
-      "label": "Class 2a Mount",
-      "description": "Basic Class 2a turret mount",
-      "kind": "item"
-    },
-    "class_2b_placeholder": {
-      "key": "item_DescClass_2b_Placeholder",
-      "label": "Class 2b Mount",
-      "description": "Basic Class 2b turret mount",
-      "kind": "item"
-    },
     "class_2b_placeholder_size1": {
       "key": "item_DescClass_2b_Placeholder_Size1",
       "label": "Class 2b Mount Size 1",
@@ -5222,12 +5144,6 @@
       "description": "With the Aspire livery, blue and white combine to evoke both the colors and frigid temperatures of New Babbage. In honor of the landing zone that inspired it, the livery also features a depiction of the Aspire Grand building that dominates the city's skyline.",
       "kind": "item"
     },
-    "cyclone_paint_aa": {
-      "key": "item_DescCyclone_Paint_AA",
-      "label": "Cyclone AA Livery",
-      "description": "Base livery for the Cyclone AA.",
-      "kind": "item"
-    },
     "cyclone_paint_dustdevil": {
       "key": "item_DescCyclone_Paint_DustDevil",
       "label": "Cyclone Dust Devil Livery",
@@ -5258,18 +5174,6 @@
       "description": "Inspired by the colors of Coramor, the Lovestruck livery is a stylish metallic pink and black look for your Cyclone.",
       "kind": "item"
     },
-    "cyclone_paint_rc": {
-      "key": "item_DescCyclone_Paint_RC",
-      "label": "Cyclone RC Livery",
-      "description": "Base livery for the Cyclone RC.",
-      "kind": "item"
-    },
-    "cyclone_paint_rn": {
-      "key": "item_DescCyclone_Paint_RN",
-      "label": "Cyclone RN Livery",
-      "description": "Base livery for the Cyclone RN.",
-      "kind": "item"
-    },
     "cyclone_paint_racing_blue_blue_blue_tigerstripes": {
       "key": "item_DescCyclone_Paint_Racing_Blue_Blue_Blue_TigerStripes",
       "label": "Cyclone Whirlwind Livery",
@@ -5298,12 +5202,6 @@
       "key": "item_DescCyclone_Paint_Racing_Yellow_White_Grey_Stripes",
       "label": "Cyclone Finish Line Livery",
       "description": "Give the Cyclone a classic racing design with the Finish Line livery. It features a yellow stripe across the front, a white one through the middle, and a grey one on the back.",
-      "kind": "item"
-    },
-    "cyclone_paint_tr": {
-      "key": "item_DescCyclone_Paint_TR",
-      "label": "Cyclone TR Livery",
-      "description": "Base livery for the Cyclone TR.",
       "kind": "item"
     },
     "drak_buccaneer_dual_s2": {
@@ -5420,12 +5318,6 @@
       "description": "This single-use mobile defibrillator unit is perfect for military and law enforcement field applications, simply place the electrodes and press the button.",
       "kind": "item"
     },
-    "dragonfly_paint_black": {
-      "key": "item_DescDragonfly_Paint_Black",
-      "label": "Dragonfly Black Livery",
-      "description": "Base livery for the Dragonfly Black.",
-      "kind": "item"
-    },
     "dragonfly_paint_citcon2953_beige_tan_beige": {
       "key": "item_DescDragonfly_Paint_Citcon2953_Beige_Tan_Beige",
       "label": "Dragonfly Roustabout Livery (Modified)",
@@ -5466,12 +5358,6 @@
       "key": "item_DescDragonfly_Paint_Racing_Red_Silver",
       "label": "Dragonfly Overdrive Livery",
       "description": "Blast past other racers in style on your Dragonfly with the Overdrive livery, which blends red and silver coloring.",
-      "kind": "item"
-    },
-    "dragonfly_paint_yellow": {
-      "key": "item_DescDragonfly_Paint_Yellow",
-      "label": "Dragonfly Yellowjacket Livery",
-      "description": "Base livery for the Dragonfly Yellowjacket.",
       "kind": "item"
     },
     "drink_bottle_beer_01_smoltz_a": {
@@ -5994,12 +5880,6 @@
       "key": "item_DescF_skinhead_hair_01_Shared",
       "label": "Clipped",
       "description": "Short, but not buzzed.",
-      "kind": "item"
-    },
-    "f_slicked_back_hair_01": {
-      "key": "item_DescF_slicked_back_hair_01",
-      "label": "Slicked Back",
-      "description": "Long and slicked back.",
       "kind": "item"
     },
     "f_spike_hair_01_shared": {
@@ -12974,12 +12854,6 @@
       "description": "Item Type: Quantum Enforcement Device Manufacturer: Wei-Tek Size: 3 Grade: C Class: Military This combination Quantum Enforcement Device from Wei-Tek contains both a Quantum Snare for pulling crafts out of quantum travel and a Quantum Dampener for preventing the engaging of quantum drives. With the ability to catch and hold, the Reynie offers an ideal all-in-one solution for security personnel.",
       "kind": "item"
     },
-    "qft_vncl_smal_pl01": {
-      "key": "item_DescQFT_VNCL_SMAL_PL01",
-      "label": "Vanduul Small Quantum Fuel Tank",
-      "description": "Small Quantum Fuel tank of Vanduul construction.",
-      "kind": "item"
-    },
     "qtnk_vncl_s04_mauler": {
       "key": "item_DescQTNK_VNCL_S04_Mauler",
       "label": "Quantum Fuel Tank",
@@ -14156,12 +14030,6 @@
       "description": "Turn the Shiv into a beauty and a brute with the Blue Blossom livery, featuring a colorful and ornate flower pattern across the top of the ship.",
       "kind": "item"
     },
-    "shubinturretitem": {
-      "key": "item_DescShubinTurretItem",
-      "label": "Class 2b Mount",
-      "description": "Basic Class 2b turret mount",
-      "kind": "item"
-    },
     "shubin_turretmissilerack": {
       "key": "item_DescShubin_TurretMissileRack",
       "label": "Behring Marksman HS Quad Platform",
@@ -15200,12 +15068,6 @@
       "description": "Announce your arrival with the Oasis livery for the Ursa, which is a vibrant teal tint with grey and white accents.",
       "kind": "item"
     },
-    "vncl_blade_fuel_tank_s1": {
-      "key": "item_DescVNCL_Blade_Fuel_Tank_S1",
-      "label": "Vanduul Blade Fuel Tank",
-      "description": "Fuel tank for the Vanduul Blade.",
-      "kind": "item"
-    },
     "vncl_blade_laserrepeater_s3": {
       "key": "item_DescVNCL_Blade_LaserRepeater_S3",
       "label": "Vanduul S3 Repeater",
@@ -15248,12 +15110,6 @@
       "description": "Manufacturer: Vanduul Item Type: Tachyon Cannon This powerful Tachyon cannon, prized on Vanduul warships for it's long range, is more commonly referred to by it's designated UEE designation of 'ERADICATOR'.",
       "kind": "item"
     },
-    "vncl_glaive_shield": {
-      "key": "item_DescVNCL_Glaive_Shield",
-      "label": "Vanduul Glaive Shield",
-      "description": "Shield generator for the Vanduul Glaive.",
-      "kind": "item"
-    },
     "vncl_lasercannon_s1": {
       "key": "item_DescVNCL_LaserCannon_S1",
       "label": "'WEAK' Repeater",
@@ -15288,12 +15144,6 @@
       "key": "item_DescVNCL_NeutronCannon_S5",
       "label": "'WAR' Cannon",
       "description": "Manufacturer: Vanduul / Esperia Item Type: Neutron Cannon Size: 5 This neutron cannon is typically found on Vanduul war ships and is commonly known by its UEE Navy designation of 'WAR'.",
-      "kind": "item"
-    },
-    "vncl_pc_scythe_right": {
-      "key": "item_DescVNCL_PC_Scythe_Right",
-      "label": "'WAR' Plasma Cannon",
-      "description": "Imperial Designation 'WAR' Plasma Cannon",
       "kind": "item"
     },
     "vncl_plasmacannon_s2": {
@@ -15492,12 +15342,6 @@
       "key": "item_DescVulture_Paint_Unity",
       "label": "Vulture Foundation Fest Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
-      "kind": "item"
-    },
-    "weapon_mount_class1_placeholder_a": {
-      "key": "item_DescWeapon_Mount_Class1_Placeholder_a",
-      "label": "Class 1a Mount",
-      "description": "Basic Class 1a fixed mount",
       "kind": "item"
     },
     "wolf_paint_black_black_red_camo": {
@@ -18488,12 +18332,6 @@
       "description": "Carrying Capacity: 1K µSCU This Banu-made mock turtleneck lets you celebrate Luminalia in comfort and style. Cozy up around the lamp with this luxurious blue and grey fabric blend with an asymmetrical front and three adjustable straps that guarantee the perfect fit. Banu phrases calling for merriment and a prosperous future adorn the front and back in white script.",
       "kind": "item"
     },
-    "basl_combat_light_flightsuit_01": {
-      "key": "item_Desc_basl_combat_light_flightsuit_01",
-      "label": "PH - basl_combat_light_flightsuit_01_01_01",
-      "description": "PH - basl_combat_light_flightsuit_01",
-      "kind": "item"
-    },
     "basl_combat_light_flightsuit_02_01_01": {
       "key": "item_Desc_basl_combat_light_flightsuit_02_01_01",
       "label": "Ace Interceptor Racing Flight Suit",
@@ -19998,12 +19836,6 @@
       "key": "item_Desc_cds_medium_armor_01_core",
       "label": "ORC-mkX Core Woodland",
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s The mark X is the latest in CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
-      "kind": "item"
-    },
-    "cds_medium_armor_01_legs": {
-      "key": "item_Desc_cds_medium_armor_01_legs",
-      "label": "ORC-mkX Legs Woodland",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU The mark X is the latest in CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
       "kind": "item"
     },
     "cds_medium_armor_02_shared": {
@@ -22766,12 +22598,6 @@
       "description": "PH - Standard issue sneaker for recruits and training, DF80s feature increased arch support for long runs and a polyweave material that keeps your feet dry.",
       "kind": "item"
     },
-    "nvy_training_pants_01": {
-      "key": "item_Desc_nvy_training_pants_01",
-      "label": "PH - nvy_training_pants_01_01_01",
-      "description": "PH - nvy_training_pants_01",
-      "kind": "item"
-    },
     "nvy_training_shirt_01": {
       "key": "item_Desc_nvy_training_shirt_01",
       "label": "ActiveWear Training T-Shirt",
@@ -25232,12 +25058,6 @@
       "description": "Carrying Capacity: 2K µSCU With an attached apron and deep side pockets, the TopLine pants from Stegman's make even the toughest service jobs a little bit easier.",
       "kind": "item"
     },
-    "scu_service_shirt_01": {
-      "key": "item_Desc_scu_service_shirt_01",
-      "label": "PH - scu_service_shirt_01_01_01",
-      "description": "PH - scu service shirt 01",
-      "kind": "item"
-    },
     "scu_service_shirt_02": {
       "key": "item_Desc_scu_service_shirt_02",
       "label": "PH - scu_service_shirt_02_01_01",
@@ -26720,12 +26540,6 @@
       "description": "Manufacturer: Apocalypse Arms Item Type: Railgun Class: Ballistic Magazine Size: 5 Rate Of Fire: 60 rpm Effective Range: 200 m Attachments: Optics (N/A), Barrel (N/A), Underbarrel (S4) Equally devastating to larger threats and hostile vehicles, this shoulder mounted railgun from Apocalypse Arms uses electromagnets to deliver its payload accurately over great distances, making it the Scourge of land, air and space.",
       "kind": "item"
     },
-    "apar_special_ballistic_01_black02": {
-      "key": "item_Descapar_special_ballistic_01_black02",
-      "label": "Scourge \"Nightstalker\" Railgun",
-      "description": "Manufacturer: Apocalypse Arms Item Type: Railgun Class: Ballistic Magazine Size: 10 Rate Of Fire: 60 rpm Effective Range: 200 m Equally devastating to larger threats and hostile vehicles, this shoulder mounted railgun from Apocalypse Arms uses electromagnets to deliver its payload accurately over great distances, making it the Scourge of land, air and space.",
-      "kind": "item"
-    },
     "apar_special_ballistic_01_mag": {
       "key": "item_Descapar_special_ballistic_01_mag",
       "label": "Scourge Railgun Magazine (5 cap)",
@@ -26736,12 +26550,6 @@
       "key": "item_Descapar_special_ballistic_01_mat01",
       "label": "Scourge \"Quite Useful\" Railgun",
       "description": "Manufacturer: Apocalypse Arms Item Type: Railgun Class: Ballistic Magazine Size: 5 Rate Of Fire: 60 rpm Effective Range: 200 m Attachments: Optics (N/A), Barrel (N/A), Underbarrel (S4) Equally devastating to larger threats and hostile vehicles, this shoulder mounted railgun from Apocalypse Arms uses electromagnets to deliver its payload accurately over great distances, making it the Scourge of land, air and space. One of the many items Wikelo has acquired in his travels, the 'Quite Useful' edition is a must have for any serious collector.",
-      "kind": "item"
-    },
-    "apar_special_ballistic_01_tan01": {
-      "key": "item_Descapar_special_ballistic_01_tan01",
-      "label": "Scourge \"Desert Shadow\" Railgun",
-      "description": "Manufacturer: Apocalypse Arms Item Type: Railgun Class: Ballistic Magazine Size: 10 Rate Of Fire: 60 rpm Effective Range: 200 m Equally devastating to larger threats and hostile vehicles, this shoulder mounted railgun from Apocalypse Arms uses electromagnets to deliver its payload accurately over great distances, making it the Scourge of land, air and space.",
       "kind": "item"
     },
     "apar_special_ballistic_02": {
@@ -27284,18 +27092,6 @@
       "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users.",
       "kind": "item"
     },
-    "behr_rifle_ballistic_01_black02": {
-      "key": "item_Descbehr_rifle_ballistic_01_black02",
-      "label": "P4-AR \"Nightstalker\" Rifle",
-      "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users.",
-      "kind": "item"
-    },
-    "behr_rifle_ballistic_01_green01": {
-      "key": "item_Descbehr_rifle_ballistic_01_green01",
-      "label": "P4-AR \"Warhawk\" Rifle",
-      "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users.",
-      "kind": "item"
-    },
     "behr_rifle_ballistic_01_iron": {
       "key": "item_Descbehr_rifle_ballistic_01_iron",
       "label": "P4-AR Iron Sight",
@@ -27314,22 +27110,10 @@
       "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users. The \"Fortuna\" edition is green with a four-leaf clover embossed on the side.",
       "kind": "item"
     },
-    "behr_rifle_ballistic_01_tan01": {
-      "key": "item_Descbehr_rifle_ballistic_01_tan01",
-      "label": "P4-AR \"Desert Shadow\" Rifle",
-      "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users.",
-      "kind": "item"
-    },
     "behr_rifle_ballistic_01_tint01": {
       "key": "item_Descbehr_rifle_ballistic_01_tint01",
       "label": "P4-AR \"Blacklist\" Rifle",
       "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users. The Blacklist edition features a black finish.",
-      "kind": "item"
-    },
-    "behr_rifle_ballistic_01_white02": {
-      "key": "item_Descbehr_rifle_ballistic_01_white02",
-      "label": "P4-AR \"Boneyard\" Rifle",
-      "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users.",
       "kind": "item"
     },
     "behr_rifle_ballistic_02": {
@@ -27428,30 +27212,6 @@
       "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection. The \"Red Alert\" edition mixes grey and a vibrant red for a bold and dynamic design.",
       "kind": "item"
     },
-    "behr_smg_ballistic_01_black01": {
-      "key": "item_Descbehr_smg_ballistic_01_black01",
-      "label": "P8-SC \"Midnight\" SMG",
-      "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection.",
-      "kind": "item"
-    },
-    "behr_smg_ballistic_01_black02": {
-      "key": "item_Descbehr_smg_ballistic_01_black02",
-      "label": "P8-SC \"Nightstalker\" SMG",
-      "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection.",
-      "kind": "item"
-    },
-    "behr_smg_ballistic_01_gold01": {
-      "key": "item_Descbehr_smg_ballistic_01_gold01",
-      "label": "P8-SC \"Executive Edition\" SMG",
-      "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection.",
-      "kind": "item"
-    },
-    "behr_smg_ballistic_01_green01": {
-      "key": "item_Descbehr_smg_ballistic_01_green01",
-      "label": "P8-SC \"Warhawk\" SMG",
-      "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection.",
-      "kind": "item"
-    },
     "behr_smg_ballistic_01_iae2501": {
       "key": "item_Descbehr_smg_ballistic_01_iae2501",
       "label": "P8-SC \"Epoque\" SMG",
@@ -27468,24 +27228,6 @@
       "key": "item_Descbehr_smg_ballistic_01_mag",
       "label": "P8-SC SMG Magazine (45 cap)",
       "description": "Item Type: Magazine Capacity: 45 This magazine for the Behring P8-SC SMG holds forty-five 10mm rounds.",
-      "kind": "item"
-    },
-    "behr_smg_ballistic_01_tan01": {
-      "key": "item_Descbehr_smg_ballistic_01_tan01",
-      "label": "P8-SC \"Desert Shadow\" SMG",
-      "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection.",
-      "kind": "item"
-    },
-    "behr_smg_ballistic_01_white01": {
-      "key": "item_Descbehr_smg_ballistic_01_white01",
-      "label": "P8-SC \"Stormfall\" SMG",
-      "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection.",
-      "kind": "item"
-    },
-    "behr_smg_ballistic_01_white02": {
-      "key": "item_Descbehr_smg_ballistic_01_white02",
-      "label": "P8-SC \"Boneyard\" SMG",
-      "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection.",
       "kind": "item"
     },
     "behr_sniper_ballistic_01": {
@@ -27528,12 +27270,6 @@
       "key": "item_Desccds_deployable_shield_01",
       "label": "CDS QuickCade",
       "description": "Manufacturer: CDS Initially designed for high-risk raids for the Advocacy, CDS has finally released their QDB tech to the public. This Quick Deployment Barricade or QuikCade is mobile system capable of projecting a localized protection field capable of temporarily shielding two operators from incoming fire.",
-      "kind": "item"
-    },
-    "cnou_mustang_s1_q2": {
-      "key": "item_Desccnou_mustang_s1_q2",
-      "label": "Mustang ball turret",
-      "description": "Mustang ball turret description text",
       "kind": "item"
     },
     "crlf_consumable_adrenaline_01": {
@@ -27678,12 +27414,6 @@
       "key": "item_Desccrlf_medicalaid_01",
       "label": "CRLF DYNAPAK",
       "description": "Manufacturer: CureLife The DYNAPAK from CureLife is a complete multi-function individual first-aid system designed and constructed for the rigors of field use. With CureLife’s proprietary serum, a single DYNAPAK will promote healing in non-serious wounds to get you back on your feet.",
-      "kind": "item"
-    },
-    "dev_mount": {
-      "key": "item_Descdev_mount",
-      "label": "Class 2b Mount",
-      "description": "Basic Class 2b turret mount",
       "kind": "item"
     },
     "flair_pot_col_medium_1_flair_a": {
@@ -27836,12 +27566,6 @@
       "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine.",
       "kind": "item"
     },
-    "gmni_pistol_ballistic_01_black02": {
-      "key": "item_Descgmni_pistol_ballistic_01_black02",
-      "label": "LH86 \"Nightstalker\" Pistol",
-      "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine.",
-      "kind": "item"
-    },
     "gmni_pistol_ballistic_01_blue_white01": {
       "key": "item_Descgmni_pistol_ballistic_01_blue_white01",
       "label": "LH86 \"Permafrost\" Pistol",
@@ -27858,18 +27582,6 @@
       "key": "item_Descgmni_pistol_ballistic_01_firerats01",
       "label": "LH86 \"Scorched\" Pistol",
       "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine. The Scorched edition features a unique flame patina.",
-      "kind": "item"
-    },
-    "gmni_pistol_ballistic_01_gold01": {
-      "key": "item_Descgmni_pistol_ballistic_01_gold01",
-      "label": "LH86 \"Executive Edition\" Pistol",
-      "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine.",
-      "kind": "item"
-    },
-    "gmni_pistol_ballistic_01_green01": {
-      "key": "item_Descgmni_pistol_ballistic_01_green01",
-      "label": "LH86 \"Warhawk\" Pistol",
-      "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine.",
       "kind": "item"
     },
     "gmni_pistol_ballistic_01_green_grey01": {
@@ -27900,24 +27612,6 @@
       "key": "item_Descgmni_pistol_ballistic_01_red_black01",
       "label": "LH86 \"Righteous\" Pistol",
       "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine. The \"Righteous\" edition features a bold red paint perfect for showing your dedication to the fight.",
-      "kind": "item"
-    },
-    "gmni_pistol_ballistic_01_tan01": {
-      "key": "item_Descgmni_pistol_ballistic_01_tan01",
-      "label": "LH86 \"Desert Shadow\" Pistol",
-      "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine.",
-      "kind": "item"
-    },
-    "gmni_pistol_ballistic_01_white01": {
-      "key": "item_Descgmni_pistol_ballistic_01_white01",
-      "label": "LH86 \"Stormfall\" Pistol",
-      "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine.",
-      "kind": "item"
-    },
-    "gmni_pistol_ballistic_01_white02": {
-      "key": "item_Descgmni_pistol_ballistic_01_white02",
-      "label": "LH86 \"Boneyard\" Pistol",
-      "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine.",
       "kind": "item"
     },
     "gmni_pistol_ballistic_02": {
@@ -28196,12 +27890,6 @@
       "description": "This laser sight for the Greycat Pyro RYT multi-tool assists the operator to aim precisely while cutting or performing repairs.",
       "kind": "item"
     },
-    "grin_paw_mag": {
-      "key": "item_Descgrin_paw_mag",
-      "label": "Pyro RYT Battery",
-      "description": "This battery powers Greycat's Pyro RYT multi-tool, so that you can tackle a variety of tasks.",
-      "kind": "item"
-    },
     "grin_salvage_01": {
       "key": "item_Descgrin_salvage_01",
       "label": "Cambio SRT",
@@ -28358,18 +28046,6 @@
       "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
       "kind": "item"
     },
-    "klwe_pistol_energy_01_black01": {
-      "key": "item_Descklwe_pistol_energy_01_black01",
-      "label": "Arclight \"Midnight\" Pistol",
-      "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
-      "kind": "item"
-    },
-    "klwe_pistol_energy_01_black02": {
-      "key": "item_Descklwe_pistol_energy_01_black02",
-      "label": "Arclight \"Nightstalker\" Pistol",
-      "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
-      "kind": "item"
-    },
     "klwe_pistol_energy_01_chromic01": {
       "key": "item_Descklwe_pistol_energy_01_chromic01",
       "label": "Arclight \"Glimmer\" Pistol",
@@ -28382,40 +28058,10 @@
       "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job. The Herrero edition distinguishes itself by including geometric etchings on the frame and grip, plus a textured trigger guard.",
       "kind": "item"
     },
-    "klwe_pistol_energy_01_gold01": {
-      "key": "item_Descklwe_pistol_energy_01_gold01",
-      "label": "Arclight \"Executive Edition\" Pistol",
-      "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
-      "kind": "item"
-    },
-    "klwe_pistol_energy_01_green01": {
-      "key": "item_Descklwe_pistol_energy_01_green01",
-      "label": "Arclight \"Warhawk\" Pistol",
-      "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
-      "kind": "item"
-    },
     "klwe_pistol_energy_01_mag": {
       "key": "item_Descklwe_pistol_energy_01_mag",
       "label": "Arclight Pistol Battery (30 cap)",
       "description": "Item Type: Battery Capacity: 30 This plasma cell has enough capacity for the Klaus & Werner Arclight pistol to fire 30 rounds before needing a recharge.",
-      "kind": "item"
-    },
-    "klwe_pistol_energy_01_tan01": {
-      "key": "item_Descklwe_pistol_energy_01_tan01",
-      "label": "Arclight \"Desert Shadow\" Pistol",
-      "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
-      "kind": "item"
-    },
-    "klwe_pistol_energy_01_white01": {
-      "key": "item_Descklwe_pistol_energy_01_white01",
-      "label": "Arclight \"Stormfall\" Pistol",
-      "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
-      "kind": "item"
-    },
-    "klwe_pistol_energy_01_white02": {
-      "key": "item_Descklwe_pistol_energy_01_white02",
-      "label": "Arclight \"Boneyard\" Pistol",
-      "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
       "kind": "item"
     },
     "klwe_pistol_energy_02": {
@@ -28434,30 +28080,6 @@
       "key": "item_Descklwe_rifle_energy_01_IAE2022",
       "label": "Gallant \"Red Alert\" Rifle",
       "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery. The \"Red Alert\" edition mixes grey and a vibrant red for a bold and dynamic design.",
-      "kind": "item"
-    },
-    "klwe_rifle_energy_01_black01": {
-      "key": "item_Descklwe_rifle_energy_01_black01",
-      "label": "Gallant \"Midnight\" Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery.",
-      "kind": "item"
-    },
-    "klwe_rifle_energy_01_black02": {
-      "key": "item_Descklwe_rifle_energy_01_black02",
-      "label": "Gallant \"Nightstalker\" Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery.",
-      "kind": "item"
-    },
-    "klwe_rifle_energy_01_gold01": {
-      "key": "item_Descklwe_rifle_energy_01_gold01",
-      "label": "Gallant \"Executive Edition\" Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery.",
-      "kind": "item"
-    },
-    "klwe_rifle_energy_01_green01": {
-      "key": "item_Descklwe_rifle_energy_01_green01",
-      "label": "Gallant \"Warhawk\" Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery.",
       "kind": "item"
     },
     "klwe_rifle_energy_01_mag": {
@@ -28482,24 +28104,6 @@
       "key": "item_Descklwe_rifle_energy_01_store01",
       "label": "Gallant \"Redline\" Rifle",
       "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery. The Redline edition features a fierce red base paint with black and gold highlights.",
-      "kind": "item"
-    },
-    "klwe_rifle_energy_01_tan01": {
-      "key": "item_Descklwe_rifle_energy_01_tan01",
-      "label": "Gallant \"Desert Shadow\" Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery.",
-      "kind": "item"
-    },
-    "klwe_rifle_energy_01_white01": {
-      "key": "item_Descklwe_rifle_energy_01_white01",
-      "label": "Gallant \"Stormfall\" Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery.",
-      "kind": "item"
-    },
-    "klwe_rifle_energy_01_white02": {
-      "key": "item_Descklwe_rifle_energy_01_white02",
-      "label": "Gallant \"Boneyard\" Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery.",
       "kind": "item"
     },
     "klwe_smg_energy_01": {
@@ -28532,58 +28136,16 @@
       "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Attachments: Optics (S3), Barrel (S2), Underbarrel (S2) Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight. First released during Luminalia, the Lamplighter edition was inspired by the traditional red holiday color.",
       "kind": "item"
     },
-    "klwe_sniper_energy_01_black01": {
-      "key": "item_Descklwe_sniper_energy_01_black01",
-      "label": "Arrowhead \"Midnight\" Sniper Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight.",
-      "kind": "item"
-    },
-    "klwe_sniper_energy_01_black02": {
-      "key": "item_Descklwe_sniper_energy_01_black02",
-      "label": "Arrowhead \"Nightstalker\" Sniper Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight.",
-      "kind": "item"
-    },
     "klwe_sniper_energy_01_cen01": {
       "key": "item_Descklwe_sniper_energy_01_cen01",
       "label": "Arrowhead \"Voyager\" Sniper Rifle",
       "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Survey the way ahead with the Voyager edition of the Klaus & Werner Arrowhead energy sniper rifle. The fiberglass composite body features a checkered metallic finish, while its blue and orange high-powered scope honors the ICC Stellar Surveyors. Chart a path to safety or surprise the enemy with this reliable long-range energy rifle.",
       "kind": "item"
     },
-    "klwe_sniper_energy_01_gold01": {
-      "key": "item_Descklwe_sniper_energy_01_gold01",
-      "label": "Arrowhead \"Executive\" Sniper Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight.",
-      "kind": "item"
-    },
-    "klwe_sniper_energy_01_green01": {
-      "key": "item_Descklwe_sniper_energy_01_green01",
-      "label": "Arrowhead \"Warhawk\" Sniper Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight.",
-      "kind": "item"
-    },
     "klwe_sniper_energy_01_imp01": {
       "key": "item_Descklwe_sniper_energy_01_imp01",
       "label": "Arrowhead \"Pathfinder\" Sniper Rifle",
       "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner elevate the Arrowhead energy sniper rifle with the Pathfinder edition. Its bronze precision stock and compound scope feature a satin finish and elegant etchings. These elements create a weapon that's devastating from a distance and dazzling from up close.",
-      "kind": "item"
-    },
-    "klwe_sniper_energy_01_tan01": {
-      "key": "item_Descklwe_sniper_energy_01_tan01",
-      "label": "Arrowhead \"Desert Shadow\" Sniper Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight.",
-      "kind": "item"
-    },
-    "klwe_sniper_energy_01_white01": {
-      "key": "item_Descklwe_sniper_energy_01_white01",
-      "label": "Arrowhead \"Stormfall\" Sniper Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight.",
-      "kind": "item"
-    },
-    "klwe_sniper_energy_01_white02": {
-      "key": "item_Descklwe_sniper_energy_01_white02",
-      "label": "Arrowhead \"Boneyard\" Sniper Rifle",
-      "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight.",
       "kind": "item"
     },
     "klwe_ubarrel_flsh_s1": {
@@ -28772,18 +28334,6 @@
       "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Attachments: Optics (S1), Barrel (S3), Underbarrel (S2) Kastak Arms’ Devastator is a pump-action plasma shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator.",
       "kind": "item"
     },
-    "ksar_shotgun_energy_01_black01": {
-      "key": "item_Descksar_shotgun_energy_01_black01",
-      "label": "Devastator \"Midnight\" Shotgun",
-      "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Kastak Arms’ Devastator is a semi-automatic electric shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator.",
-      "kind": "item"
-    },
-    "ksar_shotgun_energy_01_black02": {
-      "key": "item_Descksar_shotgun_energy_01_black02",
-      "label": "Devastator \"Nightstalker\" Shotgun",
-      "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Kastak Arms’ Devastator is a semi-automatic electric shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator.",
-      "kind": "item"
-    },
     "ksar_shotgun_energy_01_black_purple01": {
       "key": "item_Descksar_shotgun_energy_01_black_purple01",
       "label": "Devastator \"Rager\" Shotgun",
@@ -28800,18 +28350,6 @@
       "key": "item_Descksar_shotgun_energy_01_cen01",
       "label": "Devastator \"Voyager\" Shotgun",
       "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m This semi-automatic electric shotgun from Kastak Arms delivers high-impact plasma blasts ideal for close combat. The Voyager edition upgrades the look with a checked metallic finish offset with blue highlights. Look to make a statement of form and function with the Devastator Voyager edition.",
-      "kind": "item"
-    },
-    "ksar_shotgun_energy_01_gold01": {
-      "key": "item_Descksar_shotgun_energy_01_gold01",
-      "label": "Devastator \"Executive Edition\" Shotgun",
-      "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Kastak Arms’ Devastator is a semi-automatic electric shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator.",
-      "kind": "item"
-    },
-    "ksar_shotgun_energy_01_green01": {
-      "key": "item_Descksar_shotgun_energy_01_green01",
-      "label": "Devastator \"Warhawk\" Shotgun",
-      "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Kastak Arms’ Devastator is a semi-automatic electric shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator.",
       "kind": "item"
     },
     "ksar_shotgun_energy_01_imp01": {
@@ -28838,34 +28376,10 @@
       "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Kastak Arms’ Devastator is a semi-automatic electric shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator. The \"Brimstone\" special edition features a bold red top-trim and a dark gray finish on the lower half of the weapon.",
       "kind": "item"
     },
-    "ksar_shotgun_energy_01_tan01": {
-      "key": "item_Descksar_shotgun_energy_01_tan01",
-      "label": "Devastator \"Desert Shadow\" Shotgun",
-      "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Kastak Arms’ Devastator is a semi-automatic electric shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator.",
-      "kind": "item"
-    },
-    "ksar_shotgun_energy_01_white02": {
-      "key": "item_Descksar_shotgun_energy_01_white02",
-      "label": "Devastator \"Boneyard\" Shotgun",
-      "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Kastak Arms’ Devastator is a semi-automatic electric shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator.",
-      "kind": "item"
-    },
     "ksar_smg_energy_01": {
       "key": "item_Descksar_smg_energy_01",
       "label": "Custodian SMG",
       "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
-      "kind": "item"
-    },
-    "ksar_smg_energy_01_black01": {
-      "key": "item_Descksar_smg_energy_01_black01",
-      "label": "Custodian \"Midnight\" SMG",
-      "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
-      "kind": "item"
-    },
-    "ksar_smg_energy_01_black02": {
-      "key": "item_Descksar_smg_energy_01_black02",
-      "label": "Custodian \"Nightstalker\" SMG",
-      "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
       "kind": "item"
     },
     "ksar_smg_energy_01_black_green01": {
@@ -28886,28 +28400,10 @@
       "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat. Crafted to honor attendees of CitizenCon 2947, this smoldering orange finish proudly features the Foundry Forty-Two logo.",
       "kind": "item"
     },
-    "ksar_smg_energy_01_cc17b": {
-      "key": "item_Descksar_smg_energy_01_cc17b",
-      "label": "Custodian \"Citizen's Pride\" SMG",
-      "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
-      "kind": "item"
-    },
     "ksar_smg_energy_01_firerats01": {
       "key": "item_Descksar_smg_energy_01_firerats01",
       "label": "Custodian \"Scorched\" SMG",
       "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat. The Scorched edition features a unique flame patina.",
-      "kind": "item"
-    },
-    "ksar_smg_energy_01_gold01": {
-      "key": "item_Descksar_smg_energy_01_gold01",
-      "label": "Custodian \"Executive Edition\" SMG",
-      "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
-      "kind": "item"
-    },
-    "ksar_smg_energy_01_green01": {
-      "key": "item_Descksar_smg_energy_01_green01",
-      "label": "Custodian \"Warhawk\" SMG",
-      "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
       "kind": "item"
     },
     "ksar_smg_energy_01_mag": {
@@ -28920,18 +28416,6 @@
       "key": "item_Descksar_smg_energy_01_red01",
       "label": "Custodian \"Brimstone\" SMG",
       "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat. The \"Brimstone\" special edition features a bold red top-trim and a dark gray finish on the lower half of the weapon.",
-      "kind": "item"
-    },
-    "ksar_smg_energy_01_tan01": {
-      "key": "item_Descksar_smg_energy_01_tan01",
-      "label": "Custodian \"Desert Shadow\" SMG",
-      "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
-      "kind": "item"
-    },
-    "ksar_smg_energy_01_white02": {
-      "key": "item_Descksar_smg_energy_01_white02",
-      "label": "Custodian \"Boneyard\" SMG",
-      "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
       "kind": "item"
     },
     "ksar_sniper_ballistic_01": {
@@ -29238,12 +28722,6 @@
       "key": "item_Descnone_smg_energy_01_tint01",
       "label": "Ripper SMG",
       "description": "Manufacturer: Unknown Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m Scrapped together from whatever parts and pieces were available, the Ripper SMG can probably do enough damage to get you out of a tight spot. Just be ready for things to get messy.",
-      "kind": "item"
-    },
-    "none_special_ballistic_01": {
-      "key": "item_Descnone_special_ballistic_01",
-      "label": "Boomtube Rocket Launcher",
-      "description": "Manufacturer: Unknown Item Type: Launcher Class: Rocket Magazine Size: 1 Rate Of Fire: 20 rpm Effective Range: 100 m Who's got time to aim? Once you got enough room to clear the arming distance, just point the Boomtube launcher at whatever you don't like, squeeze the trigger, and watch the triple-grenade rocket thingy take care of the rest. Sometimes simple is best.",
       "kind": "item"
     },
     "none_special_ballistic_01_collector01": {
@@ -29894,18 +29372,6 @@
       "description": "Manufacturer: Verified Offworld Laser Technologies Item Type: Assault Rifle Class: Energy (Electron) Battery Size: 80 Rate of Fire: 200 rpm - Beam Effective Range: 30 m Attachments: Optics (S2), Underbarrel (S2) With the Parallax, VOLT offers consumers a rugged assault rifle design with features like a larger-than-average battery and a unique actuator that enables the weapon to scale up into a persistent beam as it fires. This modified version of the original rifle showcases a printed kopion graphic across the side of the weapon and a small kopion skull adorning the muzzle.",
       "kind": "item"
     },
-    "volt_rifle_energy_01_collector03": {
-      "key": "item_Descvolt_rifle_energy_01_collector03",
-      "label": "Parallax \"Fun Military Skull\" Energy Assault Rifle",
-      "description": "Manufacturer: Verified Offworld Laser Technologies Item Type: Assault Rifle Class: Energy (Electron) Battery Size: 80 Rate of Fire: 200 rpm - Beam Effective Range: 30 m Attachments: Optics (S2), Underbarrel (S2) With the Parallax, VOLT offers consumers a rugged assault rifle design with features like a larger-than-average battery and a unique actuator that enables the weapon to scale up into a persistent beam as it fires. This modified version of the original rifle consists of a lunar surface inspired camo pattern and a small kopion fang strapped to the muzzle.",
-      "kind": "item"
-    },
-    "volt_rifle_energy_01_collector04": {
-      "key": "item_Descvolt_rifle_energy_01_collector04",
-      "label": "Parallax \"Fun Military Tooth\" Energy Assault Rifle",
-      "description": "Manufacturer: Verified Offworld Laser Technologies Item Type: Assault Rifle Class: Energy (Electron) Battery Size: 80 Rate of Fire: 200 rpm - Beam Effective Range: 30 m Attachments: Optics (S2), Underbarrel (S2) With the Parallax, VOLT offers consumers a rugged assault rifle design with features like a larger-than-average battery and a unique actuator that enables the weapon to scale up into a persistent beam as it fires. This modified version of the original rifle consists of a lunar surface inspired camo pattern and a small kopion fang strapped to the muzzle.",
-      "kind": "item"
-    },
     "volt_rifle_energy_01_lumi01": {
       "key": "item_Descvolt_rifle_energy_01_lumi01",
       "label": "Parallax \"Piconalia\" Energy Assault Rifle",
@@ -30176,12 +29642,6 @@
       "description": "Manufacturer: Torral Aggregate Item Type: Launcher Class: Missile Magazine Size: 3 round of 10 small rockets Rate Of Fire: 10 rpm Effective Range: 200 m Attachments: Optics (N/A), Barrel (N/A), Underbarrel (N/A) Designed by the Xi'an manufacturing collective, Torral Aggregate, the I'rhal requires a skilled operator to unleash the full destructive potential of this weapon's high-powered energy missile barrage.",
       "kind": "item"
     },
-    "archimedes_paint_p72": {
-      "key": "item_descArchimedes_Paint_P72",
-      "label": "P-72 Archimedes Livery",
-      "description": "Standard livery for the P-72 Archimedes.",
-      "kind": "item"
-    },
     "carryable_1h_cy_cable_bundle_1_b": {
       "key": "item_descCarryable_1H_CY_cable_bundle_1_b",
       "label": "Scrap Cable Coil",
@@ -30204,12 +29664,6 @@
       "key": "item_descCarryable_1H_SQ_scrap_metal_1_a",
       "label": "Scrap Valve",
       "description": "A discarded piece of machinery that no longer serves a purpose.",
-      "kind": "item"
-    },
-    "merlin_paint_p52": {
-      "key": "item_descMerlin_Paint_P52",
-      "label": "P-52 Merlin Livery",
-      "description": "Standard livery for the P-52 Merlin.",
       "kind": "item"
     },
     "mining_head_s00_arbor_scitem": {
@@ -31123,9 +30577,69 @@
       "label": "PTV Rifle Green Livery",
       "description": "Rifle Green livery uses a premium two-component technology designed to endure harsher environments without fading or scratching.",
       "kind": "item"
+    },
+    "skin_scourge_railgun": {
+      "key": "item_Descapar_special_ballistic_01_tan01",
+      "label": "Scourge Railgun (Desert Shadow, Nightstalker)",
+      "description": "Manufacturer: Apocalypse Arms Item Type: Railgun Class: Ballistic Magazine Size: 10 Rate Of Fire: 60 rpm Effective Range: 200 m Equally devastating to larger threats and hostile vehicles, this shoulder mounted railgun from Apocalypse Arms uses electromagnets to deliver its payload accurately over great distances, making it the Scourge of land, air and space.",
+      "kind": "item"
+    },
+    "skin_p4_ar_rifle": {
+      "key": "item_Descbehr_rifle_ballistic_01_white02",
+      "label": "P4-AR Rifle (Boneyard, Desert Shadow, Nightstalker, Warhawk)",
+      "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users.",
+      "kind": "item"
+    },
+    "skin_p8_sc_smg": {
+      "key": "item_Descbehr_smg_ballistic_01_white02",
+      "label": "P8-SC SMG (Boneyard, Desert Shadow, Executive Edition, Midnight, Nightstalker, Stormfall, Warhawk)",
+      "description": "Manufacturer: Behring Item Type: SMG Class: Ballistic Magazine Size: 45 Rate Of Fire: 800 rpm Effective Range: 30 m When the top fighting force in the universe chooses a weapon as their standard, it pays to stand up and take notice. The Behring-crafted P8-SC has been the ballistic submachine gun of choice for the UEE Marines since it first came off the production line, but since then, many have come to rely on this weapon for their own personal safety and protection.",
+      "kind": "item"
+    },
+    "skin_lh86_pistol": {
+      "key": "item_Descgmni_pistol_ballistic_01_white02",
+      "label": "LH86 Pistol (Boneyard, Desert Shadow, Executive Edition, Nightstalker, Stormfall, Warhawk)",
+      "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine.",
+      "kind": "item"
+    },
+    "skin_arclight_pistol": {
+      "key": "item_Descklwe_pistol_energy_01_white02",
+      "label": "Arclight Pistol (Boneyard, Desert Shadow, Executive Edition, Midnight, Nightstalker, Stormfall, Warhawk)",
+      "description": "Manufacturer: Klaus & Werner Item Type: Pistol Class: Energy (Laser) Battery Size: 30 Rate Of Fire: 300 rpm Effective Range: 30 m A handheld laser made famous as Kyle Fenris’ sidearm on the hit vid show The Frontier, the Klaus & Werner Model II Arclight has become extremely popular on the civilian market. Despite its media appeal, the Model II offers a higher rate of fire than any of its ballistic counterparts. While that may diminish the weapon's stopping power, its power cell offers more than enough shots to finish the job.",
+      "kind": "item"
+    },
+    "skin_gallant_rifle": {
+      "key": "item_Descklwe_rifle_energy_01_white02",
+      "label": "Gallant Rifle (Boneyard, Desert Shadow, Executive Edition, Midnight, Nightstalker, Stormfall, Warhawk)",
+      "description": "Manufacturer: Klaus & Werner Item Type: Assault Rifle Class: Energy (Laser) Battery Size: 45 Rate Of Fire: 450 rpm Effective Range: 50 m Dependable assault weapons never go out of style. Klaus & Werner maintains that tradition by unveiling the Gallant. This energy-based assault rifle is capable of providing accurate and sustained fire at targets up to medium range, while its high-capacity power system allows operators to fire considerably more shots per battery.",
+      "kind": "item"
+    },
+    "skin_arrowhead_sniper_rifle": {
+      "key": "item_Descklwe_sniper_energy_01_white02",
+      "label": "Arrowhead Sniper Rifle (Boneyard, Desert Shadow, Executive, Midnight, Nightstalker, Stormfall, Warhawk)",
+      "description": "Manufacturer: Klaus & Werner Item Type: Sniper Rifle Class: Energy (Laser) Battery Size: 20 Rate Of Fire: 50 rpm Effective Range: 100 m Klaus & Werner’s Arrowhead Model VI long-range energy rifle features a fiberglass composite body capable of withstanding any number of rigorous environments both in atmosphere and out. Built with a precision stock, compound scope and built-in bipod, the Arrowhead offers a stable and devastating weapon for operators who want to keep their distance, but stay in the fight.",
+      "kind": "item"
+    },
+    "skin_devastator_shotgun": {
+      "key": "item_Descksar_shotgun_energy_01_white02",
+      "label": "Devastator Shotgun (Boneyard, Desert Shadow, Executive Edition, Midnight, Nightstalker, Warhawk)",
+      "description": "Manufacturer: Kastak Arms Item Type: Shotgun Class: Energy (Plasma) Battery Size: 12 Rate Of Fire: 60 rpm Effective Range: 20 m Kastak Arms’ Devastator is a semi-automatic electric shotgun capable of delivering sustained medium range, high-impact plasma blasts for close combat, room clearances and other combat operations. If the situation requires a high-power presence, look no further than the Devastator.",
+      "kind": "item"
+    },
+    "skin_custodian_smg": {
+      "key": "item_Descksar_smg_energy_01_white02",
+      "label": "Custodian SMG (Boneyard, Citizen's Pride, Desert Shadow, Executive Edition, Midnight, Nightstalker, Warhawk)",
+      "description": "Manufacturer: Kastak Arms Item Type: SMG Class: Energy (Laser) Battery Size: 60 Rate Of Fire: 800 rpm Effective Range: 30 m The Custodian SMG from Kastak Arms focuses on a high rate of fire over damage and accuracy making it an ideal choice for sweeping through tight environments and close quarters combat.",
+      "kind": "item"
+    },
+    "skin_parallax_energy_assault_rifle": {
+      "key": "item_Descvolt_rifle_energy_01_collector03",
+      "label": "Parallax Energy Assault Rifle (Fun Military Skull, Fun Military Tooth)",
+      "description": "Manufacturer: Verified Offworld Laser Technologies Item Type: Assault Rifle Class: Energy (Electron) Battery Size: 80 Rate of Fire: 200 rpm - Beam Effective Range: 30 m Attachments: Optics (S2), Underbarrel (S2) With the Parallax, VOLT offers consumers a rugged assault rifle design with features like a larger-than-average battery and a unique actuator that enables the weapon to scale up into a persistent beam as it fires. This modified version of the original rifle consists of a lunar surface inspired camo pattern and a small kopion fang strapped to the muzzle.",
+      "kind": "item"
     }
   },
   "summary": {
-    "totalDescriptions": 5187
+    "totalDescriptions": 5106
   }
 }

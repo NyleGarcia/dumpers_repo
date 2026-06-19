@@ -126,7 +126,20 @@ function isDuplicateOfLabel(label, description) {
   const maxWords = Math.max(labelWords.length, descriptionWords.length)
 
   // Same item name with trivial wording differences (light vs lighting).
-  return sharedWords >= minWords - 1 && maxWords - minWords <= 1
+  if (sharedWords >= minWords - 1 && maxWords - minWords <= 1) return true
+
+  return isRedundantShortDescription(label, description, labelWords, descriptionWords)
+}
+
+function isRedundantShortDescription(label, description, labelWords, descriptionWords) {
+  if (description.length > 120) return false
+
+  const normalizedLabel = normalizeComparableText(label)
+  const normalizedDescription = normalizeComparableText(description)
+  if (!labelWords.every((word) => normalizedDescription.includes(word))) return false
+
+  const extraWords = descriptionWords.filter((word) => !labelWords.includes(word))
+  return extraWords.length <= 3 && description.length <= 80
 }
 
 function shouldSkipLoreEntry(label, description) {
@@ -134,6 +147,132 @@ function shouldSkipLoreEntry(label, description) {
   if (isPlaceholderDescription(description)) return true
   if (isDuplicateOfLabel(label, description)) return true
   return false
+}
+
+/**
+ * Parse flavor weapon labels like: Arrowhead "Midnight" Sniper Rifle
+ */
+function parseFlavorWeaponSkin(label) {
+  const match = label.match(/^(.+?)\s+"([^"]+)"\s+(.+)$/)
+  if (!match) return null
+
+  return {
+    base: `${match[1]} ${match[3]}`.replace(/\s+/g, ' ').trim(),
+    skin: match[2],
+  }
+}
+
+function mergedSkinResourceKey(baseName) {
+  return `skin_${baseName.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`
+}
+
+function scoreLabelContextMatch(label, description) {
+  const descriptionNorm = normalizeComparableText(description)
+  const labelNorm = normalizeComparableText(label.replace(/\s+"[^"]+"\s+/g, ' '))
+  let score = 0
+
+  const productMatch = description.match(/^The (.+?) (?:is a|is an|features|offers|was|will|has)/i)
+  if (productMatch) {
+    const productNorm = normalizeComparableText(productMatch[1])
+    if (labelNorm.includes(productNorm) || productNorm.includes(labelNorm)) {
+      score += 20
+    }
+    const productWords = productNorm.split(' ').filter(Boolean)
+    const labelWords = labelNorm.split(' ').filter(Boolean)
+    score += productWords.filter((word) => labelWords.includes(word)).length * 3
+  }
+
+  const labelWords = labelNorm.split(' ').filter((word) => word.length > 2)
+  score += labelWords.filter((word) => descriptionNorm.includes(word)).length
+
+  if (/\b(fragment|fragments|ammo|magazine|iron sight|attachment|mount|cap)\b/i.test(label)) {
+    score -= 15
+  }
+
+  return score
+}
+
+function mergeFlavorWeaponSkins(lore) {
+  const byDescription = new Map()
+
+  for (const [key, entry] of Object.entries(lore)) {
+    const descriptionKey = entry.description.trim().toLowerCase()
+    if (!byDescription.has(descriptionKey)) byDescription.set(descriptionKey, [])
+    byDescription.get(descriptionKey).push({ key, entry })
+  }
+
+  const result = { ...lore }
+
+  for (const group of byDescription.values()) {
+    if (group.length < 2) continue
+
+    const parsed = group.map((item) => ({
+      ...item,
+      skin: parseFlavorWeaponSkin(item.entry.label),
+    }))
+    if (!parsed.every((item) => item.skin)) continue
+
+    const baseName = parsed[0].skin.base.toLowerCase()
+    if (!parsed.every((item) => item.skin.base.toLowerCase() === baseName)) continue
+
+    const skins = [...new Set(parsed.map((item) => item.skin.skin))].sort((a, b) =>
+      a.localeCompare(b)
+    )
+    const mergedKey = mergedSkinResourceKey(parsed[0].skin.base)
+    const canonical = parsed.sort((a, b) => a.entry.label.localeCompare(b.entry.label))[0]
+
+    result[mergedKey] = {
+      ...canonical.entry,
+      label: `${parsed[0].skin.base} (${skins.join(', ')})`,
+    }
+
+    for (const { key } of parsed) {
+      delete result[key]
+    }
+  }
+
+  return result
+}
+
+function dedupeSharedDescriptions(lore) {
+  const byDescription = new Map()
+
+  for (const [key, entry] of Object.entries(lore)) {
+    const descriptionKey = entry.description.trim().toLowerCase()
+    if (!byDescription.has(descriptionKey)) byDescription.set(descriptionKey, [])
+    byDescription.get(descriptionKey).push({ key, entry })
+  }
+
+  const result = { ...lore }
+
+  for (const group of byDescription.values()) {
+    if (group.length < 2) continue
+
+    const scored = group
+      .map((item) => ({
+        ...item,
+        score: scoreLabelContextMatch(item.entry.label, item.entry.description),
+      }))
+      .sort((a, b) => b.score - a.score)
+
+    const best = scored[0]
+    const second = scored[1]
+    if (best.score <= 0) continue
+    if (second && best.score === second.score) continue
+    if (second && best.score - second.score < 2 && best.score < 8) continue
+
+    for (let index = 1; index < scored.length; index++) {
+      delete result[scored[index].key]
+    }
+  }
+
+  return result
+}
+
+function postProcessLoreEntries(lore) {
+  let processed = mergeFlavorWeaponSkins(lore)
+  processed = dedupeSharedDescriptions(processed)
+  return processed
 }
 
 function labelFromShopStem(stem) {
@@ -441,5 +580,5 @@ export function extractAllGameLore(localization) {
     }
   }
 
-  return lore
+  return postProcessLoreEntries(lore)
 }
