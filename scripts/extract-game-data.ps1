@@ -73,6 +73,42 @@ if (Test-Path $OutputPath) {
 # Create output directory
 New-Item -ItemType Directory -Path $OutputPath -Force | Out-Null
 
+# Capture game build version from the LIVE install (used by parse scripts + site UI)
+$BuildManifestPath = Join-Path $StarCitizenPath "build_manifest.id"
+$GameBuildVersion = $null
+if (Test-Path $BuildManifestPath) {
+    try {
+        $manifest = Get-Content $BuildManifestPath -Raw | ConvertFrom-Json
+        $internalVersion = $manifest.Data.Version
+        $GameBuildVersion = $null
+        if ($internalVersion -and $internalVersion -ne 'None') {
+            $parts = $internalVersion -split '\.'
+            if ($parts.Length -ge 2) {
+                $GameBuildVersion = "$($parts[0]).$($parts[1]).x"
+            }
+        }
+        if (-not $GameBuildVersion -and $manifest.Data.Branch -match '(\d+)\.(\d+)') {
+            $GameBuildVersion = "$($Matches[1]).$($Matches[2]).x"
+        }
+        $gameBuild = @{
+            version = $GameBuildVersion
+            internalVersion = $internalVersion
+            branch = $manifest.Data.Branch
+            p4Change = $manifest.Data.RequestedP4ChangeNum
+            buildDate = $manifest.Data.BuildDateStamp
+            extracted = (Get-Date).ToUniversalTime().ToString("o")
+        }
+        $gameBuild | ConvertTo-Json -Depth 3 | Set-Content -Path (Join-Path $OutputPath "game-build.json") -Encoding utf8
+        Write-Host "Game build: $GameBuildVersion ($($manifest.Data.Branch), internal $($internalVersion))" -ForegroundColor Gray
+    }
+    catch {
+        Write-Host "WARNING: Could not read build_manifest.id: $_" -ForegroundColor Yellow
+    }
+}
+else {
+    Write-Host "WARNING: build_manifest.id not found at: $BuildManifestPath" -ForegroundColor Yellow
+}
+
 Write-Host ""
 Write-Host "[1/4] Extracting DataForge database to JSON..." -ForegroundColor Green
 Write-Host "      This may take several minutes..." -ForegroundColor Gray
@@ -154,6 +190,9 @@ Write-Host "  Files extracted: $fileCount"
 Write-Host "  Total size:      $sizeMB MB"
 Write-Host "  Time elapsed:    $($elapsed.ToString('mm\:ss'))"
 Write-Host "  Output path:     $OutputPath"
+if ($GameBuildVersion) {
+    Write-Host "  Game build:      $GameBuildVersion"
+}
 Write-Host ""
 Write-Host "Next step: Run the parsing scripts to generate app data files." -ForegroundColor Yellow
 Write-Host "  node scripts/parse-extracted-data.mjs" -ForegroundColor Gray
