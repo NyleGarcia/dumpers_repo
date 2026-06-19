@@ -1,6 +1,11 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { getResourceType } from '../../config/resourceTypes'
 import { getResourceLoreEntries, lore } from '../../data/index'
+import {
+  hasResourceLoreUiState,
+  readResourceLoreUiState,
+  writeResourceLoreUiState,
+} from '../../lib/resourceLoreUiState'
 
 const CATEGORY_ORDER = [
   'Ores & Minerals',
@@ -55,9 +60,18 @@ function getResourceLoreCategory(resourceKey: string, label: string): string {
   }
 }
 
+function readInitialCollapsedCategories(): Set<string> {
+  if (!hasResourceLoreUiState()) {
+    return new Set(CATEGORY_ORDER)
+  }
+  return new Set(readResourceLoreUiState().collapsedCategoryIds)
+}
+
 export default function ResourceLoreSection() {
   const [search, setSearch] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(CATEGORY_ORDER))
+  const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(
+    readInitialCollapsedCategories
+  )
 
   const loreEntries = useMemo(() => getResourceLoreEntries(), [])
 
@@ -88,8 +102,19 @@ export default function ResourceLoreSection() {
     return categories
   }, [loreEntries, search])
 
+  const visibleCategories = useMemo(
+    () => CATEGORY_ORDER.filter((category) => (categorizedResources.get(category)?.length ?? 0) > 0),
+    [categorizedResources]
+  )
+
+  useEffect(() => {
+    writeResourceLoreUiState({
+      collapsedCategoryIds: [...collapsedCategories],
+    })
+  }, [collapsedCategories])
+
   const toggleCategory = (category: string) => {
-    setExpandedCategories((prev) => {
+    setCollapsedCategories((prev) => {
       const next = new Set(prev)
       if (next.has(category)) {
         next.delete(category)
@@ -163,34 +188,60 @@ export default function ResourceLoreSection() {
         </p>
       </div>
 
+      {visibleCategories.length > 0 && (
+        <div className="flex items-center justify-end gap-1">
+          {!visibleCategories.every((category) => collapsedCategories.has(category)) && (
+            <button
+              type="button"
+              onClick={() => setCollapsedCategories(new Set(visibleCategories))}
+              className="px-2 py-1 text-xs text-slate-400 hover:text-white border border-slate-600 hover:border-slate-500 rounded transition-colors"
+            >
+              Close All
+            </button>
+          )}
+          {visibleCategories.some((category) => collapsedCategories.has(category)) && (
+            <button
+              type="button"
+              onClick={() => setCollapsedCategories(new Set())}
+              className="px-2 py-1 text-xs text-slate-400 hover:text-white border border-slate-600 hover:border-slate-500 rounded transition-colors"
+            >
+              Open All
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="space-y-4">
         {CATEGORY_ORDER.map((category) => {
           const entries = categorizedResources.get(category)
           if (!entries || entries.length === 0) return null
 
-          const isExpanded = expandedCategories.has(category)
+          const isCollapsed = collapsedCategories.has(category)
 
           return (
             <div key={category} className="border border-slate-700/50 rounded-lg overflow-hidden">
               <button
+                type="button"
                 onClick={() => toggleCategory(category)}
                 className="w-full flex items-center justify-between px-4 py-3 bg-slate-800/50 hover:bg-slate-800/70 transition-colors text-left"
               >
-                <span className="text-sm font-medium text-slate-200">{category}</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500">{entries.length}</span>
+                <div className="flex items-center gap-2 min-w-0">
                   <svg
-                    className={`w-4 h-4 text-slate-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
+                      isCollapsed ? '-rotate-90' : ''
+                    }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
+                  <span className="text-sm font-medium text-slate-200">{category}</span>
                 </div>
+                <span className="text-xs text-slate-500 shrink-0">{entries.length}</span>
               </button>
 
-              {isExpanded && (
+              {!isCollapsed && (
                 <div className="divide-y divide-slate-700/30">
                   {entries.map((entry) => (
                     <div key={entry.resourceKey} className="p-4 bg-slate-900/30">
