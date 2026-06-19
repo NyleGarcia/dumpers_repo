@@ -1,17 +1,6 @@
-import React, { useState, useMemo, useEffect } from 'react'
-
-interface ResourceLoreEntry {
-  label: string
-  description: string
-  source_url: string
-}
-
-interface LoreData {
-  generated_at: string
-  source: string
-  count: number
-  resources: Record<string, ResourceLoreEntry>
-}
+import React, { useMemo, useState } from 'react'
+import { getResourceType } from '../../config/resourceTypes'
+import { getResourceLoreEntries, lore } from '../../data/index'
 
 const CATEGORY_ORDER = [
   'Ores & Minerals',
@@ -25,129 +14,82 @@ const CATEGORY_ORDER = [
   'Other',
 ]
 
-function categorizeResource(key: string, label: string): string {
-  const lowerKey = key.toLowerCase()
+function getResourceLoreCategory(resourceKey: string, label: string): string {
   const lowerLabel = label.toLowerCase()
-  
-  // Ores & Minerals - common metals and mineable ores
-  const oreKeys = [
-    'iron', 'copper', 'titanium', 'aluminum', 'tungsten', 'gold', 'tin', 'silicon',
-    'quantainium', 'laranite', 'agricium', 'bexalite', 'borase', 'taranite', 'beryl',
-    'aslarite', 'hephaestanite', 'corundum', 'riccite', 'stileron', 'quartz',
-    'torite', 'ouratite', 'savrilium', 'lindinium',
-  ]
-  if (lowerKey.includes('ore') || oreKeys.includes(lowerKey)) {
-    return 'Ores & Minerals'
-  }
-  
-  // Gems & Hand Mineables
-  if (['hadanite', 'aphorite', 'dolivine', 'janalite', 'sadaryx'].includes(lowerKey)) {
-    return 'Gems & Hand Mineables'
-  }
-  
-  // Gases
-  if (['hydrogen', 'nitrogen', 'argon', 'helium', 'xenon', 'krypton', 'methane', 'tritium', 'anti_hydrogen', 'partillium'].includes(lowerKey)) {
-    return 'Gases'
-  }
-  
-  // Fuels
-  if (['hydrogen_fuel', 'quantum_fuel'].includes(lowerKey) || lowerLabel.includes('fuel')) {
-    return 'Industrial'
-  }
-  
-  // Contraband / Drugs
-  if (['altruciatoxin', 'widow', 'slam', 'neon', 'e_tam', 'maze', 'glow', 'freeze', 'thrust', 'mala', 'dopple', 'zip', 'dcsr2'].includes(lowerKey)) {
-    return 'Contraband'
-  }
-  if (['osoian_hides', 'gasping_weevil_eggs', 'human_food_bars', 'lifecure_medsticks', 'redfin_energy_modulators'].includes(lowerKey)) {
-    return 'Contraband'
-  }
-  
-  // Natural / Organic
-  if (['heart_of_the_woods', 'golden_medmon', 'revenant_pod', 'prota', 'pressurized_ice'].includes(lowerKey)) {
-    return 'Trade Goods'
-  }
-  
-  // Medical
-  if (lowerLabel.includes('medical') || lowerLabel.includes('medstick') || lowerLabel.includes('kopion') || lowerLabel.includes('molina')) {
+
+  if (
+    lowerLabel.includes('medical') ||
+    lowerLabel.includes('medstick') ||
+    lowerLabel.includes('kopion') ||
+    lowerLabel.includes('molina')
+  ) {
     return 'Medical'
   }
-  
-  // Trade Goods
-  if (lowerLabel.includes('food') || lowerLabel.includes('supplies') || ['distilled_spirits', 'stims', 'souvenirs', 'fireworks'].includes(lowerKey)) {
-    return 'Trade Goods'
-  }
-  
-  // Industrial
-  if (['rmc', 'construction_material', 'scrap', 'waste', 'compboard', 'steel'].includes(lowerKey)) {
-    return 'Industrial'
-  }
-  if (lowerLabel.includes('composite') || lowerLabel.includes('laminate') || lowerLabel.includes('coating')) {
-    return 'Industrial'
-  }
-  
-  // Refined Materials
-  if (lowerLabel.includes('refined') || ['diamond', 'silnex', 'neograph', 'thermalfoam'].includes(lowerKey)) {
+
+  if (
+    lowerLabel.includes('refined') ||
+    ['diamond', 'silnex', 'neograph', 'thermalfoam'].includes(resourceKey)
+  ) {
     return 'Refined Materials'
   }
-  
-  return 'Other'
+
+  switch (getResourceType(resourceKey)) {
+    case 'ore':
+      return 'Ores & Minerals'
+    case 'gem':
+      return 'Gems & Hand Mineables'
+    case 'gas':
+    case 'halogen':
+      return 'Gases'
+    case 'fuel':
+    case 'salvage':
+      return 'Industrial'
+    case 'contraband':
+      return 'Contraband'
+    case 'trade_good':
+    case 'harvest':
+    case 'shop_special':
+      return 'Trade Goods'
+    default:
+      return 'Other'
+  }
 }
 
 export default function ResourceLoreSection() {
-  const [loreData, setLoreData] = useState<LoreData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(CATEGORY_ORDER))
 
-  useEffect(() => {
-    async function loadLore() {
-      try {
-        const response = await fetch('/data/resource-lore.json')
-        if (!response.ok) {
-          throw new Error('Lore data not found. Run the sync script to generate it.')
-        }
-        const data = await response.json()
-        setLoreData(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load lore data')
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadLore()
-  }, [])
+  const loreEntries = useMemo(() => getResourceLoreEntries(), [])
 
   const categorizedResources = useMemo(() => {
-    if (!loreData?.resources) return new Map<string, Array<{ key: string; entry: ResourceLoreEntry }>>()
-    
-    const categories = new Map<string, Array<{ key: string; entry: ResourceLoreEntry }>>()
+    const categories = new Map<string, typeof loreEntries>()
     const searchLower = search.toLowerCase()
-    
-    for (const [key, entry] of Object.entries(loreData.resources)) {
-      // Filter by search
-      if (searchLower && !entry.label.toLowerCase().includes(searchLower) && !entry.description.toLowerCase().includes(searchLower)) {
+
+    for (const entry of loreEntries) {
+      if (
+        searchLower &&
+        !entry.label.toLowerCase().includes(searchLower) &&
+        !entry.description.toLowerCase().includes(searchLower)
+      ) {
         continue
       }
-      
-      const category = categorizeResource(key, entry.label)
+
+      const category = getResourceLoreCategory(entry.resourceKey, entry.label)
       if (!categories.has(category)) {
         categories.set(category, [])
       }
-      categories.get(category)!.push({ key, entry })
+      categories.get(category)!.push(entry)
     }
-    
-    // Sort entries within each category
+
     for (const entries of categories.values()) {
-      entries.sort((a, b) => a.entry.label.localeCompare(b.entry.label))
+      entries.sort((a, b) => a.label.localeCompare(b.label))
     }
-    
+
     return categories
-  }, [loreData, search])
+  }, [loreEntries, search])
 
   const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => {
+    setExpandedCategories((prev) => {
       const next = new Set(prev)
       if (next.has(category)) {
         next.delete(category)
@@ -166,44 +108,33 @@ export default function ResourceLoreSection() {
     return count
   }, [categorizedResources])
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" />
-      </div>
-    )
-  }
-
-  if (error) {
+  if (loreEntries.length === 0) {
     return (
       <div className="p-4 bg-amber-900/30 border border-amber-500/30 rounded-lg">
         <h3 className="text-sm font-medium text-amber-300 mb-2">Resource Lore Not Available</h3>
-        <p className="text-xs text-amber-200/70">{error}</p>
-        <p className="text-xs text-slate-400 mt-2">
-          Super-admins can generate this data via DB Actions → "Fetch Resource Lore" script.
+        <p className="text-xs text-amber-200/70">
+          Commodity lore has not been extracted yet. Run the game data pipeline locally:
         </p>
+        <ul className="text-xs text-slate-400 mt-2 list-disc list-inside space-y-1">
+          <li>
+            <code className="text-violet-300">.\scripts\extract-game-data.ps1</code>
+          </li>
+          <li>
+            <code className="text-violet-300">node scripts/parse-extracted-data.mjs</code>
+          </li>
+        </ul>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <p className="text-sm text-slate-400 mb-4">
-          Lore and flavor text for Star Citizen resources, sourced from the{' '}
-          <a
-            href="https://starcitizen.tools"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-orange-400 hover:text-orange-300 underline"
-          >
-            Star Citizen Wiki
-          </a>
-          .
+          Lore and flavor text for Star Citizen commodities, sourced directly from game localization files
+          extracted via StarBreaker.
         </p>
-        
-        {/* Search */}
+
         <div className="relative">
           <input
             type="text"
@@ -218,23 +149,27 @@ export default function ResourceLoreSection() {
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
         </div>
-        
+
         <p className="text-xs text-slate-500 mt-2">
-          Showing {totalVisible} of {loreData?.count ?? 0} resources with lore
+          Showing {totalVisible} of {lore.summary.totalDescriptions} resources with lore
         </p>
       </div>
 
-      {/* Categories */}
       <div className="space-y-4">
         {CATEGORY_ORDER.map((category) => {
           const entries = categorizedResources.get(category)
           if (!entries || entries.length === 0) return null
-          
+
           const isExpanded = expandedCategories.has(category)
-          
+
           return (
             <div key={category} className="border border-slate-700/50 rounded-lg overflow-hidden">
               <button
@@ -254,25 +189,12 @@ export default function ResourceLoreSection() {
                   </svg>
                 </div>
               </button>
-              
+
               {isExpanded && (
                 <div className="divide-y divide-slate-700/30">
-                  {entries.map(({ key, entry }) => (
-                    <div key={key} className="p-4 bg-slate-900/30">
-                      <div className="flex items-start justify-between gap-3 mb-2">
-                        <h4 className="text-sm font-medium text-orange-300">{entry.label}</h4>
-                        <a
-                          href={entry.source_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="shrink-0 text-slate-500 hover:text-orange-400 transition-colors"
-                          title="View on Star Citizen Wiki"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      </div>
+                  {entries.map((entry) => (
+                    <div key={entry.resourceKey} className="p-4 bg-slate-900/30">
+                      <h4 className="text-sm font-medium text-orange-300 mb-2">{entry.label}</h4>
                       <p className="text-xs text-slate-400 leading-relaxed">{entry.description}</p>
                     </div>
                   ))}
@@ -283,12 +205,9 @@ export default function ResourceLoreSection() {
         })}
       </div>
 
-      {/* Footer */}
-      {loreData && (
-        <div className="text-xs text-slate-600 text-center pt-4 border-t border-slate-700/30">
-          Data sourced from {loreData.source} · Last updated {new Date(loreData.generated_at).toLocaleDateString()}
-        </div>
-      )}
+      <div className="text-xs text-slate-600 text-center pt-4 border-t border-slate-700/30">
+        {lore._source} · Last extracted {new Date(lore._extracted).toLocaleDateString()}
+      </div>
     </div>
   )
 }

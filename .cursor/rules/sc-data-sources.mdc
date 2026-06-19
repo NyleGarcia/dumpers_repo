@@ -20,10 +20,12 @@ Key paths in extracted data:
 - `entities/scitem/ships/weapons/` - Mining lasers, weapons
 - `entities/scitem/ships/{cooler,powerplant,shieldgenerator}/` - Ship components
 - `reputation/standings/` - Standing thresholds
+- `Data/Localization/english/global.ini` - Commodity lore/flavor text (`items_commodities_*`)
 
 **Extraction scripts:**
-- `scripts/extract-game-data.ps1` - Extract DataForge from Data.p4k
-- `scripts/parse-extracted-data.mjs` - Parse extracted JSON into app data
+- `scripts/extract-game-data.ps1` - Extract DataForge + localization from Data.p4k
+- `scripts/parse-extracted-data.mjs` - Parse extracted JSON into app data (includes `game-lore.json`)
+- `scripts/lib/commodityLocalization.mjs` - Commodity key normalization for lore extraction
 
 ## Secondary Data Sources
 
@@ -37,11 +39,10 @@ Crowdsourced live game data for all systems (Stanton, Pyro, Nyx). Key endpoints:
 - Updated hourly by community reporters
 - **Use for:** Shop inventories, prices, locations (all systems)
 
-### 2. Star Citizen Wiki API (Lore/Descriptions)
+### 2. Star Citizen Wiki API (General reference)
 **URL:** https://api.star-citizen.wiki/api/
 
-Used for resource lore/flavor text for the Archive.
-- `scripts/fetch-resource-lore.mjs` - Fetches commodity descriptions
+Community wiki API for general reference. **Commodity lore for the Archive comes from game localization**, not this API.
 
 ### 3. seneca0815-rgb/SC_Signature_Scanner
 **URL:** https://github.com/seneca0815-rgb/SC_Signature_Scanner
@@ -57,8 +58,7 @@ Old scripts archived in `scripts/archive-deprecated/`.
 
 ## Usage Pattern
 
-1. **Game data (blueprints, components, mining):** Use extracted data or run extraction
+1. **Game data (blueprints, components, mining, commodity lore):** Use extracted data or run extraction
 2. **Live shop/price data:** Use UEX Corp API
-3. **Lore/descriptions:** Use Star Citizen Wiki API
-4. **Mining signatures:** Check SC_Signature_Scanner
-5. Only web search if none of these sources have the data
+3. **Mining signatures:** Check SC_Signature_Scanner
+4. Only web search if none of these sources have the data

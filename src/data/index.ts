@@ -243,10 +243,16 @@ export interface GameReputationData {
   }
 }
 
+export interface GameLoreResourceEntry {
+  key: string
+  label: string
+  description: string
+}
+
 export interface GameLoreData {
   _source: string
   _extracted: string
-  resources: Record<string, { key: string; description: string }>
+  resources: Record<string, GameLoreResourceEntry>
   summary: {
     totalDescriptions: number
   }
@@ -505,6 +511,27 @@ export function getRarityColor(rarity: string): string {
 export function getResourceLore(resourceKey: string): string | null {
   const entry = lore.resources[resourceKey.toLowerCase()]
   return entry?.description ?? null
+}
+
+export interface ResourceLoreListEntry {
+  resourceKey: string
+  label: string
+  description: string
+  locKey: string
+}
+
+/**
+ * All commodity lore entries for Archive display.
+ */
+export function getResourceLoreEntries(): ResourceLoreListEntry[] {
+  return Object.entries(lore.resources)
+    .map(([resourceKey, entry]) => ({
+      resourceKey,
+      label: entry.label,
+      description: entry.description,
+      locKey: entry.key,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label))
 }
 
 // ============================================================================

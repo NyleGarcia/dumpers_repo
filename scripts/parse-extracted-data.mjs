@@ -12,6 +12,7 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
 import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
+import { extractCommodityLore } from './lib/commodityLocalization.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -401,41 +402,23 @@ function parseLocalization() {
 
 function extractResourceLore(localization) {
   console.log('  Extracting resource/commodity lore...')
-  
-  const lore = {}
-  let found = 0
-  
-  // Look for commodity description keys
-  const descPatterns = [
-    /^items_commodities_(\w+)_desc$/i,
-    /^item_desc_(\w+)$/i,
-    /^commodity_(\w+)_desc$/i,
+  const lore = extractCommodityLore(localization)
+  console.log(`  Extracted ${Object.keys(lore).length} commodity lore descriptions`)
+
+  const spotCheckKeys = [
+    'hephaestanite',
+    'torite',
+    'distilled_spirits',
+    'osoian_hides',
+    'rmc',
+    'hydrogen_fuel',
+    'quantum_fuel',
   ]
-  
-  for (const [key, value] of Object.entries(localization)) {
-    const lowerKey = key.toLowerCase()
-    
-    // Skip empty or placeholder values
-    if (!value || value === '@LOC_PLACEHOLDER' || value === '@LOC_UNINITIALIZED') continue
-    
-    for (const pattern of descPatterns) {
-      const match = key.match(pattern)
-      if (match) {
-        const resourceKey = match[1].toLowerCase()
-        if (value.length > 20) { // Only meaningful descriptions
-          lore[resourceKey] = {
-            key: key,
-            description: value
-          }
-          found++
-        }
-        break
-      }
-    }
+  const missing = spotCheckKeys.filter((key) => !lore[key])
+  if (missing.length > 0) {
+    console.warn(`  ⚠ Missing expected commodity lore keys: ${missing.join(', ')}`)
   }
-  
-  console.log(`  Extracted ${found} resource lore descriptions`)
-  
+
   return lore
 }
 
