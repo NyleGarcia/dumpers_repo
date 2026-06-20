@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0-commodity-bases",
-  "sha256": "0c0320620c843544e5db613c151ce95325c3602d933ec9b3cb90b4d2fbd4051e",
+  "version": "1.5.0-band-pricing",
+  "sha256": "937ee0aad750e093ea74a4b000c196ce85c990abf4593e2e03982714257c77c9",
   "module": "dfp-engine.js"
 }

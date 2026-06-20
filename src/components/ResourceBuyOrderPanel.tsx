@@ -11,7 +11,14 @@ import {
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
 import { DEFAULT_STOCK_QUALITY, isNoQualityResource } from '../config/dfp'
-import { getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
+import {
+  getDefaultBandQuality,
+  getResourceBands,
+  getQualityTier,
+  getQualityTierColor,
+  PURCHASED_STOCK_QUALITY,
+  supportsPurchasedQuality,
+} from '../lib/qualityBands'
 import {
   buildDefaultSlotQualities,
   formatSlotQualitySummary,
@@ -253,11 +260,21 @@ export default function ResourceBuyOrderPanel({
     if (selectedResNoQuality) {
       setResQuality(String(SALVAGE_ORDER_MIN_QUALITY))
     } else if (resourceBands && resourceBands.length > 0) {
-      setResQuality(String(resourceBands[3] ?? resourceBands[0]))
+      setResQuality(String(getDefaultBandQuality(selectedResourceLabel)))
     } else {
       setResQuality(String(DEFAULT_STOCK_QUALITY))
     }
-  }, [resourceKey, selectedResNoQuality, resourceBands])
+  }, [resourceKey, selectedResNoQuality, resourceBands, selectedResourceLabel])
+
+  const showPurchasedQuality = selectedResource
+    ? supportsPurchasedQuality(selectedResource.resource_key, selectedResourceLabel)
+    : false
+  const resUsesFlatBandPrice = useMemo(() => {
+    if (!resourceBands || selectedResNoQuality) return false
+    const q = Number(resQuality)
+    if (q === PURCHASED_STOCK_QUALITY) return true
+    return q === resourceBands[0]
+  }, [resourceBands, resQuality, selectedResNoQuality])
 
   const addBlueprint = () => {
     if (!selectedBlueprint?.internalName) return
@@ -559,6 +576,9 @@ export default function ResourceBuyOrderPanel({
                     className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
                     aria-label="Quality band"
                   >
+                    {showPurchasedQuality && (
+                      <option value={PURCHASED_STOCK_QUALITY}>Purchased (Q0)</option>
+                    )}
                     {resourceBands.map((bandValue, idx) => {
                       const tier = getQualityTier(bandValue)
                       return (
@@ -628,6 +648,9 @@ export default function ResourceBuyOrderPanel({
                 )}
                 {selectedResNoQuality && (
                   <span className="text-slate-400"> · Base price only (Q0)</span>
+                )}
+                {resUsesFlatBandPrice && (
+                  <span className="text-slate-400"> · Base price only (Q0 / Band 1)</span>
                 )}
               </p>
             )}

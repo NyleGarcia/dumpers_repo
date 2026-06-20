@@ -105,3 +105,36 @@ console.assert(
   'All three name forms must resolve to same RMC price'
 )
 console.assert(rmcByDisplay === rmcBase.basePerScu * 10, 'RMC salvage buy anchor')
+
+console.log('\n--- Banded ore pricing ---')
+
+const qualityBands = JSON.parse(
+  fs.readFileSync(path.join(root, 'src/data/game-quality-bands.json'), 'utf8')
+)
+const berylBands = qualityBands.bandThresholds.beryl
+const ironBands = qualityBands.bandThresholds.iron
+const qty = 300
+
+const berylQ0 = engine.calculateMaterialDfpPrice('Beryl', 0, qty, berylBands)
+const berylBand1 = engine.calculateMaterialDfpPrice('Beryl', berylBands[0], qty, berylBands)
+const berylBand2 = engine.calculateMaterialDfpPrice('Beryl', berylBands[1], qty, berylBands)
+const berylBand4 = engine.calculateMaterialDfpPrice('Beryl', berylBands[3], qty, berylBands)
+
+console.log(`Beryl ${qty} SCU Q0: ${berylQ0.toLocaleString()}`)
+console.log(`Beryl ${qty} SCU Band1 Q${berylBands[0]}: ${berylBand1.toLocaleString()}`)
+console.log(`Beryl ${qty} SCU Band2 Q${berylBands[1]}: ${berylBand2.toLocaleString()}`)
+console.log(`Beryl ${qty} SCU Band4 Q${berylBands[3]}: ${berylBand4.toLocaleString()}`)
+
+console.assert(berylQ0 === berylBand1, 'Beryl Q0 must equal Band 1 flat base')
+console.assert(berylBand2 >= berylBand1, 'Beryl Band 2 must be >= Band 1')
+console.assert(berylBand4 > berylBand2, 'Beryl Band 4 must exceed Band 2 via quality engine')
+
+const ironQ0 = engine.calculateMaterialDfpPrice('Iron', 0, qty, ironBands)
+const ironBand1 = engine.calculateMaterialDfpPrice('Iron', ironBands[0], qty, ironBands)
+const ironBand4 = engine.calculateMaterialDfpPrice('Iron', ironBands[3], qty, ironBands)
+
+console.log(`Iron ${qty} SCU Q0: ${ironQ0.toLocaleString()}`)
+console.log(`Iron ${qty} SCU Band4 Q${ironBands[3]}: ${ironBand4.toLocaleString()}`)
+
+console.assert(ironQ0 === ironBand1, 'Iron Q0 must equal Band 1 flat base')
+console.assert(ironBand4 > ironQ0, 'Iron Band 4 must exceed flat base')

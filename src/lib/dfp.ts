@@ -2,6 +2,7 @@ import { isSalvageResource } from '../config/extraResources'
 import { isHarvestResource } from '../config/resourceTypes'
 import { AMMO_ORDER_MIN_QUALITY } from '../config/dfp'
 import { slotQualitiesToParts } from './blueprintQuality'
+import { getResourceBands } from './qualityBands'
 import { getDfpEngine } from './dfpEngine'
 
 const MIN_SCU = 0.001
@@ -87,9 +88,15 @@ export function resolveDfpTypeKey(blueprint: BlueprintDfpInput): string {
 export function calculateMaterialDfpPrice(
   resourceName: string,
   minQuality: number,
-  scuQuantity: number
+  scuQuantity: number,
+  bandThresholds?: number[],
 ): number {
-  return getDfpEngine().calculateMaterialDfpPrice(resourceName, minQuality, scuQuantity)
+  return getDfpEngine().calculateMaterialDfpPrice(
+    resourceName,
+    minQuality,
+    scuQuantity,
+    bandThresholds,
+  )
 }
 
 export function calculateMaterialDfpLine(
@@ -115,7 +122,11 @@ export function calculateBlueprintDfpWithParts(
   craftQuantity = 1,
 ): DfpResult {
   const parts = slotQualities ? slotQualitiesToParts(slotQualities) : undefined
-  const raw = getDfpEngine().calculateBlueprintDfp(blueprint, { parts, craftQuantity })
+  const raw = getDfpEngine().calculateBlueprintDfp(blueprint, {
+    parts,
+    craftQuantity,
+    bandThresholdsForResource: (name) => getResourceBands(name),
+  })
   return {
     materialTotal: raw.materialTotal,
     acquisitionPremium: raw.acquisitionPremium ?? 0,

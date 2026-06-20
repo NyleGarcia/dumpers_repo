@@ -1,6 +1,7 @@
 import { AMMO_ORDER_MIN_QUALITY, orderMinQualityForResource } from '../config/dfp'
 import { dfpEngineResourceName } from './dfpResourceNames'
 import { minSlotQuality } from './blueprintQuality'
+import { getResourceBands } from './qualityBands'
 import { extractOrderLineItemsFromBlueprints, type BlueprintWithSlots } from './blueprintResources'
 import {
   calculateBlueprintDfp,
@@ -101,7 +102,8 @@ export function pricingForResourceLine(
   const qty = normalizeQuantityForResource(resourceKey, Math.max(minAmount, quantityScu))
   const orderMinQuality = orderMinQualityForResource(resourceKey, resourceLabel, minQuality)
   const engineName = dfpEngineResourceName(resourceKey, resourceLabel)
-  const lineDfpAuec = calculateMaterialDfpPrice(engineName, orderMinQuality, qty)
+  const bands = getResourceBands(resourceLabel)
+  const lineDfpAuec = calculateMaterialDfpPrice(engineName, orderMinQuality, qty, bands)
   const unitDfpAuec = qty > 0 ? Math.round(lineDfpAuec / qty) : lineDfpAuec
   return { unitDfpAuec, lineDfpAuec, orderMinQuality }
 }

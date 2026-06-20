@@ -11,9 +11,9 @@ import {
 import { isHarvestResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.4.0-commodity-bases'
+export const DFP_VERSION = '1.5.0-band-pricing'
 
-/** Q0 salvage uses UEX Buy (+ premium on RMC/CM); Q0 commodities use UEX Sell — flat base only in engine. */
+/** Banded ores: Purchased Q0 + Band 1 = flat UEX Sell base; Band 2+ = full quality engine. Salvage = UEX Buy (unchanged). */
 
 /** Q0 = store-bought; Q100–Q1000 = mined/refined in 100-point steps. */
 export const STOCK_QUALITY_TIERS: readonly number[] = [
