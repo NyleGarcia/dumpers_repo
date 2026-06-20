@@ -126,7 +126,7 @@ console.log(`Beryl ${qty} SCU Band2 Q${berylBands[1]}: ${berylBand2.toLocaleStri
 console.log(`Beryl ${qty} SCU Band4 Q${berylBands[3]}: ${berylBand4.toLocaleString()}`)
 
 console.assert(berylQ0 === berylBand1, 'Beryl Q0 must equal Band 1 flat base')
-console.assert(berylBand2 >= berylBand1, 'Beryl Band 2 must be >= Band 1')
+console.assert(berylBand2 > berylBand1, 'Beryl Band 2 must exceed Band 1 flat base')
 console.assert(berylBand4 > berylBand2, 'Beryl Band 4 must exceed Band 2 via quality engine')
 
 const ironQ0 = engine.calculateMaterialDfpPrice('Iron', 0, qty, ironBands)

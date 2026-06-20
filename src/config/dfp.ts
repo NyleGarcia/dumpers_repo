@@ -11,7 +11,7 @@ import {
 import { isHarvestResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.5.0-band-pricing'
+export const DFP_VERSION = '1.5.1-band-tier-ceil'
 
 /** Banded ores: Purchased Q0 + Band 1 = flat UEX Sell base; Band 2+ = full quality engine. Salvage = UEX Buy (unchanged). */
 
