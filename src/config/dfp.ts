@@ -11,9 +11,9 @@ import {
 import { isHarvestResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.5.1-band-tier-ceil'
+export const DFP_VERSION = '1.5.2-quality-interp'
 
-/** Banded ores: Purchased Q0 + Band 1 = flat UEX Sell base; Band 2+ = full quality engine. Salvage = UEX Buy (unchanged). */
+/** Banded ores: Q0 + Band 1 flat UEX Sell base; Band 2+ uses log-linear qualityScale on exact band Q. Salvage unchanged. */
 
 /** Q0 = store-bought; Q100–Q1000 = mined/refined in 100-point steps. */
 export const STOCK_QUALITY_TIERS: readonly number[] = [

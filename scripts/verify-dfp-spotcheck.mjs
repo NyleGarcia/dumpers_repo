@@ -128,6 +128,15 @@ console.log(`Beryl ${qty} SCU Band4 Q${berylBands[3]}: ${berylBand4.toLocaleStri
 console.assert(berylQ0 === berylBand1, 'Beryl Q0 must equal Band 1 flat base')
 console.assert(berylBand2 > berylBand1, 'Beryl Band 2 must exceed Band 1 flat base')
 console.assert(berylBand4 > berylBand2, 'Beryl Band 4 must exceed Band 2 via quality engine')
+console.assert(
+  berylBand2 !== Math.round(19643 * (80 / 50) * qty),
+  'Beryl Band 2 must not snap to Q550 tier price'
+)
+const berylBand2Scale = Math.exp(Math.log(1) + ((berylBands[1] - 500) / 50) * Math.log(80 / 50))
+console.assert(
+  berylBand2 === Math.round(19643 * qty * berylBand2Scale),
+  'Beryl Band 2 uses exact band Q log-linear scale'
+)
 
 const ironQ0 = engine.calculateMaterialDfpPrice('Iron', 0, qty, ironBands)
 const ironBand1 = engine.calculateMaterialDfpPrice('Iron', ironBands[0], qty, ironBands)

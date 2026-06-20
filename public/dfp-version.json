@@ -1,5 +1,5 @@
 {
-  "version": "1.5.1-band-tier-ceil",
-  "sha256": "df7ceb40fe25e6e6e27dc93302701aac0aaf0e3cadaaeccdd5584cfea89ba378",
+  "version": "1.5.2-quality-interp",
+  "sha256": "0d11727898b3bfb7512c63d84b392193f422dd0badb3973e713e00b16e6c3240",
   "module": "dfp-engine.js"
 }
