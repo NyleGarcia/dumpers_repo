@@ -3,14 +3,6 @@ import { wipeResourceTracker } from '../lib/operations'
 import { supabase } from '../lib/supabase'
 import AppModal from './layout/AppModal'
 
-interface BlueprintsSyncStatus {
-  last_synced_at: string | null
-  source_version: string | null
-  sync_status: string
-  sync_error: string | null
-  blueprint_count: number
-}
-
 interface ShopDataSyncStatus {
   last_synced_at: string | null
   source_version: string | null
@@ -25,10 +17,6 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [wiping, setWiping] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   
-  // Blueprints sync state
-  const [bpSyncStatus, setBpSyncStatus] = useState<BlueprintsSyncStatus | null>(null)
-  const [bpSyncing, setBpSyncing] = useState(false)
-
   // Shop data sync state
   const [shopSyncStatus, setShopSyncStatus] = useState<ShopDataSyncStatus | null>(null)
   const [shopSyncing, setShopSyncing] = useState(false)
@@ -46,69 +34,16 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [searchingUser, setSearchingUser] = useState(false)
   const [resettingRep, setResettingRep] = useState(false)
 
-  // Fetch sync statuses on mount
+  // Fetch shop sync status on mount
   useEffect(() => {
-    const fetchSyncStatuses = async () => {
-      // Blueprints sync status
-      const { data: bpData, error: bpError } = await supabase.rpc('get_blueprints_sync_status')
-      if (!bpError && bpData && bpData.length > 0) {
-        setBpSyncStatus(bpData[0])
-      }
-
-      // Shop data sync status
+    const fetchShopSyncStatus = async () => {
       const { data: shopData, error: shopError } = await supabase.rpc('get_shop_data_sync_status')
       if (!shopError && shopData && shopData.length > 0) {
         setShopSyncStatus(shopData[0])
       }
     }
-    fetchSyncStatuses()
+    void fetchShopSyncStatus()
   }, [])
-
-  const handleBlueprintsSync = async () => {
-    setBpSyncing(true)
-    setMessage(null)
-
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setMessage({ type: 'error', text: 'Not authenticated' })
-        setBpSyncing(false)
-        return
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-blueprints`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        setMessage({ type: 'error', text: result.error || 'Blueprint sync failed' })
-      } else {
-        setMessage({ 
-          type: 'success', 
-          text: `Synced ${result.count} blueprints (v${result.version})` 
-        })
-        
-        // Refresh sync status
-        const { data } = await supabase.rpc('get_blueprints_sync_status')
-        if (data && data.length > 0) {
-          setBpSyncStatus(data[0])
-        }
-      }
-    } catch {
-      setMessage({ type: 'error', text: 'Network error during blueprint sync' })
-    }
-
-    setBpSyncing(false)
-  }
 
   const handleShopDataSync = async () => {
     setShopSyncing(true)
@@ -312,20 +247,8 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
             <h3 className="text-white font-medium text-sm">Game Data Update Process</h3>
             <p className="text-xs text-slate-400 mt-1">
               Extract and parse data directly from Star Citizen game files when a new patch drops.
+              Blueprint catalog ships in <code className="text-violet-400">game-blueprints.json</code>.
             </p>
-            {bpSyncStatus && (
-              <div className="mt-2 text-xs text-slate-500 space-y-0.5">
-                {bpSyncStatus.last_synced_at && (
-                  <p>Last synced: {new Date(bpSyncStatus.last_synced_at).toLocaleString()}</p>
-                )}
-                {bpSyncStatus.source_version && (
-                  <p>Version: {bpSyncStatus.source_version}</p>
-                )}
-                <p className="text-slate-600">
-                  {bpSyncStatus.blueprint_count} blueprints
-                </p>
-              </div>
-            )}
           </div>
 
           {/* Step-by-step game data update process */}
@@ -354,24 +277,32 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               </code>
             </div>
 
-            {/* Step 3: Sync from sccrafter (for DFP calculations) */}
+            {/* Step 3: Sync supplementary game data to DB (optional) */}
             <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-600 text-white text-xs font-bold rounded-full">3</span>
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">3</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Sync Blueprints to DB</p>
-                <p className="text-[10px] text-slate-500">Syncs blueprint data from sccrafter.com</p>
+                <p className="text-xs text-white font-medium">Sync Game Data to DB (optional)</p>
+                <p className="text-[10px] text-slate-500">Upserts mining, components, ordnance, and blueprint pools to Supabase</p>
               </div>
-              <button
-                onClick={handleBlueprintsSync}
-                disabled={bpSyncing}
-                className="shrink-0 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-medium rounded transition-colors disabled:opacity-50"
-              >
-                {bpSyncing ? 'Syncing...' : 'Sync'}
-              </button>
+              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
+                node scripts/sync-game-data-to-db.mjs
+              </code>
+            </div>
+
+            {/* Step 4: Deploy */}
+            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">4</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white font-medium">Commit &amp; Deploy</p>
+                <p className="text-[10px] text-slate-500">Commit updated game-*.json files, rebuild, and deploy so members see the new catalog</p>
+              </div>
+              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
+                npm run build
+              </code>
             </div>
 
             <p className="text-[10px] text-slate-600 italic pt-1">
-              Steps 1-2 run locally in terminal. Step 2 now extracts all data including lore from game files.
+              Steps 1–3 run locally in terminal. Blueprint catalog is bundled from game-blueprints.json at build time.
             </p>
             <p className="text-[10px] text-amber-400/70 pt-1">
               If Step 2 reports validation issues, game data structure may have changed.
@@ -385,7 +316,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
             <div className="flex-1 min-w-0">
               <h3 className="text-white font-medium text-sm">Sync Shop Data</h3>
               <p className="text-xs text-slate-400 mt-1">
-                Fetch shop inventories and prices from scunpacked GitHub (~12MB). Updates component price summaries.
+                Fetch shop inventories and prices from the UEX Corp API. Updates component price summaries for DFP.
               </p>
               {shopSyncStatus && (
                 <div className="mt-2 text-xs text-slate-500 space-y-0.5">

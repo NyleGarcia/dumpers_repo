@@ -1,3 +1,9 @@
+#!/usr/bin/env node
+/**
+ * DEPRECATED — Blueprint catalog now comes from direct game file extraction.
+ * Use extract-game-data.ps1 + parse-extracted-data.mjs instead.
+ * Output: src/data/game-blueprints.json
+ */
 import { readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'

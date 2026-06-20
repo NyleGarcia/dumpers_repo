@@ -34,12 +34,14 @@ Host `dist/` on **any** static file provider (GitHub Pages, Cloudflare, nginx, S
 
 ## Blueprint data
 
+Blueprint catalog comes from direct game file extraction. After a patch:
+
 ```bash
-npm run fetch-blueprints
-npm run validate-blueprints
+.\scripts\extract-game-data.ps1
+node scripts/parse-extracted-data.mjs
 ```
 
-Catalog lives in `src/data/Blueprints.json`.
+Output lives in `src/data/game-blueprints.json` (and related `game-*.json` files). See [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
 
 ## Dumpers Fair-Value Pricing (DFP)
 

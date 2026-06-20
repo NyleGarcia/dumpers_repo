@@ -1,3 +1,5 @@
+// DEPRECATED: Blueprint catalog now comes from direct game file extraction (game-blueprints.json).
+// This edge function populated synced_blueprints from sccrafter.com and is no longer used by the app.
 // Supabase Edge Function: sync-blueprints
 // Fetches latest Blueprints.json from sccrafter.com and updates Supabase tables
 
