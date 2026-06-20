@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
+import { fetchBlueprintOwnerCounts } from '../lib/operations'
 import {
   canAddBlueprintToOrder,
   canAddBlueprintToTargetList,
@@ -95,8 +96,11 @@ export default function BlueprintsRoute() {
       return
     }
 
-    const blueprintIds = blueprints.map(bp => bp.internalName)
-    const { data } = await fetchBlueprintOwnerCounts(blueprintIds)
+    const blueprintIds = blueprints.map(bp => bp.internalName).filter(Boolean)
+    const { data, error } = await fetchBlueprintOwnerCounts(blueprintIds)
+    if (error) {
+      console.error('Failed to fetch blueprint owner counts:', error)
+    }
     if (!cancelled) {
       setBlueprintOwnerCounts(data)
     }

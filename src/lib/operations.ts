@@ -258,6 +258,9 @@ export async function fetchBlueprintOwnerCounts(
   if (error) return { data: {}, error: error.message }
 
   const counts: Record<string, number> = {}
+  for (const id of blueprintIds) {
+    counts[id] = 0
+  }
   for (const row of data ?? []) {
     counts[row.blueprint_id] = Number(row.owner_count)
   }

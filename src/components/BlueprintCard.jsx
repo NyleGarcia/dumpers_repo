@@ -171,7 +171,16 @@ export default function BlueprintCard({
                 )}
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div className="bg-slate-950/50 rounded-lg p-2.5 border border-slate-800/50">
+              {ownerCount !== undefined && (
+                <p className={`flex items-center justify-end gap-1 text-xs ${ownerCount === 0 ? 'text-amber-400' : 'text-slate-500'}`} title={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
+                  <span>👤</span>
+                  <span>{ownerCount}</span>
+                </p>
+              )}
+            </div>
+          )}
 
           {showFooter && (
             <div className="mt-3 pt-2.5 border-t border-slate-700">
