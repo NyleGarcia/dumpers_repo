@@ -229,6 +229,25 @@
         "Subtype detection is based on filename patterns"
       ]
     },
+
+    "fpsMagazines": {
+      "_description": "FPS weapon magazines — entity class vs localization segment order",
+      "_priority": 6.5,
+      "entityClassPattern": "{base}_mag_{variant}",
+      "localizationKeyPattern": "item_Name_{base}_{variant}_mag",
+      "examples": [
+        {
+          "internalName": "behr_rifle_ballistic_02_mag_civilian",
+          "localizationLookupAlias": "behr_rifle_ballistic_02_civilian_mag",
+          "displayName": "P8-AR Rifle Magazine (15 Cap)",
+          "notes": "internalName/blueprint_id unchanged; alias is lookup-only"
+        }
+      ],
+      "notes": [
+        "Some magazine entity classes place variant after mag (_mag_civilian) while global.ini uses variant before mag (_civilian_mag)",
+        "Parser tries both orderings when resolving item_Name keys; never rewrites internalName or database blueprint_id"
+      ]
+    },
     
     "commodities": {
       "_description": "Trade commodities and raw resources",

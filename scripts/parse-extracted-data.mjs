@@ -1526,6 +1526,14 @@ function resolveCanonicalBaseBlueprintName(internalName, localization) {
   return null
 }
 
+/** Loc keys for some FPS mags use {base}_{variant}_mag while entity IDs use {base}_mag_{variant}. */
+function getMagVariantLocalizationAliases(name) {
+  if (!name) return []
+  const match = name.toLowerCase().match(/^(.+)_mag_([a-z0-9]+)$/)
+  if (!match) return []
+  return [`${match[1]}_${match[2]}_mag`]
+}
+
 const ARMOR_SLOT_DISPLAY = {
   arms: 'Arms',
   core: 'Core',
@@ -1856,7 +1864,11 @@ function parseBlueprintDefinitions(localization = {}) {
     // Look up display name from localization
     // Slot-aware armor names first — prevents cross-slot localization bleed (core name on helmet, etc.)
     let blueprintName = resolveArmorBlueprintName(internalName, localization)
-    const namesToTry = [internalName, entityClass].filter(Boolean)
+    const namesToTry = [...new Set(
+      [internalName, entityClass]
+        .filter(Boolean)
+        .flatMap(name => [name, ...getMagVariantLocalizationAliases(name)])
+    )]
     const locKeyPatterns = []
     
     if (!blueprintName) for (const name of namesToTry) {
