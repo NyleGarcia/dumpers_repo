@@ -8,22 +8,13 @@ import {
   type VisibilityContext,
 } from '../lib/featureAccess'
 import { readGuestPreviewSession, writeGuestPreviewSession } from '../lib/guestPreview'
+import { normalizeGuestBlueprintId } from '../lib/guestCatalog'
 import {
-  GUEST_ACQUIRED_STORAGE_KEY,
-  clearGuestAcquiredBlueprints,
-  clearGuestMissionPrefs,
-  clearGuestResources,
-  clearGuestTargetList,
-  clearMiningTrackerEntries,
+  ensureGuestCacheSchema,
   readGuestAcquiredBlueprints,
-  readGuestResources,
-  readGuestTargetList,
-  readMiningTrackerEntries,
-  sanitizeBlueprintId,
-  sanitizeMigrationBatch,
-  sanitizeResourceEntry,
   writeGuestAcquiredBlueprints,
 } from '../lib/localGuestCache'
+import { maybeMigrateOfflineData } from '../lib/offlineMigration'
 import { removeTargetBlueprint } from '../lib/targetList'
 import type { User, Session } from '@supabase/supabase-js'
 
@@ -89,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const enterGuestPreview = useCallback(() => {
     writeGuestPreviewSession(true)
     setIsGuestPreview(true)
-    // Load guest acquired blueprints from localStorage
+    ensureGuestCacheSchema()
     setAcquiredBlueprints(readGuestAcquiredBlueprints())
   }, [])
 
@@ -97,6 +88,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     writeGuestPreviewSession(false)
     setIsGuestPreview(false)
   }, [])
+
+  useEffect(() => {
+    if (user || !isGuestPreview) return
+    ensureGuestCacheSchema()
+    setAcquiredBlueprints(readGuestAcquiredBlueprints())
+  }, [user, isGuestPreview])
 
   useEffect(() => {
     isBannedRef.current = isBanned
@@ -199,142 +196,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return acquired
   }, [])
 
-  const migrateLocalStorage = useCallback(async (userId: string) => {
-    if (typeof localStorage === 'undefined') return
-
-    // 1. Migrate acquired blueprints
-    const localBpData = localStorage.getItem(GUEST_ACQUIRED_STORAGE_KEY)
-    if (localBpData) {
-      try {
-        const localBlueprints = JSON.parse(localBpData) as Record<string, boolean>
-        const blueprintIds = Object.keys(localBlueprints)
-          .filter(id => localBlueprints[id])
-          .map(id => sanitizeBlueprintId(id))
-          .filter((id): id is string => id !== null)
-
-        if (blueprintIds.length > 0) {
-          const inserts = sanitizeMigrationBatch(blueprintIds).map(blueprint_id => ({
-            user_id: userId,
-            blueprint_id,
-          }))
-
-          const { error } = await supabase
-            .from('acquired_blueprints')
-            .upsert(inserts, { onConflict: 'user_id,blueprint_id' })
-
-          if (!error) {
-            clearGuestAcquiredBlueprints()
-            console.log(`Migrated ${inserts.length} acquired blueprints to server`)
-          }
-        }
-      } catch (e) {
-        console.error('Error migrating acquired blueprints:', e)
-      }
-    }
-
-    // 2. Migrate target list
-    const { targetIds, missionPrefs } = readGuestTargetList()
-    const targetBpIds = Object.keys(targetIds)
-      .filter(id => targetIds[id])
-      .map(id => sanitizeBlueprintId(id))
-      .filter((id): id is string => id !== null)
-
-    if (targetBpIds.length > 0) {
-      try {
-        const inserts = sanitizeMigrationBatch(targetBpIds).map(blueprint_id => ({
-          user_id: userId,
-          blueprint_id,
-        }))
-
-        const { error } = await supabase
-          .from('target_blueprints')
-          .upsert(inserts, { onConflict: 'user_id,blueprint_id' })
-
-        if (!error) {
-          clearGuestTargetList()
-          console.log(`Migrated ${inserts.length} target blueprints to server`)
-        }
-      } catch (e) {
-        console.error('Error migrating target list:', e)
-      }
-    }
-
-    // 3. Migrate mission prefs
-    const missionKeys = Object.keys(missionPrefs).filter(k => missionPrefs[k])
-    if (missionKeys.length > 0) {
-      try {
-        const inserts = sanitizeMigrationBatch(missionKeys).map(mission_key => ({
-          user_id: userId,
-          mission_key,
-          included: true,
-        }))
-
-        const { error } = await supabase
-          .from('mission_checklist_prefs')
-          .upsert(inserts, { onConflict: 'user_id,mission_key' })
-
-        if (!error) {
-          clearGuestMissionPrefs()
-          console.log(`Migrated ${inserts.length} mission prefs to server`)
-        }
-      } catch (e) {
-        console.error('Error migrating mission prefs:', e)
-      }
-    }
-
-    // 4. Migrate resources
-    const guestResources = readGuestResources()
-    const validResources = guestResources
-      .map(r => sanitizeResourceEntry(r))
-      .filter((r): r is NonNullable<typeof r> => r !== null)
-
-    if (validResources.length > 0) {
-      try {
-        const inserts = sanitizeMigrationBatch(validResources).map(r => ({
-          user_id: userId,
-          resource_key: r.resource_key,
-          quality: r.quality,
-          quantity: r.quantity,
-        }))
-
-        const { error } = await supabase
-          .from('resource_inventory')
-          .upsert(inserts, { onConflict: 'user_id,resource_key,quality' })
-
-        if (!error) {
-          clearGuestResources()
-          console.log(`Migrated ${inserts.length} resource entries to server`)
-        }
-      } catch (e) {
-        console.error('Error migrating resources:', e)
-      }
-    }
-
-    // 5. Migrate mining tracker
-    const guestMiningEntries = readMiningTrackerEntries()
-    if (guestMiningEntries.length > 0) {
-      try {
-        const validEntries = guestMiningEntries.filter(e => 
-          typeof e.oreName === 'string' && e.oreName.length > 0 && e.oreName.length < 100 &&
-          typeof e.rarity === 'string' && e.rarity.length > 0 && e.rarity.length < 50
-        )
-
-        if (validEntries.length > 0) {
-          const { data, error } = await supabase.rpc('import_mining_tracker_entries', {
-            p_entries: validEntries,
-          })
-
-          if (!error && data?.success) {
-            clearMiningTrackerEntries()
-            console.log(`Migrated ${data.imported} mining tracker entries to server`)
-          }
-        }
-      } catch (e) {
-        console.error('Error migrating mining tracker:', e)
-      }
-    }
-  }, [])
-
   const profileRef = useRef(profile)
   profileRef.current = profile
 
@@ -359,7 +220,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (isSignIn) {
-      await migrateLocalStorage(sessionUser.id)
+      await maybeMigrateOfflineData(sessionUser.id)
     }
 
     const acquired = await fetchAcquiredBlueprints(sessionUser.id)
@@ -368,7 +229,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const siteSettings = await fetchSiteSettings()
     setDfpDisplayEnabled(siteSettings.dfpDisplayEnabled)
     setAutoApproveEnabled(siteSettings.autoApproveEnabled)
-  }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints, fetchSiteSettings])
+  }, [checkBanned, handleBannedUser, fetchProfile, fetchAcquiredBlueprints, fetchSiteSettings])
 
   useEffect(() => {
     // Handle OAuth callback - clean up URL hash after auth processes it
@@ -387,7 +248,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          await loadUserData(session.user, true)
+          await loadUserData(session.user, false)
         }
 
         setLoading(false)
@@ -404,7 +265,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          await loadUserData(session.user, true)
+          await loadUserData(session.user, false)
         }
 
         setLoading(false)
@@ -482,14 +343,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Guest mode: localStorage only
     if (isGuestMode) {
+      const normalizedId = normalizeGuestBlueprintId(blueprintId)
+      if (!normalizedId) {
+        console.warn('Cannot toggle acquired: unknown blueprint id', blueprintId)
+        return
+      }
+
       const current = acquiredRef.current
-      const isCurrentlyAcquired = current[blueprintId]
+      const isCurrentlyAcquired = current[normalizedId]
       const updated = { ...current }
 
       if (isCurrentlyAcquired) {
-        delete updated[blueprintId]
+        delete updated[normalizedId]
       } else {
-        updated[blueprintId] = true
+        updated[normalizedId] = true
       }
 
       writeGuestAcquiredBlueprints(updated)

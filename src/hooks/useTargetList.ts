@@ -3,6 +3,7 @@ import { useLatestRef } from './useLatestRef'
 import { useAuth } from '../contexts/AuthContext'
 import { missionKey } from '../lib/missions'
 import { canAddBlueprintToTargetListById } from '../lib/blueprintOrderable'
+import { normalizeGuestBlueprintId } from '../lib/guestCatalog'
 import {
   addTargetBlueprint,
   fetchMissionPrefs,
@@ -12,9 +13,14 @@ import {
   setMissionIncluded,
 } from '../lib/targetList'
 import {
+  ensureGuestCacheSchema,
+  guestMissionPrefsToMap,
+  readGuestMissionPrefEntries,
   readGuestTargetList,
+  removeGuestMissionPrefKeys,
+  upsertGuestMissionPref,
+  writeGuestMissionPrefEntries,
   writeGuestTargetIds,
-  writeGuestMissionPrefs,
 } from '../lib/localGuestCache'
 
 export type GetMissionKeysForBlueprint = (blueprintId: string) => string[]
@@ -37,6 +43,7 @@ export function useTargetList(
   const refresh = useCallback(async () => {
     // Guest mode: load from localStorage
     if (isGuest) {
+      ensureGuestCacheSchema()
       const { targetIds: guestTargets, missionPrefs: guestPrefs } = readGuestTargetList()
       setTargetIds(guestTargets)
       setMissionPrefs(guestPrefs)
@@ -138,31 +145,39 @@ export function useTargetList(
     async (blueprintId: string) => {
       // Guest mode: localStorage only
       if (isGuest) {
-        const isOnList = !!targetIds[blueprintId]
+        const normalizedId = normalizeGuestBlueprintId(blueprintId)
+        if (!normalizedId) {
+          setError('Unknown blueprint — cannot update Mission Tracker.')
+          return false
+        }
+
+        const isOnList = !!targetIds[normalizedId]
 
         if (isOnList) {
           const getMissionKeys = getMissionKeysRef.current
-          const missionKeysToRemove = getMissionKeys ? getMissionKeys(blueprintId) : []
+          const missionKeysToRemove = getMissionKeys ? getMissionKeys(normalizedId) : []
 
           const nextTargets = { ...targetIds }
-          delete nextTargets[blueprintId]
+          delete nextTargets[normalizedId]
           setTargetIds(nextTargets)
           writeGuestTargetIds(nextTargets)
 
           if (missionKeysToRemove.length > 0) {
-            const nextPrefs = { ...missionPrefs }
-            for (const key of missionKeysToRemove) delete nextPrefs[key]
-            setMissionPrefs(nextPrefs)
-            writeGuestMissionPrefs(nextPrefs)
+            const nextEntries = removeGuestMissionPrefKeys(
+              readGuestMissionPrefEntries(),
+              missionKeysToRemove
+            )
+            writeGuestMissionPrefEntries(nextEntries)
+            setMissionPrefs(guestMissionPrefsToMap(nextEntries))
           }
         } else {
-          if (!canAddBlueprintToTargetListById(blueprintId, overridesMap)) {
+          if (!canAddBlueprintToTargetListById(normalizedId, overridesMap)) {
             setError(
               'This blueprint cannot be tracked (not orderable and no reward missions).'
             )
             return false
           }
-          const nextTargets = { ...targetIds, [blueprintId]: true }
+          const nextTargets = { ...targetIds, [normalizedId]: true }
           setTargetIds(nextTargets)
           writeGuestTargetIds(nextTargets)
         }
@@ -229,10 +244,13 @@ export function useTargetList(
     async (missionLabel: string, onChecklist: boolean) => {
       // Guest mode: localStorage only
       if (isGuest) {
-        const key = missionKey(missionLabel)
-        const nextPrefs = { ...missionPrefs, [key]: onChecklist }
-        setMissionPrefs(nextPrefs)
-        writeGuestMissionPrefs(nextPrefs)
+        const nextEntries = upsertGuestMissionPref(
+          readGuestMissionPrefEntries(),
+          missionLabel,
+          onChecklist
+        )
+        writeGuestMissionPrefEntries(nextEntries)
+        setMissionPrefs(guestMissionPrefsToMap(nextEntries))
         return true
       }
 
@@ -271,12 +289,12 @@ export function useTargetList(
 
       // Guest mode: localStorage only
       if (isGuest) {
-        const nextPrefs = { ...missionPrefs }
+        let nextEntries = readGuestMissionPrefEntries()
         for (const label of toAdd) {
-          nextPrefs[missionKey(label)] = true
+          nextEntries = upsertGuestMissionPref(nextEntries, label, true)
         }
-        setMissionPrefs(nextPrefs)
-        writeGuestMissionPrefs(nextPrefs)
+        writeGuestMissionPrefEntries(nextEntries)
+        setMissionPrefs(guestMissionPrefsToMap(nextEntries))
         return true
       }
 

@@ -14,6 +14,7 @@ import { canUseFeature } from '../lib/featureAccess'
 import { inventoryLineKey } from '../lib/inventoryStock'
 import {
   type GuestResourceEntry,
+  ensureGuestCacheSchema,
   readGuestResources,
   writeGuestResources,
 } from '../lib/localGuestCache'
@@ -46,6 +47,7 @@ export default function ResourceTrackerRoute() {
   // Load guest resources from localStorage on mount / guest enter
   useEffect(() => {
     if (isGuest) {
+      ensureGuestCacheSchema()
       setGuestResources(readGuestResources())
     }
   }, [isGuest])

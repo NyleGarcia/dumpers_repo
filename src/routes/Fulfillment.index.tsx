@@ -42,6 +42,7 @@ import {
   fetchFulfillments,
   fetchInventory,
   fetchMemberReputations,
+  fetchPendingCustomOrderCount,
   fetchUserOrderLimits,
   startCustomOrderWork,
   type CustomOrder,
@@ -119,17 +120,18 @@ export default function FulfillmentRoute() {
     setLoading(false)
   }, [userId])
 
-  // Guest: load only the pending order count
+  // Guest: load only the pending order count (anon-safe aggregate RPC)
   const loadGuestData = useCallback(async () => {
     setLoading(true)
-    const ordersResult = await fetchCustomOrders()
-    if (ordersResult.error) {
-      setError(ordersResult.error)
+    setError(null)
+    const { count, error: countError } = await fetchPendingCustomOrderCount()
+    if (countError) {
+      setError(countError)
+      setGuestPendingCount(null)
       setLoading(false)
       return
     }
-    const pendingCount = ordersResult.data.filter((o) => o.status === 'pending').length
-    setGuestPendingCount(pendingCount)
+    setGuestPendingCount(count ?? 0)
     setLoading(false)
   }, [])
 
@@ -368,6 +370,16 @@ export default function FulfillmentRoute() {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-white mb-3">Order Fulfillment</h2>
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm max-w-md mx-auto">
+              {error}
+              {error.includes('get_pending_custom_order_count') && (
+                <p className="mt-2 text-red-200/80">
+                  Run pending Supabase migration 077 first.
+                </p>
+              )}
+            </div>
+          )}
           {loading ? (
             <div className="text-slate-400 mb-4">Checking pending orders...</div>
           ) : guestPendingCount !== null && guestPendingCount > 0 ? (

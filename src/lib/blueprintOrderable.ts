@@ -26,7 +26,7 @@ function extractBlueprintName(fileId: string): string | null {
 }
 
 /** Resolve catalog key from legacy file paths or post-migration internalName ids. */
-function resolveCatalogBlueprintKey(blueprintId: string): string | null {
+export function resolveCatalogBlueprintKey(blueprintId: string): string | null {
   const fromPath = extractBlueprintName(blueprintId)
   if (fromPath) return fromPath
 

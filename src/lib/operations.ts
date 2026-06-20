@@ -267,6 +267,18 @@ export async function fetchBlueprintOwnerCounts(
   return { data: counts }
 }
 
+/** Aggregate pending order count for Offline Mode Fulfillment teaser (anon-safe RPC). */
+export async function fetchPendingCustomOrderCount(): Promise<{
+  count: number | null
+  error?: string
+}> {
+  const { data, error } = await supabase.rpc('get_pending_custom_order_count')
+
+  if (error) return { count: null, error: error.message }
+
+  return { count: Number(data ?? 0) }
+}
+
 export async function fetchResourceCatalog(options?: {
   includeInactive?: boolean
 }): Promise<{ data: BlueprintResourceRow[]; error?: string }> {

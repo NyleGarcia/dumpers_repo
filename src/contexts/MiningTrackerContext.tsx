@@ -3,6 +3,7 @@ import { useAuth } from './AuthContext'
 import { supabase } from '../lib/supabase'
 import {
   type MiningTrackerEntry,
+  ensureGuestCacheSchema,
   miningTrackerEntryId,
   readMiningTrackerEntries,
   writeMiningTrackerEntries,
@@ -47,6 +48,7 @@ export function MiningTrackerProvider({ children }: { children: React.ReactNode 
   // Load from DB for logged-in users
   useEffect(() => {
     if (isGuest) {
+      ensureGuestCacheSchema()
       setEntries(readMiningTrackerEntries())
       setLoading(false)
       return

@@ -512,9 +512,11 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               Data Migration
             </h4>
             <p className="text-xs text-slate-400">
-              When you decide to sign in, <strong className="text-blue-300">all your offline data migrates automatically</strong>. 
-              Your acquired blueprints, tracked missions, resource inventory, mining tracker entries, and mission checklist preferences 
-              transfer to your account — nothing is lost.
+              Offline progress is stored in your browser using the same IDs as member accounts. 
+              Old offline data from before a recent update is cleared automatically when you visit. 
+              On your <strong className="text-blue-300">first sign-in</strong> (when the welcome onboarding appears), 
+              valid offline data migrates to your account — unmatched or outdated items are skipped, not forced in. 
+              If you already have an account, your offline stash stays separate in the browser.
             </p>
           </div>
 
