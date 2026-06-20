@@ -1,0 +1,1304 @@
+{
+  "generatedAt": "2026-06-20",
+  "source": "UEX /2.0/commodities",
+  "catalogSource": "Resource Tracker Q0 (extraResources.ts)",
+  "resources": {
+    "rmc": {
+      "internalName": "rmc",
+      "displayName": "RMC (Recycled Material Composite)",
+      "uexName": "Recycled Material Composite",
+      "basePerScu": 9156,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "construction_material": {
+      "internalName": "construction_material",
+      "displayName": "Construction Material",
+      "uexName": "Construction Materials",
+      "basePerScu": 10591,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "construction_material_pebbles": {
+      "internalName": "construction_material_pebbles",
+      "displayName": "Construction Material Pebbles",
+      "uexName": "Construction Material Pebbles",
+      "basePerScu": 9628,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "construction_material_rubble": {
+      "internalName": "construction_material_rubble",
+      "displayName": "Construction Material Rubble",
+      "uexName": "Construction Material Rubble",
+      "basePerScu": 9628,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "construction_material_salvage": {
+      "internalName": "construction_material_salvage",
+      "displayName": "Construction Material Salvage",
+      "uexName": "Construction Material Salvage",
+      "basePerScu": 9628,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "compboard": {
+      "internalName": "compboard",
+      "displayName": "Compboard",
+      "uexName": "Compboard",
+      "basePerScu": 27588,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "scrap": {
+      "internalName": "scrap",
+      "displayName": "Scrap",
+      "uexName": "Scrap",
+      "basePerScu": 3029,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "waste": {
+      "internalName": "waste",
+      "displayName": "Waste",
+      "uexName": "Waste",
+      "basePerScu": 214,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "inert_materials": {
+      "internalName": "inert_materials",
+      "displayName": "Inert Materials",
+      "uexName": "Inert Materials",
+      "basePerScu": 10710,
+      "anchor": "buy",
+      "category": "salvage"
+    },
+    "hydrogen_fuel": {
+      "internalName": "hydrogen_fuel",
+      "displayName": "Hydrogen Fuel",
+      "uexName": "Hydrogen Fuel",
+      "basePerScu": 180,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "quantum_fuel": {
+      "internalName": "quantum_fuel",
+      "displayName": "Quantum Fuel",
+      "uexName": "Quantum Fuel",
+      "basePerScu": 930,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "anti_hydrogen": {
+      "internalName": "anti_hydrogen",
+      "displayName": "Anti-Hydrogen",
+      "uexName": "Anti-Hydrogen",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "argon": {
+      "internalName": "argon",
+      "displayName": "Argon",
+      "uexName": "Argon",
+      "basePerScu": 448,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "helium": {
+      "internalName": "helium",
+      "displayName": "Helium",
+      "uexName": "Helium",
+      "basePerScu": 1041,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "hydrogen": {
+      "internalName": "hydrogen",
+      "displayName": "Hydrogen",
+      "uexName": "Hydrogen",
+      "basePerScu": 1052,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "krypton": {
+      "internalName": "krypton",
+      "displayName": "Krypton",
+      "uexName": "Krypton",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "methane": {
+      "internalName": "methane",
+      "displayName": "Methane",
+      "uexName": "Methane",
+      "basePerScu": 3596,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "nitrogen": {
+      "internalName": "nitrogen",
+      "displayName": "Nitrogen",
+      "uexName": "Nitrogen",
+      "basePerScu": 3042,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "partillium": {
+      "internalName": "partillium",
+      "displayName": "Partillium",
+      "uexName": "Partillium",
+      "basePerScu": 88488,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "tritium": {
+      "internalName": "tritium",
+      "displayName": "Tritium",
+      "uexName": "Tritium",
+      "basePerScu": 33038,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "xenon": {
+      "internalName": "xenon",
+      "displayName": "Xenon",
+      "uexName": "Xenon",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "astatine": {
+      "internalName": "astatine",
+      "displayName": "Astatine",
+      "uexName": "Astatine",
+      "basePerScu": 3494,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "chlorine": {
+      "internalName": "chlorine",
+      "displayName": "Chlorine",
+      "uexName": "Chlorine",
+      "basePerScu": 1491,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "fluorine": {
+      "internalName": "fluorine",
+      "displayName": "Fluorine",
+      "uexName": "Fluorine",
+      "basePerScu": 1259,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "iodine": {
+      "internalName": "iodine",
+      "displayName": "Iodine",
+      "uexName": "Iodine",
+      "basePerScu": 11373,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "altruciatoxin": {
+      "internalName": "altruciatoxin",
+      "displayName": "Altruciatoxin",
+      "uexName": "Altruciatoxin",
+      "basePerScu": 6339,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "dcsr2": {
+      "internalName": "dcsr2",
+      "displayName": "DCSR2",
+      "uexName": "DCSR2",
+      "basePerScu": 1200,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "dopple": {
+      "internalName": "dopple",
+      "displayName": "Dopple",
+      "uexName": "Dopple",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "e_tam": {
+      "internalName": "e_tam",
+      "displayName": "E'tam",
+      "uexName": "E'tam",
+      "basePerScu": 23039,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "freeze": {
+      "internalName": "freeze",
+      "displayName": "Freeze",
+      "uexName": "Freeze",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "glow": {
+      "internalName": "glow",
+      "displayName": "Glow",
+      "uexName": "Glow",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "mala": {
+      "internalName": "mala",
+      "displayName": "Mala",
+      "uexName": "Mala",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "maze": {
+      "internalName": "maze",
+      "displayName": "Maze",
+      "uexName": "Maze",
+      "basePerScu": 229632,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "neon": {
+      "internalName": "neon",
+      "displayName": "Neon",
+      "uexName": "Neon",
+      "basePerScu": 18325,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "slam": {
+      "internalName": "slam",
+      "displayName": "SLAM",
+      "uexName": "SLAM",
+      "basePerScu": 37471,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "thrust": {
+      "internalName": "thrust",
+      "displayName": "Thrust",
+      "uexName": "Thrust",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "widow": {
+      "internalName": "widow",
+      "displayName": "WiDoW",
+      "uexName": "WiDoW",
+      "basePerScu": 7169,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "zip": {
+      "internalName": "zip",
+      "displayName": "Zip",
+      "uexName": "Zip",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "distilled_spirits": {
+      "internalName": "distilled_spirits",
+      "displayName": "Distilled Spirits",
+      "uexName": "Distilled Spirits",
+      "basePerScu": 1861,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "stims": {
+      "internalName": "stims",
+      "displayName": "Stims",
+      "uexName": "Stims",
+      "basePerScu": 5366,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "revenant_tree_pollen": {
+      "internalName": "revenant_tree_pollen",
+      "displayName": "Revenant Tree Pollen",
+      "uexName": "Revenant Tree Pollen",
+      "basePerScu": 1227,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "agricultural_supplies": {
+      "internalName": "agricultural_supplies",
+      "displayName": "Agricultural Supplies",
+      "uexName": "Agricultural Supplies",
+      "basePerScu": 1334,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "blue_bilva": {
+      "internalName": "blue_bilva",
+      "displayName": "Blue Bilva",
+      "uexName": "Blue Bilva",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "fresh_food": {
+      "internalName": "fresh_food",
+      "displayName": "Fresh Food",
+      "uexName": "Fresh Food",
+      "basePerScu": 24431,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "human_food_bars": {
+      "internalName": "human_food_bars",
+      "displayName": "Human Food Bars",
+      "uexName": "Human Food Bars",
+      "basePerScu": 482,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "jumping_limes": {
+      "internalName": "jumping_limes",
+      "displayName": "Jumping Limes",
+      "uexName": "Jumping Limes",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "lunes": {
+      "internalName": "lunes",
+      "displayName": "Lunes",
+      "uexName": "Lunes",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "pitambu": {
+      "internalName": "pitambu",
+      "displayName": "Pitambu",
+      "uexName": "Pitambu",
+      "basePerScu": 59268,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "processed_food": {
+      "internalName": "processed_food",
+      "displayName": "Processed Food",
+      "uexName": "Processed Food",
+      "basePerScu": 1439,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "sunset_berries": {
+      "internalName": "sunset_berries",
+      "displayName": "Sunset Berries",
+      "uexName": "Sunset Berries",
+      "basePerScu": 81745,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "cave_kopion_horn": {
+      "internalName": "cave_kopion_horn",
+      "displayName": "Cave Kopion Horn",
+      "uexName": "Cave Kopion Horn",
+      "basePerScu": 34400,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "cryopod": {
+      "internalName": "cryopod",
+      "displayName": "CryoPod",
+      "uexName": "CryoPod",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "irradiated_kopion_horn": {
+      "internalName": "irradiated_kopion_horn",
+      "displayName": "Irradiated Kopion Horn",
+      "uexName": "Irradiated Kopion Horn",
+      "basePerScu": 34400,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "kopion_horn": {
+      "internalName": "kopion_horn",
+      "displayName": "Kopion Horn",
+      "uexName": "Kopion Horn",
+      "basePerScu": 34400,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "lifecure_medsticks": {
+      "internalName": "lifecure_medsticks",
+      "displayName": "LifeCure Medsticks",
+      "uexName": "LifeCure Medsticks",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "medical_supplies": {
+      "internalName": "medical_supplies",
+      "displayName": "Medical Supplies",
+      "uexName": "Medical Supplies",
+      "basePerScu": 5168,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "molina_mold_samples": {
+      "internalName": "molina_mold_samples",
+      "displayName": "Molina Mold Samples",
+      "uexName": "Molina Mold Samples",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "molina_mold_treatment": {
+      "internalName": "molina_mold_treatment",
+      "displayName": "Molina Mold Treatment",
+      "uexName": "Molina Mold Treatment",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "molina_ventilation_filters": {
+      "internalName": "molina_ventilation_filters",
+      "displayName": "Molina Ventilation Filters",
+      "uexName": "Molina Ventilation Filters",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "tundra_kopion_horn": {
+      "internalName": "tundra_kopion_horn",
+      "displayName": "Tundra Kopion Horn",
+      "uexName": "Tundra Kopion Horn",
+      "basePerScu": 34400,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "atlasium": {
+      "internalName": "atlasium",
+      "displayName": "Atlasium",
+      "uexName": "Atlasium",
+      "basePerScu": 89324,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "cobalt": {
+      "internalName": "cobalt",
+      "displayName": "Cobalt",
+      "uexName": "Cobalt",
+      "basePerScu": 20833,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "diamond": {
+      "internalName": "diamond",
+      "displayName": "Diamond",
+      "uexName": "Diamond",
+      "basePerScu": 7537,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "jaclium": {
+      "internalName": "jaclium",
+      "displayName": "Jaclium",
+      "uexName": "Jaclium",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "jahlium": {
+      "internalName": "jahlium",
+      "displayName": "Jahlium",
+      "uexName": "Jahlium",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "magnesium": {
+      "internalName": "magnesium",
+      "displayName": "Magnesium",
+      "uexName": "Magnesium",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "mercury": {
+      "internalName": "mercury",
+      "displayName": "Mercury",
+      "uexName": "Mercury",
+      "basePerScu": 990,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "potassium": {
+      "internalName": "potassium",
+      "displayName": "Potassium",
+      "uexName": "Potassium",
+      "basePerScu": 565,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "steel": {
+      "internalName": "steel",
+      "displayName": "Steel",
+      "uexName": "Steel",
+      "basePerScu": 1952,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "atacamite": {
+      "internalName": "atacamite",
+      "displayName": "Atacamite",
+      "uexName": "Atacamite",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ammonia": {
+      "internalName": "ammonia",
+      "displayName": "Ammonia",
+      "uexName": "Ammonia",
+      "basePerScu": 984,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "arsenic": {
+      "internalName": "arsenic",
+      "displayName": "Arsenic",
+      "uexName": "Arsenic",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "boron": {
+      "internalName": "boron",
+      "displayName": "Boron",
+      "uexName": "Boron",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "carbon": {
+      "internalName": "carbon",
+      "displayName": "Carbon",
+      "uexName": "Carbon",
+      "basePerScu": 366,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "coal": {
+      "internalName": "coal",
+      "displayName": "Coal",
+      "uexName": "Coal",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "crude_oil": {
+      "internalName": "crude_oil",
+      "displayName": "Crude Oil",
+      "uexName": "Crude Oil",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "phosphorus": {
+      "internalName": "phosphorus",
+      "displayName": "Phosphorus",
+      "uexName": "Phosphorus",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "selenium": {
+      "internalName": "selenium",
+      "displayName": "Selenium",
+      "uexName": "Selenium",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "tellurium": {
+      "internalName": "tellurium",
+      "displayName": "Tellurium",
+      "uexName": "Tellurium",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "acryliplex_composite": {
+      "internalName": "acryliplex_composite",
+      "displayName": "AcryliPlex Composite",
+      "uexName": "AcryliPlex Composite",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "bioplastic": {
+      "internalName": "bioplastic",
+      "displayName": "Bioplastic",
+      "uexName": "Bioplastic",
+      "basePerScu": 7544,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "cadmium_allinide": {
+      "internalName": "cadmium_allinide",
+      "displayName": "Cadmium Allinide",
+      "uexName": "Cadmium Allinide",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "diamond_laminate": {
+      "internalName": "diamond_laminate",
+      "displayName": "Diamond Laminate",
+      "uexName": "Diamond Laminate",
+      "basePerScu": 83143,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "diluthermex": {
+      "internalName": "diluthermex",
+      "displayName": "Diluthermex",
+      "uexName": "Diluthermex",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "dynaflex": {
+      "internalName": "dynaflex",
+      "displayName": "DynaFlex",
+      "uexName": "DynaFlex",
+      "basePerScu": 1940,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "elespo": {
+      "internalName": "elespo",
+      "displayName": "Elespo",
+      "uexName": "Elespo",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "hexapolymesh_coating": {
+      "internalName": "hexapolymesh_coating",
+      "displayName": "HexaPolyMesh Coating",
+      "uexName": "HexaPolyMesh Coating",
+      "basePerScu": 1,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "lastaphrene": {
+      "internalName": "lastaphrene",
+      "displayName": "Lastaphrene",
+      "uexName": "Lastaphrene",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "lycara": {
+      "internalName": "lycara",
+      "displayName": "Lycara",
+      "uexName": "Lycara",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "neograph": {
+      "internalName": "neograph",
+      "displayName": "Neograph",
+      "uexName": "Neograph",
+      "basePerScu": 91737,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "omnapoxy": {
+      "internalName": "omnapoxy",
+      "displayName": "Omnapoxy",
+      "uexName": "Omnapoxy",
+      "basePerScu": 4517,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "sarilus": {
+      "internalName": "sarilus",
+      "displayName": "Sarilus",
+      "uexName": "Sarilus",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "silnex": {
+      "internalName": "silnex",
+      "displayName": "Silnex",
+      "uexName": "Silnex",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "thermalfoam": {
+      "internalName": "thermalfoam",
+      "displayName": "ThermalFoam",
+      "uexName": "Thermalfoam",
+      "basePerScu": 6383,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "zeta_prolanide": {
+      "internalName": "zeta_prolanide",
+      "displayName": "Zeta-Prolanide",
+      "uexName": "Zeta-Prolanide",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "xa_pyen": {
+      "internalName": "xa_pyen",
+      "displayName": "Xa'Pyen",
+      "uexName": "Xa'Pyen",
+      "basePerScu": 4774,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "amioshi_plague": {
+      "internalName": "amioshi_plague",
+      "displayName": "Amioshi Plague",
+      "uexName": "Amioshi Plague",
+      "basePerScu": 24089,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "carbon_silk": {
+      "internalName": "carbon_silk",
+      "displayName": "Carbon-Silk",
+      "uexName": "Carbon-Silk",
+      "basePerScu": 20619,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "decari_pod": {
+      "internalName": "decari_pod",
+      "displayName": "Decari Pod",
+      "uexName": "Decari Pod",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "degnous_root": {
+      "internalName": "degnous_root",
+      "displayName": "Degnous Root",
+      "uexName": "Degnous Root",
+      "basePerScu": 60478,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "golden_medmon": {
+      "internalName": "golden_medmon",
+      "displayName": "Golden Medmon",
+      "uexName": "Golden Medmon",
+      "basePerScu": 58203,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "heart_of_the_woods": {
+      "internalName": "heart_of_the_woods",
+      "displayName": "Heart of the Woods",
+      "uexName": "Heart of the Woods",
+      "basePerScu": 36267,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "marok_gem": {
+      "internalName": "marok_gem",
+      "displayName": "Marok Gem",
+      "uexName": "Marok Gem",
+      "basePerScu": 50540,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "organics": {
+      "internalName": "organics",
+      "displayName": "Organics",
+      "uexName": "Organics",
+      "basePerScu": 12600,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "osoian_hides": {
+      "internalName": "osoian_hides",
+      "displayName": "Osoian Hides",
+      "uexName": "Osoian Hides",
+      "basePerScu": 870000,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "prota": {
+      "internalName": "prota",
+      "displayName": "Prota",
+      "uexName": "Prota",
+      "basePerScu": 60377,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "revenant_pod": {
+      "internalName": "revenant_pod",
+      "displayName": "Revenant Pod",
+      "uexName": "Revenant Pod",
+      "basePerScu": 9977,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "stone_bug_shell": {
+      "internalName": "stone_bug_shell",
+      "displayName": "Stone Bug Shell",
+      "uexName": "Stone Bug Shell",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "wuotan_seed": {
+      "internalName": "wuotan_seed",
+      "displayName": "Wuotan Seed",
+      "uexName": "Wuotan Seed",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "gasping_weevil_eggs": {
+      "internalName": "gasping_weevil_eggs",
+      "displayName": "Gasping Weevil Eggs",
+      "uexName": "Gasping Weevil Eggs",
+      "basePerScu": 59808,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "ck13_gid_seed_blend": {
+      "internalName": "ck13_gid_seed_blend",
+      "displayName": "CK13-GID Seed Blend",
+      "uexName": "CK13-GID Seed Blend",
+      "basePerScu": 540,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "ranta_dung": {
+      "internalName": "ranta_dung",
+      "displayName": "Ranta Dung",
+      "uexName": "Ranta Dung",
+      "basePerScu": 36102,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "apoxygenite": {
+      "internalName": "apoxygenite",
+      "displayName": "Apoxygenite",
+      "uexName": "Apoxygenite",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "detatrine": {
+      "internalName": "detatrine",
+      "displayName": "Detatrine",
+      "uexName": "Detatrine",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "dymantium": {
+      "internalName": "dymantium",
+      "displayName": "Dymantium",
+      "uexName": "Dymantium",
+      "basePerScu": 22347,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "audio_visual_equipment": {
+      "internalName": "audio_visual_equipment",
+      "displayName": "Audio-Visual Equipment",
+      "uexName": "Audio-Visual Equipment",
+      "basePerScu": 35015,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "redfin_energy_modulators": {
+      "internalName": "redfin_energy_modulators",
+      "displayName": "Redfin Energy Modulators",
+      "uexName": "Redfin Energy Modulators",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "fireworks": {
+      "internalName": "fireworks",
+      "displayName": "Fireworks",
+      "uexName": "Fireworks",
+      "basePerScu": 5000,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "luminalia_gift": {
+      "internalName": "luminalia_gift",
+      "displayName": "Luminalia Gift",
+      "uexName": "Luminalia Gift",
+      "basePerScu": 5092960,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "party_favors": {
+      "internalName": "party_favors",
+      "displayName": "Party Favors",
+      "uexName": "Party Favors",
+      "basePerScu": 4861,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "souvenirs": {
+      "internalName": "souvenirs",
+      "displayName": "Souvenirs",
+      "uexName": "Souvenirs",
+      "basePerScu": 19326,
+      "anchor": "sell",
+      "category": "commodity"
+    }
+  },
+  "priceFallbacks": [
+    {
+      "internalName": "anti_hydrogen",
+      "displayName": "Anti-Hydrogen",
+      "basePerScu": 5000,
+      "uexName": "Anti-Hydrogen"
+    },
+    {
+      "internalName": "krypton",
+      "displayName": "Krypton",
+      "basePerScu": 5000,
+      "uexName": "Krypton"
+    },
+    {
+      "internalName": "xenon",
+      "displayName": "Xenon",
+      "basePerScu": 5000,
+      "uexName": "Xenon"
+    },
+    {
+      "internalName": "dopple",
+      "displayName": "Dopple",
+      "basePerScu": 5000,
+      "uexName": "Dopple"
+    },
+    {
+      "internalName": "freeze",
+      "displayName": "Freeze",
+      "basePerScu": 5000,
+      "uexName": "Freeze"
+    },
+    {
+      "internalName": "glow",
+      "displayName": "Glow",
+      "basePerScu": 5000,
+      "uexName": "Glow"
+    },
+    {
+      "internalName": "mala",
+      "displayName": "Mala",
+      "basePerScu": 5000,
+      "uexName": "Mala"
+    },
+    {
+      "internalName": "thrust",
+      "displayName": "Thrust",
+      "basePerScu": 5000,
+      "uexName": "Thrust"
+    },
+    {
+      "internalName": "zip",
+      "displayName": "Zip",
+      "basePerScu": 5000,
+      "uexName": "Zip"
+    },
+    {
+      "internalName": "blue_bilva",
+      "displayName": "Blue Bilva",
+      "basePerScu": 5000,
+      "uexName": "Blue Bilva"
+    },
+    {
+      "internalName": "jumping_limes",
+      "displayName": "Jumping Limes",
+      "basePerScu": 5000,
+      "uexName": "Jumping Limes"
+    },
+    {
+      "internalName": "lunes",
+      "displayName": "Lunes",
+      "basePerScu": 5000,
+      "uexName": "Lunes"
+    },
+    {
+      "internalName": "cave_kopion_horn",
+      "displayName": "Cave Kopion Horn",
+      "basePerScu": 34400
+    },
+    {
+      "internalName": "cryopod",
+      "displayName": "CryoPod",
+      "basePerScu": 5000,
+      "uexName": "CryoPod"
+    },
+    {
+      "internalName": "irradiated_kopion_horn",
+      "displayName": "Irradiated Kopion Horn",
+      "basePerScu": 34400
+    },
+    {
+      "internalName": "lifecure_medsticks",
+      "displayName": "LifeCure Medsticks",
+      "basePerScu": 5000,
+      "uexName": "LifeCure Medsticks"
+    },
+    {
+      "internalName": "molina_mold_samples",
+      "displayName": "Molina Mold Samples",
+      "basePerScu": 5000,
+      "uexName": "Molina Mold Samples"
+    },
+    {
+      "internalName": "molina_mold_treatment",
+      "displayName": "Molina Mold Treatment",
+      "basePerScu": 5000,
+      "uexName": "Molina Mold Treatment"
+    },
+    {
+      "internalName": "molina_ventilation_filters",
+      "displayName": "Molina Ventilation Filters",
+      "basePerScu": 5000,
+      "uexName": "Molina Ventilation Filters"
+    },
+    {
+      "internalName": "tundra_kopion_horn",
+      "displayName": "Tundra Kopion Horn",
+      "basePerScu": 34400
+    },
+    {
+      "internalName": "jaclium",
+      "displayName": "Jaclium",
+      "basePerScu": 5000,
+      "uexName": "Jaclium"
+    },
+    {
+      "internalName": "jahlium",
+      "displayName": "Jahlium",
+      "basePerScu": 5000,
+      "uexName": "Jahlium"
+    },
+    {
+      "internalName": "magnesium",
+      "displayName": "Magnesium",
+      "basePerScu": 5000,
+      "uexName": "Magnesium"
+    },
+    {
+      "internalName": "atacamite",
+      "displayName": "Atacamite",
+      "basePerScu": 5000,
+      "uexName": "Atacamite"
+    },
+    {
+      "internalName": "arsenic",
+      "displayName": "Arsenic",
+      "basePerScu": 5000,
+      "uexName": "Arsenic"
+    },
+    {
+      "internalName": "boron",
+      "displayName": "Boron",
+      "basePerScu": 5000,
+      "uexName": "Boron"
+    },
+    {
+      "internalName": "coal",
+      "displayName": "Coal",
+      "basePerScu": 5000,
+      "uexName": "Coal"
+    },
+    {
+      "internalName": "crude_oil",
+      "displayName": "Crude Oil",
+      "basePerScu": 5000,
+      "uexName": "Crude Oil"
+    },
+    {
+      "internalName": "phosphorus",
+      "displayName": "Phosphorus",
+      "basePerScu": 5000,
+      "uexName": "Phosphorus"
+    },
+    {
+      "internalName": "selenium",
+      "displayName": "Selenium",
+      "basePerScu": 5000,
+      "uexName": "Selenium"
+    },
+    {
+      "internalName": "tellurium",
+      "displayName": "Tellurium",
+      "basePerScu": 5000,
+      "uexName": "Tellurium"
+    },
+    {
+      "internalName": "acryliplex_composite",
+      "displayName": "AcryliPlex Composite",
+      "basePerScu": 5000,
+      "uexName": "AcryliPlex Composite"
+    },
+    {
+      "internalName": "cadmium_allinide",
+      "displayName": "Cadmium Allinide",
+      "basePerScu": 5000,
+      "uexName": "Cadmium Allinide"
+    },
+    {
+      "internalName": "diluthermex",
+      "displayName": "Diluthermex",
+      "basePerScu": 5000,
+      "uexName": "Diluthermex"
+    },
+    {
+      "internalName": "elespo",
+      "displayName": "Elespo",
+      "basePerScu": 5000,
+      "uexName": "Elespo"
+    },
+    {
+      "internalName": "lastaphrene",
+      "displayName": "Lastaphrene",
+      "basePerScu": 5000,
+      "uexName": "Lastaphrene"
+    },
+    {
+      "internalName": "lycara",
+      "displayName": "Lycara",
+      "basePerScu": 5000,
+      "uexName": "Lycara"
+    },
+    {
+      "internalName": "sarilus",
+      "displayName": "Sarilus",
+      "basePerScu": 5000,
+      "uexName": "Sarilus"
+    },
+    {
+      "internalName": "silnex",
+      "displayName": "Silnex",
+      "basePerScu": 5000,
+      "uexName": "Silnex"
+    },
+    {
+      "internalName": "zeta_prolanide",
+      "displayName": "Zeta-Prolanide",
+      "basePerScu": 5000,
+      "uexName": "Zeta-Prolanide"
+    },
+    {
+      "internalName": "decari_pod",
+      "displayName": "Decari Pod",
+      "basePerScu": 5000,
+      "uexName": "Decari Pod"
+    },
+    {
+      "internalName": "stone_bug_shell",
+      "displayName": "Stone Bug Shell",
+      "basePerScu": 5000,
+      "uexName": "Stone Bug Shell"
+    },
+    {
+      "internalName": "wuotan_seed",
+      "displayName": "Wuotan Seed",
+      "basePerScu": 5000,
+      "uexName": "Wuotan Seed"
+    },
+    {
+      "internalName": "apoxygenite",
+      "displayName": "Apoxygenite",
+      "basePerScu": 5000,
+      "uexName": "Apoxygenite"
+    },
+    {
+      "internalName": "detatrine",
+      "displayName": "Detatrine",
+      "basePerScu": 5000,
+      "uexName": "Detatrine"
+    },
+    {
+      "internalName": "redfin_energy_modulators",
+      "displayName": "Redfin Energy Modulators",
+      "basePerScu": 5000,
+      "uexName": "Redfin Energy Modulators"
+    },
+    {
+      "internalName": "fireworks",
+      "displayName": "Fireworks",
+      "basePerScu": 5000,
+      "uexName": "Fireworks"
+    }
+  ],
+  "unmatched": []
+}

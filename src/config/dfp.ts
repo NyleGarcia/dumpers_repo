@@ -11,7 +11,9 @@ import {
 import { isHarvestResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.4.0-high-q-scaling'
+export const DFP_VERSION = '1.4.0-commodity-bases'
+
+/** Q0 salvage uses UEX Buy (+ premium on RMC/CM); Q0 commodities use UEX Sell — flat base only in engine. */
 
 /** Q0 = store-bought; Q100–Q1000 = mined/refined in 100-point steps. */
 export const STOCK_QUALITY_TIERS: readonly number[] = [
@@ -24,7 +26,7 @@ export const DEFAULT_STOCK_QUALITY = 500
 export const AMMO_ORDER_MIN_QUALITY = 0
 
 /** Trade commodities without quality tiers (always Q0). */
-function isNoQualityResource(resourceKey: string): boolean {
+export function isNoQualityResource(resourceKey: string): boolean {
   return (
     isSalvageResource(resourceKey) ||
     isHarvestResource(resourceKey) ||

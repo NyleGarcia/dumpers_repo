@@ -4,6 +4,9 @@ import { fileURLToPath, pathToFileURL } from 'url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const catalog = JSON.parse(fs.readFileSync(path.join(root, 'src/data/game-blueprints.json'), 'utf8'))
+const commodityBases = JSON.parse(
+  fs.readFileSync(path.join(root, 'src/data/dfp-commodity-bases.json'), 'utf8')
+)
 const engine = await import(pathToFileURL(path.join(root, 'public/dfp-engine.js')).href)
 
 function band4Defaults(bp) {
@@ -74,3 +77,31 @@ for (const id of targets) {
   const result = dfpWithParts(bp, band4Defaults(bp))
   console.log(`${id} (${bp.blueprintName}) Band4-default total: ${result.total.toLocaleString()}`)
 }
+
+console.log('\n--- Resource Tracker Q0 commodity bases ---')
+
+const agSupply = commodityBases.resources.agricultural_supplies
+const agPrice = engine.calculateMaterialDfpPrice('Agricultural Supplies', 0, 100)
+const agExpected = agSupply.basePerScu * 100
+console.log(`Agricultural Supplies 100 SCU @ Q0: ${agPrice.toLocaleString()} (expected ~${agExpected.toLocaleString()})`)
+console.assert(agPrice !== 500_000, 'Agricultural Supplies should not use 5k/SCU fallback')
+
+const argonPrice = engine.calculateMaterialDfpPrice('argon', 0, 50)
+const argonQ500 = engine.calculateMaterialDfpPrice('argon', 500, 50)
+console.log(`Argon 50 SCU internalName @ Q0: ${argonPrice.toLocaleString()} (Q500 same: ${argonQ500 === argonPrice})`)
+console.assert(argonPrice === argonQ500, 'Commodity Q0 must equal Q500 (flat base)')
+
+const scrapBase = commodityBases.resources.scrap
+const scrapPrice = engine.calculateMaterialDfpPrice('Scrap', 0, 10)
+console.log(`Scrap 10 SCU @ Q0: ${scrapPrice.toLocaleString()} (expected ${scrapBase.basePerScu * 10})`)
+
+const rmcBase = commodityBases.resources.rmc
+const rmcByDisplay = engine.calculateMaterialDfpPrice('RMC (Recycled Material Composite)', 0, 10)
+const rmcByInternal = engine.calculateMaterialDfpPrice('rmc', 0, 10)
+const rmcByUex = engine.calculateMaterialDfpPrice('Recycled Material Composite', 0, 10)
+console.log(`RMC 10 SCU via display/internal/uex: ${rmcByDisplay}/${rmcByInternal}/${rmcByUex}`)
+console.assert(
+  rmcByDisplay === rmcByInternal && rmcByInternal === rmcByUex,
+  'All three name forms must resolve to same RMC price'
+)
+console.assert(rmcByDisplay === rmcBase.basePerScu * 10, 'RMC salvage buy anchor')

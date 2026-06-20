@@ -10,7 +10,7 @@ import {
   resourceLabelClassName,
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
-import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
+import { DEFAULT_STOCK_QUALITY, isNoQualityResource } from '../config/dfp'
 import { getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
 import {
   buildDefaultSlotQualities,
@@ -214,7 +214,9 @@ export default function ResourceBuyOrderPanel({
   const selectedResQtyUnit = selectedResource
     ? resourceQuantityUnitLabel(selectedResource.resource_key)
     : 'SCU'
-  const selectedResNoQuality = selectedResIsSalvage || selectedResIsHarvest
+  const selectedResNoQuality = selectedResource
+    ? isNoQualityResource(selectedResource.resource_key)
+    : false
   const resourceBands = useMemo(
     () => (resourceKey && !selectedResNoQuality ? getResourceBands(selectedResourceLabel) : undefined),
     [resourceKey, selectedResourceLabel, selectedResNoQuality]
@@ -623,6 +625,9 @@ export default function ResourceBuyOrderPanel({
                     Number(resQuality) || DEFAULT_STOCK_QUALITY,
                     parseQuantityForResource(selectedResource.resource_key, resQty)!
                   ).lineDfpAuec
+                )}
+                {selectedResNoQuality && (
+                  <span className="text-slate-400"> · Base price only (Q0)</span>
                 )}
               </p>
             )}
