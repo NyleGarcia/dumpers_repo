@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
+import ResourceStockListView from '../components/ResourceStockListView'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import {
@@ -51,6 +52,8 @@ export default function ResourceTrackerRoute() {
 
   const [search, setSearch] = useState('')
   const [showInactive, setShowInactive] = useState(false)
+  const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards')
+  const [qualityFilter, setQualityFilter] = useState<string>('')
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
   const [editingNoteKey, setEditingNoteKey] = useState<string | null>(null)
@@ -125,18 +128,31 @@ export default function ResourceTrackerRoute() {
     return new Set(personalLineKeys)
   }, [isGuest, guestResources, personalLineKeys])
 
+  const qualityFilterOptions = useMemo(() => {
+    const seen = new Map<number, string>()
+    for (const card of stockCards) {
+      const q = card.quality ?? DEFAULT_STOCK_QUALITY
+      if (!seen.has(q)) {
+        seen.set(q, formatInventoryQualityLabel(card.resource_key, q))
+      }
+    }
+    return [...seen.entries()].sort((a, b) => a[0] - b[0])
+  }, [stockCards])
+
   const filteredCards = stockCards.filter((card) => {
+    const quality = card.quality ?? DEFAULT_STOCK_QUALITY
     const matchesSearch =
       search === '' ||
       card.label.toLowerCase().includes(search.toLowerCase()) ||
       card.resource_key.toLowerCase().includes(search.toLowerCase()) ||
       (card.quality != null && `q${card.quality}`.includes(search.toLowerCase()))
     const matchesActive = showInactive || card.is_active
-    return matchesSearch && matchesActive
+    const matchesQuality =
+      qualityFilter === '' || quality === Number(qualityFilter)
+    return matchesSearch && matchesActive && matchesQuality
   })
 
   const cardCount = stockCards.length
-  const inStockCount = stockCards.filter((c) => c.quantity > 0).length
   const totalQty = stockCards.reduce(
     (sum, c) => addResourceQuantities(sum, c.quantity),
     0
@@ -333,14 +349,10 @@ export default function ResourceTrackerRoute() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 w-full min-w-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 w-full min-w-0">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">{tabLabel}</p>
           <p className="text-2xl font-bold text-white mt-1">{cardCount}</p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">In stock</p>
-          <p className="text-2xl font-bold text-green-400 mt-1">{inStockCount}</p>
         </div>
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">Total SCU</p>
@@ -350,7 +362,31 @@ export default function ResourceTrackerRoute() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+      <div className="flex flex-col lg:flex-row gap-3 mb-4">
+        <div className="flex rounded-lg border border-slate-600 overflow-hidden shrink-0 w-fit">
+          <button
+            type="button"
+            onClick={() => setViewMode('cards')}
+            className={`px-3 py-2 text-sm font-medium transition-colors ${
+              viewMode === 'cards'
+                ? 'bg-red-600 text-white'
+                : 'bg-slate-900/70 text-slate-400 hover:text-white'
+            }`}
+          >
+            Cards
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('list')}
+            className={`px-3 py-2 text-sm font-medium transition-colors border-l border-slate-600 ${
+              viewMode === 'list'
+                ? 'bg-red-600 text-white'
+                : 'bg-slate-900/70 text-slate-400 hover:text-white'
+            }`}
+          >
+            List
+          </button>
+        </div>
         <input
           type="text"
           value={search}
@@ -360,7 +396,22 @@ export default function ResourceTrackerRoute() {
           }
           className="flex-1 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20"
         />
-        <label className="flex items-center gap-2 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-slate-300 text-sm cursor-pointer">
+        {qualityFilterOptions.length > 0 && (
+          <select
+            value={qualityFilter}
+            onChange={(e) => setQualityFilter(e.target.value)}
+            className="px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white text-sm min-w-[10rem]"
+            aria-label="Filter by quality"
+          >
+            <option value="">All qualities</option>
+            {qualityFilterOptions.map(([q, label]) => (
+              <option key={q} value={q}>
+                {label}
+              </option>
+            ))}
+          </select>
+        )}
+        <label className="flex items-center gap-2 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-slate-300 text-sm cursor-pointer shrink-0">
           <input
             type="checkbox"
             checked={showInactive}
@@ -397,6 +448,8 @@ export default function ResourceTrackerRoute() {
             )}
           </p>
         </div>
+      ) : viewMode === 'list' ? (
+        <ResourceStockListView cards={filteredCards} isPersonalTab={isPersonalTab} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 w-full min-w-0">
           {filteredCards.map((card) => {
@@ -428,25 +481,11 @@ export default function ResourceTrackerRoute() {
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
-                    <span
-                      className={`px-2 py-0.5 rounded text-xs border font-medium ${
-                        isPersonalTab
-                          ? 'bg-amber-950/40 text-amber-200 border-amber-500/30'
-                          : 'invisible border-transparent'
-                      }`}
-                      aria-hidden={!isPersonalTab}
-                    >
-                      {qualityLabel}
-                    </span>
-                    <span
-                      className={`px-2 py-0.5 rounded text-xs border ${
-                        card.quantity > 0
-                          ? 'bg-green-950/50 text-green-400 border-green-500/30'
-                          : 'bg-slate-800 text-slate-500 border-slate-600'
-                      }`}
-                    >
-                      {card.quantity > 0 ? 'In stock' : 'Empty'}
-                    </span>
+                    {isPersonalTab && (
+                      <span className="px-2 py-0.5 rounded text-xs border font-medium bg-amber-950/40 text-amber-200 border-amber-500/30">
+                        {qualityLabel}
+                      </span>
+                    )}
                   </div>
                 </div>
 

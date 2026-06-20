@@ -199,6 +199,8 @@ const PAGE_GUIDES = [
     details: [
       'Log quantities and quality levels of resources you\'ve collected',
       'Track store-purchased refined materials at Purchased (Q0)',
+      'Switch between Cards (edit quantities) and List (read-only overview with notes)',
+      'Filter by quality band on both views — each Q-tier stays on its own row',
       'Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value',
       'Salvage and trade goods use fixed Q0 tiers',
       'Perfect for tracking what you have available for crafting or trading',
