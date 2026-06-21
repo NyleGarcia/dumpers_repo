@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Link } from '@tanstack/react-router'
 import BlueprintTypeahead from './BlueprintTypeahead'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
@@ -77,6 +76,7 @@ interface ResourceBuyOrderPanelProps {
   editOrder?: CustomOrder | null
   hasPendingBuyerRep?: boolean
   minOrderValue?: number
+  canCreateSellOrder?: boolean
   initialBlueprintLines?: CartBlueprintLine[]
   blueprintOwnerCounts?: Record<string, number>
   onCancelEdit?: () => void
@@ -106,6 +106,7 @@ export default function ResourceBuyOrderPanel({
   editOrder,
   hasPendingBuyerRep = false,
   minOrderValue = 10000,
+  canCreateSellOrder = true,
   initialBlueprintLines,
   blueprintOwnerCounts = {},
   onCancelEdit,
@@ -139,6 +140,7 @@ export default function ResourceBuyOrderPanel({
     show: boolean
     message: string
   }>({ show: false, message: '' })
+  const [pendingListingType, setPendingListingType] = useState<'wtb' | 'wts'>('wtb')
 
   useEffect(() => {
     if (!editOrder) return
@@ -327,7 +329,7 @@ export default function ResourceBuyOrderPanel({
     setResQty('1')
   }
 
-  const submitOrder = async () => {
+  const submitOrder = async (listingType: 'wtb' | 'wts') => {
     if (bpCart.length === 0 && resCart.length === 0) return
 
     setSubmitting(true)
@@ -372,6 +374,7 @@ export default function ResourceBuyOrderPanel({
         })
       : await createCustomOrder({
           requesterId: userId,
+          listingType,
           ...payload,
           orderOverridesMap,
         })
@@ -410,26 +413,30 @@ export default function ResourceBuyOrderPanel({
     onSubmitted?.()
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const initiateSubmit = (listingType: 'wtb' | 'wts') => {
     if (bpCart.length === 0 && resCart.length === 0) return
 
-    // Check for blueprints with no owners
     const bpsWithNoOwners = bpCart
       .filter((line) => blueprintOwnerCounts[line.blueprintId] === 0)
       .map((line) => line.blueprintTitle)
-    
+
     if (bpsWithNoOwners.length > 0 && !showNoOwnerWarning) {
+      setPendingListingType(listingType)
       setNoOwnerBlueprints(bpsWithNoOwners)
       setShowNoOwnerWarning(true)
       return
     }
 
     if (exceedsSingleTransferLimit(cartTotalDfp)) {
+      setPendingListingType(listingType)
       setShowTransferModal(true)
       return
     }
-    void submitOrder()
+    void submitOrder(listingType)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
   }
 
   const handleConfirmNoOwnerWarning = () => {
@@ -438,13 +445,22 @@ export default function ResourceBuyOrderPanel({
       setShowTransferModal(true)
       return
     }
-    void submitOrder()
+    void submitOrder(pendingListingType)
   }
+
+  const cartEmpty = bpCart.length === 0 && resCart.length === 0
+  const buyDisabled =
+    submitting ||
+    cartEmpty ||
+    (hasPendingBuyerRep && !isEditing && cartTotalDfp < minOrderValue)
+  const sellDisabled = submitting || cartEmpty || !canCreateSellOrder
+  const dfpSuffix =
+    dfpDisplayEnabled && cartTotalDfp > 0 ? ` · ${formatDfpAuec(cartTotalDfp)}` : ''
 
   return (
     <>
       <p className="text-slate-400 text-sm mb-4">
-        Build a buy order from <strong className="text-slate-300">crafted blueprints</strong>{' '}
+        Build an order from <strong className="text-slate-300">crafted blueprints</strong>{' '}
         (full{' '}
         <a
           href="/archive#dfp"
@@ -455,11 +471,7 @@ export default function ResourceBuyOrderPanel({
           DFP
         </a>
         ) and/or <strong className="text-slate-300">refined materials</strong>{' '}
-        (material-only DFP at your quality tier). Submits as a custom order — view progress on{' '}
-        <Link to="/orders" className="text-red-400 hover:text-red-300">
-          Custom Orders
-        </Link>
-        .
+        (material-only DFP at your quality tier). Submit as a buy request (WTB) or a sell listing (WTS).
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -788,25 +800,39 @@ export default function ResourceBuyOrderPanel({
         )}
 
         <div className="flex flex-wrap gap-2">
-          <button
-            type="submit"
-            disabled={
-              submitting ||
-              (bpCart.length === 0 && resCart.length === 0) ||
-              (hasPendingBuyerRep && !isEditing && cartTotalDfp < minOrderValue)
-            }
-            className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
-          >
-            {submitting
-              ? 'Saving...'
-              : isEditing
-                ? dfpDisplayEnabled
-                  ? `Save changes · ${formatDfpAuec(cartTotalDfp)}`
-                  : 'Save changes'
+          {isEditing ? (
+            <button
+              type="button"
+              onClick={() => initiateSubmit(editOrder?.listing_type === 'wts' ? 'wts' : 'wtb')}
+              disabled={buyDisabled}
+              className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+            >
+              {submitting
+                ? 'Saving...'
                 : dfpDisplayEnabled
-                  ? `Submit buy order · ${formatDfpAuec(cartTotalDfp)}`
-                  : 'Submit buy order'}
-          </button>
+                  ? `Save changes${dfpSuffix}`
+                  : 'Save changes'}
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => initiateSubmit('wtb')}
+                disabled={buyDisabled}
+                className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+              >
+                {submitting ? 'Submitting...' : `Submit Buy Order${dfpSuffix}`}
+              </button>
+              <button
+                type="button"
+                onClick={() => initiateSubmit('wts')}
+                disabled={sellDisabled}
+                className="px-4 py-2 bg-cyan-700 hover:bg-cyan-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+              >
+                {submitting ? 'Submitting...' : `Submit Sell Order${dfpSuffix}`}
+              </button>
+            </>
+          )}
           {isEditing && onCancelEdit && (
             <button
               type="button"
@@ -822,7 +848,7 @@ export default function ResourceBuyOrderPanel({
       {showTransferModal && (
         <AuecTransferLimitModal
           totalAuec={cartTotalDfp}
-          onConfirm={() => void submitOrder()}
+          onConfirm={() => void submitOrder(pendingListingType)}
           onCancel={() => setShowTransferModal(false)}
           confirming={submitting}
         />

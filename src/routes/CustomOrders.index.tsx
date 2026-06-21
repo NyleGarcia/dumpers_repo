@@ -4,6 +4,7 @@ import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
 import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
 import OrderRequestLines from '../components/OrderRequestLines'
+import ListingTypeBadge from '../components/ListingTypeBadge'
 import ReputationBadge from '../components/ReputationBadge'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
@@ -24,6 +25,8 @@ import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { filterOrderableBlueprints } from '../lib/blueprintOrderable'
 import {
   canCustomerArchive,
+  canFulfillerArchive,
+  canSemanticBuyerConfirmPickup,
   isArchivedForUser,
   isCompletedStageOrder,
   isOpenOrder,
@@ -31,6 +34,7 @@ import {
   type OrderListTab,
 } from '../lib/orderArchive'
 import { buyerReputationFromRow, type MemberReputationRow } from '../lib/reputation'
+import { isSemanticBuyer } from '../lib/listingType'
 import {
   archiveCustomOrderWithRating,
   confirmOrderPickup,
@@ -145,7 +149,7 @@ export default function CustomOrdersRoute() {
     setLoading(true)
     setError(null)
     const ordersResult = await fetchCustomOrders(
-      user?.id ? { requesterId: user.id } : undefined
+      user?.id ? { participantId: user.id } : undefined
     )
     if (ordersResult.error) setError(ordersResult.error)
     setOrders(ordersResult.data)
@@ -259,7 +263,14 @@ export default function CustomOrdersRoute() {
     [myReputation]
   )
   const myOrders = useMemo(
-    () => (userId ? orders.filter((o) => o.requester_id === userId) : []),
+    () =>
+      userId
+        ? orders.filter(
+            (o) =>
+              o.requester_id === userId ||
+              (o.listing_type === 'wts' && o.assignee_id === userId)
+          )
+        : [],
     [orders, userId]
   )
 
@@ -331,16 +342,26 @@ export default function CustomOrdersRoute() {
               setEditingOrderId(null)
               setShowForm((v) => !v)
             }}
-            disabled={!isRsiVerified || (orderLimits && !orderLimits.can_create_order)}
+            disabled={
+              !isRsiVerified ||
+              (orderLimits &&
+                !orderLimits.can_create_order &&
+                !orderLimits.can_create_sell_order)
+            }
             className={`px-3 py-1.5 text-sm border rounded-lg transition-colors ${
-              isRsiVerified && (!orderLimits || orderLimits.can_create_order)
+              isRsiVerified &&
+              (!orderLimits ||
+                orderLimits.can_create_order ||
+                orderLimits.can_create_sell_order)
                 ? 'bg-red-950/50 hover:bg-red-900/50 text-red-300 border-red-500/30'
                 : 'bg-slate-800/50 text-slate-500 border-slate-700 cursor-not-allowed'
             }`}
             title={
               !isRsiVerified
                 ? 'Verify your RSI Handle in Settings first'
-                : orderLimits && !orderLimits.can_create_order
+                : orderLimits &&
+                    !orderLimits.can_create_order &&
+                    !orderLimits.can_create_sell_order
                   ? orderLimits.unrated_count > 0
                     ? 'Rate your completed orders first'
                     : 'Order limit reached while reputation is pending'
@@ -510,9 +531,9 @@ export default function CustomOrdersRoute() {
 
       {showForm && user?.id && !editingOrderId && (
         <div className="mb-6 bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <h2 className="text-white font-medium mb-2">New buy order</h2>
+          <h2 className="text-white font-medium mb-2">New Order</h2>
           <p className="text-slate-500 text-xs mb-4">
-            Orders post under {getDisplayName(profile)}.
+            Orders post under {getDisplayName(profile)}. Use the same form for buy (WTB) or sell (WTS) listings — DFP prices both.
           </p>
           <ResourceBuyOrderPanel
             userId={user.id}
@@ -522,6 +543,7 @@ export default function CustomOrdersRoute() {
             orderOverridesMap={overridesMap}
             hasPendingBuyerRep={orderLimits?.has_pending_buyer_rep}
             minOrderValue={orderLimits?.buyer_min_order_value ?? 10000}
+            canCreateSellOrder={orderLimits?.can_create_sell_order ?? true}
             initialBlueprintLines={draftCartLines.length > 0 ? draftCartLines : undefined}
             blueprintOwnerCounts={blueprintOwnerCounts}
             onError={setError}
@@ -591,6 +613,7 @@ export default function CustomOrdersRoute() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-white font-medium">{order.title}</h3>
+                      <ListingTypeBadge order={order} />
                       <span
                         className={`px-2 py-0.5 rounded text-xs border ${
                           STATUS_STYLES[order.status] ?? STATUS_STYLES.pending
@@ -610,14 +633,21 @@ export default function CustomOrdersRoute() {
                       )}
                     </div>
                     <p className="text-slate-500 text-xs mt-1">
-                      Placed {new Date(order.created_at).toLocaleString()}
+                      {order.requester_id === userId ? 'Posted' : 'Purchased'}{' '}
+                      {new Date(order.created_at).toLocaleString()}
                     </p>
-                    {order.assignee && (
+                    {order.assignee && order.requester_id === userId && (
                       <p className="text-emerald-400/80 text-xs mt-1">
                         Accepted by{' '}
                         {getDisplayName(profileFromOrderFields(order.assignee_id!, order.assignee))}
                         {order.accepted_at &&
                           ` · ${new Date(order.accepted_at).toLocaleString()}`}
+                      </p>
+                    )}
+                    {order.requester && order.listing_type === 'wts' && order.assignee_id === userId && (
+                      <p className="text-emerald-400/80 text-xs mt-1">
+                        Seller:{' '}
+                        {getDisplayName(profileFromOrderFields(order.requester_id, order.requester))}
                       </p>
                     )}
                     {order.notes && <p className="text-slate-400 text-sm mt-2">{order.notes}</p>}
@@ -631,12 +661,15 @@ export default function CustomOrdersRoute() {
                     <div className="mt-3">
                       <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
                     </div>
-                    <OrderDeadlineNotice order={order} role="buyer" />
+                    <OrderDeadlineNotice
+                      order={order}
+                      role={isSemanticBuyer(order, userId ?? '') ? 'buyer' : 'fulfiller'}
+                    />
                   </div>
 
                   <div className="flex flex-col items-end gap-1">
                     <div className="flex gap-2 flex-wrap justify-end">
-                      {order.status === 'ready_for_pickup' && !order.dispute_opened_at && (
+                      {canSemanticBuyerConfirmPickup(order, userId) && (
                         <>
                           <button
                             onClick={() => void handleConfirmPickup(order.id)}
@@ -658,7 +691,27 @@ export default function CustomOrdersRoute() {
                       {canCustomerArchive(order, userId) && (
                         <button
                           onClick={() =>
-                            openArchiveModal(order, 'fulfiller', order.assignee, order.assignee_id)
+                            openArchiveModal(
+                              order,
+                              'fulfiller',
+                              order.listing_type === 'wts' ? order.requester : order.assignee,
+                              order.listing_type === 'wts' ? order.requester_id : order.assignee_id
+                            )
+                          }
+                          className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded"
+                        >
+                          Archive
+                        </button>
+                      )}
+                      {canFulfillerArchive(order, userId) && (
+                        <button
+                          onClick={() =>
+                            openArchiveModal(
+                              order,
+                              'customer',
+                              order.listing_type === 'wts' ? order.assignee : order.requester,
+                              order.listing_type === 'wts' ? order.assignee_id : order.requester_id
+                            )
                           }
                           className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded"
                         >

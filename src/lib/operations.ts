@@ -99,6 +99,7 @@ export interface CustomOrderBlueprintInput {
 export interface CustomOrder {
   id: string
   requester_id: string
+  listing_type?: 'wtb' | 'wts'
   title: string
   notes: string | null
   status: CustomOrderStatus
@@ -572,6 +573,8 @@ export async function updateInventoryNote(input: {
 export async function fetchCustomOrders(options?: {
   /** Custom Orders page — only orders this member placed */
   requesterId?: string
+  /** Orders where member is requester or assignee */
+  participantId?: string
 }): Promise<{
   data: CustomOrder[]
   error?: string
@@ -587,7 +590,11 @@ export async function fetchCustomOrders(options?: {
       assignee:profiles!custom_orders_assignee_id_fkey(rsi_handle, display_name, email)
     `)
 
-  if (options?.requesterId) {
+  if (options?.participantId) {
+    query = query.or(
+      `requester_id.eq.${options.participantId},assignee_id.eq.${options.participantId}`
+    )
+  } else if (options?.requesterId) {
     query = query.eq('requester_id', options.requesterId)
   }
 
@@ -609,7 +616,9 @@ export interface UserOrderLimits {
   buyer_min_order_value?: number
   fulfiller_order_limit: number
   can_create_order: boolean
+  can_create_sell_order?: boolean
   can_accept_order: boolean
+  can_accept_wts_order?: boolean
 }
 
 export type CreateOrderErrorType =
@@ -643,6 +652,7 @@ export async function fetchUserOrderLimits(
 
 export async function createCustomOrder(input: {
   requesterId: string
+  listingType?: 'wtb' | 'wts'
   title: string
   notes?: string
   totalDfpAuec: number
@@ -690,6 +700,7 @@ export async function createCustomOrder(input: {
       resource_key: item.resourceKey,
       quantity: item.quantity,
     })),
+    p_listing_type: input.listingType ?? 'wtb',
   })
 
   if (error) {

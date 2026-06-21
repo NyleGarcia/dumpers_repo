@@ -1,4 +1,5 @@
 import type { CustomOrder } from './operations'
+import { isSemanticBuyer, isSemanticSeller } from './listingType'
 
 export type OrderListTab = 'active' | 'completed' | 'archive'
 
@@ -32,26 +33,40 @@ export function orderMatchesTab(
   if (isArchivedForUser(order, userId)) return false
 
   if (tab === 'active') {
-    return isOpenOrder(order)
+    return isOpenOrder(order) || order.status === 'ready_for_pickup'
   }
 
   return isCompletedStageOrder(order)
 }
 
 export function canCustomerArchive(order: CustomOrder, userId: string | undefined): boolean {
-  return (
-    !!userId &&
-    order.requester_id === userId &&
-    order.status === 'completed' &&
-    !order.requester_archived_at
-  )
+  if (!userId || order.status !== 'completed' || !isSemanticBuyer(order, userId)) {
+    return false
+  }
+  if (order.listing_type === 'wts') {
+    return !order.fulfiller_archived_at
+  }
+  return !order.requester_archived_at
 }
 
 export function canFulfillerArchive(order: CustomOrder, userId: string | undefined): boolean {
+  if (!userId || order.status !== 'completed' || !isSemanticSeller(order, userId)) {
+    return false
+  }
+  if (order.listing_type === 'wts') {
+    return !order.requester_archived_at
+  }
+  return !order.fulfiller_archived_at
+}
+
+export function canSemanticBuyerConfirmPickup(
+  order: CustomOrder,
+  userId: string | undefined
+): boolean {
   return (
     !!userId &&
-    order.assignee_id === userId &&
-    order.status === 'completed' &&
-    !order.fulfiller_archived_at
+    order.status === 'ready_for_pickup' &&
+    !order.dispute_opened_at &&
+    isSemanticBuyer(order, userId)
   )
 }

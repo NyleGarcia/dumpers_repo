@@ -255,16 +255,16 @@ const PAGE_GUIDES = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
       </svg>
     ),
-    description: 'Create and manage custom crafting orders for players.',
+    description: 'Post and manage buy requests (WTB) and sell listings (WTS) from one order form.',
     details: [
-      'Specify exactly what resources and quantities you need',
-      'Set quality requirements for each resource',
-      'DFP automatically calculates fair pricing for the order',
-      'Track order status from creation to fulfillment',
-      'Rate fulfillers when orders are completed (affects their reputation)',
-      'Requires a verified RSI Handle to create orders',
-      'New members: limited to 2 orders / 1M aUEC until 5 completed orders',
-      '72 hours to confirm pickup after fulfiller marks ready; use Report Problem if goods were not delivered',
+      'Click New order to open a single form for blueprints and/or resources',
+      'Submit Buy Order posts a WTB request (you want someone to craft or supply)',
+      'Submit Sell Order posts a WTS listing (you are offering stock or crafted items)',
+      'Same fields for both: blueprint/resource lines, quality tiers, min reputation, notes, DFP pricing',
+      'WTB/WTS tag shown on each of your orders',
+      'Track active, completed, and archived orders; confirm pickup and rate the other party',
+      'Requires a verified RSI Handle; new-member buyer limits apply to WTB posts',
+      'Offline Mode cannot create or manage orders',
     ],
     relatesTo: ['Resource Tracker', 'Fulfillment'],
   },
@@ -276,16 +276,15 @@ const PAGE_GUIDES = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
       </svg>
     ),
-    description: 'View and fulfill pending custom orders from other players.',
+    description: 'Browse, filter, and act on other members\' WTB and WTS orders.',
     details: [
-      'Browse orders that need resources you can provide',
-      'Claim orders to indicate you\'re working on them',
-      'Mark partial or complete fulfillment as you deliver',
-      'Earn aUEC at fair DFP rates for your contributions',
-      'Build your fulfiller reputation through ratings from buyers',
-      'Requires a verified RSI Handle to fulfill orders',
-      'New members: can only work on 1 order at a time until 5 completed',
-      '72 hours to mark ready after accepting or the order releases back to the pool',
+      'Main filter: All, WTB only, or WTS only',
+      'WTB orders — accept to fulfill/craft for the buyer',
+      'WTS listings — accept to purchase from the seller',
+      'WTB/WTS badge on every order row for transparency (always visible)',
+      'Same reputation ratings as today — no separate sell rating',
+      'Requires a verified RSI Handle; fulfiller and buyer pending limits apply by role',
+      'Offline Mode cannot browse or accept marketplace orders',
       'Verify you have materials before accepting 800+ quality blueprint orders',
     ],
     relatesTo: ['Custom Orders', 'Resource Tracker'],
@@ -488,15 +487,15 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <li>• Track resources in Resource Tracker (local only)</li>
                 <li>• Use the Mining Tracker for RS references</li>
                 <li>• Browse shop inventories and prices</li>
-                <li>• Preview pending fulfillment orders</li>
+                <li>• Preview Fulfillment — see how many WTB/WTS orders are waiting (sign in to accept)</li>
               </ul>
             </div>
             
             <div className="p-3 bg-slate-900/50 rounded-lg border border-amber-500/20">
               <h4 className="text-sm font-medium text-amber-400 mb-2">Members-Only Features</h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Create custom crafting orders</li>
-                <li>• Accept and fulfill orders for aUEC</li>
+                <li>• Custom Orders — post WTB buy requests and WTS sell listings</li>
+                <li>• Fulfillment — browse, accept, and complete WTB/WTS trades</li>
                 <li>• View member directory / browse collections</li>
                 <li>• Site Total resource aggregation</li>
                 <li>• Cross-device data sync</li>
@@ -613,9 +612,29 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </h3>
         <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
-            The Custom Orders and Fulfillment system includes a <strong className="text-white">reputation rating system</strong> to 
-            help build trust between buyers and fulfillers.
+            Custom Orders and Fulfillment use one <strong className="text-white">reputation rating system</strong> for
+            both <strong className="text-amber-300">WTB</strong> (want to buy) and{' '}
+            <strong className="text-cyan-300">WTS</strong> (want to sell) listings. There is no separate sell rating —
+            the same 1–5 star archive flow and buyer/fulfiller scores apply to both tags.
           </p>
+
+          <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+            <h4 className="text-sm font-medium text-white mb-2">WTB vs WTS — who is the buyer?</h4>
+            <ul className="text-xs text-slate-400 space-y-1.5">
+              <li>
+                • <strong className="text-amber-300">WTB</strong> — you post a buy request; someone fulfills it for you.
+                You are the <strong className="text-slate-300">buyer</strong>; they are the seller/fulfiller.
+              </li>
+              <li>
+                • <strong className="text-cyan-300">WTS</strong> — you post a sell listing; someone buys it on Fulfillment.
+                You are the <strong className="text-slate-300">seller</strong>; they are the buyer.
+              </li>
+              <li>
+                • Ratings always land in the same two buckets: <strong className="text-slate-300">buyer rep</strong> and{' '}
+                <strong className="text-slate-300">fulfiller rep</strong> (seller side), regardless of tag.
+              </li>
+            </ul>
+          </div>
           
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
@@ -626,9 +645,10 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 As a Buyer
               </h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Create orders specifying what you need</li>
-                <li>• Rate fulfillers after delivery (1-5 stars)</li>
-                <li>• Your ratings help others choose reliable fulfillers</li>
+                <li>• <strong className="text-amber-300">WTB:</strong> post on Custom Orders; rate your fulfiller after pickup</li>
+                <li>• <strong className="text-cyan-300">WTS:</strong> accept a listing on Fulfillment; rate the seller after pickup</li>
+                <li>• Rate the other party 1–5 stars when archiving a completed order</li>
+                <li>• Your buyer rep helps sellers/fulfillers decide whether to trade with you</li>
               </ul>
             </div>
             
@@ -637,12 +657,13 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                 </svg>
-                As a Fulfiller
+                As a Seller / Fulfiller
               </h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Claim and complete orders to build reputation</li>
-                <li>• Your average rating is visible to buyers</li>
-                <li>• Higher ratings = more trust from the community</li>
+                <li>• <strong className="text-amber-300">WTB:</strong> accept on Fulfillment and craft/deliver; rate the buyer after completion</li>
+                <li>• <strong className="text-cyan-300">WTS:</strong> post on Custom Orders; mark ready when the buyer accepts; rate the buyer after completion</li>
+                <li>• Your fulfiller rep (seller side) is visible on listings and buy requests</li>
+                <li>• Higher ratings build trust for both craft fulfillment and direct sales</li>
               </ul>
             </div>
           </div>
@@ -671,27 +692,31 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </h3>
         <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
-            New members start with <strong className="text-white">"Pending" reputation</strong> until they complete 
-            5 successful orders (as either buyer or fulfiller). During this time, there are some limits to help 
-            protect the community:
+            New members start with <strong className="text-white">"Pending" reputation</strong> until they complete
+            5 successful marketplace transactions (as buyer or seller/fulfiller, on either WTB or WTS). During this
+            time, limits apply by <strong className="text-slate-300">role</strong>, not by tag:
           </p>
           
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
               <h4 className="text-sm font-medium text-emerald-400 mb-2">Pending Buyer Limits</h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Maximum of 2 active orders at a time</li>
-                <li>• Total order value capped at 1,000,000 aUEC</li>
-                <li>• Limits are lifted after 5 completed orders</li>
+                <li>• Applies when you are the <strong className="text-slate-300">buyer</strong> — WTB posts and WTS purchases</li>
+                <li>• Maximum of 2 active buyer-side orders at a time</li>
+                <li>• Total buyer-side value capped at 1,000,000 aUEC</li>
+                <li>• Minimum 10,000 aUEC per <strong className="text-amber-300">WTB</strong> post while pending</li>
+                <li>• Posting <strong className="text-cyan-300">WTS</strong> listings is not capped by the 2-order / 1M buyer limits</li>
+                <li>• Limits lift after 5 completed transactions as a buyer</li>
               </ul>
             </div>
             
             <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
-              <h4 className="text-sm font-medium text-purple-400 mb-2">Pending Fulfiller Limits</h4>
+              <h4 className="text-sm font-medium text-purple-400 mb-2">Pending Seller / Fulfiller Limits</h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Can only accept 1 order at a time</li>
-                <li>• Complete it before accepting another</li>
-                <li>• Limits are lifted after 5 completed fulfillments</li>
+                <li>• Applies when you are the <strong className="text-slate-300">seller</strong> — WTB fulfillments and active WTS sales</li>
+                <li>• Can only have 1 active seller-side job at a time</li>
+                <li>• Complete or release it before accepting another WTB or WTS handoff</li>
+                <li>• Limits lift after 5 completed transactions as a seller/fulfiller</li>
               </ul>
             </div>
           </div>
@@ -702,8 +727,8 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>
-                <strong>Important:</strong> Everyone must rate their completed orders before creating or 
-                accepting new ones. This keeps the rating system fair and encourages timely feedback.
+                <strong>Important:</strong> Everyone must rate completed WTB and WTS transactions before posting or
+                accepting new ones. Unrated completed orders block both Custom Orders and Fulfillment.
               </span>
             </p>
           </div>
@@ -731,10 +756,11 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 What's Expected
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• Create orders for items/resources you genuinely need</li>
-                <li>• Complete transactions in good faith</li>
-                <li>• Rate orders promptly after completion</li>
-                <li>• Communicate clearly with your buyer/fulfiller</li>
+                <li>• Post <strong className="text-amber-300">WTB</strong> only for items you genuinely want crafted or supplied</li>
+                <li>• Post <strong className="text-cyan-300">WTS</strong> only for stock you actually have on hand</li>
+                <li>• Complete transactions in good faith on both Custom Orders and Fulfillment</li>
+                <li>• Rate promptly after completion (same archive + stars flow for both tags)</li>
+                <li>• Communicate clearly with your buyer or seller</li>
                 <li>• Use your verified RSI Handle for all in-game trades</li>
               </ul>
             </div>
@@ -745,12 +771,12 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 What's Not Allowed
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• Creating duplicate orders for the same item while one is being fulfilled</li>
-                <li>• Making artificially small orders to farm reputation quickly</li>
-                <li>• Repeatedly trading with the same person to inflate ratings</li>
-                <li>• Using multiple accounts to manipulate the order system</li>
-                <li>• Cancelling orders without good reason to waste fulfillers' time</li>
-                <li>• Refusing to rate completed orders</li>
+                <li>• Duplicate <strong className="text-amber-300">WTB</strong> posts for the same blueprint while one is active</li>
+                <li>• Making artificially small <strong className="text-amber-300">WTB</strong> orders to farm reputation quickly</li>
+                <li>• Repeatedly trading with the same person to inflate ratings (WTB or WTS)</li>
+                <li>• Using multiple accounts to manipulate the marketplace</li>
+                <li>• Abandoning accepted jobs without good reason</li>
+                <li>• Refusing to rate completed WTB or WTS transactions</li>
               </ul>
             </div>
 
@@ -760,9 +786,10 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 Pending Rep Requirements
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• <strong className="text-slate-300">Minimum order value:</strong> 10,000 aUEC per order</li>
-                <li>• <strong className="text-slate-300">No duplicate orders:</strong> Cannot create another order for the same blueprint if one is pending or being fulfilled</li>
-                <li>• <strong className="text-slate-300">Order limits:</strong> Max 2 active orders / 1M aUEC total as buyer, 1 order at a time as fulfiller</li>
+                <li>• <strong className="text-slate-300">Minimum WTB value:</strong> 10,000 aUEC per buy post while reputation is pending</li>
+                <li>• <strong className="text-slate-300">No duplicate WTB:</strong> Cannot post another buy request for the same blueprint if one is pending or in progress</li>
+                <li>• <strong className="text-slate-300">Buyer limits:</strong> Max 2 active buyer-side orders / 1M aUEC (WTB posts + accepted WTS purchases)</li>
+                <li>• <strong className="text-slate-300">Seller limits:</strong> Max 1 active seller-side job (WTB fulfillment or WTS sale in progress)</li>
               </ul>
             </div>
 
@@ -772,8 +799,8 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 Time Limits
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• <strong className="text-slate-300">Fulfiller deadline:</strong> 72 hours to mark an accepted order ready, or it releases back to the pool</li>
-                <li>• <strong className="text-slate-300">Buyer pickup:</strong> 72 hours to confirm pickup after ready, or the order auto-completes (buyer may receive a strike)</li>
+                <li>• <strong className="text-slate-300">Seller deadline:</strong> 72 hours to mark ready after accept (WTB craft or WTS handoff), or the listing returns to the pool</li>
+                <li>• <strong className="text-slate-300">Buyer pickup:</strong> 72 hours to confirm after ready, or auto-complete (buyer may receive a strike)</li>
                 <li>• <strong className="text-slate-300">Rating deadline:</strong> 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf</li>
                 <li>• <strong className="text-slate-300">3 strikes in 30 days</strong> triggers an automatic report to officers</li>
               </ul>
@@ -809,7 +836,12 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </h3>
         <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
-            Follow these tips to get your orders fulfilled faster and make it easier for fulfillers to help you.
+            These tips focus on <strong className="text-amber-300">WTB</strong> buy requests (Submit Buy Order). For{' '}
+            <strong className="text-cyan-300">WTS</strong> sell listings, only post stock you actually have and mark ready
+            promptly once a buyer accepts.
+          </p>
+          <p className="text-sm text-slate-400 leading-relaxed">
+            For WTB posts, follow these tips to get fulfilled faster and make it easier for sellers to help you.
           </p>
 
           <div className="space-y-3">

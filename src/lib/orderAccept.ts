@@ -1,4 +1,5 @@
 import type { CustomOrder } from './operations'
+import { orderListingType } from './listingType'
 import { resolveOrderBlueprintLines } from './orderPricing'
 
 export function getOrderBlueprintAcceptBlockers(input: {
@@ -24,4 +25,10 @@ export function fulfillerHasAllOrderBlueprints(
 }
 
 /** Blueprint ownership only — stock is checked at craft completion, not accept. */
-export const getOrderAcceptBlockers = getOrderBlueprintAcceptBlockers
+export function getOrderAcceptBlockers(input: {
+  order: CustomOrder
+  acquiredBlueprints: Record<string, boolean>
+}): string[] {
+  if (orderListingType(input.order) === 'wts') return []
+  return getOrderBlueprintAcceptBlockers(input)
+}

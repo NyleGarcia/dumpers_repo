@@ -4,6 +4,7 @@ import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
 import OrderRatingModal from '../components/OrderRatingModal'
 import OrderRequestLines from '../components/OrderRequestLines'
+import ListingTypeBadge from '../components/ListingTypeBadge'
 import ReputationBadge from '../components/ReputationBadge'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
@@ -51,6 +52,11 @@ import {
   type UserOrderLimits,
 } from '../lib/operations'
 import { displayNameFromFields } from '../lib/supabase'
+import {
+  matchesListingTypeFilter,
+  orderListingType,
+  type ListingTypeFilter,
+} from '../lib/listingType'
 
 export default function FulfillmentRoute() {
   const { user, profile, acquiredBlueprints, dfpDisplayEnabled, isGuestPreview } = useAuth()
@@ -66,6 +72,7 @@ export default function FulfillmentRoute() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
+  const [selectedWtsSaleId, setSelectedWtsSaleId] = useState<string | null>(null)
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [acceptingOrderId, setAcceptingOrderId] = useState<string | null>(null)
@@ -75,6 +82,7 @@ export default function FulfillmentRoute() {
   const [archiving, setArchiving] = useState(false)
   const [orderLimits, setOrderLimits] = useState<UserOrderLimits | null>(null)
   const [guestPendingCount, setGuestPendingCount] = useState<number | null>(null)
+  const [listingTypeFilter, setListingTypeFilter] = useState<ListingTypeFilter>('all')
 
   const userId = user?.id
 
@@ -171,57 +179,88 @@ export default function FulfillmentRoute() {
     () => fulfillerReputationFromRow(userId ? reputations[userId] : undefined),
     [reputations, userId]
   )
+  const myBuyerRep = useMemo(
+    () => buyerReputationFromRow(userId ? reputations[userId] : undefined),
+    [reputations, userId]
+  )
 
   const pendingOrders = useMemo(() => {
     const minFilter = minBuyerRepFilter ? Number(minBuyerRepFilter) : null
 
     return orders.filter((order) => {
       if (order.status !== 'pending' || order.requester_id === userId) return false
+      if (!matchesListingTypeFilter(order, listingTypeFilter)) return false
 
-      const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
-      if (!passesBuyerRepFilter(buyerRep, minFilter)) return false
+      if (orderListingType(order) === 'wtb') {
+        const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
+        if (!passesBuyerRepFilter(buyerRep, minFilter)) return false
+      }
 
       return true
     })
-  }, [orders, userId, minBuyerRepFilter, reputations])
+  }, [orders, userId, minBuyerRepFilter, reputations, listingTypeFilter])
 
   const visiblePendingOrders = useMemo(() => {
-    if (!onlyMyBlueprintOrders) return pendingOrders
-    return pendingOrders.filter((order) =>
-      fulfillerHasAllOrderBlueprints(order, acquiredBlueprints)
-    )
+    let list = pendingOrders
+    if (onlyMyBlueprintOrders) {
+      list = list.filter(
+        (order) =>
+          orderListingType(order) === 'wts' ||
+          fulfillerHasAllOrderBlueprints(order, acquiredBlueprints)
+      )
+    }
+    return list
   }, [pendingOrders, onlyMyBlueprintOrders, acquiredBlueprints])
 
   const myBuyingOrders = useMemo(
     () =>
       orders.filter(
         (o) =>
+          matchesListingTypeFilter(o, listingTypeFilter) &&
           o.requester_id === userId &&
+          o.listing_type !== 'wts' &&
           o.assignee_id != null &&
           ['accepted', 'in_progress', 'ready_for_pickup', 'completed'].includes(o.status)
       ),
-    [orders, userId]
+    [orders, userId, listingTypeFilter]
   )
 
   const myAssignedOrders = useMemo(
     () =>
       orders.filter(
         (o) =>
+          matchesListingTypeFilter(o, listingTypeFilter) &&
           o.assignee_id === userId &&
+          orderListingType(o) === 'wtb' &&
           ['accepted', 'in_progress'].includes(o.status)
       ),
-    [orders, userId]
+    [orders, userId, listingTypeFilter]
+  )
+
+  const myWtsSales = useMemo(
+    () =>
+      orders.filter(
+        (o) =>
+          matchesListingTypeFilter(o, listingTypeFilter) &&
+          o.requester_id === userId &&
+          orderListingType(o) === 'wts' &&
+          o.assignee_id != null &&
+          ['accepted', 'in_progress', 'ready_for_pickup'].includes(o.status)
+      ),
+    [orders, userId, listingTypeFilter]
   )
 
   const myFinishedOrders = useMemo(
     () =>
       orders.filter(
         (o) =>
+          matchesListingTypeFilter(o, listingTypeFilter) &&
           o.assignee_id === userId &&
+          orderListingType(o) === 'wtb' &&
           (o.status === 'ready_for_pickup' || o.status === 'completed') &&
           !o.fulfiller_archived_at
       ),
-    [orders, userId]
+    [orders, userId, listingTypeFilter]
   )
 
   const handleArchiveConfirm = async (stars: number, comment?: string) => {
@@ -241,6 +280,7 @@ export default function FulfillmentRoute() {
   }
 
   const selectedOrder = myAssignedOrders.find((o) => o.id === selectedOrderId) ?? null
+  const selectedWtsSale = myWtsSales.find((o) => o.id === selectedWtsSaleId) ?? null
 
   const selectedFulfillmentItems = useMemo(
     () => (selectedOrder ? fulfillmentItemsForOrder(selectedOrder) : []),
@@ -313,6 +353,21 @@ export default function FulfillmentRoute() {
     }
 
     if (selectedOrderId === orderId) setSelectedOrderId(null)
+    if (selectedWtsSaleId === orderId) setSelectedWtsSaleId(null)
+    await loadData()
+  }
+
+  const handleMarkWtsReady = async (orderId: string) => {
+    setSubmitting(true)
+    setError(null)
+    const result = await completeOrderCraft(orderId, notes.trim() || undefined)
+    setSubmitting(false)
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+    setSelectedWtsSaleId(null)
+    setNotes('')
     await loadData()
   }
 
@@ -395,20 +450,21 @@ export default function FulfillmentRoute() {
             <p className="text-slate-400 mb-4">No pending orders right now.</p>
           )}
           <p className="text-slate-400 mb-6 max-w-md mx-auto">
-            Members can browse and accept custom craft orders placed by other members. 
-            Build your reputation by fulfilling orders and earn aUEC!
+            Members browse live <strong className="text-amber-300">WTB</strong> buy requests and{' '}
+            <strong className="text-cyan-300">WTS</strong> sell listings, then accept trades that match
+            their blueprints or needs. Build reputation and earn aUEC — sign in to participate.
           </p>
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700 text-left max-w-md mx-auto">
             <h3 className="text-white font-medium mb-2">What members can do:</h3>
             <ul className="text-sm text-slate-400 space-y-1">
-              <li>• Accept orders that match your acquired blueprints</li>
-              <li>• Track crafting progress and mark orders ready</li>
-              <li>• Earn buyer ratings and build your fulfiller reputation</li>
-              <li>• Auto-deduct materials from your Resource Tracker</li>
+              <li>• Fulfill WTB craft orders that match your acquired blueprints</li>
+              <li>• Buy WTS listings from members selling stock on hand</li>
+              <li>• Track progress and mark orders ready for pickup</li>
+              <li>• Build buyer and seller reputation through ratings</li>
             </ul>
           </div>
           <p className="text-amber-300/70 text-sm mt-6">
-            Sign in to access Fulfillment and start earning.
+            Sign in to browse full order details and accept trades.
           </p>
         </div>
       </FeaturePageLayout>
@@ -517,6 +573,32 @@ export default function FulfillmentRoute() {
         </>
       )}
 
+      {isRsiVerified && (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-slate-500 mr-1">Show:</span>
+          {(
+            [
+              { id: 'all', label: 'All' },
+              { id: 'wtb', label: 'WTB' },
+              { id: 'wts', label: 'WTS' },
+            ] as const
+          ).map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              onClick={() => setListingTypeFilter(opt.id)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
+                listingTypeFilter === opt.id
+                  ? 'bg-slate-700 text-white border-slate-500'
+                  : 'bg-slate-900/60 text-slate-400 border-slate-700 hover:border-slate-600'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {loading ? (
         <div className="text-center py-16">
           <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
@@ -565,16 +647,20 @@ export default function FulfillmentRoute() {
                 <div className="space-y-2">
                   {visiblePendingOrders.map((order) => {
                     const totalDfp = orderTotalDfp(order)
+                    const isWts = orderListingType(order) === 'wts'
                     const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
                     const acceptBlockers = getOrderAcceptBlockers({
                       order,
                       acquiredBlueprints,
                     })
-                    const meetsMinRep = fulfillerMeetsOrderMinRep(
-                      myFulfillerRep,
-                      order.min_fulfiller_reputation
-                    )
-                    const canAccept = acceptBlockers.length === 0 && meetsMinRep
+                    const meetsMinRep = isWts
+                      ? fulfillerMeetsOrderMinRep(myBuyerRep, order.min_fulfiller_reputation)
+                      : fulfillerMeetsOrderMinRep(myFulfillerRep, order.min_fulfiller_reputation)
+                    const canAcceptLimits = isWts
+                      ? orderLimits?.can_accept_wts_order !== false
+                      : orderLimits?.can_accept_order !== false
+                    const canAccept =
+                      acceptBlockers.length === 0 && meetsMinRep && canAcceptLimits
                     const accepting = acceptingOrderId === order.id
 
                     return (
@@ -584,16 +670,23 @@ export default function FulfillmentRoute() {
                       >
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                           <div className="space-y-2">
-                            <p className="text-white font-medium">{order.title}</p>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <p className="text-white font-medium">{order.title}</p>
+                              <ListingTypeBadge order={order} />
+                            </div>
                             <p className="text-slate-500 text-xs">
-                              Buyer: {displayNameFromFields(order.requester)}
+                              {isWts ? 'Seller' : 'Buyer'}:{' '}
+                              {displayNameFromFields(order.requester)}
                               {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                             </p>
                             <div className="flex flex-wrap gap-2">
-                              <ReputationBadge label="Buyer rep" reputation={buyerRep} />
+                              {!isWts && (
+                                <ReputationBadge label="Buyer rep" reputation={buyerRep} />
+                              )}
                               {order.min_fulfiller_reputation != null && (
                                 <span className="px-2 py-0.5 rounded text-xs border bg-slate-800 text-slate-300 border-slate-600">
-                                  Requires fulfiller {order.min_fulfiller_reputation}+
+                                  Requires {isWts ? 'buyer' : 'fulfiller'}{' '}
+                                  {order.min_fulfiller_reputation}+
                                 </span>
                               )}
                             </div>
@@ -602,7 +695,8 @@ export default function FulfillmentRoute() {
                             </div>
                             {!meetsMinRep && (
                               <p className="text-amber-400/90 text-xs">
-                                Your fulfiller reputation is below this order&apos;s minimum.
+                                Your {isWts ? 'buyer' : 'fulfiller'} reputation is below this order&apos;s
+                                minimum.
                               </p>
                             )}
                             {acceptBlockers.length > 0 && (
@@ -612,7 +706,7 @@ export default function FulfillmentRoute() {
                                 ))}
                               </ul>
                             )}
-                            {orderHasHighQualityBlueprint(order) && (
+                            {!isWts && orderHasHighQualityBlueprint(order) && (
                               <p className="text-orange-300/90 text-xs">
                                 This order includes 800+ quality items — confirm you have materials
                                 before accepting.
@@ -625,7 +719,11 @@ export default function FulfillmentRoute() {
                             disabled={!canAccept || accepting}
                             className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
                           >
-                            {accepting ? 'Accepting...' : 'Accept order'}
+                            {accepting
+                              ? 'Accepting...'
+                              : isWts
+                                ? 'Buy listing'
+                                : 'Accept order'}
                           </button>
                         </div>
                       </div>
@@ -666,7 +764,10 @@ export default function FulfillmentRoute() {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-white font-medium">{order.title}</span>
+                        <span className="text-white font-medium flex items-center gap-2 flex-wrap">
+                          {order.title}
+                          <ListingTypeBadge order={order} />
+                        </span>
                         {craftDeductInventory && (
                           <span
                             className={`text-xs px-2 py-0.5 rounded border ${
@@ -828,6 +929,84 @@ export default function FulfillmentRoute() {
                 )}
               </div>
             )}
+            </div>
+
+            <div>
+              <h2 className="text-white font-medium mb-3">My WTS sales</h2>
+              {myWtsSales.length === 0 ? (
+                <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                  No active sell listings with a buyer yet.
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {myWtsSales.map((order) => {
+                    const isSelected = selectedWtsSaleId === order.id
+                    const totalDfp = orderTotalDfp(order)
+                    return (
+                      <button
+                        key={order.id}
+                        type="button"
+                        onClick={() => setSelectedWtsSaleId(order.id)}
+                        className={`w-full text-left p-4 rounded-xl border transition-colors ${
+                          isSelected
+                            ? 'bg-cyan-950/30 border-cyan-500/40'
+                            : 'bg-slate-900/60 border-slate-700 hover:border-slate-600'
+                        }`}
+                      >
+                        <span className="text-white font-medium flex items-center gap-2 flex-wrap">
+                          {order.title}
+                          <ListingTypeBadge order={order} />
+                        </span>
+                        <p className="text-slate-500 text-xs mt-1">
+                          {order.status.replace(/_/g, ' ')}
+                          {order.assignee &&
+                            ` · Buyer: ${displayNameFromFields(order.assignee)}`}
+                          {dfpDisplayEnabled && totalDfp > 0 && (
+                            <span className="text-amber-300/90"> · {formatDfpAuec(totalDfp)}</span>
+                          )}
+                        </p>
+                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+
+              {selectedWtsSale && (
+                <div className="mt-4 p-4 bg-slate-900/60 border border-cyan-700/40 rounded-xl space-y-3">
+                  <h3 className="text-white font-medium">{selectedWtsSale.title}</h3>
+                  <OrderRequestLines order={selectedWtsSale} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
+                  <button
+                    type="button"
+                    onClick={() => void handleAbandon(selectedWtsSale.id)}
+                    disabled={submitting}
+                    className="w-full py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 border border-slate-600 rounded-lg text-sm"
+                  >
+                    Cancel sale
+                  </button>
+                  {selectedWtsSale.status === 'accepted' && (
+                    <button
+                      type="button"
+                      onClick={() => void handleStartWork(selectedWtsSale.id)}
+                      disabled={submitting}
+                      className="w-full py-2 bg-blue-700 hover:bg-blue-600 disabled:opacity-50 text-white rounded-lg text-sm"
+                    >
+                      Start handoff
+                    </button>
+                  )}
+                  {(selectedWtsSale.status === 'accepted' ||
+                    selectedWtsSale.status === 'in_progress') && (
+                    <button
+                      type="button"
+                      onClick={() => void handleMarkWtsReady(selectedWtsSale.id)}
+                      disabled={submitting}
+                      className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 text-white rounded-lg text-sm"
+                    >
+                      Mark ready for pickup
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </section>
 
