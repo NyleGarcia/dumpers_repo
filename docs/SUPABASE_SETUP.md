@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `078_order_listing_type.sql` (WTB/WTS marketplace on `custom_orders`).
+**Latest migration:** `079_drop_synced_blueprints.sql` (removes legacy sccrafter `synced_blueprints` table).
 
 ---
 
@@ -53,7 +53,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 10 | `045_remove_preview_features.sql` | Opens preview-gated features to all members |
 | 11 | `046_starstrings_data.sql` | Legacy reference data tables (later renamed in 075) |
 | 12 | `047_public_auto_approve_read.sql` | Public read for auto-approve status (login page) |
-| 13 | `048_blueprints_sync.sql` | Legacy `synced_blueprints` table (unused by current app) |
+| 13 | `048_blueprints_sync.sql` | Legacy `synced_blueprints` table (dropped in 079) |
 | 14 | `049_welcome_modal.sql` | Welcome onboarding (`has_seen_welcome`, always-show setting) |
 | 15 | `050_rsi_handle_verification.sql` | RSI Handle verification |
 | 16 | `051_support_tickets.sql` | Support ticket system |
@@ -84,6 +84,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 41 | `076_game_data_anon_read.sql` | Anonymous read on public `game_*` reference tables |
 | 42 | `077_guest_pending_order_count.sql` | `get_pending_custom_order_count()` for Offline Fulfillment teaser |
 | 43 | `078_order_listing_type.sql` | WTB/WTS `listing_type`, semantic buyer/seller RPCs |
+| 44 | `079_drop_synced_blueprints.sql` | Drop legacy `synced_blueprints` (sccrafter era) |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -120,14 +121,9 @@ supabase functions deploy send-discord
 | `validate-rsi-handle` | Validate RSI Handles against robertsspaceindustries.com |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
 
-**Deprecated — do not deploy unless you have a legacy dependency:**
-
-| Function | Status |
-|----------|--------|
-| `sync-blueprints` | Replaced by `game-blueprints.json` from game file extraction |
-| `sync-starstrings` | Replaced by `parse-extracted-data.mjs` + optional `sync-game-data-to-db.mjs` |
-
 Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose service_role in frontend code.
+
+> **Removed from repo:** `sync-blueprints` (sccrafter.com) and `sync-starstrings` (StarStrings). Blueprint catalog ships from `game-blueprints.json`; reference data uses game file extraction + optional `sync-game-data-to-db.mjs`.
 
 ---
 
@@ -201,6 +197,9 @@ SELECT COUNT(*) FROM public.shops;
 -- Game data tables (075/076)
 SELECT table_name FROM information_schema.tables
 WHERE table_schema = 'public' AND table_name LIKE 'game_%';
+
+-- 079: legacy sccrafter table removed
+SELECT to_regclass('public.synced_blueprints');  -- should be NULL
 ```
 
 ---

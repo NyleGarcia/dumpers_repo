@@ -50,7 +50,7 @@ React 18, Vite, TanStack Router/Query, Tailwind, Supabase (Auth + Postgres + RLS
 1. Clone and `npm install`
 2. Copy `.env.example` → `.env` with your Supabase URL and anon key
 3. Set up the database — see [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)
-   - **Existing databases:** apply incremental migrations in order through `078_order_listing_type.sql` (WTB/WTS marketplace)
+   - **Existing databases:** apply incremental migrations in order through `079_drop_synced_blueprints.sql`
 4. `npm run dev` for local development
 5. `npm run build` to produce `dist/` for any static host
 

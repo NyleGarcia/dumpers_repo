@@ -54,8 +54,7 @@ Mining RS signature data:
 ## Deprecated Sources
 
 ### MrKraken/StarStrings (DEPRECATED)
-StarStrings has been replaced by direct game file extraction.
-Old scripts archived in `scripts/archive-deprecated/`.
+StarStrings has been replaced by direct game file extraction. Legacy scripts were removed from the repo.
 
 ## Usage Pattern
 

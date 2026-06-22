@@ -11,7 +11,6 @@
     "build": "vite build && node scripts/write-build-version.mjs",
     "preview": "vite preview",
     "lint": "eslint src",
-    "enrich-blueprints": "node scripts/enrich-blueprint-acquisition.mjs",
     "validate-blueprints": "node scripts/validate-blueprints.mjs",
     "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs"
   },

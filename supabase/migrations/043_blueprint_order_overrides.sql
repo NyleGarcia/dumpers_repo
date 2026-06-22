@@ -1,4 +1,4 @@
--- Per-blueprint orderable overrides (super-admin). Catalog isReward lives in Blueprints.json.
+-- Per-blueprint orderable overrides (super-admin). Catalog isReward lives in game-blueprints.json.
 
 CREATE TABLE IF NOT EXISTS public.blueprint_order_overrides (
   blueprint_id text PRIMARY KEY,
