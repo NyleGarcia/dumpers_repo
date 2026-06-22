@@ -413,7 +413,7 @@ export default function CustomOrdersRoute() {
               <h3 className="text-red-300 font-medium">Rate Your Completed Orders</h3>
               <p className="text-red-200/70 text-sm mt-1">
                 You have <strong className="text-red-300">{orderLimits.unrated_count}</strong> completed {orderLimits.unrated_count === 1 ? 'order' : 'orders'} awaiting your rating.
-                You must archive and rate all completed orders before creating new ones.
+                You must archive and rate all completed orders before posting new ones. You can still view your active orders and complete in-progress trades.
               </p>
               <button
                 type="button"

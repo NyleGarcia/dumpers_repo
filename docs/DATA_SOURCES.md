@@ -26,6 +26,8 @@ The primary data source is now direct extraction from Star Citizen's game files 
 | `game-mining.json` | Mineable elements and mining lasers | `mining/`, `entities/scitem/ships/weapons/` |
 | `game-components.json` | Ship components (coolers, shields, etc.) | `entities/scitem/ships/` |
 | `game-reputation.json` | Reputation standing thresholds | `reputation/standings/` |
+| `dfp-commodity-bases.json` | Q0 commodity/salvage DFP bases (UEX-backed) | `fetch-commodity-dfp-bases.mjs` |
+| `component-metadata.json` | Component wiki metadata | Star Citizen Wiki API |
 | `_extraction-validation.json` | Validation issues (if any) | Generated |
 
 ### Data Validation
@@ -34,10 +36,12 @@ The parser validates expected data paths exist. If the game data structure chang
 
 ---
 
-## Deprecated: MrKraken's StarStrings
+## Deprecated: MrKraken's StarStrings (Edge Function)
 
-> **Note:** StarStrings extraction has been deprecated in favor of direct game file extraction.
-> Old scripts are archived in `scripts/archive-deprecated/`.
+> **Note:** The `sync-starstrings` Edge Function and `starstrings_*` database tables are legacy.
+> Migration **075** renamed tables to `game_*`. Reference data now comes from game file extraction
+> (`parse-extracted-data.mjs`) with optional DB sync via `sync-game-data-to-db.mjs`.
+> Do not deploy `sync-starstrings` on new franchises.
 
 StarStrings was a community-curated localization pack that added useful information to in-game text.
 We previously extracted data from it, but this created a dependency on a third party updating their repo.
@@ -100,7 +104,9 @@ Located in `/scripts/`:
 |--------|---------|
 | `extract-game-data.ps1` | Extract DataForge from Data.p4k via StarBreaker |
 | `parse-extracted-data.mjs` | Parse extracted JSON into `src/data/game-*.json` |
-| `sync-game-data-to-db.mjs` | Optional: upsert mining/components/ordnance to Supabase |
+| `sync-game-data-to-db.mjs` | Optional: upsert mining/components/ordnance to Supabase `game_*` tables |
+| `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` (monthly; then rebuild DFP engine) |
+| `fetch-resource-lore.mjs` | Fetch commodity descriptions for Archive lore |
 | `enrich-missions-scunpacked.mjs` | Cross-reference missions with scunpacked-data |
 
 Deprecated scripts are in `scripts/archive-deprecated/`.
@@ -113,9 +119,10 @@ When a new Star Citizen patch drops:
 
 1. **Extract:** `.\scripts\extract-game-data.ps1`
 2. **Parse:** `node scripts/parse-extracted-data.mjs`
-3. **Optional DB sync:** `node scripts/sync-game-data-to-db.mjs` (mining, components, ordnance in Supabase)
-4. **Shop prices:** Super-admin **Sync Shop Data** in DB Actions (UEX Corp API)
-5. **Deploy:** Commit updated `game-*.json` files, `npm run build`, deploy `dist/`
+3. **Optional DB sync:** `node scripts/sync-game-data-to-db.mjs` (mining, components, ordnance → Supabase `game_*` tables)
+4. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` → rebuild DFP engine in `dfp-engine-private`
+5. **Shop prices:** Super-admin **Sync Shop Data** in DB Actions (UEX Corp API via `sync-shop-data` Edge Function)
+6. **Deploy:** Commit updated `game-*.json` (and DFP bundle if changed), `npm run build`, deploy `dist/`
 
 If Step 2 reports validation issues in `_extraction-validation.json`, the game data structure may have changed.
 

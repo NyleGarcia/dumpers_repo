@@ -284,7 +284,7 @@ const PAGE_GUIDES = [
       'WTB/WTS badge on every order row for transparency (always visible)',
       'Same reputation ratings as today — no separate sell rating',
       'Requires a verified RSI Handle; fulfiller and buyer pending limits apply by role',
-      'Offline Mode cannot browse or accept marketplace orders',
+      'Offline Mode shows a pending-order count teaser only — sign in to browse or accept',
       'Verify you have materials before accepting 800+ quality blueprint orders',
     ],
     relatesTo: ['Custom Orders', 'Resource Tracker'],
@@ -727,8 +727,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>
-                <strong>Important:</strong> Everyone must rate completed WTB and WTS transactions before posting or
-                accepting new ones. Unrated completed orders block both Custom Orders and Fulfillment.
+                <strong>Important:</strong> Everyone must rate completed WTB and WTS transactions before posting new orders or accepting new ones on Fulfillment. Until you do, those actions are paused — you can still browse listings and manage any orders already in progress. Archive unrated deals from the <strong className="text-slate-300">Completed</strong> tab on Custom Orders.
               </span>
             </p>
           </div>
