@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import {
@@ -7,31 +7,47 @@ import {
   getMyDiscordWebhooks,
   deleteMyDiscordWebhook,
   UserWebhook,
+  DEFAULT_USER_DISCORD_EVENTS,
+  DiscordPublicEventType,
+  DiscordEventCategory,
 } from '../lib/discord'
 import { useAuth } from '../contexts/AuthContext'
 
 const MAX_WEBHOOKS = 4
 
-const EVENT_LABELS: Record<string, string> = {
-  order_new: 'New Orders',
-  order_fulfilled: 'Accepted',
-  order_cancelled: 'Cancelled',
-  blueprints: 'Blueprint Syncs',
+const CATEGORY_LABELS: Record<DiscordEventCategory, { title: string; description: string }> = {
+  personal: {
+    title: 'My activity',
+    description: 'Alerts when someone else moves your deal forward — not when you click it yourself.',
+  },
+  marketplace: {
+    title: 'Marketplace activity',
+    description:
+      'Opt-in feed when other members post or change listings. Repeated post/cancel bursts from the same member may be grouped into one ping.',
+  },
+  support: {
+    title: 'Support',
+    description: 'Updates on your support tickets.',
+  },
+}
+
+const CATEGORY_ORDER: DiscordEventCategory[] = ['personal', 'marketplace', 'support']
+
+function eventLabel(event: DiscordPublicEventType): string {
+  return event.display_name
 }
 
 export default function DiscordSubscribeRoute() {
   const { user, profile, loading: authLoading } = useAuth()
   const navigate = useNavigate()
-  
-  // Existing webhooks
+
   const [myWebhooks, setMyWebhooks] = useState<UserWebhook[]>([])
   const [loadingWebhooks, setLoadingWebhooks] = useState(true)
-  
-  // Registration form
+
   const [webhookUrl, setWebhookUrl] = useState('')
   const [webhookName, setWebhookName] = useState('')
-  const [selectedEvents, setSelectedEvents] = useState<string[]>(['order_new', 'order_fulfilled', 'order_cancelled', 'blueprints'])
-  const [availableEvents, setAvailableEvents] = useState<Array<{ event_type: string; enabled: boolean; display_name: string; description: string }>>([])
+  const [selectedEvents, setSelectedEvents] = useState<string[]>(DEFAULT_USER_DISCORD_EVENTS)
+  const [availableEvents, setAvailableEvents] = useState<DiscordPublicEventType[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
@@ -40,33 +56,43 @@ export default function DiscordSubscribeRoute() {
 
   const userEmail = profile?.email || user?.email || ''
 
-  // Redirect offline users
+  const eventsByCategory = useMemo(() => {
+    const grouped: Record<DiscordEventCategory, DiscordPublicEventType[]> = {
+      personal: [],
+      marketplace: [],
+      support: [],
+    }
+    for (const event of availableEvents) {
+      grouped[event.event_category]?.push(event)
+    }
+    return grouped
+  }, [availableEvents])
+
   useEffect(() => {
     if (!authLoading && !user) {
       navigate({ to: '/' })
     }
   }, [authLoading, user, navigate])
 
-  // Fetch user's webhooks and available event types
   useEffect(() => {
     const fetchData = async () => {
       const [eventsResult, webhooksResult] = await Promise.all([
         getDiscordPublicEventTypes(),
         getMyDiscordWebhooks(),
       ])
-      
+
       if (eventsResult.success && eventsResult.eventTypes) {
         setAvailableEvents(eventsResult.eventTypes)
       }
-      
+
       if (webhooksResult.success && webhooksResult.webhooks) {
         setMyWebhooks(webhooksResult.webhooks)
       }
-      
+
       setLoading(false)
       setLoadingWebhooks(false)
     }
-    
+
     if (user) {
       fetchData()
     }
@@ -116,9 +142,8 @@ export default function DiscordSubscribeRoute() {
       setSuccessMessage(`Successfully registered "${webhookName}"`)
       setWebhookUrl('')
       setWebhookName('')
-      setSelectedEvents(['order_new', 'order_fulfilled', 'order_cancelled', 'blueprints'])
-      
-      // Refresh webhooks list
+      setSelectedEvents([...DEFAULT_USER_DISCORD_EVENTS])
+
       const webhooksResult = await getMyDiscordWebhooks()
       if (webhooksResult.success && webhooksResult.webhooks) {
         setMyWebhooks(webhooksResult.webhooks)
@@ -133,24 +158,23 @@ export default function DiscordSubscribeRoute() {
     if (!confirm(`Delete webhook "${webhook.webhook_name}"? This cannot be undone.`)) {
       return
     }
-    
+
     setDeleting(webhook.id)
     setError(null)
     setSuccessMessage(null)
-    
+
     const result = await deleteMyDiscordWebhook(webhook.id)
-    
+
     if (result.success) {
       setMyWebhooks((prev) => prev.filter((w) => w.id !== webhook.id))
       setSuccessMessage(`Deleted "${webhook.webhook_name}"`)
     } else {
       setError(result.error || 'Failed to delete webhook')
     }
-    
+
     setDeleting(null)
   }
 
-  // Loading state
   if (authLoading) {
     return (
       <FeaturePageLayout title="Webhooks" subtitle="Loading..." badge="Discord">
@@ -170,11 +194,10 @@ export default function DiscordSubscribeRoute() {
   return (
     <FeaturePageLayout
       title="Webhooks"
-      subtitle="Subscribe your Discord channels to Dumper's Repo updates"
+      subtitle="Get Discord pings about your deals and the marketplace"
       badge="Discord"
     >
       <div className="max-w-2xl space-y-6">
-        {/* Messages */}
         {error && (
           <div className="p-3 bg-red-950/40 border border-red-500/30 rounded-lg text-sm text-red-300">
             {error}
@@ -186,15 +209,16 @@ export default function DiscordSubscribeRoute() {
           </div>
         )}
 
-        {/* Existing Webhooks */}
         <section className="p-4 rounded-xl border border-slate-700 bg-slate-800/30">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-white font-semibold">Your Webhooks</h2>
-            <span className={`text-xs px-2 py-1 rounded ${
-              myWebhooks.length >= MAX_WEBHOOKS 
-                ? 'bg-red-900/50 text-red-400' 
-                : 'bg-slate-700 text-slate-400'
-            }`}>
+            <span
+              className={`text-xs px-2 py-1 rounded ${
+                myWebhooks.length >= MAX_WEBHOOKS
+                  ? 'bg-red-900/50 text-red-400'
+                  : 'bg-slate-700 text-slate-400'
+              }`}
+            >
               {myWebhooks.length} / {MAX_WEBHOOKS}
             </span>
           </div>
@@ -205,7 +229,7 @@ export default function DiscordSubscribeRoute() {
             </div>
           ) : myWebhooks.length === 0 ? (
             <p className="text-slate-500 text-sm py-4 text-center">
-              You haven't registered any webhooks yet.
+              You haven&apos;t registered any webhooks yet.
             </p>
           ) : (
             <div className="space-y-3">
@@ -221,9 +245,7 @@ export default function DiscordSubscribeRoute() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-white font-medium truncate">
-                          {webhook.webhook_name}
-                        </p>
+                        <p className="text-white font-medium truncate">{webhook.webhook_name}</p>
                         {!webhook.active && (
                           <span className="px-1.5 py-0.5 bg-red-900/50 text-red-400 text-xs rounded">
                             Disabled
@@ -231,25 +253,23 @@ export default function DiscordSubscribeRoute() {
                         )}
                       </div>
                       <div className="flex flex-wrap gap-1 mt-1.5">
-                        {webhook.subscribed_events.map((event) => (
-                          <span
-                            key={event}
-                            className="px-1.5 py-0.5 bg-indigo-900/50 text-indigo-300 text-xs rounded"
-                          >
-                            {EVENT_LABELS[event] || event}
-                          </span>
-                        ))}
+                        {webhook.subscribed_events.map((event) => {
+                          const meta = availableEvents.find((e) => e.event_type === event)
+                          return (
+                            <span
+                              key={event}
+                              className="px-1.5 py-0.5 bg-indigo-900/50 text-indigo-300 text-xs rounded"
+                            >
+                              {meta ? meta.display_name : event}
+                            </span>
+                          )
+                        })}
                       </div>
                       <p className="text-xs text-slate-500 mt-1.5">
                         Registered {new Date(webhook.created_at).toLocaleDateString()}
                         {webhook.last_success_at && (
                           <span className="text-green-400 ml-2">
                             Last sent: {new Date(webhook.last_success_at).toLocaleDateString()}
-                          </span>
-                        )}
-                        {webhook.failure_count > 0 && (
-                          <span className="text-red-400 ml-2">
-                            {webhook.failure_count} failure{webhook.failure_count !== 1 ? 's' : ''}
                           </span>
                         )}
                       </p>
@@ -268,10 +288,12 @@ export default function DiscordSubscribeRoute() {
           )}
         </section>
 
-        {/* Registration Form */}
         {canAddMore ? (
           <section className="p-4 rounded-xl border border-indigo-500/30 bg-indigo-950/20">
-            <h2 className="text-white font-semibold mb-4">Register New Webhook</h2>
+            <h2 className="text-white font-semibold mb-2">Register New Webhook</h2>
+            <p className="text-xs text-slate-400 mb-4">
+              Paste a webhook from your Discord channel once, then pick what you want to hear about.
+            </p>
 
             <div className="mb-4 p-3 bg-slate-800/50 rounded-lg">
               <p className="text-xs text-slate-400 mb-2">
@@ -279,9 +301,8 @@ export default function DiscordSubscribeRoute() {
               </p>
               <ol className="text-xs text-slate-500 list-decimal list-inside space-y-0.5">
                 <li>Go to your Discord server settings</li>
-                <li>Click "Integrations" → "Webhooks"</li>
-                <li>Click "New Webhook"</li>
-                <li>Choose a channel and copy the webhook URL</li>
+                <li>Click Integrations → Webhooks</li>
+                <li>Create a webhook and copy the URL</li>
               </ol>
             </div>
 
@@ -313,44 +334,56 @@ export default function DiscordSubscribeRoute() {
                     type="text"
                     value={webhookName}
                     onChange={(e) => setWebhookName(e.target.value)}
-                    placeholder="e.g., #dumpers-updates"
+                    placeholder="e.g., #my-dumpers-alerts"
                     className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm"
                     required
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Event Types
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {availableEvents.map((event) => (
-                      <label
-                        key={event.event_type}
-                        className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors text-sm ${
-                          !event.enabled
-                            ? 'opacity-50 cursor-not-allowed border-slate-700 bg-slate-800/30'
-                            : selectedEvents.includes(event.event_type)
-                            ? 'border-indigo-500/50 bg-indigo-950/30'
-                            : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selectedEvents.includes(event.event_type)}
-                          onChange={() => handleToggleEvent(event.event_type)}
-                          disabled={!event.enabled}
-                          className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500/20"
-                        />
-                        <div>
-                          <span className="text-white">{event.display_name}</span>
-                          {!event.enabled && (
-                            <span className="text-amber-400 text-xs ml-1">(disabled)</span>
-                          )}
+                <div className="space-y-4">
+                  {CATEGORY_ORDER.map((category) => {
+                    const events = eventsByCategory[category]
+                    if (events.length === 0) return null
+                    const meta = CATEGORY_LABELS[category]
+
+                    return (
+                      <div key={category}>
+                        <div className="mb-2">
+                          <h3 className="text-sm font-medium text-white">{meta.title}</h3>
+                          <p className="text-xs text-slate-500 mt-0.5">{meta.description}</p>
                         </div>
-                      </label>
-                    ))}
-                  </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {events.map((event) => (
+                            <label
+                              key={event.event_type}
+                              className={`flex items-start gap-2 p-2 rounded-lg border cursor-pointer transition-colors text-sm ${
+                                !event.enabled
+                                  ? 'opacity-50 cursor-not-allowed border-slate-700 bg-slate-800/30'
+                                  : selectedEvents.includes(event.event_type)
+                                    ? 'border-indigo-500/50 bg-indigo-950/30'
+                                    : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedEvents.includes(event.event_type)}
+                                onChange={() => handleToggleEvent(event.event_type)}
+                                disabled={!event.enabled}
+                                className="mt-0.5 w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500/20"
+                              />
+                              <div>
+                                <span className="text-white">{eventLabel(event)}</span>
+                                <p className="text-xs text-slate-500 mt-0.5">{event.description}</p>
+                                {!event.enabled && (
+                                  <span className="text-amber-400 text-xs">(disabled site-wide)</span>
+                                )}
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
 
                 <button
@@ -366,7 +399,7 @@ export default function DiscordSubscribeRoute() {
         ) : (
           <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-950/20">
             <p className="text-amber-300 text-sm">
-              You've reached the maximum of {MAX_WEBHOOKS} webhooks. Delete one to add another.
+              You&apos;ve reached the maximum of {MAX_WEBHOOKS} webhooks. Delete one to add another.
             </p>
           </div>
         )}

@@ -1,21 +1,59 @@
 import { supabase } from './supabase'
 
-// Discord embed colors
 export const DISCORD_COLORS = {
-  orders: 0x22c55e,           // Green (legacy)
-  order_new: 0x22c55e,        // Green
-  order_fulfilled: 0x3b82f6,  // Blue
-  order_cancelled: 0xef4444,  // Red
-  blueprints: 0xf97316,       // Orange
-  support: 0x8b5cf6,          // Purple
-  admin: 0xef4444,            // Red
-  success: 0x22c55e,          // Green
-  warning: 0xeab308,          // Yellow
-  error: 0xef4444,            // Red
-  info: 0x5865f2,             // Discord blurple
+  orders: 0x22c55e,
+  order_new: 0x22c55e,
+  order_fulfilled: 0x3b82f6,
+  order_cancelled: 0xef4444,
+  market_wtb_new: 0x22c55e,
+  market_wts_new: 0x10b981,
+  market_accepted: 0x3b82f6,
+  market_cancelled: 0xef4444,
+  market_coalesced: 0xf59e0b,
+  my_order_accepted: 0x3b82f6,
+  my_order_in_progress: 0x6366f1,
+  my_order_ready: 0xf59e0b,
+  my_order_completed: 0x22c55e,
+  my_order_cancelled: 0xef4444,
+  my_order_released: 0xef4444,
+  my_order_timeout: 0xef4444,
+  my_order_noshow: 0xef4444,
+  my_order_dispute: 0xef4444,
+  my_support_reply: 0x8b5cf6,
+  my_support_resolved: 0x22c55e,
+  support: 0x8b5cf6,
+  admin: 0xef4444,
+  success: 0x22c55e,
+  warning: 0xeab308,
+  error: 0xef4444,
+  info: 0x5865f2,
 }
 
-export type DiscordEventType = 'orders' | 'order_new' | 'order_fulfilled' | 'order_cancelled' | 'blueprints' | 'support' | 'admin'
+export type DiscordEventType =
+  | 'orders'
+  | 'order_new'
+  | 'order_fulfilled'
+  | 'order_cancelled'
+  | 'market_wtb_new'
+  | 'market_wts_new'
+  | 'market_accepted'
+  | 'market_cancelled'
+  | 'market_coalesced'
+  | 'my_order_accepted'
+  | 'my_order_in_progress'
+  | 'my_order_ready'
+  | 'my_order_completed'
+  | 'my_order_cancelled'
+  | 'my_order_released'
+  | 'my_order_timeout'
+  | 'my_order_noshow'
+  | 'my_order_dispute'
+  | 'my_support_reply'
+  | 'my_support_resolved'
+  | 'support'
+  | 'admin'
+
+export type DiscordEventCategory = 'personal' | 'marketplace' | 'support'
 
 export interface DiscordField {
   name: string
@@ -32,8 +70,19 @@ export interface DiscordSettings {
   blueprints_enabled: boolean
   support_enabled: boolean
   admin_enabled: boolean
+  personal_discord_enabled: boolean
+  market_coalesce_enabled: boolean
+  market_coalesce_minutes: number
   official_webhook_url: string | null
   official_webhook_name: string | null
+}
+
+export interface DiscordPublicEventType {
+  event_type: string
+  enabled: boolean
+  display_name: string
+  description: string
+  event_category: DiscordEventCategory
 }
 
 export interface DiscordWebhook {
@@ -54,23 +103,37 @@ export interface QueueStatus {
   processed_today: number
 }
 
-/**
- * Queue a Discord message for delivery
- */
+export const DEFAULT_USER_DISCORD_EVENTS = [
+  'my_order_accepted',
+  'my_order_ready',
+  'my_order_completed',
+  'my_order_cancelled',
+  'my_order_released',
+  'my_order_timeout',
+  'my_order_noshow',
+  'my_order_dispute',
+  'my_support_reply',
+  'my_support_resolved',
+]
+
 export async function queueDiscordMessage(
   eventType: DiscordEventType,
   title: string,
   description?: string,
   color?: number,
-  fields?: DiscordField[]
+  fields?: DiscordField[],
+  targetUserId?: string | null,
+  actorUserId?: string | null
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
   try {
     const { data, error } = await supabase.rpc('queue_discord_message', {
       p_event_type: eventType,
       p_title: title,
       p_description: description ?? null,
-      p_color: color ?? DISCORD_COLORS[eventType],
+      p_color: color ?? DISCORD_COLORS[eventType as keyof typeof DISCORD_COLORS] ?? DISCORD_COLORS.info,
       p_fields: fields ?? [],
+      p_target_user_id: targetUserId ?? null,
+      p_actor_user_id: actorUserId ?? null,
     })
 
     if (error) {
@@ -83,9 +146,6 @@ export async function queueDiscordMessage(
   }
 }
 
-/**
- * Get Discord settings (super-admin only)
- */
 export async function getDiscordSettings(): Promise<{
   success: boolean
   settings?: DiscordSettings
@@ -108,9 +168,6 @@ export async function getDiscordSettings(): Promise<{
   }
 }
 
-/**
- * Update Discord settings (super-admin only)
- */
 export async function updateDiscordSettings(settings: Partial<{
   enabled: boolean
   orders_enabled: boolean
@@ -120,6 +177,9 @@ export async function updateDiscordSettings(settings: Partial<{
   blueprints_enabled: boolean
   support_enabled: boolean
   admin_enabled: boolean
+  personal_discord_enabled: boolean
+  market_coalesce_enabled: boolean
+  market_coalesce_minutes: number
   official_webhook_url: string
   official_webhook_name: string
 }>): Promise<{ success: boolean; error?: string }> {
@@ -133,6 +193,9 @@ export async function updateDiscordSettings(settings: Partial<{
       p_blueprints_enabled: settings.blueprints_enabled ?? null,
       p_support_enabled: settings.support_enabled ?? null,
       p_admin_enabled: settings.admin_enabled ?? null,
+      p_personal_discord_enabled: settings.personal_discord_enabled ?? null,
+      p_market_coalesce_enabled: settings.market_coalesce_enabled ?? null,
+      p_market_coalesce_minutes: settings.market_coalesce_minutes ?? null,
       p_official_webhook_url: settings.official_webhook_url ?? null,
       p_official_webhook_name: settings.official_webhook_name ?? null,
     })
@@ -147,9 +210,6 @@ export async function updateDiscordSettings(settings: Partial<{
   }
 }
 
-/**
- * Get queue status (super-admin only)
- */
 export async function getDiscordQueueStatus(): Promise<{
   success: boolean
   status?: QueueStatus
@@ -162,7 +222,6 @@ export async function getDiscordQueueStatus(): Promise<{
       return { success: false, error: error.message }
     }
 
-    // RPC returns a TABLE, so data is an array - get first row
     if (Array.isArray(data) && data.length > 0) {
       return { success: true, status: data[0] as QueueStatus }
     }
@@ -173,9 +232,6 @@ export async function getDiscordQueueStatus(): Promise<{
   }
 }
 
-/**
- * Clear the message queue (super-admin only)
- */
 export async function clearDiscordQueue(
   onlyProcessed: boolean = true
 ): Promise<{ success: boolean; deleted?: number; error?: string }> {
@@ -194,9 +250,6 @@ export async function clearDiscordQueue(
   }
 }
 
-/**
- * Get all registered webhooks (super-admin only)
- */
 export async function getDiscordWebhooks(): Promise<{
   success: boolean
   webhooks?: DiscordWebhook[]
@@ -218,9 +271,6 @@ export async function getDiscordWebhooks(): Promise<{
   }
 }
 
-/**
- * Toggle webhook active status (super-admin only)
- */
 export async function toggleDiscordWebhook(
   webhookId: string,
   active: boolean
@@ -241,9 +291,6 @@ export async function toggleDiscordWebhook(
   }
 }
 
-/**
- * Delete a webhook (super-admin only)
- */
 export async function deleteDiscordWebhook(
   webhookId: string
 ): Promise<{ success: boolean; error?: string }> {
@@ -263,9 +310,6 @@ export async function deleteDiscordWebhook(
   }
 }
 
-/**
- * Register a webhook (authenticated users only)
- */
 export async function registerDiscordWebhook(
   webhookUrl: string,
   webhookName: string,
@@ -284,7 +328,6 @@ export async function registerDiscordWebhook(
       return { success: false, error: error.message }
     }
 
-    // Function now returns JSONB with success/error fields
     if (data && typeof data === 'object') {
       if (data.success) {
         return { success: true, webhookId: data.webhook_id }
@@ -309,9 +352,6 @@ export interface UserWebhook {
   active: boolean
 }
 
-/**
- * Get current user's webhooks
- */
 export async function getMyDiscordWebhooks(): Promise<{
   success: boolean
   webhooks?: UserWebhook[]
@@ -330,9 +370,6 @@ export async function getMyDiscordWebhooks(): Promise<{
   }
 }
 
-/**
- * Delete one of user's own webhooks
- */
 export async function deleteMyDiscordWebhook(
   webhookId: string
 ): Promise<{ success: boolean; error?: string }> {
@@ -355,9 +392,6 @@ export async function deleteMyDiscordWebhook(
   }
 }
 
-/**
- * Update one of user's own webhooks
- */
 export async function updateMyDiscordWebhook(
   webhookId: string,
   updates: { webhook_name?: string; subscribed_events?: string[] }
@@ -383,12 +417,9 @@ export async function updateMyDiscordWebhook(
   }
 }
 
-/**
- * Get enabled public event types (for subscription page)
- */
 export async function getDiscordPublicEventTypes(): Promise<{
   success: boolean
-  eventTypes?: Array<{ event_type: string; enabled: boolean }>
+  eventTypes?: DiscordPublicEventType[]
   error?: string
 }> {
   try {
@@ -398,15 +429,12 @@ export async function getDiscordPublicEventTypes(): Promise<{
       return { success: false, error: error.message }
     }
 
-    return { success: true, eventTypes: data }
+    return { success: true, eventTypes: data as DiscordPublicEventType[] }
   } catch (err) {
     return { success: false, error: (err as Error).message }
   }
 }
 
-/**
- * Trigger the send-discord edge function to process the queue
- */
 export async function processDiscordQueue(): Promise<{
   success: boolean
   processed?: number
@@ -434,84 +462,11 @@ export async function processDiscordQueue(): Promise<{
   }
 }
 
-// Convenience functions for queueing specific event types
-
-export interface OrderEventDetails {
-  orderTitle: string
-  items: Array<{ name: string; quantity: number; unitAuec?: number }>
-  totalAuec: number
-}
-
-export async function queueOrderEvent(
-  action: 'created' | 'fulfilled' | 'cancelled',
-  details: OrderEventDetails
-) {
-  const eventTypes: Record<string, DiscordEventType> = {
-    created: 'order_new',
-    fulfilled: 'order_fulfilled',
-    cancelled: 'order_cancelled',
-  }
-
-  const titles: Record<string, string> = {
-    created: 'New Order Placed',
-    fulfilled: 'Order Accepted',
-    cancelled: 'Order Cancelled',
-  }
-
-  const eventType = eventTypes[action]
-
-  // Build item list string (max 5 items shown)
-  const itemLines = details.items.slice(0, 5).map(item => {
-    if (item.unitAuec) {
-      return `• ${item.name} ×${item.quantity} (${item.unitAuec.toLocaleString()} aUEC ea)`
-    }
-    return `• ${item.name} ×${item.quantity}`
-  })
-  
-  if (details.items.length > 5) {
-    itemLines.push(`• ...and ${details.items.length - 5} more items`)
-  }
-
-  const description = itemLines.join('\n')
-
-  const fields: DiscordField[] = [
-    { name: 'Total Value', value: `${details.totalAuec.toLocaleString()} aUEC`, inline: true },
-    { name: 'Items', value: details.items.length.toString(), inline: true },
-  ]
-
-  return queueDiscordMessage(
-    eventType,
-    `${titles[action]}: ${details.orderTitle}`,
-    description,
-    DISCORD_COLORS[eventType],
-    fields
-  )
-}
-
-export async function queueBlueprintSyncEvent(
-  count: number,
-  version: string
-) {
-  return queueDiscordMessage(
-    'blueprints',
-    'Blueprint Data Synced',
-    `Successfully synced ${count.toLocaleString()} blueprints`,
-    DISCORD_COLORS.blueprints,
-    [
-      { name: 'Blueprints', value: count.toLocaleString(), inline: true },
-      { name: 'Version', value: version, inline: true },
-    ]
-  )
-}
-
-export async function queueSupportEvent(
-  ticketId: string,
-  category: string
-) {
+export async function queueSupportEvent(ticketId: string, category: string) {
   return queueDiscordMessage(
     'support',
     'New Support Ticket',
-    `A new support ticket has been submitted`,
+    'A new support ticket has been submitted',
     DISCORD_COLORS.support,
     [
       { name: 'Category', value: category, inline: true },

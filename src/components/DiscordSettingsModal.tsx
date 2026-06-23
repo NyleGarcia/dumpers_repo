@@ -26,6 +26,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
   // Form state for official webhook
   const [officialUrl, setOfficialUrl] = useState('')
   const [officialName, setOfficialName] = useState('')
+  const [coalesceMinutes, setCoalesceMinutes] = useState('15')
 
   useEffect(() => {
     fetchData()
@@ -44,6 +45,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
       setSettings(settingsRes.settings)
       setOfficialUrl(settingsRes.settings.official_webhook_url || '')
       setOfficialName(settingsRes.settings.official_webhook_name || '')
+      setCoalesceMinutes(String(settingsRes.settings.market_coalesce_minutes ?? 15))
     }
 
     if (webhooksRes.success && webhooksRes.webhooks) {
@@ -59,14 +61,38 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
 
   const handleToggleSetting = async (key: keyof DiscordSettings) => {
     if (!settings) return
+    const current = settings[key]
+    if (typeof current !== 'boolean') return
 
     setSaving(true)
-    const newValue = !settings[key]
+    const newValue = !current
     const result = await updateDiscordSettings({ [key]: newValue })
 
     if (result.success) {
       setSettings({ ...settings, [key]: newValue })
       setMessage({ type: 'success', text: `${key.replace(/_/g, ' ')} updated` })
+    } else {
+      setMessage({ type: 'error', text: result.error || 'Failed to update setting' })
+    }
+    setSaving(false)
+  }
+
+  const handleSaveCoalesceMinutes = async () => {
+    if (!settings) return
+
+    const parsed = parseInt(coalesceMinutes, 10)
+    if (Number.isNaN(parsed) || parsed < 1) {
+      setMessage({ type: 'error', text: 'Enter at least 1 minute' })
+      return
+    }
+
+    setSaving(true)
+    const result = await updateDiscordSettings({ market_coalesce_minutes: parsed })
+
+    if (result.success) {
+      setSettings({ ...settings, market_coalesce_minutes: parsed })
+      setCoalesceMinutes(String(parsed))
+      setMessage({ type: 'success', text: 'Coalesce quiet period updated' })
     } else {
       setMessage({ type: 'error', text: result.error || 'Failed to update setting' })
     }
@@ -220,43 +246,73 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
 
           {/* Event Type Toggles */}
           <div className="p-4 rounded-xl border border-slate-700 bg-slate-800/30 space-y-3">
-            <h3 className="text-white font-medium text-sm mb-3">Public Event Types</h3>
-            
+            <h3 className="text-white font-medium text-sm mb-3">Marketplace Feed (global)</h3>
+
             <div className="pl-2 border-l-2 border-green-500/50 space-y-2">
-              <p className="text-xs text-slate-400 -ml-2 mb-2">Order Events</p>
               <ToggleRow
-                label="New Orders"
-                description="When orders are placed"
+                label="New WTB / WTS listings"
+                description="When anyone posts a new marketplace listing"
                 enabled={settings?.order_new_enabled ?? false}
                 onToggle={() => handleToggleSetting('order_new_enabled')}
                 disabled={saving}
                 color="green"
               />
               <ToggleRow
-                label="Order Accepted"
-                description="When a crafter accepts an order"
+                label="Listing accepted"
+                description="When any marketplace listing is accepted"
                 enabled={settings?.order_fulfilled_enabled ?? false}
                 onToggle={() => handleToggleSetting('order_fulfilled_enabled')}
                 disabled={saving}
                 color="blue"
               />
               <ToggleRow
-                label="Order Cancelled"
-                description="When orders are cancelled"
+                label="Listing cancelled"
+                description="When any pending listing is cancelled"
                 enabled={settings?.order_cancelled_enabled ?? false}
                 onToggle={() => handleToggleSetting('order_cancelled_enabled')}
                 disabled={saving}
                 color="red"
               />
             </div>
-            
+
+            <div className="pt-3 border-t border-slate-700/50 space-y-2">
+              <ToggleRow
+                label="Coalesce listing churn"
+                description="Group rapid post/cancel bursts from the same member into one ping"
+                enabled={settings?.market_coalesce_enabled ?? true}
+                onToggle={() => handleToggleSetting('market_coalesce_enabled')}
+                disabled={saving}
+                color="orange"
+              />
+              <div className="flex items-center justify-between gap-3 py-1">
+                <div>
+                  <span className="text-white text-sm">Quiet period (minutes)</span>
+                  <p className="text-xs text-slate-500">
+                    Wait this long after the last change before sending a grouped ping
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <input
+                    type="number"
+                    min={1}
+                    max={120}
+                    value={coalesceMinutes}
+                    onChange={(e) => setCoalesceMinutes(e.target.value)}
+                    onBlur={() => void handleSaveCoalesceMinutes()}
+                    disabled={saving || !(settings?.market_coalesce_enabled ?? true)}
+                    className="w-16 px-2 py-1 text-sm bg-slate-800 border border-slate-600 rounded text-white text-center disabled:opacity-50"
+                  />
+                </div>
+              </div>
+            </div>
+
             <ToggleRow
-              label="Blueprints"
-              description="Blueprint sync completions"
-              enabled={settings?.blueprints_enabled ?? false}
-              onToggle={() => handleToggleSetting('blueprints_enabled')}
+              label="Personal notifications"
+              description="Member deal alerts (my_order_* and support replies)"
+              enabled={settings?.personal_discord_enabled ?? true}
+              onToggle={() => handleToggleSetting('personal_discord_enabled')}
               disabled={saving}
-              color="orange"
+              color="blue"
             />
           </div>
 

@@ -9,15 +9,29 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-// Discord embed colors
 const COLORS: Record<string, number> = {
-  orders: 0x22c55e,         // Green (legacy)
-  order_new: 0x22c55e,      // Green
-  order_fulfilled: 0x3b82f6, // Blue
-  order_cancelled: 0xef4444, // Red
-  blueprints: 0xf97316,     // Orange
-  support: 0x8b5cf6,        // Purple
-  admin: 0xef4444,          // Red
+  orders: 0x22c55e,
+  order_new: 0x22c55e,
+  order_fulfilled: 0x3b82f6,
+  order_cancelled: 0xef4444,
+  market_wtb_new: 0x22c55e,
+  market_wts_new: 0x10b981,
+  market_accepted: 0x3b82f6,
+  market_cancelled: 0xef4444,
+  market_coalesced: 0xf59e0b,
+  my_order_accepted: 0x3b82f6,
+  my_order_in_progress: 0x6366f1,
+  my_order_ready: 0xf59e0b,
+  my_order_completed: 0x22c55e,
+  my_order_cancelled: 0xef4444,
+  my_order_released: 0xef4444,
+  my_order_timeout: 0xef4444,
+  my_order_noshow: 0xef4444,
+  my_order_dispute: 0xef4444,
+  my_support_reply: 0x8b5cf6,
+  my_support_resolved: 0x22c55e,
+  support: 0x8b5cf6,
+  admin: 0xef4444,
 }
 
 interface DiscordSettings {
@@ -29,17 +43,22 @@ interface DiscordSettings {
   blueprints_enabled: boolean
   support_enabled: boolean
   admin_enabled: boolean
+  personal_discord_enabled: boolean
+  market_coalesce_enabled: boolean
+  market_coalesce_minutes: number
   official_webhook_url: string | null
   official_webhook_name: string | null
 }
 
 interface QueuedMessage {
   id: string
-  event_type: 'orders' | 'order_new' | 'order_fulfilled' | 'order_cancelled' | 'blueprints' | 'support' | 'admin'
+  event_type: string
   title: string
   description: string | null
   color: number
   fields: Array<{ name: string; value: string; inline?: boolean }>
+  target_user_id: string | null
+  actor_user_id: string | null
   created_at: string
 }
 
@@ -56,6 +75,22 @@ interface DiscordEmbed {
   fields?: Array<{ name: string; value: string; inline?: boolean }>
   footer?: { text: string }
   timestamp?: string
+}
+
+function isStaffEvent(eventType: string): boolean {
+  return eventType === 'support' || eventType === 'admin'
+}
+
+function isPersonalEvent(eventType: string): boolean {
+  return eventType.startsWith('my_')
+}
+
+function isMarketEvent(eventType: string): boolean {
+  return eventType.startsWith('market_')
+}
+
+function isLegacyPublicEvent(eventType: string): boolean {
+  return ['orders', 'order_new', 'order_fulfilled', 'order_cancelled'].includes(eventType)
 }
 
 async function sendToWebhook(
@@ -86,26 +121,45 @@ async function sendToWebhook(
   }
 }
 
+async function deliverToWebhooks(
+  supabase: ReturnType<typeof createClient>,
+  webhooks: Webhook[],
+  embed: DiscordEmbed
+): Promise<number> {
+  let sent = 0
+
+  for (const webhook of webhooks) {
+    const success = await sendToWebhook(webhook.webhook_url, embed, webhook.webhook_name)
+
+    await supabase.rpc('record_discord_webhook_result', {
+      p_webhook_id: webhook.id,
+      p_success: success,
+    })
+
+    if (success) sent++
+    await new Promise((resolve) => setTimeout(resolve, 100))
+  }
+
+  return sent
+}
+
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    // Create Supabase client with service role
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Optional: Verify caller is super-admin (for manual triggers)
     const authHeader = req.headers.get('Authorization')
     if (authHeader) {
       const userClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
-        global: { headers: { Authorization: authHeader } }
+        global: { headers: { Authorization: authHeader } },
       })
       const { data: { user }, error: authError } = await userClient.auth.getUser()
-      
+
       if (!authError && user) {
         const { data: profile } = await supabase
           .from('profiles')
@@ -122,9 +176,7 @@ serve(async (req) => {
       }
     }
 
-    // Get Discord settings
-    const { data: settingsData, error: settingsError } = await supabase
-      .rpc('get_discord_settings')
+    const { data: settingsData, error: settingsError } = await supabase.rpc('get_discord_settings')
 
     if (settingsError || !settingsData || settingsData.length === 0) {
       return new Response(
@@ -142,9 +194,9 @@ serve(async (req) => {
       )
     }
 
-    // Get pending messages
-    const { data: messages, error: msgError } = await supabase
-      .rpc('get_pending_discord_messages', { p_limit: 50 })
+    const { data: messages, error: msgError } = await supabase.rpc('get_pending_discord_messages', {
+      p_limit: 50,
+    })
 
     if (msgError) {
       return new Response(
@@ -176,13 +228,7 @@ serve(async (req) => {
         timestamp: msg.created_at,
       }
 
-      // Determine target webhooks based on event type
-      // Public events: order_new, order_fulfilled, order_cancelled, blueprints, orders (legacy)
-      // Org-only events: support, admin
-      const isOrgOnly = msg.event_type === 'support' || msg.event_type === 'admin'
-
-      if (isOrgOnly) {
-        // Org-only events go to official webhook ONLY
+      if (isStaffEvent(msg.event_type)) {
         if (settings.official_webhook_url) {
           const success = await sendToWebhook(
             settings.official_webhook_url,
@@ -191,35 +237,49 @@ serve(async (req) => {
           )
           if (success) sent++
         } else {
-          console.log(`Skipping org-only message (${msg.event_type}): No official webhook configured`)
+          console.log(`Skipping staff message (${msg.event_type}): No official webhook configured`)
         }
-      } else {
-        // Public events go to subscribed public webhooks ONLY (not official)
-        const { data: webhooks, error: webhookError } = await supabase
-          .rpc('get_discord_webhooks_for_event', { p_event_type: msg.event_type })
+      } else if (isPersonalEvent(msg.event_type)) {
+        if (!msg.target_user_id) {
+          console.log(`Skipping personal message (${msg.event_type}): missing target_user_id`)
+        } else {
+          const { data: webhooks, error: webhookError } = await supabase.rpc(
+            'get_discord_webhooks_for_personal_event',
+            { p_event_type: msg.event_type, p_target_user_id: msg.target_user_id }
+          )
+
+          if (webhookError) {
+            errors.push(`Failed to get personal webhooks for ${msg.event_type}: ${webhookError.message}`)
+          } else {
+            sent += await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+          }
+        }
+      } else if (isMarketEvent(msg.event_type)) {
+        const { data: webhooks, error: webhookError } = await supabase.rpc(
+          'get_discord_webhooks_for_market_event',
+          { p_event_type: msg.event_type, p_exclude_user_id: msg.actor_user_id }
+        )
+
+        if (webhookError) {
+          errors.push(`Failed to get market webhooks for ${msg.event_type}: ${webhookError.message}`)
+        } else {
+          sent += await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+        }
+      } else if (isLegacyPublicEvent(msg.event_type)) {
+        const { data: webhooks, error: webhookError } = await supabase.rpc(
+          'get_discord_webhooks_for_event',
+          { p_event_type: msg.event_type }
+        )
 
         if (webhookError) {
           errors.push(`Failed to get webhooks for ${msg.event_type}: ${webhookError.message}`)
-          continue
+        } else {
+          sent += await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
         }
-
-        for (const webhook of (webhooks || []) as Webhook[]) {
-          const success = await sendToWebhook(webhook.webhook_url, embed, webhook.webhook_name)
-          
-          // Record result
-          await supabase.rpc('record_discord_webhook_result', {
-            p_webhook_id: webhook.id,
-            p_success: success
-          })
-
-          if (success) sent++
-
-          // Rate limiting: Discord allows 30 requests per minute per webhook
-          await new Promise(resolve => setTimeout(resolve, 100))
-        }
+      } else {
+        console.log(`Skipping unknown event type: ${msg.event_type}`)
       }
 
-      // Mark message as processed
       await supabase.rpc('mark_discord_message_processed', { p_message_id: msg.id })
       processed++
     }
@@ -229,11 +289,10 @@ serve(async (req) => {
         success: true,
         processed,
         sent,
-        errors: errors.length > 0 ? errors : undefined
+        errors: errors.length > 0 ? errors : undefined,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
-
   } catch (error) {
     console.error('Send Discord error:', error)
     return new Response(

@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `079_drop_synced_blueprints.sql` (removes legacy sccrafter `synced_blueprints` table).
+**Latest migration:** `082_discord_market_coalesce.sql` (marketplace listing churn coalesce). Apply `080` and `081` first if not already applied.
 
 ---
 
@@ -85,6 +85,9 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 42 | `077_guest_pending_order_count.sql` | `get_pending_custom_order_count()` for Offline Fulfillment teaser |
 | 43 | `078_order_listing_type.sql` | WTB/WTS `listing_type`, semantic buyer/seller RPCs |
 | 44 | `079_drop_synced_blueprints.sql` | Drop legacy `synced_blueprints` (sccrafter era) |
+| 45 | `080_discord_personal_routing.sql` | Personal + marketplace Discord routing, server-side triggers |
+| 46 | `081_rsi_org_schema.sql` | RSI org affiliation tables (DB only; site code deferred) |
+| 47 | `082_discord_market_coalesce.sql` | Marketplace listing churn coalesce + admin quiet-period setting |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -200,6 +203,17 @@ WHERE table_schema = 'public' AND table_name LIKE 'game_%';
 
 -- 079: legacy sccrafter table removed
 SELECT to_regclass('public.synced_blueprints');  -- should be NULL
+
+-- 080: personal Discord routing
+SELECT column_name FROM information_schema.columns
+WHERE table_schema = 'public' AND table_name = 'discord_message_queue' AND column_name = 'target_user_id';
+
+-- 081: org schema (optional until Phase 2 site code)
+SELECT to_regclass('public.user_rsi_org_affiliations');  -- should exist after 081
+
+-- 082: marketplace Discord coalesce
+SELECT column_name FROM information_schema.columns
+WHERE table_schema = 'public' AND table_name = 'discord_settings' AND column_name = 'market_coalesce_enabled';
 ```
 
 ---

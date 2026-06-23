@@ -8,6 +8,7 @@ import ListingTypeBadge from '../components/ListingTypeBadge'
 import ReputationBadge from '../components/ReputationBadge'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import AppModal from '../components/layout/AppModal'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpRequiredPrice } from '../lib/dfp'
@@ -123,6 +124,8 @@ export default function CustomOrdersRoute() {
     orderId: string
     orderTitle: string
   } | null>(null)
+  const [deleteModalOrder, setDeleteModalOrder] = useState<CustomOrder | null>(null)
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false)
   const [disputeDescription, setDisputeDescription] = useState('')
   const [disputeSubmitting, setDisputeSubmitting] = useState(false)
   const [ratingModal, setRatingModal] = useState<{
@@ -184,18 +187,14 @@ export default function CustomOrdersRoute() {
   }
 
   const handleDeleteOrder = async (orderId: string) => {
-    if (
-      !window.confirm(
-        'Delete this order permanently? This cannot be undone.'
-      )
-    ) {
-      return
-    }
+    setDeleteSubmitting(true)
     const result = await deleteCustomOrderRequester(orderId)
+    setDeleteSubmitting(false)
     if (result.error) {
       setError(result.error)
       return
     }
+    setDeleteModalOrder(null)
     if (editingOrderId === orderId) setEditingOrderId(null)
     await loadOrders()
   }
@@ -732,7 +731,7 @@ export default function CustomOrdersRoute() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => void handleDeleteOrder(order.id)}
+                            onClick={() => setDeleteModalOrder(order)}
                             className="px-2 py-1 text-xs bg-red-950/50 text-red-300 border border-red-500/30 rounded"
                           >
                             Delete
@@ -779,6 +778,50 @@ export default function CustomOrdersRoute() {
           onCancel={() => setRatingModal(null)}
           confirming={archiving}
         />
+      )}
+
+      {deleteModalOrder && (
+        <AppModal
+          title="Delete listing?"
+          onClose={() => setDeleteModalOrder(null)}
+          size="sm"
+          closeOnBackdrop={!deleteSubmitting}
+        >
+          <p className="text-slate-300 text-sm">
+            <span className="text-white font-medium">{deleteModalOrder.title}</span> will be
+            permanently removed.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2 mt-6">
+            <button
+              type="button"
+              onClick={() => void handleDeleteOrder(deleteModalOrder.id)}
+              disabled={deleteSubmitting}
+              className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+            >
+              {deleteSubmitting ? 'Deleting…' : 'Delete'}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setDeleteModalOrder(null)
+                setShowForm(false)
+                setEditingOrderId(deleteModalOrder.id)
+              }}
+              disabled={deleteSubmitting}
+              className="flex-1 px-4 py-2 bg-orange-950/50 hover:bg-orange-900/50 text-orange-300 border border-orange-500/30 rounded-lg text-sm"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeleteModalOrder(null)}
+              disabled={deleteSubmitting}
+              className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
+            >
+              Nevermind, I&apos;ll keep it
+            </button>
+          </div>
+        </AppModal>
       )}
 
       {disputeModal && (
