@@ -1,14 +1,14 @@
 {
-  "_parsed": "2026-06-23T05:06:27.986Z",
+  "_parsed": "2026-06-23T11:36:15.366Z",
   "gameBuild": null,
   "socpaksScanned": 477,
   "shops": 173,
-  "shopsWithInventory": 52,
+  "shopsWithInventory": 53,
   "shelfShops": 33,
-  "emptyKioskShops": 88,
-  "emptyShops": 121,
-  "inventoryItems": 4507,
-  "itemsWithPrice": 4507,
+  "emptyKioskShops": 87,
+  "emptyShops": 120,
+  "inventoryItems": 4623,
+  "itemsWithPrice": 4623,
   "itemsSkippedNoDisplayName": 8,
   "parseErrors": 0
 }

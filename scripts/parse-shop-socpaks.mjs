@@ -88,9 +88,8 @@ function main() {
 
         if (merged.length === 0) continue
 
-        const hierarchy = deriveHierarchy(socpakRelative)
-
         for (const shop of merged) {
+          const hierarchy = deriveHierarchy(socpakRelative, shop.label)
           const shopReference = `socpak:${socpakRelative}:${shop.entityGuid}`
           if (seenReferences.has(shopReference)) continue
           seenReferences.add(shopReference)

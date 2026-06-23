@@ -87,7 +87,10 @@ const SHOP_LABEL_PATTERNS = [
 const LOCATION_HINTS = [
   { re: /area18|area_18|a18/, system: 'Stanton', site: 'ArcCorp', location: 'Area 18', locationType: 'city' },
   { re: /lorville|l19/, system: 'Stanton', site: 'Hurston', location: 'Lorville', locationType: 'city' },
-  { re: /newbabbage|nb_|new_babbage/, system: 'Stanton', site: 'microTech', location: 'New Babbage', locationType: 'city' },
+  { re: /newbabbage|newbab|nb_|new_babbage/, system: 'Stanton', site: 'microTech', location: 'New Babbage', locationType: 'city' },
+  { re: /area18|area_18|a18|_a18/, system: 'Stanton', site: 'ArcCorp', location: 'Area 18', locationType: 'city' },
+  { re: /lorville|l19|hurston|hur_|_hur/, system: 'Stanton', site: 'Hurston', location: 'Lorville', locationType: 'city' },
+  { re: /levski|lev_occu|_lev_/, system: 'Nyx', site: 'Levski', location: 'Levski', locationType: 'city' },
   { re: /orison|orv_|crusader(?!.*l[1-5])/, system: 'Stanton', site: 'Crusader', location: 'Orison', locationType: 'city' },
   { re: /levski|refin_levski/, system: 'Nyx', site: 'Levski', location: 'Levski', locationType: 'city' },
   {
@@ -110,7 +113,7 @@ const LOCATION_HINTS = [
   { re: /hur[-_]?l1|hurston.*l1/, system: 'Stanton', site: 'Hurston', location: 'HUR-L1', locationType: 'refinery' },
   { re: /mic[-_]?l1|microtech.*l1/, system: 'Stanton', site: 'microTech', location: 'MIC-L1', locationType: 'refinery' },
   { re: /arc[-_]?l1|arccorp.*l1/, system: 'Stanton', site: 'ArcCorp', location: 'ARC-L1', locationType: 'refinery' },
-  { re: /reststop|rs_ext|rs_int/, system: null, site: null, location: null, locationType: 'rest_stop' },
+  { re: /reststop(?:[_/]|$)|rs_ext(?:[_-]|$)|(?:^|[_-])rs_int(?:[_-]|$|\.)/, system: null, site: null, location: null, locationType: 'rest_stop' },
 ]
 
 const PYRO_ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
@@ -310,7 +313,97 @@ export function mergeShopRecords(xmlShops, socShops) {
   return [...byGuid.values()]
 }
 
-export function deriveHierarchy(socpakRelativePath) {
+function restStopLocationFromLabel(label, fileName) {
+  const raw = `${label} ${fileName}`.toLowerCase()
+  if (/burrito/i.test(raw)) return 'Burrito Cart'
+  if (/hotdog/i.test(raw)) return 'Hot Dog Cart'
+  if (/noodle.?cart|noodlebar/i.test(raw)) return 'Noodle Vendor'
+  if (/pizza/i.test(raw)) return 'Pizza Vendor'
+  if (/coffee/i.test(raw)) return 'Coffee Vendor'
+  if (/centermass|livefire|weaponsmith|armor/i.test(raw)) return 'Weapons & Armor'
+  if (/clothing|casaba|aparelli|hatstall/i.test(raw)) return 'Clothing'
+  if (/pharmacy|medical|clinic/i.test(raw)) return 'Pharmacy'
+  if (/cargo/i.test(raw)) return 'Cargo Office'
+  if (/commodity|platinumbay/i.test(raw)) return 'Commodity Terminal'
+  if (/dealership/i.test(raw)) return 'Ship Dealer'
+  if (/refinery/i.test(raw)) return 'Refinery Services'
+  if (/food|ellroys|wallys|whammers|nearbeer|bar_/i.test(raw)) return 'Food & Drink'
+  if (/mining|harvestable/i.test(raw)) return 'Mining Supplies'
+  if (/electronics/i.test(raw)) return 'Electronics'
+  if (/admin/i.test(raw)) return 'Admin Office'
+  if (/truckstop|lt_[a-z]/i.test(raw)) return 'Truck Stop'
+  if (/stall|market/i.test(raw)) return 'Market Stall'
+  return 'Rest Stop Vendor'
+}
+
+/** Infer hierarchy from SCShop label when socpak path is a generic reusable template. */
+function deriveHierarchyFromLabel(label, fileName, pathSystem) {
+  if (!label) return null
+  const haystack = `${label}/${fileName}`.toLowerCase()
+
+  if (/levski|nyx|delamar|cafe.?musain|grandbarter|conscientiousobjects.*levski|teach.*levski/i.test(haystack)) {
+    return { system: 'Nyx', site: 'Levski', location: 'Levski', locationType: 'city' }
+  }
+
+  if (/pyro[_-]?rstop|pyroreststop|cargo.?office.?pyro|pyro.*dealership|pyro.*stall|pyro.*electronics/i.test(haystack)) {
+    const numMatch = haystack.match(/pyro[_-]?(\d)/)
+    const site = numMatch ? pyroPlanetLabel(numMatch[1]) : 'Pyro III'
+    return { system: 'Pyro', site, location: 'Rest Stop', locationType: 'rest_stop' }
+  }
+
+  if (/rdwn|rundown|rund_weaponsmith|rund_001|rund_002/i.test(haystack)) {
+    return { system: 'Pyro', site: 'Pyro II', location: 'Ruin Station', locationType: 'rest_stop' }
+  }
+
+  if (/newbabbage|newbab|new_bab|omega.?pro.*newbab|wallys.*newbab|whammers.*newbab|tdd.*newbab|kelto.*newbab|centermass.*newbab|pharmacy.*newbab|aparelli/i.test(haystack)) {
+    return { system: 'Stanton', site: 'microTech', location: 'New Babbage', locationType: 'city' }
+  }
+
+  if (/area18|area_18|_a18\b|centermass.*area/i.test(haystack)) {
+    return { system: 'Stanton', site: 'ArcCorp', location: 'Area 18', locationType: 'city' }
+  }
+
+  if (/orison|crusader|kelto.*orison|makau|covalex|providence|cousincrows|showroom.*orison/i.test(haystack)) {
+    return { system: 'Stanton', site: 'Crusader', location: 'Orison', locationType: 'city' }
+  }
+
+  if (/lorville|hurston|seizedgoods.*lorville|tammany/i.test(haystack)) {
+    return { system: 'Stanton', site: 'Hurston', location: 'Lorville', locationType: 'city' }
+  }
+
+  if (/grimhex|grim_hex|yela/i.test(haystack)) {
+    return { system: 'Stanton', site: 'Yela', location: 'Grim HEX', locationType: 'rest_stop' }
+  }
+
+  if (/portolisar|olisar/i.test(haystack)) {
+    return { system: 'Stanton', site: 'Crusader', location: 'Port Olisar', locationType: 'rest_stop' }
+  }
+
+  if (/refineryadmin|refinery.*rentals|refinery.*ore/i.test(haystack)) {
+    return { system: 'Stanton', site: 'Refineries', location: 'Refinery Services', locationType: 'refinery' }
+  }
+
+  if (
+    /truckstop|platinumbay|utilstation|reststop|_rstop|lt_[a-z]|stall_rdwn|base_stall|burrito|hotdog|noodle|pizza|coffee_to_go|cargo_office|centermass_large(?!_newbab)|armor_util|shipweapons|bar_util|commex|securityoffice|defensecon/i.test(
+      haystack
+    )
+  ) {
+    return {
+      system: 'Stanton',
+      site: 'Rest Stops',
+      location: restStopLocationFromLabel(label, fileName),
+      locationType: 'rest_stop',
+    }
+  }
+
+  if (pathSystem === 'Nyx') {
+    return { system: 'Nyx', site: 'Levski', location: 'Levski', locationType: 'city' }
+  }
+
+  return null
+}
+
+export function deriveHierarchy(socpakRelativePath, shopLabel = '') {
   const lower = socpakRelativePath.replace(/\\/g, '/').toLowerCase()
   const fileName = basename(lower, '.socpak')
   const pathSystem = detectPathSystem(lower)
@@ -331,6 +424,11 @@ export function deriveHierarchy(socpakRelativePath) {
 
   for (const hint of LOCATION_HINTS) {
     if (hint.re.test(lower) || hint.re.test(fileName)) {
+      const labelHint = deriveHierarchyFromLabel(shopLabel, fileName, pathSystem)
+      if (labelHint && hint.locationType === 'rest_stop' && !hint.location) {
+        return { ...labelHint, shopCategory, franchise }
+      }
+
       const system = hint.system ?? pathSystem
       const site = resolveHierarchySite(hint, lower, pathSystem)
       return {
@@ -345,7 +443,7 @@ export function deriveHierarchy(socpakRelativePath) {
   }
 
   const inferredSite = inferSiteFromPath(lower, pathSystem)
-  return {
+  const fallback = {
     system: pathSystem,
     site: inferredSite || 'Rest Stops',
     location: titleCase(fileName.replace(/_/g, ' ')),
@@ -353,6 +451,21 @@ export function deriveHierarchy(socpakRelativePath) {
     shopCategory,
     franchise,
   }
+
+  const labelHint = deriveHierarchyFromLabel(shopLabel, fileName, pathSystem)
+  if (labelHint) {
+    return { ...labelHint, shopCategory, franchise }
+  }
+
+  if (fallback.site === 'Rest Stops' || fallback.locationType === 'unknown') {
+    return {
+      ...fallback,
+      location: restStopLocationFromLabel(shopLabel, fileName) || fallback.location,
+      locationType: fallback.locationType === 'unknown' ? 'rest_stop' : fallback.locationType,
+    }
+  }
+
+  return fallback
 }
 
 export function resolveShopDisplayName(label, franchise, _location) {

@@ -12,7 +12,8 @@ export const LOCATION_TO_SITE: Record<string, string> = {
   'ARC-L1': 'ArcCorp',
 }
 
-const GENERIC_SITE_LABELS = new Set(['unknown', 'unmapped', 'rest stops', ''])
+/** Labels that mean "re-infer site from location" — not bucket names like Rest Stops. */
+const GENERIC_SITE_LABELS = new Set(['unknown', 'unmapped', ''])
 
 /** Use parser-provided site when sensible; infer planet body from city name only as fallback. */
 export function resolveTreeSite(
