@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import { shouldFlattenLocation } from '../../lib/shopHierarchy'
 
 export interface ShopTreeShop {
   id: number
@@ -54,6 +55,43 @@ function LocationTypeBadge({ type }: { type: string | null }) {
   )
 }
 
+function shopListHasMatch(shops: ShopTreeShop[], matchingShopIds: Set<number> | null): boolean {
+  if (!matchingShopIds) return false
+  return shops.some((shop) => matchingShopIds.has(shop.id))
+}
+
+function ShopButtons({
+  shops,
+  selectedShopId,
+  matchingShopIds,
+  onSelectShop,
+}: {
+  shops: ShopTreeShop[]
+  selectedShopId: number | null
+  matchingShopIds: Set<number> | null
+  onSelectShop: (shopId: number) => void
+}) {
+  return (
+    <div className="ml-3 border-l border-slate-700/10">
+      {shops.map((shop) => (
+        <button
+          key={shop.id}
+          type="button"
+          onClick={() => onSelectShop(shop.id)}
+          className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-700/20 transition-colors ${
+            selectedShopId === shop.id
+              ? 'bg-amber-500/10 border-l-2 border-amber-500 text-white'
+              : 'text-slate-300'
+          }`}
+        >
+          <div className="truncate">{shop.name}</div>
+          <div className="text-[10px] text-slate-500 mt-0.5">{shop.inventory_count} items</div>
+        </button>
+      ))}
+    </div>
+  )
+}
+
 export default function ShopBrowseTree({
   tree,
   selectedShopId,
@@ -61,6 +99,8 @@ export default function ShopBrowseTree({
   onSelectShop,
   loading,
 }: ShopBrowseTreeProps) {
+  const searchActive = matchingShopIds !== null
+
   const filteredTree = useMemo(() => {
     if (!matchingShopIds) return tree
 
@@ -96,61 +136,86 @@ export default function ShopBrowseTree({
 
   return (
     <div className="border border-slate-700/50 rounded-xl bg-slate-800/20 max-h-[640px] overflow-y-auto">
-      {filteredTree.map((system) => (
-        <details key={system.system} open className="group/system border-b border-slate-700/30 last:border-b-0">
-          <summary className="cursor-pointer px-3 py-2 text-sm font-medium text-white hover:bg-slate-700/20 list-none flex items-center justify-between">
-            <span>{system.system}</span>
-            <span className="text-xs text-slate-500">
-              {system.sites.reduce(
-                (acc, site) => acc + site.locations.reduce((a, l) => a + l.shops.length, 0),
-                0
-              )}{' '}
-              shops
-            </span>
-          </summary>
+      {filteredTree.map((system) => {
+        const systemShopCount = system.sites.reduce(
+          (acc, site) => acc + site.locations.reduce((a, l) => a + l.shops.length, 0),
+          0
+        )
+        const systemOpen =
+          searchActive &&
+          system.sites.some((site) =>
+            site.locations.some((location) => shopListHasMatch(location.shops, matchingShopIds))
+          )
 
-          {system.sites.map((site) => (
-            <details key={`${system.system}-${site.site}`} open className="ml-3 border-l border-slate-700/30">
-              <summary className="cursor-pointer px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-700/20 list-none">
-                {site.site}
-              </summary>
+        return (
+          <details
+            key={system.system}
+            open={systemOpen || undefined}
+            className="group/system border-b border-slate-700/30 last:border-b-0"
+          >
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium text-white hover:bg-slate-700/20 list-none flex items-center justify-between">
+              <span>{system.system}</span>
+              <span className="text-xs text-slate-500">{systemShopCount} shops</span>
+            </summary>
 
-              {site.locations.map((location) => (
+            {system.sites.map((site) => {
+              const siteOpen =
+                searchActive &&
+                site.locations.some((location) => shopListHasMatch(location.shops, matchingShopIds))
+
+              return (
                 <details
-                  key={`${system.system}-${site.site}-${location.location}`}
-                  open
-                  className="ml-3 border-l border-slate-700/20"
+                  key={`${system.system}-${site.site}`}
+                  open={siteOpen || undefined}
+                  className="ml-3 border-l border-slate-700/30"
                 >
-                  <summary className="cursor-pointer px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700/20 list-none flex items-center gap-2">
-                    <span>{location.location}</span>
-                    <LocationTypeBadge type={location.location_type} />
+                  <summary className="cursor-pointer px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-700/20 list-none">
+                    {site.site}
                   </summary>
 
-                  <div className="ml-3 border-l border-slate-700/10">
-                    {location.shops.map((shop) => (
-                      <button
-                        key={shop.id}
-                        type="button"
-                        onClick={() => onSelectShop(shop.id)}
-                        className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-700/20 transition-colors ${
-                          selectedShopId === shop.id
-                            ? 'bg-amber-500/10 border-l-2 border-amber-500 text-white'
-                            : 'text-slate-300'
-                        }`}
+                  {site.locations.map((location) => {
+                    const flattened = shouldFlattenLocation(site.site, location.location)
+                    const locationOpen =
+                      searchActive && shopListHasMatch(location.shops, matchingShopIds)
+
+                    if (flattened) {
+                      return (
+                        <ShopButtons
+                          key={`${system.system}-${site.site}-${location.location}`}
+                          shops={location.shops}
+                          selectedShopId={selectedShopId}
+                          matchingShopIds={matchingShopIds}
+                          onSelectShop={onSelectShop}
+                        />
+                      )
+                    }
+
+                    return (
+                      <details
+                        key={`${system.system}-${site.site}-${location.location}`}
+                        open={locationOpen || undefined}
+                        className="ml-3 border-l border-slate-700/20"
                       >
-                        <div className="truncate">{shop.name}</div>
-                        <div className="text-[10px] text-slate-500 mt-0.5">
-                          {shop.inventory_count} items
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                        <summary className="cursor-pointer px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700/20 list-none flex items-center gap-2">
+                          <span>{location.location}</span>
+                          <LocationTypeBadge type={location.location_type} />
+                        </summary>
+
+                        <ShopButtons
+                          shops={location.shops}
+                          selectedShopId={selectedShopId}
+                          matchingShopIds={matchingShopIds}
+                          onSelectShop={onSelectShop}
+                        />
+                      </details>
+                    )
+                  })}
                 </details>
-              ))}
-            </details>
-          ))}
-        </details>
-      ))}
+              )
+            })}
+          </details>
+        )
+      })}
     </div>
   )
 }

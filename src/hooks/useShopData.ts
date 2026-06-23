@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import type { ShopTreeSystem } from '../components/shops/ShopBrowseTree'
+import { resolveTreeSite, shouldFlattenLocation } from '../lib/shopHierarchy'
 
 export interface ShopSystem {
   system: string
@@ -106,17 +107,22 @@ function buildBrowseTree(
 
     if (!systems.has(row.system)) systems.set(row.system, new Map())
     const siteMap = systems.get(row.system)!
-    const siteKey = row.site || 'Unknown'
+    const siteKey = resolveTreeSite(row.system, row.site, row.location, row.location_type)
     if (!siteMap.has(siteKey)) siteMap.set(siteKey, new Map())
+
     const locMap = siteMap.get(siteKey)!
-    if (!locMap.has(row.location)) {
-      locMap.set(row.location, {
-        location: row.location,
+    const locationKey = shouldFlattenLocation(siteKey, row.location)
+      ? siteKey
+      : row.location
+
+    if (!locMap.has(locationKey)) {
+      locMap.set(locationKey, {
+        location: locationKey,
         location_type: row.location_type,
         shops: [],
       })
     }
-    locMap.get(row.location)!.shops.push({
+    locMap.get(locationKey)!.shops.push({
       id: row.id,
       name: row.name,
       location_type: row.location_type,

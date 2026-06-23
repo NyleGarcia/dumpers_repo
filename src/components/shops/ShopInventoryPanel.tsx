@@ -31,16 +31,20 @@ function TransactionBadges({ item }: { item: ShopInventoryItem }) {
 interface ShopInventoryPanelProps {
   shop: ShopDetails | null
   inventory: ShopInventoryItem[]
+  totalInventoryCount?: number
   loading: boolean
   gameBuild?: string | null
+  itemSearchQuery?: string
   renderItemExtra?: (item: ShopInventoryItem) => React.ReactNode
 }
 
 export default function ShopInventoryPanel({
   shop,
   inventory,
+  totalInventoryCount,
   loading,
   gameBuild,
+  itemSearchQuery,
   renderItemExtra,
 }: ShopInventoryPanelProps) {
   if (!shop) {
@@ -83,11 +87,26 @@ export default function ShopInventoryPanel({
                 Places like food bars and noodle counters don&apos;t use a shop terminal listing.
               </p>
             </div>
+          ) : itemSearchQuery ? (
+            <div className="p-8 text-center space-y-2">
+              <p className="text-slate-400">No items in this shop match &ldquo;{itemSearchQuery}&rdquo;.</p>
+              {(totalInventoryCount ?? 0) > 0 && (
+                <p className="text-xs text-slate-500">
+                  This shop has {totalInventoryCount} items — try clearing the search to see all.
+                </p>
+              )}
+            </div>
           ) : (
             <div className="p-8 text-center text-slate-500">No inventory data for this shop yet.</div>
           )
         ) : (
           <>
+            {itemSearchQuery && (totalInventoryCount ?? inventory.length) > inventory.length && (
+              <div className="px-4 py-2 text-xs text-slate-500 border-b border-slate-700/30 bg-slate-800/40">
+                Showing {inventory.length} of {totalInventoryCount ?? inventory.length} items matching
+                &ldquo;{itemSearchQuery}&rdquo;
+              </div>
+            )}
             <div className="grid grid-cols-[1fr,120px,120px,90px] gap-4 px-4 py-2 bg-slate-800/50 text-xs text-slate-500 font-medium uppercase tracking-wider">
               <div>Item</div>
               <div className="text-right">Price</div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useSearch } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
@@ -36,6 +36,15 @@ export default function ShopsRoute() {
 
   const isEmpty = tree.length === 0 && !treeLoading
   const searchActive = globalSearch.trim().length >= 3
+  const searchQuery = globalSearch.trim().toLowerCase()
+
+  const filteredInventory = useMemo(() => {
+    if (!searchActive) return inventory
+    return inventory.filter((item) => {
+      const name = (item.display_name || item.item_name || '').toLowerCase()
+      return name.includes(searchQuery)
+    })
+  }, [inventory, searchActive, searchQuery])
 
   return (
     <FeaturePageLayout
@@ -92,9 +101,11 @@ export default function ShopsRoute() {
               ) : (
                 <ShopInventoryPanel
                   shop={shopDetails}
-                  inventory={inventory}
+                  inventory={filteredInventory}
+                  totalInventoryCount={inventory.length}
                   loading={inventoryLoading}
                   gameBuild={gameBuild}
+                  itemSearchQuery={searchActive ? globalSearch.trim() : undefined}
                   renderItemExtra={(item) => {
                     const itemName = item.display_name || ''
                     const blueprint = getBlueprintByItemName(itemName)

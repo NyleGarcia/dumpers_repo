@@ -100,6 +100,27 @@ const LOCATION_HINTS = [
   { re: /reststop|rs_ext|rs_int/, system: 'Stanton', site: null, location: null, locationType: 'rest_stop' },
 ]
 
+function inferSiteFromPath(lower) {
+  if (/levski|delamar|nyx/.test(lower)) return 'Delamar'
+  if (/lorville|l19|hurston|hur_|_hur-|\/hur\//.test(lower)) return 'Hurston'
+  if (/newbabbage|nb_|microtech|mic_|_mic-|\/mic\//.test(lower)) return 'microTech'
+  if (/orison|orv_|crusader|cru_|_cru-|\/cru\//.test(lower)) return 'Crusader'
+  if (/area18|a18|arccorp|arc_|_arc-|\/arc\//.test(lower)) return 'ArcCorp'
+  if (/yela|grimhex|grim_hex/.test(lower)) return 'Yela'
+  if (/portolisar|olisar|po_|port_olisar/.test(lower)) return 'Crusader'
+  if (/pyro/.test(lower)) return 'Pyro'
+  return null
+}
+
+function resolveHierarchySite(hint, lower) {
+  if (hint.site) return hint.site
+  const inferred = inferSiteFromPath(lower)
+  if (inferred) return inferred
+  if (hint.locationType === 'rest_stop') return 'Rest Stops'
+  if (hint.locationType === 'refinery') return 'Refineries'
+  return hint.system
+}
+
 export function readSocpakEntries(socpakPath) {
   const zip = new AdmZip(socpakPath)
   const entries = zip.getEntries()
@@ -240,9 +261,10 @@ export function deriveHierarchy(socpakRelativePath) {
 
   for (const hint of LOCATION_HINTS) {
     if (hint.re.test(lower) || hint.re.test(fileName)) {
+      const site = resolveHierarchySite(hint, lower)
       return {
         system: hint.system,
-        site: hint.site || hint.location || hint.system,
+        site,
         location: hint.location || titleCase(fileName.replace(/_/g, ' ')),
         locationType: hint.locationType,
         shopCategory,
@@ -251,9 +273,10 @@ export function deriveHierarchy(socpakRelativePath) {
     }
   }
 
+  const inferredSite = inferSiteFromPath(lower)
   return {
-    system: 'Stanton',
-    site: 'Unknown',
+    system: lower.includes('pyro') ? 'Pyro' : lower.includes('nyx') ? 'Nyx' : 'Stanton',
+    site: inferredSite || 'Rest Stops',
     location: titleCase(fileName.replace(/_/g, ' ')),
     locationType: lower.includes('refin') ? 'refinery' : 'unknown',
     shopCategory,
