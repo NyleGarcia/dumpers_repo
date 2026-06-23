@@ -89,32 +89,96 @@ const LOCATION_HINTS = [
   { re: /lorville|l19/, system: 'Stanton', site: 'Hurston', location: 'Lorville', locationType: 'city' },
   { re: /newbabbage|nb_|new_babbage/, system: 'Stanton', site: 'microTech', location: 'New Babbage', locationType: 'city' },
   { re: /orison|orv_|crusader(?!.*l[1-5])/, system: 'Stanton', site: 'Crusader', location: 'Orison', locationType: 'city' },
-  { re: /levski|refin_levski|nyx/, system: 'Nyx', site: 'Delamar', location: 'Levski', locationType: 'city' },
+  { re: /levski|refin_levski/, system: 'Nyx', site: 'Levski', location: 'Levski', locationType: 'city' },
+  {
+    re: /nyx[-_]castra|castra[-_]jp|rs_ext_nyx-castra/,
+    system: 'Nyx',
+    site: 'Jump Points',
+    location: 'Castra Gateway',
+    locationType: 'orbital',
+  },
+  {
+    re: /nyx.*social|social.*nyx|admin.*nyx|keeger|rs_asmbl_keeger/,
+    system: 'Nyx',
+    site: 'Levski',
+    location: 'Social Station',
+    locationType: 'rest_stop',
+  },
   { re: /grimhex|grim_hex/, system: 'Stanton', site: 'Yela', location: 'Grim HEX', locationType: 'rest_stop' },
-  { re: /portolisar|olisar|po_|port_olisar/, system: 'Stanton', site: 'Stanton', location: 'Port Olisar', locationType: 'rest_stop' },
+  { re: /portolisar|olisar|po_|port_olisar/, system: 'Stanton', site: 'Crusader', location: 'Port Olisar', locationType: 'rest_stop' },
   { re: /cru[-_]?l1|crusader.*l1/, system: 'Stanton', site: 'Crusader', location: 'CRU-L1', locationType: 'refinery' },
   { re: /hur[-_]?l1|hurston.*l1/, system: 'Stanton', site: 'Hurston', location: 'HUR-L1', locationType: 'refinery' },
   { re: /mic[-_]?l1|microtech.*l1/, system: 'Stanton', site: 'microTech', location: 'MIC-L1', locationType: 'refinery' },
   { re: /arc[-_]?l1|arccorp.*l1/, system: 'Stanton', site: 'ArcCorp', location: 'ARC-L1', locationType: 'refinery' },
-  { re: /pyro/, system: 'Pyro', site: 'Pyro', location: 'Pyro', locationType: 'unknown' },
-  { re: /reststop|rs_ext|rs_int/, system: 'Stanton', site: null, location: null, locationType: 'rest_stop' },
+  { re: /reststop|rs_ext|rs_int/, system: null, site: null, location: null, locationType: 'rest_stop' },
 ]
 
-function inferSiteFromPath(lower) {
-  if (/levski|delamar|nyx/.test(lower)) return 'Delamar'
+const PYRO_ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
+
+function pyroPlanetLabel(planetNum) {
+  const n = parseInt(planetNum, 10)
+  return `Pyro ${PYRO_ROMAN[n] || n}`
+}
+
+function detectPathSystem(lower) {
+  if (/\/loc\/mod\/nyx\//.test(lower)) return 'Nyx'
+  if (/\/loc\/mod\/pyro\//.test(lower)) return 'Pyro'
+  return 'Stanton'
+}
+
+function deriveJumpPointOrPyro(lower, fileName) {
+  const haystack = `${lower}/${fileName}`
+
+  if (/\/loc\/mod\/stanton\//.test(lower) && /stan[-_]pyro|pyro[-_]stan/.test(haystack)) {
+    return { system: 'Stanton', site: 'Jump Points', location: 'Pyro Gateway', locationType: 'orbital' }
+  }
+  if (/\/loc\/mod\/pyro\//.test(lower) && /pyro[-_]stan|stan[-_]pyro/.test(haystack)) {
+    return { system: 'Pyro', site: 'Jump Points', location: 'Stanton Gateway', locationType: 'orbital' }
+  }
+  if (/\/loc\/mod\/nyx\//.test(lower) && /nyx[-_]pyro|pyro[-_]nyx|pyro[-_]stan|stan[-_]pyro/.test(haystack)) {
+    return { system: 'Nyx', site: 'Jump Points', location: 'Pyro Gateway', locationType: 'orbital' }
+  }
+  if (/\/loc\/mod\/pyro\//.test(lower) && /nyx[-_]pyro|pyro[-_]nyx/.test(haystack)) {
+    return { system: 'Pyro', site: 'Jump Points', location: 'Nyx Gateway', locationType: 'orbital' }
+  }
+
+  if (!/\/loc\/mod\/pyro\//.test(lower)) return null
+
+  const planetMatch = fileName.match(/pyro(\d+)/i) || lower.match(/pyro(\d+)/)
+  if (!planetMatch) {
+    if (/ruin_station|ruin/.test(haystack)) {
+      return { system: 'Pyro', site: 'Pyro II', location: 'Ruin Station', locationType: 'rest_stop' }
+    }
+    return null
+  }
+
+  const site = pyroPlanetLabel(planetMatch[1])
+  let location = 'Rest Stop'
+  if (/ruin_station|\/ruin/.test(haystack)) location = 'Ruin Station'
+  else if (/[_-]leo(?:[_-]|$|\.)/.test(haystack)) location = 'Leo'
+  else {
+    const lagrangeMatch = fileName.match(/[_-]l(\d+)/i)
+    if (lagrangeMatch) location = `Lagrange L${lagrangeMatch[1]}`
+  }
+
+  return { system: 'Pyro', site, location, locationType: 'rest_stop' }
+}
+
+function inferSiteFromPath(lower, pathSystem) {
+  if (pathSystem === 'Nyx') return 'Levski'
+  if (/levski|refin_levski/.test(lower)) return 'Levski'
   if (/lorville|l19|hurston|hur_|_hur-|\/hur\//.test(lower)) return 'Hurston'
   if (/newbabbage|nb_|microtech|mic_|_mic-|\/mic\//.test(lower)) return 'microTech'
   if (/orison|orv_|crusader|cru_|_cru-|\/cru\//.test(lower)) return 'Crusader'
   if (/area18|a18|arccorp|arc_|_arc-|\/arc\//.test(lower)) return 'ArcCorp'
   if (/yela|grimhex|grim_hex/.test(lower)) return 'Yela'
   if (/portolisar|olisar|po_|port_olisar/.test(lower)) return 'Crusader'
-  if (/pyro/.test(lower)) return 'Pyro'
   return null
 }
 
-function resolveHierarchySite(hint, lower) {
+function resolveHierarchySite(hint, lower, pathSystem) {
   if (hint.site) return hint.site
-  const inferred = inferSiteFromPath(lower)
+  const inferred = inferSiteFromPath(lower, pathSystem)
   if (inferred) return inferred
   if (hint.locationType === 'rest_stop') return 'Rest Stops'
   if (hint.locationType === 'refinery') return 'Refineries'
@@ -249,6 +313,7 @@ export function mergeShopRecords(xmlShops, socShops) {
 export function deriveHierarchy(socpakRelativePath) {
   const lower = socpakRelativePath.replace(/\\/g, '/').toLowerCase()
   const fileName = basename(lower, '.socpak')
+  const pathSystem = detectPathSystem(lower)
 
   let shopCategory = 'unknown'
   let franchise = null
@@ -259,11 +324,17 @@ export function deriveHierarchy(socpakRelativePath) {
     franchise = shopsMatch[2]
   }
 
+  const pyroOrJump = deriveJumpPointOrPyro(lower, fileName)
+  if (pyroOrJump) {
+    return { ...pyroOrJump, shopCategory, franchise }
+  }
+
   for (const hint of LOCATION_HINTS) {
     if (hint.re.test(lower) || hint.re.test(fileName)) {
-      const site = resolveHierarchySite(hint, lower)
+      const system = hint.system ?? pathSystem
+      const site = resolveHierarchySite(hint, lower, pathSystem)
       return {
-        system: hint.system,
+        system,
         site,
         location: hint.location || titleCase(fileName.replace(/_/g, ' ')),
         locationType: hint.locationType,
@@ -273,9 +344,9 @@ export function deriveHierarchy(socpakRelativePath) {
     }
   }
 
-  const inferredSite = inferSiteFromPath(lower)
+  const inferredSite = inferSiteFromPath(lower, pathSystem)
   return {
-    system: lower.includes('pyro') ? 'Pyro' : lower.includes('nyx') ? 'Nyx' : 'Stanton',
+    system: pathSystem,
     site: inferredSite || 'Rest Stops',
     location: titleCase(fileName.replace(/_/g, ' ')),
     locationType: lower.includes('refin') ? 'refinery' : 'unknown',

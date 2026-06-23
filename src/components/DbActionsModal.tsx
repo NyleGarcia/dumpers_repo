@@ -365,6 +365,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               <p className="text-xs text-white font-medium">Sync to Database</p>
               <p className="text-[10px] text-slate-500 mt-1">
                 Loads bundled game-shops.json into Supabase (shops, inventory, price summaries when known).
+                Replaces legacy UEX shop rows — expect ~173 shops after sync, not hundreds of old terminal names.
               </p>
               {shopSyncStatus && (
                 <div className="mt-2 text-xs text-slate-500 space-y-0.5">
