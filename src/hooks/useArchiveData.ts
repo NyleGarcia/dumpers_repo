@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
+import { bundledComponentCatalog } from '../lib/componentCatalog'
 
 export interface MiningData {
   id: number
@@ -119,8 +120,13 @@ export function useMiningData() {
   return useCachedArchiveData<MiningData>('game_mining', 'rarity')
 }
 
-export function useComponentsData() {
-  return useCachedArchiveData<ComponentData>('game_components', 'component_type')
+export function useComponentsData(): UseArchiveDataResult<ComponentData> {
+  return {
+    data: bundledComponentCatalog,
+    loading: false,
+    error: null,
+    refetch: () => {},
+  }
 }
 
 export function useOrdnanceData() {

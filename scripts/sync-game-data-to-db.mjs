@@ -49,6 +49,17 @@ function readJsonFile(filename) {
   return JSON.parse(readFileSync(path, 'utf-8'))
 }
 
+function isUnresolvedDisplayName(name) {
+  if (!name || typeof name !== 'string') return true
+  const trimmed = name.trim()
+  return (
+    trimmed.length === 0 ||
+    trimmed.startsWith('@') ||
+    trimmed.includes('PLACEHOLDER') ||
+    trimmed.includes('UNINITIALIZED')
+  )
+}
+
 async function syncMining() {
   console.log('\n[1/5] Syncing mining data...')
   
@@ -104,7 +115,9 @@ async function syncComponents() {
   const data = readJsonFile('game-components.json')
   if (!data?.components) return { synced: 0, errors: 0 }
   
-  const rows = data.components.map(c => ({
+  const rows = data.components
+    .filter((c) => !isUnresolvedDisplayName(c.displayName))
+    .map(c => ({
     internal_id: c.name,
     display_name: c.displayName || c.name,
     component_type: c.type,

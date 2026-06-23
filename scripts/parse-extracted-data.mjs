@@ -2890,7 +2890,7 @@ function parseShipComponents(localization = {}) {
     console.log(`  Parsed ${files.length} ${compType} components`)
   }
   
-  return components
+  return components.filter((c) => !isUnresolvedDisplayName(c.displayName))
 }
 
 // ============================================================================
