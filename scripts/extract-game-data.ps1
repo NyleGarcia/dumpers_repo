@@ -110,7 +110,7 @@ else {
 }
 
 Write-Host ""
-Write-Host "[1/4] Extracting DataForge database to JSON..." -ForegroundColor Green
+Write-Host "[1/6] Extracting DataForge database to JSON..." -ForegroundColor Green
 Write-Host "      This may take several minutes..." -ForegroundColor Gray
 Write-Host ""
 
@@ -132,7 +132,7 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[2/4] Extracting localization files..." -ForegroundColor Green
+Write-Host "[2/6] Extracting localization files..." -ForegroundColor Green
 Write-Host "      Getting english language strings for lore/descriptions..." -ForegroundColor Gray
 Write-Host ""
 
@@ -152,7 +152,50 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[3/4] Extracting quality band data via query..." -ForegroundColor Green
+Write-Host "[3/6] Extracting shop socpaks..." -ForegroundColor Green
+Write-Host "      Branded shops + rest-stop shop modules..." -ForegroundColor Gray
+Write-Host ""
+
+try {
+    & $StarBreakerPath p4k extract `
+        --p4k $DataP4kPath `
+        --output $OutputPath `
+        --filter "Data/ObjectContainers/PU/Shops/**/*.socpak"
+
+    & $StarBreakerPath p4k extract `
+        --p4k $DataP4kPath `
+        --output $OutputPath `
+        --filter "Data/ObjectContainers/PU/loc/mod/**/reststop_*/**/*.socpak"
+
+    & $StarBreakerPath p4k extract `
+        --p4k $DataP4kPath `
+        --output $OutputPath `
+        --filter "Data/ObjectContainers/PU/loc/mod/**/reststop_ref/**/*.socpak"
+
+    Write-Host "  Shop socpaks extracted" -ForegroundColor Gray
+}
+catch {
+    Write-Host "WARNING: Shop socpak extraction failed: $_" -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "[4/6] Extracting shop inventory JSON..." -ForegroundColor Green
+Write-Host ""
+
+try {
+    & $StarBreakerPath p4k extract `
+        --p4k $DataP4kPath `
+        --output $OutputPath `
+        --filter "Data/Scripts/ShopInventories/**"
+
+    Write-Host "  Shop inventory JSON extracted" -ForegroundColor Gray
+}
+catch {
+    Write-Host "WARNING: Shop inventory extraction failed: $_" -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "[5/6] Extracting quality band data via query..." -ForegroundColor Green
 Write-Host "      Running dcb query for CraftingQualityQuantizationRecord..." -ForegroundColor Gray
 Write-Host ""
 
@@ -176,7 +219,7 @@ $stopwatch.Stop()
 $elapsed = $stopwatch.Elapsed
 
 Write-Host ""
-Write-Host "[4/4] Extraction complete!" -ForegroundColor Green
+Write-Host "[6/6] Extraction complete!" -ForegroundColor Green
 Write-Host ""
 
 # Count extracted files
@@ -196,4 +239,5 @@ if ($GameBuildVersion) {
 Write-Host ""
 Write-Host "Next step: Run the parsing scripts to generate app data files." -ForegroundColor Yellow
 Write-Host "  node scripts/parse-extracted-data.mjs" -ForegroundColor Gray
+Write-Host "  node scripts/parse-shop-socpaks.mjs" -ForegroundColor Gray
 Write-Host ""

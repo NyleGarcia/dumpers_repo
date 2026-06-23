@@ -20,25 +20,24 @@ Key paths in extracted data:
 - `entities/scitem/ships/weapons/` - Mining lasers, weapons
 - `entities/scitem/ships/{cooler,powerplant,shieldgenerator}/` - Ship components
 - `reputation/standings/` - Standing thresholds
+- `Data/ObjectContainers/PU/Shops/**/*.socpak` - Branded item shop layouts
+- `Data/ObjectContainers/PU/loc/mod/**/reststop_*` - Rest-stop / refinery embedded shops
+- `Data/Scripts/ShopInventories/` - Shop inventory + prices (when referenced by socpak)
 - `Data/Localization/english/global.ini` - Game lore/flavor text (`items_commodities_*`, `item_desc*`, `Item_Desc_*`)
 
 **Extraction scripts:**
-- `scripts/extract-game-data.ps1` - Extract DataForge + localization from Data.p4k
+- `scripts/extract-game-data.ps1` - Extract DataForge, localization, shop socpaks, ShopInventories JSON
 - `scripts/parse-extracted-data.mjs` - Parse extracted JSON into app data (includes `game-lore.json`)
+- `scripts/parse-shop-socpaks.mjs` - Parse socpaks + ShopInventories into `game-shops.json`
 - `scripts/lib/commodityLocalization.mjs` - Commodity key normalization for lore extraction
 - `scripts/lib/gameLore.mjs` - Full lore extraction (commodities + item descriptions)
 
 ## Secondary Data Sources
 
-### 1. UEX Corp API (Live Shop Data)
+### 1. UEX Corp API (Commodity DFP bases only)
 **URL:** https://uexcorp.space/api/documentation
 
-Crowdsourced live game data for all systems (Stanton, Pyro, Nyx). Key endpoints:
-- `/terminals` - All shop/terminal locations with system info
-- `/items_prices_all` - All items and prices across all terminals
-- No auth required for read endpoints
-- Updated hourly by community reporters
-- **Use for:** Shop inventories, prices, locations (all systems)
+Crowdsourced live commodity price data. **Use for:** Resource Tracker DFP Q0 base prices (`npm run fetch-commodity-bases`). **Do not use for item shop inventories** — shops come from game files.
 
 ### 2. Star Citizen Wiki API (General reference)
 **URL:** https://api.star-citizen.wiki/api/
@@ -58,7 +57,7 @@ StarStrings has been replaced by direct game file extraction. Legacy scripts wer
 
 ## Usage Pattern
 
-1. **Game data (blueprints, components, mining, Archive lore):** Use extracted data or run extraction
-2. **Live shop/price data:** Use UEX Corp API
+1. **Game data (blueprints, components, mining, shops, Archive lore):** Use extracted data or run extraction
+2. **Commodity DFP bases:** UEX Corp API (`fetch-commodity-dfp-bases.mjs`)
 3. **Mining signatures:** Check SC_Signature_Scanner
 4. Only web search if none of these sources have the data

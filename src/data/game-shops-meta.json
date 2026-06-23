@@ -1,0 +1,14 @@
+{
+  "_parsed": "2026-06-23T04:37:13.456Z",
+  "gameBuild": null,
+  "socpaksScanned": 477,
+  "shops": 173,
+  "shopsWithInventory": 52,
+  "shelfShops": 33,
+  "emptyKioskShops": 88,
+  "emptyShops": 121,
+  "inventoryItems": 4507,
+  "itemsWithPrice": 4507,
+  "itemsSkippedNoDisplayName": 8,
+  "parseErrors": 0
+}
