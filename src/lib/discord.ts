@@ -344,12 +344,42 @@ export async function registerDiscordWebhook(
 
 export interface UserWebhook {
   id: string
+  webhook_url: string
   webhook_name: string
   subscribed_events: string[]
   created_at: string
   last_success_at: string | null
   failure_count: number
   active: boolean
+}
+
+export async function syncMyDiscordEventWebhooks(
+  entries: Array<{ event_type: string; webhook_name: string; webhook_url: string }>
+): Promise<{ success: boolean; error?: string; eventType?: string }> {
+  try {
+    const { data, error } = await supabase.rpc('sync_my_discord_event_webhooks', {
+      p_entries: entries,
+    })
+
+    if (error) {
+      return { success: false, error: error.message }
+    }
+
+    if (data && typeof data === 'object') {
+      if (data.success) {
+        return { success: true }
+      }
+      return {
+        success: false,
+        error: data.error || 'Failed to update webhooks',
+        eventType: data.event_type ?? undefined,
+      }
+    }
+
+    return { success: true }
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
 }
 
 export async function getMyDiscordWebhooks(): Promise<{

@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `082_discord_market_coalesce.sql` (marketplace listing churn coalesce). Apply `080` and `081` first if not already applied.
+**Latest migration:** `084_discord_rsi_personal_webhooks.sql` (RSI gate for personal deal webhooks). Apply `080`–`083` first if not already applied.
 
 ---
 
@@ -88,6 +88,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 45 | `080_discord_personal_routing.sql` | Personal + marketplace Discord routing, server-side triggers |
 | 46 | `081_rsi_org_schema.sql` | RSI org affiliation tables (DB only; site code deferred) |
 | 47 | `082_discord_market_coalesce.sql` | Marketplace listing churn coalesce + admin quiet-period setting |
+| 48 | `083_discord_per_event_webhooks.sql` | Remove webhook cap; per-event sync RPC; return URLs to owner |
+| 49 | `084_discord_rsi_personal_webhooks.sql` | Require RSI verification for `my_order_*` webhook registration |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -214,6 +216,11 @@ SELECT to_regclass('public.user_rsi_org_affiliations');  -- should exist after 0
 -- 082: marketplace Discord coalesce
 SELECT column_name FROM information_schema.columns
 WHERE table_schema = 'public' AND table_name = 'discord_settings' AND column_name = 'market_coalesce_enabled';
+
+-- 084: RSI gate on personal deal webhooks
+SELECT pg_get_functiondef(oid) LIKE '%my_order_%'
+FROM pg_proc
+WHERE proname = 'sync_my_discord_event_webhooks';
 ```
 
 ---
