@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `084_discord_rsi_personal_webhooks.sql` (RSI gate for personal deal webhooks). Apply `080`–`083` first if not already applied.
+**Latest migration:** `087_drop_shop_data.sql` (removes shop tables — feature moved to separate project). Apply `087` after `084` if not already applied.
 
 ---
 
@@ -65,7 +65,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 22 | `057_guest_preview_anon_read.sql` | Anonymous read for archive reference data |
 | 23 | `058_officer_ratings_escalation.sql` | Officer ticket ratings + escalation |
 | 24 | `059_mining_tracker.sql` | Mining Tracker entries (member sync) |
-| 25 | `060_shop_data.sql` | Shop inventories and prices (UEX sync target tables) |
+| 25 | `060_shop_data.sql` | *(Historical)* Shop tables — dropped by `087` |
 | 26 | `061_discord_integration.sql` | Discord webhook integration + message queue |
 | 27 | `062_granular_order_events.sql` | Granular Discord order event subscriptions |
 | 28 | `063_user_webhook_management.sql` | User-managed Discord webhooks (4 max) |
@@ -90,6 +90,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 47 | `082_discord_market_coalesce.sql` | Marketplace listing churn coalesce + admin quiet-period setting |
 | 48 | `083_discord_per_event_webhooks.sql` | Remove webhook cap; per-event sync RPC; return URLs to owner |
 | 49 | `084_discord_rsi_personal_webhooks.sql` | Require RSI verification for `my_order_*` webhook registration |
+| 50 | `087_drop_shop_data.sql` | Drop shop tables and RPCs (Shops feature removed from app) |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -113,7 +114,6 @@ supabase link --project-ref YOUR_PROJECT_REF
 supabase functions deploy ban-user
 supabase functions deploy unban-user
 supabase functions deploy delete-account
-supabase functions deploy sync-shop-data
 supabase functions deploy validate-rsi-handle
 supabase functions deploy send-discord
 ```
@@ -122,7 +122,6 @@ supabase functions deploy send-discord
 |----------|---------|
 | `ban-user` / `unban-user` | Admin user management |
 | `delete-account` | User self-service account deletion |
-| `sync-shop-data` | UEX Corp API → shop inventory tables |
 | `validate-rsi-handle` | Validate RSI Handles against robertsspaceindustries.com |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
 
@@ -196,8 +195,7 @@ SELECT public.get_pending_custom_order_count();
 SELECT column_name FROM information_schema.columns
 WHERE table_schema = 'public' AND table_name = 'custom_orders' AND column_name = 'listing_type';
 
--- Shops (060)
-SELECT COUNT(*) FROM public.shops;
+-- Shop tables removed (087) — skip if migration 087 applied
 
 -- Game data tables (075/076)
 SELECT table_name FROM information_schema.tables

@@ -17,7 +17,7 @@ const QUICK_LINKS: QuickLink[] = [
   {
     id: 'components',
     label: 'Component Database',
-    description: 'Browse ship components by type, size, grade, and manufacturer. Click any component to see shop prices and similar upgrades.',
+    description: 'Browse ship components by type, size, grade, and manufacturer. Click any component to see stats and similar upgrades.',
     section: 'components',
   },
   {
@@ -229,24 +229,6 @@ const PAGE_GUIDES = [
     relatesTo: ['Resource Tracker'],
   },
   {
-    id: 'shops',
-    title: 'Shops',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-    description: 'Browse in-game item shops across Stanton, Pyro, and Nyx — organized by system, site, location, and shop.',
-    details: [
-      'Drill down: System → Site (planet) → Location → Shop',
-      'Global search (3+ characters) filters to shops that sell matching items',
-      'See shop inventory with display names; prices shown when available from game files',
-      'Refinery item shops, Dumper\'s Depot, armor, weapons, and more — sourced from game socpaks',
-      'Accessible in Offline Mode — reference data only, no account required',
-    ],
-    relatesTo: ['Components', 'Mining Tracker'],
-  },
-  {
     id: 'orders',
     title: 'Custom Orders',
     icon: (
@@ -360,11 +342,10 @@ const PAGE_GUIDES = [
       'Filter by component type: coolers, power plants, shields, quantum drives',
       'Browse by size (S1-S4) and grade (A-D)',
       'See manufacturer information for each component',
-      'Click any component to view detailed stats and shop prices',
-      'Find where components are sold across Stanton, Pyro, and Nyx',
+      'Click any component to view detailed stats',
       'Compare upgrade paths between similar components',
     ],
-    relatesTo: ['Shops', 'Blueprints'],
+    relatesTo: ['Blueprints'],
   },
   {
     id: 'ordnance',
@@ -506,7 +487,6 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <li>• Build your Mission Tracker list (local only)</li>
                 <li>• Track resources in Resource Tracker (local only)</li>
                 <li>• Use the Mining Tracker for RS references</li>
-                <li>• Browse shop inventories and prices</li>
                 <li>• Preview Fulfillment — see how many WTB/WTS orders are waiting (sign in to accept)</li>
               </ul>
             </div>

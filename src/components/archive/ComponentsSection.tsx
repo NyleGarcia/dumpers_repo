@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react'
 import { useComponentsData, type ComponentData } from '../../hooks/useArchiveData'
-import { useComponentPriceSummaries, type ComponentPriceSummary } from '../../hooks/useShopData'
 import ComponentDetailModal from './ComponentDetailModal'
 
 const GRADE_COLORS: Record<string, string> = {
@@ -20,7 +19,6 @@ const CLASS_COLORS: Record<string, string> = {
 
 export default function ComponentsSection() {
   const { data, loading, error, refetch } = useComponentsData()
-  const { data: priceSummaries } = useComponentPriceSummaries()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [selectedManufacturer, setSelectedManufacturer] = useState<string | null>(null)
@@ -183,7 +181,6 @@ export default function ComponentsSection() {
             <ComponentCard
               key={item.id}
               item={item}
-              priceData={priceSummaries.get(item.display_name)}
               onSelect={() => setSelectedComponent(item)}
             />
           ))
@@ -210,11 +207,10 @@ export default function ComponentsSection() {
 
 interface ComponentCardProps {
   item: ComponentData
-  priceData?: ComponentPriceSummary
   onSelect: () => void
 }
 
-function ComponentCard({ item, priceData, onSelect }: ComponentCardProps) {
+function ComponentCard({ item, onSelect }: ComponentCardProps) {
   const gradeClass = GRADE_COLORS[item.grade] || GRADE_COLORS.D
   const classColor = CLASS_COLORS[item.class] || 'text-slate-300'
   
@@ -249,11 +245,6 @@ function ComponentCard({ item, priceData, onSelect }: ComponentCardProps) {
             <span className="text-slate-500">Class:</span>
             <span className={classColor}>{item.class}</span>
           </div>
-          {priceData && priceData.avg_price && (
-            <span className="text-slate-500">
-              ~{priceData.avg_price.toLocaleString()} aUEC
-            </span>
-          )}
         </div>
       </div>
     </div>

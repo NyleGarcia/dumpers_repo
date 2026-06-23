@@ -10,7 +10,6 @@ import ArchiveRoute from './Archive.index'
 import SupportDashboardRoute from './SupportDashboard.index'
 import GuestLockedRoute from './GuestLocked.index'
 import MiningTrackerRoute from './MiningTracker.index'
-import ShopsRoute from './Shops.index'
 import DiscordSubscribeRoute from './DiscordSubscribe.index'
 import { requireFeature } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
@@ -51,16 +50,6 @@ const resourceTrackerRoute = createRoute({
   path: '/resources',
   component: ResourceTrackerRoute,
   beforeLoad: requireFeature('resource_tracker'),
-})
-
-const shopsRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/shops',
-  component: ShopsRoute,
-  beforeLoad: requireFeature('shops_browse'),
-  validateSearch: (search: Record<string, unknown>) => ({
-    shop: typeof search.shop === 'string' ? search.shop : undefined,
-  }),
 })
 
 const customOrdersRoute = createRoute({
@@ -111,7 +100,6 @@ export const routeTree = rootRoute.addChildren([
   miningTrackerRoute,
   targetsRoute,
   resourceTrackerRoute,
-  shopsRoute,
   customOrdersRoute,
   fulfillmentRoute,
   archiveRoute,

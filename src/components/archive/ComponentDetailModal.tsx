@@ -1,8 +1,6 @@
 import React, { useMemo } from 'react'
-import { Link } from '@tanstack/react-router'
 import AppModal from '../layout/AppModal'
 import { type ComponentData } from '../../hooks/useArchiveData'
-import { useShopsSellingComponent, type ComponentShopListing } from '../../hooks/useShopData'
 
 interface ComponentDetailModalProps {
   component: ComponentData
@@ -23,66 +21,6 @@ const CLASS_COLORS: Record<string, string> = {
   Stealth: 'text-purple-300',
   Competition: 'text-yellow-300',
   Industrial: 'text-orange-300',
-}
-
-function formatPrice(price: number | null): string {
-  if (price === null || price === undefined) return '—'
-  return price.toLocaleString() + ' aUEC'
-}
-
-function ShopListings({ shops, loading }: { shops: ComponentShopListing[]; loading: boolean }) {
-  if (loading) {
-    return (
-      <div className="py-4 text-center text-sm text-slate-500">
-        Loading shop data...
-      </div>
-    )
-  }
-
-  if (shops.length === 0) {
-    return (
-      <div className="py-4 text-center">
-        <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          Loot Only — Not sold in shops
-        </span>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-1">
-      {shops.slice(0, 8).map((shop, idx) => (
-        <div
-          key={`${shop.shop_id}-${idx}`}
-          className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-700/30"
-        >
-          <Link
-            to="/shops"
-            search={{ shop: String(shop.shop_id) }}
-            className="text-sm text-amber-400 hover:text-amber-300 hover:underline"
-          >
-            {shop.shop_name}
-          </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-500">
-              {shop.location}, {shop.system}
-            </span>
-            <span className="text-sm text-white font-medium">
-              {formatPrice(shop.effective_price)}
-            </span>
-          </div>
-        </div>
-      ))}
-      {shops.length > 8 && (
-        <div className="text-xs text-slate-500 text-center py-1">
-          +{shops.length - 8} more shops
-        </div>
-      )}
-    </div>
-  )
 }
 
 function SimilarComponents({
@@ -171,8 +109,6 @@ export default function ComponentDetailModal({
   allComponents,
   onClose,
 }: ComponentDetailModalProps) {
-  const { data: shopListings, loading: shopsLoading } = useShopsSellingComponent(component.display_name)
-
   const _gradeClass = GRADE_COLORS[component.grade] || GRADE_COLORS.D
   const _classColor = CLASS_COLORS[component.class] || 'text-slate-300'
 
@@ -229,19 +165,6 @@ export default function ComponentDetailModal({
           <span className="text-sm text-slate-400">
             by {displayComponent.manufacturer}
           </span>
-        </div>
-
-        {/* Purchase Locations */}
-        <div>
-          <h3 className="text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            Purchase Locations
-          </h3>
-          <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <ShopListings shops={shopListings} loading={shopsLoading} />
-          </div>
         </div>
 
         {/* Upgrade Path */}

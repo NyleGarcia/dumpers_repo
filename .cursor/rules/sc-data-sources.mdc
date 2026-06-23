@@ -28,16 +28,17 @@ Key paths in extracted data:
 **Extraction scripts:**
 - `scripts/extract-game-data.ps1` - Extract DataForge, localization, shop socpaks, ShopInventories JSON
 - `scripts/parse-extracted-data.mjs` - Parse extracted JSON into app data (includes `game-lore.json`)
-- `scripts/parse-shop-socpaks.mjs` - Parse socpaks + ShopInventories into `game-shops.json`
 - `scripts/lib/commodityLocalization.mjs` - Commodity key normalization for lore extraction
 - `scripts/lib/gameLore.mjs` - Full lore extraction (commodities + item descriptions)
+
+**Shop socpaks + ShopInventories** are extracted by `extract-game-data.ps1` into `extracted-data/` for future use (separate project — not bundled in this app).
 
 ## Secondary Data Sources
 
 ### 1. UEX Corp API (Commodity DFP bases only)
 **URL:** https://uexcorp.space/api/documentation
 
-Crowdsourced live commodity price data. **Use for:** Resource Tracker DFP Q0 base prices (`npm run fetch-commodity-bases`). **Do not use for item shop inventories** — shops come from game files.
+Crowdsourced live commodity price data. **Use for:** Resource Tracker DFP Q0 base prices (`npm run fetch-commodity-bases`).
 
 ### 2. Star Citizen Wiki API (General reference)
 **URL:** https://api.star-citizen.wiki/api/
@@ -57,7 +58,7 @@ StarStrings has been replaced by direct game file extraction. Legacy scripts wer
 
 ## Usage Pattern
 
-1. **Game data (blueprints, components, mining, shops, Archive lore):** Use extracted data or run extraction
+1. **Game data (blueprints, components, mining, Archive lore):** Use extracted data or run extraction
 2. **Commodity DFP bases:** UEX Corp API (`fetch-commodity-dfp-bases.mjs`)
 3. **Mining signatures:** Check SC_Signature_Scanner
 4. Only web search if none of these sources have the data

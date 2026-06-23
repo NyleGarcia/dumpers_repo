@@ -1,26 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { wipeResourceTracker } from '../lib/operations'
 import { supabase } from '../lib/supabase'
 import AppModal from './layout/AppModal'
-import shopParseMeta from '../data/game-shops-meta.json'
-
-interface ShopDataSyncStatus {
-  last_synced_at: string | null
-  source_version: string | null
-  sync_status: string
-  sync_error: string | null
-  shop_count: number
-  inventory_count: number
-}
 
 export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [confirmText, setConfirmText] = useState('')
   const [wiping, setWiping] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  
-  // Shop data sync state
-  const [shopSyncStatus, setShopSyncStatus] = useState<ShopDataSyncStatus | null>(null)
-  const [shopSyncing, setShopSyncing] = useState(false)
 
   // RSI Handle verification removal state
   const [rsiHandleToRevoke, setRsiHandleToRevoke] = useState('')
@@ -34,63 +20,6 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [clearArchived, setClearArchived] = useState(false)
   const [searchingUser, setSearchingUser] = useState(false)
   const [resettingRep, setResettingRep] = useState(false)
-
-  // Fetch shop sync status on mount
-  useEffect(() => {
-    const fetchShopSyncStatus = async () => {
-      const { data: shopData, error: shopError } = await supabase.rpc('get_shop_data_sync_status')
-      if (!shopError && shopData && shopData.length > 0) {
-        setShopSyncStatus(shopData[0])
-      }
-    }
-    void fetchShopSyncStatus()
-  }, [])
-
-  const handleShopDataSync = async () => {
-    setShopSyncing(true)
-    setMessage(null)
-
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setMessage({ type: 'error', text: 'Not authenticated' })
-        setShopSyncing(false)
-        return
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-shop-data`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        setMessage({ type: 'error', text: result.error || 'Shop data sync failed' })
-      } else {
-        setMessage({ 
-          type: 'success', 
-          text: `Synced ${result.counts.shops} shops, ${result.counts.inventory.toLocaleString()} items, ${result.counts.componentPriceSummaries} price summaries` 
-        })
-        
-        // Refresh sync status
-        const { data } = await supabase.rpc('get_shop_data_sync_status')
-        if (data && data.length > 0) {
-          setShopSyncStatus(data[0])
-        }
-      }
-    } catch {
-      setMessage({ type: 'error', text: 'Network error during shop data sync' })
-    }
-
-    setShopSyncing(false)
-  }
 
   const handleWipe = async () => {
     if (confirmText !== 'WIPE') return
@@ -278,21 +207,9 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               </code>
             </div>
 
-            {/* Step 3: Parse shop socpaks */}
+            {/* Step 3: Sync supplementary game data to DB (optional) */}
             <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
               <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">3</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Parse Shop Socpaks</p>
-                <p className="text-[10px] text-slate-500">Builds game-shops.json from socpaks + ShopInventories (inventory; prices when available)</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
-                node scripts/parse-shop-socpaks.mjs
-              </code>
-            </div>
-
-            {/* Step 4: Sync supplementary game data to DB (optional) */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">4</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-white font-medium">Sync Game Data to DB (optional)</p>
                 <p className="text-[10px] text-slate-500">Upserts mining, components, ordnance, and blueprint pools to Supabase</p>
@@ -302,12 +219,12 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               </code>
             </div>
 
-            {/* Step 5: Deploy */}
+            {/* Step 4: Deploy */}
             <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">5</span>
+              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">4</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-white font-medium">Commit &amp; Deploy</p>
-                <p className="text-[10px] text-slate-500">Commit game-*.json + redeploy sync-shop-data edge function, then build</p>
+                <p className="text-[10px] text-slate-500">Commit game-*.json changes, then build and deploy</p>
               </div>
               <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
                 npm run build
@@ -315,79 +232,11 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
             </div>
 
             <p className="text-[10px] text-slate-600 italic pt-1">
-              Steps 1–4 run locally in terminal. Blueprint catalog is bundled from game-blueprints.json at build time.
+              Steps 1–3 run locally in terminal. Blueprint catalog is bundled from game-blueprints.json at build time.
             </p>
             <p className="text-[10px] text-amber-400/70 pt-1">
               If Step 2 reports validation issues, game data structure may have changed.
             </p>
-          </div>
-        </div>
-
-        {/* Shop Data Pipeline */}
-        <div className="p-3 sm:p-4 rounded-xl border border-cyan-500/30 bg-cyan-950/20 space-y-3">
-          <div>
-            <h3 className="text-white font-medium text-sm">Shop Data Pipeline</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Shops are parsed locally from game socpaks into <code className="text-cyan-400">game-shops.json</code>,
-              then pushed to Supabase so the /shops page can search and browse. Source of truth is game files — not UEX.
-            </p>
-          </div>
-
-          <div className="p-2 bg-slate-800/50 rounded-lg text-[10px] text-slate-400 space-y-1">
-            <p className="text-slate-300 font-medium text-xs">Bundled parse snapshot</p>
-            {shopParseMeta._parsed && (
-              <p>Parsed: {new Date(shopParseMeta._parsed).toLocaleString()}</p>
-            )}
-            <p>
-              {shopParseMeta.socpaksScanned} socpaks → {shopParseMeta.shops} shops
-              ({shopParseMeta.shopsWithInventory} with inventory
-              {shopParseMeta.shelfShops != null && (
-                <>, {shopParseMeta.shelfShops} shelf vendors</>
-              )}
-              {shopParseMeta.emptyKioskShops != null && (
-                <>, {shopParseMeta.emptyKioskShops} empty kiosks</>
-              )}
-              )
-            </p>
-            <p>
-              {shopParseMeta.inventoryItems.toLocaleString()} items
-              {shopParseMeta.itemsWithPrice > 0 && (
-                <> · {shopParseMeta.itemsWithPrice.toLocaleString()} with prices</>
-              )}
-            </p>
-            <p className="text-slate-500 italic">
-              Re-run Step 3 above after extraction, then commit + redeploy edge function before syncing.
-            </p>
-          </div>
-
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-white font-medium">Sync to Database</p>
-              <p className="text-[10px] text-slate-500 mt-1">
-                Loads bundled game-shops.json into Supabase (shops, inventory, price summaries when known).
-                Replaces legacy UEX shop rows — expect ~173 shops after sync, not hundreds of old terminal names.
-              </p>
-              {shopSyncStatus && (
-                <div className="mt-2 text-xs text-slate-500 space-y-0.5">
-                  {shopSyncStatus.last_synced_at && (
-                    <p>Last synced: {new Date(shopSyncStatus.last_synced_at).toLocaleString()}</p>
-                  )}
-                  {shopSyncStatus.source_version && (
-                    <p>Build: {shopSyncStatus.source_version}</p>
-                  )}
-                  <p className="text-slate-600">
-                    DB: {shopSyncStatus.shop_count} shops · {shopSyncStatus.inventory_count.toLocaleString()} items
-                  </p>
-                </div>
-              )}
-            </div>
-            <button
-              onClick={handleShopDataSync}
-              disabled={shopSyncing}
-              className="shrink-0 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {shopSyncing ? 'Syncing...' : 'Sync Now'}
-            </button>
           </div>
         </div>
 

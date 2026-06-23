@@ -70,8 +70,6 @@ node scripts/parse-extracted-data.mjs
 
 Output lives in `src/data/game-*.json`. Super-admins can also run extract → parse → deploy from **DB Actions**. See [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
 
-Shop prices are synced separately via the UEX Corp API (`sync-shop-data` Edge Function).
-
 ## Dumpers Fair-Value Pricing (DFP)
 
 **Dumper's Fair-Value Price (DFP)** is **proprietary** to Michael Linzenmeyer. Production franchises must load the official engine from `https://www.dumpers-repo.com` (`dfp-engine.js` + `dfp-version.json`). Do not tamper with or replace the engine.

@@ -41,17 +41,15 @@ The parser validates expected data paths exist. If the game data structure chang
 
 ---
 
-## Source: UEX Corp API (Live Shop Data)
+## Source: UEX Corp API (Commodity DFP bases)
 
 **API:** [https://uexcorp.space/api/documentation](https://uexcorp.space/api/documentation)
 
-Crowdsourced live shop inventories and prices across all systems (Stanton, Pyro, Nyx).
+Crowdsourced live commodity prices. Used for Resource Tracker DFP Q0 base prices only:
 
-### Usage
+`npm run fetch-commodity-bases` (monthly refresh recommended).
 
-Super-admins sync shop data via the **DB Actions** modal, which calls the `sync-shop-data` Edge Function. This populates shop inventory tables and component price summaries used by DFP.
-
-Commodity Q0 bases for Resource Tracker DFP pricing: `npm run fetch-commodity-bases` (monthly refresh recommended).
+Shop socpaks and ShopInventories are extracted locally via `extract-game-data.ps1` into `extracted-data/` for a future separate project — not synced to this app.
 
 ---
 
@@ -96,8 +94,7 @@ When a new Star Citizen patch drops:
 3. **Validate:** `npm run validate-blueprints`
 4. **Optional DB sync:** `node scripts/sync-game-data-to-db.mjs` (mining, components, ordnance → Supabase `game_*` tables)
 5. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` → rebuild DFP engine in `dfp-engine-private`
-6. **Shop prices:** Super-admin **Sync Shop Data** in DB Actions (UEX Corp API via `sync-shop-data` Edge Function)
-7. **Deploy:** Commit updated `game-*.json` (and DFP bundle if changed), `npm run build`, deploy `dist/`
+6. **Deploy:** Commit updated `game-*.json` (and DFP bundle if changed), `npm run build`, deploy `dist/`
 
 If Step 2 reports validation issues in `_extraction-validation.json`, the game data structure may have changed.
 

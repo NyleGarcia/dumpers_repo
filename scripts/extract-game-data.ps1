@@ -239,5 +239,6 @@ if ($GameBuildVersion) {
 Write-Host ""
 Write-Host "Next step: Run the parsing scripts to generate app data files." -ForegroundColor Yellow
 Write-Host "  node scripts/parse-extracted-data.mjs" -ForegroundColor Gray
-Write-Host "  node scripts/parse-shop-socpaks.mjs" -ForegroundColor Gray
+Write-Host ""
+Write-Host "Shop socpaks and ShopInventories are in extracted-data/ for future use." -ForegroundColor DarkGray
 Write-Host ""

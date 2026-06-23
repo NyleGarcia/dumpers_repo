@@ -13,7 +13,7 @@ This guide covers deploying your own Dumper's Repo franchise instance.
 1. Clone the repository
 2. Copy `.env.example` to `.env` and configure Supabase credentials
 3. Run database migrations through **`078_order_listing_type.sql`** — see [docs/SUPABASE_SETUP.md](SUPABASE_SETUP.md)
-4. Deploy Edge Functions (`ban-user`, `unban-user`, `delete-account`, `sync-shop-data`, `validate-rsi-handle`, `send-discord`)
+4. Deploy Edge Functions (`ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`)
 5. Build and deploy
 
 ```bash
@@ -122,7 +122,7 @@ The canonical DFP host (`raw.githubusercontent.com`) serves `Access-Control-Allo
 
 ### Edge Functions not working
 1. Verify functions are deployed: `supabase functions list`
-2. Required functions: `ban-user`, `unban-user`, `delete-account`, `sync-shop-data`, `validate-rsi-handle`, `send-discord`
+2. Required functions: `ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`
 3. Check function logs: `supabase functions logs send-discord`
 4. Discord queue cron requires **pg_cron** + **pg_net** (see `SUPABASE_SETUP.md` migrations 065–068)
 5. Ensure `SUPABASE_SERVICE_ROLE_KEY` is set in Supabase dashboard
