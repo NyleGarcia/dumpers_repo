@@ -20,7 +20,7 @@
 - **Custom Orders** — One **New Order** form for both listing types:
   - **WTB** (Submit Buy Order) — request crafted items or supplied resources
   - **WTS** (Submit Sell Order) — offer stock or crafted items you have on hand
-  - DFP-priced lines, reputation gates, edit/abandon while pending
+  - DFP-priced lines, reputation gates, edit or delete while pending
 - **Fulfillment** — Browse pending **WTB** and **WTS** listings with All/WTB/WTS filters; accept to craft for buyers or purchase from sellers; optional inventory deduct; ratings and archive
 
 Both marketplace pages share one reputation system (buyer rep + fulfiller/seller rep). RSI Handle verification is required to post or accept.
@@ -36,6 +36,7 @@ Custom Orders and accepting trades require a free member account.
 ### Community & admin
 
 - **Notifications** — Header bell; dismiss deletes the row
+- **Discord Webhooks** — Paste your channel webhook at `/discord-subscribe` for personal deal alerts, opt-in marketplace feed, and support ticket updates
 - **Support tickets** — Member bug reports and issue reporting
 - **Roles** — Google OAuth; `pending` → officer approval → `member` / `officer` / `super-admin`
 - **Ghost Mode** — Hide from member directory; keeps personal tools, hides orders/fulfillment
@@ -50,7 +51,7 @@ React 18, Vite, TanStack Router/Query, Tailwind, Supabase (Auth + Postgres + RLS
 1. Clone and `npm install`
 2. Copy `.env.example` → `.env` with your Supabase URL and anon key
 3. Set up the database — see [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)
-   - **Existing databases:** apply incremental migrations in order through `079_drop_synced_blueprints.sql`
+   - **Existing databases:** apply incremental migrations in order through `082_discord_market_coalesce.sql`
 4. `npm run dev` for local development
 5. `npm run build` to produce `dist/` for any static host
 
