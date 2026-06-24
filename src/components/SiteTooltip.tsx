@@ -7,7 +7,7 @@ interface SiteTooltipProps {
   side?: TooltipSide
   className?: string
   panelClassName?: string
-  children: React.ReactElement
+  children: React.ReactNode
 }
 
 const sideClasses: Record<TooltipSide, string> = {
@@ -44,33 +44,19 @@ export default function SiteTooltip({
     }, 300)
   }, [])
 
-  const child = React.cloneElement(children, {
-    'aria-describedby': open ? tooltipId : undefined,
-    onMouseEnter: (e: React.MouseEvent) => {
-      show()
-      children.props.onMouseEnter?.(e)
-    },
-    onMouseLeave: (e: React.MouseEvent) => {
-      hide()
-      children.props.onMouseLeave?.(e)
-    },
-    onFocus: (e: React.FocusEvent) => {
-      show()
-      children.props.onFocus?.(e)
-    },
-    onBlur: (e: React.FocusEvent) => {
-      hide()
-      children.props.onBlur?.(e)
-    },
-    onClick: (e: React.MouseEvent) => {
-      if ('ontouchstart' in window) toggleTouch()
-      children.props.onClick?.(e)
-    },
-  })
-
   return (
-    <span className={`relative inline-flex ${className}`}>
-      {child}
+    <span
+      className={`relative inline-flex ${className}`}
+      onMouseEnter={show}
+      onMouseLeave={hide}
+      onFocus={show}
+      onBlur={hide}
+      onClick={() => {
+        if ('ontouchstart' in window) toggleTouch()
+      }}
+      aria-describedby={open ? tooltipId : undefined}
+    >
+      {children}
       {open && (
         <span
           id={tooltipId}

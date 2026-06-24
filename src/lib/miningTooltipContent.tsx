@@ -14,20 +14,21 @@ import {
 import type { MiningTrackerEntry } from './localGuestCache'
 import { formatRsReading } from './miningSignatures'
 
-function pct(n: number, digits = 2): string {
+function pct(n: number | null | undefined, digits = 2): string {
+  if (n == null || !Number.isFinite(n)) return '—'
   return `${n.toFixed(digits)}%`
 }
 
-function compositionSummary(parts: LocationSpawnProfile['compositionParts']): string {
-  if (!parts.length) return 'Composition data unavailable'
+function compositionSummary(parts: LocationSpawnProfile['compositionParts'] | undefined): string {
+  if (!parts?.length) return 'Composition data unavailable'
   return parts
     .slice(0, 3)
     .map((p) => `${p.elementName} ${p.minPercentage}–${p.maxPercentage}%`)
     .join(', ')
 }
 
-function clusterPreview(rows: Array<{ nodes: number; chancePercent: number }>): string {
-  if (!rows.length) return 'Solo only'
+function clusterPreview(rows: Array<{ nodes: number; chancePercent: number }> | undefined): string {
+  if (!rows?.length) return 'Solo only'
   return rows.map((r) => `${pct(r.chancePercent, 0)} (${r.nodes}×)`).join(' / ')
 }
 

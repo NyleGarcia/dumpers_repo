@@ -118,12 +118,14 @@ export function getTrackerProfile(entry: MiningTrackerEntry): FormattedClusterDi
   const ore = getOreProfile(entry.oreName)
   if (!ore) return null
 
+  const depositType: DepositType = entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
+
   if (entry.profileMode === 'location' && entry.locationName) {
-    const locProfile = getLocationProfile(entry.oreName, entry.locationName, entry.depositType)
+    const locProfile = getLocationProfile(entry.oreName, entry.locationName, depositType)
     if (locProfile) return formatClusterRows(locProfile, ore.baseSignature)
   }
 
-  const overall = getOverallProfile(entry.oreName, entry.depositType)
+  const overall = getOverallProfile(entry.oreName, depositType)
   if (overall) return formatClusterRows(overall, ore.baseSignature)
   return null
 }
@@ -132,13 +134,16 @@ export function formatClusterRows(
   profile: ClusterDisplayProfile | LocationSpawnProfile,
   baseSignature?: number
 ): FormattedClusterDisplay {
-  const baseRs = baseSignature ?? profile.clusterRows[0]?.rs
-    ? Math.round((profile.clusterRows[0]?.rs ?? 0) / (profile.clusterRows[0]?.nodes ?? 1))
-    : 0
+  const clusterRows = profile.clusterRows ?? []
+  const baseRs =
+    baseSignature ??
+    (clusterRows[0]?.nodes
+      ? Math.round(clusterRows[0].rs / clusterRows[0].nodes)
+      : 0)
 
   return {
     baseRs,
-    rows: profile.clusterRows.map((row) => ({
+    rows: clusterRows.map((row) => ({
       nodes: row.nodes,
       rs: row.rs,
       chancePercent: row.chancePercent,
@@ -172,10 +177,12 @@ export function getLocationSpawnTag(
 }
 
 export function getTrackerSubtitle(entry: MiningTrackerEntry): string {
+  const depositType: DepositType = entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
+
   if (entry.profileMode === 'location' && entry.locationName) {
     return `Location · ${entry.locationName}`
   }
-  const overall = getOverallProfile(entry.oreName, entry.depositType)
+  const overall = getOverallProfile(entry.oreName, depositType)
   if (overall?.bestLocation) {
     return `Overall · best at ${overall.bestLocation}`
   }
@@ -186,8 +193,8 @@ export function depositTypeLabel(depositType: DepositType): string {
   return depositType === 'surface' ? 'Surface' : 'Asteroid'
 }
 
-export function depositTypeUpper(depositType: DepositType): string {
-  return depositType === 'surface' ? 'SURFACE' : 'ASTEROID'
+export function depositTypeUpper(depositType: DepositType | undefined): string {
+  return depositType === 'asteroid' ? 'ASTEROID' : 'SURFACE'
 }
 
 export { spawns as miningSpawnData }

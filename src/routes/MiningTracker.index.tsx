@@ -45,7 +45,11 @@ export default function MiningTrackerRoute() {
   const { isGuestPreview } = useAuth()
   const { data, loading, error, refetch } = useMiningData()
   const { entries, addEntry, removeEntry, clearAll, isTracked } = useMiningTracker()
-  const search = useSearch({ from: '/mining-tracker' })
+  const search = useSearch({ strict: false }) as {
+    ore?: string
+    location?: string
+    add?: boolean
+  }
 
   const [viewMode, setViewMode] = useState<ViewMode>('tracker')
   const [oreSearch, setOreSearch] = useState('')
@@ -394,7 +398,9 @@ export default function MiningTrackerRoute() {
                                     {formatRsReading(row.rs)}
                                   </span>
                                   <span className="text-sm text-slate-400 shrink-0">
-                                    {row.chancePercent.toFixed(row.chancePercent % 1 === 0 ? 0 : 1)}%
+                                    {typeof row.chancePercent === 'number'
+                                      ? `${row.chancePercent.toFixed(row.chancePercent % 1 === 0 ? 0 : 1)}%`
+                                      : '—'}
                                   </span>
                                 </div>
                               </SiteTooltip>
