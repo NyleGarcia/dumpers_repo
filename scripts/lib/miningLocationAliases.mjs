@@ -64,6 +64,15 @@ export const GUIDE_TO_SPAWN_KEYS = {
   'MIC-L5': ['Lagrange C'],
 }
 
+/** Compendium entries that map to multiple spawn profile keys. */
+export const COMPOUND_GUIDE_TO_SPAWN_KEYS = {
+  Hurston: ['Stanton1', 'Stanton1a', 'Stanton1b', 'Stanton1c', 'Stanton1d'],
+  Monox: ['Stanton1a', 'Stanton4', 'Stanton4a'],
+  microTech: ['Stanton4', 'Stanton4a', 'Stanton4b', 'Stanton4c'],
+  'Yela Ring': ['Stanton2c Belt', 'Stanton2c'],
+  'Magda Sand Caves': ['Stanton1d'],
+}
+
 function pyrLagrangeNames(planetNum) {
   return [1, 2, 3, 4, 5].map((n) => `PYR${planetNum} L${n}`)
 }
@@ -289,6 +298,41 @@ export function buildLocationAliases(localization, extractedDataRoot) {
   return Object.fromEntries(
     [...aliases.entries()].sort(([a], [b]) => a.localeCompare(b))
   )
+}
+
+/**
+ * Compendium / guide name → spawn profile keys (runtime lookup table).
+ * Excludes broad buckets and PYR nav labels used only for belt template display.
+ */
+export function buildGuideToSpawnKeys(locationAliases = {}) {
+  const map = {}
+
+  for (const [guideName, spawnKeys] of Object.entries(GUIDE_TO_SPAWN_KEYS)) {
+    map[guideName] = [...spawnKeys]
+  }
+  for (const [guideName, spawnKeys] of Object.entries(COMPOUND_GUIDE_TO_SPAWN_KEYS)) {
+    map[guideName] = [...spawnKeys]
+  }
+  for (const [spawnKey, guideName] of Object.entries(SPAWN_CODE_GUIDE_NAMES)) {
+    if (!map[guideName]) map[guideName] = []
+    if (!map[guideName].includes(spawnKey)) map[guideName].push(spawnKey)
+  }
+
+  for (const [spawnKey, alias] of Object.entries(locationAliases)) {
+    const names = alias.guideNames ?? (alias.guideName ? [alias.guideName] : [])
+    for (const name of names) {
+      if (name === 'Pyro Asteroid Clusters') continue
+      if (/^PYR\d/i.test(name)) continue
+      if (!map[name]) map[name] = []
+      if (!map[name].includes(spawnKey)) map[name].push(spawnKey)
+    }
+  }
+
+  for (const keys of Object.values(map)) {
+    keys.sort()
+  }
+
+  return Object.fromEntries(Object.entries(map).sort(([a], [b]) => a.localeCompare(b)))
 }
 
 function applyVerifiedOverlays(aliases) {

@@ -183,7 +183,10 @@ export function getOverallSpawnTag(
 ): { label: string; tier: SpawnTagTier } {
   const overall = getOverallProfile(oreName, depositType)
   if (!overall) return { label: 'Overall', tier: 'broad' }
-  return { label: formatOverallTagLabel(overall.bestLocation), tier: 'broad' }
+  return {
+    label: formatOverallTagLabel(overall.bestLocation, overall.bestLocationDisplayName),
+    tier: 'broad',
+  }
 }
 
 export function getLocationSpawnTag(
@@ -223,7 +226,9 @@ export function getTrackerSubtitle(entry: MiningTrackerEntry): string {
     return `Spawn & cluster · ${entry.locationName}`
   }
   const overall = getOverallProfile(entry.oreName, depositType)
-  if (overall) return formatOverallTagLabel(overall.bestLocation)
+  if (overall) {
+    return formatOverallTagLabel(overall.bestLocation, overall.bestLocationDisplayName)
+  }
   return 'Overall'
 }
 

@@ -72,7 +72,10 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
       )}
       {!isLocationTrackerEntry(entry) && (() => {
         const overall = getOverallProfile(entry.oreName, entry.depositType)
-        const bestAtNote = formatOverallBestAtTooltip(overall?.bestLocation)
+        const bestAtNote = formatOverallBestAtTooltip(
+          overall?.bestLocation,
+          overall?.bestLocationDisplayName
+        )
         return bestAtNote ? (
           <div className="text-slate-400">{bestAtNote}</div>
         ) : null
@@ -145,8 +148,10 @@ export function guideLocationChipTooltip(
       <div className="space-y-1">
         <div className="font-semibold text-orange-300">Overall · {depositTypeLabel(depositType)}</div>
         <div className="text-slate-400">{guideLocationName}</div>
-        {formatOverallBestAtTooltip(overall.bestLocation) && (
-          <div className="text-slate-400">{formatOverallBestAtTooltip(overall.bestLocation)}</div>
+        {formatOverallBestAtTooltip(overall.bestLocation, overall.bestLocationDisplayName) && (
+          <div className="text-slate-400">
+            {formatOverallBestAtTooltip(overall.bestLocation, overall.bestLocationDisplayName)}
+          </div>
         )}
         <div>Cluster: {clusterPreview(overall.clusterRows)}</div>
         <div className="text-slate-400 text-[11px]">
@@ -219,7 +224,10 @@ export function guideLocationOreTooltip(
       const overall = getOverallProfile(oreName, depositType)
       if (!overall) return []
       const tag = getOverallSpawnTag(oreName, depositType)
-      const bestAt = formatOverallBestAtTooltip(overall.bestLocation)
+      const bestAt = formatOverallBestAtTooltip(
+        overall.bestLocation,
+        overall.bestLocationDisplayName
+      )
       return [
         `${depositTypeLabel(depositType)}: ${tag.label}${bestAt ? ` — ${bestAt}` : ''}`,
       ]

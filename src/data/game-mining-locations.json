@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-24T22:28:34.290Z",
+  "_extracted": "2026-06-24T22:50:06.257Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -2981,6 +2981,174 @@
       "source": "localization_desc+hpp_path_audit"
     }
   },
+  "guideToSpawnKeys": {
+    "Aaron Halo": [
+      "Aaron Halo"
+    ],
+    "Aberdeen": [
+      "Stanton1b"
+    ],
+    "Adir": [
+      "Pyro5c"
+    ],
+    "Akiro Cluster": [
+      "Akiro Cluster"
+    ],
+    "ARC-L1": [
+      "Lagrange F"
+    ],
+    "ARC-L2": [
+      "Lagrange F"
+    ],
+    "ARC-L3": [
+      "Lagrange D"
+    ],
+    "ARC-L4": [
+      "Lagrange F"
+    ],
+    "ARC-L5": [
+      "Lagrange B"
+    ],
+    "Arial": [
+      "Stanton1c"
+    ],
+    "Bloom": [
+      "Pyro3"
+    ],
+    "Calliope": [
+      "Stanton4a"
+    ],
+    "Cellin": [
+      "Stanton2a"
+    ],
+    "Clio": [
+      "Stanton4b"
+    ],
+    "CRU-L1": [
+      "Lagrange E"
+    ],
+    "CRU-L2": [
+      "Lagrange E"
+    ],
+    "CRU-L3": [
+      "Lagrange C"
+    ],
+    "CRU-L4": [
+      "Lagrange B"
+    ],
+    "CRU-L5": [
+      "Lagrange D"
+    ],
+    "Daymar": [
+      "Stanton2b"
+    ],
+    "Euterpe": [
+      "Stanton4c"
+    ],
+    "Fairo": [
+      "Pyro5d"
+    ],
+    "Fuego": [
+      "Pyro5e"
+    ],
+    "Glaciem Ring": [
+      "Glaciem Ring"
+    ],
+    "HUR-L1": [
+      "Lagrange A"
+    ],
+    "HUR-L2": [
+      "Lagrange F"
+    ],
+    "HUR-L3": [
+      "Lagrange E"
+    ],
+    "HUR-L4": [
+      "Lagrange A"
+    ],
+    "HUR-L5": [
+      "Lagrange A"
+    ],
+    "Hurston": [
+      "Stanton1",
+      "Stanton1a",
+      "Stanton1b",
+      "Stanton1c",
+      "Stanton1d"
+    ],
+    "Ignis": [
+      "Pyro5a"
+    ],
+    "Ita": [
+      "Stanton1a"
+    ],
+    "Keeger Belt": [
+      "Keeger Belt"
+    ],
+    "Lyria": [
+      "Stanton3a"
+    ],
+    "Magda": [
+      "Stanton1d"
+    ],
+    "Magda Sand Caves": [
+      "Stanton1d"
+    ],
+    "MIC-L1": [
+      "Lagrange C"
+    ],
+    "MIC-L2": [
+      "Lagrange C"
+    ],
+    "MIC-L3": [
+      "Lagrange B"
+    ],
+    "MIC-L4": [
+      "Lagrange D"
+    ],
+    "MIC-L5": [
+      "Lagrange C"
+    ],
+    "microTech": [
+      "Stanton4",
+      "Stanton4a",
+      "Stanton4b",
+      "Stanton4c"
+    ],
+    "Monox": [
+      "Stanton1a",
+      "Stanton4",
+      "Stanton4a"
+    ],
+    "Pyro I": [
+      "Pyro1"
+    ],
+    "Pyro II": [
+      "Pyro2"
+    ],
+    "Pyro IV": [
+      "Pyro4"
+    ],
+    "Terminus": [
+      "Pyro6"
+    ],
+    "Vatra": [
+      "Pyro5b"
+    ],
+    "Vuur": [
+      "Pyro5f"
+    ],
+    "Wala": [
+      "Stanton3b"
+    ],
+    "Yela": [
+      "Stanton2c"
+    ],
+    "Yela Ring": [
+      "Stanton2c",
+      "Stanton2c Belt"
+    ]
+  },
   "rarityOrder": [
     "legendary",
     "epic",
@@ -2993,6 +3161,7 @@
     "totalOres": 35,
     "totalLocations": 56,
     "locationsWithDetails": 25,
-    "locationAliasCount": 47
+    "locationAliasCount": 47,
+    "guideToSpawnKeyCount": 52
   }
 }

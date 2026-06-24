@@ -15,6 +15,7 @@ import { fileURLToPath } from 'url'
 import { extractAllGameLore } from './lib/gameLore.mjs'
 import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 import {
+  buildGuideToSpawnKeys,
   buildLocationAliases,
   parseLocationDescKey,
   SPAWN_CODE_GUIDE_NAMES,
@@ -556,6 +557,8 @@ function parseMiningLocations(localization) {
 
   const locationAliases = buildLocationAliases(localization, EXTRACTED_DATA)
   console.log(`  Built ${Object.keys(locationAliases).length} location alias entries`)
+  const guideToSpawnKeys = buildGuideToSpawnKeys(locationAliases)
+  console.log(`  Built ${Object.keys(guideToSpawnKeys).length} guide→spawn key mappings`)
   
   // Build rarity-organized structure
   const byRarity = {
@@ -588,6 +591,7 @@ function parseMiningLocations(localization) {
     locationOres,
     locationMineables,
     locationAliases,
+    guideToSpawnKeys,
     rarityTiers: byRarity,
     rarityOrder: ['legendary', 'epic', 'rare', 'uncommon', 'common', 'handMineable']
   }
@@ -3736,12 +3740,14 @@ async function main() {
     locationOres: miningLocations.locationOres,
     locationMineables: miningLocations.locationMineables,
     locationAliases: miningLocations.locationAliases,
+    guideToSpawnKeys: miningLocations.guideToSpawnKeys,
     rarityOrder: miningLocations.rarityOrder,
     summary: {
       totalOres: Object.keys(miningLocations.oreLocations).length,
       totalLocations: Object.keys(miningLocations.locationOres).length,
       locationsWithDetails: Object.keys(miningLocations.locationMineables).length,
       locationAliasCount: Object.keys(miningLocations.locationAliases ?? {}).length,
+      guideToSpawnKeyCount: Object.keys(miningLocations.guideToSpawnKeys ?? {}).length,
     }
   })
 

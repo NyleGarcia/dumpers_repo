@@ -29,6 +29,7 @@ export interface MiningLocationsData {
       source?: string
     }
   >
+  guideToSpawnKeys?: Record<string, string[]>
   rarityTiers: {
     legendary: OreLocation[]
     epic: OreLocation[]

@@ -109,9 +109,11 @@ Internal HPP spawn keys (e.g. `Stanton1b`, `Lagrange F`) are mapped to member-fa
 | Field | Purpose |
 |-------|---------|
 | `spawnKey` | Stable lookup id from HPP record (matches `locationName` in spawn profiles) |
-| `displayName` | Member-facing label (`Aberdeen`, `Stanton L-point belt · F`, `Pyro warm asteroid field`) |
+| `displayName` | Member-facing label (`Aberdeen`, `ARC-L1`, `Pyro I–II Lagrange belts`) |
 | `guideName` / `guideNames` | Compendium / starmap names for guide chip resolution |
 | `source` | `localization_desc`, `spawn_code_table`, `verified_overlay`, or `hpp_path_audit` |
+
+`guideToSpawnKeys` is the reverse map (compendium name → spawn keys) for guide location resolution at runtime via `src/lib/miningLocationNames.ts`.
 
 Built in `scripts/lib/miningLocationAliases.mjs` during `parseMiningLocations()`. Lagrange belt templates and Pyro cluster fields use a verified overlay when game files lack explicit parent-body labels.
 
