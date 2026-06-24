@@ -13,6 +13,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
 import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
 import { extractAllGameLore } from './lib/gameLore.mjs'
+import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -3725,6 +3726,16 @@ async function main() {
       totalLocations: Object.keys(miningLocations.locationOres).length,
       locationsWithDetails: Object.keys(miningLocations.locationMineables).length
     }
+  })
+
+  const miningSpawns = parseMiningSpawns(EXTRACTED_DATA, miningLocations)
+  saveJson('game-mining-spawns.json', {
+    _source: 'Star Citizen Game Files (extracted harvestable/HPP data)',
+    _extracted: new Date().toISOString(),
+    clusterPresets: miningSpawns.clusterPresets,
+    ores: miningSpawns.ores,
+    audit: miningSpawns.audit,
+    summary: miningSpawns.summary,
   })
   
   // Manufacturers

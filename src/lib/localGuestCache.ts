@@ -9,13 +9,24 @@ export const GUEST_CACHE_VERSION_KEY = 'dumpers_guest_cache_version'
 export const GUEST_ACQUIRED_STORAGE_KEY = 'acquired_blueprints'
 
 export const MINING_TRACKER_STORAGE_KEY = 'dumpers_mining_tracker'
-export const MINING_TRACKER_MULTIPLIER_KEY = 'dumpers_mining_tracker_multiplier'
+
+export type DepositType = 'surface' | 'asteroid'
+export type ProfileMode = 'overall' | 'location'
 
 export interface MiningTrackerEntry {
   id: string
   oreName: string
+  depositType: DepositType
   rarity: string
   addedAt: number
+  profileMode: ProfileMode
+  locationName?: string
+}
+
+export interface MiningTrackerAddOptions {
+  depositType: DepositType
+  profileMode?: ProfileMode
+  locationName?: string
 }
 
 export const GUEST_TARGET_LIST_STORAGE_KEY = 'dumpers_guest_target_list'
@@ -118,7 +129,7 @@ export function clearAllGuestLocalData(): void {
   localStorage.removeItem(GUEST_MISSION_PREFS_STORAGE_KEY)
   localStorage.removeItem(GUEST_RESOURCES_STORAGE_KEY)
   localStorage.removeItem(MINING_TRACKER_STORAGE_KEY)
-  localStorage.removeItem(MINING_TRACKER_MULTIPLIER_KEY)
+  localStorage.removeItem('dumpers_mining_tracker_multiplier')
   localStorage.removeItem(GUEST_CACHE_VERSION_KEY)
 }
 
@@ -156,31 +167,39 @@ export function writeGuestAcquiredBlueprints(acquired: Record<string, boolean>):
   stampGuestCacheVersion()
 }
 
+function normalizeMiningTrackerEntry(raw: Partial<MiningTrackerEntry>): MiningTrackerEntry | null {
+  const checked = validateGuestMiningEntry(raw.oreName ?? '', raw.rarity ?? '')
+  if (!checked) return null
+
+  const depositType: DepositType = raw.depositType === 'asteroid' ? 'asteroid' : 'surface'
+  const profileMode: ProfileMode = raw.profileMode === 'location' ? 'location' : 'overall'
+
+  return {
+    id: miningTrackerEntryId(checked.oreName, depositType),
+    oreName: checked.oreName,
+    depositType,
+    rarity: checked.rarity,
+    addedAt: typeof raw.addedAt === 'number' ? raw.addedAt : Date.now(),
+    profileMode,
+    locationName: profileMode === 'location' ? raw.locationName : undefined,
+  }
+}
+
 export function readMiningTrackerEntries(): MiningTrackerEntry[] {
   if (typeof localStorage === 'undefined') return []
-  const entries = safeParse<MiningTrackerEntry[]>(
+  const entries = safeParse<Partial<MiningTrackerEntry>[]>(
     localStorage.getItem(MINING_TRACKER_STORAGE_KEY),
     []
   )
-  return entries.filter((entry) => {
-    const valid = validateGuestMiningEntry(entry.oreName, entry.rarity)
-    return valid !== null
-  })
+  return entries
+    .map((entry) => normalizeMiningTrackerEntry(entry))
+    .filter((entry): entry is MiningTrackerEntry => entry !== null)
 }
 
 export function writeMiningTrackerEntries(entries: MiningTrackerEntry[]): void {
   if (typeof localStorage === 'undefined') return
   const valid = entries
-    .map((entry) => {
-      const checked = validateGuestMiningEntry(entry.oreName, entry.rarity)
-      if (!checked) return null
-      return {
-        id: checked.oreName,
-        oreName: checked.oreName,
-        rarity: checked.rarity,
-        addedAt: entry.addedAt,
-      }
-    })
+    .map((entry) => normalizeMiningTrackerEntry(entry))
     .filter((entry): entry is MiningTrackerEntry => entry !== null)
   localStorage.setItem(MINING_TRACKER_STORAGE_KEY, JSON.stringify(valid))
   stampGuestCacheVersion()
@@ -191,24 +210,8 @@ export function clearMiningTrackerEntries(): void {
   localStorage.removeItem(MINING_TRACKER_STORAGE_KEY)
 }
 
-export function miningTrackerEntryId(oreName: string): string {
-  return oreName
-}
-
-export function readMiningTrackerMultiplier(): number {
-  if (typeof localStorage === 'undefined') return 3
-  const raw = localStorage.getItem(MINING_TRACKER_MULTIPLIER_KEY)
-  if (!raw) return 3
-  const val = parseInt(raw, 10)
-  if (Number.isNaN(val) || val < 2 || val > 10) return 3
-  return val
-}
-
-export function writeMiningTrackerMultiplier(count: number): void {
-  if (typeof localStorage === 'undefined') return
-  const clamped = Math.max(2, Math.min(10, Math.floor(count)))
-  localStorage.setItem(MINING_TRACKER_MULTIPLIER_KEY, String(clamped))
-  stampGuestCacheVersion()
+export function miningTrackerEntryId(oreName: string, depositType: DepositType = 'surface'): string {
+  return `${oreName}:${depositType}`
 }
 
 export function guestMissionPrefsToMap(entries: GuestMissionPrefEntry[]): Record<string, boolean> {

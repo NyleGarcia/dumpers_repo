@@ -2,6 +2,8 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 import { useAuth } from './AuthContext'
 import { supabase } from '../lib/supabase'
 import {
+  type DepositType,
+  type MiningTrackerAddOptions,
   type MiningTrackerEntry,
   ensureGuestCacheSchema,
   miningTrackerEntryId,
@@ -13,24 +15,31 @@ interface DbEntry {
   id: string
   ore_name: string
   rarity: string
+  deposit_type: string
+  profile_mode: string
+  location_name: string | null
   added_at: string
 }
 
 function dbToLocal(db: DbEntry): MiningTrackerEntry {
+  const depositType: DepositType = db.deposit_type === 'asteroid' ? 'asteroid' : 'surface'
   return {
-    id: db.ore_name,
+    id: miningTrackerEntryId(db.ore_name, depositType),
     oreName: db.ore_name,
+    depositType,
     rarity: db.rarity,
     addedAt: new Date(db.added_at).getTime(),
+    profileMode: db.profile_mode === 'location' ? 'location' : 'overall',
+    locationName: db.location_name ?? undefined,
   }
 }
 
 interface MiningTrackerContextValue {
   entries: MiningTrackerEntry[]
-  addEntry: (oreName: string, rarity: string) => Promise<boolean>
+  addEntry: (oreName: string, rarity: string, options: MiningTrackerAddOptions) => Promise<boolean>
   removeEntry: (id: string) => Promise<void>
   clearAll: () => Promise<void>
-  isTracked: (oreName: string) => boolean
+  isTracked: (oreName: string, depositType: DepositType) => boolean
   loading: boolean
 }
 
@@ -45,7 +54,6 @@ export function MiningTrackerProvider({ children }: { children: React.ReactNode 
   )
   const [loading, setLoading] = useState(!isGuest)
 
-  // Load from DB for logged-in users
   useEffect(() => {
     if (isGuest) {
       ensureGuestCacheSchema()
@@ -69,7 +77,6 @@ export function MiningTrackerProvider({ children }: { children: React.ReactNode 
     loadFromDb()
   }, [isGuest, user?.id])
 
-  // Listen for localStorage changes (guests only, for cross-tab sync)
   useEffect(() => {
     if (!isGuest) return
 
@@ -83,33 +90,42 @@ export function MiningTrackerProvider({ children }: { children: React.ReactNode 
   }, [isGuest])
 
   const addEntry = useCallback(
-    async (oreName: string, rarity: string) => {
-      const id = miningTrackerEntryId(oreName)
-      if (entries.some((e) => e.id === id)) return false
+    async (oreName: string, rarity: string, options: MiningTrackerAddOptions) => {
+      const depositType = options.depositType
+      const profileMode = options.profileMode ?? 'overall'
+      const locationName = profileMode === 'location' ? options.locationName : undefined
+      const id = miningTrackerEntryId(oreName, depositType)
+      const nextEntry: MiningTrackerEntry = {
+        id,
+        oreName,
+        depositType,
+        rarity,
+        addedAt: Date.now(),
+        profileMode,
+        locationName,
+      }
 
       if (isGuest) {
-        const next: MiningTrackerEntry[] = [
-          { id, oreName, rarity, addedAt: Date.now() },
-          ...entries,
-        ]
+        const without = entries.filter((e) => e.id !== id)
+        const next = [nextEntry, ...without]
         writeMiningTrackerEntries(next)
         setEntries(next)
         return true
       }
 
-      // Logged-in user: save to DB
       try {
-        const { data, error } = await supabase.rpc('add_mining_tracker_entry', {
+        const { error } = await supabase.rpc('add_mining_tracker_entry', {
           p_ore_name: oreName,
           p_rarity: rarity,
+          p_deposit_type: depositType,
+          p_profile_mode: profileMode,
+          p_location_name: locationName ?? null,
         })
         if (error) throw error
-        if (data?.success && !data?.already_existed) {
-          setEntries((prev) => [
-            { id, oreName, rarity, addedAt: Date.now() },
-            ...prev,
-          ])
-        }
+        setEntries((prev) => {
+          const without = prev.filter((e) => e.id !== id)
+          return [nextEntry, ...without]
+        })
         return true
       } catch (err) {
         console.error('Failed to add mining tracker entry:', err)
@@ -128,10 +144,9 @@ export function MiningTrackerProvider({ children }: { children: React.ReactNode 
         return
       }
 
-      // Logged-in user: remove from DB (id is the ore name)
       try {
         const { error } = await supabase.rpc('remove_mining_tracker_entry', {
-          p_ore_name: id,
+          p_entry_id: id,
         })
         if (error) throw error
         setEntries((prev) => prev.filter((e) => e.id !== id))
@@ -149,7 +164,6 @@ export function MiningTrackerProvider({ children }: { children: React.ReactNode 
       return
     }
 
-    // Logged-in user: clear from DB
     try {
       const { error } = await supabase.rpc('clear_mining_tracker')
       if (error) throw error
@@ -160,8 +174,8 @@ export function MiningTrackerProvider({ children }: { children: React.ReactNode 
   }, [isGuest])
 
   const isTracked = useCallback(
-    (oreName: string) => {
-      return entries.some((e) => e.id === miningTrackerEntryId(oreName))
+    (oreName: string, depositType: DepositType) => {
+      return entries.some((e) => e.id === miningTrackerEntryId(oreName, depositType))
     },
     [entries]
   )

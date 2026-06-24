@@ -1,0 +1,457 @@
+/**
+ * Parse mining spawn / cluster profiles from extracted harvestable + HPP game data.
+ */
+
+import { readFileSync, existsSync, readdirSync } from 'fs'
+import { join, basename } from 'path'
+
+/** Ship-mining RS signatures (must match src/lib/miningConstants.ts ORE_SIGNATURES). */
+export const ORE_SIGNATURES = {
+  Quantainium: 3170,
+  Stileron: 3185,
+  Savrilium: 3200,
+  Ouratite: 3370,
+  Riccite: 3385,
+  Lindinium: 3400,
+  Beryl: 3540,
+  Taranite: 3555,
+  Borase: 3570,
+  Gold: 3585,
+  Bexalite: 3600,
+  Laranite: 3825,
+  Aslarite: 3840,
+  Titanium: 3855,
+  Tungsten: 3870,
+  Agricium: 3885,
+  Torite: 3900,
+  Hephaestanite: 4180,
+  Tin: 4195,
+  Quartz: 4210,
+  Corundum: 4225,
+  Copper: 4240,
+  Silicon: 4255,
+  Iron: 4270,
+  Aluminium: 4285,
+  Ice: 4300,
+}
+
+const SLUG_TO_ORE = {
+  quantainium: 'Quantainium',
+  stileron: 'Stileron',
+  sileron: 'Stileron',
+  savrilium: 'Savrilium',
+  ouratite: 'Ouratite',
+  riccite: 'Riccite',
+  lindinium: 'Lindinium',
+  beryl: 'Beryl',
+  taranite: 'Taranite',
+  borase: 'Borase',
+  gold: 'Gold',
+  bexalite: 'Bexalite',
+  laranite: 'Laranite',
+  aslarite: 'Aslarite',
+  titanium: 'Titanium',
+  tungsten: 'Tungsten',
+  agricium: 'Agricium',
+  torite: 'Torite',
+  hephaestanite: 'Hephaestanite',
+  tin: 'Tin',
+  quartz: 'Quartz',
+  corundum: 'Corundum',
+  copper: 'Copper',
+  silicon: 'Silicon',
+  iron: 'Iron',
+  aluminium: 'Aluminium',
+  aluminum: 'Aluminium',
+  ice: 'Ice',
+}
+
+function readJson(path) {
+  try {
+    return JSON.parse(readFileSync(path, 'utf-8'))
+  } catch {
+    return null
+  }
+}
+
+function walkJsonFiles(dir, acc = []) {
+  if (!existsSync(dir)) return acc
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, entry.name)
+    if (entry.isDirectory()) walkJsonFiles(p, acc)
+    else if (entry.name.endsWith('.json')) acc.push(p)
+  }
+  return acc
+}
+
+function resolveRef(ref, extractedDataRoot) {
+  if (!ref) return null
+  const s = String(ref)
+  const idx = s.toLowerCase().indexOf('libs/foundry/records/')
+  if (idx === -1) return null
+  return join(extractedDataRoot, s.slice(idx).replace(/\//g, '\\'))
+}
+
+function normalizeLocationKey(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '')
+}
+
+function hppKeyToDisplayName(hppRecordName) {
+  const raw = hppRecordName.replace(/^HarvestableProviderPreset\.HPP_/i, '')
+  const parts = raw.split('_').filter(Boolean)
+  return parts
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
+    .join(' ')
+}
+
+function inferSystemFromPath(filePath) {
+  const lower = filePath.replace(/\\/g, '/').toLowerCase()
+  if (lower.includes('/nyx/')) return 'Nyx'
+  if (lower.includes('/pyro/')) return 'Pyro'
+  if (lower.includes('/stanton/')) return 'Stanton'
+  return 'Unknown'
+}
+
+function depositTypeFromPreset(presetBasename) {
+  if (/^mining_asteroid/i.test(presetBasename)) return 'asteroid'
+  if (/^mining_(common|uncommon|rare|epic|legendary|surface)/i.test(presetBasename)) return 'surface'
+  return null
+}
+
+function oreFromPresetBasename(presetBasename) {
+  const m = presetBasename.match(/^mining_(?:asteroid)?(?:legendary|epic|rare|uncommon|common|surface)?_?(.*)$/i)
+  if (!m) return null
+  const slug = m[1].replace(/_rcd$/i, '').toLowerCase()
+  return SLUG_TO_ORE[slug] ?? null
+}
+
+function buildClusterRows(clusterPreset, baseSignature) {
+  const val = clusterPreset?._RecordValue_
+  if (!val) return { maxNodes: 0, rows: [], clusterPresetKey: null, probabilityOfClustering: 0 }
+
+  const key = clusterPreset._RecordName_ || null
+  const probabilityOfClustering = val.probabilityOfClustering ?? 100
+  const arr = val.clusterParamsArray ?? []
+  if (arr.length === 0) return { maxNodes: 0, rows: [], clusterPresetKey: key, probabilityOfClustering }
+
+  const sumRel = arr.reduce((s, x) => s + (x.relativeProbability ?? 0), 0) || 1
+  const rows = []
+  let maxNodes = 0
+
+  for (const param of arr) {
+    const nodes = param.maxSize ?? param.minSize ?? 0
+    if (nodes < 2) continue
+    maxNodes = Math.max(maxNodes, nodes)
+    const sizeShare = (param.relativeProbability ?? 0) / sumRel
+    const chancePercent =
+      probabilityOfClustering < 100
+        ? Math.round(probabilityOfClustering * sizeShare * 100) / 100
+        : Math.round(sizeShare * 10000) / 100
+    rows.push({
+      nodes,
+      rs: baseSignature * nodes,
+      chancePercent,
+      minProximity: param.minProximity,
+      maxProximity: param.maxProximity,
+    })
+  }
+
+  rows.sort((a, b) => a.nodes - b.nodes)
+  return { maxNodes, rows, clusterPresetKey: key, probabilityOfClustering }
+}
+
+function buildOverallProfile(locations, depositType) {
+  const filtered = locations.filter((l) => l.depositType === depositType)
+  if (filtered.length === 0) return null
+
+  let maxNodes = 0
+  let bestLocation = filtered[0].locationName
+  let bestLocationSpawnPercent = filtered[0].effectiveSpawnPercent
+
+  for (const loc of filtered) {
+    maxNodes = Math.max(maxNodes, loc.maxNodes)
+    if (loc.effectiveSpawnPercent > bestLocationSpawnPercent) {
+      bestLocation = loc.locationName
+      bestLocationSpawnPercent = loc.effectiveSpawnPercent
+    }
+  }
+
+  const clusterRows = []
+  for (let n = 2; n <= maxNodes; n++) {
+    let bestChance = 0
+    let bestAt = bestLocation
+    for (const loc of filtered) {
+      const row = loc.clusterRows.find((r) => r.nodes === n)
+      if (row && row.chancePercent > bestChance) {
+        bestChance = row.chancePercent
+        bestAt = loc.locationName
+      }
+    }
+    if (bestChance > 0) {
+      const baseSig = ORE_SIGNATURES[filtered[0].oreName]
+      clusterRows.push({
+        nodes: n,
+        rs: baseSig * n,
+        chancePercent: bestChance,
+        bestAtLocation: bestAt,
+      })
+    }
+  }
+
+  return {
+    maxNodes,
+    clusterRows,
+    bestLocation,
+    bestLocationSpawnPercent: Math.round(bestLocationSpawnPercent * 1000) / 1000,
+  }
+}
+
+function loadCompositions(extractedDataRoot) {
+  const compDir = join(extractedDataRoot, 'libs/foundry/records/mining/rockcompositionpresets')
+  const map = new Map()
+  for (const file of walkJsonFiles(compDir)) {
+    const json = readJson(file)
+    if (!json?._RecordName_) continue
+    const key = json._RecordName_
+    const parts = (json._RecordValue_?.compositionArray ?? []).map((part) => {
+      const elemPath = part.mineableElement
+      const elemFile =
+        typeof elemPath === 'string'
+          ? resolveRef(elemPath, extractedDataRoot)
+          : resolveRef(elemPath?._RecordPath_ || elemPath, extractedDataRoot)
+      let elementName = 'Unknown'
+      if (elemFile) {
+        const elem = readJson(elemFile)
+        const rn = elem?._RecordName_ || basename(elemFile, '.json')
+        elementName = rn.replace(/^MineableElement\./i, '').replace(/_ore$|_raw$/i, '')
+      }
+      return {
+        elementName,
+        minPercentage: part.minPercentage,
+        maxPercentage: part.maxPercentage,
+        qualityScale: part.qualityScale,
+      }
+    })
+    map.set(key, {
+      recordName: key,
+      depositName: json._RecordValue_?.depositName,
+      parts,
+    })
+  }
+  return map
+}
+
+function findCompositionForPreset(presetBasename, compositions) {
+  const slug = presetBasename.replace(/^mining_asteroid/i, 'mining_').replace(/^mining_/i, '')
+  for (const [key, comp] of compositions.entries()) {
+    if (key.toLowerCase().includes(slug.replace(/_/g, ''))) return comp
+  }
+  const ore = oreFromPresetBasename(presetBasename)
+  if (!ore) return null
+  const oreSlug = ore.toLowerCase()
+  for (const [key, comp] of compositions.entries()) {
+    if (key.toLowerCase().includes(oreSlug)) return comp
+  }
+  return null
+}
+
+function buildLocationIndex(miningLocations) {
+  const allNames = new Set()
+  for (const ore of Object.values(miningLocations?.oreLocations ?? {})) {
+    for (const loc of ore) allNames.add(loc)
+  }
+  const byNorm = new Map()
+  for (const name of allNames) {
+    byNorm.set(normalizeLocationKey(name), name)
+  }
+  return { allNames, byNorm }
+}
+
+function matchGuideLocation(hppDisplayName, locationIndex) {
+  const norm = normalizeLocationKey(hppDisplayName)
+  if (locationIndex.byNorm.has(norm)) return locationIndex.byNorm.get(norm)
+
+  for (const [key, name] of locationIndex.byNorm.entries()) {
+    if (key.includes(norm) || norm.includes(key)) return name
+  }
+  return hppDisplayName
+}
+
+/**
+ * @param {string} extractedDataRoot
+ * @param {object} miningLocations - parsed game-mining-locations shape (oreLocations)
+ */
+export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
+  console.log('\n  Parsing mining spawn / cluster profiles...')
+
+  const clusterPresets = new Map()
+  const clusterDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/clusteringpresets')
+  for (const file of walkJsonFiles(clusterDir)) {
+    const json = readJson(file)
+    if (json?._RecordName_) clusterPresets.set(json._RecordName_, json)
+  }
+
+  const compositions = loadCompositions(extractedDataRoot)
+  const locationIndex = buildLocationIndex(miningLocations)
+  const hppDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/providerpresets')
+  const rawLinks = []
+  const audit = { unmappedHppLinks: [], oresMissingProfile: [] }
+
+  for (const file of walkJsonFiles(hppDir)) {
+    if (!basename(file).startsWith('hpp_')) continue
+    const json = readJson(file)
+    if (!json?._RecordValue_) continue
+
+    const hppKey = json._RecordName_ || basename(file, '.json')
+    const system = inferSystemFromPath(file)
+    const guideLocation = matchGuideLocation(hppKeyToDisplayName(hppKey), locationIndex)
+
+    for (const group of json._RecordValue_.harvestableGroups ?? []) {
+      if (group.groupName !== 'SpaceShip_Mineables') continue
+      const groupProb = group.groupProbability ?? 0
+      const poolSum = (group.harvestables ?? []).reduce((s, h) => s + (h.relativeProbability ?? 0), 0) || 1
+
+      for (const h of group.harvestables ?? []) {
+        const harvestPath = resolveRef(h.harvestable?._RecordPath_ || h.harvestable, extractedDataRoot)
+        const clusterPath = resolveRef(h.clustering?._RecordPath_ || h.clustering, extractedDataRoot)
+        if (!harvestPath || !clusterPath) continue
+
+        const presetBasename = basename(harvestPath, '.json')
+        const oreName = oreFromPresetBasename(presetBasename)
+        const depositType = depositTypeFromPreset(presetBasename)
+        if (!oreName || !depositType || !ORE_SIGNATURES[oreName]) continue
+
+        const clusterFile = readJson(clusterPath)
+        const clusterKey = clusterFile?._RecordName_
+        const clusterPreset = clusterKey ? clusterPresets.get(clusterKey) || clusterFile : clusterFile
+        const baseSignature = ORE_SIGNATURES[oreName]
+        const { maxNodes, rows, clusterPresetKey, probabilityOfClustering } = buildClusterRows(
+          clusterPreset,
+          baseSignature
+        )
+
+        const relWeight = h.relativeProbability ?? 0
+        const poolSharePercent = Math.round((relWeight / poolSum) * 10000) / 100
+        const effectiveSpawnPercent = Math.round(((relWeight / poolSum) * groupProb) * 10000) / 10000
+
+        const comp = findCompositionForPreset(presetBasename, compositions)
+
+        rawLinks.push({
+          oreName,
+          locationName: guideLocation,
+          hppKey,
+          system,
+          depositType,
+          groupName: group.groupName,
+          groupSpawnPercent: groupProb,
+          relativeSpawnWeight: relWeight,
+          poolSharePercent,
+          effectiveSpawnPercent,
+          harvestablePreset: presetBasename,
+          compositionRecordName: comp?.recordName ?? null,
+          compositionParts: comp?.parts ?? [],
+          clusterPresetKey,
+          probabilityOfClustering,
+          maxNodes,
+          clusterRows: rows,
+        })
+      }
+    }
+  }
+
+  const ores = {}
+  for (const oreName of Object.keys(ORE_SIGNATURES)) {
+    ores[oreName] = {
+      oreName,
+      baseSignature: ORE_SIGNATURES[oreName],
+      depositTypes: [],
+      overallByType: {},
+      locations: {},
+      harvestablePresets: [],
+      compositionRecordIds: [],
+      clusterPresetKeys: [],
+    }
+  }
+
+  for (const link of rawLinks) {
+    const ore = ores[link.oreName]
+    if (!ore) continue
+
+    if (!ore.depositTypes.includes(link.depositType)) ore.depositTypes.push(link.depositType)
+    if (!ore.harvestablePresets.includes(link.harvestablePreset)) {
+      ore.harvestablePresets.push(link.harvestablePreset)
+    }
+    if (link.compositionRecordName && !ore.compositionRecordIds.includes(link.compositionRecordName)) {
+      ore.compositionRecordIds.push(link.compositionRecordName)
+    }
+    if (link.clusterPresetKey && !ore.clusterPresetKeys.includes(link.clusterPresetKey)) {
+      ore.clusterPresetKeys.push(link.clusterPresetKey)
+    }
+
+    const locKey = `${link.locationName}|${link.depositType}`
+    const existing = ore.locations[locKey]
+    if (!existing || link.effectiveSpawnPercent > existing.effectiveSpawnPercent) {
+      ore.locations[locKey] = {
+        locationName: link.locationName,
+        hppKey: link.hppKey,
+        system: link.system,
+        depositType: link.depositType,
+        groupName: link.groupName,
+        groupSpawnPercent: link.groupSpawnPercent,
+        relativeSpawnWeight: link.relativeSpawnWeight,
+        poolSharePercent: link.poolSharePercent,
+        effectiveSpawnPercent: link.effectiveSpawnPercent,
+        harvestablePreset: link.harvestablePreset,
+        compositionRecordName: link.compositionRecordName,
+        compositionParts: link.compositionParts,
+        clusterPresetKey: link.clusterPresetKey,
+        probabilityOfClustering: link.probabilityOfClustering,
+        maxNodes: link.maxNodes,
+        clusterRows: link.clusterRows,
+      }
+    }
+  }
+
+  for (const ore of Object.values(ores)) {
+    ore.depositTypes.sort()
+    const locList = Object.values(ore.locations)
+    if (ore.depositTypes.includes('surface')) {
+      ore.overallByType.surface = buildOverallProfile(locList, 'surface')
+    }
+    if (ore.depositTypes.includes('asteroid')) {
+      ore.overallByType.asteroid = buildOverallProfile(locList, 'asteroid')
+    }
+    if (locList.length === 0) audit.oresMissingProfile.push(ore.oreName)
+  }
+
+  const oreProfiles = Object.values(ores).filter((o) => o.depositTypes.length > 0)
+
+  console.log(`  Parsed ${rawLinks.length} HPP spawn links for ${oreProfiles.length} signature ores`)
+  if (audit.oresMissingProfile.length) {
+    console.log(`  ⚠ ${audit.oresMissingProfile.length} signature ores with no HPP links`)
+  }
+
+  return {
+    clusterPresets: Object.fromEntries(
+      [...clusterPresets.entries()].map(([k, v]) => [
+        k,
+        {
+          probabilityOfClustering: v._RecordValue_?.probabilityOfClustering,
+          sizes: (v._RecordValue_?.clusterParamsArray ?? []).map((p) => ({
+            min: p.minSize,
+            max: p.maxSize,
+            relativeProbability: p.relativeProbability,
+          })),
+        },
+      ])
+    ),
+    ores: Object.fromEntries(oreProfiles.map((o) => [o.oreName, o])),
+    audit,
+    summary: {
+      signatureOres: Object.keys(ORE_SIGNATURES).length,
+      oresWithProfiles: oreProfiles.length,
+      totalSpawnLinks: rawLinks.length,
+      totalLocationProfiles: oreProfiles.reduce((s, o) => s + Object.keys(o.locations).length, 0),
+    },
+  }
+}

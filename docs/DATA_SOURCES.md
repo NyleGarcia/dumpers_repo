@@ -26,6 +26,8 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 | `game-blueprint-missions.json` | Mission → blueprint reward mappings | `crafting/blueprintrewards/` |
 | `game-blueprints.json` | Blueprint definitions with crafting recipes (**app catalog**) | `crafting/blueprints/` |
 | `game-mining.json` | Mineable elements and mining lasers | `mining/`, `entities/scitem/ships/weapons/` |
+| `game-mining-locations.json` | Ore/location compendium (rarity tiers, location lists) | Game localization + compendium data |
+| `game-mining-spawns.json` | Per-location spawn weights, cluster RS/chance profiles | `harvestable/providerpresets/`, `harvestable/clusteringpresets/`, `mining/rockcompositionpresets/` |
 | `game-components.json` | Ship components (coolers, shields, etc.) | `entities/scitem/ships/` |
 | `game-reputation.json` | Reputation standing thresholds | `reputation/standings/` |
 | `game-lore.json` | Resource/item lore for Archive | Game localization (`global.ini`) |

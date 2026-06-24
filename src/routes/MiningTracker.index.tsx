@@ -17,13 +17,27 @@ import {
 import {
   formatRsReading,
   getOreBaseSignature,
-  getSignatureMultiples,
 } from '../lib/miningSignatures'
 import {
-  readMiningTrackerMultiplier,
-  writeMiningTrackerMultiplier,
-} from '../lib/localGuestCache'
-import TrackOreButton from '../components/TrackOreButton'
+  depositTypeUpper,
+  getDepositTypes,
+  getGuideLocationProfiles,
+  getLocationProfile,
+  getLocationSpawnTag,
+  getTrackerProfile,
+  getTrackerSubtitle,
+} from '../lib/miningClusterProfiles'
+import TrackOreButtons from '../components/TrackOreButton'
+import SiteTooltip from '../components/SiteTooltip'
+import {
+  guideLocationChipTooltip,
+  guideLocationOreTooltip,
+  guideOreModalLocationTooltip,
+  guideOreTitleTooltip,
+  trackerCardTooltip,
+  trackerChanceTooltip,
+} from '../lib/miningTooltipContent'
+import type { DepositType } from '../lib/localGuestCache'
 
 type ViewMode = 'tracker' | 'guide'
 
@@ -37,7 +51,6 @@ export default function MiningTrackerRoute() {
   const [oreSearch, setOreSearch] = useState('')
   const [selectedOreName, setSelectedOreName] = useState<string>('')
   const [listRarityFilter, setListRarityFilter] = useState<string>('')
-  const [multiplierCount, setMultiplierCount] = useState(() => readMiningTrackerMultiplier())
   
   // Guide view state
   const [guideRarityFilter, setGuideRarityFilter] = useState<string | null>(null)
@@ -45,11 +58,6 @@ export default function MiningTrackerRoute() {
   const [guideViewMode, setGuideViewMode] = useState<'ores' | 'locations'>('ores')
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null)
   const [selectedOre, setSelectedOre] = useState<MiningData | null>(null)
-
-  const handleMultiplierChange = (count: number) => {
-    setMultiplierCount(count)
-    writeMiningTrackerMultiplier(count)
-  }
 
   const allOreNames = useMemo(() => {
     if (!data) return []
@@ -81,35 +89,27 @@ export default function MiningTrackerRoute() {
     setSelectedOreName(ore.ore_name)
 
     if (search.add) {
-      addEntry(ore.ore_name, ore.rarity)
+      const types = getDepositTypes(ore.ore_name)
+      const depositType = types.includes('surface') ? 'surface' : types[0]
+      if (depositType) {
+        addEntry(ore.ore_name, ore.rarity, { depositType, profileMode: 'overall' })
+      }
     }
   }, [search.ore, search.add, data, addEntry])
 
-  const handleAdd = () => {
-    if (!data) return
+  const selectedOreData = useMemo(() => {
+    if (!data) return null
+    const name = selectedOreName || oreSearch
+    if (!name) return null
+    return findOreByName(data, name) ?? searchOreResults.find((o) => o.ore_name === name) ?? null
+  }, [data, selectedOreName, oreSearch, searchOreResults])
 
-    let ore = findOreByName(data, selectedOreName) ?? searchOreResults.find((o) => o.ore_name === selectedOreName)
-
-    if (!ore && oreSearch.length >= 2) {
-      ore = findOreByName(data, oreSearch)
-    }
-
-    if (!ore) return
-
-    addEntry(ore.ore_name, ore.rarity)
-    setSelectedOreName('')
-    setOreSearch('')
-  }
-
-  const canAdd = useMemo(() => {
-    if (!data) return false
-    const oreName = selectedOreName || oreSearch
-    if (!oreName) return false
-    const ore = findOreByName(data, oreName)
-    if (!ore) return false
-    if (getOreBaseSignature(ore.ore_name) === undefined) return false
-    return !isTracked(ore.ore_name)
-  }, [data, selectedOreName, oreSearch, isTracked])
+  const untrackedDepositTypes = useMemo((): DepositType[] => {
+    if (!selectedOreData) return []
+    return getDepositTypes(selectedOreData.ore_name).filter(
+      (type) => !isTracked(selectedOreData.ore_name, type)
+    )
+  }, [selectedOreData, isTracked])
 
   const filteredEntries = useMemo(() => {
     return entries.filter((entry) => {
@@ -182,7 +182,7 @@ export default function MiningTrackerRoute() {
     <FeaturePageLayout
       title="Mining Tracker"
       subtitle={viewMode === 'tracker' 
-        ? `Cluster RS reference for ores you are hunting — base signature through ${multiplierCount}×.`
+        ? 'Cluster RS reference with spawn-weighted chance % for ores you are hunting.'
         : 'Browse all ores by rarity or find ores at specific locations.'
       }
       badge={isGuestPreview ? 'Local only' : undefined}
@@ -194,7 +194,7 @@ export default function MiningTrackerRoute() {
             </span>
           ) : (
             <span>
-              Cluster RS = node count × base RS. Compare in-game scanner readings to the values below.
+              Base RS plus cluster rows with Chance % from game spawn data. Cluster RS = node count × base RS.
             </span>
           )
         ) : (
@@ -205,30 +205,14 @@ export default function MiningTrackerRoute() {
       }
       actions={
         <div className="flex items-center gap-3">
-          {viewMode === 'tracker' && (
-            <>
-              <label className="flex items-center gap-2 text-xs text-slate-400">
-                <span>Show</span>
-                <select
-                  value={multiplierCount}
-                  onChange={(e) => handleMultiplierChange(Number(e.target.value))}
-                  className="site-input px-2 py-1 text-xs w-14"
-                >
-                  {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                    <option key={n} value={n}>{n}×</option>
-                  ))}
-                </select>
-              </label>
-              {entries.length > 0 && (
-                <button
-                  type="button"
-                  onClick={clearAll}
-                  className="text-xs px-3 py-1.5 rounded-lg border border-slate-600/50 text-slate-400 hover:text-red-400 hover:border-red-500/40 transition-colors"
-                >
-                  Clear all
-                </button>
-              )}
-            </>
+          {viewMode === 'tracker' && entries.length > 0 && (
+            <button
+              type="button"
+              onClick={clearAll}
+              className="text-xs px-3 py-1.5 rounded-lg border border-slate-600/50 text-slate-400 hover:text-red-400 hover:border-red-500/40 transition-colors"
+            >
+              Clear all
+            </button>
           )}
         </div>
       }
@@ -298,11 +282,12 @@ export default function MiningTrackerRoute() {
                 >
                   <option value="">Select ore...</option>
                   {searchOreResults.map((ore) => {
-                    const alreadyTracked = isTracked(ore.ore_name)
+                    const types = getDepositTypes(ore.ore_name)
+                    const allTracked = types.length > 0 && types.every((t) => isTracked(ore.ore_name, t))
                     return (
-                      <option key={ore.id} value={ore.ore_name} disabled={alreadyTracked}>
+                      <option key={ore.id} value={ore.ore_name} disabled={allTracked}>
                         {ore.ore_name} ({MINING_RARITY_LABELS[ore.rarity] ?? ore.rarity})
-                        {alreadyTracked ? ' — tracked' : ''}
+                        {allTracked ? ' — all tracked' : ''}
                       </option>
                     )
                   })}
@@ -312,14 +297,12 @@ export default function MiningTrackerRoute() {
                 <p className="text-xs text-slate-500 mt-1">No matches</p>
               )}
             </div>
-            <button
-              type="button"
-              onClick={handleAdd}
-              disabled={!canAdd}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-orange-600 hover:bg-orange-500 disabled:opacity-40 disabled:cursor-not-allowed text-white transition-colors"
-            >
-              Add
-            </button>
+            {selectedOreData && untrackedDepositTypes.length > 0 && (
+              <TrackOreButtons oreName={selectedOreData.ore_name} rarity={selectedOreData.rarity} />
+            )}
+            {selectedOreData && untrackedDepositTypes.length === 0 && getDepositTypes(selectedOreData.ore_name).length > 0 && (
+              <span className="text-xs text-slate-500 self-center">All deposit types tracked</span>
+            )}
           </section>
 
           <section className="space-y-3">
@@ -366,51 +349,64 @@ export default function MiningTrackerRoute() {
               <div className="flex flex-wrap gap-4">
                 {sortedEntries.map((entry) => {
                   const colors = MINING_RARITY_COLORS[entry.rarity] || MINING_RARITY_COLORS.common
-                  const baseSignature = getOreBaseSignature(entry.oreName)
-                  const multiples = baseSignature ? getSignatureMultiples(baseSignature, multiplierCount) : []
+                  const display = getTrackerProfile(entry)
+                  const subtitle = getTrackerSubtitle(entry)
 
                   return (
-                    <div
-                      key={entry.id}
-                      className={`p-4 rounded-xl border w-48 text-center relative ${colors.bg} ${colors.border}`}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => removeEntry(entry.id)}
-                        className="absolute top-2 right-2 p-1 text-slate-500 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-colors"
-                        title="Remove"
+                    <SiteTooltip key={entry.id} content={trackerCardTooltip(entry)} side="top">
+                      <div
+                        className={`p-4 rounded-xl border w-56 text-left relative ${colors.bg} ${colors.border}`}
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => removeEntry(entry.id)}
+                          className="absolute top-2 right-2 p-1 text-slate-500 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-colors"
+                          aria-label="Remove"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
 
-                      <div className="mb-3">
-                        <span className={`text-lg font-semibold ${colors.text}`}>
-                          {entry.oreName}
-                        </span>
-                        <div className="text-xs text-slate-500 uppercase tracking-wider mt-0.5">
-                          {MINING_RARITY_LABELS[entry.rarity] ?? entry.rarity}
+                        <div className="mb-3 pr-6">
+                          <span className={`text-lg font-semibold ${colors.text}`}>
+                            {entry.oreName}
+                          </span>
+                          <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">
+                            {depositTypeUpper(entry.depositType)} · {MINING_RARITY_LABELS[entry.rarity] ?? entry.rarity}
+                          </div>
+                          <div className="text-[11px] text-slate-500 mt-1">{subtitle}</div>
                         </div>
-                      </div>
 
-                      {multiples.length > 0 ? (
-                        <div className="space-y-1">
-                          {multiples.map((reading) => (
-                            <div
-                              key={reading}
-                              className="text-2xl font-bold font-mono text-amber-300 tabular-nums"
-                            >
-                              {formatRsReading(reading)}
+                        {display ? (
+                          <div className="space-y-1">
+                            <div className="text-2xl font-bold font-mono text-amber-300 tabular-nums">
+                              {formatRsReading(display.baseRs)}
                             </div>
-                          ))}
-                        </div>
-                      ) : entry.rarity === 'handMineable' ? (
-                        <p className="text-xs text-slate-500">Hand-mineable only (no ship RS)</p>
-                      ) : (
-                        <p className="text-xs text-slate-500">RS signature not on file</p>
-                      )}
-                    </div>
+                            {display.rows.map((row) => (
+                              <SiteTooltip
+                                key={row.nodes}
+                                content={trackerChanceTooltip(entry, row.nodes, row.rs, row.chancePercent)}
+                                side="right"
+                              >
+                                <div className="flex items-baseline justify-between gap-2 font-mono tabular-nums">
+                                  <span className="text-xl font-bold text-amber-300/90">
+                                    {formatRsReading(row.rs)}
+                                  </span>
+                                  <span className="text-sm text-slate-400 shrink-0">
+                                    {row.chancePercent.toFixed(row.chancePercent % 1 === 0 ? 0 : 1)}%
+                                  </span>
+                                </div>
+                              </SiteTooltip>
+                            ))}
+                          </div>
+                        ) : entry.rarity === 'handMineable' ? (
+                          <p className="text-xs text-slate-500">Hand-mineable only (no ship RS)</p>
+                        ) : (
+                          <p className="text-xs text-slate-500">Spawn profile not on file</p>
+                        )}
+                      </div>
+                    </SiteTooltip>
                   )
                 })}
               </div>
@@ -558,50 +554,125 @@ export default function MiningTrackerRoute() {
 function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationClick: (loc: string) => void }) {
   const colors = MINING_RARITY_COLORS[item.rarity] || MINING_RARITY_COLORS.common
   const signature = ORE_SIGNATURES[item.ore_name]
+
+  const locationChips = useMemo(() => {
+    type Chip = {
+      location: string
+      depositType: DepositType
+      spawnLabel: string
+      spawnTier: string
+      maxNodes: number
+    }
+    const chips: Chip[] = []
+    for (const location of item.locations) {
+      const profiles = getGuideLocationProfiles(item.ore_name, location)
+      if (profiles.length === 0) {
+        chips.push({
+          location,
+          depositType: 'surface',
+          spawnLabel: 'Broad spawn',
+          spawnTier: 'broad',
+          maxNodes: 0,
+        })
+        continue
+      }
+      for (const profile of profiles) {
+        const tag = getLocationSpawnTag(item.ore_name, location, profile.depositType)
+        chips.push({
+          location,
+          depositType: profile.depositType,
+          spawnLabel: tag.label,
+          spawnTier: tag.tier,
+          maxNodes: profile.maxNodes,
+        })
+      }
+    }
+    const surface = chips.filter((c) => c.depositType === 'surface').sort((a, b) => {
+      if (a.spawnTier === 'best') return -1
+      if (b.spawnTier === 'best') return 1
+      return a.location.localeCompare(b.location)
+    })
+    const asteroid = chips.filter((c) => c.depositType === 'asteroid').sort((a, b) => {
+      if (a.spawnTier === 'best') return -1
+      if (b.spawnTier === 'best') return 1
+      return a.location.localeCompare(b.location)
+    })
+    return { surface, asteroid }
+  }, [item.ore_name, item.locations])
+
+  const renderChip = (chip: {
+    location: string
+    depositType: DepositType
+    spawnLabel: string
+    maxNodes: number
+  }) => {
+    const system = LOCATION_SYSTEMS[chip.location]
+    const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+    return (
+      <SiteTooltip
+        key={`${chip.location}-${chip.depositType}`}
+        content={guideLocationChipTooltip(item.ore_name, chip.location, chip.depositType)}
+        side="top"
+      >
+        <button
+          onClick={() => onLocationClick(chip.location)}
+          className="text-xs px-2 py-1 rounded bg-slate-800/60 text-slate-300 hover:bg-slate-700/60 hover:text-white transition-colors cursor-pointer text-left"
+        >
+          <span className="inline-block text-[9px] uppercase tracking-wider text-orange-300/80 mr-1">
+            {chip.depositType === 'surface' ? 'Surface' : 'Asteroid'}
+          </span>
+          {chip.location}
+          {system && (
+            <span className={`ml-1 ${systemColor} opacity-70`}>({system})</span>
+          )}
+          <span className="block text-[10px] text-slate-500 mt-0.5">
+            {chip.spawnLabel}
+            {chip.maxNodes >= 2 ? ` · max ${chip.maxNodes}×` : ''}
+          </span>
+        </button>
+      </SiteTooltip>
+    )
+  }
   
   return (
     <div className={`p-4 rounded-lg border ${colors.bg} ${colors.border}`}>
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h3 className={`font-semibold ${colors.text}`}>{item.ore_name}</h3>
-          <div className="flex items-center gap-3 mt-0.5">
-            <span className="text-xs text-slate-500 uppercase tracking-wider">
-              {MINING_RARITY_LABELS[item.rarity]}
-            </span>
-            {signature && (
-              <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded">
-                RS {signature}
+        <SiteTooltip content={guideOreTitleTooltip(item.ore_name)} side="top">
+          <div>
+            <h3 className={`font-semibold ${colors.text}`}>{item.ore_name}</h3>
+            <div className="flex items-center gap-3 mt-0.5">
+              <span className="text-xs text-slate-500 uppercase tracking-wider">
+                {MINING_RARITY_LABELS[item.rarity]}
               </span>
-            )}
+              {signature && (
+                <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded">
+                  RS {signature}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        </SiteTooltip>
         <div className="flex items-center gap-2 shrink-0">
           {signature && (
-            <TrackOreButton oreName={item.ore_name} rarity={item.rarity} compact />
+            <TrackOreButtons oreName={item.ore_name} rarity={item.rarity} compact />
           )}
           <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
             {item.locations.length} location{item.locations.length !== 1 ? 's' : ''}
           </span>
         </div>
       </div>
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {item.locations.map((location, idx) => {
-          const system = LOCATION_SYSTEMS[location]
-          const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
-          return (
-            <button
-              key={idx}
-              onClick={() => onLocationClick(location)}
-              className="text-xs px-2 py-1 rounded bg-slate-800/60 text-slate-300 hover:bg-slate-700/60 hover:text-white transition-colors cursor-pointer text-left"
-            >
-              {location}
-              {system && (
-                <span className={`ml-1 ${systemColor} opacity-70`}>({system})</span>
-              )}
-            </button>
-          )
-        })}
-      </div>
+      {locationChips.surface.length > 0 && (
+        <div className="mt-3">
+          <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Surface</div>
+          <div className="flex flex-wrap gap-1.5">{locationChips.surface.map(renderChip)}</div>
+        </div>
+      )}
+      {locationChips.asteroid.length > 0 && (
+        <div className={`mt-3 ${locationChips.surface.length > 0 ? 'pt-3 border-t border-slate-700/40' : ''}`}>
+          <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Asteroid</div>
+          <div className="flex flex-wrap gap-1.5">{locationChips.asteroid.map(renderChip)}</div>
+        </div>
+      )}
     </div>
   )
 }
@@ -641,20 +712,32 @@ function GuideLocationCard({
         {sortedOres.map((ore) => {
           const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
           const signature = ORE_SIGNATURES[ore.ore_name]
+          const profile = getLocationProfile(ore.ore_name, location)
+          const spawnTag = profile
+            ? getLocationSpawnTag(ore.ore_name, location, profile.depositType)
+            : null
           return (
-            <button
+            <SiteTooltip
               key={ore.id}
-              type="button"
-              onClick={() => onOreClick(ore)}
-              className={`text-xs px-2 py-1 rounded ${colors.bg} ${colors.text} border ${colors.border} hover:brightness-125 transition-all cursor-pointer text-left`}
+              content={guideLocationOreTooltip(ore.ore_name, location)}
+              side="top"
             >
-              {ore.ore_name}
-              {signature && (
-                <span className="ml-1 text-amber-400/70 font-mono text-[10px]">
-                  {signature}
-                </span>
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() => onOreClick(ore)}
+                className={`text-xs px-2 py-1 rounded ${colors.bg} ${colors.text} border ${colors.border} hover:brightness-125 transition-all cursor-pointer text-left`}
+              >
+                {ore.ore_name}
+                {signature && (
+                  <span className="ml-1 text-amber-400/70 font-mono text-[10px]">
+                    {signature}
+                  </span>
+                )}
+                {spawnTag && (
+                  <span className="block text-[10px] text-slate-400 mt-0.5">{spawnTag.label}</span>
+                )}
+              </button>
+            </SiteTooltip>
           )
         })}
       </div>
@@ -695,7 +778,7 @@ function GuideOreModal({ ore, onClose }: { ore: MiningData; onClose: () => void 
           </div>
           <div className="flex items-center gap-2">
             {signature && (
-              <TrackOreButton oreName={ore.ore_name} rarity={ore.rarity} showTrackerLink />
+              <TrackOreButtons oreName={ore.ore_name} rarity={ore.rarity} showTrackerLink />
             )}
             <button
               onClick={onClose}
@@ -716,17 +799,46 @@ function GuideOreModal({ ore, onClose }: { ore: MiningData; onClose: () => void 
             {sortedLocations.map((location) => {
               const system = LOCATION_SYSTEMS[location]
               const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
-              return (
-                <div
-                  key={location}
-                  className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+              const profiles = getGuideLocationProfiles(ore.ore_name, location)
+              if (profiles.length === 0) {
+                return (
+                  <div
+                    key={location}
+                    className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+                  >
+                    <span className="font-medium text-white">{location}</span>
+                    {system && (
+                      <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
+                    )}
+                    <span className="block text-xs text-slate-500 mt-1">Broad spawn</span>
+                  </div>
+                )
+              }
+              return profiles.map((profile) => (
+                <SiteTooltip
+                  key={`${location}-${profile.depositType}`}
+                  content={guideOreModalLocationTooltip(ore.ore_name, location, profile.depositType)}
+                  side="right"
                 >
-                  <span className="font-medium text-white">{location}</span>
-                  {system && (
-                    <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
-                  )}
-                </div>
-              )
+                  <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="font-medium text-white">{location}</span>
+                        {system && (
+                          <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
+                        )}
+                      </div>
+                      <span className="text-[10px] uppercase tracking-wider text-orange-300/80 shrink-0">
+                        {profile.depositType === 'surface' ? 'Surface' : 'Asteroid'}
+                      </span>
+                    </div>
+                    <span className="block text-xs text-slate-400 mt-1">
+                      {getLocationSpawnTag(ore.ore_name, location, profile.depositType).label}
+                      {profile.maxNodes >= 2 ? ` · max ${profile.maxNodes}×` : ''}
+                    </span>
+                  </div>
+                </SiteTooltip>
+              ))
             })}
           </div>
         </div>
@@ -774,6 +886,7 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
             {sortedOres.map((ore) => {
               const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
               const signature = ORE_SIGNATURES[ore.ore_name]
+              const profile = getLocationProfile(ore.ore_name, location)
               return (
                 <div
                   key={ore.id}
@@ -782,23 +895,31 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
                   <div className="flex items-center justify-between gap-2">
                     <span className={`font-medium ${colors.text}`}>{ore.ore_name}</span>
                     <div className="flex items-center gap-2 shrink-0">
+                      {signature && profile && (
+                        <TrackOreButtons
+                          oreName={ore.ore_name}
+                          rarity={ore.rarity}
+                          compact
+                          depositType={profile.depositType}
+                          locationName={location}
+                        />
+                      )}
                       {signature && (
-                        <>
-                          <TrackOreButton
-                            oreName={ore.ore_name}
-                            rarity={ore.rarity}
-                            compact
-                          />
-                          <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-2 py-1 rounded">
-                            RS {signature}
-                          </span>
-                        </>
+                        <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-2 py-1 rounded">
+                          RS {signature}
+                        </span>
                       )}
                     </div>
                   </div>
                   <span className="text-xs text-slate-500 uppercase">
                     {MINING_RARITY_LABELS[ore.rarity]}
                   </span>
+                  {profile && (
+                    <span className="block text-[10px] text-slate-400 mt-1">
+                      {profile.depositType === 'surface' ? 'Surface' : 'Asteroid'} ·{' '}
+                      {getLocationSpawnTag(ore.ore_name, location, profile.depositType).label}
+                    </span>
+                  )}
                 </div>
               )
             })}

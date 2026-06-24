@@ -1,0 +1,67 @@
+---
+description: Supabase/PostgreSQL migration safety — drop functions before signature or return-type changes
+globs: supabase/migrations/**/*.sql
+alwaysApply: false
+---
+
+# Supabase Migration — Function Replace Rules
+
+PostgreSQL **`CREATE OR REPLACE FUNCTION` does NOT change an existing function's signature or return type**. Attempting to do so fails with:
+
+```text
+ERROR 42P13: cannot change return type of existing function
+DETAIL: Row type defined by OUT parameters is different.
+HINT: Use DROP FUNCTION ... first.
+```
+
+This applies when you change any of:
+
+- `RETURNS TABLE (...)` column list (added/removed/renamed OUT columns)
+- `RETURNS` scalar type (e.g. `jsonb` → `uuid`)
+- Argument names/types/count (creates overloads; old signature may still exist)
+
+## Required pattern
+
+Before `CREATE OR REPLACE` (or `CREATE`) when altering an existing RPC:
+
+1. **`DROP FUNCTION IF EXISTS` with the full argument type list** for every signature being replaced.
+2. Then `CREATE OR REPLACE FUNCTION ...`
+3. Then `GRANT EXECUTE ON FUNCTION ...` with the **new** signature.
+
+```sql
+-- ✅ GOOD — return type / OUT columns changed
+DROP FUNCTION IF EXISTS public.get_mining_tracker_entries();
+
+CREATE OR REPLACE FUNCTION public.get_mining_tracker_entries()
+RETURNS TABLE (
+  id uuid,
+  ore_name text,
+  deposit_type text  -- new column
+)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT id, ore_name, deposit_type FROM ...
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_mining_tracker_entries() TO authenticated;
+```
+
+```sql
+-- ❌ BAD — will fail if function already exists with fewer OUT columns
+CREATE OR REPLACE FUNCTION public.get_mining_tracker_entries()
+RETURNS TABLE (id uuid, ore_name text, deposit_type text) ...
+```
+
+## Checklist for every migration that touches RPCs
+
+- [ ] Grep prior migrations for `CREATE.*FUNCTION public.<name>` and note **exact signatures**.
+- [ ] If return type, `RETURNS TABLE` columns, or args changed → `DROP FUNCTION IF EXISTS public.<name>(<arg types>);` **before** create.
+- [ ] Drop **all old overloads** (e.g. `(text, text)` when replacing with `(text, text, text, text, text)`).
+- [ ] Re-apply `GRANT EXECUTE` after create (drops do not preserve grants on recreated functions in migrations).
+
+## Other migration gotchas (same pass)
+
+- Unique constraints: `DROP CONSTRAINT IF EXISTS ...` before adding renamed constraint.
+- `ADD COLUMN IF NOT EXISTS` for idempotent column adds; use `DROP CONSTRAINT IF EXISTS` before check constraints that may already exist from a partial apply.

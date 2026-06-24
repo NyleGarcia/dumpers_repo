@@ -304,6 +304,76 @@ export interface GameMiningData {
   }
 }
 
+export type DepositType = 'surface' | 'asteroid'
+
+export interface MiningClusterRow {
+  nodes: number
+  rs: number
+  chancePercent: number
+  bestAtLocation?: string
+}
+
+export interface MiningClusterDisplayProfile {
+  maxNodes: number
+  clusterRows: MiningClusterRow[]
+  bestLocation?: string
+  bestLocationSpawnPercent?: number
+}
+
+export interface MiningCompositionPart {
+  elementName: string
+  minPercentage: number
+  maxPercentage: number
+  qualityScale: number
+}
+
+export interface MiningLocationSpawnProfile {
+  locationName: string
+  hppKey: string
+  system: string
+  depositType: DepositType
+  groupName: string
+  groupSpawnPercent: number
+  relativeSpawnWeight: number
+  poolSharePercent: number
+  effectiveSpawnPercent: number
+  harvestablePreset: string
+  compositionRecordName: string | null
+  compositionParts: MiningCompositionPart[]
+  clusterPresetKey: string
+  probabilityOfClustering: number
+  maxNodes: number
+  clusterRows: MiningClusterRow[]
+}
+
+export interface MiningOreSpawnProfile {
+  oreName: string
+  baseSignature: number
+  depositTypes: DepositType[]
+  overallByType: Partial<Record<DepositType, MiningClusterDisplayProfile>>
+  locations: Record<string, MiningLocationSpawnProfile>
+  harvestablePresets: string[]
+  compositionRecordIds: string[]
+  clusterPresetKeys: string[]
+}
+
+export interface GameMiningSpawnsData {
+  _source: string
+  _extracted: string
+  clusterPresets: Record<string, unknown>
+  ores: Record<string, MiningOreSpawnProfile>
+  audit: {
+    unmappedHppLinks: unknown[]
+    oresMissingProfile: string[]
+  }
+  summary: {
+    signatureOres: number
+    oresWithProfiles: number
+    totalSpawnLinks: number
+    totalLocationProfiles: number
+  }
+}
+
 export interface FpsWeapon {
   id: string
   name: string
@@ -339,6 +409,7 @@ import gameManufacturersData from './game-manufacturers.json'
 import gameReputationData from './game-reputation.json'
 import gameLoreData from './game-lore.json'
 import gameMiningData from './game-mining.json'
+import gameMiningSpawnsData from './game-mining-spawns.json'
 import gameFpsWeaponsData from './game-fps-weapons.json'
 
 // Cast to proper types
@@ -350,6 +421,7 @@ export const manufacturers = gameManufacturersData as GameManufacturersData
 export const reputation = gameReputationData as GameReputationData
 export const lore = gameLoreData as GameLoreData
 export const gameMining = gameMiningData as GameMiningData
+export const miningSpawns = gameMiningSpawnsData as GameMiningSpawnsData
 export const fpsWeapons = gameFpsWeaponsData as GameFpsWeaponsData
 
 // Legacy aliases for backward compatibility
