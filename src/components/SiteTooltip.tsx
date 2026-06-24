@@ -1,4 +1,5 @@
 import React, { useCallback, useId, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 type TooltipSide = 'top' | 'bottom' | 'left' | 'right'
 
@@ -11,19 +12,74 @@ interface SiteTooltipProps {
 }
 
 const VIEWPORT_PAD = 8
+const GAP = 8
 
-const sideClasses: Record<TooltipSide, string> = {
-  top: 'bottom-full left-1/2 mb-2',
-  bottom: 'top-full left-1/2 mt-2',
-  left: 'right-full top-1/2 mr-2',
-  right: 'left-full top-1/2 ml-2',
+interface PanelPosition {
+  top: number
+  left: number
+  resolvedSide: TooltipSide
 }
 
-function sideTransform(side: TooltipSide, shiftX: number): string {
-  if (side === 'top' || side === 'bottom') {
-    return `translateX(calc(-50% + ${shiftX}px))`
+function resolveSide(
+  preferred: TooltipSide,
+  anchorRect: DOMRect,
+  panelRect: DOMRect
+): TooltipSide {
+  if (preferred === 'top' || preferred === 'bottom') {
+    if (preferred === 'top' && anchorRect.top - panelRect.height - GAP < VIEWPORT_PAD) {
+      return 'bottom'
+    }
+    if (
+      preferred === 'bottom' &&
+      anchorRect.bottom + panelRect.height + GAP > window.innerHeight - VIEWPORT_PAD
+    ) {
+      return 'top'
+    }
+    return preferred
   }
-  return 'translateY(-50%)'
+  return preferred
+}
+
+function computePanelPosition(
+  anchorRect: DOMRect,
+  panelRect: DOMRect,
+  preferredSide: TooltipSide
+): PanelPosition {
+  const resolvedSide = resolveSide(preferredSide, anchorRect, panelRect)
+
+  if (resolvedSide === 'top') {
+    let left = anchorRect.left + anchorRect.width / 2 - panelRect.width / 2
+    left = Math.max(VIEWPORT_PAD, Math.min(left, window.innerWidth - VIEWPORT_PAD - panelRect.width))
+    return {
+      top: anchorRect.top - panelRect.height - GAP,
+      left,
+      resolvedSide,
+    }
+  }
+
+  if (resolvedSide === 'bottom') {
+    let left = anchorRect.left + anchorRect.width / 2 - panelRect.width / 2
+    left = Math.max(VIEWPORT_PAD, Math.min(left, window.innerWidth - VIEWPORT_PAD - panelRect.width))
+    return {
+      top: anchorRect.bottom + GAP,
+      left,
+      resolvedSide,
+    }
+  }
+
+  if (resolvedSide === 'left') {
+    return {
+      top: anchorRect.top + anchorRect.height / 2 - panelRect.height / 2,
+      left: anchorRect.left - panelRect.width - GAP,
+      resolvedSide,
+    }
+  }
+
+  return {
+    top: anchorRect.top + anchorRect.height / 2 - panelRect.height / 2,
+    left: anchorRect.right + GAP,
+    resolvedSide,
+  }
 }
 
 export default function SiteTooltip({
@@ -34,8 +90,7 @@ export default function SiteTooltip({
   children,
 }: SiteTooltipProps) {
   const [open, setOpen] = useState(false)
-  const [resolvedSide, setResolvedSide] = useState<TooltipSide>(side)
-  const [shiftX, setShiftX] = useState(0)
+  const [position, setPosition] = useState<PanelPosition | null>(null)
   const tooltipId = useId()
   const touchRef = useRef(false)
   const anchorRef = useRef<HTMLSpanElement>(null)
@@ -46,60 +101,57 @@ export default function SiteTooltip({
   }, [])
 
   const hide = useCallback(() => {
-    if (!touchRef.current) setOpen(false)
+    if (!touchRef.current) {
+      setOpen(false)
+      setPosition(null)
+    }
   }, [])
 
   const toggleTouch = useCallback(() => {
     touchRef.current = true
-    setOpen((prev) => !prev)
+    setOpen((prev) => {
+      if (prev) setPosition(null)
+      return !prev
+    })
     window.setTimeout(() => {
       touchRef.current = false
     }, 300)
   }, [])
 
   useLayoutEffect(() => {
-    if (!open) {
-      setResolvedSide(side)
-      setShiftX(0)
-      return
+    if (!open) return
+
+    const updatePosition = () => {
+      const anchor = anchorRef.current
+      const panel = panelRef.current
+      if (!anchor || !panel) return
+      setPosition(computePanelPosition(anchor.getBoundingClientRect(), panel.getBoundingClientRect(), side))
     }
 
-    const anchor = anchorRef.current
-    const panel = panelRef.current
-    if (!anchor || !panel) return
+    updatePosition()
+    window.addEventListener('scroll', updatePosition, true)
+    window.addEventListener('resize', updatePosition)
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true)
+      window.removeEventListener('resize', updatePosition)
+    }
+  }, [open, side, content])
 
-    const anchorRect = anchor.getBoundingClientRect()
-    const panelRect = panel.getBoundingClientRect()
-
-    let nextSide = resolvedSide
-    if (side === 'top' || side === 'bottom') {
-      nextSide = side
-      if (side === 'top' && anchorRect.top - panelRect.height - VIEWPORT_PAD < VIEWPORT_PAD) {
-        nextSide = 'bottom'
-      } else if (
-        side === 'bottom' &&
-        anchorRect.bottom + panelRect.height + VIEWPORT_PAD > window.innerHeight - VIEWPORT_PAD
-      ) {
-        nextSide = 'top'
+  const panel = open ? (
+    <span
+      ref={panelRef}
+      id={tooltipId}
+      role="tooltip"
+      style={
+        position
+          ? { position: 'fixed', top: position.top, left: position.left, zIndex: 9999 }
+          : { position: 'fixed', top: -9999, left: -9999, visibility: 'hidden', zIndex: 9999 }
       }
-    }
-
-    if (nextSide !== resolvedSide) {
-      setResolvedSide(nextSide)
-      return
-    }
-
-    let deltaX = 0
-    if (nextSide === 'top' || nextSide === 'bottom') {
-      if (panelRect.left < VIEWPORT_PAD) {
-        deltaX = VIEWPORT_PAD - panelRect.left
-      } else if (panelRect.right > window.innerWidth - VIEWPORT_PAD) {
-        deltaX = window.innerWidth - VIEWPORT_PAD - panelRect.right
-      }
-    }
-
-    setShiftX(deltaX)
-  }, [open, side, content, resolvedSide])
+      className={`site-tooltip-panel pointer-events-none text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 bg-slate-900/95 backdrop-blur border border-orange-500/30 rounded-lg shadow-xl ${panelClassName}`}
+    >
+      {content}
+    </span>
+  ) : null
 
   return (
     <span
@@ -115,17 +167,7 @@ export default function SiteTooltip({
       aria-describedby={open ? tooltipId : undefined}
     >
       {children}
-      {open && (
-        <span
-          ref={panelRef}
-          id={tooltipId}
-          role="tooltip"
-          style={{ transform: sideTransform(resolvedSide, shiftX) }}
-          className={`site-tooltip-panel absolute z-[70] pointer-events-none text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 bg-slate-900/95 backdrop-blur border border-orange-500/30 rounded-lg shadow-xl ${sideClasses[resolvedSide]} ${panelClassName}`}
-        >
-          {content}
-        </span>
-      )}
+      {panel && typeof document !== 'undefined' ? createPortal(panel, document.body) : null}
     </span>
   )
 }

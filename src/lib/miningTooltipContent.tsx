@@ -58,7 +58,12 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
           </div>
           <div>Cluster: {clusterPreview(refProfile.clusterRows)}</div>
           <div className="text-slate-400">Composition: {compositionSummary(refProfile.compositionParts)}</div>
-          <div className="text-[10px] font-mono text-slate-500 break-words">{refProfile.hppKey}</div>
+          {refProfile.locationName && (
+            <div className="text-slate-400">
+              Region: {refProfile.locationName}
+              {refProfile.system ? ` · ${refProfile.system} System` : ''}
+            </div>
+          )}
         </>
       )}
       {display && (
@@ -120,7 +125,7 @@ export function guideLocationChipTooltip(
     return (
       <div>
         <div className="font-semibold">{guideLocationName}</div>
-        <div className="text-slate-400">Broad spawn — no HPP mapping for this compendium entry.</div>
+        <div className="text-slate-400">Broad spawn — no detailed spawn profile for this compendium entry.</div>
       </div>
     )
   }
@@ -138,7 +143,6 @@ export function guideLocationChipTooltip(
       </div>
       <div>Cluster: {clusterPreview(profile.clusterRows)}</div>
       <div className="text-slate-400">Composition: {compositionSummary(profile.compositionParts)}</div>
-      <div className="text-slate-500">Preset: {profile.harvestablePreset}</div>
     </div>
   )
 }
