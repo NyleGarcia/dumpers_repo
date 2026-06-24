@@ -135,17 +135,27 @@ export function formatClusterRows(
   baseSignature?: number
 ): FormattedClusterDisplay {
   const clusterRows = profile.clusterRows ?? []
-  const baseRs =
-    baseSignature ??
-    (clusterRows[0]?.nodes
-      ? Math.round(clusterRows[0].rs / clusterRows[0].nodes)
-      : 0)
+  const resolvedBase =
+    baseSignature != null && Number.isFinite(baseSignature) && baseSignature > 0
+      ? baseSignature
+      : clusterRows[0]?.nodes &&
+          clusterRows[0]?.rs != null &&
+          Number.isFinite(clusterRows[0].rs)
+        ? Math.round(clusterRows[0].rs / clusterRows[0].nodes)
+        : 0
+
+  const baseRs = resolvedBase
 
   return {
     baseRs,
     rows: clusterRows.map((row) => ({
       nodes: row.nodes,
-      rs: row.rs,
+      rs:
+        row.rs != null && Number.isFinite(row.rs)
+          ? row.rs
+          : resolvedBase > 0 && row.nodes
+            ? resolvedBase * row.nodes
+            : 0,
       chancePercent: row.chancePercent,
     })),
     profile,

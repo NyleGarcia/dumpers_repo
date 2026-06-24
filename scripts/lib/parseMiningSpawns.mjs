@@ -160,7 +160,7 @@ function buildClusterRows(clusterPreset, baseSignature) {
   return { maxNodes, rows, clusterPresetKey: key, probabilityOfClustering }
 }
 
-function buildOverallProfile(locations, depositType) {
+function buildOverallProfile(locations, depositType, oreName) {
   const filtered = locations.filter((l) => l.depositType === depositType)
   if (filtered.length === 0) return null
 
@@ -176,6 +176,7 @@ function buildOverallProfile(locations, depositType) {
     }
   }
 
+  const baseSig = ORE_SIGNATURES[oreName]
   const clusterRows = []
   for (let n = 2; n <= maxNodes; n++) {
     let bestChance = 0
@@ -188,7 +189,6 @@ function buildOverallProfile(locations, depositType) {
       }
     }
     if (bestChance > 0) {
-      const baseSig = ORE_SIGNATURES[filtered[0].oreName]
       clusterRows.push({
         nodes: n,
         rs: baseSig * n,
@@ -416,10 +416,10 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
     ore.depositTypes.sort()
     const locList = Object.values(ore.locations)
     if (ore.depositTypes.includes('surface')) {
-      ore.overallByType.surface = buildOverallProfile(locList, 'surface')
+      ore.overallByType.surface = buildOverallProfile(locList, 'surface', ore.oreName)
     }
     if (ore.depositTypes.includes('asteroid')) {
-      ore.overallByType.asteroid = buildOverallProfile(locList, 'asteroid')
+      ore.overallByType.asteroid = buildOverallProfile(locList, 'asteroid', ore.oreName)
     }
     if (locList.length === 0) audit.oresMissingProfile.push(ore.oreName)
   }

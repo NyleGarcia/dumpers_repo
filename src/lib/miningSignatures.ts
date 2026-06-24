@@ -11,6 +11,7 @@ export function getOreBaseSignature(oreName: string): number | undefined {
   return ORE_SIGNATURES[oreName]
 }
 
-export function formatRsReading(value: number): string {
+export function formatRsReading(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '—'
   return value.toLocaleString()
 }
