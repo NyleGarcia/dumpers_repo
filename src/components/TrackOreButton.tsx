@@ -12,6 +12,7 @@ import {
   getDepositTypes,
   getLocationProfile,
 } from '../lib/miningClusterProfiles'
+import { isBroadGuideLocation } from '../lib/miningLocationAliases'
 import { trackButtonTooltip } from '../lib/miningTooltipContent'
 
 function trackButtonLabel(
@@ -132,6 +133,10 @@ export default function TrackOreButtons({
   stacked = false,
   tooltipSide = 'top',
 }: TrackOreButtonsProps) {
+  const effectiveLocationName =
+    locationName && !isBroadGuideLocation(locationName) ? locationName : undefined
+  const effectiveProfileMode: ProfileMode = effectiveLocationName ? 'location' : 'overall'
+
   const groupClass = stacked
     ? 'flex flex-col gap-1.5 w-full sm:w-[10.5rem]'
     : 'flex items-center gap-2 flex-wrap'
@@ -150,16 +155,12 @@ export default function TrackOreButtons({
     </Link>
   ) : null
 
-  if (locationName) {
-    const effectiveProfileMode: ProfileMode =
-      profileMode === 'overall' && !depositType ? 'overall' : 'location'
+  if (effectiveLocationName) {
     const types = depositType
-      ? depositTypesForLocation(oreName, locationName).includes(depositType)
+      ? depositTypesForLocation(oreName, effectiveLocationName).includes(depositType)
         ? [depositType]
         : []
-      : effectiveProfileMode === 'location'
-        ? depositTypesForLocation(oreName, locationName)
-        : getDepositTypes(oreName)
+      : depositTypesForLocation(oreName, effectiveLocationName)
 
     if (types.length === 0) return null
 
@@ -171,17 +172,12 @@ export default function TrackOreButtons({
             oreName={oreName}
             rarity={rarity}
             depositType={type}
-            profileMode={effectiveProfileMode}
-            locationName={effectiveProfileMode === 'location' ? locationName : undefined}
+            profileMode="location"
+            locationName={effectiveLocationName}
             compact={compact}
             stacked={stacked}
             tooltipSide={tooltipSide}
-            label={trackButtonLabel(
-              type,
-              effectiveProfileMode,
-              effectiveProfileMode === 'location' ? locationName : undefined,
-              compact
-            )}
+            label={trackButtonLabel(type, 'location', effectiveLocationName, compact)}
           />
         ))}
         {openTrackerLink}
@@ -199,11 +195,11 @@ export default function TrackOreButtons({
           oreName={oreName}
           rarity={rarity}
           depositType="surface"
-          profileMode={profileMode}
+          profileMode={effectiveProfileMode}
           compact={compact}
           stacked={stacked}
           tooltipSide={tooltipSide}
-          label={trackButtonLabel('surface', profileMode, undefined, compact)}
+          label={trackButtonLabel('surface', effectiveProfileMode, undefined, compact)}
         />
       )}
       {depositTypes.includes('asteroid') && (
@@ -211,11 +207,11 @@ export default function TrackOreButtons({
           oreName={oreName}
           rarity={rarity}
           depositType="asteroid"
-          profileMode={profileMode}
+          profileMode={effectiveProfileMode}
           compact={compact}
           stacked={stacked}
           tooltipSide={tooltipSide}
-          label={trackButtonLabel('asteroid', profileMode, undefined, compact)}
+          label={trackButtonLabel('asteroid', effectiveProfileMode, undefined, compact)}
         />
       )}
       {openTrackerLink}

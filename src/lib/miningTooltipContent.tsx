@@ -8,12 +8,14 @@ import {
   getLocationProfile,
   getLocationProfilesForOre,
   getOverallProfile,
+  getOverallSpawnTag,
   getTrackerProfile,
   getTrackerProfileMissingMessage,
   getTrackerSubtitle,
   isLocationTrackerEntry,
 } from './miningClusterProfiles'
 import type { MiningTrackerEntry } from './localGuestCache'
+import { isBroadGuideLocation } from './miningLocationAliases'
 import { formatRsReading } from './miningSignatures'
 
 function pct(n: number | null | undefined, digits = 2): string {
@@ -128,6 +130,31 @@ export function guideLocationChipTooltip(
   guideLocationName: string,
   depositType: DepositType
 ): React.ReactNode {
+  if (isBroadGuideLocation(guideLocationName)) {
+    const overall = getOverallProfile(oreName, depositType)
+    if (!overall) {
+      return (
+        <div>
+          <div className="font-semibold">{guideLocationName}</div>
+          <div className="text-slate-400">Broad compendium entry — uses overall spawn profile.</div>
+        </div>
+      )
+    }
+    return (
+      <div className="space-y-1">
+        <div className="font-semibold text-orange-300">Overall · {depositTypeLabel(depositType)}</div>
+        <div className="text-slate-400">{guideLocationName}</div>
+        {overall.bestLocation && (
+          <div>Best cluster chances at {overall.bestLocation}</div>
+        )}
+        <div>Cluster: {clusterPreview(overall.clusterRows)}</div>
+        <div className="text-slate-400 text-[11px]">
+          Same data as Track Surface/Asteroid (overall) on the RS Tracker.
+        </div>
+      </div>
+    )
+  }
+
   const profile = getLocationProfile(oreName, guideLocationName, depositType)
   if (!profile) {
     return (
@@ -185,6 +212,24 @@ export function guideLocationOreTooltip(
   oreName: string,
   locationName: string
 ): React.ReactNode {
+  const depositTypes = getDepositTypes(oreName)
+  if (isBroadGuideLocation(locationName)) {
+    const lines = depositTypes.map((depositType) => {
+      const tag = getOverallSpawnTag(oreName, depositType)
+      return `${depositTypeLabel(depositType)}: ${tag.label}`
+    })
+    return (
+      <div className="space-y-1">
+        <div className="font-semibold text-orange-300">{oreName}</div>
+        <div className="text-slate-400">{locationName}</div>
+        <div>Uses overall spawn profile (not site-specific).</div>
+        {lines.length > 0 && (
+          <div className="text-slate-400">{lines.join(' · ')}</div>
+        )}
+      </div>
+    )
+  }
+
   const profiles = getGuideLocationProfiles(oreName, locationName)
   const profile = profiles[0]
   if (!profile) {
@@ -204,7 +249,7 @@ export function guideLocationOreTooltip(
       <div>{depositTypeLabel(profile.depositType)} at {locationName}</div>
       <div>Spawn ~{pct(profile.effectiveSpawnPercent)}</div>
       <div className="text-slate-400">
-        Base RS {overall ? formatRsReading(overall.clusterRows[0]?.rs ? overall.clusterRows[0].rs / overall.clusterRows[0].nodes : 0) : '—'}
+        Base RS {formatRsReading(profile.clusterRows[0]?.rs ? profile.clusterRows[0].rs / profile.clusterRows[0].nodes : overall?.clusterRows[0]?.rs ? overall.clusterRows[0].rs / overall.clusterRows[0].nodes : 0)}
       </div>
       <div>Cluster: {clusterPreview(profile.clusterRows)}</div>
     </div>

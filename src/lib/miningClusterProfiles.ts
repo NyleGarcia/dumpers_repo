@@ -1,5 +1,6 @@
 import gameMiningSpawnsData from '../data/game-mining-spawns.json'
 import type { MiningTrackerEntry } from './localGuestCache'
+import { getSpawnKeysForGuideLocation, isBroadGuideLocation, spawnKeyMatchesGuideLocation } from './miningLocationAliases'
 
 export type DepositType = 'surface' | 'asteroid'
 export type ProfileMode = 'overall' | 'location'
@@ -87,11 +88,17 @@ export function getLocationProfile(
   locationName: string,
   depositType?: DepositType
 ): LocationSpawnProfile | null {
+  if (isBroadGuideLocation(locationName)) return null
+
   const profile = getOreProfile(oreName)
   if (!profile) return null
 
+  const spawnKeys = getSpawnKeysForGuideLocation(locationName)
+
   const matches = Object.values(profile.locations ?? {}).filter(
-    (loc) => loc.locationName === locationName && (!depositType || loc.depositType === depositType)
+    (loc) =>
+      (spawnKeys.includes(loc.locationName) || loc.locationName === locationName) &&
+      (!depositType || loc.depositType === depositType)
   )
   if (matches.length === 0) return null
   return matches.reduce((best, loc) =>
@@ -109,8 +116,8 @@ export function getGuideLocationProfiles(
   oreName: string,
   guideLocationName: string
 ): LocationSpawnProfile[] {
-  return getLocationProfilesForOre(oreName).filter(
-    (loc) => loc.locationName === guideLocationName
+  return getLocationProfilesForOre(oreName).filter((loc) =>
+    spawnKeyMatchesGuideLocation(loc.locationName, guideLocationName)
   )
 }
 
@@ -165,11 +172,27 @@ export function formatClusterRows(
 
 export type SpawnTagTier = 'best' | 'high' | 'medium' | 'low' | 'broad'
 
+export function getOverallSpawnTag(
+  oreName: string,
+  depositType: DepositType
+): { label: string; tier: SpawnTagTier } {
+  const overall = getOverallProfile(oreName, depositType)
+  if (!overall) return { label: 'Overall', tier: 'broad' }
+  if (overall.bestLocation) {
+    return { label: `Overall · best at ${overall.bestLocation}`, tier: 'broad' }
+  }
+  return { label: 'Overall', tier: 'broad' }
+}
+
 export function getLocationSpawnTag(
   oreName: string,
   locationName: string,
   depositType: DepositType
 ): { label: string; tier: SpawnTagTier } {
+  if (isBroadGuideLocation(locationName)) {
+    return getOverallSpawnTag(oreName, depositType)
+  }
+
   const loc = getLocationProfile(oreName, locationName, depositType)
   if (!loc) return { label: 'Broad spawn', tier: 'broad' }
 
@@ -206,6 +229,7 @@ export function getTrackerSubtitle(entry: MiningTrackerEntry): string {
 
 export function getTrackerProfileMissingMessage(entry: MiningTrackerEntry): string | null {
   if (!isLocationTrackerEntry(entry) || !entry.locationName) return null
+  if (isBroadGuideLocation(entry.locationName)) return null
   const depositType: DepositType = entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
   if (getLocationProfile(entry.oreName, entry.locationName, depositType)) return null
   return `No spawn profile on file for ${entry.locationName}`

@@ -24,11 +24,14 @@ import {
   getGuideLocationProfiles,
   getLocationProfile,
   getLocationSpawnTag,
+  getOverallProfile,
+  getOverallSpawnTag,
   getTrackerProfile,
   getTrackerProfileMissingMessage,
   getTrackerSubtitle,
   isLocationTrackerEntry,
 } from '../lib/miningClusterProfiles'
+import { isBroadGuideLocation } from '../lib/miningLocationAliases'
 import TrackOreButtons from '../components/TrackOreButton'
 import SiteTooltip from '../components/SiteTooltip'
 import {
@@ -614,6 +617,21 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
     }
     const chips: Chip[] = []
     for (const location of item.locations ?? []) {
+      if (isBroadGuideLocation(location)) {
+        for (const depositType of getDepositTypes(item.ore_name)) {
+          if (!getOverallProfile(item.ore_name, depositType)) continue
+          const tag = getOverallSpawnTag(item.ore_name, depositType)
+          const overall = getOverallProfile(item.ore_name, depositType)
+          chips.push({
+            location,
+            depositType,
+            spawnLabel: tag.label,
+            spawnTier: tag.tier,
+            maxNodes: overall?.maxNodes ?? 0,
+          })
+        }
+        continue
+      }
       const profiles = getGuideLocationProfiles(item.ore_name, location)
       if (profiles.length === 0) {
         chips.push({
@@ -774,9 +792,13 @@ function GuideLocationCard({
           const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
           const signature = ORE_SIGNATURES[ore.ore_name]
           const profile = getLocationProfile(ore.ore_name, location)
-          const spawnTag = profile
-            ? getLocationSpawnTag(ore.ore_name, location, profile.depositType)
-            : null
+          const spawnTag = isBroadGuideLocation(location)
+            ? getDepositTypes(ore.ore_name)
+                .map((dt) => getOverallSpawnTag(ore.ore_name, dt))
+                .find(Boolean)
+            : profile
+              ? getLocationSpawnTag(ore.ore_name, location, profile.depositType)
+              : null
           return (
             <SiteTooltip
               key={ore.id}
@@ -822,7 +844,9 @@ function GuideOreModal({
   const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
   const signature = ORE_SIGNATURES[ore.ore_name]
   const locationProfiles = guideLocationName
-    ? getGuideLocationProfiles(ore.ore_name, guideLocationName)
+    ? isBroadGuideLocation(guideLocationName)
+      ? []
+      : getGuideLocationProfiles(ore.ore_name, guideLocationName)
     : []
 
   const sortedLocations = [...(ore.locations ?? [])].sort((a, b) => {
@@ -882,6 +906,7 @@ function GuideOreModal({
                 <TrackOreButtons
                   oreName={ore.ore_name}
                   rarity={ore.rarity}
+                  locationName={guideLocationName}
                   showTrackerLink
                   stacked
                   tooltipSide="bottom"
@@ -901,6 +926,39 @@ function GuideOreModal({
               const system = LOCATION_SYSTEMS[location]
               const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
               const profiles = getGuideLocationProfiles(ore.ore_name, location)
+              if (profiles.length === 0 && isBroadGuideLocation(location)) {
+                return getDepositTypes(ore.ore_name).map((depositType) => {
+                  const overall = getOverallProfile(ore.ore_name, depositType)
+                  if (!overall) return null
+                  const tag = getOverallSpawnTag(ore.ore_name, depositType)
+                  return (
+                    <SiteTooltip
+                      key={`${location}-${depositType}`}
+                      content={guideLocationChipTooltip(ore.ore_name, location, depositType)}
+                      side="top"
+                      className="block w-full"
+                    >
+                      <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <span className="font-medium text-white">{location}</span>
+                            {system && (
+                              <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
+                            )}
+                          </div>
+                          <span className="text-[10px] uppercase tracking-wider text-orange-300/80 shrink-0">
+                            {depositType === 'surface' ? 'Surface' : 'Asteroid'}
+                          </span>
+                        </div>
+                        <span className="block text-xs text-slate-400 mt-1">
+                          {tag.label}
+                          {overall.maxNodes >= 2 ? ` · max ${overall.maxNodes}×` : ''}
+                        </span>
+                      </div>
+                    </SiteTooltip>
+                  )
+                })
+              }
               if (profiles.length === 0) {
                 return (
                   <div
@@ -997,12 +1055,12 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
                   <div className="flex items-center justify-between gap-2">
                     <span className={`font-medium ${colors.text}`}>{ore.ore_name}</span>
                     <div className="flex items-center gap-2 shrink-0">
-                      {signature && profile && (
+                      {signature && (profile || isBroadGuideLocation(location)) && (
                         <TrackOreButtons
                           oreName={ore.ore_name}
                           rarity={ore.rarity}
                           compact
-                          depositType={profile.depositType}
+                          depositType={profile?.depositType}
                           locationName={location}
                         />
                       )}
@@ -1020,6 +1078,13 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
                     <span className="block text-[10px] text-slate-400 mt-1">
                       {profile.depositType === 'surface' ? 'Surface' : 'Asteroid'} ·{' '}
                       {getLocationSpawnTag(ore.ore_name, location, profile.depositType).label}
+                    </span>
+                  )}
+                  {!profile && isBroadGuideLocation(location) && (
+                    <span className="block text-[10px] text-slate-400 mt-1">
+                      {getDepositTypes(ore.ore_name)
+                        .map((dt) => getOverallSpawnTag(ore.ore_name, dt).label)
+                        .join(' · ')}
                     </span>
                   )}
                 </div>
