@@ -82,20 +82,25 @@ export default function MiningTrackerRoute() {
   }, [data, oreSearch, allOreNames])
 
   useEffect(() => {
-    if (!search.ore || !data) return
+    if (search.view === 'tracker') {
+      setViewMode('tracker')
+      setOreSearch('')
+      setSelectedOreName('')
+    } else if (search.view === 'guide') {
+      setViewMode('guide')
+    }
+  }, [search.view])
+
+  useEffect(() => {
+    if (!search.ore || !data || search.add !== true) return
     const ore = findOreByName(data, search.ore)
     if (!ore) return
     if (getOreBaseSignature(ore.ore_name) === undefined) return
 
-    setOreSearch(ore.ore_name)
-    setSelectedOreName(ore.ore_name)
-
-    if (search.add === true) {
-      const types = getDepositTypes(ore.ore_name)
-      const depositType = types.includes('surface') ? 'surface' : types[0]
-      if (depositType && !isTracked(ore.ore_name, depositType)) {
-        addEntry(ore.ore_name, ore.rarity, { depositType, profileMode: 'overall' })
-      }
+    const types = getDepositTypes(ore.ore_name)
+    const depositType = types.includes('surface') ? 'surface' : types[0]
+    if (depositType && !isTracked(ore.ore_name, depositType)) {
+      addEntry(ore.ore_name, ore.rarity, { depositType, profileMode: 'overall' })
     }
   }, [search.ore, search.add, data, addEntry, isTracked])
 
@@ -355,7 +360,12 @@ export default function MiningTrackerRoute() {
                   const subtitle = getTrackerSubtitle(entry)
 
                   return (
-                    <SiteTooltip key={entry.id} content={trackerCardTooltip(entry)} side="top">
+                    <SiteTooltip
+                      key={entry.id}
+                      content={trackerCardTooltip(entry)}
+                      side="bottom"
+                      className="block"
+                    >
                       <div
                         className={`p-4 rounded-xl border w-56 text-left relative ${colors.bg} ${colors.border}`}
                       >
@@ -390,6 +400,7 @@ export default function MiningTrackerRoute() {
                                 key={row.nodes}
                                 content={trackerChanceTooltip(entry, row.nodes, row.rs, row.chancePercent)}
                                 side="right"
+                                className="block w-full"
                               >
                                 <div className="flex items-baseline justify-between gap-2 font-mono tabular-nums">
                                   <span className="text-xl font-bold text-amber-300/90">
@@ -545,6 +556,12 @@ export default function MiningTrackerRoute() {
             <GuideOreModal
               ore={selectedOre}
               onClose={() => setSelectedOre(null)}
+              onOpenTracker={() => {
+                setSelectedOre(null)
+                setViewMode('tracker')
+                setOreSearch('')
+                setSelectedOreName('')
+              }}
             />
           )}
         </div>
@@ -753,7 +770,15 @@ function GuideLocationCard({
   )
 }
 
-function GuideOreModal({ ore, onClose }: { ore: MiningData; onClose: () => void }) {
+function GuideOreModal({
+  ore,
+  onClose,
+  onOpenTracker,
+}: {
+  ore: MiningData
+  onClose: () => void
+  onOpenTracker: () => void
+}) {
   useBodyScrollLock(true)
 
   const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
@@ -786,7 +811,12 @@ function GuideOreModal({ ore, onClose }: { ore: MiningData; onClose: () => void 
           </div>
           <div className="flex items-center gap-2">
             {signature && (
-              <TrackOreButtons oreName={ore.ore_name} rarity={ore.rarity} showTrackerLink />
+              <TrackOreButtons
+                oreName={ore.ore_name}
+                rarity={ore.rarity}
+                showTrackerLink
+                onOpenTracker={onOpenTracker}
+              />
             )}
             <button
               onClick={onClose}
@@ -827,6 +857,7 @@ function GuideOreModal({ ore, onClose }: { ore: MiningData; onClose: () => void 
                   key={`${location}-${profile.depositType}`}
                   content={guideOreModalLocationTooltip(ore.ore_name, location, profile.depositType)}
                   side="right"
+                  className="block w-full"
                 >
                   <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
                     <div className="flex items-start justify-between gap-2">

@@ -19,6 +19,8 @@ interface TrackOreButtonsProps {
   locationName?: string
   /** When set, show a single track button for this deposit type (By Location). */
   depositType?: DepositType
+  /** Called when "Open tracker" is clicked (e.g. close guide modal, switch tab). */
+  onOpenTracker?: () => void
 }
 
 function TrackButton({
@@ -59,6 +61,7 @@ function TrackButton({
     <SiteTooltip
       content={trackButtonTooltip(oreName, depositType, profileMode, locationName)}
       side="top"
+      className="inline-flex"
     >
       <button
         type="button"
@@ -91,6 +94,7 @@ export default function TrackOreButtons({
   profileMode = 'overall',
   locationName,
   depositType,
+  onOpenTracker,
 }: TrackOreButtonsProps) {
   const depositTypes = depositType ? [depositType] : getDepositTypes(oreName)
 
@@ -111,9 +115,12 @@ export default function TrackOreButtons({
         {showTrackerLink && (
           <Link
             to="/mining-tracker"
-            search={{ ore: oreName }}
+            search={{ view: 'tracker' }}
             className="text-xs text-slate-500 hover:text-orange-400 transition-colors"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              onOpenTracker?.()
+            }}
           >
             Open tracker
           </Link>
@@ -151,9 +158,12 @@ export default function TrackOreButtons({
       {showTrackerLink && (
         <Link
           to="/mining-tracker"
-          search={{ ore: oreName }}
+          search={{ view: 'tracker' }}
           className="text-xs text-slate-500 hover:text-orange-400 transition-colors"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation()
+            onOpenTracker?.()
+          }}
         >
           Open tracker
         </Link>

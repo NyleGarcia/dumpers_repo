@@ -58,7 +58,7 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
           </div>
           <div>Cluster: {clusterPreview(refProfile.clusterRows)}</div>
           <div className="text-slate-400">Composition: {compositionSummary(refProfile.compositionParts)}</div>
-          <div className="text-[10px] font-mono text-slate-500 break-all">{refProfile.hppKey}</div>
+          <div className="text-[10px] font-mono text-slate-500 break-words">{refProfile.hppKey}</div>
         </>
       )}
       {display && (
