@@ -5,6 +5,11 @@ import { getBrowseSystemsForMission } from '../lib/missionLocations'
 import type { Region } from '../lib/missions'
 import { getContractMissionBrowseCatalog, type ContractMissionBrowseEntry } from '../lib/blueprintMissionRewards'
 import {
+  formatBlueprintDropChance,
+  formatRepReward,
+  formatStandingRange,
+} from '../lib/missionAcquisition'
+import {
   makeBrowseMissionKey,
   readMissionTrackerUiState,
   writeMissionTrackerUiState,
@@ -272,6 +277,13 @@ export default function BrowseMissionsView({
         ? [systemRegion]
         : []
 
+    const standingLabel = formatStandingRange(mission.minStanding, mission.maxStanding)
+    const repText = formatRepReward(mission.repPoints, mission.repPoints)
+    const poolRollText =
+      mission.hasPartialPoolRoll && mission.minPoolChance < 1
+        ? `${Math.round(mission.minPoolChance * 100)}% pool roll`
+        : null
+
     return (
       <>
         {!mission.isLawful && (
@@ -290,10 +302,16 @@ export default function BrowseMissionsView({
           system={mission.system}
           poolKey={mission.poolKeys[0]}
         />
-        {mission.minStanding && mission.minStanding.minReputation > 0 && (
+        {standingLabel && (
           <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">
-            {mission.minStanding.name} ({mission.minStanding.minReputation.toLocaleString()})
+            {standingLabel}
           </span>
+        )}
+        {repText && (
+          <span className="text-[10px] text-emerald-400/90">{repText}</span>
+        )}
+        {poolRollText && (
+          <span className="text-[10px] text-amber-400/80">{poolRollText}</span>
         )}
       </>
     )
@@ -382,7 +400,7 @@ export default function BrowseMissionsView({
               )}
             </div>
             <span className="shrink-0 text-[10px] text-slate-500 pt-0.5">
-              {group.variants.length} locations
+              {group.variants.length} variant{group.variants.length !== 1 ? 's' : ''}
             </span>
           </div>
         </div>
@@ -434,6 +452,7 @@ export default function BrowseMissionsView({
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([faction, data]) => {
                 const uniqueTitles = new Set(data.missions.map(m => m.title)).size
+                const contractCount = data.missions.length
                 const systemsArray = Array.from(data.systems)
                 return (
                   <button
@@ -459,7 +478,7 @@ export default function BrowseMissionsView({
                       ))}
                     </div>
                     <p className="text-xs text-slate-500 mt-1">
-                      {uniqueTitles} mission{uniqueTitles !== 1 ? 's' : ''} with blueprints
+                      {uniqueTitles} mission type{uniqueTitles !== 1 ? 's' : ''} · {contractCount} contract variant{contractCount !== 1 ? 's' : ''}
                     </p>
                   </button>
                 )
@@ -500,7 +519,7 @@ export default function BrowseMissionsView({
                 {renderMissionTags(selectedMission)}
               </div>
               <p className="text-sm text-slate-400 mt-3">
-                Blueprints from this location
+                Blueprint rewards from this contract
               </p>
               <p className="text-lg font-semibold mt-0.5">
                 <span className={blueprintStats.acquired === blueprintStats.total ? 'text-green-400' : 'text-amber-400'}>
@@ -542,6 +561,11 @@ export default function BrowseMissionsView({
                     )}
                     {bp.isTracked && !bp.isAcquired && (
                       <span className="text-[10px] text-amber-400">On tracker</span>
+                    )}
+                    {!bp.isAcquired && formatBlueprintDropChance(bp.dropChance) && (
+                      <span className="text-[10px] text-amber-400/80">
+                        {formatBlueprintDropChance(bp.dropChance)}
+                      </span>
                     )}
                   </div>
                   {!bp.isAcquired && !bp.isTracked && bp.fullBlueprint && (

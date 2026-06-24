@@ -64,8 +64,12 @@ function resolveBlueprintInternalName(blueprintId: string | null | undefined): s
   return normalized.trim()
 }
 
+function normalizeMissionTitle(title: string): string {
+  return title.replace(/\\n/g, '').replace(/\n/g, '').trim()
+}
+
 function contractMissionLabel(contract: ContractEntry): string {
-  return `${contract.faction}: ${contract.title}`
+  return `${contract.faction}: ${normalizeMissionTitle(contract.title)}`
 }
 
 function poolTotalWeight(poolKey: string): number {
@@ -224,16 +228,20 @@ export interface ContractMissionBrowseEntry {
   maxStanding: { name: string; minReputation: number } | null
   repPoints: number
   poolKeys: string[]
+  /** Lowest pool roll chance when any attached pool is < 100%. */
+  minPoolChance: number
+  hasPartialPoolRoll: boolean
   blueprints: ContractBlueprintDrop[]
 }
 
 function isValidBrowseMissionTitle(title: string | null | undefined): boolean {
-  if (!title?.trim()) return false
+  const normalized = normalizeMissionTitle(title || '')
+  if (!normalized) return false
   return (
-    !title.includes('~mission') &&
-    !title.startsWith('@') &&
-    !title.includes('UNINITIALIZED') &&
-    !title.includes('PLACEHOLDER')
+    !normalized.includes('~mission') &&
+    !normalized.startsWith('@') &&
+    !normalized.includes('UNINITIALIZED') &&
+    !normalized.includes('PLACEHOLDER')
   )
 }
 
@@ -267,6 +275,9 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
 
     if (blueprints.length === 0) continue
 
+    const poolChances = (contract.blueprintPools ?? []).map((pool) => pool.chance ?? 1)
+    const minPoolChance = poolChances.length > 0 ? Math.min(...poolChances) : 1
+
     entries.push({
       entryKey: [
         contract.id || contract.debugName || contract.title,
@@ -275,7 +286,7 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
         contract.system || 'unknown',
       ].join('|'),
       mission: contractMissionLabel(contract),
-      title: contract.title,
+      title: normalizeMissionTitle(contract.title),
       faction: contract.faction,
       system: contract.system || null,
       region: contract.region ?? null,
@@ -284,6 +295,8 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       maxStanding: contract.maxStanding,
       repPoints: contract.repPoints ?? 0,
       poolKeys,
+      minPoolChance,
+      hasPartialPoolRoll: minPoolChance < 1,
       blueprints,
     })
   }

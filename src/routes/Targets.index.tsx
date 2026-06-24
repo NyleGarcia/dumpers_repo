@@ -9,6 +9,7 @@ import { buildMissionList, getMissionsForBlueprint, missionKey, type Region } fr
 import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import {
   formatBlueprintUnlockBadge,
+  formatBlueprintDropChance,
   formatRepReward,
   getBlueprintUnlockInfo,
 } from '../lib/missionAcquisition'
@@ -19,10 +20,7 @@ import { readMissionTrackerUiState, writeMissionTrackerUiState } from '../lib/mi
 type ViewMode = 'tracker' | 'browse'
 
 function formatDropChance(chance: number | null | undefined): string | null {
-  if (chance == null) return null
-  if (chance >= 1) return null
-  const pct = chance * 100
-  return pct >= 10 ? `${Math.round(pct)}% BP drop` : `${pct.toFixed(1)}% BP drop`
+  return formatBlueprintDropChance(chance)
 }
 
 function MissionCategoryBadge({ category }: { category?: string | null }) {

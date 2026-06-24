@@ -147,6 +147,30 @@ export function formatStandingRequirement(
   return null
 }
 
+export function formatStandingRange(
+  minStanding: { name: string; minReputation: number } | null | undefined,
+  maxStanding: { name: string; minReputation: number } | null | undefined
+): string | null {
+  if (!minStanding && !maxStanding) return null
+
+  if (
+    minStanding &&
+    maxStanding &&
+    minStanding.minReputation !== maxStanding.minReputation
+  ) {
+    return `${minStanding.name} (${minStanding.minReputation.toLocaleString()}) – ${maxStanding.name} (${maxStanding.minReputation.toLocaleString()})`
+  }
+
+  const locked = minStanding ?? maxStanding
+  return formatStandingRequirement(locked?.name ?? null, locked?.minReputation ?? null)
+}
+
+export function formatBlueprintDropChance(chance: number | null | undefined): string | null {
+  if (chance == null || chance >= 1) return null
+  const pct = chance * 100
+  return pct >= 10 ? `${Math.round(pct)}% BP drop` : `${pct.toFixed(1)}% BP drop`
+}
+
 /**
  * Get mission rep info from the pool-based mission data.
  * Looks up by pool key or mission title.
