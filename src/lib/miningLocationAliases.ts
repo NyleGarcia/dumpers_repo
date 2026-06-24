@@ -60,16 +60,24 @@ export function formatOverallTagLabel(
   return 'Overall'
 }
 
-/** Tooltip detail for overall best-at; lists compendium sites when ambiguous. */
-export function formatOverallBestAtTooltip(
-  bestLocation?: string,
-  displayNameOverride?: string
-): string | null {
+/** Multi-site compendium detail — use when the tag label already shows best-at. */
+export function formatOverallCompendiumDetail(bestLocation?: string): string | null {
   const compendium = getCompendiumGuideNamesForSpawnKey(bestLocation)
   if (compendium.length >= 2) {
     return `Overall best cluster odds map to: ${compendium.join(', ')}`
   }
+  return null
+}
+
+/** Tooltip detail for overall best-at (e.g. broad-location chip tooltips without a tag label). */
+export function formatOverallBestAtTooltip(
+  bestLocation?: string,
+  displayNameOverride?: string
+): string | null {
+  const compendiumDetail = formatOverallCompendiumDetail(bestLocation)
+  if (compendiumDetail) return compendiumDetail
   if (displayNameOverride) return `Best overall at ${displayNameOverride}`
+  const compendium = getCompendiumGuideNamesForSpawnKey(bestLocation)
   if (compendium.length === 1) return `Best overall at ${compendium[0]}`
   const display = getDisplayNameForSpawnKey(bestLocation)
   if (display !== bestLocation) return `Best overall at ${display}`

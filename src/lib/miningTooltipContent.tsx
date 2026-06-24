@@ -15,7 +15,11 @@ import {
   isLocationTrackerEntry,
 } from './miningClusterProfiles'
 import type { MiningTrackerEntry } from './localGuestCache'
-import { isBroadGuideLocation, formatOverallBestAtTooltip } from './miningLocationAliases'
+import {
+  isBroadGuideLocation,
+  formatOverallBestAtTooltip,
+  formatOverallCompendiumDetail,
+} from './miningLocationAliases'
 import { formatRsReading } from './miningSignatures'
 
 function pct(n: number | null | undefined, digits = 2): string {
@@ -72,10 +76,7 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
       )}
       {!isLocationTrackerEntry(entry) && (() => {
         const overall = getOverallProfile(entry.oreName, entry.depositType)
-        const bestAtNote = formatOverallBestAtTooltip(
-          overall?.bestLocation,
-          overall?.bestLocationDisplayName
-        )
+        const bestAtNote = formatOverallCompendiumDetail(overall?.bestLocation)
         return bestAtNote ? (
           <div className="text-slate-400">{bestAtNote}</div>
         ) : null
@@ -224,12 +225,9 @@ export function guideLocationOreTooltip(
       const overall = getOverallProfile(oreName, depositType)
       if (!overall) return []
       const tag = getOverallSpawnTag(oreName, depositType)
-      const bestAt = formatOverallBestAtTooltip(
-        overall.bestLocation,
-        overall.bestLocationDisplayName
-      )
+      const compendiumDetail = formatOverallCompendiumDetail(overall.bestLocation)
       return [
-        `${depositTypeLabel(depositType)}: ${tag.label}${bestAt ? ` — ${bestAt}` : ''}`,
+        `${depositTypeLabel(depositType)}: ${tag.label}${compendiumDetail ? ` — ${compendiumDetail}` : ''}`,
       ]
     })
     return (
