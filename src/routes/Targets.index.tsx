@@ -163,7 +163,7 @@ function MissionChecklistGroups({
   onRemove,
 }: {
   groups: ReturnType<typeof buildMissionList>
-  onRemove: (mission: string) => void
+  onRemove: (mission: { missionKey: string; mission: string }) => void
 }) {
   if (groups.length === 0) {
     return (
@@ -216,7 +216,7 @@ function MissionChecklistGroups({
                     </div>
                     <button
                       type="button"
-                      onClick={() => void onRemove(mission.mission)}
+                      onClick={() => void onRemove(mission)}
                       className="shrink-0 px-2 py-1 text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg hover:bg-red-950/30 transition-colors"
                     >
                       Remove
@@ -516,7 +516,12 @@ export default function TargetsRoute() {
                             <button
                               type="button"
                               onClick={() =>
-                                void addAllMissionsToChecklist(addableMissions.map((m) => m.mission))
+                                void addAllMissionsToChecklist(
+                                  addableMissions.map((m) => ({
+                                    key: m.missionKey,
+                                    label: m.mission,
+                                  }))
+                                )
                               }
                               className="px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-500/40 rounded hover:bg-amber-950/40 transition-colors"
                             >
@@ -547,7 +552,7 @@ export default function TargetsRoute() {
                                 <button
                                   type="button"
                                   disabled={onChecklist}
-                                  onClick={() => void addMissionToChecklist(m.mission)}
+                                  onClick={() => void addMissionToChecklist(m.missionKey, m.mission)}
                                   className={`w-full text-left px-3 py-2.5 transition-colors ${
                                     onChecklist
                                       ? 'opacity-40 cursor-not-allowed bg-slate-950/20'
@@ -593,7 +598,9 @@ export default function TargetsRoute() {
             <h2 className="text-lg font-semibold text-white mb-3">Mission checklist</h2>
             <MissionChecklistGroups
               groups={missionGroups}
-              onRemove={(mission) => void removeMissionFromChecklist(mission)}
+              onRemove={(mission) =>
+                void removeMissionFromChecklist(mission.missionKey, mission.mission)
+              }
             />
           </section>
         </div>

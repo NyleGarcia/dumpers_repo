@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-24T02:51:45.917Z",
+  "_extracted": "2026-06-24T22:28:34.290Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -1931,7 +1931,7 @@
     ]
   },
   "locationMineables": {
-    "Pyro1": {
+    "Pyro I": {
       "shipMineables": [
         "Iron",
         "Copper",
@@ -1955,9 +1955,10 @@
         "Amioshi Plague (Caves)",
         "Bluemoon Fungus (Caves)"
       ],
-      "creatures": []
+      "creatures": [],
+      "spawnKey": "Pyro1"
     },
-    "Pyro2": {
+    "Pyro II": {
       "shipMineables": [
         "Hephaestanite",
         "Iron",
@@ -1981,9 +1982,10 @@
       ],
       "creatures": [
         "Quasigrazer"
-      ]
+      ],
+      "spawnKey": "Pyro2"
     },
-    "Pyro3": {
+    "Bloom": {
       "shipMineables": [
         "Quartz",
         "Borase",
@@ -2007,9 +2009,10 @@
       ],
       "creatures": [
         "Quasigrazer"
-      ]
+      ],
+      "spawnKey": "Pyro3"
     },
-    "Pyro4": {
+    "Pyro IV": {
       "shipMineables": [
         "Copper",
         "Laranite",
@@ -2032,7 +2035,8 @@
       ],
       "creatures": [
         "Quasigrazer"
-      ]
+      ],
+      "spawnKey": "Pyro4"
     },
     "Ignis": {
       "shipMineables": [
@@ -2053,7 +2057,8 @@
         "Amioshi Plague (Caves)",
         "Bluemoon Fungus (Caves)"
       ],
-      "creatures": []
+      "creatures": [],
+      "spawnKey": "Pyro5a"
     },
     "Vatra": {
       "shipMineables": [
@@ -2074,7 +2079,8 @@
         "Amioshi Plague (Caves)",
         "Bluemoon Fungus (Caves)"
       ],
-      "creatures": []
+      "creatures": [],
+      "spawnKey": "Pyro5b"
     },
     "Adir": {
       "shipMineables": [
@@ -2095,7 +2101,8 @@
         "Amioshi Plague (Caves)",
         "Bluemoon Fungus (Caves)"
       ],
-      "creatures": []
+      "creatures": [],
+      "spawnKey": "Pyro5c"
     },
     "Fairo": {
       "shipMineables": [
@@ -2116,7 +2123,8 @@
         "Amioshi Plague (Caves)",
         "Bluemoon Fungus (Caves)"
       ],
-      "creatures": []
+      "creatures": [],
+      "spawnKey": "Pyro5d"
     },
     "Fuego": {
       "shipMineables": [
@@ -2136,7 +2144,8 @@
         "Amioshi Plague (Caves)",
         "Bluemoon Fungus (Caves)"
       ],
-      "creatures": []
+      "creatures": [],
+      "spawnKey": "Pyro5e"
     },
     "Vuur": {
       "shipMineables": [
@@ -2157,9 +2166,10 @@
         "Amioshi Plague (Caves)",
         "Bluemoon Fungus (Caves)"
       ],
-      "creatures": []
+      "creatures": [],
+      "spawnKey": "Pyro5f"
     },
-    "Pyro6": {
+    "Terminus": {
       "shipMineables": [
         "Ice",
         "Copper",
@@ -2180,7 +2190,795 @@
         "Amioshi Plague (Caves)",
         "Bluemoon Fungus (Caves)"
       ],
-      "creatures": []
+      "creatures": [],
+      "spawnKey": "Pyro6"
+    },
+    "Hurston": {
+      "shipMineables": [
+        "Aluminum",
+        "Tin",
+        "Ouratite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Hadanite",
+        "Janalite (Caves only)"
+      ],
+      "harvestables": [
+        "Pitambu",
+        "Golden Medmon",
+        "Degnous Root",
+        "CompBoard",
+        "Prota",
+        "Revenant Pod",
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [
+        "Kopion",
+        "Marok",
+        "Quasigrazer",
+        "Juvenile Valakkar"
+      ],
+      "spawnKey": "Stanton1"
+    },
+    "Ita": {
+      "shipMineables": [
+        "Aluminum",
+        "Tin",
+        "Hephaestanite",
+        "Corundum",
+        "Ouratite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Hadanite",
+        "Janalite (Caves only)"
+      ],
+      "harvestables": [
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [],
+      "spawnKey": "Stanton1a"
+    },
+    "Aberdeen": {
+      "shipMineables": [
+        "Aluminum",
+        "Titanium",
+        "Ouratite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Hadanite",
+        "Janalite (Caves only)"
+      ],
+      "harvestables": [
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [],
+      "spawnKey": "Stanton1b"
+    },
+    "Arial": {
+      "shipMineables": [
+        "Aluminum",
+        "Titanium",
+        "Aslarite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Hadanite",
+        "Janalite (Caves only)"
+      ],
+      "harvestables": [
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [],
+      "spawnKey": "Stanton1c"
+    },
+    "Magda": {
+      "shipMineables": [
+        "Alumium",
+        "Tin",
+        "Aslarite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Hadanite",
+        "Janalite (Caves only)"
+      ],
+      "harvestables": [
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [],
+      "spawnKey": "Stanton1d"
+    },
+    "Cellin": {
+      "shipMineables": [
+        "Quartz",
+        "Agricium",
+        "Tarantite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Hadanite",
+        "Janalite (Caves only)"
+      ],
+      "harvestables": [
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [],
+      "spawnKey": "Stanton2a"
+    },
+    "Daymar": {
+      "shipMineables": [
+        "Quartz",
+        "Agricium",
+        "Silicon",
+        "Quantainium",
+        "Titanium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Hadanite",
+        "Janalite (Caves only)"
+      ],
+      "harvestables": [
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)",
+        "Stone Bug Shell (Caves)"
+      ],
+      "creatures": [
+        "Juvenile Valakkar"
+      ],
+      "spawnKey": "Stanton2b"
+    },
+    "Yela": {
+      "shipMineables": [
+        "Quartz",
+        "Agricium",
+        "Tarantite",
+        "Silicon",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Hadanite"
+      ],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Stanton2c"
+    },
+    "Lyria": {
+      "shipMineables": [
+        "Iron",
+        "Copper",
+        "Laranite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Janalite"
+      ],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Stanton3a"
+    },
+    "Wala": {
+      "shipMineables": [
+        "Iron",
+        "Laranite",
+        "Beryl",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Janalite"
+      ],
+      "harvestables": [
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [],
+      "spawnKey": "Stanton3b"
+    },
+    "microTech": {
+      "shipMineables": [
+        "Iron",
+        "Ice",
+        "Hephaestanite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Janalite"
+      ],
+      "harvestables": [
+        "Pitambu",
+        "Golden Medmon",
+        "Sunset Berry",
+        "Heart of the Woods",
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [
+        "Kopion",
+        "Marok",
+        "Quasigrazer"
+      ],
+      "spawnKey": "Stanton4"
+    },
+    "Calliope": {
+      "shipMineables": [
+        "Iron",
+        "Ice",
+        "Hephaestanite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Janalite"
+      ],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Stanton4a"
+    },
+    "Clio": {
+      "shipMineables": [
+        "Ice",
+        "Copper",
+        "Taranite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Janalite"
+      ],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Stanton4b"
+    },
+    "Euterpe": {
+      "shipMineables": [
+        "Ice",
+        "Copper",
+        "Taranite",
+        "Quantainium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [
+        "Aphorite",
+        "Dolivine",
+        "Janalite"
+      ],
+      "harvestables": [
+        "Ranta Dung (Caves)",
+        "Amioshi Plague (Caves)",
+        "Bluemoon Fungus (Caves)"
+      ],
+      "creatures": [],
+      "spawnKey": "Stanton4c"
+    }
+  },
+  "locationAliases": {
+    "Aaron Halo": {
+      "spawnKey": "Aaron Halo",
+      "guideName": "Aaron Halo",
+      "guideNames": [
+        "Aaron Halo"
+      ],
+      "displayName": "Aaron Halo",
+      "system": "Stanton",
+      "source": "spawn_code_table+hpp_path_audit"
+    },
+    "Akiro Cluster": {
+      "spawnKey": "Akiro Cluster",
+      "guideName": "Akiro Cluster",
+      "guideNames": [
+        "Akiro Cluster"
+      ],
+      "displayName": "Akiro Cluster",
+      "system": "Pyro",
+      "source": "spawn_code_table+hpp_path_audit"
+    },
+    "Glaciem Ring": {
+      "spawnKey": "Glaciem Ring",
+      "guideName": "Glaciem Ring",
+      "guideNames": [
+        "Glaciem Ring"
+      ],
+      "displayName": "Glaciem Ring",
+      "system": "Nyx",
+      "source": "spawn_code_table+hpp_path_audit"
+    },
+    "Keeger Belt": {
+      "spawnKey": "Keeger Belt",
+      "guideName": "Keeger Belt",
+      "guideNames": [
+        "Keeger Belt"
+      ],
+      "displayName": "Keeger Belt",
+      "system": "Nyx",
+      "source": "spawn_code_table+hpp_path_audit"
+    },
+    "Lagrange A": {
+      "spawnKey": "Lagrange A",
+      "guideNames": [
+        "HUR-L1",
+        "HUR-L4",
+        "HUR-L5"
+      ],
+      "displayName": "HUR-L1",
+      "system": "Stanton",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Lagrange B": {
+      "spawnKey": "Lagrange B",
+      "guideNames": [
+        "ARC-L5",
+        "CRU-L4",
+        "MIC-L3"
+      ],
+      "displayName": "ARC-L5",
+      "system": "Stanton",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Lagrange C": {
+      "spawnKey": "Lagrange C",
+      "guideNames": [
+        "CRU-L3",
+        "MIC-L1",
+        "MIC-L2",
+        "MIC-L5"
+      ],
+      "displayName": "CRU-L3",
+      "system": "Stanton",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Lagrange D": {
+      "spawnKey": "Lagrange D",
+      "guideNames": [
+        "ARC-L3",
+        "CRU-L5",
+        "MIC-L4"
+      ],
+      "displayName": "ARC-L3",
+      "system": "Stanton",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Lagrange E": {
+      "spawnKey": "Lagrange E",
+      "guideNames": [
+        "CRU-L1",
+        "CRU-L2",
+        "HUR-L3"
+      ],
+      "displayName": "CRU-L1",
+      "system": "Stanton",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Lagrange F": {
+      "spawnKey": "Lagrange F",
+      "guideNames": [
+        "ARC-L1",
+        "ARC-L2",
+        "ARC-L4",
+        "HUR-L2"
+      ],
+      "displayName": "ARC-L1",
+      "system": "Stanton",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Lagrange G": {
+      "spawnKey": "Lagrange G",
+      "displayName": "Aaron Halo belt · G",
+      "system": "Stanton",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Lagrange Occupied": {
+      "spawnKey": "Lagrange Occupied",
+      "displayName": "Occupied Lagrange belt",
+      "system": "Stanton",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Pyro Cool01": {
+      "spawnKey": "Pyro Cool01",
+      "guideNames": [
+        "Pyro Asteroid Clusters",
+        "PYR5 L1",
+        "PYR5 L2",
+        "PYR5 L3",
+        "PYR5 L4",
+        "PYR5 L5"
+      ],
+      "displayName": "Pyro V Lagrange belts",
+      "system": "Pyro",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Pyro Cool02": {
+      "spawnKey": "Pyro Cool02",
+      "guideNames": [
+        "Pyro Asteroid Clusters",
+        "PYR6 L1",
+        "PYR6 L2",
+        "PYR6 L3",
+        "PYR6 L4",
+        "PYR6 L5"
+      ],
+      "displayName": "Pyro VI Lagrange belts",
+      "system": "Pyro",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Pyro Deepspaceasteroids": {
+      "spawnKey": "Pyro Deepspaceasteroids",
+      "guideNames": [
+        "Pyro Asteroid Clusters"
+      ],
+      "displayName": "Pyro Asteroid Clusters",
+      "system": "Pyro",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Pyro Warm01": {
+      "spawnKey": "Pyro Warm01",
+      "guideNames": [
+        "Pyro Asteroid Clusters",
+        "PYR1 L1",
+        "PYR1 L2",
+        "PYR1 L3",
+        "PYR1 L4",
+        "PYR1 L5",
+        "PYR2 L1",
+        "PYR2 L2",
+        "PYR2 L3",
+        "PYR2 L4",
+        "PYR2 L5"
+      ],
+      "displayName": "Pyro I–II Lagrange belts",
+      "system": "Pyro",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Pyro Warm02": {
+      "spawnKey": "Pyro Warm02",
+      "guideNames": [
+        "Pyro Asteroid Clusters",
+        "PYR3 L1",
+        "PYR3 L2",
+        "PYR3 L3",
+        "PYR3 L4",
+        "PYR3 L5"
+      ],
+      "displayName": "Pyro III Lagrange belts",
+      "system": "Pyro",
+      "source": "verified_overlay+hpp_path_audit"
+    },
+    "Pyro1": {
+      "spawnKey": "Pyro1",
+      "guideName": "Pyro I",
+      "guideNames": [
+        "Pyro I"
+      ],
+      "displayName": "Pyro I",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro2": {
+      "spawnKey": "Pyro2",
+      "guideName": "Pyro II",
+      "guideNames": [
+        "Pyro II"
+      ],
+      "displayName": "Pyro II",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro3": {
+      "spawnKey": "Pyro3",
+      "guideName": "Bloom",
+      "guideNames": [
+        "Bloom"
+      ],
+      "displayName": "Bloom",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro4": {
+      "spawnKey": "Pyro4",
+      "guideName": "Pyro IV",
+      "guideNames": [
+        "Pyro IV"
+      ],
+      "displayName": "Pyro IV",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro5a": {
+      "spawnKey": "Pyro5a",
+      "guideName": "Ignis",
+      "guideNames": [
+        "Ignis"
+      ],
+      "displayName": "Ignis",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro5b": {
+      "spawnKey": "Pyro5b",
+      "guideName": "Vatra",
+      "guideNames": [
+        "Vatra"
+      ],
+      "displayName": "Vatra",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro5c": {
+      "spawnKey": "Pyro5c",
+      "guideName": "Adir",
+      "guideNames": [
+        "Adir"
+      ],
+      "displayName": "Adir",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro5d": {
+      "spawnKey": "Pyro5d",
+      "guideName": "Fairo",
+      "guideNames": [
+        "Fairo"
+      ],
+      "displayName": "Fairo",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro5e": {
+      "spawnKey": "Pyro5e",
+      "guideName": "Fuego",
+      "guideNames": [
+        "Fuego"
+      ],
+      "displayName": "Fuego",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro5f": {
+      "spawnKey": "Pyro5f",
+      "guideName": "Vuur",
+      "guideNames": [
+        "Vuur"
+      ],
+      "displayName": "Vuur",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Pyro6": {
+      "spawnKey": "Pyro6",
+      "guideName": "Terminus",
+      "guideNames": [
+        "Terminus"
+      ],
+      "displayName": "Terminus",
+      "system": "Pyro",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Resourcerush Gold": {
+      "spawnKey": "Resourcerush Gold",
+      "displayName": "Resourcerush Gold",
+      "system": "Stanton",
+      "source": "hpp_path_audit"
+    },
+    "Resourcerush Gold Highdensity": {
+      "spawnKey": "Resourcerush Gold Highdensity",
+      "displayName": "Resourcerush Gold Highdensity",
+      "system": "Stanton",
+      "source": "hpp_path_audit"
+    },
+    "Shipgraveyard 001": {
+      "spawnKey": "Shipgraveyard 001",
+      "displayName": "Shipgraveyard 001",
+      "system": "Stanton",
+      "source": "hpp_path_audit"
+    },
+    "Spacederelict General": {
+      "spawnKey": "Spacederelict General",
+      "displayName": "Spacederelict General",
+      "system": "Stanton",
+      "source": "hpp_path_audit"
+    },
+    "Stanton1": {
+      "spawnKey": "Stanton1",
+      "guideName": "Hurston",
+      "guideNames": [
+        "Hurston"
+      ],
+      "displayName": "Hurston",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton1a": {
+      "spawnKey": "Stanton1a",
+      "guideName": "Ita",
+      "guideNames": [
+        "Ita"
+      ],
+      "displayName": "Ita",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton1b": {
+      "spawnKey": "Stanton1b",
+      "guideName": "Aberdeen",
+      "guideNames": [
+        "Aberdeen"
+      ],
+      "displayName": "Aberdeen",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton1c": {
+      "spawnKey": "Stanton1c",
+      "guideName": "Arial",
+      "guideNames": [
+        "Arial"
+      ],
+      "displayName": "Arial",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton1d": {
+      "spawnKey": "Stanton1d",
+      "guideName": "Magda",
+      "guideNames": [
+        "Magda"
+      ],
+      "displayName": "Magda",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton2a": {
+      "spawnKey": "Stanton2a",
+      "guideName": "Cellin",
+      "guideNames": [
+        "Cellin"
+      ],
+      "displayName": "Cellin",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton2b": {
+      "spawnKey": "Stanton2b",
+      "guideName": "Daymar",
+      "guideNames": [
+        "Daymar"
+      ],
+      "displayName": "Daymar",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton2c": {
+      "spawnKey": "Stanton2c",
+      "guideName": "Yela",
+      "guideNames": [
+        "Yela"
+      ],
+      "displayName": "Yela",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton2c Belt": {
+      "spawnKey": "Stanton2c Belt",
+      "guideName": "Yela Ring",
+      "guideNames": [
+        "Yela Ring"
+      ],
+      "displayName": "Yela Ring",
+      "system": "Stanton",
+      "source": "spawn_code_table+hpp_path_audit"
+    },
+    "Stanton3a": {
+      "spawnKey": "Stanton3a",
+      "guideName": "Lyria",
+      "guideNames": [
+        "Lyria"
+      ],
+      "displayName": "Lyria",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton3b": {
+      "spawnKey": "Stanton3b",
+      "guideName": "Wala",
+      "guideNames": [
+        "Wala"
+      ],
+      "displayName": "Wala",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton4": {
+      "spawnKey": "Stanton4",
+      "guideName": "microTech",
+      "guideNames": [
+        "microTech"
+      ],
+      "displayName": "microTech",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton4a": {
+      "spawnKey": "Stanton4a",
+      "guideName": "Calliope",
+      "guideNames": [
+        "Calliope"
+      ],
+      "displayName": "Calliope",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton4b": {
+      "spawnKey": "Stanton4b",
+      "guideName": "Clio",
+      "guideNames": [
+        "Clio"
+      ],
+      "displayName": "Clio",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
+    },
+    "Stanton4c": {
+      "spawnKey": "Stanton4c",
+      "guideName": "Euterpe",
+      "guideNames": [
+        "Euterpe"
+      ],
+      "displayName": "Euterpe",
+      "system": "Stanton",
+      "source": "localization_desc+hpp_path_audit"
     }
   },
   "rarityOrder": [
@@ -2194,6 +2992,7 @@
   "summary": {
     "totalOres": 35,
     "totalLocations": 56,
-    "locationsWithDetails": 11
+    "locationsWithDetails": 25,
+    "locationAliasCount": 47
   }
 }

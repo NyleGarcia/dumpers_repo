@@ -26,8 +26,8 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 | `game-blueprint-missions.json` | Mission → blueprint reward mappings | `crafting/blueprintrewards/` |
 | `game-blueprints.json` | Blueprint definitions with crafting recipes (**app catalog**) | `crafting/blueprints/` |
 | `game-mining.json` | Mineable elements and mining lasers | `mining/`, `entities/scitem/ships/weapons/` |
-| `game-mining-locations.json` | Ore/location compendium (rarity tiers, location lists) | Game localization + compendium data |
-| `game-mining-spawns.json` | Per-location spawn weights, cluster RS/chance profiles | `harvestable/providerpresets/`, `harvestable/clusteringpresets/`, `mining/rockcompositionpresets/` |
+| `game-mining-locations.json` | Ore/location compendium, `locationAliases` (spawnKey → displayName/guideName), mineable details | Game localization (`*_desc` keys) + compendium + HPP audit |
+| `game-mining-spawns.json` | Per-location spawn weights, cluster RS/chance profiles; each location includes `spawnKey`, `displayName`, `guideName` | `harvestable/providerpresets/`, `harvestable/clusteringpresets/`, `mining/rockcompositionpresets/` |
 | `game-components.json` | Ship components (coolers, shields, etc.) | `entities/scitem/ships/` |
 | `game-reputation.json` | Reputation standing thresholds | `reputation/standings/` |
 | `game-lore.json` | Resource/item lore for Archive | Game localization (`global.ini`) |
@@ -79,6 +79,7 @@ Located in `/scripts/`:
 |--------|---------|
 | `extract-game-data.ps1` | Extract DataForge + localization from Data.p4k via StarBreaker |
 | `parse-extracted-data.mjs` | Parse extracted JSON into `src/data/game-*.json` |
+| `audit-mining-aliases.mjs` | Verify all spawn keys in `game-mining-spawns.json` have `locationAliases` entries with member-facing `displayName` |
 | `sync-game-data-to-db.mjs` | Optional: upsert mining/components/ordnance to Supabase `game_*` tables |
 | `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` |
 | `validate-blueprints.mjs` | Sanity-check `game-blueprints.json` after parse |
@@ -93,12 +94,26 @@ When a new Star Citizen patch drops:
 
 1. **Extract:** `.\scripts\extract-game-data.ps1`
 2. **Parse:** `node scripts/parse-extracted-data.mjs`
-3. **Validate:** `npm run validate-blueprints`
-4. **Optional DB sync:** `node scripts/sync-game-data-to-db.mjs` (mining, components, ordnance → Supabase `game_*` tables)
-5. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` → rebuild DFP engine in `dfp-engine-private`
-6. **Deploy:** Commit updated `game-*.json` (and DFP bundle if changed), `npm run build`, deploy `dist/`
+3. **Audit mining aliases:** `node scripts/audit-mining-aliases.mjs`
+4. **Validate:** `npm run validate-blueprints`
+5. **Optional DB sync:** `node scripts/sync-game-data-to-db.mjs` (mining, components, ordnance → Supabase `game_*` tables)
+6. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` → rebuild DFP engine in `dfp-engine-private`
+7. **Deploy:** Commit updated `game-*.json` (and DFP bundle if changed), `npm run build`, deploy `dist/`
 
 If Step 2 reports validation issues in `_extraction-validation.json`, the game data structure may have changed.
+
+### Mining location aliases (`locationAliases`)
+
+Internal HPP spawn keys (e.g. `Stanton1b`, `Lagrange F`) are mapped to member-facing names during parse:
+
+| Field | Purpose |
+|-------|---------|
+| `spawnKey` | Stable lookup id from HPP record (matches `locationName` in spawn profiles) |
+| `displayName` | Member-facing label (`Aberdeen`, `Stanton L-point belt · F`, `Pyro warm asteroid field`) |
+| `guideName` / `guideNames` | Compendium / starmap names for guide chip resolution |
+| `source` | `localization_desc`, `spawn_code_table`, `verified_overlay`, or `hpp_path_audit` |
+
+Built in `scripts/lib/miningLocationAliases.mjs` during `parseMiningLocations()`. Lagrange belt templates and Pyro cluster fields use a verified overlay when game files lack explicit parent-body labels.
 
 ---
 

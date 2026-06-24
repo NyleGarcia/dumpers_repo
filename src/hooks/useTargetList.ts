@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useLatestRef } from './useLatestRef'
 import { useAuth } from '../contexts/AuthContext'
-import { missionKey } from '../lib/missions'
 import { canAddBlueprintToTargetListById } from '../lib/blueprintOrderable'
 import { normalizeGuestBlueprintId } from '../lib/guestCatalog'
 import {
@@ -18,7 +17,7 @@ import {
   readGuestMissionPrefEntries,
   readGuestTargetList,
   removeGuestMissionPrefKeys,
-  upsertGuestMissionPref,
+  upsertGuestMissionPrefByKey,
   writeGuestMissionPrefEntries,
   writeGuestTargetIds,
 } from '../lib/localGuestCache'
@@ -241,11 +240,12 @@ export function useTargetList(
   )
 
   const setMissionOnChecklist = useCallback(
-    async (missionLabel: string, onChecklist: boolean) => {
+    async (key: string, missionLabel: string, onChecklist: boolean) => {
       // Guest mode: localStorage only
       if (isGuest) {
-        const nextEntries = upsertGuestMissionPref(
+        const nextEntries = upsertGuestMissionPrefByKey(
           readGuestMissionPrefEntries(),
+          key,
           missionLabel,
           onChecklist
         )
@@ -256,42 +256,44 @@ export function useTargetList(
 
       if (!user || !isApproved) return false
 
-      const result = await setMissionIncluded(user.id, missionLabel, onChecklist)
+      const result = await setMissionIncluded(user.id, key, missionLabel, onChecklist)
       if (result.error) {
         setError(result.error)
         return false
       }
 
-      setMissionPrefs((prev) => ({
-        ...prev,
-        [missionKey(missionLabel)]: onChecklist,
-      }))
+      setMissionPrefs((prev) => {
+        const next = { ...prev }
+        if (onChecklist) next[key] = true
+        else delete next[key]
+        return next
+      })
 
       return true
     },
-    [user, isApproved, isGuest, missionPrefs]
+    [user, isApproved, isGuest]
   )
 
   const addMissionToChecklist = useCallback(
-    async (missionLabel: string) => setMissionOnChecklist(missionLabel, true),
+    async (key: string, missionLabel: string) => setMissionOnChecklist(key, missionLabel, true),
     [setMissionOnChecklist]
   )
 
   const removeMissionFromChecklist = useCallback(
-    async (missionLabel: string) => setMissionOnChecklist(missionLabel, false),
+    async (key: string, missionLabel: string) => setMissionOnChecklist(key, missionLabel, false),
     [setMissionOnChecklist]
   )
 
   const addAllMissionsToChecklist = useCallback(
-    async (missionLabels: string[]) => {
-      const toAdd = missionLabels.filter((label) => missionPrefs[missionKey(label)] !== true)
+    async (missions: Array<{ key: string; label: string }>) => {
+      const toAdd = missions.filter(({ key }) => missionPrefs[key] !== true)
       if (toAdd.length === 0) return true
 
       // Guest mode: localStorage only
       if (isGuest) {
         let nextEntries = readGuestMissionPrefEntries()
-        for (const label of toAdd) {
-          nextEntries = upsertGuestMissionPref(nextEntries, label, true)
+        for (const { key, label } of toAdd) {
+          nextEntries = upsertGuestMissionPrefByKey(nextEntries, key, label, true)
         }
         writeGuestMissionPrefEntries(nextEntries)
         setMissionPrefs(guestMissionPrefsToMap(nextEntries))
@@ -301,7 +303,7 @@ export function useTargetList(
       if (!user || !isApproved) return false
 
       const results = await Promise.all(
-        toAdd.map((label) => setMissionIncluded(user.id, label, true))
+        toAdd.map(({ key, label }) => setMissionIncluded(user.id, key, label, true))
       )
       const failed = results.find((r) => r.error)
       if (failed?.error) {
@@ -311,8 +313,8 @@ export function useTargetList(
 
       setMissionPrefs((prev) => {
         const next = { ...prev }
-        for (const label of toAdd) {
-          next[missionKey(label)] = true
+        for (const { key } of toAdd) {
+          next[key] = true
         }
         return next
       })

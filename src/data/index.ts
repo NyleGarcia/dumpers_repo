@@ -18,6 +18,17 @@ export interface OreLocation {
 export interface MiningLocationsData {
   _source: string
   _extracted: string
+  locationAliases?: Record<
+    string,
+    {
+      spawnKey: string
+      guideName?: string
+      guideNames?: string[]
+      displayName?: string
+      system?: string
+      source?: string
+    }
+  >
   rarityTiers: {
     legendary: OreLocation[]
     epic: OreLocation[]

@@ -4,6 +4,11 @@
 
 import { readFileSync, existsSync, readdirSync } from 'fs'
 import { join, basename } from 'path'
+import {
+  auditAliasCoverage,
+  hppRecordToSpawnKey,
+  resolveAliasForSpawnKey,
+} from './miningLocationAliases.mjs'
 
 /** Ship-mining RS signatures (must match src/lib/miningConstants.ts ORE_SIGNATURES). */
 export const ORE_SIGNATURES = {
@@ -160,18 +165,18 @@ function buildClusterRows(clusterPreset, baseSignature) {
   return { maxNodes, rows, clusterPresetKey: key, probabilityOfClustering }
 }
 
-function buildOverallProfile(locations, depositType, oreName) {
+function buildOverallProfile(locations, depositType, oreName, locationAliases) {
   const filtered = locations.filter((l) => l.depositType === depositType)
   if (filtered.length === 0) return null
 
   let maxNodes = 0
-  let bestLocation = filtered[0].locationName
+  let bestLocation = filtered[0].spawnKey ?? filtered[0].locationName
   let bestLocationSpawnPercent = filtered[0].effectiveSpawnPercent
 
   for (const loc of filtered) {
     maxNodes = Math.max(maxNodes, loc.maxNodes)
     if (loc.effectiveSpawnPercent > bestLocationSpawnPercent) {
-      bestLocation = loc.locationName
+      bestLocation = loc.spawnKey ?? loc.locationName
       bestLocationSpawnPercent = loc.effectiveSpawnPercent
     }
   }
@@ -185,23 +190,28 @@ function buildOverallProfile(locations, depositType, oreName) {
       const row = loc.clusterRows.find((r) => r.nodes === n)
       if (row && row.chancePercent > bestChance) {
         bestChance = row.chancePercent
-        bestAt = loc.locationName
+        bestAt = loc.spawnKey ?? loc.locationName
       }
     }
     if (bestChance > 0) {
+      const bestAtResolved = resolveAliasForSpawnKey(bestAt, locationAliases)
       clusterRows.push({
         nodes: n,
         rs: baseSig * n,
         chancePercent: bestChance,
         bestAtLocation: bestAt,
+        bestAtLocationDisplayName: bestAtResolved.displayName,
       })
     }
   }
+
+  const bestResolved = resolveAliasForSpawnKey(bestLocation, locationAliases)
 
   return {
     maxNodes,
     clusterRows,
     bestLocation,
+    bestLocationDisplayName: bestResolved.displayName,
     bestLocationSpawnPercent: Math.round(bestLocationSpawnPercent * 1000) / 1000,
   }
 }
@@ -267,22 +277,25 @@ function buildLocationIndex(miningLocations) {
   return { allNames, byNorm }
 }
 
-function matchGuideLocation(hppDisplayName, locationIndex) {
-  const norm = normalizeLocationKey(hppDisplayName)
+function matchGuideLocation(spawnKey, locationIndex, locationAliases) {
+  const alias = locationAliases?.[spawnKey]
+  if (alias?.guideName) return alias.guideName
+  const norm = normalizeLocationKey(spawnKey)
   if (locationIndex.byNorm.has(norm)) return locationIndex.byNorm.get(norm)
-
   for (const [key, name] of locationIndex.byNorm.entries()) {
     if (key.includes(norm) || norm.includes(key)) return name
   }
-  return hppDisplayName
+  return alias?.displayName ?? spawnKey
 }
 
 /**
  * @param {string} extractedDataRoot
- * @param {object} miningLocations - parsed game-mining-locations shape (oreLocations)
+ * @param {object} miningLocations - parsed game-mining-locations shape (oreLocations, locationAliases)
  */
 export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
   console.log('\n  Parsing mining spawn / cluster profiles...')
+
+  const locationAliases = miningLocations.locationAliases ?? {}
 
   const clusterPresets = new Map()
   const clusterDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/clusteringpresets')
@@ -295,7 +308,13 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
   const locationIndex = buildLocationIndex(miningLocations)
   const hppDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/providerpresets')
   const rawLinks = []
-  const audit = { unmappedHppLinks: [], oresMissingProfile: [] }
+  const audit = {
+    unmappedHppLinks: [],
+    oresMissingProfile: [],
+    unmappedSpawnKeys: [],
+    rawDisplayNames: [],
+  }
+  const seenSpawnKeys = new Set()
 
   for (const file of walkJsonFiles(hppDir)) {
     if (!basename(file).startsWith('hpp_')) continue
@@ -303,8 +322,12 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
     if (!json?._RecordValue_) continue
 
     const hppKey = json._RecordName_ || basename(file, '.json')
-    const system = inferSystemFromPath(file)
-    const guideLocation = matchGuideLocation(hppKeyToDisplayName(hppKey), locationIndex)
+    const spawnKey = hppRecordToSpawnKey(hppKey)
+    seenSpawnKeys.add(spawnKey)
+    const resolved = resolveAliasForSpawnKey(spawnKey, locationAliases)
+    const system = inferSystemFromPath(file) !== 'Unknown'
+      ? inferSystemFromPath(file)
+      : resolved.system
 
     for (const group of json._RecordValue_.harvestableGroups ?? []) {
       if (group.groupName !== 'SpaceShip_Mineables') continue
@@ -338,7 +361,10 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
 
         rawLinks.push({
           oreName,
-          locationName: guideLocation,
+          locationName: spawnKey,
+          spawnKey,
+          displayName: resolved.displayName,
+          guideName: resolved.guideName ?? matchGuideLocation(spawnKey, locationIndex, locationAliases),
           hppKey,
           system,
           depositType,
@@ -392,7 +418,10 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
     const existing = ore.locations[locKey]
     if (!existing || link.effectiveSpawnPercent > existing.effectiveSpawnPercent) {
       ore.locations[locKey] = {
-        locationName: link.locationName,
+        locationName: link.spawnKey,
+        spawnKey: link.spawnKey,
+        displayName: link.displayName,
+        guideName: link.guideName,
         hppKey: link.hppKey,
         system: link.system,
         depositType: link.depositType,
@@ -416,17 +445,24 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
     ore.depositTypes.sort()
     const locList = Object.values(ore.locations)
     if (ore.depositTypes.includes('surface')) {
-      ore.overallByType.surface = buildOverallProfile(locList, 'surface', ore.oreName)
+      ore.overallByType.surface = buildOverallProfile(locList, 'surface', ore.oreName, locationAliases)
     }
     if (ore.depositTypes.includes('asteroid')) {
-      ore.overallByType.asteroid = buildOverallProfile(locList, 'asteroid', ore.oreName)
+      ore.overallByType.asteroid = buildOverallProfile(locList, 'asteroid', ore.oreName, locationAliases)
     }
     if (locList.length === 0) audit.oresMissingProfile.push(ore.oreName)
   }
 
   const oreProfiles = Object.values(ores).filter((o) => o.depositTypes.length > 0)
 
+  const aliasAudit = auditAliasCoverage(seenSpawnKeys, locationAliases)
+  audit.unmappedSpawnKeys = aliasAudit.unmapped
+  audit.rawDisplayNames = aliasAudit.rawDisplayNames
+
   console.log(`  Parsed ${rawLinks.length} HPP spawn links for ${oreProfiles.length} signature ores`)
+  if (audit.unmappedSpawnKeys.length) {
+    console.log(`  ⚠ ${audit.unmappedSpawnKeys.length} spawn keys missing locationAliases entries`)
+  }
   if (audit.oresMissingProfile.length) {
     console.log(`  ⚠ ${audit.oresMissingProfile.length} signature ores with no HPP links`)
   }

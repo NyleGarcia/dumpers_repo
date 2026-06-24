@@ -10,6 +10,7 @@ export interface ClusterRow {
   rs: number
   chancePercent: number
   bestAtLocation?: string
+  bestAtLocationDisplayName?: string
   minProximity?: number
   maxProximity?: number
 }
@@ -18,6 +19,7 @@ export interface ClusterDisplayProfile {
   maxNodes: number
   clusterRows: ClusterRow[]
   bestLocation?: string
+  bestLocationDisplayName?: string
   bestLocationSpawnPercent?: number
 }
 
@@ -30,6 +32,9 @@ export interface CompositionPart {
 
 export interface LocationSpawnProfile {
   locationName: string
+  spawnKey?: string
+  displayName?: string
+  guideName?: string
   hppKey: string
   system: string
   depositType: DepositType

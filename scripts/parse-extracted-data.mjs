@@ -14,6 +14,11 @@ import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
 import { extractAllGameLore } from './lib/gameLore.mjs'
 import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
+import {
+  buildLocationAliases,
+  parseLocationDescKey,
+  SPAWN_CODE_GUIDE_NAMES,
+} from './lib/miningLocationAliases.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -487,16 +492,19 @@ function parseMiningLocations(localization) {
   }
   
   // Parse location descriptions for structured mineable data
-  // Keys like: Pyro1_desc, Stanton1b_Aberdeen_desc, etc.
+  // Keys like: Pyro1_desc, Stanton1b_Desc, Pyro5c_Adir_desc, etc.
   let locDescCount = 0
   for (const [key, value] of Object.entries(localization)) {
-    // Match location description keys
-    if (!key.endsWith('_desc')) continue
+    if (key === '_lowerMap') continue
+    if (!/_desc$/i.test(key)) continue
     if (!value.includes('Potential')) continue
-    
-    // Extract location name from key
-    const locName = key.replace('_desc', '').split('_').pop() || key.replace('_desc', '')
-    
+
+    const parsed = parseLocationDescKey(key)
+    if (!parsed) continue
+
+    const mineableKey =
+      parsed.guideName ?? SPAWN_CODE_GUIDE_NAMES[parsed.spawnKey] ?? parsed.spawnKey
+
     const mineables = {
       shipMineables: [],
       groundVehicleMineables: [],
@@ -536,12 +544,18 @@ function parseMiningLocations(localization) {
     // Only save if we found mineable data
     const hasData = Object.values(mineables).some(arr => arr.length > 0)
     if (hasData) {
-      locationMineables[locName] = mineables
+      locationMineables[mineableKey] = {
+        ...mineables,
+        spawnKey: parsed.spawnKey,
+      }
       locDescCount++
     }
   }
   
   console.log(`  Parsed ${locDescCount} locations with mineable details`)
+
+  const locationAliases = buildLocationAliases(localization, EXTRACTED_DATA)
+  console.log(`  Built ${Object.keys(locationAliases).length} location alias entries`)
   
   // Build rarity-organized structure
   const byRarity = {
@@ -573,6 +587,7 @@ function parseMiningLocations(localization) {
     oreLocations,
     locationOres,
     locationMineables,
+    locationAliases,
     rarityTiers: byRarity,
     rarityOrder: ['legendary', 'epic', 'rare', 'uncommon', 'common', 'handMineable']
   }
@@ -3720,11 +3735,13 @@ async function main() {
     oreLocations: miningLocations.oreLocations,
     locationOres: miningLocations.locationOres,
     locationMineables: miningLocations.locationMineables,
+    locationAliases: miningLocations.locationAliases,
     rarityOrder: miningLocations.rarityOrder,
     summary: {
       totalOres: Object.keys(miningLocations.oreLocations).length,
       totalLocations: Object.keys(miningLocations.locationOres).length,
-      locationsWithDetails: Object.keys(miningLocations.locationMineables).length
+      locationsWithDetails: Object.keys(miningLocations.locationMineables).length,
+      locationAliasCount: Object.keys(miningLocations.locationAliases ?? {}).length,
     }
   })
 

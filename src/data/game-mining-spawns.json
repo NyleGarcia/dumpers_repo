@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted harvestable/HPP data)",
-  "_extracted": "2026-06-24T02:51:46.005Z",
+  "_extracted": "2026-06-24T22:28:34.708Z",
   "clusterPresets": {
     "HarvestableClusterPreset.Asteroid_Cluster_Pyro": {
       "probabilityOfClustering": 30,
@@ -421,12 +421,14 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6340,
               "chancePercent": 25,
-              "bestAtLocation": "Stanton1"
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
             }
           ],
           "bestLocation": "Stanton4a",
+          "bestLocationDisplayName": "Calliope",
           "bestLocationSpawnPercent": 0.12
         },
         "asteroid": {
@@ -434,18 +436,23 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6340,
               "chancePercent": 25,
-              "bestAtLocation": "Aaron Halo"
+              "bestAtLocation": "Aaron Halo",
+              "bestAtLocationDisplayName": "Aaron Halo"
             }
           ],
           "bestLocation": "Aaron Halo",
+          "bestLocationDisplayName": "Aaron Halo",
           "bestLocationSpawnPercent": 0.006
         }
       },
       "locations": {
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -491,6 +498,9 @@
         },
         "Stanton1|surface": {
           "locationName": "Stanton1",
+          "spawnKey": "Stanton1",
+          "displayName": "Hurston",
+          "guideName": "Hurston",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1",
           "system": "Stanton",
           "depositType": "surface",
@@ -536,6 +546,9 @@
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
+          "spawnKey": "Stanton1a",
+          "displayName": "Ita",
+          "guideName": "Ita",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1a",
           "system": "Stanton",
           "depositType": "surface",
@@ -581,6 +594,9 @@
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
+          "spawnKey": "Stanton1b",
+          "displayName": "Aberdeen",
+          "guideName": "Aberdeen",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1b",
           "system": "Stanton",
           "depositType": "surface",
@@ -626,6 +642,9 @@
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
+          "spawnKey": "Stanton1c",
+          "displayName": "Arial",
+          "guideName": "Arial",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1c",
           "system": "Stanton",
           "depositType": "surface",
@@ -671,6 +690,9 @@
         },
         "Stanton1d|surface": {
           "locationName": "Stanton1d",
+          "spawnKey": "Stanton1d",
+          "displayName": "Magda",
+          "guideName": "Magda",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1d",
           "system": "Stanton",
           "depositType": "surface",
@@ -716,6 +738,9 @@
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
+          "spawnKey": "Stanton2a",
+          "displayName": "Cellin",
+          "guideName": "Cellin",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2a",
           "system": "Stanton",
           "depositType": "surface",
@@ -761,6 +786,9 @@
         },
         "Stanton2b|surface": {
           "locationName": "Stanton2b",
+          "spawnKey": "Stanton2b",
+          "displayName": "Daymar",
+          "guideName": "Daymar",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2b",
           "system": "Stanton",
           "depositType": "surface",
@@ -806,6 +834,9 @@
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
+          "spawnKey": "Stanton2c",
+          "displayName": "Yela",
+          "guideName": "Yela",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c",
           "system": "Stanton",
           "depositType": "surface",
@@ -851,6 +882,9 @@
         },
         "Stanton3a|surface": {
           "locationName": "Stanton3a",
+          "spawnKey": "Stanton3a",
+          "displayName": "Lyria",
+          "guideName": "Lyria",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3a",
           "system": "Stanton",
           "depositType": "surface",
@@ -896,6 +930,9 @@
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
+          "spawnKey": "Stanton3b",
+          "displayName": "Wala",
+          "guideName": "Wala",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3b",
           "system": "Stanton",
           "depositType": "surface",
@@ -941,6 +978,9 @@
         },
         "Stanton4|surface": {
           "locationName": "Stanton4",
+          "spawnKey": "Stanton4",
+          "displayName": "microTech",
+          "guideName": "microTech",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4",
           "system": "Stanton",
           "depositType": "surface",
@@ -986,6 +1026,9 @@
         },
         "Stanton4a|surface": {
           "locationName": "Stanton4a",
+          "spawnKey": "Stanton4a",
+          "displayName": "Calliope",
+          "guideName": "Calliope",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4a",
           "system": "Stanton",
           "depositType": "surface",
@@ -1031,6 +1074,9 @@
         },
         "Stanton4b|surface": {
           "locationName": "Stanton4b",
+          "spawnKey": "Stanton4b",
+          "displayName": "Clio",
+          "guideName": "Clio",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4b",
           "system": "Stanton",
           "depositType": "surface",
@@ -1076,6 +1122,9 @@
         },
         "Stanton4c|surface": {
           "locationName": "Stanton4c",
+          "spawnKey": "Stanton4c",
+          "displayName": "Euterpe",
+          "guideName": "Euterpe",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4c",
           "system": "Stanton",
           "depositType": "surface",
@@ -1144,12 +1193,14 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6370,
               "chancePercent": 25,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             }
           ],
           "bestLocation": "Pyro1",
+          "bestLocationDisplayName": "Pyro I",
           "bestLocationSpawnPercent": 0.15
         },
         "asteroid": {
@@ -1157,18 +1208,23 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6370,
               "chancePercent": 25,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             }
           ],
           "bestLocation": "Akiro Cluster",
+          "bestLocationDisplayName": "Akiro Cluster",
           "bestLocationSpawnPercent": 0.002
         }
       },
       "locations": {
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
+          "spawnKey": "Akiro Cluster",
+          "displayName": "Akiro Cluster",
+          "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -1214,6 +1270,9 @@
         },
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
+          "spawnKey": "Pyro Deepspaceasteroids",
+          "displayName": "Pyro Asteroid Clusters",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_DeepSpaceAsteroids",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -1259,6 +1318,9 @@
         },
         "Pyro1|surface": {
           "locationName": "Pyro1",
+          "spawnKey": "Pyro1",
+          "displayName": "Pyro I",
+          "guideName": "Pyro I",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro1",
           "system": "Pyro",
           "depositType": "surface",
@@ -1304,6 +1366,9 @@
         },
         "Pyro2|surface": {
           "locationName": "Pyro2",
+          "spawnKey": "Pyro2",
+          "displayName": "Pyro II",
+          "guideName": "Pyro II",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro2",
           "system": "Pyro",
           "depositType": "surface",
@@ -1349,6 +1414,9 @@
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
+          "spawnKey": "Pyro3",
+          "displayName": "Bloom",
+          "guideName": "Bloom",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro3",
           "system": "Pyro",
           "depositType": "surface",
@@ -1394,6 +1462,9 @@
         },
         "Pyro4|surface": {
           "locationName": "Pyro4",
+          "spawnKey": "Pyro4",
+          "displayName": "Pyro IV",
+          "guideName": "Pyro IV",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro4",
           "system": "Pyro",
           "depositType": "surface",
@@ -1439,6 +1510,9 @@
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
+          "spawnKey": "Pyro6",
+          "displayName": "Terminus",
+          "guideName": "Terminus",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro6",
           "system": "Pyro",
           "depositType": "surface",
@@ -1506,18 +1580,23 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6400,
               "chancePercent": 25,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             }
           ],
           "bestLocation": "Glaciem Ring",
+          "bestLocationDisplayName": "Glaciem Ring",
           "bestLocationSpawnPercent": 0.002
         }
       },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
+          "spawnKey": "Glaciem Ring",
+          "displayName": "Glaciem Ring",
+          "guideName": "Glaciem Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_GlaciemRing",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -1563,6 +1642,9 @@
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
+          "spawnKey": "Keeger Belt",
+          "displayName": "Keeger Belt",
+          "guideName": "Keeger Belt",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_KeegerBelt",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -1630,18 +1712,21 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6740,
               "chancePercent": 30,
-              "bestAtLocation": "Stanton1"
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10110,
               "chancePercent": 10,
-              "bestAtLocation": "Stanton1"
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
             }
           ],
           "bestLocation": "Stanton1",
+          "bestLocationDisplayName": "Hurston",
           "bestLocationSpawnPercent": 0.6
         },
         "asteroid": {
@@ -1649,24 +1734,30 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6740,
               "chancePercent": 30,
-              "bestAtLocation": "Stanton2c Belt"
+              "bestAtLocation": "Stanton2c Belt",
+              "bestAtLocationDisplayName": "Yela Ring"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10110,
               "chancePercent": 10,
-              "bestAtLocation": "Stanton2c Belt"
+              "bestAtLocation": "Stanton2c Belt",
+              "bestAtLocationDisplayName": "Yela Ring"
             }
           ],
           "bestLocation": "Stanton2c Belt",
+          "bestLocationDisplayName": "Yela Ring",
           "bestLocationSpawnPercent": 0.02
         }
       },
       "locations": {
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
+          "spawnKey": "Stanton2c Belt",
+          "displayName": "Yela Ring",
+          "guideName": "Yela Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c_Belt",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -1719,6 +1810,9 @@
         },
         "Stanton1|surface": {
           "locationName": "Stanton1",
+          "spawnKey": "Stanton1",
+          "displayName": "Hurston",
+          "guideName": "Hurston",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1",
           "system": "Stanton",
           "depositType": "surface",
@@ -1771,6 +1865,9 @@
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
+          "spawnKey": "Stanton1a",
+          "displayName": "Ita",
+          "guideName": "Ita",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1a",
           "system": "Stanton",
           "depositType": "surface",
@@ -1823,6 +1920,9 @@
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
+          "spawnKey": "Stanton1b",
+          "displayName": "Aberdeen",
+          "guideName": "Aberdeen",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1b",
           "system": "Stanton",
           "depositType": "surface",
@@ -1898,18 +1998,21 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6770,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro3"
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10155,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro3"
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
             }
           ],
           "bestLocation": "Pyro3",
+          "bestLocationDisplayName": "Bloom",
           "bestLocationSpawnPercent": 0.75
         },
         "asteroid": {
@@ -1917,24 +2020,30 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6770,
               "chancePercent": 30,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10155,
               "chancePercent": 10,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             }
           ],
           "bestLocation": "Akiro Cluster",
+          "bestLocationDisplayName": "Akiro Cluster",
           "bestLocationSpawnPercent": 0.01
         }
       },
       "locations": {
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
+          "spawnKey": "Akiro Cluster",
+          "displayName": "Akiro Cluster",
+          "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -1987,6 +2096,9 @@
         },
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
+          "spawnKey": "Pyro Deepspaceasteroids",
+          "displayName": "Pyro Asteroid Clusters",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_DeepSpaceAsteroids",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -2039,6 +2151,9 @@
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
+          "spawnKey": "Pyro3",
+          "displayName": "Bloom",
+          "guideName": "Bloom",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro3",
           "system": "Pyro",
           "depositType": "surface",
@@ -2091,6 +2206,9 @@
         },
         "Pyro5a|surface": {
           "locationName": "Pyro5a",
+          "spawnKey": "Pyro5a",
+          "displayName": "Ignis",
+          "guideName": "Ignis",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5a",
           "system": "Pyro",
           "depositType": "surface",
@@ -2143,6 +2261,9 @@
         },
         "Pyro5b|surface": {
           "locationName": "Pyro5b",
+          "spawnKey": "Pyro5b",
+          "displayName": "Vatra",
+          "guideName": "Vatra",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5b",
           "system": "Pyro",
           "depositType": "surface",
@@ -2195,6 +2316,9 @@
         },
         "Pyro5c|surface": {
           "locationName": "Pyro5c",
+          "spawnKey": "Pyro5c",
+          "displayName": "Adir",
+          "guideName": "Adir",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5c",
           "system": "Pyro",
           "depositType": "surface",
@@ -2247,6 +2371,9 @@
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
+          "spawnKey": "Pyro6",
+          "displayName": "Terminus",
+          "guideName": "Terminus",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro6",
           "system": "Pyro",
           "depositType": "surface",
@@ -2321,24 +2448,30 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 6800,
               "chancePercent": 30,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10200,
               "chancePercent": 10,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             }
           ],
           "bestLocation": "Glaciem Ring",
+          "bestLocationDisplayName": "Glaciem Ring",
           "bestLocationSpawnPercent": 0.01
         }
       },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
+          "spawnKey": "Glaciem Ring",
+          "displayName": "Glaciem Ring",
+          "guideName": "Glaciem Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_GlaciemRing",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -2391,6 +2524,9 @@
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
+          "spawnKey": "Keeger Belt",
+          "displayName": "Keeger Belt",
+          "guideName": "Keeger Belt",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_KeegerBelt",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -2465,24 +2601,28 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7080,
               "chancePercent": 60,
-              "bestAtLocation": "Stanton3b"
+              "bestAtLocation": "Stanton3b",
+              "bestAtLocationDisplayName": "Wala"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10620,
               "chancePercent": 30,
-              "bestAtLocation": "Stanton3b"
+              "bestAtLocation": "Stanton3b",
+              "bestAtLocationDisplayName": "Wala"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14160,
               "chancePercent": 10,
-              "bestAtLocation": "Stanton3b"
+              "bestAtLocation": "Stanton3b",
+              "bestAtLocationDisplayName": "Wala"
             }
           ],
           "bestLocation": "Stanton3b",
+          "bestLocationDisplayName": "Wala",
           "bestLocationSpawnPercent": 1.08
         },
         "asteroid": {
@@ -2490,30 +2630,37 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7080,
               "chancePercent": 60,
-              "bestAtLocation": "Aaron Halo"
+              "bestAtLocation": "Aaron Halo",
+              "bestAtLocationDisplayName": "Aaron Halo"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10620,
               "chancePercent": 30,
-              "bestAtLocation": "Aaron Halo"
+              "bestAtLocation": "Aaron Halo",
+              "bestAtLocationDisplayName": "Aaron Halo"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14160,
               "chancePercent": 10,
-              "bestAtLocation": "Aaron Halo"
+              "bestAtLocation": "Aaron Halo",
+              "bestAtLocationDisplayName": "Aaron Halo"
             }
           ],
           "bestLocation": "Aaron Halo",
+          "bestLocationDisplayName": "Aaron Halo",
           "bestLocationSpawnPercent": 0.054
         }
       },
       "locations": {
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -2567,6 +2714,9 @@
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
+          "spawnKey": "Lagrange D",
+          "displayName": "ARC-L3",
+          "guideName": "ARC-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_D",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -2620,6 +2770,9 @@
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
+          "spawnKey": "Lagrange G",
+          "displayName": "Aaron Halo belt · G",
+          "guideName": "Aaron Halo belt · G",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_G",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -2666,6 +2819,9 @@
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
+          "spawnKey": "Lagrange Occupied",
+          "displayName": "Occupied Lagrange belt",
+          "guideName": "Occupied Lagrange belt",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_Occupied",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -2719,6 +2875,9 @@
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
+          "spawnKey": "Stanton3b",
+          "displayName": "Wala",
+          "guideName": "Wala",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3b",
           "system": "Stanton",
           "depositType": "surface",
@@ -2796,24 +2955,28 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7110,
               "chancePercent": 60,
-              "bestAtLocation": "Stanton2a"
+              "bestAtLocation": "Stanton2a",
+              "bestAtLocationDisplayName": "Cellin"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10665,
               "chancePercent": 30,
-              "bestAtLocation": "Stanton2a"
+              "bestAtLocation": "Stanton2a",
+              "bestAtLocationDisplayName": "Cellin"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14220,
               "chancePercent": 10,
-              "bestAtLocation": "Stanton2a"
+              "bestAtLocation": "Stanton2a",
+              "bestAtLocationDisplayName": "Cellin"
             }
           ],
           "bestLocation": "Stanton2a",
+          "bestLocationDisplayName": "Cellin",
           "bestLocationSpawnPercent": 1.08
         },
         "asteroid": {
@@ -2821,30 +2984,37 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7110,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Cool02"
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10665,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Cool02"
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14220,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Cool02"
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
             }
           ],
           "bestLocation": "Lagrange F",
+          "bestLocationDisplayName": "ARC-L1",
           "bestLocationSpawnPercent": 0.027
         }
       },
       "locations": {
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
+          "spawnKey": "Pyro Cool02",
+          "displayName": "Pyro VI Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Cool02",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -2898,6 +3068,9 @@
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
+          "spawnKey": "Lagrange F",
+          "displayName": "ARC-L1",
+          "guideName": "ARC-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_F",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -2951,6 +3124,9 @@
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
+          "spawnKey": "Stanton2a",
+          "displayName": "Cellin",
+          "guideName": "Cellin",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2a",
           "system": "Stanton",
           "depositType": "surface",
@@ -3004,6 +3180,9 @@
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
+          "spawnKey": "Stanton2c",
+          "displayName": "Yela",
+          "guideName": "Yela",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c",
           "system": "Stanton",
           "depositType": "surface",
@@ -3057,6 +3236,9 @@
         },
         "Stanton4b|surface": {
           "locationName": "Stanton4b",
+          "spawnKey": "Stanton4b",
+          "displayName": "Clio",
+          "guideName": "Clio",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4b",
           "system": "Stanton",
           "depositType": "surface",
@@ -3110,6 +3292,9 @@
         },
         "Stanton4c|surface": {
           "locationName": "Stanton4c",
+          "spawnKey": "Stanton4c",
+          "displayName": "Euterpe",
+          "guideName": "Euterpe",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4c",
           "system": "Stanton",
           "depositType": "surface",
@@ -3186,24 +3371,28 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7140,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro3"
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10710,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro3"
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14280,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro3"
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
             }
           ],
           "bestLocation": "Pyro4",
+          "bestLocationDisplayName": "Pyro IV",
           "bestLocationSpawnPercent": 1.351
         },
         "asteroid": {
@@ -3211,30 +3400,37 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7140,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Cool01"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10710,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Cool01"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14280,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Cool01"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             }
           ],
           "bestLocation": "Pyro Cool01",
+          "bestLocationDisplayName": "Pyro V Lagrange belts",
           "bestLocationSpawnPercent": 0.018
         }
       },
       "locations": {
         "Pyro Cool01|asteroid": {
           "locationName": "Pyro Cool01",
+          "spawnKey": "Pyro Cool01",
+          "displayName": "Pyro V Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Cool01",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -3300,6 +3496,9 @@
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
+          "spawnKey": "Pyro3",
+          "displayName": "Bloom",
+          "guideName": "Bloom",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro3",
           "system": "Pyro",
           "depositType": "surface",
@@ -3365,6 +3564,9 @@
         },
         "Pyro4|surface": {
           "locationName": "Pyro4",
+          "spawnKey": "Pyro4",
+          "displayName": "Pyro IV",
+          "guideName": "Pyro IV",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro4",
           "system": "Pyro",
           "depositType": "surface",
@@ -3430,6 +3632,9 @@
         },
         "Pyro5c|surface": {
           "locationName": "Pyro5c",
+          "spawnKey": "Pyro5c",
+          "displayName": "Adir",
+          "guideName": "Adir",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5c",
           "system": "Pyro",
           "depositType": "surface",
@@ -3495,6 +3700,9 @@
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
+          "spawnKey": "Pyro5e",
+          "displayName": "Fuego",
+          "guideName": "Fuego",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5e",
           "system": "Pyro",
           "depositType": "surface",
@@ -3560,6 +3768,9 @@
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
+          "spawnKey": "Lagrange A",
+          "displayName": "HUR-L1",
+          "guideName": "HUR-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_A",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -3648,24 +3859,28 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7170,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro5a"
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10755,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro5a"
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14340,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro5a"
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
             }
           ],
           "bestLocation": "Pyro5a",
+          "bestLocationDisplayName": "Ignis",
           "bestLocationSpawnPercent": 1.35
         },
         "asteroid": {
@@ -3673,30 +3888,37 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7170,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Warm02"
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10755,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Warm02"
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14340,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Warm02"
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
             }
           ],
           "bestLocation": "Lagrange B",
+          "bestLocationDisplayName": "ARC-L5",
           "bestLocationSpawnPercent": 0.027
         }
       },
       "locations": {
         "Pyro Warm02|asteroid": {
           "locationName": "Pyro Warm02",
+          "spawnKey": "Pyro Warm02",
+          "displayName": "Pyro III Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Warm02",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -3762,6 +3984,9 @@
         },
         "Pyro5a|surface": {
           "locationName": "Pyro5a",
+          "spawnKey": "Pyro5a",
+          "displayName": "Ignis",
+          "guideName": "Ignis",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5a",
           "system": "Pyro",
           "depositType": "surface",
@@ -3827,6 +4052,9 @@
         },
         "Pyro5b|surface": {
           "locationName": "Pyro5b",
+          "spawnKey": "Pyro5b",
+          "displayName": "Vatra",
+          "guideName": "Vatra",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5b",
           "system": "Pyro",
           "depositType": "surface",
@@ -3892,6 +4120,9 @@
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
+          "spawnKey": "Pyro5d",
+          "displayName": "Fairo",
+          "guideName": "Fairo",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5d",
           "system": "Pyro",
           "depositType": "surface",
@@ -3957,6 +4188,9 @@
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
+          "spawnKey": "Pyro6",
+          "displayName": "Terminus",
+          "guideName": "Terminus",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro6",
           "system": "Pyro",
           "depositType": "surface",
@@ -4022,6 +4256,9 @@
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
+          "spawnKey": "Lagrange B",
+          "displayName": "ARC-L5",
+          "guideName": "ARC-L5",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_B",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -4110,24 +4347,28 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7200,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro5d"
+              "bestAtLocation": "Pyro5d",
+              "bestAtLocationDisplayName": "Fairo"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10800,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro5d"
+              "bestAtLocation": "Pyro5d",
+              "bestAtLocationDisplayName": "Fairo"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14400,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro5d"
+              "bestAtLocation": "Pyro5d",
+              "bestAtLocationDisplayName": "Fairo"
             }
           ],
           "bestLocation": "Pyro5f",
+          "bestLocationDisplayName": "Vuur",
           "bestLocationSpawnPercent": 1.35
         },
         "asteroid": {
@@ -4135,30 +4376,37 @@
           "clusterRows": [
             {
               "nodes": 2,
-              "rs": null,
+              "rs": 7200,
               "chancePercent": 60,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 10800,
               "chancePercent": 30,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 14400,
               "chancePercent": 10,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             }
           ],
           "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
           "bestLocationSpawnPercent": 0.054
         }
       },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
+          "spawnKey": "Glaciem Ring",
+          "displayName": "Glaciem Ring",
+          "guideName": "Glaciem Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_GlaciemRing",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -4224,6 +4472,9 @@
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
+          "spawnKey": "Keeger Belt",
+          "displayName": "Keeger Belt",
+          "guideName": "Keeger Belt",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_KeegerBelt",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -4289,6 +4540,9 @@
         },
         "Pyro Warm01|asteroid": {
           "locationName": "Pyro Warm01",
+          "spawnKey": "Pyro Warm01",
+          "displayName": "Pyro I–II Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Warm01",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -4354,6 +4608,9 @@
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
+          "spawnKey": "Pyro5d",
+          "displayName": "Fairo",
+          "guideName": "Fairo",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5d",
           "system": "Pyro",
           "depositType": "surface",
@@ -4419,6 +4676,9 @@
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
+          "spawnKey": "Pyro5e",
+          "displayName": "Fuego",
+          "guideName": "Fuego",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5e",
           "system": "Pyro",
           "depositType": "surface",
@@ -4484,6 +4744,9 @@
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
+          "spawnKey": "Pyro5f",
+          "displayName": "Vuur",
+          "guideName": "Vuur",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5f",
           "system": "Pyro",
           "depositType": "surface",
@@ -4549,6 +4812,9 @@
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
+          "spawnKey": "Lagrange E",
+          "displayName": "CRU-L1",
+          "guideName": "CRU-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_E",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -4637,24 +4903,28 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11475,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro4"
+              "bestAtLocation": "Pyro4",
+              "bestAtLocationDisplayName": "Pyro IV"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15300,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro4"
+              "bestAtLocation": "Pyro4",
+              "bestAtLocationDisplayName": "Pyro IV"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19125,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro4"
+              "bestAtLocation": "Pyro4",
+              "bestAtLocationDisplayName": "Pyro IV"
             }
           ],
           "bestLocation": "Pyro4",
+          "bestLocationDisplayName": "Pyro IV",
           "bestLocationSpawnPercent": 2.14
         },
         "asteroid": {
@@ -4662,30 +4932,37 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11475,
               "chancePercent": 60,
-              "bestAtLocation": "Lagrange A"
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15300,
               "chancePercent": 30,
-              "bestAtLocation": "Lagrange A"
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19125,
               "chancePercent": 10,
-              "bestAtLocation": "Lagrange A"
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
             }
           ],
           "bestLocation": "Lagrange A",
+          "bestLocationDisplayName": "HUR-L1",
           "bestLocationSpawnPercent": 0.029
         }
       },
       "locations": {
         "Pyro4|surface": {
           "locationName": "Pyro4",
+          "spawnKey": "Pyro4",
+          "displayName": "Pyro IV",
+          "guideName": "Pyro IV",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro4",
           "system": "Pyro",
           "depositType": "surface",
@@ -4745,6 +5022,9 @@
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
+          "spawnKey": "Lagrange A",
+          "displayName": "HUR-L1",
+          "guideName": "HUR-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_A",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -4804,6 +5084,9 @@
         },
         "Stanton3a|surface": {
           "locationName": "Stanton3a",
+          "spawnKey": "Stanton3a",
+          "displayName": "Lyria",
+          "guideName": "Lyria",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3a",
           "system": "Stanton",
           "depositType": "surface",
@@ -4863,6 +5146,9 @@
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
+          "spawnKey": "Stanton3b",
+          "displayName": "Wala",
+          "guideName": "Wala",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3b",
           "system": "Stanton",
           "depositType": "surface",
@@ -4945,24 +5231,28 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11520,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro5e"
+              "bestAtLocation": "Pyro5e",
+              "bestAtLocationDisplayName": "Fuego"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15360,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro5e"
+              "bestAtLocation": "Pyro5e",
+              "bestAtLocationDisplayName": "Fuego"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19200,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro5e"
+              "bestAtLocation": "Pyro5e",
+              "bestAtLocationDisplayName": "Fuego"
             }
           ],
           "bestLocation": "Pyro5e",
+          "bestLocationDisplayName": "Fuego",
           "bestLocationSpawnPercent": 2.138
         },
         "asteroid": {
@@ -4970,30 +5260,37 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11520,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Cool02"
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15360,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Cool02"
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19200,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Cool02"
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
             }
           ],
           "bestLocation": "Lagrange B",
+          "bestLocationDisplayName": "ARC-L5",
           "bestLocationSpawnPercent": 0.043
         }
       },
       "locations": {
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
+          "spawnKey": "Pyro Cool02",
+          "displayName": "Pyro VI Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Cool02",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -5059,6 +5356,9 @@
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
+          "spawnKey": "Pyro5e",
+          "displayName": "Fuego",
+          "guideName": "Fuego",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5e",
           "system": "Pyro",
           "depositType": "surface",
@@ -5124,6 +5424,9 @@
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
+          "spawnKey": "Pyro5f",
+          "displayName": "Vuur",
+          "guideName": "Vuur",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5f",
           "system": "Pyro",
           "depositType": "surface",
@@ -5189,6 +5492,9 @@
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -5254,6 +5560,9 @@
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
+          "spawnKey": "Lagrange B",
+          "displayName": "ARC-L5",
+          "guideName": "ARC-L5",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_B",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -5319,6 +5628,9 @@
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
+          "spawnKey": "Stanton1c",
+          "displayName": "Arial",
+          "guideName": "Arial",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1c",
           "system": "Stanton",
           "depositType": "surface",
@@ -5384,6 +5696,9 @@
         },
         "Stanton1d|surface": {
           "locationName": "Stanton1d",
+          "spawnKey": "Stanton1d",
+          "displayName": "Magda",
+          "guideName": "Magda",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1d",
           "system": "Stanton",
           "depositType": "surface",
@@ -5472,24 +5787,28 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11565,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro6"
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15420,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro6"
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19275,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro6"
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
             }
           ],
           "bestLocation": "Stanton1b",
+          "bestLocationDisplayName": "Aberdeen",
           "bestLocationSpawnPercent": 1.71
         },
         "asteroid": {
@@ -5497,30 +5816,37 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11565,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Cool01"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15420,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Cool01"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19275,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Cool01"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             }
           ],
           "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
           "bestLocationSpawnPercent": 0.086
         }
       },
       "locations": {
         "Pyro Cool01|asteroid": {
           "locationName": "Pyro Cool01",
+          "spawnKey": "Pyro Cool01",
+          "displayName": "Pyro V Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Cool01",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -5586,6 +5912,9 @@
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
+          "spawnKey": "Pyro6",
+          "displayName": "Terminus",
+          "guideName": "Terminus",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro6",
           "system": "Pyro",
           "depositType": "surface",
@@ -5651,6 +5980,9 @@
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -5716,6 +6048,9 @@
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
+          "spawnKey": "Lagrange E",
+          "displayName": "CRU-L1",
+          "guideName": "CRU-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_E",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -5781,6 +6116,9 @@
         },
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
+          "spawnKey": "Stanton2c Belt",
+          "displayName": "Yela Ring",
+          "guideName": "Yela Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c_Belt",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -5846,6 +6184,9 @@
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
+          "spawnKey": "Stanton1b",
+          "displayName": "Aberdeen",
+          "guideName": "Aberdeen",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1b",
           "system": "Stanton",
           "depositType": "surface",
@@ -5911,6 +6252,9 @@
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
+          "spawnKey": "Stanton1c",
+          "displayName": "Arial",
+          "guideName": "Arial",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1c",
           "system": "Stanton",
           "depositType": "surface",
@@ -5999,24 +6343,28 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11610,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro5c"
+              "bestAtLocation": "Pyro5c",
+              "bestAtLocationDisplayName": "Adir"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15480,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro5c"
+              "bestAtLocation": "Pyro5c",
+              "bestAtLocationDisplayName": "Adir"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19350,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro5c"
+              "bestAtLocation": "Pyro5c",
+              "bestAtLocationDisplayName": "Adir"
             }
           ],
           "bestLocation": "Pyro5c",
+          "bestLocationDisplayName": "Adir",
           "bestLocationSpawnPercent": 2.138
         },
         "asteroid": {
@@ -6024,30 +6372,37 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11610,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Warm02"
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15480,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Warm02"
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19350,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Warm02"
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
             }
           ],
           "bestLocation": "Lagrange F",
+          "bestLocationDisplayName": "ARC-L1",
           "bestLocationSpawnPercent": 0.043
         }
       },
       "locations": {
         "Pyro Warm02|asteroid": {
           "locationName": "Pyro Warm02",
+          "spawnKey": "Pyro Warm02",
+          "displayName": "Pyro III Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Warm02",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -6107,6 +6462,9 @@
         },
         "Pyro5c|surface": {
           "locationName": "Pyro5c",
+          "spawnKey": "Pyro5c",
+          "displayName": "Adir",
+          "guideName": "Adir",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5c",
           "system": "Pyro",
           "depositType": "surface",
@@ -6166,6 +6524,9 @@
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
+          "spawnKey": "Pyro5d",
+          "displayName": "Fairo",
+          "guideName": "Fairo",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5d",
           "system": "Pyro",
           "depositType": "surface",
@@ -6225,6 +6586,9 @@
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
+          "spawnKey": "Lagrange F",
+          "displayName": "ARC-L1",
+          "guideName": "ARC-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_F",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -6307,24 +6671,28 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11655,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Warm01"
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15540,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Warm01"
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19425,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Warm01"
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
             }
           ],
           "bestLocation": "Stanton2a",
+          "bestLocationDisplayName": "Cellin",
           "bestLocationSpawnPercent": 1.71
         },
         "asteroid": {
@@ -6332,30 +6700,37 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11655,
               "chancePercent": 60,
-              "bestAtLocation": "Lagrange D"
+              "bestAtLocation": "Lagrange D",
+              "bestAtLocationDisplayName": "ARC-L3"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15540,
               "chancePercent": 30,
-              "bestAtLocation": "Lagrange D"
+              "bestAtLocation": "Lagrange D",
+              "bestAtLocationDisplayName": "ARC-L3"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19425,
               "chancePercent": 10,
-              "bestAtLocation": "Lagrange D"
+              "bestAtLocation": "Lagrange D",
+              "bestAtLocationDisplayName": "ARC-L3"
             }
           ],
           "bestLocation": "Lagrange D",
+          "bestLocationDisplayName": "ARC-L3",
           "bestLocationSpawnPercent": 0.029
         }
       },
       "locations": {
         "Pyro Warm01|surface": {
           "locationName": "Pyro Warm01",
+          "spawnKey": "Pyro Warm01",
+          "displayName": "Pyro I–II Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Warm01",
           "system": "Pyro",
           "depositType": "surface",
@@ -6421,6 +6796,9 @@
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
+          "spawnKey": "Pyro5f",
+          "displayName": "Vuur",
+          "guideName": "Vuur",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5f",
           "system": "Pyro",
           "depositType": "surface",
@@ -6486,6 +6864,9 @@
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
+          "spawnKey": "Pyro6",
+          "displayName": "Terminus",
+          "guideName": "Terminus",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro6",
           "system": "Pyro",
           "depositType": "surface",
@@ -6551,6 +6932,9 @@
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
+          "spawnKey": "Lagrange D",
+          "displayName": "ARC-L3",
+          "guideName": "ARC-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_D",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -6616,6 +7000,9 @@
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
+          "spawnKey": "Lagrange G",
+          "displayName": "Aaron Halo belt · G",
+          "guideName": "Aaron Halo belt · G",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_G",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -6681,6 +7068,9 @@
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
+          "spawnKey": "Lagrange Occupied",
+          "displayName": "Occupied Lagrange belt",
+          "guideName": "Occupied Lagrange belt",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_Occupied",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -6746,6 +7136,9 @@
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
+          "spawnKey": "Stanton2a",
+          "displayName": "Cellin",
+          "guideName": "Cellin",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2a",
           "system": "Stanton",
           "depositType": "surface",
@@ -6811,6 +7204,9 @@
         },
         "Stanton2b|surface": {
           "locationName": "Stanton2b",
+          "spawnKey": "Stanton2b",
+          "displayName": "Daymar",
+          "guideName": "Daymar",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2b",
           "system": "Stanton",
           "depositType": "surface",
@@ -6876,6 +7272,9 @@
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
+          "spawnKey": "Stanton2c",
+          "displayName": "Yela",
+          "guideName": "Yela",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c",
           "system": "Stanton",
           "depositType": "surface",
@@ -6963,30 +7362,37 @@
           "clusterRows": [
             {
               "nodes": 3,
-              "rs": null,
+              "rs": 11700,
               "chancePercent": 60,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 15600,
               "chancePercent": 30,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 19500,
               "chancePercent": 10,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             }
           ],
           "bestLocation": "Glaciem Ring",
+          "bestLocationDisplayName": "Glaciem Ring",
           "bestLocationSpawnPercent": 0.029
         }
       },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
+          "spawnKey": "Glaciem Ring",
+          "displayName": "Glaciem Ring",
+          "guideName": "Glaciem Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_GlaciemRing",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -7040,6 +7446,9 @@
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
+          "spawnKey": "Keeger Belt",
+          "displayName": "Keeger Belt",
+          "guideName": "Keeger Belt",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_KeegerBelt",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -7093,6 +7502,9 @@
         },
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
+          "spawnKey": "Akiro Cluster",
+          "displayName": "Akiro Cluster",
+          "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -7146,6 +7558,9 @@
         },
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
+          "spawnKey": "Pyro Deepspaceasteroids",
+          "displayName": "Pyro Asteroid Clusters",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_DeepSpaceAsteroids",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -7199,6 +7614,9 @@
         },
         "Lagrange C|asteroid": {
           "locationName": "Lagrange C",
+          "spawnKey": "Lagrange C",
+          "displayName": "CRU-L3",
+          "guideName": "CRU-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_C",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -7274,24 +7692,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16720,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro2"
+              "bestAtLocation": "Pyro2",
+              "bestAtLocationDisplayName": "Pyro II"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 20900,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro2"
+              "bestAtLocation": "Pyro2",
+              "bestAtLocationDisplayName": "Pyro II"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25080,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro2"
+              "bestAtLocation": "Pyro2",
+              "bestAtLocationDisplayName": "Pyro II"
             }
           ],
           "bestLocation": "Pyro2",
+          "bestLocationDisplayName": "Pyro II",
           "bestLocationSpawnPercent": 2.455
         },
         "asteroid": {
@@ -7299,30 +7721,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16720,
               "chancePercent": 60,
-              "bestAtLocation": "Lagrange A"
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 20900,
               "chancePercent": 30,
-              "bestAtLocation": "Lagrange A"
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25080,
               "chancePercent": 10,
-              "bestAtLocation": "Lagrange A"
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
             }
           ],
           "bestLocation": "Lagrange F",
+          "bestLocationDisplayName": "ARC-L1",
           "bestLocationSpawnPercent": 0.027
         }
       },
       "locations": {
         "Pyro2|surface": {
           "locationName": "Pyro2",
+          "spawnKey": "Pyro2",
+          "displayName": "Pyro II",
+          "guideName": "Pyro II",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro2",
           "system": "Pyro",
           "depositType": "surface",
@@ -7388,6 +7817,9 @@
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
+          "spawnKey": "Pyro5e",
+          "displayName": "Fuego",
+          "guideName": "Fuego",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5e",
           "system": "Pyro",
           "depositType": "surface",
@@ -7453,6 +7885,9 @@
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
+          "spawnKey": "Pyro5f",
+          "displayName": "Vuur",
+          "guideName": "Vuur",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5f",
           "system": "Pyro",
           "depositType": "surface",
@@ -7518,6 +7953,9 @@
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
+          "spawnKey": "Lagrange A",
+          "displayName": "HUR-L1",
+          "guideName": "HUR-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_A",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -7583,6 +8021,9 @@
         },
         "Lagrange C|asteroid": {
           "locationName": "Lagrange C",
+          "spawnKey": "Lagrange C",
+          "displayName": "CRU-L3",
+          "guideName": "CRU-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_C",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -7648,6 +8089,9 @@
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
+          "spawnKey": "Lagrange F",
+          "displayName": "ARC-L1",
+          "guideName": "ARC-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_F",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -7713,6 +8157,9 @@
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
+          "spawnKey": "Stanton1a",
+          "displayName": "Ita",
+          "guideName": "Ita",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1a",
           "system": "Stanton",
           "depositType": "surface",
@@ -7778,6 +8225,9 @@
         },
         "Stanton4|surface": {
           "locationName": "Stanton4",
+          "spawnKey": "Stanton4",
+          "displayName": "microTech",
+          "guideName": "microTech",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4",
           "system": "Stanton",
           "depositType": "surface",
@@ -7843,6 +8293,9 @@
         },
         "Stanton4a|surface": {
           "locationName": "Stanton4a",
+          "spawnKey": "Stanton4a",
+          "displayName": "Calliope",
+          "guideName": "Calliope",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4a",
           "system": "Stanton",
           "depositType": "surface",
@@ -7931,24 +8384,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16780,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 20975,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25170,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             }
           ],
           "bestLocation": "Pyro5a",
+          "bestLocationDisplayName": "Ignis",
           "bestLocationSpawnPercent": 2.7
         },
         "asteroid": {
@@ -7956,30 +8413,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16780,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 20975,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25170,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             }
           ],
           "bestLocation": "Pyro Deepspaceasteroids",
+          "bestLocationDisplayName": "Pyro Asteroid Clusters",
           "bestLocationSpawnPercent": 0.015
         }
       },
       "locations": {
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
+          "spawnKey": "Pyro Deepspaceasteroids",
+          "displayName": "Pyro Asteroid Clusters",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_DeepSpaceAsteroids",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -8039,6 +8503,9 @@
         },
         "Pyro1|surface": {
           "locationName": "Pyro1",
+          "spawnKey": "Pyro1",
+          "displayName": "Pyro I",
+          "guideName": "Pyro I",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro1",
           "system": "Pyro",
           "depositType": "surface",
@@ -8098,6 +8565,9 @@
         },
         "Pyro2|surface": {
           "locationName": "Pyro2",
+          "spawnKey": "Pyro2",
+          "displayName": "Pyro II",
+          "guideName": "Pyro II",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro2",
           "system": "Pyro",
           "depositType": "surface",
@@ -8157,6 +8627,9 @@
         },
         "Pyro5a|surface": {
           "locationName": "Pyro5a",
+          "spawnKey": "Pyro5a",
+          "displayName": "Ignis",
+          "guideName": "Ignis",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5a",
           "system": "Pyro",
           "depositType": "surface",
@@ -8216,6 +8689,9 @@
         },
         "Stanton1|surface": {
           "locationName": "Stanton1",
+          "spawnKey": "Stanton1",
+          "displayName": "Hurston",
+          "guideName": "Hurston",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1",
           "system": "Stanton",
           "depositType": "surface",
@@ -8275,6 +8751,9 @@
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
+          "spawnKey": "Stanton1a",
+          "displayName": "Ita",
+          "guideName": "Ita",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1a",
           "system": "Stanton",
           "depositType": "surface",
@@ -8334,6 +8813,9 @@
         },
         "Stanton1d|surface": {
           "locationName": "Stanton1d",
+          "spawnKey": "Stanton1d",
+          "displayName": "Magda",
+          "guideName": "Magda",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1d",
           "system": "Stanton",
           "depositType": "surface",
@@ -8416,24 +8898,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16840,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro3"
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21050,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro3"
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25260,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro3"
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
             }
           ],
           "bestLocation": "Pyro3",
+          "bestLocationDisplayName": "Bloom",
           "bestLocationSpawnPercent": 2.625
         },
         "asteroid": {
@@ -8441,30 +8927,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16840,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21050,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25260,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             }
           ],
           "bestLocation": "Pyro Deepspaceasteroids",
+          "bestLocationDisplayName": "Pyro Asteroid Clusters",
           "bestLocationSpawnPercent": 0.015
         }
       },
       "locations": {
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
+          "spawnKey": "Pyro Deepspaceasteroids",
+          "displayName": "Pyro Asteroid Clusters",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_DeepSpaceAsteroids",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -8530,6 +9023,9 @@
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
+          "spawnKey": "Pyro3",
+          "displayName": "Bloom",
+          "guideName": "Bloom",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro3",
           "system": "Pyro",
           "depositType": "surface",
@@ -8595,6 +9091,9 @@
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
+          "spawnKey": "Stanton2a",
+          "displayName": "Cellin",
+          "guideName": "Cellin",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2a",
           "system": "Stanton",
           "depositType": "surface",
@@ -8660,6 +9159,9 @@
         },
         "Stanton2b|surface": {
           "locationName": "Stanton2b",
+          "spawnKey": "Stanton2b",
+          "displayName": "Daymar",
+          "guideName": "Daymar",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2b",
           "system": "Stanton",
           "depositType": "surface",
@@ -8725,6 +9227,9 @@
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
+          "spawnKey": "Stanton2c",
+          "displayName": "Yela",
+          "guideName": "Yela",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c",
           "system": "Stanton",
           "depositType": "surface",
@@ -8813,24 +9318,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16900,
               "chancePercent": 60,
-              "bestAtLocation": "Stanton1a"
+              "bestAtLocation": "Stanton1a",
+              "bestAtLocationDisplayName": "Ita"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21125,
               "chancePercent": 30,
-              "bestAtLocation": "Stanton1a"
+              "bestAtLocation": "Stanton1a",
+              "bestAtLocationDisplayName": "Ita"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25350,
               "chancePercent": 10,
-              "bestAtLocation": "Stanton1a"
+              "bestAtLocation": "Stanton1a",
+              "bestAtLocationDisplayName": "Ita"
             }
           ],
           "bestLocation": "Stanton1b",
+          "bestLocationDisplayName": "Aberdeen",
           "bestLocationSpawnPercent": 1.788
         },
         "asteroid": {
@@ -8838,30 +9347,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16900,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21125,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25350,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro Deepspaceasteroids"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             }
           ],
           "bestLocation": "Lagrange F",
+          "bestLocationDisplayName": "ARC-L1",
           "bestLocationSpawnPercent": 0.027
         }
       },
       "locations": {
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
+          "spawnKey": "Pyro Deepspaceasteroids",
+          "displayName": "Pyro Asteroid Clusters",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_DeepSpaceAsteroids",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -8921,6 +9437,9 @@
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
+          "spawnKey": "Lagrange A",
+          "displayName": "HUR-L1",
+          "guideName": "HUR-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_A",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -8980,6 +9499,9 @@
         },
         "Lagrange C|asteroid": {
           "locationName": "Lagrange C",
+          "spawnKey": "Lagrange C",
+          "displayName": "CRU-L3",
+          "guideName": "CRU-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_C",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -9039,6 +9561,9 @@
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
+          "spawnKey": "Lagrange F",
+          "displayName": "ARC-L1",
+          "guideName": "ARC-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_F",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -9098,6 +9623,9 @@
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
+          "spawnKey": "Stanton1a",
+          "displayName": "Ita",
+          "guideName": "Ita",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1a",
           "system": "Stanton",
           "depositType": "surface",
@@ -9157,6 +9685,9 @@
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
+          "spawnKey": "Stanton1b",
+          "displayName": "Aberdeen",
+          "guideName": "Aberdeen",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1b",
           "system": "Stanton",
           "depositType": "surface",
@@ -9239,24 +9770,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16960,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21200,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25440,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             }
           ],
           "bestLocation": "Pyro1",
+          "bestLocationDisplayName": "Pyro I",
           "bestLocationSpawnPercent": 2.447
         },
         "asteroid": {
@@ -9264,30 +9799,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 16960,
               "chancePercent": 60,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21200,
               "chancePercent": 30,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25440,
               "chancePercent": 10,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             }
           ],
           "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
           "bestLocationSpawnPercent": 0.053
         }
       },
       "locations": {
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
+          "spawnKey": "Akiro Cluster",
+          "displayName": "Akiro Cluster",
+          "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -9347,6 +9889,9 @@
         },
         "Pyro Warm01|asteroid": {
           "locationName": "Pyro Warm01",
+          "spawnKey": "Pyro Warm01",
+          "displayName": "Pyro I–II Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Warm01",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -9406,6 +9951,9 @@
         },
         "Pyro Warm02|asteroid": {
           "locationName": "Pyro Warm02",
+          "spawnKey": "Pyro Warm02",
+          "displayName": "Pyro III Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Warm02",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -9465,6 +10013,9 @@
         },
         "Pyro1|surface": {
           "locationName": "Pyro1",
+          "spawnKey": "Pyro1",
+          "displayName": "Pyro I",
+          "guideName": "Pyro I",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro1",
           "system": "Pyro",
           "depositType": "surface",
@@ -9524,6 +10075,9 @@
         },
         "Pyro4|surface": {
           "locationName": "Pyro4",
+          "spawnKey": "Pyro4",
+          "displayName": "Pyro IV",
+          "guideName": "Pyro IV",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro4",
           "system": "Pyro",
           "depositType": "surface",
@@ -9583,6 +10137,9 @@
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
+          "spawnKey": "Pyro6",
+          "displayName": "Terminus",
+          "guideName": "Terminus",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro6",
           "system": "Pyro",
           "depositType": "surface",
@@ -9642,6 +10199,9 @@
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -9701,6 +10261,9 @@
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
+          "spawnKey": "Lagrange B",
+          "displayName": "ARC-L5",
+          "guideName": "ARC-L5",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_B",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -9760,6 +10323,9 @@
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
+          "spawnKey": "Lagrange D",
+          "displayName": "ARC-L3",
+          "guideName": "ARC-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_D",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -9819,6 +10385,9 @@
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
+          "spawnKey": "Lagrange E",
+          "displayName": "CRU-L1",
+          "guideName": "CRU-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_E",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -9878,6 +10447,9 @@
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
+          "spawnKey": "Lagrange G",
+          "displayName": "Aaron Halo belt · G",
+          "guideName": "Aaron Halo belt · G",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_G",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -9937,6 +10509,9 @@
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
+          "spawnKey": "Lagrange Occupied",
+          "displayName": "Occupied Lagrange belt",
+          "guideName": "Occupied Lagrange belt",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_Occupied",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -9996,6 +10571,9 @@
         },
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
+          "spawnKey": "Stanton2c Belt",
+          "displayName": "Yela Ring",
+          "guideName": "Yela Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c_Belt",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -10055,6 +10633,9 @@
         },
         "Stanton3a|surface": {
           "locationName": "Stanton3a",
+          "spawnKey": "Stanton3a",
+          "displayName": "Lyria",
+          "guideName": "Lyria",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3a",
           "system": "Stanton",
           "depositType": "surface",
@@ -10114,6 +10695,9 @@
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
+          "spawnKey": "Stanton3b",
+          "displayName": "Wala",
+          "guideName": "Wala",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3b",
           "system": "Stanton",
           "depositType": "surface",
@@ -10173,6 +10757,9 @@
         },
         "Stanton4b|surface": {
           "locationName": "Stanton4b",
+          "spawnKey": "Stanton4b",
+          "displayName": "Clio",
+          "guideName": "Clio",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4b",
           "system": "Stanton",
           "depositType": "surface",
@@ -10232,6 +10819,9 @@
         },
         "Stanton4c|surface": {
           "locationName": "Stanton4c",
+          "spawnKey": "Stanton4c",
+          "displayName": "Euterpe",
+          "guideName": "Euterpe",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4c",
           "system": "Stanton",
           "depositType": "surface",
@@ -10314,24 +10904,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 17020,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro5a"
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21275,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro5a"
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25530,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro5a"
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
             }
           ],
           "bestLocation": "Pyro5a",
+          "bestLocationDisplayName": "Ignis",
           "bestLocationSpawnPercent": 2.7
         },
         "asteroid": {
@@ -10339,30 +10933,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 17020,
               "chancePercent": 60,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21275,
               "chancePercent": 30,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25530,
               "chancePercent": 10,
-              "bestAtLocation": "Akiro Cluster"
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
             }
           ],
           "bestLocation": "Aaron Halo",
+          "bestLocationDisplayName": "Aaron Halo",
           "bestLocationSpawnPercent": 0.031
         }
       },
       "locations": {
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
+          "spawnKey": "Akiro Cluster",
+          "displayName": "Akiro Cluster",
+          "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -10428,6 +11029,9 @@
         },
         "Pyro Cool01|asteroid": {
           "locationName": "Pyro Cool01",
+          "spawnKey": "Pyro Cool01",
+          "displayName": "Pyro V Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Cool01",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -10493,6 +11097,9 @@
         },
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
+          "spawnKey": "Pyro Cool02",
+          "displayName": "Pyro VI Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Cool02",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -10558,6 +11165,9 @@
         },
         "Pyro5a|surface": {
           "locationName": "Pyro5a",
+          "spawnKey": "Pyro5a",
+          "displayName": "Ignis",
+          "guideName": "Ignis",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5a",
           "system": "Pyro",
           "depositType": "surface",
@@ -10623,6 +11233,9 @@
         },
         "Pyro5b|surface": {
           "locationName": "Pyro5b",
+          "spawnKey": "Pyro5b",
+          "displayName": "Vatra",
+          "guideName": "Vatra",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5b",
           "system": "Pyro",
           "depositType": "surface",
@@ -10688,6 +11301,9 @@
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
+          "spawnKey": "Pyro5d",
+          "displayName": "Fairo",
+          "guideName": "Fairo",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5d",
           "system": "Pyro",
           "depositType": "surface",
@@ -10753,6 +11369,9 @@
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -10818,6 +11437,9 @@
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
+          "spawnKey": "Stanton2a",
+          "displayName": "Cellin",
+          "guideName": "Cellin",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2a",
           "system": "Stanton",
           "depositType": "surface",
@@ -10883,6 +11505,9 @@
         },
         "Stanton2b|surface": {
           "locationName": "Stanton2b",
+          "spawnKey": "Stanton2b",
+          "displayName": "Daymar",
+          "guideName": "Daymar",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2b",
           "system": "Stanton",
           "depositType": "surface",
@@ -10948,6 +11573,9 @@
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
+          "spawnKey": "Stanton2c",
+          "displayName": "Yela",
+          "guideName": "Yela",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c",
           "system": "Stanton",
           "depositType": "surface",
@@ -11036,24 +11664,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 17080,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21350,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25620,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro1"
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
             }
           ],
           "bestLocation": "Pyro5c",
+          "bestLocationDisplayName": "Adir",
           "bestLocationSpawnPercent": 3.263
         },
         "asteroid": {
@@ -11061,30 +11693,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 17080,
               "chancePercent": 60,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21350,
               "chancePercent": 30,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25620,
               "chancePercent": 10,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             }
           ],
           "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
           "bestLocationSpawnPercent": 0.054
         }
       },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
+          "spawnKey": "Glaciem Ring",
+          "displayName": "Glaciem Ring",
+          "guideName": "Glaciem Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_GlaciemRing",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -11138,6 +11777,9 @@
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
+          "spawnKey": "Keeger Belt",
+          "displayName": "Keeger Belt",
+          "guideName": "Keeger Belt",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_KeegerBelt",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -11191,6 +11833,9 @@
         },
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
+          "spawnKey": "Akiro Cluster",
+          "displayName": "Akiro Cluster",
+          "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -11244,6 +11889,9 @@
         },
         "Pyro Warm01|asteroid": {
           "locationName": "Pyro Warm01",
+          "spawnKey": "Pyro Warm01",
+          "displayName": "Pyro I–II Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Warm01",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -11297,6 +11945,9 @@
         },
         "Pyro Warm02|asteroid": {
           "locationName": "Pyro Warm02",
+          "spawnKey": "Pyro Warm02",
+          "displayName": "Pyro III Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Warm02",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -11350,6 +12001,9 @@
         },
         "Pyro1|surface": {
           "locationName": "Pyro1",
+          "spawnKey": "Pyro1",
+          "displayName": "Pyro I",
+          "guideName": "Pyro I",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro1",
           "system": "Pyro",
           "depositType": "surface",
@@ -11403,6 +12057,9 @@
         },
         "Pyro2|surface": {
           "locationName": "Pyro2",
+          "spawnKey": "Pyro2",
+          "displayName": "Pyro II",
+          "guideName": "Pyro II",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro2",
           "system": "Pyro",
           "depositType": "surface",
@@ -11456,6 +12113,9 @@
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
+          "spawnKey": "Pyro3",
+          "displayName": "Bloom",
+          "guideName": "Bloom",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro3",
           "system": "Pyro",
           "depositType": "surface",
@@ -11509,6 +12169,9 @@
         },
         "Pyro4|surface": {
           "locationName": "Pyro4",
+          "spawnKey": "Pyro4",
+          "displayName": "Pyro IV",
+          "guideName": "Pyro IV",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro4",
           "system": "Pyro",
           "depositType": "surface",
@@ -11562,6 +12225,9 @@
         },
         "Pyro5b|surface": {
           "locationName": "Pyro5b",
+          "spawnKey": "Pyro5b",
+          "displayName": "Vatra",
+          "guideName": "Vatra",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5b",
           "system": "Pyro",
           "depositType": "surface",
@@ -11615,6 +12281,9 @@
         },
         "Pyro5c|surface": {
           "locationName": "Pyro5c",
+          "spawnKey": "Pyro5c",
+          "displayName": "Adir",
+          "guideName": "Adir",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5c",
           "system": "Pyro",
           "depositType": "surface",
@@ -11668,6 +12337,9 @@
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
+          "spawnKey": "Pyro5d",
+          "displayName": "Fairo",
+          "guideName": "Fairo",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5d",
           "system": "Pyro",
           "depositType": "surface",
@@ -11721,6 +12393,9 @@
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
+          "spawnKey": "Pyro5e",
+          "displayName": "Fuego",
+          "guideName": "Fuego",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5e",
           "system": "Pyro",
           "depositType": "surface",
@@ -11774,6 +12449,9 @@
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
+          "spawnKey": "Pyro5f",
+          "displayName": "Vuur",
+          "guideName": "Vuur",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro5f",
           "system": "Pyro",
           "depositType": "surface",
@@ -11827,6 +12505,9 @@
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -11880,6 +12561,9 @@
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
+          "spawnKey": "Lagrange B",
+          "displayName": "ARC-L5",
+          "guideName": "ARC-L5",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_B",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -11933,6 +12617,9 @@
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
+          "spawnKey": "Lagrange D",
+          "displayName": "ARC-L3",
+          "guideName": "ARC-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_D",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -11986,6 +12673,9 @@
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
+          "spawnKey": "Lagrange E",
+          "displayName": "CRU-L1",
+          "guideName": "CRU-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_E",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -12039,6 +12729,9 @@
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
+          "spawnKey": "Lagrange G",
+          "displayName": "Aaron Halo belt · G",
+          "guideName": "Aaron Halo belt · G",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_G",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -12092,6 +12785,9 @@
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
+          "spawnKey": "Lagrange Occupied",
+          "displayName": "Occupied Lagrange belt",
+          "guideName": "Occupied Lagrange belt",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_Occupied",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -12145,6 +12841,9 @@
         },
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
+          "spawnKey": "Stanton2c Belt",
+          "displayName": "Yela Ring",
+          "guideName": "Yela Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c_Belt",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -12198,6 +12897,9 @@
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
+          "spawnKey": "Stanton1c",
+          "displayName": "Arial",
+          "guideName": "Arial",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1c",
           "system": "Stanton",
           "depositType": "surface",
@@ -12251,6 +12953,9 @@
         },
         "Stanton3a|surface": {
           "locationName": "Stanton3a",
+          "spawnKey": "Stanton3a",
+          "displayName": "Lyria",
+          "guideName": "Lyria",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3a",
           "system": "Stanton",
           "depositType": "surface",
@@ -12304,6 +13009,9 @@
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
+          "spawnKey": "Stanton3b",
+          "displayName": "Wala",
+          "guideName": "Wala",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton3b",
           "system": "Stanton",
           "depositType": "surface",
@@ -12357,6 +13065,9 @@
         },
         "Stanton4|surface": {
           "locationName": "Stanton4",
+          "spawnKey": "Stanton4",
+          "displayName": "microTech",
+          "guideName": "microTech",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4",
           "system": "Stanton",
           "depositType": "surface",
@@ -12410,6 +13121,9 @@
         },
         "Stanton4a|surface": {
           "locationName": "Stanton4a",
+          "spawnKey": "Stanton4a",
+          "displayName": "Calliope",
+          "guideName": "Calliope",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4a",
           "system": "Stanton",
           "depositType": "surface",
@@ -12486,24 +13200,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 17140,
               "chancePercent": 60,
-              "bestAtLocation": "Stanton1"
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21425,
               "chancePercent": 30,
-              "bestAtLocation": "Stanton1"
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25710,
               "chancePercent": 10,
-              "bestAtLocation": "Stanton1"
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
             }
           ],
           "bestLocation": "Stanton1",
+          "bestLocationDisplayName": "Hurston",
           "bestLocationSpawnPercent": 2.64
         },
         "asteroid": {
@@ -12511,30 +13229,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 17140,
               "chancePercent": 60,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21425,
               "chancePercent": 30,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25710,
               "chancePercent": 10,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             }
           ],
           "bestLocation": "Aaron Halo",
+          "bestLocationDisplayName": "Aaron Halo",
           "bestLocationSpawnPercent": 0.031
         }
       },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
+          "spawnKey": "Glaciem Ring",
+          "displayName": "Glaciem Ring",
+          "guideName": "Glaciem Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_GlaciemRing",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -12612,6 +13337,9 @@
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
+          "spawnKey": "Keeger Belt",
+          "displayName": "Keeger Belt",
+          "guideName": "Keeger Belt",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_KeegerBelt",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -12689,6 +13417,9 @@
         },
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
+          "spawnKey": "Pyro Deepspaceasteroids",
+          "displayName": "Pyro Asteroid Clusters",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_DeepSpaceAsteroids",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -12766,6 +13497,9 @@
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -12843,6 +13577,9 @@
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
+          "spawnKey": "Lagrange A",
+          "displayName": "HUR-L1",
+          "guideName": "HUR-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_A",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -12920,6 +13657,9 @@
         },
         "Lagrange C|asteroid": {
           "locationName": "Lagrange C",
+          "spawnKey": "Lagrange C",
+          "displayName": "CRU-L3",
+          "guideName": "CRU-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_C",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -12997,6 +13737,9 @@
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
+          "spawnKey": "Lagrange F",
+          "displayName": "ARC-L1",
+          "guideName": "ARC-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_F",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -13074,6 +13817,9 @@
         },
         "Stanton1|surface": {
           "locationName": "Stanton1",
+          "spawnKey": "Stanton1",
+          "displayName": "Hurston",
+          "guideName": "Hurston",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1",
           "system": "Stanton",
           "depositType": "surface",
@@ -13151,6 +13897,9 @@
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
+          "spawnKey": "Stanton1a",
+          "displayName": "Ita",
+          "guideName": "Ita",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1a",
           "system": "Stanton",
           "depositType": "surface",
@@ -13228,6 +13977,9 @@
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
+          "spawnKey": "Stanton1b",
+          "displayName": "Aberdeen",
+          "guideName": "Aberdeen",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1b",
           "system": "Stanton",
           "depositType": "surface",
@@ -13305,6 +14057,9 @@
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
+          "spawnKey": "Stanton1c",
+          "displayName": "Arial",
+          "guideName": "Arial",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1c",
           "system": "Stanton",
           "depositType": "surface",
@@ -13382,6 +14137,9 @@
         },
         "Stanton1d|surface": {
           "locationName": "Stanton1d",
+          "spawnKey": "Stanton1d",
+          "displayName": "Magda",
+          "guideName": "Magda",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton1d",
           "system": "Stanton",
           "depositType": "surface",
@@ -13482,24 +14240,28 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 17200,
               "chancePercent": 60,
-              "bestAtLocation": "Pyro6"
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21500,
               "chancePercent": 30,
-              "bestAtLocation": "Pyro6"
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25800,
               "chancePercent": 10,
-              "bestAtLocation": "Pyro6"
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
             }
           ],
           "bestLocation": "Stanton4b",
+          "bestLocationDisplayName": "Clio",
           "bestLocationSpawnPercent": 2.4
         },
         "asteroid": {
@@ -13507,30 +14269,37 @@
           "clusterRows": [
             {
               "nodes": 4,
-              "rs": null,
+              "rs": 17200,
               "chancePercent": 60,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 5,
-              "rs": null,
+              "rs": 21500,
               "chancePercent": 30,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             },
             {
               "nodes": 6,
-              "rs": null,
+              "rs": 25800,
               "chancePercent": 10,
-              "bestAtLocation": "Glaciem Ring"
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
             }
           ],
           "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
           "bestLocationSpawnPercent": 0.053
         }
       },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
+          "spawnKey": "Glaciem Ring",
+          "displayName": "Glaciem Ring",
+          "guideName": "Glaciem Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_GlaciemRing",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -13584,6 +14353,9 @@
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
+          "spawnKey": "Keeger Belt",
+          "displayName": "Keeger Belt",
+          "guideName": "Keeger Belt",
           "hppKey": "HarvestableProviderPreset.HPP_Nyx_KeegerBelt",
           "system": "Nyx",
           "depositType": "asteroid",
@@ -13637,6 +14409,9 @@
         },
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
+          "spawnKey": "Akiro Cluster",
+          "displayName": "Akiro Cluster",
+          "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -13690,6 +14465,9 @@
         },
         "Pyro Cool01|asteroid": {
           "locationName": "Pyro Cool01",
+          "spawnKey": "Pyro Cool01",
+          "displayName": "Pyro V Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Cool01",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -13743,6 +14521,9 @@
         },
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
+          "spawnKey": "Pyro Cool02",
+          "displayName": "Pyro VI Lagrange belts",
+          "guideName": "Pyro Asteroid Clusters",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_Cool02",
           "system": "Pyro",
           "depositType": "asteroid",
@@ -13796,6 +14577,9 @@
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
+          "spawnKey": "Pyro6",
+          "displayName": "Terminus",
+          "guideName": "Terminus",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro6",
           "system": "Pyro",
           "depositType": "surface",
@@ -13849,6 +14633,9 @@
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
+          "spawnKey": "Aaron Halo",
+          "displayName": "Aaron Halo",
+          "guideName": "Aaron Halo",
           "hppKey": "HarvestableProviderPreset.HPP_AaronHalo",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -13902,6 +14689,9 @@
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
+          "spawnKey": "Lagrange B",
+          "displayName": "ARC-L5",
+          "guideName": "ARC-L5",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_B",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -13955,6 +14745,9 @@
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
+          "spawnKey": "Lagrange D",
+          "displayName": "ARC-L3",
+          "guideName": "ARC-L3",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_D",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -14008,6 +14801,9 @@
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
+          "spawnKey": "Lagrange E",
+          "displayName": "CRU-L1",
+          "guideName": "CRU-L1",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_E",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -14061,6 +14857,9 @@
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
+          "spawnKey": "Lagrange G",
+          "displayName": "Aaron Halo belt · G",
+          "guideName": "Aaron Halo belt · G",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_G",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -14114,6 +14913,9 @@
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
+          "spawnKey": "Lagrange Occupied",
+          "displayName": "Occupied Lagrange belt",
+          "guideName": "Occupied Lagrange belt",
           "hppKey": "HarvestableProviderPreset.HPP_Lagrange_Occupied",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -14167,6 +14969,9 @@
         },
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
+          "spawnKey": "Stanton2c Belt",
+          "displayName": "Yela Ring",
+          "guideName": "Yela Ring",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton2c_Belt",
           "system": "Stanton",
           "depositType": "asteroid",
@@ -14220,6 +15025,9 @@
         },
         "Stanton4|surface": {
           "locationName": "Stanton4",
+          "spawnKey": "Stanton4",
+          "displayName": "microTech",
+          "guideName": "microTech",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4",
           "system": "Stanton",
           "depositType": "surface",
@@ -14273,6 +15081,9 @@
         },
         "Stanton4a|surface": {
           "locationName": "Stanton4a",
+          "spawnKey": "Stanton4a",
+          "displayName": "Calliope",
+          "guideName": "Calliope",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4a",
           "system": "Stanton",
           "depositType": "surface",
@@ -14326,6 +15137,9 @@
         },
         "Stanton4b|surface": {
           "locationName": "Stanton4b",
+          "spawnKey": "Stanton4b",
+          "displayName": "Clio",
+          "guideName": "Clio",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4b",
           "system": "Stanton",
           "depositType": "surface",
@@ -14379,6 +15193,9 @@
         },
         "Stanton4c|surface": {
           "locationName": "Stanton4c",
+          "spawnKey": "Stanton4c",
+          "displayName": "Euterpe",
+          "guideName": "Euterpe",
           "hppKey": "HarvestableProviderPreset.HPP_Stanton4c",
           "system": "Stanton",
           "depositType": "surface",
@@ -14445,7 +15262,9 @@
   },
   "audit": {
     "unmappedHppLinks": [],
-    "oresMissingProfile": []
+    "oresMissingProfile": [],
+    "unmappedSpawnKeys": [],
+    "rawDisplayNames": []
   },
   "summary": {
     "signatureOres": 26,

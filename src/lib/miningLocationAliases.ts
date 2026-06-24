@@ -5,6 +5,8 @@
  * - **overall**: compendium “broad” entries — same aggregate profile as RS Tracker Overall mode
  */
 
+import { miningLocations } from '../data'
+
 /** Compendium entries that intentionally use Overall cluster/spawn data, not a single site. */
 export const BROAD_GUIDE_LOCATIONS = new Set<string>([
   'All Moons/Planets/Caves',
@@ -97,6 +99,8 @@ function buildSpawnKeyToGuideNames(): Map<string, string[]> {
 /** Compendium/guide names that share this internal spawn profile key. */
 export function getGuideNamesForSpawnKey(spawnKey: string | undefined): string[] {
   if (!spawnKey) return []
+  const generated = miningLocations.locationAliases?.[spawnKey]?.guideNames
+  if (generated?.length) return generated
   return SPAWN_KEY_TO_GUIDE_NAMES.get(spawnKey) ?? []
 }
 

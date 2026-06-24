@@ -255,6 +255,15 @@ export function upsertGuestMissionPref(
   included: boolean
 ): GuestMissionPrefEntry[] {
   const key = missionKey(missionLabel)
+  return upsertGuestMissionPrefByKey(entries, key, missionLabel, included)
+}
+
+export function upsertGuestMissionPrefByKey(
+  entries: GuestMissionPrefEntry[],
+  key: string,
+  missionLabel: string,
+  included: boolean
+): GuestMissionPrefEntry[] {
   const without = entries.filter((entry) => entry.mission_key !== key)
   if (!included) return without
   return [...without, { mission_key: key, mission_label: missionLabel, included: true }]

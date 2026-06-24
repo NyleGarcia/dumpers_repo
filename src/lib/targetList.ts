@@ -1,5 +1,4 @@
 import { supabase } from './supabase'
-import { missionKey } from './missions'
 
 export interface TargetListRow {
   id: string
@@ -97,10 +96,10 @@ export async function fetchMissionPrefs(userId: string): Promise<Record<string, 
 
 export async function setMissionIncluded(
   userId: string,
+  key: string,
   missionLabel: string,
   included: boolean
 ): Promise<{ error?: string }> {
-  const key = missionKey(missionLabel)
   const { error } = await supabase.from('target_list_mission_prefs').upsert(
     {
       user_id: userId,
