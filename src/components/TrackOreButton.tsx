@@ -21,6 +21,9 @@ interface TrackOreButtonsProps {
   depositType?: DepositType
   /** Called when "Open tracker" is clicked (e.g. close guide modal, switch tab). */
   onOpenTracker?: () => void
+  /** Stack buttons vertically (e.g. modal header). */
+  stacked?: boolean
+  tooltipSide?: 'top' | 'bottom' | 'left' | 'right'
 }
 
 function TrackButton({
@@ -30,6 +33,8 @@ function TrackButton({
   profileMode = 'overall',
   locationName,
   compact,
+  stacked,
+  tooltipSide = 'top',
   label,
 }: {
   oreName: string
@@ -38,6 +43,8 @@ function TrackButton({
   profileMode?: ProfileMode
   locationName?: string
   compact?: boolean
+  stacked?: boolean
+  tooltipSide?: 'top' | 'bottom' | 'left' | 'right'
   label: string
 }) {
   const { addEntry, removeEntry, isTracked } = useMiningTracker()
@@ -60,8 +67,8 @@ function TrackButton({
   return (
     <SiteTooltip
       content={trackButtonTooltip(oreName, depositType, profileMode, locationName)}
-      side="top"
-      className="inline-flex"
+      side={tooltipSide}
+      className={stacked ? 'block w-full' : 'inline-flex'}
     >
       <button
         type="button"
@@ -69,11 +76,15 @@ function TrackButton({
         className={
           compact
             ? `text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
+                stacked ? 'w-full ' : ''
+              }${
                 tracked
                   ? 'bg-orange-600/30 text-orange-300 hover:bg-orange-600/40'
                   : 'bg-slate-700/50 text-slate-400 hover:bg-orange-600/20 hover:text-orange-300'
               }`
             : `text-xs px-2.5 py-1 rounded-md border transition-colors ${
+                stacked ? 'w-full ' : ''
+              }${
                 tracked
                   ? 'bg-orange-950/50 border-orange-500/40 text-orange-300 hover:border-orange-400/60'
                   : 'bg-slate-800/60 border-slate-600/50 text-slate-300 hover:border-orange-500/40 hover:text-orange-300'
@@ -95,14 +106,19 @@ export default function TrackOreButtons({
   locationName,
   depositType,
   onOpenTracker,
+  stacked = false,
+  tooltipSide = 'top',
 }: TrackOreButtonsProps) {
   const depositTypes = depositType ? [depositType] : getDepositTypes(oreName)
+  const groupClass = stacked
+    ? 'flex flex-col gap-1.5 w-full sm:w-[10.5rem]'
+    : 'flex items-center gap-2 flex-wrap'
 
   if (depositType && locationName) {
     const resolved = getLocationProfile(oreName, locationName, depositType)
     const type = resolved?.depositType ?? depositType
     return (
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className={groupClass}>
         <TrackButton
           oreName={oreName}
           rarity={rarity}
@@ -110,13 +126,15 @@ export default function TrackOreButtons({
           profileMode="location"
           locationName={locationName}
           compact={compact}
+          stacked={stacked}
+          tooltipSide={tooltipSide}
           label={`Track (${type === 'surface' ? 'Surface' : 'Asteroid'})`}
         />
         {showTrackerLink && (
           <Link
             to="/mining-tracker"
             search={{ view: 'tracker' }}
-            className="text-xs text-slate-500 hover:text-orange-400 transition-colors"
+            className={`text-xs text-slate-500 hover:text-orange-400 transition-colors${stacked ? ' text-center' : ''}`}
             onClick={(e) => {
               e.stopPropagation()
               onOpenTracker?.()
@@ -132,7 +150,7 @@ export default function TrackOreButtons({
   if (depositTypes.length === 0) return null
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className={groupClass}>
       {depositTypes.includes('surface') && (
         <TrackButton
           oreName={oreName}
@@ -141,6 +159,8 @@ export default function TrackOreButtons({
           profileMode={profileMode}
           locationName={locationName}
           compact={compact}
+          stacked={stacked}
+          tooltipSide={tooltipSide}
           label={compact ? 'Surface' : 'Track Surface'}
         />
       )}
@@ -152,6 +172,8 @@ export default function TrackOreButtons({
           profileMode={profileMode}
           locationName={locationName}
           compact={compact}
+          stacked={stacked}
+          tooltipSide={tooltipSide}
           label={compact ? 'Asteroid' : 'Track Asteroid'}
         />
       )}
@@ -159,7 +181,7 @@ export default function TrackOreButtons({
         <Link
           to="/mining-tracker"
           search={{ view: 'tracker' }}
-          className="text-xs text-slate-500 hover:text-orange-400 transition-colors"
+          className={`text-xs text-slate-500 hover:text-orange-400 transition-colors${stacked ? ' text-center' : ''}`}
           onClick={(e) => {
             e.stopPropagation()
             onOpenTracker?.()

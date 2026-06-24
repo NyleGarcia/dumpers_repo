@@ -121,7 +121,7 @@ export default function SiteTooltip({
           id={tooltipId}
           role="tooltip"
           style={{ transform: sideTransform(resolvedSide, shiftX) }}
-          className={`site-tooltip-panel absolute z-50 pointer-events-none text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 bg-slate-900/95 backdrop-blur border border-orange-500/30 rounded-lg shadow-xl ${sideClasses[resolvedSide]} ${panelClassName}`}
+          className={`site-tooltip-panel absolute z-[70] pointer-events-none text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 bg-slate-900/95 backdrop-blur border border-orange-500/30 rounded-lg shadow-xl ${sideClasses[resolvedSide]} ${panelClassName}`}
         >
           {content}
         </span>
