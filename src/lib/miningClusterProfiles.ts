@@ -123,6 +123,7 @@ export function getTrackerProfile(entry: MiningTrackerEntry): FormattedClusterDi
   if (entry.profileMode === 'location' && entry.locationName) {
     const locProfile = getLocationProfile(entry.oreName, entry.locationName, depositType)
     if (locProfile) return formatClusterRows(locProfile, ore.baseSignature)
+    return null
   }
 
   const overall = getOverallProfile(entry.oreName, depositType)
@@ -186,17 +187,28 @@ export function getLocationSpawnTag(
   return { label: `${pct.toFixed(2)}% spawn`, tier: 'low' }
 }
 
+export function isLocationTrackerEntry(entry: MiningTrackerEntry): boolean {
+  return entry.profileMode === 'location' && Boolean(entry.locationName)
+}
+
 export function getTrackerSubtitle(entry: MiningTrackerEntry): string {
   const depositType: DepositType = entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
 
-  if (entry.profileMode === 'location' && entry.locationName) {
-    return `Location · ${entry.locationName}`
+  if (isLocationTrackerEntry(entry) && entry.locationName) {
+    return `Spawn & cluster · ${entry.locationName}`
   }
   const overall = getOverallProfile(entry.oreName, depositType)
   if (overall?.bestLocation) {
     return `Overall · best at ${overall.bestLocation}`
   }
   return 'Overall'
+}
+
+export function getTrackerProfileMissingMessage(entry: MiningTrackerEntry): string | null {
+  if (!isLocationTrackerEntry(entry) || !entry.locationName) return null
+  const depositType: DepositType = entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
+  if (getLocationProfile(entry.oreName, entry.locationName, depositType)) return null
+  return `No spawn profile on file for ${entry.locationName}`
 }
 
 export function depositTypeLabel(depositType: DepositType): string {

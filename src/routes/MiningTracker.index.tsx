@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useMiningData, type MiningData } from '../hooks/useArchiveData'
@@ -25,7 +25,9 @@ import {
   getLocationProfile,
   getLocationSpawnTag,
   getTrackerProfile,
+  getTrackerProfileMissingMessage,
   getTrackerSubtitle,
+  isLocationTrackerEntry,
 } from '../lib/miningClusterProfiles'
 import TrackOreButtons from '../components/TrackOreButton'
 import SiteTooltip from '../components/SiteTooltip'
@@ -60,6 +62,17 @@ export default function MiningTrackerRoute() {
   const [guideViewMode, setGuideViewMode] = useState<'ores' | 'locations'>('ores')
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null)
   const [selectedOre, setSelectedOre] = useState<MiningData | null>(null)
+  const [selectedOreGuideLocation, setSelectedOreGuideLocation] = useState<string | null>(null)
+
+  const openOreModal = useCallback((ore: MiningData, guideLocation?: string) => {
+    setSelectedOre(ore)
+    setSelectedOreGuideLocation(guideLocation ?? null)
+  }, [])
+
+  const closeOreModal = useCallback(() => {
+    setSelectedOre(null)
+    setSelectedOreGuideLocation(null)
+  }, [])
 
   const allOreNames = useMemo(() => {
     if (!data) return []
@@ -358,6 +371,8 @@ export default function MiningTrackerRoute() {
                   const colors = MINING_RARITY_COLORS[entry.rarity] || MINING_RARITY_COLORS.common
                   const display = getTrackerProfile(entry)
                   const subtitle = getTrackerSubtitle(entry)
+                  const missingMessage = getTrackerProfileMissingMessage(entry)
+                  const isLocationEntry = isLocationTrackerEntry(entry)
 
                   return (
                     <SiteTooltip
@@ -387,6 +402,11 @@ export default function MiningTrackerRoute() {
                           <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">
                             {depositTypeUpper(entry.depositType)} · {MINING_RARITY_LABELS[entry.rarity] ?? entry.rarity}
                           </div>
+                          {isLocationEntry && entry.locationName ? (
+                            <div className="text-xs font-medium text-orange-300/90 mt-1">
+                              At {entry.locationName}
+                            </div>
+                          ) : null}
                           <div className="text-[11px] text-slate-500 mt-1">{subtitle}</div>
                         </div>
 
@@ -418,7 +438,9 @@ export default function MiningTrackerRoute() {
                         ) : entry.rarity === 'handMineable' ? (
                           <p className="text-xs text-slate-500">Hand-mineable only (no ship RS)</p>
                         ) : (
-                          <p className="text-xs text-slate-500">Spawn profile not on file</p>
+                          <p className="text-xs text-slate-500">
+                            {missingMessage ?? 'Spawn profile not on file'}
+                          </p>
                         )}
                       </div>
                     </SiteTooltip>
@@ -535,7 +557,8 @@ export default function MiningTrackerRoute() {
                     key={location}
                     location={location}
                     ores={locationOresMap[location] || []}
-                    onOreClick={setSelectedOre}
+                    onOreClick={(ore) => openOreModal(ore, location)}
+                    onLocationClick={setSelectedLocation}
                   />
                 ))
               )}
@@ -555,9 +578,10 @@ export default function MiningTrackerRoute() {
           {selectedOre && (
             <GuideOreModal
               ore={selectedOre}
-              onClose={() => setSelectedOre(null)}
+              guideLocationName={selectedOreGuideLocation ?? undefined}
+              onClose={closeOreModal}
               onOpenTracker={() => {
-                setSelectedOre(null)
+                closeOreModal()
                 setViewMode('tracker')
                 setOreSearch('')
                 setSelectedOreName('')
@@ -706,10 +730,12 @@ function GuideLocationCard({
   location,
   ores,
   onOreClick,
+  onLocationClick,
 }: {
   location: string
   ores: MiningData[]
-  onOreClick: (ore: MiningData) => void
+  onOreClick: (ore: MiningData, location: string) => void
+  onLocationClick?: (location: string) => void
 }) {
   const system = LOCATION_SYSTEMS[location]
   const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
@@ -722,7 +748,17 @@ function GuideLocationCard({
     <div className="p-4 rounded-lg border bg-slate-800/30 border-slate-700/50">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-semibold text-white">{location}</h3>
+          {onLocationClick ? (
+            <button
+              type="button"
+              onClick={() => onLocationClick(location)}
+              className="font-semibold text-white hover:text-orange-300 transition-colors text-left"
+            >
+              {location}
+            </button>
+          ) : (
+            <h3 className="font-semibold text-white">{location}</h3>
+          )}
           {system && (
             <span className={`text-xs ${systemColor} uppercase tracking-wider`}>
               {system} System
@@ -749,7 +785,7 @@ function GuideLocationCard({
             >
               <button
                 type="button"
-                onClick={() => onOreClick(ore)}
+                onClick={() => onOreClick(ore, location)}
                 className={`text-xs px-2 py-1 rounded ${colors.bg} ${colors.text} border ${colors.border} hover:brightness-125 transition-all cursor-pointer text-left`}
               >
                 {ore.ore_name}
@@ -772,10 +808,12 @@ function GuideLocationCard({
 
 function GuideOreModal({
   ore,
+  guideLocationName,
   onClose,
   onOpenTracker,
 }: {
   ore: MiningData
+  guideLocationName?: string
   onClose: () => void
   onOpenTracker: () => void
 }) {
@@ -783,6 +821,9 @@ function GuideOreModal({
 
   const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
   const signature = ORE_SIGNATURES[ore.ore_name]
+  const locationProfiles = guideLocationName
+    ? getGuideLocationProfiles(ore.ore_name, guideLocationName)
+    : []
 
   const sortedLocations = [...(ore.locations ?? [])].sort((a, b) => {
     const sysA = LOCATION_SYSTEMS[a] || 'Unknown'
@@ -808,6 +849,11 @@ function GuideOreModal({
                     RS {signature}
                   </span>
                 )}
+                {guideLocationName && (
+                  <span className="text-xs text-orange-300/90 whitespace-nowrap">
+                    At {guideLocationName}
+                  </span>
+                )}
               </div>
             </div>
             <button
@@ -821,14 +867,27 @@ function GuideOreModal({
           </div>
           {signature && (
             <div className="mt-3 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
-              <TrackOreButtons
-                oreName={ore.ore_name}
-                rarity={ore.rarity}
-                showTrackerLink
-                stacked
-                tooltipSide="bottom"
-                onOpenTracker={onOpenTracker}
-              />
+              {guideLocationName && locationProfiles.length > 0 ? (
+                <TrackOreButtons
+                  oreName={ore.ore_name}
+                  rarity={ore.rarity}
+                  profileMode="location"
+                  locationName={guideLocationName}
+                  showTrackerLink
+                  stacked
+                  tooltipSide="bottom"
+                  onOpenTracker={onOpenTracker}
+                />
+              ) : (
+                <TrackOreButtons
+                  oreName={ore.ore_name}
+                  rarity={ore.rarity}
+                  showTrackerLink
+                  stacked
+                  tooltipSide="bottom"
+                  onOpenTracker={onOpenTracker}
+                />
+              )}
             </div>
           )}
         </div>

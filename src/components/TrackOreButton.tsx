@@ -7,8 +7,31 @@ import {
   miningTrackerEntryId,
   type ProfileMode,
 } from '../lib/localGuestCache'
-import { getDepositTypes, getLocationProfile } from '../lib/miningClusterProfiles'
+import {
+  depositTypeLabel,
+  getDepositTypes,
+  getLocationProfile,
+} from '../lib/miningClusterProfiles'
 import { trackButtonTooltip } from '../lib/miningTooltipContent'
+
+function trackButtonLabel(
+  depositType: DepositType,
+  profileMode: ProfileMode,
+  locationName: string | undefined,
+  compact: boolean | undefined
+): string {
+  const typeLabel = depositTypeLabel(depositType)
+  if (profileMode === 'location' && locationName) {
+    return compact ? `${typeLabel} · ${locationName}` : `Track ${typeLabel} · ${locationName}`
+  }
+  return compact ? typeLabel : `Track ${typeLabel}`
+}
+
+function depositTypesForLocation(oreName: string, locationName: string): DepositType[] {
+  return getDepositTypes(oreName).filter(
+    (type) => getLocationProfile(oreName, locationName, type) != null
+  )
+}
 
 interface TrackOreButtonsProps {
   oreName: string
@@ -109,44 +132,64 @@ export default function TrackOreButtons({
   stacked = false,
   tooltipSide = 'top',
 }: TrackOreButtonsProps) {
-  const depositTypes = depositType ? [depositType] : getDepositTypes(oreName)
   const groupClass = stacked
     ? 'flex flex-col gap-1.5 w-full sm:w-[10.5rem]'
     : 'flex items-center gap-2 flex-wrap'
 
-  if (depositType && locationName) {
-    const resolved = getLocationProfile(oreName, locationName, depositType)
-    const type = resolved?.depositType ?? depositType
+  const openTrackerLink = showTrackerLink ? (
+    <Link
+      to="/mining-tracker"
+      search={{ view: 'tracker' }}
+      className={`text-xs text-slate-500 hover:text-orange-400 transition-colors${stacked ? ' text-center' : ''}`}
+      onClick={(e) => {
+        e.stopPropagation()
+        onOpenTracker?.()
+      }}
+    >
+      Open tracker
+    </Link>
+  ) : null
+
+  if (locationName) {
+    const effectiveProfileMode: ProfileMode =
+      profileMode === 'overall' && !depositType ? 'overall' : 'location'
+    const types = depositType
+      ? depositTypesForLocation(oreName, locationName).includes(depositType)
+        ? [depositType]
+        : []
+      : effectiveProfileMode === 'location'
+        ? depositTypesForLocation(oreName, locationName)
+        : getDepositTypes(oreName)
+
+    if (types.length === 0) return null
+
     return (
       <div className={groupClass}>
-        <TrackButton
-          oreName={oreName}
-          rarity={rarity}
-          depositType={type}
-          profileMode="location"
-          locationName={locationName}
-          compact={compact}
-          stacked={stacked}
-          tooltipSide={tooltipSide}
-          label={`Track (${type === 'surface' ? 'Surface' : 'Asteroid'})`}
-        />
-        {showTrackerLink && (
-          <Link
-            to="/mining-tracker"
-            search={{ view: 'tracker' }}
-            className={`text-xs text-slate-500 hover:text-orange-400 transition-colors${stacked ? ' text-center' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation()
-              onOpenTracker?.()
-            }}
-          >
-            Open tracker
-          </Link>
-        )}
+        {types.map((type) => (
+          <TrackButton
+            key={type}
+            oreName={oreName}
+            rarity={rarity}
+            depositType={type}
+            profileMode={effectiveProfileMode}
+            locationName={effectiveProfileMode === 'location' ? locationName : undefined}
+            compact={compact}
+            stacked={stacked}
+            tooltipSide={tooltipSide}
+            label={trackButtonLabel(
+              type,
+              effectiveProfileMode,
+              effectiveProfileMode === 'location' ? locationName : undefined,
+              compact
+            )}
+          />
+        ))}
+        {openTrackerLink}
       </div>
     )
   }
 
+  const depositTypes = depositType ? [depositType] : getDepositTypes(oreName)
   if (depositTypes.length === 0) return null
 
   return (
@@ -157,11 +200,10 @@ export default function TrackOreButtons({
           rarity={rarity}
           depositType="surface"
           profileMode={profileMode}
-          locationName={locationName}
           compact={compact}
           stacked={stacked}
           tooltipSide={tooltipSide}
-          label={compact ? 'Surface' : 'Track Surface'}
+          label={trackButtonLabel('surface', profileMode, undefined, compact)}
         />
       )}
       {depositTypes.includes('asteroid') && (
@@ -170,26 +212,13 @@ export default function TrackOreButtons({
           rarity={rarity}
           depositType="asteroid"
           profileMode={profileMode}
-          locationName={locationName}
           compact={compact}
           stacked={stacked}
           tooltipSide={tooltipSide}
-          label={compact ? 'Asteroid' : 'Track Asteroid'}
+          label={trackButtonLabel('asteroid', profileMode, undefined, compact)}
         />
       )}
-      {showTrackerLink && (
-        <Link
-          to="/mining-tracker"
-          search={{ view: 'tracker' }}
-          className={`text-xs text-slate-500 hover:text-orange-400 transition-colors${stacked ? ' text-center' : ''}`}
-          onClick={(e) => {
-            e.stopPropagation()
-            onOpenTracker?.()
-          }}
-        >
-          Open tracker
-        </Link>
-      )}
+      {openTrackerLink}
     </div>
   )
 }

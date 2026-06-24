@@ -9,7 +9,9 @@ import {
   getLocationProfilesForOre,
   getOverallProfile,
   getTrackerProfile,
+  getTrackerProfileMissingMessage,
   getTrackerSubtitle,
+  isLocationTrackerEntry,
 } from './miningClusterProfiles'
 import type { MiningTrackerEntry } from './localGuestCache'
 import { formatRsReading } from './miningSignatures'
@@ -42,12 +44,18 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
       ? getLocationProfile(entry.oreName, entry.locationName, entry.depositType)
       : locProfiles.sort((a, b) => b.effectiveSpawnPercent - a.effectiveSpawnPercent)[0]
 
+  const missingMessage = getTrackerProfileMissingMessage(entry)
+
   return (
     <div className="space-y-2">
       <div className="font-semibold text-orange-300">
         {entry.oreName} · {depositTypeUpper(entry.depositType)}
       </div>
+      {isLocationTrackerEntry(entry) && entry.locationName ? (
+        <div className="text-orange-200/90">Cluster profile for {entry.locationName}</div>
+      ) : null}
       <div className="text-slate-400">{getTrackerSubtitle(entry)}</div>
+      {missingMessage ? <div className="text-amber-400/90">{missingMessage}</div> : null}
       {refProfile && (
         <>
           <div>
