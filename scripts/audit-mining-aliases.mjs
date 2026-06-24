@@ -6,7 +6,7 @@
 import { readFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { auditAliasCoverage } from './lib/miningLocationAliases.mjs'
+import { auditAliasCoverage, buildGuideToSpawnKeys } from './lib/miningLocationAliases.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DATA = join(__dirname, '..', 'src', 'data')
@@ -22,6 +22,7 @@ for (const ore of Object.values(spawns.ores ?? {})) {
 }
 
 const aliases = locations.locationAliases ?? {}
+const guideToSpawnKeys = locations.guideToSpawnKeys ?? buildGuideToSpawnKeys(aliases)
 const { unmapped, rawDisplayNames } = auditAliasCoverage(spawnKeys, aliases)
 
 let exitCode = 0
@@ -57,6 +58,35 @@ if (missingDisplayOnProfiles.length) {
   for (const row of missingDisplayOnProfiles.slice(0, 20)) console.error(`  - ${row}`)
   if (missingDisplayOnProfiles.length > 20) {
     console.error(`  ... and ${missingDisplayOnProfiles.length - 20} more`)
+  }
+}
+
+/** Spot-check guide names that must resolve to a specific system via spawn aliases. */
+const REQUIRED_GUIDE_SYSTEMS = {
+  'Glaciem Ring': 'Nyx',
+  'Keeger Belt': 'Nyx',
+  'Akiro Cluster': 'Pyro',
+  Aberdeen: 'Stanton',
+}
+
+function auditGuideLocationSystems(aliases, guideToSpawnKeysMap) {
+  const mismatches = []
+  for (const [guideName, expected] of Object.entries(REQUIRED_GUIDE_SYSTEMS)) {
+    const keys = guideToSpawnKeysMap[guideName] ?? [guideName]
+    const systems = [...new Set(keys.map((k) => aliases[k]?.system).filter(Boolean))]
+    if (systems.length !== 1 || systems[0] !== expected) {
+      mismatches.push({ guideName, expected, systems })
+    }
+  }
+  return mismatches
+}
+
+const systemMismatches = auditGuideLocationSystems(aliases, guideToSpawnKeys)
+if (systemMismatches.length) {
+  exitCode = 1
+  console.error('\nGuide location system mismatches:')
+  for (const row of systemMismatches) {
+    console.error(`  - ${row.guideName}: expected ${row.expected}, got ${row.systems.join(', ') || 'none'}`)
   }
 }
 

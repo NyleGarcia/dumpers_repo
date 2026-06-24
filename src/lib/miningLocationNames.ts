@@ -56,4 +56,50 @@ export function getSpawnKeysForGuideName(guideName: string): string[] {
   return mapped?.length ? [...mapped] : []
 }
 
+/** Broad compendium buckets with no single spawn key — system is explicit. */
+const BROAD_GUIDE_LOCATION_SYSTEMS: Record<string, string> = {
+  'All Moons/Planets/Caves': 'Stanton',
+  'All Pyro Planets': 'Pyro',
+  'Pyro Asteroid Clusters': 'Pyro',
+  'Found in All Stanton Deposits (Rare)': 'Stanton',
+  'Found in All Stanton Deposits': 'Stanton',
+  'QV Breaker Stations (Nyx)': 'Nyx',
+}
+
+function resolveSystemFromSpawnKeys(spawnKeys: string[]): string | null {
+  for (const spawnKey of spawnKeys) {
+    const system = locationAliases[spawnKey]?.system
+    if (system && system !== 'Unknown') return system
+  }
+  return null
+}
+
+function buildGuideLocationSystemsMap(): Record<string, string> {
+  const map: Record<string, string> = { ...BROAD_GUIDE_LOCATION_SYSTEMS }
+
+  for (const [guideName, spawnKeys] of Object.entries(guideToSpawnKeys)) {
+    const system = resolveSystemFromSpawnKeys(spawnKeys)
+    if (system) map[guideName] = system
+  }
+
+  for (const alias of Object.values(locationAliases)) {
+    if (!alias.system || alias.system === 'Unknown') continue
+    if (alias.guideName) map[alias.guideName] = alias.system
+    for (const name of alias.guideNames ?? []) {
+      if (name === 'Pyro Asteroid Clusters') continue
+      if (/^PYR\d/i.test(name)) continue
+      map[name] = alias.system
+    }
+  }
+
+  return map
+}
+
+/** Compendium / guide location name → star system (Stanton, Pyro, Nyx). */
+export const GUIDE_LOCATION_SYSTEMS = buildGuideLocationSystemsMap()
+
+export function getSystemForGuideLocation(guideLocationName: string): string | null {
+  return GUIDE_LOCATION_SYSTEMS[guideLocationName] ?? null
+}
+
 export { locationAliases, guideToSpawnKeys }

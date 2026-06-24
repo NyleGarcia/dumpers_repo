@@ -1,3 +1,5 @@
+import { GUIDE_LOCATION_SYSTEMS } from './miningLocationNames'
+
 export const MINING_RARITY_ORDER = [
   'legendary',
   'epic',
@@ -37,58 +39,8 @@ export const ORE_SIGNATURES: Record<string, number> = {
   Ice: 4300,
 }
 
-export const LOCATION_SYSTEMS: Record<string, string> = {
-  Aberdeen: 'Stanton',
-  Arial: 'Stanton',
-  Hurston: 'Stanton',
-  Yela: 'Stanton',
-  'Yela Ring': 'Stanton',
-  Daymar: 'Stanton',
-  Cellin: 'Stanton',
-  Wala: 'Stanton',
-  Magda: 'Stanton',
-  Clio: 'Stanton',
-  Calliope: 'Stanton',
-  Euterpe: 'Stanton',
-  Lyria: 'Stanton',
-  'Aaron Halo': 'Stanton',
-  'ARC-L1': 'Stanton',
-  'ARC-L2': 'Stanton',
-  'ARC-L3': 'Stanton',
-  'ARC-L4': 'Stanton',
-  'ARC-L5': 'Stanton',
-  'CRU-L1': 'Stanton',
-  'CRU-L2': 'Stanton',
-  'CRU-L3': 'Stanton',
-  'CRU-L4': 'Stanton',
-  'CRU-L5': 'Stanton',
-  'HUR-L1': 'Stanton',
-  'HUR-L2': 'Stanton',
-  'HUR-L3': 'Stanton',
-  'HUR-L4': 'Stanton',
-  'HUR-L5': 'Stanton',
-  'MIC-L1': 'Stanton',
-  'MIC-L2': 'Stanton',
-  'MIC-L3': 'Stanton',
-  'MIC-L4': 'Stanton',
-  'MIC-L5': 'Stanton',
-  Adir: 'Pyro',
-  Bloom: 'Pyro',
-  Fairo: 'Pyro',
-  Fuego: 'Pyro',
-  Ignis: 'Pyro',
-  Terminus: 'Pyro',
-  Vatra: 'Pyro',
-  Vuur: 'Pyro',
-  'Pyro IV': 'Pyro',
-  'Akiro Cluster': 'Pyro',
-  'Glaciem Ring': 'Pyro',
-  'Keeger Belt': 'Pyro',
-  'Pyro Asteroid Clusters': 'Pyro',
-  'All Pyro Planets': 'Pyro',
-  'QV Breaker Stations (Nyx)': 'Nyx',
-  'Found in All Stanton Deposits': 'Stanton',
-}
+/** @deprecated Use getSystemForGuideLocation from miningLocationNames — kept for existing imports. */
+export const LOCATION_SYSTEMS: Record<string, string> = GUIDE_LOCATION_SYSTEMS
 
 export const MINING_SYSTEM_COLORS: Record<string, string> = {
   Stanton: 'text-blue-400',

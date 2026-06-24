@@ -82,4 +82,5 @@ export {
   getGuideNamesForSpawnKey,
   getPrimaryCompendiumGuideName,
   getSpawnKeysForGuideName,
+  getSystemForGuideLocation,
 } from './miningLocationNames'
