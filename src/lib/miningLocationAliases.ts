@@ -79,6 +79,54 @@ export const GUIDE_LOCATION_SPAWN_KEYS: Record<string, readonly string[]> = {
   'Keeger Belt': ['Keeger Belt'],
 }
 
+const SPAWN_KEY_TO_GUIDE_NAMES: Map<string, string[]> = buildSpawnKeyToGuideNames()
+
+function buildSpawnKeyToGuideNames(): Map<string, string[]> {
+  const map = new Map<string, Set<string>>()
+  for (const [guideName, spawnKeys] of Object.entries(GUIDE_LOCATION_SPAWN_KEYS)) {
+    for (const spawnKey of spawnKeys) {
+      if (!map.has(spawnKey)) map.set(spawnKey, new Set())
+      map.get(spawnKey)!.add(guideName)
+    }
+  }
+  return new Map(
+    [...map.entries()].map(([spawnKey, names]) => [spawnKey, [...names].sort()])
+  )
+}
+
+/** Compendium/guide names that share this internal spawn profile key. */
+export function getGuideNamesForSpawnKey(spawnKey: string | undefined): string[] {
+  if (!spawnKey) return []
+  return SPAWN_KEY_TO_GUIDE_NAMES.get(spawnKey) ?? []
+}
+
+/** Member-facing name when exactly one compendium site maps to this spawn key. */
+export function getPrimaryGuideNameForSpawnKey(spawnKey: string | undefined): string | null {
+  const names = getGuideNamesForSpawnKey(spawnKey)
+  if (names.length === 1) return names[0]
+  if (names.length === 0 && spawnKey && spawnKey in GUIDE_LOCATION_SPAWN_KEYS) {
+    return spawnKey
+  }
+  return null
+}
+
+/** Card/chip tag for overall aggregate data — never shows raw internal spawn keys. */
+export function formatOverallTagLabel(bestLocation?: string): string {
+  const primary = getPrimaryGuideNameForSpawnKey(bestLocation)
+  if (primary) return `Overall · best at ${primary}`
+  return 'Overall'
+}
+
+/** Tooltip detail for overall best-at; lists all compendium sites when ambiguous. */
+export function formatOverallBestAtTooltip(bestLocation?: string): string | null {
+  const names = getGuideNamesForSpawnKey(bestLocation)
+  if (names.length >= 2) {
+    return `Overall best cluster odds map to: ${names.join(', ')}`
+  }
+  if (names.length === 1) return `Best overall at ${names[0]}`
+  return null
+}
+
 export type GuideLocationResolution = 'overall' | 'spawn'
 
 export function isBroadGuideLocation(guideLocationName: string): boolean {

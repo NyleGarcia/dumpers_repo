@@ -15,7 +15,7 @@ import {
   isLocationTrackerEntry,
 } from './miningClusterProfiles'
 import type { MiningTrackerEntry } from './localGuestCache'
-import { isBroadGuideLocation } from './miningLocationAliases'
+import { isBroadGuideLocation, formatOverallBestAtTooltip } from './miningLocationAliases'
 import { formatRsReading } from './miningSignatures'
 
 function pct(n: number | null | undefined, digits = 2): string {
@@ -68,14 +68,15 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
           </div>
           <div>Cluster: {clusterPreview(refProfile.clusterRows)}</div>
           <div className="text-slate-400">Composition: {compositionSummary(refProfile.compositionParts)}</div>
-          {refProfile.locationName && (
-            <div className="text-slate-400">
-              Region: {refProfile.locationName}
-              {refProfile.system ? ` · ${refProfile.system} System` : ''}
-            </div>
-          )}
         </>
       )}
+      {!isLocationTrackerEntry(entry) && (() => {
+        const overall = getOverallProfile(entry.oreName, entry.depositType)
+        const bestAtNote = formatOverallBestAtTooltip(overall?.bestLocation)
+        return bestAtNote ? (
+          <div className="text-slate-400">{bestAtNote}</div>
+        ) : null
+      })()}
       {display && (
         <div className="text-slate-400 pt-1 border-t border-slate-700/50">
           Base RS {formatRsReading(display.baseRs)}
@@ -144,8 +145,8 @@ export function guideLocationChipTooltip(
       <div className="space-y-1">
         <div className="font-semibold text-orange-300">Overall · {depositTypeLabel(depositType)}</div>
         <div className="text-slate-400">{guideLocationName}</div>
-        {overall.bestLocation && (
-          <div>Best cluster chances at {overall.bestLocation}</div>
+        {formatOverallBestAtTooltip(overall.bestLocation) && (
+          <div className="text-slate-400">{formatOverallBestAtTooltip(overall.bestLocation)}</div>
         )}
         <div>Cluster: {clusterPreview(overall.clusterRows)}</div>
         <div className="text-slate-400 text-[11px]">
@@ -214,9 +215,14 @@ export function guideLocationOreTooltip(
 ): React.ReactNode {
   const depositTypes = getDepositTypes(oreName)
   if (isBroadGuideLocation(locationName)) {
-    const lines = depositTypes.map((depositType) => {
+    const lines = depositTypes.flatMap((depositType) => {
+      const overall = getOverallProfile(oreName, depositType)
+      if (!overall) return []
       const tag = getOverallSpawnTag(oreName, depositType)
-      return `${depositTypeLabel(depositType)}: ${tag.label}`
+      const bestAt = formatOverallBestAtTooltip(overall.bestLocation)
+      return [
+        `${depositTypeLabel(depositType)}: ${tag.label}${bestAt ? ` — ${bestAt}` : ''}`,
+      ]
     })
     return (
       <div className="space-y-1">
@@ -224,7 +230,11 @@ export function guideLocationOreTooltip(
         <div className="text-slate-400">{locationName}</div>
         <div>Uses overall spawn profile (not site-specific).</div>
         {lines.length > 0 && (
-          <div className="text-slate-400">{lines.join(' · ')}</div>
+          <div className="text-slate-400 space-y-0.5">
+            {lines.map((line) => (
+              <div key={line}>{line}</div>
+            ))}
+          </div>
         )}
       </div>
     )

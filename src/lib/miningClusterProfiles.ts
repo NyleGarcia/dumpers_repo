@@ -1,6 +1,6 @@
 import gameMiningSpawnsData from '../data/game-mining-spawns.json'
 import type { MiningTrackerEntry } from './localGuestCache'
-import { getSpawnKeysForGuideLocation, isBroadGuideLocation, spawnKeyMatchesGuideLocation } from './miningLocationAliases'
+import { getSpawnKeysForGuideLocation, isBroadGuideLocation, spawnKeyMatchesGuideLocation, formatOverallTagLabel } from './miningLocationAliases'
 
 export type DepositType = 'surface' | 'asteroid'
 export type ProfileMode = 'overall' | 'location'
@@ -178,10 +178,7 @@ export function getOverallSpawnTag(
 ): { label: string; tier: SpawnTagTier } {
   const overall = getOverallProfile(oreName, depositType)
   if (!overall) return { label: 'Overall', tier: 'broad' }
-  if (overall.bestLocation) {
-    return { label: `Overall · best at ${overall.bestLocation}`, tier: 'broad' }
-  }
-  return { label: 'Overall', tier: 'broad' }
+  return { label: formatOverallTagLabel(overall.bestLocation), tier: 'broad' }
 }
 
 export function getLocationSpawnTag(
@@ -221,9 +218,7 @@ export function getTrackerSubtitle(entry: MiningTrackerEntry): string {
     return `Spawn & cluster · ${entry.locationName}`
   }
   const overall = getOverallProfile(entry.oreName, depositType)
-  if (overall?.bestLocation) {
-    return `Overall · best at ${overall.bestLocation}`
-  }
+  if (overall) return formatOverallTagLabel(overall.bestLocation)
   return 'Overall'
 }
 

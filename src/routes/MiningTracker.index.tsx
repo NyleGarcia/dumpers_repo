@@ -19,6 +19,7 @@ import {
   getOreBaseSignature,
 } from '../lib/miningSignatures'
 import {
+  depositTypeLabel,
   depositTypeUpper,
   getDepositTypes,
   getGuideLocationProfiles,
@@ -1081,11 +1082,17 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
                     </span>
                   )}
                   {!profile && isBroadGuideLocation(location) && (
-                    <span className="block text-[10px] text-slate-400 mt-1">
-                      {getDepositTypes(ore.ore_name)
-                        .map((dt) => getOverallSpawnTag(ore.ore_name, dt).label)
-                        .join(' · ')}
-                    </span>
+                    <div className="text-[10px] text-slate-400 mt-1 space-y-0.5">
+                      {getDepositTypes(ore.ore_name).map((dt) => {
+                        const overall = getOverallProfile(ore.ore_name, dt)
+                        if (!overall) return null
+                        return (
+                          <div key={dt}>
+                            {depositTypeLabel(dt)} · {getOverallSpawnTag(ore.ore_name, dt).label}
+                          </div>
+                        )
+                      })}
+                    </div>
                   )}
                 </div>
               )
