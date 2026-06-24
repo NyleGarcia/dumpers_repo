@@ -1,4 +1,9 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
+import {
+  getBlueprintUnlockStanding,
+  getContractsForMissionLabel,
+  getRewardMissionsForBlueprint,
+} from './blueprintMissionRewards'
 
 export interface MissionRepInfo {
   repMin: number | null
@@ -239,6 +244,24 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     return defaultReturn
   }
 
+  const exactContracts = getContractsForMissionLabel(missionLabel)
+  if (exactContracts.length === 1) {
+    return contractToMissionRepInfo(exactContracts[0])
+  }
+  if (exactContracts.length > 1) {
+    const lockedTier = exactContracts.filter(
+      (contract) =>
+        contract.minStanding?.minReputation != null &&
+        contract.maxStanding?.minReputation != null &&
+        contract.minStanding.minReputation === contract.maxStanding.minReputation
+    )
+    const candidates = lockedTier.length > 0 ? lockedTier : exactContracts
+    const best = [...candidates].sort(
+      (a, b) => (b.minStanding?.minReputation ?? 0) - (a.minStanding?.minReputation ?? 0)
+    )[0]
+    return contractToMissionRepInfo(best)
+  }
+
   // Try to find matching pool by searching all pools for matching titles
   for (const [poolKey, missions] of Object.entries(missionsByPool)) {
     for (const mission of missions) {
@@ -270,9 +293,38 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
   return defaultReturn
 }
 
+function contractToMissionRepInfo(contract: {
+  faction: string
+  title: string
+  system: string
+  region: string | null
+  category: string | null
+  minStanding: { name: string; minReputation: number } | null
+  repPoints: number
+}): MissionRepInfo {
+  return {
+    repMin: contract.repPoints,
+    repMax: contract.repPoints,
+    minReputation: contract.minStanding?.minReputation ?? null,
+    minStandingName: contract.minStanding?.name ?? null,
+    variantCount: 1,
+    missionGiver: contract.faction,
+    matched: true,
+    isLawful: !isUnlawfulFaction(contract.faction),
+    aUecMin: 0,
+    aUecMax: 0,
+    missionType: null,
+    missionLocations: contract.system ? [contract.system] : [],
+    repPoints: contract.repPoints,
+    region: contract.region ?? null,
+    system: contract.system ?? null,
+    category: contract.category ?? null,
+  }
+}
+
 export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlockInfo {
   const internalName = resolveBlueprintInternalName(blueprintFileId)
-  
+
   const defaultReturn: BlueprintUnlockInfo = {
     unlockMinReputation: null,
     unlockStandingName: null,
@@ -285,55 +337,27 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
     missionPoolName: null,
     repPoints: 0,
   }
-  
+
   if (!internalName) return defaultReturn
-  
-  const poolKeys = blueprintToPoolIndex.get(internalName)
-  if (!poolKeys || poolKeys.length === 0) return defaultReturn
-  
-  let lowestReputation: number | null = null
-  let lowestStandingName: string | null = null
-  let factionName: string | null = null
-  let bestPoolName: string | null = null
-  let matchedCount = 0
-  let repPoints = 0
-  
-  for (const poolKey of poolKeys) {
-    // Normalize pool key - strip BP_MISSIONREWARD_ or BP_REWARDS_ prefix and lowercase
-    const normalizedKey = poolKey
-      .replace(/^BP_MISSIONREWARD_/i, '')
-      .replace(/^BP_REWARDS_/i, '')
-      .toLowerCase()
-    const poolMissions = missionsByPool[normalizedKey] || missionsByPool[poolKey.toLowerCase()]
-    if (!poolMissions || poolMissions.length === 0) continue
-    
-    matchedCount++
-    if (!bestPoolName) bestPoolName = poolKey
 
-    for (const mission of poolMissions) {
-      if (!factionName) factionName = mission.faction
-      if (mission.repPoints > repPoints) repPoints = mission.repPoints
+  const rewardMissions = getRewardMissionsForBlueprint(internalName)
+  if (rewardMissions.length === 0) return defaultReturn
 
-      const minRep = mission.minStanding?.minReputation ?? 0
-      if (lowestReputation === null || minRep < lowestReputation) {
-        lowestReputation = minRep
-        lowestStandingName = mission.minStanding?.name ?? (minRep === 0 ? 'Neutral' : null)
-      }
-    }
-  }
-  
-  if (matchedCount === 0) return defaultReturn
-  
+  const unlockStanding = getBlueprintUnlockStanding(internalName)
+  const poolKeys = blueprintToPoolIndex.get(internalName) ?? []
+  const factionName = rewardMissions[0]?.faction ?? null
+  const repPoints = rewardMissions.reduce((max, reward) => Math.max(max, reward.repPoints), 0)
+
   return {
-    unlockMinReputation: lowestReputation,
-    unlockStandingName: lowestStandingName,
+    unlockMinReputation: unlockStanding?.minReputation ?? null,
+    unlockStandingName: unlockStanding?.standingName ?? null,
     factionName,
-    isAvailableByDefault: lowestReputation === 0 || lowestReputation === null,
+    isAvailableByDefault: unlockStanding?.minReputation === 0,
     matched: true,
-    matchedMissionCount: matchedCount,
-    unmatchedMissionCount: poolKeys.length - matchedCount,
+    matchedMissionCount: rewardMissions.length,
+    unmatchedMissionCount: Math.max(0, poolKeys.length - rewardMissions.length),
     isInferred: false,
-    missionPoolName: bestPoolName,
+    missionPoolName: rewardMissions[0]?.poolKey ?? poolKeys[0] ?? null,
     repPoints,
   }
 }

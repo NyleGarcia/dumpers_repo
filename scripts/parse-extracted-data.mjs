@@ -991,6 +991,66 @@ function parseBlueprintRewards() {
 }
 
 /**
+ * Build contract-accurate reward missions for a blueprint (not pool-index bleed).
+ */
+function buildBlueprintRewardMissionsFromContracts(internalName, missionBlueprintsMap, contracts) {
+  const bpName = (internalName || '').toLowerCase()
+  if (!bpName) return []
+
+  const raw = []
+
+  for (const contract of contracts) {
+    for (const poolRef of contract.blueprintPools || []) {
+      const poolItems = missionBlueprintsMap[poolRef.key]
+      if (!poolItems?.length) continue
+
+      const item = poolItems.find((entry) => (entry.name || '').toLowerCase() === bpName)
+      if (!item) continue
+
+      const totalWeight = poolItems.reduce((sum, entry) => sum + (entry.weight || 1), 0)
+      const poolChance = poolRef.chance ?? 1
+      const dropChance = totalWeight > 0 ? poolChance * ((item.weight || 1) / totalWeight) : 0
+
+      raw.push({
+        mission: contract.faction && contract.title ? `${contract.faction}: ${contract.title}` : contract.title,
+        chance: dropChance,
+        poolChance,
+        poolKey: poolRef.key,
+        locations: contract.system ? [contract.system] : [],
+        system: contract.system || null,
+        region: contract.region || null,
+        category: contract.category || null,
+        repPoints: contract.repPoints || 0,
+        minReputation: contract.minStanding?.minReputation ?? null,
+        maxReputation: contract.maxStanding?.minReputation ?? null,
+        standingName: contract.minStanding?.name ?? null,
+        maxStandingName: contract.maxStanding?.name ?? null,
+      })
+    }
+  }
+
+  const grouped = new Map()
+  for (const reward of raw) {
+    const key = `${reward.mission}|${reward.minReputation ?? 'null'}|${reward.maxReputation ?? 'null'}`
+    const existing = grouped.get(key)
+    if (!existing) {
+      grouped.set(key, { ...reward, locations: [...reward.locations] })
+      continue
+    }
+    for (const loc of reward.locations) {
+      if (!existing.locations.includes(loc)) existing.locations.push(loc)
+    }
+    if (reward.chance > existing.chance) existing.chance = reward.chance
+  }
+
+  return [...grouped.values()].sort((a, b) => {
+    const repDiff = (a.minReputation ?? 0) - (b.minReputation ?? 0)
+    if (repDiff !== 0) return repDiff
+    return a.mission.localeCompare(b.mission)
+  })
+}
+
+/**
  * Parse contract generator files to extract complete mission data:
  * - Mission titles (from localization)
  * - Blueprint reward pools
@@ -3693,34 +3753,16 @@ async function main() {
   const enrichedBlueprints = blueprintDefs.map(bp => {
     const bpName = bp.name.toLowerCase().replace('bp_craft_', '')
     const poolKeys = blueprintMissions[bpName] || []
-    
-    if (poolKeys.length === 0) {
+    const rewardMissions = buildBlueprintRewardMissionsFromContracts(
+      bp.internalName || bpName,
+      missionBlueprints,
+      contractData.contracts
+    )
+
+    if (rewardMissions.length === 0) {
       return { ...bp, isReward: false, rewardMissions: [] }
     }
-    
-    // Build rewardMissions from contract data
-    const rewardMissions = []
-    for (const poolKey of poolKeys) {
-      // Normalize pool key to match missionsByPool format
-      const normalizedKey = poolKey
-        .replace(/^bp_missionreward_/i, '')
-        .replace(/^bp_rewards_/i, '')
-        .toLowerCase()
-      const missions = contractData.missionsByPool[normalizedKey] || contractData.missionsByPool[poolKey.toLowerCase()] || []
-      for (const m of missions) {
-        rewardMissions.push({
-          mission: m.faction && m.title ? `${m.faction}: ${m.title}` : m.title,
-          chance: 1,
-          locations: m.system ? [m.system] : [],
-          system: m.system || null,
-          region: m.region || null,
-          repPoints: m.repPoints || 0,
-          minReputation: m.minStanding?.minReputation || 0,
-          standingName: m.minStanding?.name || null
-        })
-      }
-    }
-    
+
     return {
       ...bp,
       isReward: true,

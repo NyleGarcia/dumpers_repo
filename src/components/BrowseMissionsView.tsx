@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import blueprintMissionData from '../data/game-blueprint-missions.json'
 import { useBlueprintData } from '../routes/blueprints'
 import MissionLocationTags from './MissionLocationTags'
 import { getBrowseSystemsForMission } from '../lib/missionLocations'
 import type { Region } from '../lib/missions'
+import { getContractMissionBrowseCatalog, type ContractMissionBrowseEntry } from '../lib/blueprintMissionRewards'
 import {
   makeBrowseMissionKey,
   readMissionTrackerUiState,
@@ -18,22 +18,9 @@ type BlueprintRecord = {
   [key: string]: unknown
 }
 
-type MissionPoolBlueprint = {
-  name: string
-  weight: number
-  path: string
-}
-
-type MissionEntry = {
-  title: string
-  titleKey: string
-  faction: string
-  system: string
-  region: string | null
-  category: string | null
-  minStanding: { name: string; minReputation: number } | null
-  maxStanding: { name: string; minReputation: number } | null
-  repPoints: number
+type MissionDisplay = ContractMissionBrowseEntry & {
+  isLawful: boolean
+  blueprintCount: number
 }
 
 const SYSTEM_LABELS: Record<BrowseSystem, string> = {
@@ -60,19 +47,6 @@ function isUnlawfulFaction(faction: string): boolean {
   return UNLAWFUL_FACTIONS.some(f => lower.includes(f))
 }
 
-interface MissionDisplay {
-  entryKey: string
-  poolKey: string
-  title: string
-  faction: string
-  sourceSystem: string | null
-  region: string | null
-  category: string | null
-  isLawful: boolean
-  minStanding: { name: string; minReputation: number } | null
-  blueprintCount: number
-}
-
 interface MissionGroup {
   title: string
   isLawful: boolean
@@ -86,10 +60,10 @@ interface BrowseMissionsViewProps {
   isOnTargetList: (blueprintId: string) => boolean
 }
 
-function getMissionBrowseSystems(mission: Pick<MissionDisplay, 'poolKey' | 'sourceSystem' | 'region'>): BrowseSystem[] {
+function getMissionBrowseSystems(mission: Pick<MissionDisplay, 'poolKeys' | 'system' | 'region'>): BrowseSystem[] {
   return getBrowseSystemsForMission({
-    poolKey: mission.poolKey,
-    system: mission.sourceSystem,
+    poolKey: mission.poolKeys[0] ?? '',
+    system: mission.system,
     subRegion: mission.region,
   })
 }
@@ -115,7 +89,9 @@ function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
     group.variants.sort((a, b) => {
       const regionCompare = (a.region || '').localeCompare(b.region || '')
       if (regionCompare !== 0) return regionCompare
-      return a.poolKey.localeCompare(b.poolKey)
+      const repCompare = (a.minStanding?.minReputation ?? 0) - (b.minStanding?.minReputation ?? 0)
+      if (repCompare !== 0) return repCompare
+      return (a.poolKeys[0] || '').localeCompare(b.poolKeys[0] || '')
     })
   }
 
@@ -136,8 +112,13 @@ export default function BrowseMissionsView({
   )
   const [searchTerm, setSearchTerm] = useState(() => readMissionTrackerUiState().browse.searchTerm)
 
-  const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
-  const missionsByPool = blueprintMissionData.missionsByPool as Record<string, MissionEntry[]>
+  const missions = useMemo((): MissionDisplay[] => {
+    return getContractMissionBrowseCatalog().map((contract) => ({
+      ...contract,
+      isLawful: !isUnlawfulFaction(contract.faction || ''),
+      blueprintCount: contract.blueprints.length,
+    }))
+  }, [])
 
   const blueprintsByInternalName = useMemo(() => {
     const map: Record<string, BlueprintRecord> = {}
@@ -155,38 +136,6 @@ export default function BrowseMissionsView({
     }
     return map
   }, [blueprints])
-
-  const missions = useMemo((): MissionDisplay[] => {
-    const result: MissionDisplay[] = []
-
-    for (const [poolKey, missionEntries] of Object.entries(missionsByPool)) {
-      const bps = missionBlueprints[poolKey] || missionBlueprints[poolKey.toLowerCase()] || []
-      if (bps.length === 0) continue
-
-      missionEntries.forEach((mission, entryIndex) => {
-        if (!mission.title ||
-            mission.title.includes('~mission') ||
-            mission.title.startsWith('@') ||
-            mission.title.includes('UNINITIALIZED') ||
-            mission.title.includes('PLACEHOLDER')) return
-
-        result.push({
-          entryKey: `${poolKey}|${entryIndex}|${mission.title}|${mission.faction}|${mission.system || 'unknown'}`,
-          poolKey,
-          title: mission.title,
-          faction: mission.faction || 'Unknown',
-          sourceSystem: mission.system || null,
-          region: mission.region,
-          category: mission.category,
-          isLawful: !isUnlawfulFaction(mission.faction || ''),
-          minStanding: mission.minStanding,
-          blueprintCount: bps.length,
-        })
-      })
-    }
-
-    return result.sort((a, b) => a.title.localeCompare(b.title))
-  }, [missionsByPool, missionBlueprints])
 
   const missionsByFaction = useMemo(() => {
     const map: Record<string, { missions: MissionDisplay[]; isLawful: boolean; systems: Set<BrowseSystem> }> = {}
@@ -251,21 +200,17 @@ export default function BrowseMissionsView({
   }, [selectedFaction, missionsByFaction, searchTerm])
 
   const getMissionBlueprintStats = (mission: MissionDisplay) => {
-    const poolBps = missionBlueprints[mission.poolKey] || missionBlueprints[mission.poolKey.toLowerCase()] || []
-    const acquiredCount = poolBps.filter(bp => {
-      const bpName = bp.name.toLowerCase()
-      const fullBp = blueprintsByInternalName[bpName]
+    const acquiredCount = mission.blueprints.filter((bp) => {
+      const fullBp = blueprintsByInternalName[bp.name.toLowerCase()]
       return fullBp && acquiredBlueprints[fullBp.internalName]
     }).length
-    return { poolBps, acquiredCount, total: poolBps.length }
+    return { acquiredCount, total: mission.blueprints.length }
   }
 
   const selectedMissionBlueprints = useMemo(() => {
     if (!selectedMission) return []
 
-    const poolBps = missionBlueprints[selectedMission.poolKey] || missionBlueprints[selectedMission.poolKey.toLowerCase()] || []
-
-    return poolBps.map(bp => {
+    return selectedMission.blueprints.map((bp) => {
       const bpName = bp.name.toLowerCase()
       const fullBp = blueprintsByInternalName[bpName]
       const isAcquired = fullBp ? !!acquiredBlueprints[fullBp.internalName] : false
@@ -282,7 +227,7 @@ export default function BrowseMissionsView({
       if (a.isAcquired !== b.isAcquired) return a.isAcquired ? 1 : -1
       return a.displayName.localeCompare(b.displayName)
     })
-  }, [selectedMission, missionBlueprints, blueprintsByInternalName, acquiredBlueprints, isOnTargetList])
+  }, [selectedMission, blueprintsByInternalName, acquiredBlueprints, isOnTargetList])
 
   const blueprintStats = useMemo(() => {
     const total = selectedMissionBlueprints.length
@@ -321,7 +266,7 @@ export default function BrowseMissionsView({
   }, [selectedFaction, selectedMission])
 
   const renderMissionTags = (mission: MissionDisplay) => {
-    const systemRegion = mission.sourceSystem?.toLowerCase()
+    const systemRegion = mission.system?.toLowerCase()
     const regions: Region[] =
       systemRegion === 'stanton' || systemRegion === 'pyro' || systemRegion === 'nyx'
         ? [systemRegion]
@@ -342,8 +287,8 @@ export default function BrowseMissionsView({
         <MissionLocationTags
           regions={regions}
           subRegion={mission.region}
-          system={mission.sourceSystem}
-          poolKey={mission.poolKey}
+          system={mission.system}
+          poolKey={mission.poolKeys[0]}
         />
         {mission.minStanding && mission.minStanding.minReputation > 0 && (
           <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">

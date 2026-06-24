@@ -6,6 +6,7 @@ import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { resolveIsOrderable } from '../lib/blueprintOrderable'
 import { buildMissionList, getMissionsForBlueprint, missionKey, type Region } from '../lib/missions'
+import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import {
   formatBlueprintUnlockBadge,
   formatRepReward,
@@ -18,8 +19,10 @@ import { readMissionTrackerUiState, writeMissionTrackerUiState } from '../lib/mi
 type ViewMode = 'tracker' | 'browse'
 
 function formatDropChance(chance: number | null | undefined): string | null {
-  if (chance == null || chance >= 1) return null
-  return `${Math.round(chance * 100)}% BP drop`
+  if (chance == null) return null
+  if (chance >= 1) return null
+  const pct = chance * 100
+  return pct >= 10 ? `${Math.round(pct)}% BP drop` : `${pct.toFixed(1)}% BP drop`
 }
 
 function MissionCategoryBadge({ category }: { category?: string | null }) {
@@ -262,9 +265,10 @@ export default function TargetsRoute() {
     const map: Record<string, string[]> = {}
     for (const bp of blueprints) {
       const keys: string[] = []
-      for (const reward of bp.rewardMissions ?? []) {
+      for (const reward of getRewardMissionsForBlueprint(bp.internalName)) {
         const mission = reward.mission?.trim()
-        if (mission) keys.push(missionKey(mission))
+        if (!mission) continue
+        keys.push(missionKey(`${mission}|${reward.minReputation ?? ''}|${reward.maxReputation ?? ''}`))
       }
       map[bp.internalName] = keys
     }
