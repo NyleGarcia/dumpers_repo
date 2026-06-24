@@ -64,11 +64,11 @@ export interface FormattedClusterDisplay {
 }
 
 const spawns = gameMiningSpawnsData as {
-  ores: Record<string, OreSpawnProfile>
+  ores?: Record<string, OreSpawnProfile>
 }
 
 function getOreProfile(oreName: string): OreSpawnProfile | null {
-  return spawns.ores[oreName] ?? null
+  return spawns.ores?.[oreName] ?? null
 }
 
 export function getDepositTypes(oreName: string): DepositType[] {
@@ -90,7 +90,7 @@ export function getLocationProfile(
   const profile = getOreProfile(oreName)
   if (!profile) return null
 
-  const matches = Object.values(profile.locations).filter(
+  const matches = Object.values(profile.locations ?? {}).filter(
     (loc) => loc.locationName === locationName && (!depositType || loc.depositType === depositType)
   )
   if (matches.length === 0) return null
@@ -101,7 +101,7 @@ export function getLocationProfile(
 
 export function getLocationProfilesForOre(oreName: string): LocationSpawnProfile[] {
   const profile = getOreProfile(oreName)
-  if (!profile) return []
+  if (!profile?.locations) return []
   return Object.values(profile.locations)
 }
 

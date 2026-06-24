@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useSearch } from '@tanstack/react-router'
+import { getRouteApi } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useMiningData, type MiningData } from '../hooks/useArchiveData'
 import { useMiningTracker } from '../hooks/useMiningTracker'
@@ -41,15 +41,13 @@ import type { DepositType } from '../lib/localGuestCache'
 
 type ViewMode = 'tracker' | 'guide'
 
+const miningTrackerRoute = getRouteApi('/mining-tracker')
+
 export default function MiningTrackerRoute() {
   const { isGuestPreview } = useAuth()
   const { data, loading, error, refetch } = useMiningData()
   const { entries, addEntry, removeEntry, clearAll, isTracked } = useMiningTracker()
-  const search = useSearch({ strict: false }) as {
-    ore?: string
-    location?: string
-    add?: boolean
-  }
+  const search = miningTrackerRoute.useSearch()
 
   const [viewMode, setViewMode] = useState<ViewMode>('tracker')
   const [oreSearch, setOreSearch] = useState('')
@@ -92,14 +90,14 @@ export default function MiningTrackerRoute() {
     setOreSearch(ore.ore_name)
     setSelectedOreName(ore.ore_name)
 
-    if (search.add) {
+    if (search.add === true) {
       const types = getDepositTypes(ore.ore_name)
       const depositType = types.includes('surface') ? 'surface' : types[0]
-      if (depositType) {
+      if (depositType && !isTracked(ore.ore_name, depositType)) {
         addEntry(ore.ore_name, ore.rarity, { depositType, profileMode: 'overall' })
       }
     }
-  }, [search.ore, search.add, data, addEntry])
+  }, [search.ore, search.add, data, addEntry, isTracked])
 
   const selectedOreData = useMemo(() => {
     if (!data) return null
@@ -140,7 +138,7 @@ export default function MiningTrackerRoute() {
     if (!data) return {}
     const map: Record<string, MiningData[]> = {}
     for (const ore of data) {
-      for (const loc of ore.locations) {
+      for (const loc of ore.locations ?? []) {
         if (!map[loc]) map[loc] = []
         map[loc].push(ore)
       }
@@ -167,7 +165,7 @@ export default function MiningTrackerRoute() {
       filtered = filtered.filter(
         (item) =>
           item.ore_name.toLowerCase().includes(term) ||
-          item.locations.some((loc) => loc.toLowerCase().includes(term))
+          item.locations?.some((loc) => loc.toLowerCase().includes(term))
       )
     }
     return filtered
@@ -557,6 +555,10 @@ export default function MiningTrackerRoute() {
 
 // ===== Guide View Helper Components =====
 
+function getOreLocations(ore: MiningData): string[] {
+  return ore.locations ?? []
+}
+
 function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationClick: (loc: string) => void }) {
   const colors = MINING_RARITY_COLORS[item.rarity] || MINING_RARITY_COLORS.common
   const signature = ORE_SIGNATURES[item.ore_name]
@@ -570,7 +572,7 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
       maxNodes: number
     }
     const chips: Chip[] = []
-    for (const location of item.locations) {
+    for (const location of item.locations ?? []) {
       const profiles = getGuideLocationProfiles(item.ore_name, location)
       if (profiles.length === 0) {
         chips.push({
@@ -663,7 +665,7 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
             <TrackOreButtons oreName={item.ore_name} rarity={item.rarity} compact />
           )}
           <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
-            {item.locations.length} location{item.locations.length !== 1 ? 's' : ''}
+            {getOreLocations(item).length} location{getOreLocations(item).length !== 1 ? 's' : ''}
           </span>
         </div>
       </div>
@@ -757,7 +759,7 @@ function GuideOreModal({ ore, onClose }: { ore: MiningData; onClose: () => void 
   const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
   const signature = ORE_SIGNATURES[ore.ore_name]
 
-  const sortedLocations = [...ore.locations].sort((a, b) => {
+  const sortedLocations = [...(ore.locations ?? [])].sort((a, b) => {
     const sysA = LOCATION_SYSTEMS[a] || 'Unknown'
     const sysB = LOCATION_SYSTEMS[b] || 'Unknown'
     if (sysA !== sysB) return sysA.localeCompare(sysB)
@@ -799,7 +801,7 @@ function GuideOreModal({ ore, onClose }: { ore: MiningData; onClose: () => void 
 
         <div className="p-4 overflow-y-auto max-h-[60vh]">
           <p className="text-sm text-slate-400 mb-4">
-            Found at {ore.locations.length} location{ore.locations.length !== 1 ? 's' : ''}:
+            Found at {getOreLocations(ore).length} location{getOreLocations(ore).length !== 1 ? 's' : ''}:
           </p>
           <div className="space-y-2">
             {sortedLocations.map((location) => {

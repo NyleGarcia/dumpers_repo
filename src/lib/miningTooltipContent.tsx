@@ -156,7 +156,7 @@ export function guideOreModalLocationTooltip(
   return (
     <div className="space-y-2">
       {guideLocationChipTooltip(oreName, guideLocationName, depositType)}
-      {profile.compositionParts.length > 0 && (
+      {profile.compositionParts?.length ? (
         <ul className="text-slate-400 space-y-0.5">
           {profile.compositionParts.map((part) => (
             <li key={part.elementName}>
@@ -164,7 +164,7 @@ export function guideOreModalLocationTooltip(
             </li>
           ))}
         </ul>
-      )}
+      ) : null}
     </div>
   )
 }
