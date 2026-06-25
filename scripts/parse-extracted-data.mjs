@@ -249,16 +249,163 @@ function resolveFactionDisplayName({ rawName, factionKey, recordName, hints = ''
 }
 
 const NYX_LOCATION_MARKERS = ['levski', 'rockcracker', 'keeger', 'claw salamander']
+const STANTON_LOCATION_MARKERS = [
+  'asdfacility',
+  'onyxfacility',
+  'microtech',
+  'hurston',
+  'crusader',
+  'arccorp',
+  'delamar',
+  'stantonstar',
+  // PAF/OLP Caranite sites — Daymar (Crusader) & Aberdeen (Hurston), Stanton only
+  'daymar',
+  'aberdeen',
+  'attritus',
+  'vivere',
+  'ruptura',
+  'hathor',
+  '_paf',
+  '_olp',
+]
+
+/** BHG bounty at Planetary Alignment Facility sites (Hathor mission line). */
+const BHG_PAF_DISPLAY_TITLE = 'Verified Bounty · Hathor · Planetary Alignment Facility'
+
+const BHG_NYX_DIFFICULTY_LABELS = {
+  rehire: 'Rehire',
+  veryeasy: 'Very Easy',
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
+  veryhard: 'Very Hard',
+  super: 'Super',
+}
 
 function inferSystemFromContractSignals(contractSignals) {
   const lower = contractSignals.toLowerCase()
+
   if (NYX_LOCATION_MARKERS.some((marker) => lower.includes(marker))) {
     return 'Nyx'
   }
-  if (lower.includes('_nyx_') || lower.includes('/nyx/') || lower.includes('nyx_')) {
+  if (STANTON_LOCATION_MARKERS.some((marker) => lower.includes(marker))) {
+    return 'Stanton'
+  }
+
+  if (lower.includes('pyronyx') || lower.includes('nyx/stanton') || lower.includes('pyro/stanton')) {
+    return 'Pyro'
+  }
+
+  if (/_stanton(?:_|$|\d|\s)/.test(lower) || /(?:^|_)stanton$/.test(lower)) {
+    return 'Stanton'
+  }
+  if (/_pyro(?:_|$|\d|\s)/.test(lower) || /(?:^|_)pyro$/.test(lower)) {
+    return 'Pyro'
+  }
+  if (/_nyx(?:_|$|\d|\s)/.test(lower) || /(?:^|_)nyx$/.test(lower)) {
     return 'Nyx'
   }
+  if (/_nyx\//.test(lower)) {
+    return 'Nyx'
+  }
+
+  if (lower.includes('vaughn') && /region[a-d]/.test(lower)) {
+    return 'Pyro'
+  }
+
   return null
+}
+
+function humanizeContractDebugName(debugName) {
+  if (!debugName) return 'Unknown Mission'
+  return debugName
+    .replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => {
+      const lower = word.toLowerCase()
+      if (lower === 'bhg') return 'BHG'
+      if (lower === 'nyx') return 'Nyx'
+      if (lower === 'paf') return 'Planetary Alignment Facility'
+      if (lower === 'olp') return 'Orbital Laser Platform'
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ')
+}
+
+function stripMissionTemplatePlaceholders(title) {
+  if (!title) return ''
+  return title
+    .replace(/~mission\s*\([^)]*\)/gi, '')
+    .replace(/\s*\|\s*/g, ' · ')
+    .replace(/\s*:\s*(\s|$)/g, ': ')
+    .replace(/\s+/g, ' ')
+    .replace(/\s+at\s*$/i, '')
+    .trim()
+}
+
+function resolveContractDisplayTitle({ title, titleKey, debugName, localization, category, system }) {
+  const debugLower = (debugName || '').toLowerCase()
+  const titleLower = (title || '').toLowerCase()
+
+  const nyxBhgMatch = debugName?.match(/^BountyHuntersGuild_Bounty_Nyx_(.+)$/i)
+  if (nyxBhgMatch) {
+    const suffix = nyxBhgMatch[1]
+    const suffixLower = suffix.toLowerCase()
+    const diffLabel =
+      BHG_NYX_DIFFICULTY_LABELS[suffixLower] ||
+      humanizeContractDebugName(suffix)
+
+    const locCandidates = [
+      debugName,
+      `bhg_bounty_nyx_${suffixLower}`,
+      `BountyHuntersGuild_Bounty_Nyx_${suffix}`,
+      titleKey?.startsWith('@') ? titleKey.slice(1) : titleKey,
+    ].filter(Boolean)
+
+    for (const key of locCandidates) {
+      const loc = localization[key]
+      if (loc && !loc.includes('~mission') && !isUnresolvedDisplayName(loc)) {
+        return loc.trim()
+      }
+    }
+    return `Nyx Bounty · ${diffLabel}`
+  }
+
+  if (debugLower.includes('asdfacilitydelv')) {
+    if (debugLower.includes('researchwing')) return 'Verified Bounty · ASD Research Wing'
+    if (debugLower.includes('engineeringwing')) return 'Verified Bounty · ASD Engineering Wing'
+    return 'Verified Bounty · ASD Facility'
+  }
+
+  if (debugLower.includes('rockcracker') || titleLower.includes('qv breaker station')) {
+    if (titleLower.includes('high-risk')) return 'High-Risk Bounty · QV Breaker Station'
+    return 'Verified Bounty · QV Breaker Station'
+  }
+
+  if (debugLower.includes('bountyhuntersguild_paf') || (debugLower.includes('_paf_') && debugLower.includes('bounty'))) {
+    return BHG_PAF_DISPLAY_TITLE
+  }
+
+  if (title?.includes('~mission')) {
+    const cleaned = stripMissionTemplatePlaceholders(title)
+    if (cleaned.length > 8 && !/^verified bounty:?$/i.test(cleaned)) {
+      return cleaned.replace(/:\s*$/, '').trim()
+    }
+  }
+
+  if (!title || title === debugName || isUnresolvedDisplayName(title)) {
+    if (titleKey?.startsWith('@')) {
+      const loc = localization[titleKey.slice(1)]
+      if (loc && !loc.includes('~mission') && !isUnresolvedDisplayName(loc)) {
+        return loc.trim()
+      }
+    }
+    return humanizeContractDebugName(debugName)
+  }
+
+  return title.trim()
 }
 
 /**
@@ -1203,7 +1350,19 @@ function parseContractGenerators(localization) {
       ...(blueprintPoolPaths || []),
     ].join(' ').toLowerCase()
 
-    if (contractSignals.includes('hockrow') || contractSignals.includes('asdfacilitydelve') || /\basd[23][a-z]?\b/.test(contractSignals)) {
+    if (
+      contractSignals.includes('bountyhuntersguild') ||
+      contractSignals.includes('bhg_')
+    ) {
+      if (factionName === 'Unknown' || factionName === factionKey || isUnresolvedDisplayName(factionName)) {
+        factionKey = 'lawful_bountyhuntersguild'
+        factionName = factionNames.factionreputation_lawful_bountyhuntersguild || 'Bounty Hunters Guild'
+      }
+    } else if (
+      contractSignals.includes('hockrow') ||
+      contractSignals.includes('hockrow_facilitydelve') ||
+      (/\basd[23][a-z]?\b/.test(contractSignals) && contractSignals.includes('hockrow'))
+    ) {
       factionKey = 'lawful_hockrowagency'
       factionName = factionNames.factionreputation_lawful_hockrowagency || 'Hockrow Agency'
     } else if (
@@ -1385,46 +1544,25 @@ function parseContractGenerators(localization) {
           }
         }
         
-        // Extract system from title, debugName, localization keys, or template path
+        // Extract system from contract-specific signals only (not whole generator file paths).
         let system = 'Unknown'
-        const nameToCheck = `${title} ${debugName} ${titleKey} ${templatePath} ${file}`.toLowerCase()
+        const poolKeySignals = blueprintPools.map((pool) => pool.key).join(' ')
+        const nameToCheck = `${title} ${debugName} ${titleKey} ${templatePath} ${poolKeySignals}`.toLowerCase()
 
-        const inferredNyx = inferSystemFromContractSignals(nameToCheck)
-        if (inferredNyx) {
-          system = inferredNyx
-        } else {
-          const systemPatterns = [
-            { pattern: /(?:^|[^a-z])stanton(?:\d|\b|\/)/i, name: 'Stanton' },
-            { pattern: /(?:^|[^a-z])pyro(?:\d|\b|\/)/i, name: 'Pyro' },
-            { pattern: /(?:^|[^a-z])nyx(?:\d|\b|\/)/i, name: 'Nyx' },
-            { pattern: /(?:^|[^a-z])terra(?:\d|\b)/i, name: 'Terra' },
-            { pattern: /\bsol\b/i, name: 'Sol' },
-          ]
-          for (const { pattern, name } of systemPatterns) {
-            if (pattern.test(nameToCheck)) {
-              system = name
-              break
-            }
-          }
+        const inferredSystem = inferSystemFromContractSignals(nameToCheck)
+        if (inferredSystem) {
+          system = inferredSystem
         }
 
         if (system === 'Unknown') {
-          const contractSignals = nameToCheck
           if (
             factionKey === 'wikelo' ||
-            contractSignals.includes('thecollector') ||
-            contractSignals.includes('collectorwikelo')
+            nameToCheck.includes('thecollector') ||
+            nameToCheck.includes('collectorwikelo')
           ) {
             system = 'Stanton'
-          } else if (
-            factionKey === 'lawful_hockrowagency' ||
-            contractSignals.includes('hockrow_facilitydelve') ||
-            contractSignals.includes('asdfacilitydelve')
-          ) {
+          } else if (nameToCheck.includes('hockrow_facilitydelve') || nameToCheck.includes('asdfacilitydelv')) {
             system = 'Stanton'
-          } else {
-            const inferredSystem = inferSystemFromContractSignals(contractSignals)
-            if (inferredSystem) system = inferredSystem
           }
         }
         
@@ -1528,11 +1666,21 @@ function parseContractGenerators(localization) {
         
         if (blueprintPools.length > 0) {
           contractsWithBlueprints++
+
+          const displayTitle = resolveContractDisplayTitle({
+            title,
+            titleKey,
+            debugName,
+            localization,
+            category,
+            system,
+          })
           
           const contractData = {
             id: contract.id || contract.debugName,
             debugName: contract.debugName,
             title,
+            displayTitle,
             titleKey,
             faction: factionName,
             factionKey,
@@ -1554,6 +1702,7 @@ function parseContractGenerators(localization) {
             }
             missionsByPool[pool.key].push({
               title,
+              displayTitle,
               titleKey,
               faction: factionName,
               system,

@@ -1,4 +1,7 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
+import { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
+
+export { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
 
 export interface BlueprintRewardMission {
   mission: string
@@ -35,6 +38,7 @@ type ContractEntry = {
   id?: string
   debugName?: string
   title: string
+  displayTitle?: string
   titleKey?: string
   faction: string
   factionKey?: string
@@ -68,8 +72,17 @@ function normalizeMissionTitle(title: string): string {
   return title.replace(/\\n/g, '').replace(/\n/g, '').trim()
 }
 
+function contractDisplayTitle(contract: ContractEntry): string {
+  return formatMissionDisplayTitle({
+    title: contract.title,
+    displayTitle: contract.displayTitle,
+    titleKey: contract.titleKey,
+    debugName: contract.debugName,
+  })
+}
+
 function contractMissionLabel(contract: ContractEntry): string {
-  return `${contract.faction}: ${normalizeMissionTitle(contract.title)}`
+  return `${contract.faction}: ${contractDisplayTitle(contract)}`
 }
 
 function poolTotalWeight(poolKey: string): number {
@@ -110,7 +123,7 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
           standingName: contract.minStanding?.name ?? null,
           maxStandingName: contract.maxStanding?.name ?? null,
           faction: contract.faction,
-          title: contract.title,
+          title: contractDisplayTitle(contract),
         }
 
         if (!index.has(bpName)) index.set(bpName, [])
@@ -234,22 +247,16 @@ export interface ContractMissionBrowseEntry {
   blueprints: ContractBlueprintDrop[]
 }
 
-function isValidBrowseMissionTitle(title: string | null | undefined): boolean {
-  const normalized = normalizeMissionTitle(title || '')
-  if (!normalized) return false
-  return (
-    !normalized.includes('~mission') &&
-    !normalized.startsWith('@') &&
-    !normalized.includes('UNINITIALIZED') &&
-    !normalized.includes('PLACEHOLDER')
-  )
+function isValidBrowseContract(contract: ContractEntry): boolean {
+  const displayTitle = contractDisplayTitle(contract)
+  return isValidBrowseMissionTitle(displayTitle) && isValidBrowseMissionTitle(contract.title)
 }
 
 function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
   const entries: ContractMissionBrowseEntry[] = []
 
   for (const contract of contracts) {
-    if (!isValidBrowseMissionTitle(contract.title)) continue
+    if (!isValidBrowseContract(contract)) continue
 
     const poolKeys = (contract.blueprintPools ?? []).map((pool) => pool.key)
     const blueprints: ContractBlueprintDrop[] = []
@@ -286,7 +293,7 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
         contract.system || 'unknown',
       ].join('|'),
       mission: contractMissionLabel(contract),
-      title: normalizeMissionTitle(contract.title),
+      title: contractDisplayTitle(contract),
       faction: contract.faction,
       system: contract.system || null,
       region: contract.region ?? null,

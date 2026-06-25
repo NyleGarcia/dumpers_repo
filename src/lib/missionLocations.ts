@@ -115,6 +115,14 @@ export function formatRegionLabel(system: string | Region, region: string): stri
 
 function inferSystemFromPoolKey(poolKey: string): MissionStarSystem | null {
   const lower = poolKey.toLowerCase()
+
+  if (/_stanton(?:_|$)/.test(lower) || lower.endsWith('stanton')) return 'stanton'
+  if (lower.includes('pyronyx')) return 'pyro'
+  if (/_pyro(?:_|$)/.test(lower) || lower.endsWith('pyro')) return 'pyro'
+  if (/_nyx(?:_|$)/.test(lower) || lower.endsWith('nyx')) return 'nyx'
+  if (/_paf(?:_|$)/.test(lower) || /_olp(?:_|$)/.test(lower)) return 'stanton'
+  if (/daymar|aberdeen|attritus|vivere|ruptura|hathor/.test(lower)) return 'stanton'
+
   if (!/region[a-d]/i.test(lower)) return null
 
   // Pyro regional contract pools (CFP outposts, Headhunters mercenary, etc.)
@@ -210,6 +218,8 @@ export function getBrowseSystemsForMission(options: {
   const tags = buildMissionLocationTags(options)
 
   if (tags.length === 1 && tags[0].key === 'unknown') {
+    const poolLower = options.poolKey?.toLowerCase() ?? ''
+    if (poolLower.includes('pyronyx')) return ['pyro', 'nyx']
     return ['unknown']
   }
 
@@ -223,6 +233,12 @@ export function getBrowseSystemsForMission(options: {
 
     const sys = normalizeSystem(tag.key.split('-')[0])
     if (sys) systems.add(sys)
+  }
+
+  const poolLower = options.poolKey?.toLowerCase() ?? ''
+  if (poolLower.includes('pyronyx')) {
+    systems.add('pyro')
+    systems.add('nyx')
   }
 
   return systems.size > 0 ? [...systems] : ['unknown']
