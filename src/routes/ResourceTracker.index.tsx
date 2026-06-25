@@ -281,7 +281,7 @@ export default function ResourceTrackerRoute() {
           onClick={() => setActiveTab('personal')}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
             activeTab === 'personal'
-              ? 'bg-red-600 text-white shadow-lg shadow-red-500/20 site-btn-burn'
+              ? 'site-filter-selected-red shadow-lg shadow-red-500/10'
               : 'text-slate-400 hover:text-white hover:bg-slate-800'
           }`}
         >
@@ -293,7 +293,7 @@ export default function ResourceTrackerRoute() {
             onClick={() => setActiveTab('site')}
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
               activeTab === 'site'
-                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20 site-btn-burn'
+                ? 'site-filter-selected-purple shadow-lg shadow-purple-500/10'
                 : 'text-slate-400 hover:text-white hover:bg-slate-800'
             }`}
           >
@@ -371,7 +371,7 @@ export default function ResourceTrackerRoute() {
             onClick={() => setViewMode('cards')}
             className={`px-3 py-2 text-sm font-medium transition-colors site-btn-shimmer ${
               viewMode === 'cards'
-                ? 'bg-red-600 text-white site-btn-burn'
+                ? 'site-filter-selected-red'
                 : 'bg-slate-900/70 text-slate-400 hover:text-white'
             }`}
           >
@@ -382,7 +382,7 @@ export default function ResourceTrackerRoute() {
             onClick={() => setViewMode('list')}
             className={`px-3 py-2 text-sm font-medium transition-colors border-l border-slate-600 site-btn-shimmer ${
               viewMode === 'list'
-                ? 'bg-red-600 text-white site-btn-burn'
+                ? 'site-filter-selected-red'
                 : 'bg-slate-900/70 text-slate-400 hover:text-white'
             }`}
           >

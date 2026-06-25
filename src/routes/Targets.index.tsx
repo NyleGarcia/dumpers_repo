@@ -365,7 +365,7 @@ export default function TargetsRoute() {
           onClick={() => setViewMode('tracker')}
           className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
             viewMode === 'tracker'
-              ? 'bg-orange-600 text-white site-btn-burn'
+              ? 'site-filter-selected-orange'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -375,7 +375,7 @@ export default function TargetsRoute() {
           onClick={() => setViewMode('browse')}
           className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
             viewMode === 'browse'
-              ? 'bg-orange-600 text-white site-btn-burn'
+              ? 'site-filter-selected-orange'
               : 'text-slate-400 hover:text-white'
           }`}
         >

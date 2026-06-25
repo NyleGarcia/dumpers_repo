@@ -220,7 +220,7 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
                   onClick={() => setSelectedCareer(null)}
                   className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors site-btn-shimmer ${
                     selectedCareer === null
-                      ? 'bg-orange-500/20 text-orange-400 border-orange-500/30 site-btn-burn'
+                      ? 'site-filter-selected-orange'
                       : 'bg-slate-700/50 text-slate-400 border-slate-600/50 hover:border-slate-500/50'
                   }`}
                 >
@@ -232,7 +232,7 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
                     onClick={() => setSelectedCareer(key)}
                     className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors site-btn-shimmer ${
                       selectedCareer === key
-                        ? 'bg-orange-500/20 text-orange-400 border-orange-500/30 site-btn-burn'
+                        ? 'site-filter-selected-orange'
                         : 'bg-slate-700/50 text-slate-400 border-slate-600/50 hover:border-slate-500/50'
                     }`}
                   >

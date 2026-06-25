@@ -450,7 +450,7 @@ export default function BlueprintsRoute() {
             onClick={() => setShowOnlyRewards(!showOnlyRewards)}
             className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap shrink-0 site-btn-shimmer ${
               showOnlyRewards
-                ? 'bg-amber-600 text-white site-btn-burn'
+                ? 'site-filter-selected-amber'
                 : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 border border-slate-600'
             }`}
           >
@@ -546,7 +546,7 @@ export default function BlueprintsRoute() {
                         disabled={count === 0}
                         className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                           selectedSize === size
-                            ? 'bg-blue-600 text-white site-btn-burn'
+                            ? 'site-filter-selected-blue'
                             : count === 0
                               ? 'bg-blue-950/30 text-blue-800 border border-blue-900/50 cursor-not-allowed'
                               : 'bg-blue-950/50 text-blue-400 hover:bg-blue-900/50 border border-blue-800/50'
@@ -576,7 +576,7 @@ export default function BlueprintsRoute() {
                         disabled={count === 0}
                         className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                           selectedArmorWeight === weight
-                            ? 'bg-blue-600 text-white site-btn-burn'
+                            ? 'site-filter-selected-blue'
                             : count === 0
                               ? 'bg-blue-950/30 text-blue-800 border border-blue-900/50 cursor-not-allowed'
                               : 'bg-blue-950/50 text-blue-400 hover:bg-blue-900/50 border border-blue-800/50'
@@ -606,7 +606,7 @@ export default function BlueprintsRoute() {
                         disabled={count === 0}
                         className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                           selectedArmorSlot === slot
-                            ? 'bg-green-600 text-white site-btn-burn'
+                            ? 'site-filter-selected-green'
                             : count === 0
                               ? 'bg-green-950/30 text-green-800 border border-green-900/50 cursor-not-allowed'
                               : 'bg-green-950/50 text-green-400 hover:bg-green-900/50 border border-green-800/50'
@@ -630,7 +630,7 @@ export default function BlueprintsRoute() {
                     disabled={count === 0}
                     className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                       selectedSubCategory === sub
-                        ? 'bg-orange-600 text-white site-btn-burn'
+                        ? 'site-filter-selected-orange'
                         : count === 0
                           ? 'bg-orange-950/30 text-orange-800 border border-orange-900/50 cursor-not-allowed'
                           : 'bg-orange-950/50 text-orange-400 hover:bg-orange-900/50 border border-orange-800/50'

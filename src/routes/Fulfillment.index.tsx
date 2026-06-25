@@ -589,7 +589,7 @@ export default function FulfillmentRoute() {
               onClick={() => setListingTypeFilter(opt.id)}
               className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors site-btn-shimmer ${
                 listingTypeFilter === opt.id
-                  ? 'bg-slate-700 text-white border-slate-500 site-btn-burn'
+                  ? 'site-filter-selected-slate'
                   : 'bg-slate-900/60 text-slate-400 border-slate-700 hover:border-slate-600'
               }`}
             >
