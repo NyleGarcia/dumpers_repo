@@ -250,9 +250,9 @@ export default function MiningTrackerRoute() {
       <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit mb-4">
         <button
           onClick={() => setViewMode('tracker')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
             viewMode === 'tracker' 
-              ? 'bg-orange-600 text-white' 
+              ? 'bg-orange-600 text-white site-btn-burn' 
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -260,9 +260,9 @@ export default function MiningTrackerRoute() {
         </button>
         <button
           onClick={() => setViewMode('guide')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
             viewMode === 'guide' 
-              ? 'bg-orange-600 text-white' 
+              ? 'bg-orange-600 text-white site-btn-burn' 
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -470,9 +470,9 @@ export default function MiningTrackerRoute() {
           <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
             <button
               onClick={() => setGuideViewMode('ores')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
                 guideViewMode === 'ores' 
-                  ? 'bg-slate-700 text-white' 
+                  ? 'bg-slate-700 text-white site-btn-burn' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -480,9 +480,9 @@ export default function MiningTrackerRoute() {
             </button>
             <button
               onClick={() => setGuideViewMode('locations')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
                 guideViewMode === 'locations' 
-                  ? 'bg-slate-700 text-white' 
+                  ? 'bg-slate-700 text-white site-btn-burn' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -531,8 +531,8 @@ export default function MiningTrackerRoute() {
                     key={rarity}
                     onClick={() => setGuideRarityFilter(guideRarityFilter === rarity ? null : rarity)}
                     className={`
-                      p-2 rounded-lg border text-center transition-all
-                      ${guideRarityFilter === rarity ? colors.bg + ' ' + colors.border : 'bg-slate-800/40 border-slate-700/50 hover:border-slate-600'}
+                      p-2 rounded-lg border text-center transition-all site-btn-shimmer
+                      ${guideRarityFilter === rarity ? colors.bg + ' ' + colors.border + ' site-btn-burn' : 'bg-slate-800/40 border-slate-700/50 hover:border-slate-600'}
                     `}
                   >
                     <span className={`text-lg font-bold ${guideRarityFilter === rarity ? colors.text : 'text-white'}`}>

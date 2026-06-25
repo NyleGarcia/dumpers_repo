@@ -279,9 +279,9 @@ export default function ResourceTrackerRoute() {
         <button
           type="button"
           onClick={() => setActiveTab('personal')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
             activeTab === 'personal'
-              ? 'bg-red-600 text-white shadow-lg shadow-red-500/20'
+              ? 'bg-red-600 text-white shadow-lg shadow-red-500/20 site-btn-burn'
               : 'text-slate-400 hover:text-white hover:bg-slate-800'
           }`}
         >
@@ -291,9 +291,9 @@ export default function ResourceTrackerRoute() {
           <button
             type="button"
             onClick={() => setActiveTab('site')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
               activeTab === 'site'
-                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
+                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20 site-btn-burn'
                 : 'text-slate-400 hover:text-white hover:bg-slate-800'
             }`}
           >
@@ -369,9 +369,9 @@ export default function ResourceTrackerRoute() {
           <button
             type="button"
             onClick={() => setViewMode('cards')}
-            className={`px-3 py-2 text-sm font-medium transition-colors ${
+            className={`px-3 py-2 text-sm font-medium transition-colors site-btn-shimmer ${
               viewMode === 'cards'
-                ? 'bg-red-600 text-white'
+                ? 'bg-red-600 text-white site-btn-burn'
                 : 'bg-slate-900/70 text-slate-400 hover:text-white'
             }`}
           >
@@ -380,9 +380,9 @@ export default function ResourceTrackerRoute() {
           <button
             type="button"
             onClick={() => setViewMode('list')}
-            className={`px-3 py-2 text-sm font-medium transition-colors border-l border-slate-600 ${
+            className={`px-3 py-2 text-sm font-medium transition-colors border-l border-slate-600 site-btn-shimmer ${
               viewMode === 'list'
-                ? 'bg-red-600 text-white'
+                ? 'bg-red-600 text-white site-btn-burn'
                 : 'bg-slate-900/70 text-slate-400 hover:text-white'
             }`}
           >

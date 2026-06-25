@@ -218,9 +218,9 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
               <div className="flex flex-wrap gap-1.5">
                 <button
                   onClick={() => setSelectedCareer(null)}
-                  className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors ${
+                  className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors site-btn-shimmer ${
                     selectedCareer === null
-                      ? 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                      ? 'bg-orange-500/20 text-orange-400 border-orange-500/30 site-btn-burn'
                       : 'bg-slate-700/50 text-slate-400 border-slate-600/50 hover:border-slate-500/50'
                   }`}
                 >
@@ -230,9 +230,9 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
                   <button
                     key={key}
                     onClick={() => setSelectedCareer(key)}
-                    className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors ${
+                    className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors site-btn-shimmer ${
                       selectedCareer === key
-                        ? 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                        ? 'bg-orange-500/20 text-orange-400 border-orange-500/30 site-btn-burn'
                         : 'bg-slate-700/50 text-slate-400 border-slate-600/50 hover:border-slate-500/50'
                     }`}
                   >

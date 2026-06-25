@@ -363,9 +363,9 @@ export default function TargetsRoute() {
       <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit mb-6">
         <button
           onClick={() => setViewMode('tracker')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
             viewMode === 'tracker'
-              ? 'bg-orange-600 text-white'
+              ? 'bg-orange-600 text-white site-btn-burn'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -373,9 +373,9 @@ export default function TargetsRoute() {
         </button>
         <button
           onClick={() => setViewMode('browse')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
             viewMode === 'browse'
-              ? 'bg-orange-600 text-white'
+              ? 'bg-orange-600 text-white site-btn-burn'
               : 'text-slate-400 hover:text-white'
           }`}
         >
