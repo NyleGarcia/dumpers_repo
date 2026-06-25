@@ -47,7 +47,7 @@ React 18, Vite, TanStack Router/Query, Tailwind, Supabase (Auth + Postgres + RLS
 
 ## Quick start
 
-1. Clone and `npm install`
+1. Clone and `npm install` (Node **22+**, npm **11+** — see `.nvmrc`)
 2. Copy `.env.example` → `.env` with your Supabase URL and anon key
 3. Set up the database — see [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)
    - **Existing databases:** apply incremental migrations in order through `082_discord_market_coalesce.sql`

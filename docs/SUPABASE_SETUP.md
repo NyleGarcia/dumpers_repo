@@ -107,15 +107,15 @@ If pg_cron is unavailable on your plan, Discord queue messages can still be proc
 ## 4. Deploy Edge Functions
 
 ```bash
-npm install -g supabase   # if needed
-supabase login
-supabase link --project-ref YOUR_PROJECT_REF
+npm install   # includes Supabase CLI as a dev dependency
+npx supabase login
+npx supabase link --project-ref YOUR_PROJECT_REF
 
-supabase functions deploy ban-user
-supabase functions deploy unban-user
-supabase functions deploy delete-account
-supabase functions deploy validate-rsi-handle
-supabase functions deploy send-discord
+npx supabase functions deploy ban-user
+npx supabase functions deploy unban-user
+npx supabase functions deploy delete-account
+npx supabase functions deploy validate-rsi-handle
+npx supabase functions deploy send-discord
 ```
 
 | Function | Purpose |

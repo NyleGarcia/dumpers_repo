@@ -121,9 +121,9 @@ Your host isn't configured for SPA routing. All paths need to serve `index.html`
 The canonical DFP host (`raw.githubusercontent.com`) serves `Access-Control-Allow-Origin: *`. If you see CORS errors, check that you're not accidentally trying to load from a different origin.
 
 ### Edge Functions not working
-1. Verify functions are deployed: `supabase functions list`
+1. Verify functions are deployed: `npx supabase functions list`
 2. Required functions: `ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`
-3. Check function logs: `supabase functions logs send-discord`
+3. Check function logs: `npx supabase functions logs send-discord`
 4. Discord queue cron requires **pg_cron** + **pg_net** (see `SUPABASE_SETUP.md` migrations 065–068)
 5. Ensure `SUPABASE_SERVICE_ROLE_KEY` is set in Supabase dashboard
 
