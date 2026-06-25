@@ -64,8 +64,6 @@ export function getSortedLocations(locationOresMap: Record<string, MiningData[]>
   })
 }
 
-import { normalizeMiningOreName } from './handMineables'
-
 export function findOreByName(data: MiningData[], oreName: string): MiningData | undefined {
   const canonical = normalizeMiningOreName(oreName).toLowerCase()
   return data.find((o) => o.ore_name.toLowerCase() === canonical)
