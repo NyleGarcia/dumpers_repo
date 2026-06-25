@@ -21,6 +21,12 @@ import {
   parseLocationDescKey,
   SPAWN_CODE_GUIDE_NAMES,
 } from './lib/miningLocationAliases.mjs'
+import {
+  isHandMineableOre,
+  normalizeCompendiumOreName,
+  normalizeMineableLabel,
+  preferredGuideNameForSpawnKey,
+} from './lib/miningOreNames.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -590,7 +596,43 @@ function parseMiningLocations(localization) {
     rare: ['Beryl', 'Bexalite', 'Laranite', 'Agricium', 'Borase', 'Hephaestanite', 'Gold', 'Aslarite'],
     uncommon: ['Corundum', 'Quartz', 'Titanium', 'Tungsten', 'Diamond', 'Taranite'],
     common: ['Aluminum', 'Copper', 'Iron', 'Silicon', 'Tin'],
-    handMineable: ['Aphorite', 'Dolivine', 'Hadanite', 'Janalite']
+    handMineable: ['Aphorite', 'Dolivine', 'Hadanite', 'Janalite', 'Glacosite', 'Feynmaline', 'Sadaryx']
+  }
+  
+  function assignOreRarity(oreName) {
+    if (isHandMineableOre(oreName)) return 'handMineable'
+    for (const [tier, ores] of Object.entries(rarityTiers)) {
+      if (ores.some((o) => o.toLowerCase() === oreName.toLowerCase())) {
+        return tier
+      }
+    }
+    return 'common'
+  }
+
+  function mergeHandMineableSiteLocations() {
+    for (const [guideLoc, mineables] of Object.entries(locationMineables)) {
+      const oreLabels = [
+        ...(mineables.handMineables ?? []),
+        ...(mineables.groundVehicleMineables ?? []),
+      ]
+      for (const rawLabel of oreLabels) {
+        const ore = normalizeMineableLabel(rawLabel)
+        if (!isHandMineableOre(ore)) continue
+
+        if (!oreLocations[ore]) oreLocations[ore] = []
+        if (!oreLocations[ore].includes(guideLoc)) {
+          oreLocations[ore].push(guideLoc)
+        }
+
+        if (!locationOres[guideLoc]) locationOres[guideLoc] = []
+        const existing = locationOres[guideLoc].find((entry) => entry.name === ore)
+        if (existing) {
+          if (existing.rarity !== 'handMineable') existing.rarity = 'handMineable'
+        } else {
+          locationOres[guideLoc].push({ name: ore, rarity: 'handMineable' })
+        }
+      }
+    }
   }
   
   // Parse the Mining Compendium for comprehensive ore-location mappings
@@ -603,7 +645,7 @@ function parseMiningLocations(localization) {
     for (const line of lines) {
       const match = line.match(/^([A-Za-z]+)\s*-\s*(.+)$/i)
       if (match) {
-        const ore = match[1].trim()
+        const ore = normalizeCompendiumOreName(match[1].trim())
         const locations = match[2].split(',').map(l => l.trim()).filter(l => l.length > 0)
         
         if (!oreLocations[ore]) {
@@ -616,15 +658,13 @@ function parseMiningLocations(localization) {
           if (!locationOres[loc]) {
             locationOres[loc] = []
           }
-          // Determine rarity
-          let rarity = 'common'
-          for (const [tier, ores] of Object.entries(rarityTiers)) {
-            if (ores.some(o => o.toLowerCase() === ore.toLowerCase())) {
-              rarity = tier
-              break
-            }
+          const rarity = assignOreRarity(ore)
+          const existing = locationOres[loc].find((entry) => entry.name === ore)
+          if (existing) {
+            if (rarity === 'handMineable') existing.rarity = 'handMineable'
+          } else {
+            locationOres[loc].push({ name: ore, rarity })
           }
-          locationOres[loc].push({ name: ore, rarity })
         }
       }
     }
@@ -643,8 +683,10 @@ function parseMiningLocations(localization) {
     const parsed = parseLocationDescKey(key)
     if (!parsed) continue
 
-    const mineableKey =
+    const mineableKey = preferredGuideNameForSpawnKey(
+      parsed.spawnKey,
       parsed.guideName ?? SPAWN_CODE_GUIDE_NAMES[parsed.spawnKey] ?? parsed.spawnKey
+    )
 
     const mineables = {
       shipMineables: [],
@@ -678,7 +720,7 @@ function parseMiningLocations(localization) {
           .map(line => line.trim().replace(/^\s*-\s*/, ''))
           .filter(item => item.length > 0 && !item.includes(':'))
         
-        mineables[currentSection].push(...items)
+        mineables[currentSection].push(...items.map((item) => normalizeMineableLabel(item)))
       }
     }
     
@@ -694,6 +736,8 @@ function parseMiningLocations(localization) {
   }
   
   console.log(`  Parsed ${locDescCount} locations with mineable details`)
+
+  mergeHandMineableSiteLocations()
 
   const locationAliases = buildLocationAliases(localization, EXTRACTED_DATA)
   console.log(`  Built ${Object.keys(locationAliases).length} location alias entries`)
@@ -711,14 +755,7 @@ function parseMiningLocations(localization) {
   }
   
   for (const [ore, locations] of Object.entries(oreLocations)) {
-    // Determine rarity
-    let assignedRarity = 'common'
-    for (const [tier, ores] of Object.entries(rarityTiers)) {
-      if (ores.some(o => o.toLowerCase() === ore.toLowerCase())) {
-        assignedRarity = tier
-        break
-      }
-    }
+    const assignedRarity = assignOreRarity(ore)
     
     byRarity[assignedRarity].push({
       name: ore,

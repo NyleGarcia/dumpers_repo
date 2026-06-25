@@ -24,7 +24,7 @@ export const SPAWN_CODE_GUIDE_NAMES = {
   Stanton4b: 'Clio',
   Stanton4c: 'Euterpe',
   Pyro1: 'Pyro I',
-  Pyro2: 'Pyro II',
+  Pyro2: 'Monox',
   Pyro3: 'Bloom',
   Pyro4: 'Pyro IV',
   Pyro6: 'Terminus',
@@ -67,7 +67,7 @@ export const GUIDE_TO_SPAWN_KEYS = {
 /** Compendium entries that map to multiple spawn profile keys. */
 export const COMPOUND_GUIDE_TO_SPAWN_KEYS = {
   Hurston: ['Stanton1', 'Stanton1a', 'Stanton1b', 'Stanton1c', 'Stanton1d'],
-  Monox: ['Stanton1a', 'Stanton4', 'Stanton4a'],
+  Monox: ['Pyro2'],
   microTech: ['Stanton4', 'Stanton4a', 'Stanton4b', 'Stanton4c'],
   'Yela Ring': ['Stanton2c Belt', 'Stanton2c'],
   'Magda Sand Caves': ['Stanton1d'],
@@ -348,6 +348,14 @@ function applyVerifiedOverlays(aliases) {
   upsertAlias(aliases, 'Pyro Deepspaceasteroids', {
     guideNames: ['Pyro Asteroid Clusters'],
     displayName: SPAWN_TEMPLATE_DISPLAY_NAMES['Pyro Deepspaceasteroids'],
+    system: 'Pyro',
+    source: 'verified_overlay',
+  })
+
+  upsertAlias(aliases, 'Pyro2', {
+    guideNames: ['Monox', 'Pyro II'],
+    guideName: 'Monox',
+    displayName: 'Monox',
     system: 'Pyro',
     source: 'verified_overlay',
   })

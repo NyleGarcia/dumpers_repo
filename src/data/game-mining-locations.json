@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-25T03:58:17.630Z",
+  "_extracted": "2026-06-25T15:32:41.704Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -268,7 +268,7 @@
         ]
       },
       {
-        "name": "Beradon",
+        "name": "Beradom",
         "locations": [
           "Bloom",
           "Pyro I"
@@ -303,18 +303,6 @@
           "Terminus",
           "Wala",
           "Yela Ring"
-        ]
-      },
-      {
-        "name": "Feynmaline",
-        "locations": [
-          "Pyro IV"
-        ]
-      },
-      {
-        "name": "Glacosite",
-        "locations": [
-          "Monox"
         ]
       },
       {
@@ -372,12 +360,6 @@
         ]
       },
       {
-        "name": "Sadaryx",
-        "locations": [
-          "QV Breaker Stations (Nyx)"
-        ]
-      },
-      {
         "name": "Silicon",
         "locations": [
           "Aaron Halo",
@@ -422,19 +404,97 @@
       {
         "name": "Aphorite",
         "locations": [
-          "All Moons/Planets/Caves"
+          "All Moons/Planets/Caves",
+          "Pyro I",
+          "Monox",
+          "Bloom",
+          "Pyro IV",
+          "Ignis",
+          "Vatra",
+          "Adir",
+          "Fairo",
+          "Fuego",
+          "Vuur",
+          "Terminus",
+          "Hurston",
+          "Ita",
+          "Aberdeen",
+          "Arial",
+          "Magda",
+          "Cellin",
+          "Daymar",
+          "Yela",
+          "Lyria",
+          "Wala",
+          "microTech",
+          "Calliope",
+          "Clio",
+          "Euterpe"
         ]
       },
       {
         "name": "Dolivine",
         "locations": [
-          "All Moons/Planets/Caves"
+          "All Moons/Planets/Caves",
+          "Pyro I",
+          "Monox",
+          "Bloom",
+          "Pyro IV",
+          "Ignis",
+          "Vatra",
+          "Adir",
+          "Fairo",
+          "Fuego",
+          "Vuur",
+          "Terminus",
+          "Hurston",
+          "Ita",
+          "Aberdeen",
+          "Arial",
+          "Magda",
+          "Cellin",
+          "Daymar",
+          "Yela",
+          "Lyria",
+          "Wala",
+          "microTech",
+          "Calliope",
+          "Clio",
+          "Euterpe"
+        ]
+      },
+      {
+        "name": "Feynmaline",
+        "locations": [
+          "Pyro IV"
+        ]
+      },
+      {
+        "name": "Glacosite",
+        "locations": [
+          "Monox"
         ]
       },
       {
         "name": "Hadanite",
         "locations": [
-          "All Moons/Planets/Caves"
+          "All Moons/Planets/Caves",
+          "Pyro I",
+          "Monox",
+          "Pyro IV",
+          "Ignis",
+          "Vatra",
+          "Adir",
+          "Fairo",
+          "Vuur",
+          "Hurston",
+          "Ita",
+          "Aberdeen",
+          "Arial",
+          "Magda",
+          "Cellin",
+          "Daymar",
+          "Yela"
         ]
       },
       {
@@ -444,7 +504,33 @@
           "Hurston",
           "Ita",
           "Magda Sand Caves",
-          "Wala"
+          "Wala",
+          "Pyro I",
+          "Monox",
+          "Bloom",
+          "Pyro IV",
+          "Ignis",
+          "Vatra",
+          "Adir",
+          "Fairo",
+          "Fuego",
+          "Vuur",
+          "Terminus",
+          "Aberdeen",
+          "Arial",
+          "Magda",
+          "Cellin",
+          "Lyria",
+          "microTech",
+          "Calliope",
+          "Clio",
+          "Euterpe"
+        ]
+      },
+      {
+        "name": "Sadaryx",
+        "locations": [
+          "QV Breaker Stations (Nyx)"
         ]
       }
     ]
@@ -482,7 +568,32 @@
       "Pyro Asteroid Clusters"
     ],
     "Aphorite": [
-      "All Moons/Planets/Caves"
+      "All Moons/Planets/Caves",
+      "Pyro I",
+      "Monox",
+      "Bloom",
+      "Pyro IV",
+      "Ignis",
+      "Vatra",
+      "Adir",
+      "Fairo",
+      "Fuego",
+      "Vuur",
+      "Terminus",
+      "Hurston",
+      "Ita",
+      "Aberdeen",
+      "Arial",
+      "Magda",
+      "Cellin",
+      "Daymar",
+      "Yela",
+      "Lyria",
+      "Wala",
+      "microTech",
+      "Calliope",
+      "Clio",
+      "Euterpe"
     ],
     "Aslarite": [
       "Aaron Halo",
@@ -495,7 +606,7 @@
       "Pyro Asteroid Clusters",
       "Vuur"
     ],
-    "Beradon": [
+    "Beradom": [
       "Bloom",
       "Pyro I"
     ],
@@ -571,7 +682,32 @@
       "Pyro Asteroid Clusters"
     ],
     "Dolivine": [
-      "All Moons/Planets/Caves"
+      "All Moons/Planets/Caves",
+      "Pyro I",
+      "Monox",
+      "Bloom",
+      "Pyro IV",
+      "Ignis",
+      "Vatra",
+      "Adir",
+      "Fairo",
+      "Fuego",
+      "Vuur",
+      "Terminus",
+      "Hurston",
+      "Ita",
+      "Aberdeen",
+      "Arial",
+      "Magda",
+      "Cellin",
+      "Daymar",
+      "Yela",
+      "Lyria",
+      "Wala",
+      "microTech",
+      "Calliope",
+      "Clio",
+      "Euterpe"
     ],
     "Feynmaline": [
       "Pyro IV"
@@ -590,7 +726,23 @@
       "Vatra"
     ],
     "Hadanite": [
-      "All Moons/Planets/Caves"
+      "All Moons/Planets/Caves",
+      "Pyro I",
+      "Monox",
+      "Pyro IV",
+      "Ignis",
+      "Vatra",
+      "Adir",
+      "Fairo",
+      "Vuur",
+      "Hurston",
+      "Ita",
+      "Aberdeen",
+      "Arial",
+      "Magda",
+      "Cellin",
+      "Daymar",
+      "Yela"
     ],
     "Hephaestanite": [
       "Arial",
@@ -665,7 +817,27 @@
       "Hurston",
       "Ita",
       "Magda Sand Caves",
-      "Wala"
+      "Wala",
+      "Pyro I",
+      "Monox",
+      "Bloom",
+      "Pyro IV",
+      "Ignis",
+      "Vatra",
+      "Adir",
+      "Fairo",
+      "Fuego",
+      "Vuur",
+      "Terminus",
+      "Aberdeen",
+      "Arial",
+      "Magda",
+      "Cellin",
+      "Lyria",
+      "microTech",
+      "Calliope",
+      "Clio",
+      "Euterpe"
     ],
     "Laranite": [
       "HUR-L1",
@@ -819,6 +991,22 @@
       {
         "name": "Taranite",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "CRU-L5": [
@@ -859,6 +1047,18 @@
       {
         "name": "Silicon",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
       }
     ],
     "MIC-L4": [
@@ -993,6 +1193,18 @@
       {
         "name": "Titanium",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Vuur": [
@@ -1015,6 +1227,22 @@
       {
         "name": "Iron",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Yela": [
@@ -1033,6 +1261,18 @@
       {
         "name": "Taranite",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
       }
     ],
     "Aaron Halo": [
@@ -1089,6 +1329,22 @@
       {
         "name": "Titanium",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "ARC-L1": [
@@ -1155,6 +1411,22 @@
       {
         "name": "Tin",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "CRU-L3": [
@@ -1309,6 +1581,18 @@
       {
         "name": "Tin",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
       }
     ],
     "Keeger Belt": [
@@ -1357,6 +1641,22 @@
       {
         "name": "Titanium",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "MIC-L1": [
@@ -1487,11 +1787,23 @@
       {
         "name": "Iron",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Bloom": [
       {
-        "name": "Beradon",
+        "name": "Beradom",
         "rarity": "common"
       },
       {
@@ -1509,11 +1821,23 @@
       {
         "name": "Riccite",
         "rarity": "epic"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Pyro I": [
       {
-        "name": "Beradon",
+        "name": "Beradom",
         "rarity": "common"
       },
       {
@@ -1527,6 +1851,22 @@
       {
         "name": "Tin",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Wala": [
@@ -1549,6 +1889,14 @@
       {
         "name": "Laranite",
         "rarity": "rare"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
       }
     ],
     "CRU-L1": [
@@ -1607,6 +1955,22 @@
       {
         "name": "Tungsten",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "HUR-L3": [
@@ -1643,6 +2007,22 @@
       {
         "name": "Tungsten",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Pyro IV": [
@@ -1656,7 +2036,7 @@
       },
       {
         "name": "Feynmaline",
-        "rarity": "common"
+        "rarity": "handMineable"
       },
       {
         "name": "Iron",
@@ -1665,6 +2045,22 @@
       {
         "name": "Laranite",
         "rarity": "rare"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Akiro Cluster": [
@@ -1709,6 +2105,18 @@
       {
         "name": "Taranite",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Euterpe": [
@@ -1723,6 +2131,18 @@
       {
         "name": "Taranite",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Lyria": [
@@ -1737,6 +2157,18 @@
       {
         "name": "Laranite",
         "rarity": "rare"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "MIC-L3": [
@@ -1813,12 +2245,24 @@
       {
         "name": "Tin",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
       }
     ],
     "Monox": [
       {
         "name": "Glacosite",
-        "rarity": "common"
+        "rarity": "handMineable"
       },
       {
         "name": "Hephaestanite",
@@ -1831,6 +2275,22 @@
       {
         "name": "Tin",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Ignis": [
@@ -1849,6 +2309,22 @@
       {
         "name": "Tin",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Vatra": [
@@ -1867,6 +2343,22 @@
       {
         "name": "Silicon",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Calliope": [
@@ -1881,6 +2373,18 @@
       {
         "name": "Iron",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "microTech": [
@@ -1895,6 +2399,18 @@
       {
         "name": "Iron",
         "rarity": "common"
+      },
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
       }
     ],
     "Magda Sand Caves": [
@@ -1912,7 +2428,7 @@
     "QV Breaker Stations (Nyx)": [
       {
         "name": "Sadaryx",
-        "rarity": "common"
+        "rarity": "handMineable"
       },
       {
         "name": "Savrilium",
@@ -1939,26 +2455,26 @@
         "Stileron"
       ],
       "groundVehicleMineables": [
-        "Beradon"
+        "Beradom"
       ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
         "Decari Pod",
         "Fotia Seedpod",
         "Wuotan Seeds",
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Pyro1"
     },
-    "Pyro II": {
+    "Monox": {
       "shipMineables": [
         "Hephaestanite",
         "Iron",
@@ -1972,13 +2488,13 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
         "Pingala Seeds",
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [
         "Quasigrazer"
@@ -1993,7 +2509,7 @@
         "Stileron"
       ],
       "groundVehicleMineables": [
-        "Beradon"
+        "Beradom"
       ],
       "handMineables": [
         "Aphorite",
@@ -2003,9 +2519,9 @@
       "harvestables": [
         "Flareweed Stalk",
         "Amiant Pod",
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [
         "Quasigrazer"
@@ -2026,12 +2542,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [
         "Quasigrazer"
@@ -2050,12 +2566,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Pyro5a"
@@ -2072,12 +2588,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Pyro5b"
@@ -2094,12 +2610,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Pyro5c"
@@ -2116,12 +2632,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Pyro5d"
@@ -2140,9 +2656,9 @@
         "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Pyro5e"
@@ -2159,12 +2675,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Pyro5f"
@@ -2186,9 +2702,9 @@
         "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Pyro6"
@@ -2205,7 +2721,7 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
         "Pitambu",
@@ -2214,9 +2730,9 @@
         "CompBoard",
         "Prota",
         "Revenant Pod",
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [
         "Kopion",
@@ -2240,12 +2756,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Stanton1a"
@@ -2262,12 +2778,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Stanton1b"
@@ -2284,12 +2800,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Stanton1c"
@@ -2306,12 +2822,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Stanton1d"
@@ -2328,12 +2844,12 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Stanton2a"
@@ -2351,13 +2867,13 @@
         "Aphorite",
         "Dolivine",
         "Hadanite",
-        "Janalite (Caves only)"
+        "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)",
-        "Stone Bug Shell (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus",
+        "Stone Bug Shell"
       ],
       "creatures": [
         "Juvenile Valakkar"
@@ -2413,9 +2929,9 @@
         "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Stanton3b"
@@ -2438,9 +2954,9 @@
         "Golden Medmon",
         "Sunset Berry",
         "Heart of the Woods",
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [
         "Kopion",
@@ -2497,9 +3013,9 @@
         "Janalite"
       ],
       "harvestables": [
-        "Ranta Dung (Caves)",
-        "Amioshi Plague (Caves)",
-        "Bluemoon Fungus (Caves)"
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
       ],
       "creatures": [],
       "spawnKey": "Stanton4c"
@@ -2708,13 +3224,14 @@
     },
     "Pyro2": {
       "spawnKey": "Pyro2",
-      "guideName": "Pyro II",
+      "guideName": "Monox",
       "guideNames": [
+        "Monox",
         "Pyro II"
       ],
-      "displayName": "Pyro II",
+      "displayName": "Monox",
       "system": "Pyro",
-      "source": "localization_desc+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit"
     },
     "Pyro3": {
       "spawnKey": "Pyro3",
@@ -3116,9 +3633,7 @@
       "Stanton4c"
     ],
     "Monox": [
-      "Stanton1a",
-      "Stanton4",
-      "Stanton4a"
+      "Pyro2"
     ],
     "Pyro I": [
       "Pyro1"

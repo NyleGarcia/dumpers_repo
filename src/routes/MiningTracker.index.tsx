@@ -43,6 +43,10 @@ import {
   trackerCardTooltip,
   trackerChanceTooltip,
 } from '../lib/miningTooltipContent'
+import {
+  getGuideLocationSpawnLabel,
+  isGuideLocationListOnlyOre,
+} from '../lib/handMineables'
 import type { DepositType } from '../lib/localGuestCache'
 
 type ViewMode = 'tracker' | 'guide'
@@ -607,6 +611,7 @@ function getOreLocations(ore: MiningData): string[] {
 function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationClick: (loc: string) => void }) {
   const colors = MINING_RARITY_COLORS[item.rarity] || MINING_RARITY_COLORS.common
   const signature = ORE_SIGNATURES[item.ore_name]
+  const locationListOnly = isGuideLocationListOnlyOre(item.ore_name, item.rarity)
 
   const locationChips = useMemo(() => {
     type Chip = {
@@ -617,6 +622,24 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
       maxNodes: number
     }
     const chips: Chip[] = []
+
+    if (locationListOnly) {
+      const listLabel = getGuideLocationSpawnLabel(item.ore_name)
+      for (const location of item.locations ?? []) {
+        chips.push({
+          location,
+          depositType: 'surface',
+          spawnLabel: listLabel,
+          spawnTier: 'hand',
+          maxNodes: 0,
+        })
+      }
+      return {
+        surface: chips.sort((a, b) => a.location.localeCompare(b.location)),
+        asteroid: [] as Chip[],
+      }
+    }
+
     for (const location of item.locations ?? []) {
       if (isBroadGuideLocation(location)) {
         for (const depositType of getDepositTypes(item.ore_name)) {
@@ -666,7 +689,7 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
       return a.location.localeCompare(b.location)
     })
     return { surface, asteroid }
-  }, [item.ore_name, item.locations])
+  }, [item.ore_name, item.locations, item.rarity, locationListOnly])
 
   const renderChip = (chip: {
     location: string
@@ -679,23 +702,29 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
     return (
       <SiteTooltip
         key={`${chip.location}-${chip.depositType}`}
-        content={guideLocationChipTooltip(item.ore_name, chip.location, chip.depositType)}
+        content={
+          locationListOnly
+            ? guideLocationOreTooltip(item.ore_name, chip.location)
+            : guideLocationChipTooltip(item.ore_name, chip.location, chip.depositType)
+        }
         side="top"
       >
         <button
           onClick={() => onLocationClick(chip.location)}
           className="text-xs px-2 py-1 rounded bg-slate-800/60 text-slate-300 hover:bg-slate-700/60 hover:text-white transition-colors cursor-pointer text-left"
         >
-          <span className="inline-block text-[9px] uppercase tracking-wider text-orange-300/80 mr-1">
-            {chip.depositType === 'surface' ? 'Surface' : 'Asteroid'}
-          </span>
+          {!locationListOnly && (
+            <span className="inline-block text-[9px] uppercase tracking-wider text-orange-300/80 mr-1">
+              {chip.depositType === 'surface' ? 'Surface' : 'Asteroid'}
+            </span>
+          )}
           {chip.location}
           {system && (
             <span className={`ml-1 ${systemColor} opacity-70`}>({system})</span>
           )}
           <span className="block text-[10px] text-slate-500 mt-0.5">
             {chip.spawnLabel}
-            {chip.maxNodes >= 2 ? ` · max ${chip.maxNodes}×` : ''}
+            {!locationListOnly && chip.maxNodes >= 2 ? ` · max ${chip.maxNodes}×` : ''}
           </span>
         </button>
       </SiteTooltip>
@@ -729,17 +758,28 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
           </span>
         </div>
       </div>
-      {locationChips.surface.length > 0 && (
-        <div className="mt-3">
-          <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Surface</div>
-          <div className="flex flex-wrap gap-1.5">{locationChips.surface.map(renderChip)}</div>
-        </div>
-      )}
-      {locationChips.asteroid.length > 0 && (
-        <div className={`mt-3 ${locationChips.surface.length > 0 ? 'pt-3 border-t border-slate-700/40' : ''}`}>
-          <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Asteroid</div>
-          <div className="flex flex-wrap gap-1.5">{locationChips.asteroid.map(renderChip)}</div>
-        </div>
+      {locationListOnly ? (
+        locationChips.surface.length > 0 && (
+          <div className="mt-3">
+            <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Locations</div>
+            <div className="flex flex-wrap gap-1.5">{locationChips.surface.map(renderChip)}</div>
+          </div>
+        )
+      ) : (
+        <>
+          {locationChips.surface.length > 0 && (
+            <div className="mt-3">
+              <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Surface</div>
+              <div className="flex flex-wrap gap-1.5">{locationChips.surface.map(renderChip)}</div>
+            </div>
+          )}
+          {locationChips.asteroid.length > 0 && (
+            <div className={`mt-3 ${locationChips.surface.length > 0 ? 'pt-3 border-t border-slate-700/40' : ''}`}>
+              <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Asteroid</div>
+              <div className="flex flex-wrap gap-1.5">{locationChips.asteroid.map(renderChip)}</div>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -844,6 +884,8 @@ function GuideOreModal({
 
   const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
   const signature = ORE_SIGNATURES[ore.ore_name]
+  const locationListOnly = isGuideLocationListOnlyOre(ore.ore_name, ore.rarity)
+  const listSpawnLabel = getGuideLocationSpawnLabel(ore.ore_name)
   const locationProfiles = guideLocationName
     ? isBroadGuideLocation(guideLocationName)
       ? []
@@ -926,6 +968,20 @@ function GuideOreModal({
             {sortedLocations.map((location) => {
               const system = LOCATION_SYSTEMS[location]
               const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+              if (locationListOnly) {
+                return (
+                  <div
+                    key={location}
+                    className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+                  >
+                    <span className="font-medium text-white">{location}</span>
+                    {system && (
+                      <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
+                    )}
+                    <span className="block text-xs text-slate-500 mt-1">{listSpawnLabel}</span>
+                  </div>
+                )
+              }
               const profiles = getGuideLocationProfiles(ore.ore_name, location)
               if (profiles.length === 0 && isBroadGuideLocation(location)) {
                 return getDepositTypes(ore.ore_name).map((depositType) => {

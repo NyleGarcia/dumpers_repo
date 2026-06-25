@@ -21,6 +21,12 @@ import {
   formatOverallCompendiumDetail,
 } from './miningLocationAliases'
 import { formatRsReading } from './miningSignatures'
+import {
+  getGuideLocationSpawnLabel,
+  hasShipRsSignature,
+  isGuideLocationListOnlyOre,
+  isHandMineableOre,
+} from './handMineables'
 
 function pct(n: number | null | undefined, digits = 2): string {
   if (n == null || !Number.isFinite(n)) return '—'
@@ -135,6 +141,17 @@ export function guideLocationChipTooltip(
   guideLocationName: string,
   depositType: DepositType
 ): React.ReactNode {
+  if (isHandMineableOre(oreName) || !hasShipRsSignature(oreName)) {
+    const label = getGuideLocationSpawnLabel(oreName)
+    return (
+      <div>
+        <div className="font-semibold text-orange-300">{oreName}</div>
+        <div className="text-slate-400">{guideLocationName}</div>
+        <div className="text-slate-400">{label} at this site (no ship RS signature).</div>
+      </div>
+    )
+  }
+
   if (isBroadGuideLocation(guideLocationName)) {
     const overall = getOverallProfile(oreName, depositType)
     if (!overall) {
@@ -219,6 +236,16 @@ export function guideLocationOreTooltip(
   oreName: string,
   locationName: string
 ): React.ReactNode {
+  if (isHandMineableOre(oreName)) {
+    return (
+      <div className="space-y-1">
+        <div className="font-semibold text-orange-300">{oreName}</div>
+        <div className="text-slate-400">{locationName}</div>
+        <div>Hand-mineable at this site (no ship RS signature).</div>
+      </div>
+    )
+  }
+
   const depositTypes = getDepositTypes(oreName)
   if (isBroadGuideLocation(locationName)) {
     const lines = depositTypes.flatMap((depositType) => {

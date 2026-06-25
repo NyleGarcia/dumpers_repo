@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted harvestable/HPP data)",
-  "_extracted": "2026-06-25T03:58:18.061Z",
+  "_extracted": "2026-06-25T15:32:41.794Z",
   "clusterPresets": {
     "HarvestableClusterPreset.Asteroid_Cluster_Pyro": {
       "probabilityOfClustering": 30,
@@ -1367,8 +1367,8 @@
         "Pyro2|surface": {
           "locationName": "Pyro2",
           "spawnKey": "Pyro2",
-          "displayName": "Pyro II",
-          "guideName": "Pyro II",
+          "displayName": "Monox",
+          "guideName": "Monox",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro2",
           "system": "Pyro",
           "depositType": "surface",
@@ -7695,25 +7695,25 @@
               "rs": 16720,
               "chancePercent": 60,
               "bestAtLocation": "Pyro2",
-              "bestAtLocationDisplayName": "Pyro II"
+              "bestAtLocationDisplayName": "Monox"
             },
             {
               "nodes": 5,
               "rs": 20900,
               "chancePercent": 30,
               "bestAtLocation": "Pyro2",
-              "bestAtLocationDisplayName": "Pyro II"
+              "bestAtLocationDisplayName": "Monox"
             },
             {
               "nodes": 6,
               "rs": 25080,
               "chancePercent": 10,
               "bestAtLocation": "Pyro2",
-              "bestAtLocationDisplayName": "Pyro II"
+              "bestAtLocationDisplayName": "Monox"
             }
           ],
           "bestLocation": "Pyro2",
-          "bestLocationDisplayName": "Pyro II",
+          "bestLocationDisplayName": "Monox",
           "bestLocationSpawnPercent": 2.455
         },
         "asteroid": {
@@ -7750,8 +7750,8 @@
         "Pyro2|surface": {
           "locationName": "Pyro2",
           "spawnKey": "Pyro2",
-          "displayName": "Pyro II",
-          "guideName": "Pyro II",
+          "displayName": "Monox",
+          "guideName": "Monox",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro2",
           "system": "Pyro",
           "depositType": "surface",
@@ -8566,8 +8566,8 @@
         "Pyro2|surface": {
           "locationName": "Pyro2",
           "spawnKey": "Pyro2",
-          "displayName": "Pyro II",
-          "guideName": "Pyro II",
+          "displayName": "Monox",
+          "guideName": "Monox",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro2",
           "system": "Pyro",
           "depositType": "surface",
@@ -12058,8 +12058,8 @@
         "Pyro2|surface": {
           "locationName": "Pyro2",
           "spawnKey": "Pyro2",
-          "displayName": "Pyro II",
-          "guideName": "Pyro II",
+          "displayName": "Monox",
+          "guideName": "Monox",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro2",
           "system": "Pyro",
           "depositType": "surface",
