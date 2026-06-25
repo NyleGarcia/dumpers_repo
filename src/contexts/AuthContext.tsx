@@ -62,7 +62,8 @@ interface AuthContextType {
   updateDfpDisplayEnabled: (enabled: boolean) => Promise<boolean>
   autoApproveEnabled: boolean
   updateAutoApprove: (enabled: boolean) => Promise<boolean>
-  orgLogoUrl: string | null
+  orgLogoUrl: string
+  orgLogoUpdatedAt: string | null
   orgLogoConfigured: boolean
   refreshOrgLogo: () => Promise<void>
 }
@@ -652,6 +653,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       autoApproveEnabled,
       updateAutoApprove,
       orgLogoUrl,
+      orgLogoUpdatedAt,
       orgLogoConfigured,
       refreshOrgLogo,
     }),
@@ -691,6 +693,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       autoApproveEnabled,
       updateAutoApprove,
       orgLogoUrl,
+      orgLogoUpdatedAt,
       orgLogoConfigured,
       refreshOrgLogo,
     ]

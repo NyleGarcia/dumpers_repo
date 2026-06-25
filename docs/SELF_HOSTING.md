@@ -99,8 +99,9 @@ Super-admins upload a **PNG org logo** under **Settings → Site**. Requirements
 - 64–2048 pixels per side, max 512 KB
 - Transparent background recommended
 
-Apply migration **`089_org_logo.sql`** before using upload. The logo is **not**
-shipped in the franchise repo — each instance stores its own file in Supabase.
+Apply migration **`089_org_logo.sql`** before using upload. Until then, members see the
+shipped default at `public/org-logo-default.svg` (Dumper's Repo + slogan). Your
+custom PNG replaces that default after upload.
 
 **Reference deployment only:** you may keep a gitignored `public/ORG_LOGO.png`
 for local dev (see `.gitignore`). Production should use the Settings upload so

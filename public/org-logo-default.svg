@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img" aria-label="Dumper's Repo  Buy. Craft. Sell.">
+  <defs>
+    <linearGradient id="repoGrad" x1="32" y1="160" x2="608" y2="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ea580c"/>
+      <stop offset="45%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#facc15"/>
+    </linearGradient>
+  </defs>
+  <text
+    x="320"
+    y="132"
+    text-anchor="middle"
+    font-family="Orbitron, ui-sans-serif, system-ui, sans-serif"
+    font-size="46"
+    font-weight="900"
+    fill="url(#repoGrad)"
+    letter-spacing="0.06em"
+  >DUMPER'S REPO</text>
+  <text
+    x="320"
+    y="196"
+    text-anchor="middle"
+    font-family="Orbitron, ui-sans-serif, system-ui, sans-serif"
+    font-size="20"
+    font-weight="500"
+    fill="#94a3b8"
+    letter-spacing="0.32em"
+  >BUY · CRAFT · SELL</text>
+</svg>

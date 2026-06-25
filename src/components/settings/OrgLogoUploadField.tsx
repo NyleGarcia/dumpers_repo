@@ -1,22 +1,31 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import SettingsField from './SettingsField'
 import {
+  ORG_LOGO_DEFAULT_PATH,
   ORG_LOGO_MAX_BYTES,
   ORG_LOGO_MAX_DIMENSION,
   ORG_LOGO_MIN_DIMENSION,
   ORG_LOGO_OBJECT_NAME,
+  buildOrgLogoStorageUrl,
   removeOrgLogo,
   uploadOrgLogo,
   validateOrgLogoFile,
 } from '../../lib/orgLogo'
 
 export default function OrgLogoUploadField() {
-  const { orgLogoUrl, orgLogoConfigured, refreshOrgLogo } = useAuth()
+  const { orgLogoUpdatedAt, orgLogoConfigured, refreshOrgLogo } = useAuth()
+  const previewSrc = orgLogoConfigured && orgLogoUpdatedAt
+    ? buildOrgLogoStorageUrl(orgLogoUpdatedAt)
+    : ORG_LOGO_DEFAULT_PATH
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [removing, setRemoving] = useState(false)
   const [previewError, setPreviewError] = useState(false)
+
+  useEffect(() => {
+    setPreviewError(false)
+  }, [orgLogoUpdatedAt, orgLogoConfigured])
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -63,7 +72,7 @@ export default function OrgLogoUploadField() {
   return (
     <SettingsField
       label="Org logo (blueprint modal)"
-      hint={`PNG only, ${ORG_LOGO_MIN_DIMENSION}–${ORG_LOGO_MAX_DIMENSION}px per side, max ${Math.round(ORG_LOGO_MAX_BYTES / 1024)} KB. Stored as ${ORG_LOGO_OBJECT_NAME} in Supabase Storage. Not shipped with the franchise repo — upload your org graphic here.`}
+      hint={`PNG only, ${ORG_LOGO_MIN_DIMENSION}–${ORG_LOGO_MAX_DIMENSION}px per side, max ${Math.round(ORG_LOGO_MAX_BYTES / 1024)} KB. Stored as ${ORG_LOGO_OBJECT_NAME} in Supabase Storage. Until you upload, members see the shipped Dumper's Repo default logo.`}
       action={
         orgLogoConfigured ? (
           <button
@@ -79,16 +88,16 @@ export default function OrgLogoUploadField() {
     >
       <div className="flex flex-col sm:flex-row gap-4 items-start">
         <div className="w-28 h-28 rounded-xl border border-slate-600 bg-slate-900/80 flex items-center justify-center overflow-hidden shrink-0">
-          {orgLogoUrl && !previewError ? (
+          {previewSrc && !previewError ? (
             <img
-              src={orgLogoUrl}
-              alt="Current org logo preview"
+              src={previewSrc ?? ORG_LOGO_DEFAULT_PATH}
+              alt={orgLogoConfigured ? 'Current org logo preview' : 'Default franchise org logo'}
               className="max-w-full max-h-full object-contain"
               onError={() => setPreviewError(true)}
             />
           ) : (
             <span className="text-[10px] text-slate-500 text-center px-2 leading-snug">
-              {orgLogoConfigured ? 'Preview unavailable' : 'No logo uploaded'}
+              Preview unavailable
             </span>
           )}
         </div>

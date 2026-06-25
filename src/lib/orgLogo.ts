@@ -3,7 +3,9 @@ import { supabase } from './supabase'
 /** Fixed storage object name — one PNG per franchise instance. */
 export const ORG_LOGO_OBJECT_NAME = 'ORG_LOGO.png' as const
 export const ORG_LOGO_BUCKET = 'org-logo' as const
-/** Optional local fallback for reference/dev installs (gitignored, not shipped). */
+/** Shipped default for franchises before a custom org logo is uploaded. */
+export const ORG_LOGO_DEFAULT_PATH = '/org-logo-default.svg' as const
+/** Optional local override for reference/dev installs (gitignored, not shipped). */
 export const ORG_LOGO_LOCAL_PATH = '/ORG_LOGO.png' as const
 
 export const ORG_LOGO_MAX_BYTES = 512 * 1024
@@ -22,10 +24,22 @@ export function buildOrgLogoStorageUrl(updatedAt: string): string | null {
   return `${base}/storage/v1/object/public/${ORG_LOGO_BUCKET}/${ORG_LOGO_OBJECT_NAME}?v=${cacheBuster}`
 }
 
-/** Storage URL when configured; otherwise optional gitignored local file path. */
-export function resolveOrgLogoUrl(updatedAt: string | null | undefined): string | null {
-  if (updatedAt) return buildOrgLogoStorageUrl(updatedAt)
-  return ORG_LOGO_LOCAL_PATH
+/** Priority: uploaded storage → optional local override → shipped default. */
+export function getOrgLogoCandidates(updatedAt: string | null | undefined): string[] {
+  const candidates: string[] = []
+
+  if (updatedAt) {
+    const storageUrl = buildOrgLogoStorageUrl(updatedAt)
+    if (storageUrl) candidates.push(storageUrl)
+  }
+
+  candidates.push(ORG_LOGO_LOCAL_PATH, ORG_LOGO_DEFAULT_PATH)
+  return candidates
+}
+
+/** First candidate (for preload). */
+export function resolveOrgLogoUrl(updatedAt: string | null | undefined): string {
+  return getOrgLogoCandidates(updatedAt)[0] ?? ORG_LOGO_DEFAULT_PATH
 }
 
 export async function fetchOrgLogoStatus(): Promise<OrgLogoStatus> {
@@ -139,4 +153,10 @@ export function preloadOrgLogo(url: string | null | undefined): void {
   const img = new Image()
   img.decoding = 'sync'
   img.src = url
+}
+
+export function preloadOrgLogoCandidates(updatedAt: string | null | undefined): void {
+  for (const url of getOrgLogoCandidates(updatedAt)) {
+    preloadOrgLogo(url)
+  }
 }

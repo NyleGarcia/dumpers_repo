@@ -4,7 +4,7 @@ import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import BrandModalBack from '../BrandModalBack'
 import { useAuth } from '../../contexts/AuthContext'
-import { preloadOrgLogo } from '../../lib/orgLogo'
+import { preloadOrgLogoCandidates } from '../../lib/orgLogo'
 import AppModal, { type AppModalSize, type AppModalZIndex } from './AppModal'
 
 const sizeMaxWidth: Record<AppModalSize, number> = {
@@ -179,7 +179,7 @@ function BrandRevealAnimatedModal({
   closeOnBackdrop,
   titleId,
 }: BrandRevealModalShellProps & { originRect: DOMRect; titleId: string }) {
-  const { orgLogoUrl } = useAuth()
+  const { orgLogoUpdatedAt } = useAuth()
   const [stage, setStage] = useState<ModalStage>('flip')
   const [wormholeTarget, setWormholeTarget] = useState({ x: 0, y: 0 })
   const originRef = useRef(originRect)
@@ -193,8 +193,8 @@ function BrandRevealAnimatedModal({
   useBodyScrollLock(true)
 
   useEffect(() => {
-    preloadOrgLogo(orgLogoUrl)
-  }, [orgLogoUrl])
+    preloadOrgLogoCandidates(orgLogoUpdatedAt)
+  }, [orgLogoUpdatedAt])
 
   useEffect(() => {
     if (stage === 'flip') {
