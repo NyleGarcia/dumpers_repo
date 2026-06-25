@@ -7,7 +7,7 @@
 | **PRE-upgrade** | `backup/pre-stack-upgrade-2026-03-26` | `0e28dc9` | Before Vite 8, React 19, ESLint 10, Tailwind 4 |
 | **POST-upgrade** | `backup/post-stack-upgrade-2026-06-25` | `94b3fff` | After all three upgrade phases merged and QA passed |
 
-Each name exists as both an **annotated tag** and a **frozen branch** at the same commit.
+Each name exists as both an **annotated tag** and a **frozen branch** at the same commit. See [Local zip archives](#local-zip-archives) below.
 
 ## Upgrade phases
 
@@ -57,7 +57,29 @@ Only use when revert is messy or you need an immediate rollback. Coordinate with
 
 ### Option C — GitHub Release archive
 
-If you created a Release from `backup/pre-stack-upgrade-2026-03-26`, download the source zip from GitHub Releases as an offline reference.
+Create a Release from `backup/pre-stack-upgrade-2026-03-26` or `backup/post-stack-upgrade-2026-06-25` on GitHub to download a source zip from the Releases page.
+
+## Local zip archives
+
+Offline source snapshots (no `node_modules`, no `.env`) are stored **outside the repo**:
+
+`C:\Users\AT4_Backblast\Desktop\Coding Projects\Dumpers Repo Backups\`
+
+| Zip | Commit |
+|-----|--------|
+| `dumpers-repo-PRE-stack-upgrade-2026-03-26.zip` | `0e28dc9` |
+| `dumpers-repo-POST-stack-upgrade-2026-06-25.zip` | `94b3fff` |
+
+See `README.txt` in that folder. The PRE zip was recreated from git after the upgrade; no local zip existed before upgrade day.
+
+Recreate from a backup branch:
+
+```bash
+git archive --format=zip -o "../Dumpers Repo Backups/dumpers-repo-PRE-stack-upgrade-2026-03-26.zip" refs/heads/backup/pre-stack-upgrade-2026-03-26
+git archive --format=zip -o "../Dumpers Repo Backups/dumpers-repo-POST-stack-upgrade-2026-06-25.zip" refs/heads/backup/post-stack-upgrade-2026-06-25
+```
+
+After unzipping: `npm ci`, restore `.env`, then `npm run dev`.
 
 ## Local checkout of a backup state
 

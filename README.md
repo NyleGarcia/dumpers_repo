@@ -43,7 +43,33 @@ Custom Orders and accepting trades require a free member account.
 
 ## Tech stack
 
-React 18, Vite, TanStack Router/Query, Tailwind, Supabase (Auth + Postgres + RLS + RPCs).
+React 19, Vite 8, TanStack Router/Query, Tailwind CSS 4, Supabase (Auth + Postgres + RLS + RPCs).
+
+Pull requests to `main` run lint and build via [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (no deploy). Production deploys on push to `main` via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+## Backups and stack upgrade
+
+Major stack upgrades (June 2026) moved to Vite 8, React 19, ESLint 10, and Tailwind 4. Save points:
+
+| Label | Git tag / branch | Commit |
+|-------|------------------|--------|
+| **PRE-upgrade** | `backup/pre-stack-upgrade-2026-03-26` | `0e28dc9` |
+| **POST-upgrade** | `backup/post-stack-upgrade-2026-06-25` | `94b3fff` |
+
+**Revert playbook:** [docs/STACK_UPGRADE_REVERT.md](docs/STACK_UPGRADE_REVERT.md) — merge revert, reset to tag, and local checkout commands.
+
+**Local zip archives** (source only; no `node_modules` or `.env`) live outside the repo:
+
+`Desktop\Coding Projects\Dumpers Repo Backups\`
+
+- `dumpers-repo-PRE-stack-upgrade-2026-03-26.zip`
+- `dumpers-repo-POST-stack-upgrade-2026-06-25.zip`
+
+See `README.txt` in that folder. Recreate a zip from any tag with:
+
+```bash
+git archive --format=zip -o ../Dumpers Repo Backups/my-backup.zip refs/heads/backup/post-stack-upgrade-2026-06-25
+```
 
 ## Quick start
 
