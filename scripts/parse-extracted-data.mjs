@@ -26,6 +26,7 @@ import {
   isHandMineableType,
   normalizeCompendiumOreName,
   normalizeMineableLabel,
+  parseHandMineableHabitatRaw,
   preferredGuideNameForSpawnKey,
 } from './lib/miningOreNames.mjs'
 
@@ -589,6 +590,15 @@ function parseMiningLocations(localization) {
   const oreLocations = {}      // ore -> locations[]
   const locationOres = {}      // location -> ores[]
   const locationMineables = {} // location -> { shipMineables, handMineables, groundVehicleMineables, harvestables }
+  /** ore -> guide location -> surface | caves | both (from per-body localization desc) */
+  const handMineableHabitats = {}
+
+  function recordHandMineableHabitat(rawItem, guideLoc) {
+    const ore = normalizeMineableLabel(rawItem)
+    if (!isHandMineableOre(ore)) return
+    if (!handMineableHabitats[ore]) handMineableHabitats[ore] = {}
+    handMineableHabitats[ore][guideLoc] = parseHandMineableHabitatRaw(rawItem)
+  }
   
   // Define ore rarity tiers based on game knowledge
   const rarityTiers = {
@@ -732,7 +742,7 @@ function parseMiningLocations(localization) {
         currentSection = 'shipMineables'
       } else if (section.includes('Potential Ground Vehicle Mineable')) {
         currentSection = 'groundVehicleMineables'
-      } else if (section.includes('Potential Hand Mineable')) {
+      } else if (/Hand Mineables/i.test(section)) {
         currentSection = 'handMineables'
       } else if (section.includes('Potential Harvestable')) {
         currentSection = 'harvestables'
@@ -747,7 +757,12 @@ function parseMiningLocations(localization) {
           .map(line => line.trim().replace(/^\s*-\s*/, ''))
           .filter(item => item.length > 0 && !item.includes(':'))
         
-        mineables[currentSection].push(...items.map((item) => normalizeMineableLabel(item)))
+        for (const item of items) {
+          if (currentSection === 'handMineables') {
+            recordHandMineableHabitat(item, mineableKey)
+          }
+          mineables[currentSection].push(normalizeMineableLabel(item))
+        }
       }
     }
     
@@ -763,6 +778,11 @@ function parseMiningLocations(localization) {
   }
   
   console.log(`  Parsed ${locDescCount} locations with mineable details`)
+  const habitatEntryCount = Object.values(handMineableHabitats).reduce(
+    (n, byLoc) => n + Object.keys(byLoc).length,
+    0
+  )
+  console.log(`  Recorded ${habitatEntryCount} hand-mineable habitat entries (per body)`)
 
   mergeHandMineableSiteLocations()
   mergeShipMineableSiteLocations()
@@ -795,6 +815,7 @@ function parseMiningLocations(localization) {
     oreLocations,
     locationOres,
     locationMineables,
+    handMineableHabitats,
     locationAliases,
     guideToSpawnKeys,
     rarityTiers: byRarity,
@@ -3946,6 +3967,7 @@ async function main() {
     oreLocations: miningLocations.oreLocations,
     locationOres: miningLocations.locationOres,
     locationMineables: miningLocations.locationMineables,
+    handMineableHabitats: miningLocations.handMineableHabitats,
     locationAliases: miningLocations.locationAliases,
     guideToSpawnKeys: miningLocations.guideToSpawnKeys,
     rarityOrder: miningLocations.rarityOrder,
@@ -3953,6 +3975,10 @@ async function main() {
       totalOres: Object.keys(miningLocations.oreLocations).length,
       totalLocations: Object.keys(miningLocations.locationOres).length,
       locationsWithDetails: Object.keys(miningLocations.locationMineables).length,
+      handMineableHabitatEntries: Object.values(miningLocations.handMineableHabitats ?? {}).reduce(
+        (n, byLoc) => n + Object.keys(byLoc).length,
+        0
+      ),
       locationAliasCount: Object.keys(miningLocations.locationAliases ?? {}).length,
       guideToSpawnKeyCount: Object.keys(miningLocations.guideToSpawnKeys ?? {}).length,
     }

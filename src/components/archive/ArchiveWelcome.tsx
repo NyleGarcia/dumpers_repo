@@ -232,6 +232,7 @@ const PAGE_GUIDES = [
       'Overall tags list member-visible locations in tooltips when cluster odds map to multiple sites',
       'Compare in-game: cluster RS = node count × base RS',
       'Hand-mineables and gems are not in the RS Tracker reference yet',
+      'Hand-mineable gems show cave vs surface availability per planet from extracted game data',
       'Logged-in users sync to their account; Offline Mode saves locally',
     ],
     relatesTo: ['Resource Tracker'],

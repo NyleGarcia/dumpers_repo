@@ -38,6 +38,21 @@ export function stripMineableLabel(raw) {
     .trim()
 }
 
+/**
+ * FPS gem habitat at a specific body from localization mineable lines.
+ * No parenthetical → surface and caves; "(Caves only)" → caves only.
+ */
+export function parseHandMineableHabitatRaw(raw) {
+  const text = String(raw || '').trim()
+  const paren = text.match(/\(([^)]+)\)\s*$/)
+  if (!paren) return 'both'
+  const note = paren[1].toLowerCase()
+  if (note.includes('caves only') || note === 'caves') return 'caves'
+  if (note.includes('surface only') || note === 'surface') return 'surface'
+  if (note.includes('surface') && note.includes('cave')) return 'both'
+  return 'both'
+}
+
 export function normalizeMineableLabel(raw) {
   return normalizeCompendiumOreName(stripMineableLabel(raw))
 }

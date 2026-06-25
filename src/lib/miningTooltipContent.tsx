@@ -28,6 +28,7 @@ import {
   isHandMineableOre,
   rsTrackerUnmappedDetail,
 } from './handMineables'
+import { formatHandMineableHabitatAtSite } from './handMineableHabitats'
 import {
   formatMineableInstability,
   formatMineableResistance,
@@ -50,6 +51,13 @@ function compositionSummary(parts: LocationSpawnProfile['compositionParts'] | un
 function clusterPreview(rows: Array<{ nodes: number; chancePercent: number }> | undefined): string {
   if (!rows?.length) return 'Solo only'
   return rows.map((r) => `${pct(r.chancePercent, 0)} (${r.nodes}×)`).join(' / ')
+}
+
+function handMineableHabitatLine(oreName: string, locationName?: string): React.ReactNode | null {
+  if (!locationName) return null
+  const label = formatHandMineableHabitatAtSite(oreName, locationName)
+  if (!label) return null
+  return <div className="text-slate-400">{label}</div>
 }
 
 export function oreMineableStatsTooltipBlock(oreName: string): React.ReactNode | null {
@@ -139,18 +147,27 @@ export function guideOreTitleTooltip(oreName: string): React.ReactNode {
   const types = getDepositTypes(oreName)
   const surfaceCount = getLocationProfilesForOre(oreName).filter((l) => l.depositType === 'surface').length
   const asteroidCount = getLocationProfilesForOre(oreName).filter((l) => l.depositType === 'asteroid').length
+  const handMineable = isHandMineableOre(oreName)
 
   return (
     <div className="space-y-1">
       <div className="font-semibold text-orange-300">{oreName}</div>
-      <div>
-        Deposit types: {types.map(depositTypeLabel).join(' · ') || 'Unknown'}
-      </div>
-      <div className="text-slate-400">
-        {surfaceCount} surface · {asteroidCount} asteroid mapped locations
-      </div>
+      {handMineable ? (
+        <div className="text-slate-400">Hand-mineable — cave vs surface availability varies by planet</div>
+      ) : (
+        <>
+          <div>
+            Deposit types: {types.map(depositTypeLabel).join(' · ') || 'Unknown'}
+          </div>
+          <div className="text-slate-400">
+            {surfaceCount} surface · {asteroidCount} asteroid mapped locations
+          </div>
+        </>
+      )}
       {oreMineableStatsTooltipBlock(oreName)}
-      <div className="text-slate-400 text-[11px]">Use Track Surface / Track Asteroid for RS Tracker cards.</div>
+      {!handMineable && (
+        <div className="text-slate-400 text-[11px]">Use Track Surface / Track Asteroid for RS Tracker cards.</div>
+      )}
     </div>
   )
 }
@@ -162,10 +179,11 @@ export function guideLocationChipTooltip(
 ): React.ReactNode {
   if (isHandMineableOre(oreName) || !hasShipRsSignature(oreName)) {
     return (
-      <div>
+      <div className="space-y-1">
         <div className="font-semibold text-orange-300">{oreName}</div>
         <div className="text-slate-400">{guideLocationName}</div>
         <div className="text-slate-400">{rsTrackerUnmappedDetail(oreName)}</div>
+        {handMineableHabitatLine(oreName, guideLocationName)}
       </div>
     )
   }
@@ -260,6 +278,7 @@ export function guideLocationOreTooltip(
         <div className="font-semibold text-orange-300">{oreName}</div>
         <div className="text-slate-400">{locationName}</div>
         <div>{rsTrackerUnmappedDetail(oreName)}</div>
+        {handMineableHabitatLine(oreName, locationName)}
         {oreMineableStatsTooltipBlock(oreName)}
       </div>
     )

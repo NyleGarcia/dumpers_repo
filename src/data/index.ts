@@ -47,6 +47,8 @@ export interface MiningLocationsData {
     harvestables: string[]
     creatures: string[]
   }>
+  /** FPS gem habitat per guide location (from in-game body descriptions). */
+  handMineableHabitats?: Record<string, Record<string, 'surface' | 'caves' | 'both'>>
   rarityOrder: string[]
   summary: {
     totalOres: number

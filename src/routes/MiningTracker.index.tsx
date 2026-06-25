@@ -51,6 +51,7 @@ import {
   matchesGuideRarityFilter,
   rsTrackerCardUnmappedNote,
 } from '../lib/handMineables'
+import { formatHandMineableHabitatAtSite } from '../lib/handMineableHabitats'
 import type { DepositType } from '../lib/localGuestCache'
 
 type ViewMode = 'tracker' | 'guide'
@@ -697,6 +698,9 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
   }) => {
     const system = LOCATION_SYSTEMS[chip.location]
     const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+    const habitatLabel = locationListOnly
+      ? formatHandMineableHabitatAtSite(item.ore_name, chip.location)
+      : null
     return (
       <SiteTooltip
         key={`${chip.location}-${chip.depositType}`}
@@ -722,6 +726,7 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
           )}
           <span className="block text-[10px] text-slate-500 mt-0.5">
             {chip.spawnLabel}
+            {habitatLabel ? ` · ${habitatLabel}` : ''}
             {!locationListOnly && chip.maxNodes >= 2 ? ` · max ${chip.maxNodes}×` : ''}
           </span>
         </button>
@@ -835,6 +840,7 @@ function GuideLocationCard({
         {sortedOres.map((ore) => {
           const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
           const signature = ORE_SIGNATURES[ore.ore_name]
+          const habitatLabel = formatHandMineableHabitatAtSite(ore.ore_name, location)
           const profile = getLocationProfile(ore.ore_name, location)
           const spawnTag = isBroadGuideLocation(location)
             ? getDepositTypes(ore.ore_name)
@@ -862,6 +868,9 @@ function GuideLocationCard({
                 )}
                 {spawnTag && (
                   <span className="block text-[10px] text-slate-400 mt-0.5">{spawnTag.label}</span>
+                )}
+                {habitatLabel && (
+                  <span className="block text-[10px] text-cyan-400/80 mt-0.5">{habitatLabel}</span>
                 )}
               </button>
             </SiteTooltip>
@@ -976,6 +985,7 @@ function GuideOreModal({
               const system = LOCATION_SYSTEMS[location]
               const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
               if (locationListOnly) {
+                const habitatLabel = formatHandMineableHabitatAtSite(ore.ore_name, location)
                 return (
                   <div
                     key={location}
@@ -985,7 +995,10 @@ function GuideOreModal({
                     {system && (
                       <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
                     )}
-                    <span className="block text-xs text-slate-500 mt-1">{listSpawnLabel}</span>
+                    <span className="block text-xs text-slate-500 mt-1">
+                      {listSpawnLabel}
+                      {habitatLabel ? ` · ${habitatLabel}` : ''}
+                    </span>
                   </div>
                 )
               }

@@ -1,12 +1,26 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-25T15:32:41.704Z",
+  "_extracted": "2026-06-25T21:49:52.579Z",
   "rarityTiers": {
     "legendary": [
       {
         "name": "Quantainium",
         "locations": [
-          "Found in All Stanton Deposits (Rare)"
+          "Found in All Stanton Deposits (Rare)",
+          "Hurston",
+          "Ita",
+          "Aberdeen",
+          "Arial",
+          "Magda",
+          "Cellin",
+          "Daymar",
+          "Yela",
+          "Lyria",
+          "Wala",
+          "microTech",
+          "Calliope",
+          "Clio",
+          "Euterpe"
         ]
       },
       {
@@ -22,7 +36,12 @@
         "locations": [
           "All Pyro Planets",
           "Akiro Cluster",
-          "Pyro Asteroid Clusters"
+          "Pyro Asteroid Clusters",
+          "Pyro I",
+          "Monox",
+          "Bloom",
+          "Pyro IV",
+          "Terminus"
         ]
       }
     ],
@@ -40,7 +59,8 @@
           "Aberdeen",
           "Arial",
           "Hurston",
-          "Yela Ring"
+          "Yela Ring",
+          "Ita"
         ]
       },
       {
@@ -82,7 +102,8 @@
           "Magda",
           "MIC-L4",
           "Pyro Asteroid Clusters",
-          "Vuur"
+          "Vuur",
+          "Arial"
         ]
       },
       {
@@ -156,7 +177,8 @@
           "MIC-L5",
           "Monox",
           "Pyro Asteroid Clusters",
-          "Vuur"
+          "Vuur",
+          "Ita"
         ]
       },
       {
@@ -189,7 +211,8 @@
           "MIC-L1",
           "MIC-L2",
           "MIC-L5",
-          "Pyro Asteroid Clusters"
+          "Pyro Asteroid Clusters",
+          "Ita"
         ]
       },
       {
@@ -227,7 +250,9 @@
           "Magda",
           "Pyro Asteroid Clusters",
           "Terminus",
-          "Yela Ring"
+          "Yela Ring",
+          "Arial",
+          "Daymar"
         ]
       },
       {
@@ -322,7 +347,8 @@
           "MIC-L3",
           "MIC-L4",
           "Pyro Asteroid Clusters",
-          "Yela Ring"
+          "Yela Ring",
+          "Terminus"
         ]
       },
       {
@@ -382,7 +408,8 @@
           "Ita",
           "Monox",
           "Pyro Asteroid Clusters",
-          "Pyro I"
+          "Pyro I",
+          "Magda"
         ]
       },
       {
@@ -397,6 +424,28 @@
           "MIC-L5",
           "Pyro Asteroid Clusters",
           "QV Breaker Stations (Nyx)"
+        ]
+      },
+      {
+        "name": "Aluminum",
+        "locations": [
+          "Hurston",
+          "Ita",
+          "Aberdeen",
+          "Arial"
+        ]
+      },
+      {
+        "name": "Alumium",
+        "locations": [
+          "Magda"
+        ]
+      },
+      {
+        "name": "Tarantite",
+        "locations": [
+          "Cellin",
+          "Yela"
         ]
       }
     ],
@@ -604,7 +653,8 @@
       "Magda",
       "MIC-L4",
       "Pyro Asteroid Clusters",
-      "Vuur"
+      "Vuur",
+      "Arial"
     ],
     "Beradom": [
       "Bloom",
@@ -679,7 +729,8 @@
       "MIC-L1",
       "MIC-L2",
       "MIC-L5",
-      "Pyro Asteroid Clusters"
+      "Pyro Asteroid Clusters",
+      "Ita"
     ],
     "Dolivine": [
       "All Moons/Planets/Caves",
@@ -762,7 +813,8 @@
       "MIC-L5",
       "Monox",
       "Pyro Asteroid Clusters",
-      "Vuur"
+      "Vuur",
+      "Ita"
     ],
     "Ice": [
       "Aaron Halo",
@@ -779,7 +831,8 @@
       "MIC-L3",
       "MIC-L4",
       "Pyro Asteroid Clusters",
-      "Yela Ring"
+      "Yela Ring",
+      "Terminus"
     ],
     "Iron": [
       "Aaron Halo",
@@ -855,10 +908,25 @@
       "Aberdeen",
       "Arial",
       "Hurston",
-      "Yela Ring"
+      "Yela Ring",
+      "Ita"
     ],
     "Quantainium": [
-      "Found in All Stanton Deposits (Rare)"
+      "Found in All Stanton Deposits (Rare)",
+      "Hurston",
+      "Ita",
+      "Aberdeen",
+      "Arial",
+      "Magda",
+      "Cellin",
+      "Daymar",
+      "Yela",
+      "Lyria",
+      "Wala",
+      "microTech",
+      "Calliope",
+      "Clio",
+      "Euterpe"
     ],
     "Quartz": [
       "Bloom",
@@ -898,7 +966,12 @@
     "Stileron": [
       "All Pyro Planets",
       "Akiro Cluster",
-      "Pyro Asteroid Clusters"
+      "Pyro Asteroid Clusters",
+      "Pyro I",
+      "Monox",
+      "Bloom",
+      "Pyro IV",
+      "Terminus"
     ],
     "Taranite": [
       "ARC-L1",
@@ -918,7 +991,8 @@
       "Ita",
       "Monox",
       "Pyro Asteroid Clusters",
-      "Pyro I"
+      "Pyro I",
+      "Magda"
     ],
     "Titanium": [
       "Aaron Halo",
@@ -929,7 +1003,9 @@
       "Magda",
       "Pyro Asteroid Clusters",
       "Terminus",
-      "Yela Ring"
+      "Yela Ring",
+      "Arial",
+      "Daymar"
     ],
     "Torite": [
       "Akiro Cluster",
@@ -950,6 +1026,19 @@
       "Fairo",
       "HUR-L2",
       "Pyro Asteroid Clusters"
+    ],
+    "Aluminum": [
+      "Hurston",
+      "Ita",
+      "Aberdeen",
+      "Arial"
+    ],
+    "Alumium": [
+      "Magda"
+    ],
+    "Tarantite": [
+      "Cellin",
+      "Yela"
     ]
   },
   "locationOres": {
@@ -1007,6 +1096,14 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Tarantite",
+        "rarity": "common"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "CRU-L5": [
@@ -1059,6 +1156,14 @@
       {
         "name": "Hadanite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
       }
     ],
     "MIC-L4": [
@@ -1205,6 +1310,14 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Stileron",
+        "rarity": "legendary"
       }
     ],
     "Vuur": [
@@ -1273,6 +1386,14 @@
       {
         "name": "Hadanite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Tarantite",
+        "rarity": "common"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "Aaron Halo": [
@@ -1345,6 +1466,14 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "ARC-L1": [
@@ -1427,6 +1556,22 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "CRU-L3": [
@@ -1593,6 +1738,26 @@
       {
         "name": "Hadanite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "Keeger Belt": [
@@ -1657,6 +1822,18 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Alumium",
+        "rarity": "common"
+      },
+      {
+        "name": "Tin",
+        "rarity": "common"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "MIC-L1": [
@@ -1804,7 +1981,7 @@
     "Bloom": [
       {
         "name": "Beradom",
-        "rarity": "common"
+        "rarity": "handMineable"
       },
       {
         "name": "Borase",
@@ -1833,12 +2010,16 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Stileron",
+        "rarity": "legendary"
       }
     ],
     "Pyro I": [
       {
         "name": "Beradom",
-        "rarity": "common"
+        "rarity": "handMineable"
       },
       {
         "name": "Copper",
@@ -1867,6 +2048,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Stileron",
+        "rarity": "legendary"
       }
     ],
     "Wala": [
@@ -1897,6 +2082,10 @@
       {
         "name": "Dolivine",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "CRU-L1": [
@@ -2061,6 +2250,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Stileron",
+        "rarity": "legendary"
       }
     ],
     "Akiro Cluster": [
@@ -2117,6 +2310,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "Euterpe": [
@@ -2143,6 +2340,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "Lyria": [
@@ -2169,6 +2370,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "MIC-L3": [
@@ -2257,6 +2462,14 @@
       {
         "name": "Hadanite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "Monox": [
@@ -2291,6 +2504,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Stileron",
+        "rarity": "legendary"
       }
     ],
     "Ignis": [
@@ -2385,6 +2602,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "microTech": [
@@ -2411,6 +2632,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "Magda Sand Caves": [
@@ -3019,6 +3244,106 @@
       ],
       "creatures": [],
       "spawnKey": "Stanton4c"
+    }
+  },
+  "handMineableHabitats": {
+    "Aphorite": {
+      "Pyro I": "both",
+      "Monox": "both",
+      "Bloom": "both",
+      "Pyro IV": "both",
+      "Ignis": "both",
+      "Vatra": "both",
+      "Adir": "both",
+      "Fairo": "both",
+      "Fuego": "both",
+      "Vuur": "both",
+      "Terminus": "both",
+      "Hurston": "both",
+      "Ita": "both",
+      "Aberdeen": "both",
+      "Arial": "both",
+      "Magda": "both",
+      "Cellin": "both",
+      "Daymar": "both",
+      "Yela": "both",
+      "Lyria": "both",
+      "Wala": "both",
+      "microTech": "both",
+      "Calliope": "both",
+      "Clio": "both",
+      "Euterpe": "both"
+    },
+    "Dolivine": {
+      "Pyro I": "both",
+      "Monox": "both",
+      "Bloom": "both",
+      "Pyro IV": "both",
+      "Ignis": "both",
+      "Vatra": "both",
+      "Adir": "both",
+      "Fairo": "both",
+      "Fuego": "both",
+      "Vuur": "both",
+      "Terminus": "both",
+      "Hurston": "both",
+      "Ita": "both",
+      "Aberdeen": "both",
+      "Arial": "both",
+      "Magda": "both",
+      "Cellin": "both",
+      "Daymar": "both",
+      "Yela": "both",
+      "Lyria": "both",
+      "Wala": "both",
+      "microTech": "both",
+      "Calliope": "both",
+      "Clio": "both",
+      "Euterpe": "both"
+    },
+    "Hadanite": {
+      "Pyro I": "both",
+      "Monox": "both",
+      "Pyro IV": "both",
+      "Ignis": "both",
+      "Vatra": "both",
+      "Adir": "both",
+      "Fairo": "both",
+      "Vuur": "both",
+      "Hurston": "both",
+      "Ita": "both",
+      "Aberdeen": "both",
+      "Arial": "both",
+      "Magda": "both",
+      "Cellin": "both",
+      "Daymar": "both",
+      "Yela": "both"
+    },
+    "Janalite": {
+      "Pyro I": "caves",
+      "Monox": "caves",
+      "Bloom": "both",
+      "Pyro IV": "caves",
+      "Ignis": "caves",
+      "Vatra": "caves",
+      "Adir": "caves",
+      "Fairo": "caves",
+      "Fuego": "both",
+      "Vuur": "caves",
+      "Terminus": "both",
+      "Hurston": "caves",
+      "Ita": "caves",
+      "Aberdeen": "caves",
+      "Arial": "caves",
+      "Magda": "caves",
+      "Cellin": "caves",
+      "Daymar": "caves",
+      "Lyria": "both",
+      "Wala": "both",
+      "microTech": "both",
+      "Calliope": "both",
+      "Clio": "both",
+      "Euterpe": "both"
     }
   },
   "locationAliases": {
@@ -3673,9 +3998,10 @@
     "handMineable"
   ],
   "summary": {
-    "totalOres": 35,
+    "totalOres": 38,
     "totalLocations": 56,
     "locationsWithDetails": 25,
+    "handMineableHabitatEntries": 90,
     "locationAliasCount": 47,
     "guideToSpawnKeyCount": 52
   }
