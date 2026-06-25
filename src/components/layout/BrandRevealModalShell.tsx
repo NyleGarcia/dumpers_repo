@@ -22,6 +22,9 @@ const FLIP_EASE = [0.32, 0.72, 0, 1] as const
 const EXPAND_EASE = [0.22, 1, 0.36, 1] as const
 const BLINDS_EASE = [0.22, 1, 0.36, 1] as const
 const WORMHOLE_EASE = [0.55, 0, 1, 0.45] as const
+/** Shrink stays visible; opacity only dips at the end. */
+const WORMHOLE_SHRINK_EASE = [0.42, 0, 0.58, 1] as const
+const WORMHOLE_MIN_SCALE = 0.1
 
 const BRAND_GRADIENT =
   'linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #ea580c 100%)'
@@ -38,9 +41,13 @@ const TIMING = {
   flipInPlace: 0.6,
   expandToCenter: 0.5,
   blindsIn: 0.8,
-  wormholeOut: 0.62,
+  wormholeOut: 0.72,
   backdropOut: 0.22,
 } as const
+
+/** Matches AppModal lg — top inset + fill remaining viewport. */
+const MODAL_TOP_VH = 0.05
+const MODAL_HEIGHT_VH = 0.9
 
 const backFaceStyle: React.CSSProperties = {
   backfaceVisibility: 'hidden',
@@ -70,15 +77,21 @@ export interface BrandRevealModalShellProps {
   titleId?: string
 }
 
-function computeTargetRect(size: AppModalSize, originRect: DOMRect | null) {
+function computeTargetRect(size: AppModalSize) {
   const width = Math.min(sizeMaxWidth[size], window.innerWidth - 32)
   const left = (window.innerWidth - width) / 2
-  const top = Math.max(16, window.innerHeight * 0.06)
-  const height = Math.min(
-    window.innerHeight * 0.88,
-    Math.max(originRect?.height ?? 280, 320)
-  )
+  const top = Math.max(16, window.innerHeight * MODAL_TOP_VH)
+  const height = Math.max(280, window.innerHeight * MODAL_HEIGHT_VH - top - 16)
   return { top, left, width, height }
+}
+
+function pickRandomWormholeTarget(rect: { top: number; left: number; width: number; height: number }) {
+  const inset = 32
+  const centerX = rect.left + rect.width / 2
+  const centerY = rect.top + rect.height / 2
+  const targetX = inset + Math.random() * (window.innerWidth - inset * 2)
+  const targetY = inset + Math.random() * (window.innerHeight - inset * 2)
+  return { x: targetX - centerX, y: targetY - centerY }
 }
 
 function rectToBox(rect: { top: number; left: number; width: number; height: number }) {
@@ -166,13 +179,11 @@ function BrandRevealAnimatedModal({
   titleId,
 }: BrandRevealModalShellProps & { originRect: DOMRect; titleId: string }) {
   const [stage, setStage] = useState<ModalStage>('flip')
+  const [wormholeTarget, setWormholeTarget] = useState({ x: 0, y: 0 })
   const originRef = useRef(originRect)
   originRef.current = originRect
 
-  const targetRect = useMemo(
-    () => computeTargetRect(size ?? 'md', originRect),
-    [size, originRect]
-  )
+  const targetRect = useMemo(() => computeTargetRect(size ?? 'md'), [size])
 
   const originBox = useMemo(() => rectToBox(originRef.current), [originRect])
   const interactive = stage === 'ready'
@@ -207,8 +218,9 @@ function BrandRevealAnimatedModal({
 
   const requestClose = useCallback(() => {
     if (stage !== 'ready') return
+    setWormholeTarget(pickRandomWormholeTarget(targetRect))
     setStage('wormhole-close')
-  }, [stage])
+  }, [stage, targetRect])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -241,7 +253,7 @@ function BrandRevealAnimatedModal({
         animate={{ opacity: closing ? 0 : 1 }}
         transition={{
           duration: closing ? TIMING.backdropOut : TIMING.backdropIn,
-          delay: closing ? TIMING.wormholeOut * 0.35 : 0,
+          delay: closing ? TIMING.wormholeOut * 0.88 : 0,
         }}
         onClick={closeOnBackdrop && interactive ? requestClose : undefined}
       />
@@ -285,6 +297,7 @@ function BrandRevealAnimatedModal({
             top: targetRect.top,
             left: targetRect.left,
             width: targetRect.width,
+            height: targetRect.height,
             maxHeight: targetRect.height,
             transformOrigin: 'center center',
           }}
@@ -292,29 +305,53 @@ function BrandRevealAnimatedModal({
           animate={
             closing
               ? {
-                  scale: 0,
+                  scale: WORMHOLE_MIN_SCALE,
                   opacity: 0,
                   rotate: -540,
-                  filter: 'blur(14px)',
+                  filter: 'blur(10px)',
+                  x: wormholeTarget.x,
+                  y: wormholeTarget.y,
                 }
               : {
                   scale: 1,
                   opacity: 1,
                   rotate: 0,
                   filter: 'blur(0px)',
+                  x: 0,
+                  y: 0,
                 }
           }
-          transition={{
-            duration: TIMING.wormholeOut,
-            ease: WORMHOLE_EASE,
-          }}
+          transition={
+            closing
+              ? {
+                  scale: { duration: TIMING.wormholeOut, ease: WORMHOLE_SHRINK_EASE },
+                  x: { duration: TIMING.wormholeOut, ease: WORMHOLE_SHRINK_EASE },
+                  y: { duration: TIMING.wormholeOut, ease: WORMHOLE_SHRINK_EASE },
+                  rotate: { duration: TIMING.wormholeOut, ease: WORMHOLE_SHRINK_EASE },
+                  filter: {
+                    duration: TIMING.wormholeOut * 0.25,
+                    delay: TIMING.wormholeOut * 0.72,
+                    ease: 'easeIn',
+                  },
+                  opacity: {
+                    duration: 0.1,
+                    delay: TIMING.wormholeOut * 0.88,
+                    ease: 'easeIn',
+                  },
+                }
+              : {
+                  duration: TIMING.wormholeOut,
+                  ease: WORMHOLE_EASE,
+                }
+          }
         >
           <div
             className={`relative bg-slate-900 border border-slate-700 rounded-2xl w-full h-full shadow-2xl flex flex-col min-w-0 overflow-hidden ${
               closing ? 'pointer-events-none' : ''
             }`}
             style={{
-              maxHeight: 'min(90dvh, 36rem)',
+              height: targetRect.height,
+              maxHeight: targetRect.height,
             }}
             onClick={(e) => e.stopPropagation()}
           >
