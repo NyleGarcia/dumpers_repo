@@ -77,7 +77,7 @@ const TIPS: { title: string; content: string }[] = [
   },
   {
     title: 'Resource Tracking',
-    content: 'Use the Resource Tracker to keep inventory of your mined and refined materials. The DFP (Dumper\'s Fair Price) algorithm calculates fair market values based on quality tiers.',
+    content: 'Use the Resource Tracker to keep inventory of your mined and refined materials. Dumper\'s Fair-Value Price (DFP) calculates fair market values based on quality tiers.',
   },
   {
     title: 'Quality Tiers',
@@ -86,6 +86,24 @@ const TIPS: { title: string; content: string }[] = [
   {
     title: 'Standing Progression',
     content: 'All factions use the same standing ladder from Neutral to Elite Contractor. Higher standings unlock better-paying contracts and exclusive blueprint rewards.',
+  },
+]
+
+const DATA_SOURCES: { title: string; content: string }[] = [
+  {
+    title: 'Game catalog data',
+    content:
+      'Blueprints, components, ordnance, mining spawns, factions, Archive lore, and RS signature references are extracted directly from Star Citizen game files, then parsed into bundled JSON shipped with the site.',
+  },
+  {
+    title: 'DFP pricing',
+    content:
+      'Dumper\'s Fair-Value Price (DFP) is a proprietary pricing engine loaded from the official franchise bundle. The site does not pull live prices from third-party market APIs.',
+  },
+  {
+    title: 'Not included here',
+    content:
+      'Live in-game shop inventories are not part of Dumper\'s Repo. For item locations and market lookup, use the external tools listed below.',
   },
 ]
 
@@ -105,6 +123,24 @@ export default function GeneralArchiveSection() {
             >
               <h4 className="text-sm font-medium text-orange-300 mb-1">{tip.title}</h4>
               <p className="text-xs text-slate-400 leading-relaxed">{tip.content}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Data sources */}
+      <section>
+        <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">
+          Data Sources
+        </h3>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {DATA_SOURCES.map((source) => (
+            <div
+              key={source.title}
+              className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+            >
+              <h4 className="text-sm font-medium text-orange-300 mb-1">{source.title}</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">{source.content}</p>
             </div>
           ))}
         </div>

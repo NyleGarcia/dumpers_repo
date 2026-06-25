@@ -358,7 +358,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
           >
             <SettingsToggle
               label="Ghost Mode"
-              description="Hide yourself from the member blueprint directory and community features. You keep personal tools — blueprints, Mission Tracker, and Resource Tracker — but orders, fulfillment, support, and admin tools stay hidden."
+              description="Hide yourself from the member blueprint directory and community features. You keep personal tools — blueprints, Mission Tracker, Resource Tracker, Mining Tracker, and the Info Archive — but orders, fulfillment, webhooks, support, and admin tools stay hidden."
               checked={ghostMode}
               onChange={handleGhostModeChange}
               saving={savingGhost}

@@ -102,7 +102,7 @@ function MissionTagLegend() {
         </div>
         <ul className="mt-3 space-y-1 text-[11px] text-slate-500">
           <li>• Pyro A = Monox · Pyro B = Bloom, Ignis · Pyro C = Fairo · Pyro D = Terminus, Vatra</li>
-          <li>• Stanton region tags will appear here as game data adds them</li>
+          <li>• Stanton system-wide missions (e.g. BHG Hathor PAF bounties) show only the Stanton tag</li>
         </ul>
       </div>
 
@@ -154,6 +154,7 @@ const PAGE_GUIDES = [
       'View the resources and components required to craft each item',
       'Click any blueprint to see detailed crafting requirements and DFP values',
       'Use the quality sliders to preview how resource quality affects final stats and DFP pricing',
+      'Browse other members\' blueprint collections from the member picker (hidden in Ghost Mode)',
       'Offline Mode: acquired marks save locally until you sign in',
     ],
     relatesTo: ['Mission Tracker', 'Resource Tracker'],
@@ -182,6 +183,7 @@ const PAGE_GUIDES = [
       'Investigation missions are mostly Hockrow Agency\'s Jorrit Dossier line at ASD\'s Onyx Facility (Stanton)',
       'Jorrit Dossier is a linear story chain — complete each step to unlock the next; repeat runs drop blueprints',
       'Collection missions include Wikelo Emporium craft contracts in Stanton (turn in gathered items for blueprints)',
+      'BHG Hathor PAF bounties (Verified Bounty · Hathor · Planetary Alignment Facility) resolve to Stanton — Daymar and Aberdeen platform sites',
       'Prioritize which factions to grind based on your goals',
       'Offline Mode: list saves locally until you sign in (then migrates automatically)',
     ],
@@ -203,6 +205,7 @@ const PAGE_GUIDES = [
       'Filter by quality band on both views — each Q-tier stays on its own row',
       'Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value',
       'Salvage and trade goods use fixed Q0 tiers',
+      'Officers see a read-only Site Total tab — live rollup of all approved members\' stock',
       'Perfect for tracking what you have available for crafting or trading',
       'Offline Mode: inventory saves locally until you sign in (then migrates automatically)',
     ],
@@ -291,7 +294,25 @@ const PAGE_GUIDES = [
       'Repeated post/cancel bursts from the same member may arrive as one grouped marketplace ping',
       'Support: staff replies and ticket resolved notices on your tickets — available without RSI verification',
       'One channel name and webhook URL per alert type — leave the URL blank to unregister',
-      'Set up from your avatar menu → Webhooks after sign-in (members only)',
+      'Set up from your avatar menu → Webhooks (/discord-subscribe) after sign-in — hidden in Ghost Mode',
+    ],
+    relatesTo: ['Custom Orders', 'Fulfillment'],
+  },
+  {
+    id: 'notifications',
+    title: 'Notifications',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+    ),
+    description: 'In-app alerts for marketplace activity from the header bell.',
+    details: [
+      'Bell icon in the header shows your unread notification count',
+      'Alerts cover marketplace events such as order acceptances and status changes',
+      'Click Clear on a notification to dismiss it — dismissed rows are deleted (no read history kept)',
+      'Use Clear all to dismiss every notification at once',
+      'Unavailable while your account is pending approval or when Ghost Mode is on',
     ],
     relatesTo: ['Custom Orders', 'Fulfillment'],
   },
@@ -307,11 +328,12 @@ const PAGE_GUIDES = [
     description: 'Manage your profile, privacy, and account from your avatar menu.',
     details: [
       'Set or update your RSI Handle for verification and orders',
-      'Enable Ghost Mode to hide from member lists while keeping personal blueprint and resource tracking',
-      'Ghost Mode keeps blueprints, Mission Tracker, Resource Tracker, and the Archive — orders and fulfillment stay hidden',
+      'Deduct inventory on craft complete: when enabled, finishing a WTB fulfillment deducts materials from My Resources (requires verified RSI Handle)',
+      'Enable Ghost Mode to hide from member lists while keeping personal tools',
+      'Ghost Mode keeps blueprints, Mission Tracker, Resource Tracker, Mining Tracker, and the Info Archive — orders, fulfillment, webhooks, and support stay hidden',
       'Turn Ghost Mode off anytime from Privacy settings',
     ],
-    relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker'],
+    relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker'],
   },
   {
     id: 'support',

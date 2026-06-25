@@ -13,7 +13,6 @@
 - **Resource Tracker** — Per-member stock (quality-tier SCU), **Site Total** live rollup, super-admin catalog sync
 - **Mining Tracker** — RS signature reference grid for mining (available offline)
 - **Info Archive** — Components, ordnance, factions, resource lore, and site guides
-- **Shops** — Live shop inventories and prices (UEX Corp API, synced by super-admins)
 
 ### Marketplace (members only)
 
@@ -27,7 +26,7 @@ Both marketplace pages share one reputation system (buyer rep + fulfiller/seller
 
 ### Offline Mode (no account)
 
-Try most tools in the browser before signing up: blueprints, Mission Tracker, Resource Tracker, Mining Tracker, Archive, and Shops. Offline progress can migrate to your account on first sign-in.
+Try most tools in the browser before signing up: blueprints, Mission Tracker, Resource Tracker, Mining Tracker, and Archive. Offline progress can migrate to your account on first sign-in.
 
 **Fulfillment teaser:** Offline users can open Fulfillment to see how many orders are waiting (count only — sign in to browse details or accept).
 
@@ -40,7 +39,7 @@ Custom Orders and accepting trades require a free member account.
 - **Support tickets** — Member bug reports and issue reporting
 - **Roles** — Google OAuth; `pending` → officer approval → `member` / `officer` / `super-admin`
 - **Ghost Mode** — Hide from member directory; keeps personal tools, hides orders/fulfillment
-- **Admin** — Approve users, roles, ban/unban; super-admin **DB Actions** (game data extract/parse/deploy, UEX shop sync)
+- **Admin** — Approve users, roles, ban/unban; super-admin **DB Actions** (game data extract/parse/deploy)
 
 ## Tech stack
 
