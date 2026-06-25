@@ -21,7 +21,7 @@ import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import BlueprintCategoryTags from './BlueprintCategoryTags'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
-import AppModal from './layout/AppModal'
+import BrandRevealModalShell from './layout/BrandRevealModalShell'
 
 interface SlotOption {
   type?: string
@@ -71,6 +71,7 @@ interface BlueprintRecord {
 interface BlueprintDetailsModalProps {
   blueprint: BlueprintRecord
   onClose: () => void
+  originRect?: DOMRect | null
   isApproved: boolean
   isGuest?: boolean
   isAcquired: boolean
@@ -85,6 +86,7 @@ interface BlueprintDetailsModalProps {
 export default function BlueprintDetailsModal({
   blueprint,
   onClose,
+  originRect = null,
   isApproved,
   isGuest = false,
   isAcquired,
@@ -187,9 +189,10 @@ export default function BlueprintDetailsModal({
   }
 
   return (
-    <AppModal
+    <BrandRevealModalShell
       title={blueprint.blueprintName || 'Blueprint'}
       onClose={onClose}
+      originRect={originRect}
       size="lg"
       zIndex={60}
     >
@@ -363,7 +366,7 @@ export default function BlueprintDetailsModal({
           </div>
         )}
       </div>
-    </AppModal>
+    </BrandRevealModalShell>
   )
 }
 

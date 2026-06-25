@@ -79,6 +79,7 @@ export default function BlueprintsRoute() {
   const [selectedArmorSlot, setSelectedArmorSlot] = React.useState(null)
   const [showOnlyRewards, setShowOnlyRewards] = React.useState(true)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
+  const [modalOriginRect, setModalOriginRect] = React.useState(null)
 
   const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
   const [selectedUserId, setSelectedUserId] = React.useState('all')
@@ -684,7 +685,10 @@ export default function BlueprintsRoute() {
                 <BlueprintCard
                   key={bp.internalName}
                   blueprint={bp}
-                  onClick={() => setSelectedBlueprint(bp)}
+                  onClick={(_bp, e) => {
+                    setModalOriginRect(e.currentTarget.getBoundingClientRect())
+                    setSelectedBlueprint(bp)
+                  }}
                   isAcquired={!!displayAcquiredBlueprints[bp.internalName]}
                   onToggleAcquired={() => toggleAcquired(bp.internalName)}
                   canModify={canModifyBlueprints}
@@ -709,7 +713,11 @@ export default function BlueprintsRoute() {
       {selectedBlueprint && (
         <BlueprintDetailsModal
           blueprint={selectedBlueprint}
-          onClose={() => setSelectedBlueprint(null)}
+          originRect={modalOriginRect}
+          onClose={() => {
+            setSelectedBlueprint(null)
+            setModalOriginRect(null)
+          }}
           isApproved={isApproved}
           isGuest={isGuest}
           isAcquired={!!displayAcquiredBlueprints[selectedBlueprint.internalName]}
