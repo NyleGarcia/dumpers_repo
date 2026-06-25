@@ -4,7 +4,7 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useMiningData, type MiningData } from '../hooks/useArchiveData'
 import { useMiningTracker } from '../hooks/useMiningTracker'
 import { useAuth } from '../contexts/AuthContext'
-import { findOreByName, countGuideRarityBucket } from '../lib/miningDataHelpers'
+import { findOreByName, countGuideRarityBucket, buildLocationOresMap } from '../lib/miningDataHelpers'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import {
   LOCATION_SYSTEMS,
@@ -163,17 +163,7 @@ export default function MiningTrackerRoute() {
     }, {})
   }, [data])
 
-  const locationOresMap = useMemo(() => {
-    if (!data) return {}
-    const map: Record<string, MiningData[]> = {}
-    for (const ore of data) {
-      for (const loc of ore.locations ?? []) {
-        if (!map[loc]) map[loc] = []
-        map[loc].push(ore)
-      }
-    }
-    return map
-  }, [data])
+  const locationOresMap = useMemo(() => buildLocationOresMap(data ?? []), [data])
 
   const allLocations = useMemo(() => {
     return Object.keys(locationOresMap).sort((a, b) => {

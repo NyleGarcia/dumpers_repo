@@ -1,7 +1,9 @@
 import type { MiningData } from '../hooks/useArchiveData'
+import { miningLocations } from '../data'
 import { MINING_RARITY_ORDER } from './miningConstants'
 import { isHandMineableType, normalizeMiningOreName } from './handMineables'
 import { LOCATION_SYSTEMS } from './miningConstants'
+import { isBroadGuideLocation } from './miningLocationAliases'
 
 const RARITY_RANK = Object.fromEntries(MINING_RARITY_ORDER.map((r, i) => [r, i]))
 
@@ -14,6 +16,40 @@ function pickDisplayRarity(a: string, b: string): string {
   return rankB < rankA ? b : a
 }
 
+function normalizeMineableLabel(label: string): string {
+  return normalizeMiningOreName(label.trim())
+}
+
+/** Guide sites where extracted localization lists this ore (ship / hand / ground). */
+export function getSiteMineableGuideLocations(oreName: string): string[] {
+  const canonical = normalizeMiningOreName(oreName).toLowerCase()
+  const sites: string[] = []
+
+  for (const [guideLoc, mineables] of Object.entries(miningLocations.locationMineables ?? {})) {
+    const labels = [
+      ...(mineables.shipMineables ?? []),
+      ...(mineables.handMineables ?? []),
+      ...(mineables.groundVehicleMineables ?? []),
+    ]
+    if (labels.some((label) => normalizeMineableLabel(label).toLowerCase() === canonical)) {
+      sites.push(guideLoc)
+    }
+  }
+
+  return sites
+}
+
+/**
+ * Locations used when indexing a specific planet/moon/station site.
+ * Broad compendium buckets (e.g. "All Pyro Planets") are excluded — those are
+ * not guaranteed on every body in the system.
+ */
+export function getSpecificGuideLocations(ore: MiningData): string[] {
+  const fromCompendium = (ore.locations ?? []).filter((loc) => !isBroadGuideLocation(loc))
+  const fromSiteData = getSiteMineableGuideLocations(ore.ore_name)
+  return [...new Set([...fromCompendium, ...fromSiteData])]
+}
+
 /** Normalize names, merge alias duplicates (e.g. Beradon → Beradom), union locations. */
 export function enrichMiningCatalog(rows: MiningData[]): MiningData[] {
   const byKey = new Map<string, MiningData>()
@@ -23,15 +59,18 @@ export function enrichMiningCatalog(rows: MiningData[]): MiningData[] {
     const key = ore_name.toLowerCase()
     const existing = byKey.get(key)
 
+    const siteLocations = getSiteMineableGuideLocations(ore_name)
+    const locations = [...new Set([...(row.locations ?? []), ...siteLocations])]
+
     if (!existing) {
-      byKey.set(key, { ...row, ore_name })
+      byKey.set(key, { ...row, ore_name, locations })
       continue
     }
 
-    const locations = [...new Set([...(existing.locations ?? []), ...(row.locations ?? [])])]
+    const mergedLocations = [...new Set([...(existing.locations ?? []), ...locations])]
     const rarity = pickDisplayRarity(existing.rarity, row.rarity)
 
-    byKey.set(key, { ...existing, ore_name, locations, rarity })
+    byKey.set(key, { ...existing, ore_name, locations: mergedLocations, rarity })
   }
 
   return Array.from(byKey.values())
@@ -46,12 +85,26 @@ export function countGuideRarityBucket(data: MiningData[], bucket: string): numb
 
 export function buildLocationOresMap(data: MiningData[]): Record<string, MiningData[]> {
   const map: Record<string, MiningData[]> = {}
-  for (const ore of data) {
-    for (const loc of ore.locations) {
-      if (!map[loc]) map[loc] = []
+
+  const addOreToLocation = (loc: string, ore: MiningData) => {
+    if (!map[loc]) map[loc] = []
+    if (!map[loc].some((entry) => entry.id === ore.id)) {
       map[loc].push(ore)
     }
   }
+
+  for (const ore of data) {
+    for (const loc of getSpecificGuideLocations(ore)) {
+      addOreToLocation(loc, ore)
+    }
+
+    for (const loc of ore.locations ?? []) {
+      if (isBroadGuideLocation(loc)) {
+        addOreToLocation(loc, ore)
+      }
+    }
+  }
+
   return map
 }
 

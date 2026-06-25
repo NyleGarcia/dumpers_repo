@@ -635,6 +635,32 @@ function parseMiningLocations(localization) {
       }
     }
   }
+
+  function mergeShipMineableSiteLocations() {
+    mergeMineableSiteLocations(['shipMineables'])
+  }
+
+  function mergeMineableSiteLocations(fieldNames) {
+    for (const [guideLoc, mineables] of Object.entries(locationMineables)) {
+      const oreLabels = fieldNames.flatMap((field) => mineables[field] ?? [])
+      for (const rawLabel of oreLabels) {
+        const ore = normalizeMineableLabel(rawLabel)
+        if (!oreLocations[ore]) oreLocations[ore] = []
+        if (!oreLocations[ore].includes(guideLoc)) {
+          oreLocations[ore].push(guideLoc)
+        }
+
+        if (!locationOres[guideLoc]) locationOres[guideLoc] = []
+        const existing = locationOres[guideLoc].find((entry) => entry.name === ore)
+        const rarity = assignOreRarity(ore)
+        if (existing) {
+          if (rarity === 'handMineable') existing.rarity = 'handMineable'
+        } else {
+          locationOres[guideLoc].push({ name: ore, rarity })
+        }
+      }
+    }
+  }
   
   // Parse the Mining Compendium for comprehensive ore-location mappings
   const compendiumKey = 'Journal_General_Mining_Compendium_Content'
@@ -739,6 +765,7 @@ function parseMiningLocations(localization) {
   console.log(`  Parsed ${locDescCount} locations with mineable details`)
 
   mergeHandMineableSiteLocations()
+  mergeShipMineableSiteLocations()
 
   const locationAliases = buildLocationAliases(localization, EXTRACTED_DATA)
   console.log(`  Built ${Object.keys(locationAliases).length} location alias entries`)
