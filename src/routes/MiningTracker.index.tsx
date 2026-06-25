@@ -46,6 +46,7 @@ import {
 import {
   getGuideLocationSpawnLabel,
   isGuideLocationListOnlyOre,
+  rsTrackerCardUnmappedNote,
 } from '../lib/handMineables'
 import type { DepositType } from '../lib/localGuestCache'
 
@@ -443,8 +444,10 @@ export default function MiningTrackerRoute() {
                               </SiteTooltip>
                             ))}
                           </div>
-                        ) : entry.rarity === 'handMineable' ? (
-                          <p className="text-xs text-slate-500">Hand-mineable only (no ship RS)</p>
+                        ) : entry.rarity === 'handMineable' || !ORE_SIGNATURES[entry.oreName] ? (
+                          <p className="text-xs text-slate-500">
+                            {rsTrackerCardUnmappedNote(entry.oreName)}
+                          </p>
                         ) : (
                           <p className="text-xs text-slate-500">
                             {missingMessage ?? 'Spawn profile not on file'}

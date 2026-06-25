@@ -1,6 +1,6 @@
 import { ORE_SIGNATURES } from './miningConstants'
 
-/** FPS gems + ground-vehicle gems with no ship RS signature. */
+/** FPS gems + ground-vehicle gems excluded from the ship RS Tracker reference. */
 export const HAND_MINEABLE_ORES = new Set([
   'Aphorite',
   'Dolivine',
@@ -11,7 +11,7 @@ export const HAND_MINEABLE_ORES = new Set([
   'Sadaryx',
 ])
 
-/** Ground-vehicle gems (no ship RS, not FPS hand-mineable). */
+/** Ground-vehicle gems (not in RS Tracker reference; not FPS hand-mineable). */
 export const GROUND_VEHICLE_GEMS = new Set(['Beradom', 'Glacosite', 'Feynmaline'])
 
 const ORE_COMPENDIUM_ALIASES: Record<string, string> = {
@@ -45,4 +45,15 @@ export function getGuideLocationSpawnLabel(oreName: string): string {
   if (isHandMineableOre(name)) return 'Hand-mineable'
   if (GROUND_VEHICLE_GEMS.has(name)) return 'Ground vehicle'
   return 'Compendium'
+}
+
+/** Why an ore appears in the guide but not the RS Tracker grid. */
+export function rsTrackerUnmappedDetail(oreName: string): string {
+  const label = getGuideLocationSpawnLabel(oreName)
+  return `${label} at this site. RS Tracker reference not mapped — an in-game signature may still exist.`
+}
+
+export function rsTrackerCardUnmappedNote(oreName: string): string {
+  const label = getGuideLocationSpawnLabel(oreName)
+  return `${label} — RS Tracker reference not mapped`
 }

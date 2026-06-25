@@ -1,6 +1,6 @@
 /**
  * Canonical ore names and hand-mineable classification for mining location parsing.
- * Hand-mineables have no ship RS signature (FPS gems + select ground-vehicle gems).
+ * Hand-mineables are excluded from the ship RS Tracker reference (FPS gems + select ground-vehicle gems).
  */
 
 /** Compendium / desc typos → canonical in-game name. */

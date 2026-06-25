@@ -26,6 +26,7 @@ import {
   hasShipRsSignature,
   isGuideLocationListOnlyOre,
   isHandMineableOre,
+  rsTrackerUnmappedDetail,
 } from './handMineables'
 
 function pct(n: number | null | undefined, digits = 2): string {
@@ -142,12 +143,11 @@ export function guideLocationChipTooltip(
   depositType: DepositType
 ): React.ReactNode {
   if (isHandMineableOre(oreName) || !hasShipRsSignature(oreName)) {
-    const label = getGuideLocationSpawnLabel(oreName)
     return (
       <div>
         <div className="font-semibold text-orange-300">{oreName}</div>
         <div className="text-slate-400">{guideLocationName}</div>
-        <div className="text-slate-400">{label} at this site (no ship RS signature).</div>
+        <div className="text-slate-400">{rsTrackerUnmappedDetail(oreName)}</div>
       </div>
     )
   }
@@ -236,12 +236,12 @@ export function guideLocationOreTooltip(
   oreName: string,
   locationName: string
 ): React.ReactNode {
-  if (isHandMineableOre(oreName)) {
+  if (isHandMineableOre(oreName) || !hasShipRsSignature(oreName)) {
     return (
       <div className="space-y-1">
         <div className="font-semibold text-orange-300">{oreName}</div>
         <div className="text-slate-400">{locationName}</div>
-        <div>Hand-mineable at this site (no ship RS signature).</div>
+        <div>{rsTrackerUnmappedDetail(oreName)}</div>
       </div>
     )
   }

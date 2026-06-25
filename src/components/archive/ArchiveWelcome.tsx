@@ -230,7 +230,7 @@ const PAGE_GUIDES = [
       'Site-specific locations show Best or spawn % tags; hover tooltips explain spawn, cluster, and composition',
       'Overall tags list member-visible locations in tooltips when cluster odds map to multiple sites',
       'Compare in-game: cluster RS = node count × base RS',
-      'Hand-mineables and gems cannot be tracked (no RS signature)',
+      'Hand-mineables and gems are not in the RS Tracker reference yet',
       'Logged-in users sync to their account; Offline Mode saves locally',
     ],
     relatesTo: ['Resource Tracker'],
