@@ -228,6 +228,7 @@ const PAGE_GUIDES = [
       'Mining Guide tab: browse By Ore (rarity filters, location chips) or By Location (ores at each site)',
       'Broad compendium entries (e.g. Pyro Asteroid Clusters) use Overall aggregate data — tag shows Overall',
       'Site-specific locations show Best or spawn % tags; hover tooltips explain spawn, cluster, and composition',
+      'Ore tooltips and detail popups include instability and resistance from extracted game data',
       'Overall tags list member-visible locations in tooltips when cluster odds map to multiple sites',
       'Compare in-game: cluster RS = node count × base RS',
       'Hand-mineables and gems are not in the RS Tracker reference yet',

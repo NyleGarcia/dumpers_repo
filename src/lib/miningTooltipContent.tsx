@@ -28,6 +28,11 @@ import {
   isHandMineableOre,
   rsTrackerUnmappedDetail,
 } from './handMineables'
+import {
+  formatMineableInstability,
+  formatMineableResistance,
+  getMineableElementStats,
+} from './mineableElementStats'
 
 function pct(n: number | null | undefined, digits = 2): string {
   if (n == null || !Number.isFinite(n)) return '—'
@@ -45,6 +50,17 @@ function compositionSummary(parts: LocationSpawnProfile['compositionParts'] | un
 function clusterPreview(rows: Array<{ nodes: number; chancePercent: number }> | undefined): string {
   if (!rows?.length) return 'Solo only'
   return rows.map((r) => `${pct(r.chancePercent, 0)} (${r.nodes}×)`).join(' / ')
+}
+
+export function oreMineableStatsTooltipBlock(oreName: string): React.ReactNode | null {
+  const stats = getMineableElementStats(oreName)
+  if (!stats) return null
+  return (
+    <div className="text-slate-400">
+      Instability {formatMineableInstability(stats.instability)} · Resistance{' '}
+      {formatMineableResistance(stats.resistance)}
+    </div>
+  )
 }
 
 export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
@@ -93,6 +109,7 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
           Base RS {formatRsReading(display.baseRs)}
         </div>
       )}
+      {oreMineableStatsTooltipBlock(entry.oreName)}
     </div>
   )
 }
@@ -132,6 +149,7 @@ export function guideOreTitleTooltip(oreName: string): React.ReactNode {
       <div className="text-slate-400">
         {surfaceCount} surface · {asteroidCount} asteroid mapped locations
       </div>
+      {oreMineableStatsTooltipBlock(oreName)}
       <div className="text-slate-400 text-[11px]">Use Track Surface / Track Asteroid for RS Tracker cards.</div>
     </div>
   )
@@ -242,6 +260,7 @@ export function guideLocationOreTooltip(
         <div className="font-semibold text-orange-300">{oreName}</div>
         <div className="text-slate-400">{locationName}</div>
         <div>{rsTrackerUnmappedDetail(oreName)}</div>
+        {oreMineableStatsTooltipBlock(oreName)}
       </div>
     )
   }
@@ -269,6 +288,7 @@ export function guideLocationOreTooltip(
             ))}
           </div>
         )}
+        {oreMineableStatsTooltipBlock(oreName)}
       </div>
     )
   }
@@ -295,6 +315,7 @@ export function guideLocationOreTooltip(
         Base RS {formatRsReading(profile.clusterRows[0]?.rs ? profile.clusterRows[0].rs / profile.clusterRows[0].nodes : overall?.clusterRows[0]?.rs ? overall.clusterRows[0].rs / overall.clusterRows[0].nodes : 0)}
       </div>
       <div>Cluster: {clusterPreview(profile.clusterRows)}</div>
+      {oreMineableStatsTooltipBlock(oreName)}
     </div>
   )
 }

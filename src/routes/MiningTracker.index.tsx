@@ -40,6 +40,7 @@ import {
   guideLocationOreTooltip,
   guideOreModalLocationTooltip,
   guideOreTitleTooltip,
+  oreMineableStatsTooltipBlock,
   trackerCardTooltip,
   trackerChanceTooltip,
 } from '../lib/miningTooltipContent'
@@ -888,6 +889,7 @@ function GuideOreModal({
   const signature = ORE_SIGNATURES[ore.ore_name]
   const locationListOnly = isGuideLocationListOnlyOre(ore.ore_name, ore.rarity)
   const listSpawnLabel = getGuideLocationSpawnLabel(ore.ore_name)
+  const elementStatsBlock = oreMineableStatsTooltipBlock(ore.ore_name)
   const locationProfiles = guideLocationName
     ? isBroadGuideLocation(guideLocationName)
       ? []
@@ -924,6 +926,9 @@ function GuideOreModal({
                   </span>
                 )}
               </div>
+              {elementStatsBlock && (
+                <div className="mt-1.5 text-xs">{elementStatsBlock}</div>
+              )}
             </div>
             <button
               onClick={onClose}
