@@ -27,8 +27,24 @@ export function isHandMineableOre(name: string): boolean {
   return HAND_MINEABLE_ORES.has(normalizeMiningOreName(name))
 }
 
+/** Manual mine type: FPS gems + ground-vehicle gems (not the same as rarity tier). */
+export function isHandMineableType(name: string): boolean {
+  const canonical = normalizeMiningOreName(name)
+  return HAND_MINEABLE_ORES.has(canonical) || GROUND_VEHICLE_GEMS.has(canonical)
+}
+
 export function isHandMineableRarity(rarity: string | undefined): boolean {
   return rarity === 'handMineable'
+}
+
+export function matchesGuideRarityFilter(
+  oreName: string,
+  storedRarity: string,
+  filter: string | null
+): boolean {
+  if (!filter) return true
+  if (filter === 'handMineable') return isHandMineableType(oreName)
+  return storedRarity === filter
 }
 
 export function hasShipRsSignature(oreName: string): boolean {
@@ -37,7 +53,11 @@ export function hasShipRsSignature(oreName: string): boolean {
 
 /** Guide chips for ores without RS spawn profiles (hand-mineables, ground gems, etc.). */
 export function isGuideLocationListOnlyOre(oreName: string, rarity: string): boolean {
-  return isHandMineableOre(oreName) || isHandMineableRarity(rarity) || !hasShipRsSignature(oreName)
+  return (
+    isHandMineableType(oreName) ||
+    isHandMineableRarity(rarity) ||
+    !hasShipRsSignature(oreName)
+  )
 }
 
 export function getGuideLocationSpawnLabel(oreName: string): string {

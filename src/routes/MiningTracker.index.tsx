@@ -4,7 +4,7 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useMiningData, type MiningData } from '../hooks/useArchiveData'
 import { useMiningTracker } from '../hooks/useMiningTracker'
 import { useAuth } from '../contexts/AuthContext'
-import { findOreByName } from '../lib/miningDataHelpers'
+import { findOreByName, countGuideRarityBucket } from '../lib/miningDataHelpers'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import {
   LOCATION_SYSTEMS,
@@ -46,6 +46,8 @@ import {
 import {
   getGuideLocationSpawnLabel,
   isGuideLocationListOnlyOre,
+  isHandMineableType,
+  matchesGuideRarityFilter,
   rsTrackerCardUnmappedNote,
 } from '../lib/handMineables'
 import type { DepositType } from '../lib/localGuestCache'
@@ -185,7 +187,9 @@ export default function MiningTrackerRoute() {
   const guideFilteredData = useMemo(() => {
     let filtered = data || []
     if (guideRarityFilter) {
-      filtered = filtered.filter((item) => item.rarity === guideRarityFilter)
+      filtered = filtered.filter((item) =>
+        matchesGuideRarityFilter(item.ore_name, item.rarity, guideRarityFilter)
+      )
     }
     if (guideSearch) {
       const term = guideSearch.toLowerCase()
@@ -444,7 +448,7 @@ export default function MiningTrackerRoute() {
                               </SiteTooltip>
                             ))}
                           </div>
-                        ) : entry.rarity === 'handMineable' || !ORE_SIGNATURES[entry.oreName] ? (
+                        ) : isHandMineableType(entry.oreName) || !ORE_SIGNATURES[entry.oreName] ? (
                           <p className="text-xs text-slate-500">
                             {rsTrackerCardUnmappedNote(entry.oreName)}
                           </p>
@@ -513,7 +517,7 @@ export default function MiningTrackerRoute() {
                 <option value="">All Rarities</option>
                 {MINING_RARITY_ORDER.map((rarity) => (
                   <option key={rarity} value={rarity}>
-                    {MINING_RARITY_LABELS[rarity]} ({groupedByRarity[rarity]?.length || 0})
+                    {MINING_RARITY_LABELS[rarity]} ({data ? countGuideRarityBucket(data, rarity) : 0})
                   </option>
                 ))}
               </select>
@@ -525,7 +529,7 @@ export default function MiningTrackerRoute() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
               {MINING_RARITY_ORDER.map((rarity) => {
                 const colors = MINING_RARITY_COLORS[rarity]
-                const count = groupedByRarity[rarity]?.length || 0
+                const count = data ? countGuideRarityBucket(data, rarity) : 0
                 return (
                   <button
                     key={rarity}
@@ -740,10 +744,15 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
         <SiteTooltip content={guideOreTitleTooltip(item.ore_name)} side="top">
           <div>
             <h3 className={`font-semibold ${colors.text}`}>{item.ore_name}</h3>
-            <div className="flex items-center gap-3 mt-0.5">
+            <div className="flex items-center gap-3 mt-0.5 flex-wrap">
               <span className="text-xs text-slate-500 uppercase tracking-wider">
                 {MINING_RARITY_LABELS[item.rarity]}
               </span>
+              {isHandMineableType(item.ore_name) && item.rarity !== 'handMineable' && (
+                <span className="text-xs text-cyan-400/90 uppercase tracking-wider">
+                  · Hand Mineable
+                </span>
+              )}
               {signature && (
                 <span className="text-xs text-amber-400 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded">
                   RS {signature}

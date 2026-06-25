@@ -23,6 +23,7 @@ import {
 } from './lib/miningLocationAliases.mjs'
 import {
   isHandMineableOre,
+  isHandMineableType,
   normalizeCompendiumOreName,
   normalizeMineableLabel,
   preferredGuideNameForSpawnKey,
@@ -617,7 +618,7 @@ function parseMiningLocations(localization) {
       ]
       for (const rawLabel of oreLabels) {
         const ore = normalizeMineableLabel(rawLabel)
-        if (!isHandMineableOre(ore)) continue
+        if (!isHandMineableType(ore)) continue
 
         if (!oreLocations[ore]) oreLocations[ore] = []
         if (!oreLocations[ore].includes(guideLoc)) {

@@ -23,6 +23,9 @@ export const HAND_MINEABLE_ORES = new Set([
   'Sadaryx',
 ])
 
+/** Ground-vehicle gems (manual mine type; Beradom is not an FPS cave gem). */
+export const GROUND_VEHICLE_GEMS = new Set(['Beradom', 'Glacosite', 'Feynmaline'])
+
 export function normalizeCompendiumOreName(name) {
   const trimmed = String(name || '').trim()
   return ORE_COMPENDIUM_ALIASES[trimmed] ?? trimmed
@@ -41,6 +44,12 @@ export function normalizeMineableLabel(raw) {
 
 export function isHandMineableOre(name) {
   return HAND_MINEABLE_ORES.has(normalizeCompendiumOreName(name))
+}
+
+/** Manual / FPS / ground-vehicle mine type (distinct from ship-ore rarity tier). */
+export function isHandMineableType(name) {
+  const canonical = normalizeCompendiumOreName(name)
+  return HAND_MINEABLE_ORES.has(canonical) || GROUND_VEHICLE_GEMS.has(canonical)
 }
 
 export function preferredGuideNameForSpawnKey(spawnKey, fallback) {

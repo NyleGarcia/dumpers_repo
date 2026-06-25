@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { bundledComponentCatalog } from '../lib/componentCatalog'
+import { enrichMiningCatalog } from '../lib/miningDataHelpers'
 
 export interface MiningData {
   id: number
@@ -94,8 +95,13 @@ function useCachedArchiveData<T>(
 
       if (queryError) throw queryError
 
-      dataCache[cacheKey] = { data: result || [], timestamp: now }
-      setData(result as T[])
+      const normalized =
+        tableName === 'game_mining'
+          ? enrichMiningCatalog((result || []) as MiningData[])
+          : (result || [])
+
+      dataCache[cacheKey] = { data: normalized, timestamp: now }
+      setData(normalized as T[])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch data')
       setData(null)
