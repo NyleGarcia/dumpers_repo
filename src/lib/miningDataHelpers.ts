@@ -3,7 +3,7 @@ import { miningLocations } from '../data'
 import { MINING_RARITY_ORDER } from './miningConstants'
 import { isHandMineableType, normalizeMiningOreName } from './handMineables'
 import { LOCATION_SYSTEMS } from './miningConstants'
-import { isBroadGuideLocation, isNonSiteBroadGuideLocation } from './miningLocationAliases'
+import { isBroadGuideLocation, isNonSiteBroadGuideLocation, isRedundantSubsiteGuideLocation } from './miningLocationAliases'
 
 const RARITY_RANK = Object.fromEntries(MINING_RARITY_ORDER.map((r, i) => [r, i]))
 
@@ -45,7 +45,9 @@ export function getSiteMineableGuideLocations(oreName: string): string[] {
  * not guaranteed on every body in the system.
  */
 export function getSpecificGuideLocations(ore: MiningData): string[] {
-  const fromCompendium = (ore.locations ?? []).filter((loc) => !isBroadGuideLocation(loc))
+  const fromCompendium = (ore.locations ?? []).filter(
+    (loc) => !isBroadGuideLocation(loc) && !isRedundantSubsiteGuideLocation(loc)
+  )
   const fromSiteData = getSiteMineableGuideLocations(ore.ore_name)
   return [...new Set([...fromCompendium, ...fromSiteData])]
 }
@@ -60,7 +62,9 @@ export function enrichMiningCatalog(rows: MiningData[]): MiningData[] {
     const existing = byKey.get(key)
 
     const siteLocations = getSiteMineableGuideLocations(ore_name)
-    const locations = [...new Set([...(row.locations ?? []), ...siteLocations])]
+    const locations = [...new Set([...(row.locations ?? []), ...siteLocations])].filter(
+      (loc) => !isRedundantSubsiteGuideLocation(loc)
+    )
 
     if (!existing) {
       byKey.set(key, { ...row, ore_name, locations })

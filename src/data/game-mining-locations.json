@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-06-25T21:49:52.579Z",
+  "_extracted": "2026-06-25T22:05:55.721Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -552,7 +552,6 @@
           "Daymar",
           "Hurston",
           "Ita",
-          "Magda Sand Caves",
           "Wala",
           "Pyro I",
           "Monox",
@@ -869,7 +868,6 @@
       "Daymar",
       "Hurston",
       "Ita",
-      "Magda Sand Caves",
       "Wala",
       "Pyro I",
       "Monox",
@@ -2638,12 +2636,6 @@
         "rarity": "legendary"
       }
     ],
-    "Magda Sand Caves": [
-      {
-        "name": "Janalite",
-        "rarity": "handMineable"
-      }
-    ],
     "Found in All Stanton Deposits (Rare)": [
       {
         "name": "Quantainium",
@@ -3346,6 +3338,9 @@
       "Euterpe": "both"
     }
   },
+  "redundantSubsiteGuideLocations": [
+    "Magda Sand Caves"
+  ],
   "locationAliases": {
     "Aaron Halo": {
       "spawnKey": "Aaron Halo",
@@ -3999,7 +3994,7 @@
   ],
   "summary": {
     "totalOres": 38,
-    "totalLocations": 56,
+    "totalLocations": 55,
     "locationsWithDetails": 25,
     "handMineableHabitatEntries": 90,
     "locationAliasCount": 47,

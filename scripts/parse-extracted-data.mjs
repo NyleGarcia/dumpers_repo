@@ -19,6 +19,7 @@ import {
   buildGuideToSpawnKeys,
   buildLocationAliases,
   parseLocationDescKey,
+  REDUNDANT_SUBSITE_GUIDE_LOCATIONS,
   SPAWN_CODE_GUIDE_NAMES,
 } from './lib/miningLocationAliases.mjs'
 import {
@@ -683,7 +684,10 @@ function parseMiningLocations(localization) {
       const match = line.match(/^([A-Za-z]+)\s*-\s*(.+)$/i)
       if (match) {
         const ore = normalizeCompendiumOreName(match[1].trim())
-        const locations = match[2].split(',').map(l => l.trim()).filter(l => l.length > 0)
+        const locations = match[2]
+          .split(',')
+          .map(l => l.trim())
+          .filter(l => l.length > 0 && !REDUNDANT_SUBSITE_GUIDE_LOCATIONS.has(l))
         
         if (!oreLocations[ore]) {
           oreLocations[ore] = []
@@ -804,11 +808,17 @@ function parseMiningLocations(localization) {
   
   for (const [ore, locations] of Object.entries(oreLocations)) {
     const assignedRarity = assignOreRarity(ore)
-    
+    const cleaned = [...new Set(locations)].filter((loc) => !REDUNDANT_SUBSITE_GUIDE_LOCATIONS.has(loc))
+    oreLocations[ore] = cleaned
+
     byRarity[assignedRarity].push({
       name: ore,
-      locations: [...new Set(locations)] // Remove duplicates
+      locations: cleaned,
     })
+  }
+
+  for (const loc of REDUNDANT_SUBSITE_GUIDE_LOCATIONS) {
+    delete locationOres[loc]
   }
   
   return {
@@ -816,6 +826,7 @@ function parseMiningLocations(localization) {
     locationOres,
     locationMineables,
     handMineableHabitats,
+    redundantSubsiteGuideLocations: [...REDUNDANT_SUBSITE_GUIDE_LOCATIONS],
     locationAliases,
     guideToSpawnKeys,
     rarityTiers: byRarity,
@@ -3968,6 +3979,7 @@ async function main() {
     locationOres: miningLocations.locationOres,
     locationMineables: miningLocations.locationMineables,
     handMineableHabitats: miningLocations.handMineableHabitats,
+    redundantSubsiteGuideLocations: miningLocations.redundantSubsiteGuideLocations,
     locationAliases: miningLocations.locationAliases,
     guideToSpawnKeys: miningLocations.guideToSpawnKeys,
     rarityOrder: miningLocations.rarityOrder,

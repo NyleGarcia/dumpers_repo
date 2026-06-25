@@ -90,6 +90,16 @@ if (locationMap['All Pyro Planets']) {
   console.log('OK: All Pyro Planets excluded from By Location index')
 }
 
+const redundantSubsites = ['Magda Sand Caves']
+for (const loc of redundantSubsites) {
+  if (locationMap[loc]) {
+    console.error(`FAIL: redundant subsite must not be a By Location card: ${loc}`)
+    exitCode = 1
+  } else {
+    console.log(`OK: ${loc} excluded from By Location index`)
+  }
+}
+
 for (const [ore, locs] of Object.entries(data.oreLocations ?? {})) {
   const hasBroadOnly = locs.some((l) => BROAD.has(l))
   const specifics = specificGuideLocations(ore, locs)

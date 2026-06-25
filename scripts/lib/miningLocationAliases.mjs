@@ -73,6 +73,22 @@ export const COMPOUND_GUIDE_TO_SPAWN_KEYS = {
   'Magda Sand Caves': ['Stanton1d'],
 }
 
+/**
+ * Compendium subsite labels that map to the same spawn key as a parent moon
+ * (e.g. "Magda Sand Caves" → Stanton1d, same as Magda). Not browsable locations.
+ */
+export function buildRedundantSubsiteGuideLocations() {
+  const redundant = new Set()
+  for (const [guideName, spawnKeys] of Object.entries(COMPOUND_GUIDE_TO_SPAWN_KEYS)) {
+    if (spawnKeys.length !== 1) continue
+    const primary = SPAWN_CODE_GUIDE_NAMES[spawnKeys[0]]
+    if (primary && primary !== guideName) redundant.add(guideName)
+  }
+  return redundant
+}
+
+export const REDUNDANT_SUBSITE_GUIDE_LOCATIONS = buildRedundantSubsiteGuideLocations()
+
 function pyrLagrangeNames(planetNum) {
   return [1, 2, 3, 4, 5].map((n) => `PYR${planetNum} L${n}`)
 }

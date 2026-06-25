@@ -49,6 +49,8 @@ export interface MiningLocationsData {
   }>
   /** FPS gem habitat per guide location (from in-game body descriptions). */
   handMineableHabitats?: Record<string, Record<string, 'surface' | 'caves' | 'both'>>
+  /** Compendium subsite labels excluded from guide browsing (e.g. Magda Sand Caves). */
+  redundantSubsiteGuideLocations?: string[]
   rarityOrder: string[]
   summary: {
     totalOres: number

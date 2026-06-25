@@ -5,6 +5,7 @@
  * (sourced from game-mining-locations.json).
  */
 
+import { miningLocations } from '../data'
 import {
   getCompendiumGuideNamesForSpawnKey,
   getDisplayNameForSpawnKey,
@@ -37,6 +38,29 @@ export function isBroadGuideLocation(guideLocationName: string): boolean {
 
 export function isNonSiteBroadGuideLocation(guideLocationName: string): boolean {
   return NON_SITE_BROAD_GUIDE_LOCATIONS.has(guideLocationName)
+}
+
+/**
+ * Compendium subsite labels that duplicate a parent moon (same spawn key).
+ * e.g. "Magda Sand Caves" is part of Magda, not a separate guide site.
+ */
+export function isRedundantSubsiteGuideLocation(guideLocationName: string): boolean {
+  const listed = miningLocations.redundantSubsiteGuideLocations
+  if (listed?.includes(guideLocationName)) return true
+
+  const spawnKeys = getSpawnKeysForGuideName(guideLocationName)
+  if (spawnKeys.length !== 1) return false
+
+  const spawnKey = spawnKeys[0]
+  for (const [guideLoc, mineables] of Object.entries(miningLocations.locationMineables ?? {})) {
+    const entry = mineables as { spawnKey?: string }
+    if (entry.spawnKey === spawnKey && guideLoc !== guideLocationName) return true
+  }
+  return false
+}
+
+export function isExcludedGuideLocation(guideLocationName: string): boolean {
+  return isNonSiteBroadGuideLocation(guideLocationName) || isRedundantSubsiteGuideLocation(guideLocationName)
 }
 
 export type GuideLocationResolution = 'overall' | 'spawn'
