@@ -13,6 +13,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
 import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
 import { extractAllGameLore } from './lib/gameLore.mjs'
+import { HATHOR_PAF_OLP_MARKERS } from './lib/hathorPafSites.mjs'
 import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 import {
   buildGuideToSpawnKeys,
@@ -258,15 +259,7 @@ const STANTON_LOCATION_MARKERS = [
   'arccorp',
   'delamar',
   'stantonstar',
-  // PAF/OLP Caranite sites — Daymar (Crusader) & Aberdeen (Hurston), Stanton only
-  'daymar',
-  'aberdeen',
-  'attritus',
-  'vivere',
-  'ruptura',
-  'hathor',
-  '_paf',
-  '_olp',
+  ...HATHOR_PAF_OLP_MARKERS,
 ]
 
 /** BHG bounty at Planetary Alignment Facility sites (Hathor mission line). */

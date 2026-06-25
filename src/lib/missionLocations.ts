@@ -9,6 +9,7 @@
  */
 
 import type { Region } from './missions'
+import { isHathorPafOlpSignal } from './hathorPafSites'
 
 export type MissionStarSystem = 'pyro' | 'stanton' | 'nyx'
 export type SystemRegionCode = 'A' | 'B' | 'C' | 'D'
@@ -121,7 +122,7 @@ function inferSystemFromPoolKey(poolKey: string): MissionStarSystem | null {
   if (/_pyro(?:_|$)/.test(lower) || lower.endsWith('pyro')) return 'pyro'
   if (/_nyx(?:_|$)/.test(lower) || lower.endsWith('nyx')) return 'nyx'
   if (/_paf(?:_|$)/.test(lower) || /_olp(?:_|$)/.test(lower)) return 'stanton'
-  if (/daymar|aberdeen|attritus|vivere|ruptura|hathor/.test(lower)) return 'stanton'
+  if (isHathorPafOlpSignal(lower)) return 'stanton'
 
   if (!/region[a-d]/i.test(lower)) return null
 

@@ -7,13 +7,31 @@ import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
+import { HATHOR_PAF_OLP_MARKERS } from './lib/hathorPafSites.mjs'
+
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const missionData = JSON.parse(readFileSync(join(root, 'src/data/game-blueprint-missions.json'), 'utf-8'))
 const missionBlueprints = missionData.missionBlueprints || {}
 const contracts = missionData.contracts || []
 
 const SYSTEM_SIGNALS = [
-  { pattern: /stanton|asdfacility|onyxfacility|microtech|hurston|crusader|arccorp|delamar|daymar|aberdeen|attritus|vivere|ruptura|hathor|_paf|_olp/i, system: 'Stanton' },
+  {
+    pattern: new RegExp(
+      [
+        'stanton',
+        'asdfacility',
+        'onyxfacility',
+        'microtech',
+        'hurston',
+        'crusader',
+        'arccorp',
+        'delamar',
+        ...HATHOR_PAF_OLP_MARKERS,
+      ].join('|'),
+      'i'
+    ),
+    system: 'Stanton',
+  },
   { pattern: /pyro|_region[a-d]_/i, system: 'Pyro' },
   { pattern: /nyx|levski|rockcracker|keeger|claw salamander/i, system: 'Nyx' },
 ]
