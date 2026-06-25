@@ -25,6 +25,24 @@ const CLOSE_FLY_EASE = [0.4, 0, 1, 1] as const
 const BRAND_GRADIENT =
   'linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #ea580c 100%)'
 
+/** Tuned for readable flip + blinds without feeling sluggish. */
+const TIMING = {
+  openInteractiveMs: 800,
+  closeUnmountMs: 480,
+  backdropIn: 0.2,
+  backdropOut: 0.18,
+  backdropOutDelay: 0.26,
+  flipIn: 0.5,
+  flipOut: 0.28,
+  flipOutDelay: 0.12,
+  blindsIn: 0.4,
+  blindsInDelay: 0.35,
+  blindsOut: 0.26,
+  contentFadeIn: 0.18,
+  contentFadeInDelay: 0.45,
+  contentFadeOut: 0.1,
+} as const
+
 export interface BrandRevealModalShellProps {
   title: string
   subtitle?: string
@@ -137,7 +155,7 @@ function BrandRevealAnimatedModal({
     const openTimer = window.setTimeout(() => {
       setPhase('open')
       setInteractive(true)
-    }, 500)
+    }, TIMING.openInteractiveMs)
     return () => window.clearTimeout(openTimer)
   }, [])
 
@@ -148,7 +166,7 @@ function BrandRevealAnimatedModal({
   const requestClose = useCallback(() => {
     setInteractive(false)
     setPhase('exit')
-    window.setTimeout(finishClose, 300)
+    window.setTimeout(finishClose, TIMING.closeUnmountMs)
   }, [finishClose])
 
   useEffect(() => {
@@ -185,8 +203,8 @@ function BrandRevealAnimatedModal({
         initial={{ opacity: 0 }}
         animate={{ opacity: phase === 'exit' ? 0 : 1 }}
         transition={{
-          duration: phase === 'exit' ? 0.12 : 0.15,
-          delay: phase === 'exit' ? 0.16 : 0,
+          duration: phase === 'exit' ? TIMING.backdropOut : TIMING.backdropIn,
+          delay: phase === 'exit' ? TIMING.backdropOutDelay : 0,
         }}
         onClick={closeOnBackdrop && interactive ? requestClose : undefined}
       />
@@ -206,8 +224,8 @@ function BrandRevealAnimatedModal({
           opacity: flipOpacity,
         }}
         transition={{
-          duration: phase === 'exit' ? 0.18 : 0.3,
-          delay: phase === 'exit' ? 0.08 : 0,
+          duration: phase === 'exit' ? TIMING.flipOut : TIMING.flipIn,
+          delay: phase === 'exit' ? TIMING.flipOutDelay : 0,
           ease: phase === 'exit' ? CLOSE_FLY_EASE : OPEN_EASE,
         }}
       >
@@ -217,8 +235,8 @@ function BrandRevealAnimatedModal({
           initial={{ rotateY: 0 }}
           animate={{ rotateY: flipRotate }}
           transition={{
-            duration: phase === 'exit' ? 0.18 : 0.3,
-            delay: phase === 'exit' ? 0.08 : 0,
+            duration: phase === 'exit' ? TIMING.flipOut : TIMING.flipIn,
+            delay: phase === 'exit' ? TIMING.flipOutDelay : 0,
             ease: phase === 'exit' ? CLOSE_FLY_EASE : OPEN_EASE,
           }}
         >
@@ -245,8 +263,8 @@ function BrandRevealAnimatedModal({
         initial={{ opacity: 0 }}
         animate={{ opacity: phase === 'exit' ? 0 : 1 }}
         transition={{
-          duration: phase === 'exit' ? 0.08 : 0.12,
-          delay: phase === 'exit' ? 0 : 0.28,
+          duration: phase === 'exit' ? TIMING.contentFadeOut : TIMING.contentFadeIn,
+          delay: phase === 'exit' ? 0 : TIMING.contentFadeInDelay,
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -291,8 +309,8 @@ function BrandRevealAnimatedModal({
                   initial={{ x: '0%' }}
                   animate={{ x: blindsOpen ? '-100%' : '0%' }}
                   transition={{
-                    duration: phase === 'exit' ? 0.16 : 0.24,
-                    delay: phase === 'enter' ? 0.2 : 0,
+                    duration: phase === 'exit' ? TIMING.blindsOut : TIMING.blindsIn,
+                    delay: phase === 'enter' ? TIMING.blindsInDelay : 0,
                     ease: phase === 'exit' ? CLOSE_BLINDS_EASE : BLINDS_OPEN_EASE,
                   }}
                 />
@@ -302,8 +320,8 @@ function BrandRevealAnimatedModal({
                   initial={{ x: '0%' }}
                   animate={{ x: blindsOpen ? '100%' : '0%' }}
                   transition={{
-                    duration: phase === 'exit' ? 0.16 : 0.24,
-                    delay: phase === 'enter' ? 0.2 : 0,
+                    duration: phase === 'exit' ? TIMING.blindsOut : TIMING.blindsIn,
+                    delay: phase === 'enter' ? TIMING.blindsInDelay : 0,
                     ease: phase === 'exit' ? CLOSE_BLINDS_EASE : BLINDS_OPEN_EASE,
                   }}
                 />
