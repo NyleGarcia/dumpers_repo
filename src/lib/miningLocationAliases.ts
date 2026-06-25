@@ -21,8 +21,22 @@ export const BROAD_GUIDE_LOCATIONS = new Set<string>([
   'QV Breaker Stations (Nyx)',
 ])
 
+/**
+ * Broad compendium labels that are not real mineable sites — exclude from By Location
+ * browsing (e.g. "All Pyro Planets" only means "various pyro bodies", not one place).
+ */
+export const NON_SITE_BROAD_GUIDE_LOCATIONS = new Set<string>([
+  'All Moons/Planets/Caves',
+  'All Pyro Planets',
+  'Found in All Stanton Deposits (Rare)',
+])
+
 export function isBroadGuideLocation(guideLocationName: string): boolean {
   return BROAD_GUIDE_LOCATIONS.has(guideLocationName)
+}
+
+export function isNonSiteBroadGuideLocation(guideLocationName: string): boolean {
+  return NON_SITE_BROAD_GUIDE_LOCATIONS.has(guideLocationName)
 }
 
 export type GuideLocationResolution = 'overall' | 'spawn'

@@ -226,7 +226,7 @@ const PAGE_GUIDES = [
       'Location-tracked cards show At {site} with that site\'s spawn and cluster data',
       'Track Surface / Track Asteroid for overall profiles; Track Surface · {site} from location context',
       'Mining Guide tab: browse By Ore (rarity filters, location chips) or By Location (ores at each site)',
-      'Broad compendium entries (e.g. Pyro Asteroid Clusters) use Overall aggregate data — tag shows Overall',
+      'Broad compendium entries (e.g. Pyro Asteroid Clusters) use Overall aggregate data — tag shows Overall; vague buckets like All Pyro Planets stay on ore cards only, not as By Location sites',
       'Site-specific locations show Best or spawn % tags; hover tooltips explain spawn, cluster, and composition',
       'Ore tooltips and detail popups include instability and resistance from extracted game data',
       'Overall tags list member-visible locations in tooltips when cluster odds map to multiple sites',

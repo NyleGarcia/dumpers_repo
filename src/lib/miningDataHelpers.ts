@@ -3,7 +3,7 @@ import { miningLocations } from '../data'
 import { MINING_RARITY_ORDER } from './miningConstants'
 import { isHandMineableType, normalizeMiningOreName } from './handMineables'
 import { LOCATION_SYSTEMS } from './miningConstants'
-import { isBroadGuideLocation } from './miningLocationAliases'
+import { isBroadGuideLocation, isNonSiteBroadGuideLocation } from './miningLocationAliases'
 
 const RARITY_RANK = Object.fromEntries(MINING_RARITY_ORDER.map((r, i) => [r, i]))
 
@@ -99,7 +99,7 @@ export function buildLocationOresMap(data: MiningData[]): Record<string, MiningD
     }
 
     for (const loc of ore.locations ?? []) {
-      if (isBroadGuideLocation(loc)) {
+      if (isBroadGuideLocation(loc) && !isNonSiteBroadGuideLocation(loc)) {
         addOreToLocation(loc, ore)
       }
     }
