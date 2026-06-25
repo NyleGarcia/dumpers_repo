@@ -4,6 +4,7 @@ import { deleteAccount, supabase } from '../lib/supabase'
 import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
+import OrgLogoUploadField from './settings/OrgLogoUploadField'
 import AppModal from './layout/AppModal'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
@@ -370,6 +371,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               title="Site"
               description="Franchise-wide instance settings"
             >
+              <OrgLogoUploadField />
               <SettingsToggle
                 label="Disable DFP display"
                 description={

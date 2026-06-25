@@ -32,8 +32,10 @@ dumpers-repo-backup.zip
 dumpers-repo-backup-*.zip
 DumpersRepo-backup.zip
 
-# Local probe/scratch files
-.tmp-*
+# Reference org logo (not shipped — upload via Settings or use Supabase Storage)
+public/ORG_LOGO.png
+public/org-logo.png
+public/blackstar.png
 
 # DFP Engine source (proprietary - kept in private repo)
 dfp-engine/

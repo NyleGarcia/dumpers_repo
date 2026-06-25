@@ -16,7 +16,10 @@ ALL of the following:
 
 1. **Branding** — The primary application header must continue to identify the
    product as "Dumper's Repo" (including the Buy. Craft. Sell. slogan or
-   equivalent brand treatment required by the reference deployment).
+   equivalent brand treatment required by the reference deployment). You may
+   upload your **org logo** (PNG) for blueprint modal animations via super-admin
+   Settings; that logo must not replace or obscure the Dumper's Repo product
+   identity in the header.
 
 2. **No monetization** — You must not charge any fee for access to the
    Software, for hosting the franchise, or for using Dumper's Repo features.

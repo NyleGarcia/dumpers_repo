@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `087_drop_shop_data.sql` (removes shop tables — feature moved to separate project). Apply `087` after `084` if not already applied.
+**Latest migration:** `089_org_logo.sql` (franchise org logo upload for blueprint modal). Apply through `089` in order if catching up.
 
 ---
 
@@ -91,6 +91,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 48 | `083_discord_per_event_webhooks.sql` | Remove webhook cap; per-event sync RPC; return URLs to owner |
 | 49 | `084_discord_rsi_personal_webhooks.sql` | Require RSI verification for `my_order_*` webhook registration |
 | 50 | `087_drop_shop_data.sql` | Drop shop tables and RPCs (Shops feature removed from app) |
+| 51 | `088_mining_tracker_location.sql` | Mining tracker location field |
+| 52 | `089_org_logo.sql` | Supabase Storage bucket + super-admin org logo (`ORG_LOGO.png`) |
 
 ### pg_cron (migrations 054, 065–068)
 

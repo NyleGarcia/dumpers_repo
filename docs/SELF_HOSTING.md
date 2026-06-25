@@ -87,9 +87,24 @@ Franchises may customize these values in `src/config/site.ts`:
 | `SITE_DESCRIPTION` | Meta description | Yes |
 | `SITE_COPYRIGHT` | Footer copyright text | Yes (per TRADEMARK.md) |
 | `SITE_SLOGAN` | Tagline displayed in UI | Yes |
-| `SITE_BRAND_*` | Brand colors, fonts, logo | No (see LICENSE) |
+| `SITE_BRAND_*` | Dumper's Repo header colors, fonts, product mark | No (see LICENSE) |
 | `DFP_OFFICIAL_HOSTS` | Reference deployment hosts | No |
 | `DFP_CANONICAL_BASE_URL` | DFP engine source | No |
+
+### Org logo (blueprint modal flip)
+
+Super-admins upload a **PNG org logo** under **Settings → Site**. Requirements:
+
+- PNG only (`ORG_LOGO.png` in Supabase Storage bucket `org-logo`)
+- 64–2048 pixels per side, max 512 KB
+- Transparent background recommended
+
+Apply migration **`089_org_logo.sql`** before using upload. The logo is **not**
+shipped in the franchise repo — each instance stores its own file in Supabase.
+
+**Reference deployment only:** you may keep a gitignored `public/ORG_LOGO.png`
+for local dev (see `.gitignore`). Production should use the Settings upload so
+the logo is not bundled in `dist/` for franchisees who clone the repo.
 
 Also update `index.html` for:
 - `<title>` tag

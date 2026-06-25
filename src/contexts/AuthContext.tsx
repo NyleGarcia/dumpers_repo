@@ -15,6 +15,7 @@ import {
   writeGuestAcquiredBlueprints,
 } from '../lib/localGuestCache'
 import { maybeMigrateOfflineData } from '../lib/offlineMigration'
+import { fetchOrgLogoStatus, resolveOrgLogoUrl } from '../lib/orgLogo'
 import { removeTargetBlueprint } from '../lib/targetList'
 import type { User, Session } from '@supabase/supabase-js'
 
@@ -61,6 +62,9 @@ interface AuthContextType {
   updateDfpDisplayEnabled: (enabled: boolean) => Promise<boolean>
   autoApproveEnabled: boolean
   updateAutoApprove: (enabled: boolean) => Promise<boolean>
+  orgLogoUrl: string | null
+  orgLogoConfigured: boolean
+  refreshOrgLogo: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -75,6 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
   const [dfpDisplayEnabled, setDfpDisplayEnabled] = useState(true)
   const [autoApproveEnabled, setAutoApproveEnabled] = useState(false)
+  const [orgLogoUpdatedAt, setOrgLogoUpdatedAt] = useState<string | null>(null)
+  const [orgLogoConfigured, setOrgLogoConfigured] = useState(false)
   const [isGuestPreview, setIsGuestPreview] = useState(() => readGuestPreviewSession())
 
   const enterGuestPreview = useCallback(() => {
@@ -159,6 +165,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const profileData = await fetchProfile(user.id)
     if (profileData) setProfile(profileData)
   }, [user?.id, fetchProfile])
+
+  const refreshOrgLogo = useCallback(async () => {
+    const status = await fetchOrgLogoStatus()
+    setOrgLogoConfigured(status.configured)
+    setOrgLogoUpdatedAt(status.updatedAt)
+  }, [])
+
+  useEffect(() => {
+    void refreshOrgLogo()
+  }, [refreshOrgLogo])
+
+  const orgLogoUrl = useMemo(
+    () => resolveOrgLogoUrl(orgLogoUpdatedAt),
+    [orgLogoUpdatedAt]
+  )
 
   const fetchSiteSettings = useCallback(async () => {
     const { data, error } = await supabase
@@ -630,6 +651,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateDfpDisplayEnabled,
       autoApproveEnabled,
       updateAutoApprove,
+      orgLogoUrl,
+      orgLogoConfigured,
+      refreshOrgLogo,
     }),
     [
       user,
@@ -666,6 +690,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateDfpDisplayEnabled,
       autoApproveEnabled,
       updateAutoApprove,
+      orgLogoUrl,
+      orgLogoConfigured,
+      refreshOrgLogo,
     ]
   )
 

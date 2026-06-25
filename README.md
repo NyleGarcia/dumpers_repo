@@ -111,6 +111,7 @@ Dumper's Repo is owned and licensed by **Michael Linzenmeyer** (RSI: Sinedrone_S
 - **Do not charge** members to use the app
 - **Do not tamper with** DFP
 - Ship unmodified [LICENSE](LICENSE) and [TRADEMARK.md](TRADEMARK.md)
+- Upload your **org logo** (blueprint modal PNG) via super-admin **Settings → Site** — not via git (see [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md))
 
 See [TRADEMARK.md](TRADEMARK.md) for brand rules.
 

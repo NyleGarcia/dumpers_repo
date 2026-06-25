@@ -6,7 +6,7 @@
 
 - **Dumper's Repo** (product name)
 - **Buy. Craft. Sell.** (slogan)
-- Application header branding and logo treatment shipped with this repository
+- Application header branding and logo treatment shipped with this repository (the **Dumper's Repo** product mark)
 
 Registration with a trademark office is not required for these guidelines to
 apply. The name is used in commerce by the reference deployment at
@@ -20,8 +20,11 @@ Licensed franchises **must**:
 - Ship this file and the LICENSE unchanged
 - Not imply they are the official dumpers-repo.com instance unless authorized
 
-Franchises **may** customize footer copyright, domain, Supabase backend, and
-member-approval workflows.
+Franchises **may** customize footer copyright, domain, Supabase backend,
+member-approval workflows, and **org logo** (the PNG shown on blueprint detail
+card flip animations). Upload your org logo in **Settings → Site** (super-admin)
+after running migration `089_org_logo.sql`. Do not commit your org logo PNG to
+the franchise repo — it is stored in your Supabase project, not in git.
 
 ## Dumpers Fair-Value Pricing (DFP)
 

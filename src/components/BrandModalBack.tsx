@@ -1,28 +1,41 @@
-import React, { useEffect } from 'react'
-import { preloadBlackstarLogo } from '../lib/preloadBlackstarLogo'
-
-/** Black Star org graphic — card flip back face (transparent PNG, aspect ratio preserved). */
-const BLACKSTAR_LOGO = '/blackstar.png'
+import React, { useEffect, useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
+import { preloadOrgLogo } from '../lib/orgLogo'
 
 export default function BrandModalBack({ className = '' }: { className?: string }) {
+  const { orgLogoUrl } = useAuth()
+  const [imageFailed, setImageFailed] = useState(false)
+
   useEffect(() => {
-    preloadBlackstarLogo()
-  }, [])
+    preloadOrgLogo(orgLogoUrl)
+  }, [orgLogoUrl])
+
+  useEffect(() => {
+    setImageFailed(false)
+  }, [orgLogoUrl])
 
   return (
     <div
       className={`absolute inset-0 flex items-center justify-center bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden ${className}`}
     >
-      <img
-        src={BLACKSTAR_LOGO}
-        alt=""
-        aria-hidden
-        decoding="sync"
-        loading="eager"
-        fetchPriority="high"
-        draggable={false}
-        className="block max-w-[78%] max-h-[78%] w-auto h-auto object-contain object-center mx-auto my-auto"
-      />
+      {orgLogoUrl && !imageFailed ? (
+        <img
+          src={orgLogoUrl}
+          alt=""
+          aria-hidden
+          decoding="sync"
+          loading="eager"
+          fetchPriority="high"
+          draggable={false}
+          onError={() => setImageFailed(true)}
+          className="block max-w-[78%] max-h-[78%] w-auto h-auto object-contain object-center mx-auto my-auto"
+        />
+      ) : (
+        <div className="text-center px-6 text-slate-500 text-xs leading-relaxed max-w-[85%]">
+          <p className="font-medium text-slate-400 mb-1">Org logo</p>
+          <p>Super-admins can upload a PNG in Settings → Site.</p>
+        </div>
+      )}
     </div>
   )
 }
