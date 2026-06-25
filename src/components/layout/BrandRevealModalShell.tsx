@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import BrandModalBack from '../BrandModalBack'
+import { preloadBlackstarLogo } from '../../lib/preloadBlackstarLogo'
 import AppModal, { type AppModalSize, type AppModalZIndex } from './AppModal'
 
 const sizeMaxWidth: Record<AppModalSize, number> = {
@@ -28,19 +29,20 @@ const BRAND_GRADIENT =
 /** Tuned for readable flip + blinds without feeling sluggish. */
 const TIMING = {
   openInteractiveMs: 800,
-  closeUnmountMs: 480,
+  closeUnmountMs: 1150,
   backdropIn: 0.2,
-  backdropOut: 0.18,
-  backdropOutDelay: 0.26,
+  backdropOut: 0.28,
+  backdropOutDelay: 0.88,
   flipIn: 0.5,
-  flipOut: 0.28,
-  flipOutDelay: 0.12,
+  flipOut: 0.55,
+  /** Close: blinds shut first, then flip back + fly to card. */
+  flipOutDelay: 0.44,
   blindsIn: 0.4,
   blindsInDelay: 0.35,
-  blindsOut: 0.26,
+  blindsOut: 0.42,
   contentFadeIn: 0.18,
   contentFadeInDelay: 0.45,
-  contentFadeOut: 0.1,
+  contentFadeOut: 0.12,
 } as const
 
 export interface BrandRevealModalShellProps {
@@ -152,6 +154,10 @@ function BrandRevealAnimatedModal({
   useBodyScrollLock(true)
 
   useEffect(() => {
+    preloadBlackstarLogo()
+  }, [])
+
+  useEffect(() => {
     const openTimer = window.setTimeout(() => {
       setPhase('open')
       setInteractive(true)
@@ -191,6 +197,18 @@ function BrandRevealAnimatedModal({
   const flipRotate = phase === 'exit' ? 0 : 180
   const flipOpacity = phase === 'open' ? 0 : 1
 
+  const backFaceStyle: React.CSSProperties = {
+    backfaceVisibility: 'hidden',
+    WebkitBackfaceVisibility: 'hidden',
+    transform: 'rotateY(180deg) translateZ(1px)',
+  }
+
+  const frontFaceStyle: React.CSSProperties = {
+    backfaceVisibility: 'hidden',
+    WebkitBackfaceVisibility: 'hidden',
+    transform: 'translateZ(1px)',
+  }
+
   return (
     <div
       className={`fixed inset-0 ${zIndexClasses[zIndex ?? 70]} flex items-start justify-center overflow-hidden p-4`}
@@ -210,7 +228,7 @@ function BrandRevealAnimatedModal({
       />
 
       <motion.div
-        className="fixed pointer-events-none"
+        className={`fixed pointer-events-none ${phase === 'exit' ? 'z-[62]' : 'z-[58]'}`}
         style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
         initial={{
           top: origin.top,
@@ -242,19 +260,18 @@ function BrandRevealAnimatedModal({
         >
           <div
             className="absolute inset-0 rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 shadow-2xl"
-            style={{ backfaceVisibility: 'hidden' }}
+            style={frontFaceStyle}
           />
-          <div
-            className="absolute inset-0 rounded-2xl overflow-hidden"
-            style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-          >
+          <div className="absolute inset-0" style={backFaceStyle}>
             <BrandModalBack className="w-full h-full rounded-2xl border-0" />
           </div>
         </motion.div>
       </motion.div>
 
       <motion.div
-        className="relative bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 overflow-hidden"
+        className={`relative bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 overflow-hidden z-[60] ${
+          phase === 'exit' ? 'pointer-events-none' : ''
+        }`}
         style={{
           maxWidth: sizeMaxWidth[size ?? 'md'],
           maxHeight: 'min(90dvh, 36rem)',

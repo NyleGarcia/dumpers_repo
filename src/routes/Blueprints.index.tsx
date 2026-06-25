@@ -20,6 +20,7 @@ import {
   getArmorWeight as getArmorWeightFromTaxonomy,
   getBlueprintSubType,
 } from '../lib/blueprintTaxonomy'
+import { preloadBlackstarLogo } from '../lib/preloadBlackstarLogo'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -80,6 +81,10 @@ export default function BlueprintsRoute() {
   const [showOnlyRewards, setShowOnlyRewards] = React.useState(true)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
   const [modalOriginRect, setModalOriginRect] = React.useState(null)
+
+  React.useEffect(() => {
+    preloadBlackstarLogo()
+  }, [])
 
   const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
   const [selectedUserId, setSelectedUserId] = React.useState('all')
