@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import BrandModalBack from '../BrandModalBack'
@@ -18,32 +18,43 @@ const zIndexClasses: Record<AppModalZIndex, string> = {
   80: 'z-[80]',
 }
 
-const OPEN_EASE = [0.32, 0.72, 0, 1] as const
-const BLINDS_OPEN_EASE = [0.22, 1, 0.36, 1] as const
-const CLOSE_BLINDS_EASE = [0.4, 0, 0.2, 1] as const
-const CLOSE_FLY_EASE = [0.4, 0, 1, 1] as const
+const FLIP_EASE = [0.32, 0.72, 0, 1] as const
+const EXPAND_EASE = [0.22, 1, 0.36, 1] as const
+const BLINDS_EASE = [0.22, 1, 0.36, 1] as const
+const WORMHOLE_EASE = [0.55, 0, 1, 0.45] as const
 
 const BRAND_GRADIENT =
   'linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #ea580c 100%)'
 
-/** Tuned for readable flip + blinds without feeling sluggish. */
+/**
+ * Open sequence (strictly one-by-one):
+ * 1. flip — card flips in-place at click origin, Black Star on back
+ * 2. expand — branded card zooms to screen center
+ * 3. blinds-open — side wipes reveal detail panel
+ * 4. ready — interactive
+ */
 const TIMING = {
-  openInteractiveMs: 800,
-  closeUnmountMs: 1150,
-  backdropIn: 0.2,
-  backdropOut: 0.28,
-  backdropOutDelay: 0.88,
-  flipIn: 0.5,
-  flipOut: 0.55,
-  /** Close: blinds shut first, then flip back + fly to card. */
-  flipOutDelay: 0.44,
-  blindsIn: 0.4,
-  blindsInDelay: 0.35,
-  blindsOut: 0.42,
-  contentFadeIn: 0.18,
-  contentFadeInDelay: 0.45,
-  contentFadeOut: 0.12,
+  backdropIn: 0.18,
+  flipInPlace: 0.45,
+  expandToCenter: 0.5,
+  blindsIn: 0.42,
+  wormholeOut: 0.62,
+  backdropOut: 0.22,
 } as const
+
+const backFaceStyle: React.CSSProperties = {
+  backfaceVisibility: 'hidden',
+  WebkitBackfaceVisibility: 'hidden',
+  transform: 'rotateY(180deg) translateZ(1px)',
+}
+
+const frontFaceStyle: React.CSSProperties = {
+  backfaceVisibility: 'hidden',
+  WebkitBackfaceVisibility: 'hidden',
+  transform: 'translateZ(1px)',
+}
+
+type ModalStage = 'flip' | 'expand' | 'blinds-open' | 'ready' | 'wormhole-close'
 
 export interface BrandRevealModalShellProps {
   title: string
@@ -70,9 +81,22 @@ function computeTargetRect(size: AppModalSize, originRect: DOMRect | null) {
   return { top, left, width, height }
 }
 
+function rectToBox(rect: { top: number; left: number; width: number; height: number }) {
+  return {
+    top: rect.top,
+    left: rect.left,
+    width: rect.width,
+    height: rect.height,
+  }
+}
+
 function isOriginUsable(originRect: DOMRect | null): originRect is DOMRect {
   if (!originRect) return false
   return originRect.width > 0 && originRect.height > 0
+}
+
+function ms(seconds: number): number {
+  return Math.round(seconds * 1000)
 }
 
 export default function BrandRevealModalShell({
@@ -141,8 +165,7 @@ function BrandRevealAnimatedModal({
   closeOnBackdrop,
   titleId,
 }: BrandRevealModalShellProps & { originRect: DOMRect; titleId: string }) {
-  const [phase, setPhase] = useState<'enter' | 'open' | 'exit'>('enter')
-  const [interactive, setInteractive] = useState(false)
+  const [stage, setStage] = useState<ModalStage>('flip')
   const originRef = useRef(originRect)
   originRef.current = originRect
 
@@ -151,6 +174,9 @@ function BrandRevealAnimatedModal({
     [size, originRect]
   )
 
+  const originBox = useMemo(() => rectToBox(originRef.current), [originRect])
+  const interactive = stage === 'ready'
+
   useBodyScrollLock(true)
 
   useEffect(() => {
@@ -158,56 +184,49 @@ function BrandRevealAnimatedModal({
   }, [])
 
   useEffect(() => {
-    const openTimer = window.setTimeout(() => {
-      setPhase('open')
-      setInteractive(true)
-    }, TIMING.openInteractiveMs)
-    return () => window.clearTimeout(openTimer)
-  }, [])
-
-  const finishClose = useCallback(() => {
-    onClose()
-  }, [onClose])
+    if (stage === 'flip') {
+      const timer = window.setTimeout(() => setStage('expand'), ms(TIMING.flipInPlace))
+      return () => window.clearTimeout(timer)
+    }
+    if (stage === 'expand') {
+      const timer = window.setTimeout(() => setStage('blinds-open'), ms(TIMING.expandToCenter))
+      return () => window.clearTimeout(timer)
+    }
+    if (stage === 'blinds-open') {
+      const timer = window.setTimeout(() => setStage('ready'), ms(TIMING.blindsIn))
+      return () => window.clearTimeout(timer)
+    }
+    if (stage === 'wormhole-close') {
+      const timer = window.setTimeout(
+        () => onClose(),
+        ms(TIMING.wormholeOut + TIMING.backdropOut * 0.5)
+      )
+      return () => window.clearTimeout(timer)
+    }
+  }, [stage, onClose])
 
   const requestClose = useCallback(() => {
-    setInteractive(false)
-    setPhase('exit')
-    window.setTimeout(finishClose, TIMING.closeUnmountMs)
-  }, [finishClose])
+    if (stage !== 'ready') return
+    setStage('wormhole-close')
+  }, [stage])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && interactive) {
+      if (event.key === 'Escape' && stage === 'ready') {
         event.preventDefault()
         requestClose()
       }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [interactive, requestClose])
+  }, [stage, requestClose])
 
-  const blindsOpen = phase === 'enter' || phase === 'open'
-  const origin = originRef.current
+  const showFlipCard = stage === 'flip' || stage === 'expand'
+  const showModal = stage === 'blinds-open' || stage === 'ready' || stage === 'wormhole-close'
+  const showBlinds = stage === 'blinds-open'
+  const closing = stage === 'wormhole-close'
 
-  const flipPosition =
-    phase === 'exit'
-      ? origin
-      : targetRect
-
-  const flipRotate = phase === 'exit' ? 0 : 180
-  const flipOpacity = phase === 'open' ? 0 : 1
-
-  const backFaceStyle: React.CSSProperties = {
-    backfaceVisibility: 'hidden',
-    WebkitBackfaceVisibility: 'hidden',
-    transform: 'rotateY(180deg) translateZ(1px)',
-  }
-
-  const frontFaceStyle: React.CSSProperties = {
-    backfaceVisibility: 'hidden',
-    WebkitBackfaceVisibility: 'hidden',
-    transform: 'translateZ(1px)',
-  }
+  const flipCardBox = stage === 'flip' ? originBox : targetRect
 
   return (
     <div
@@ -219,134 +238,137 @@ function BrandRevealAnimatedModal({
       <motion.div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         initial={{ opacity: 0 }}
-        animate={{ opacity: phase === 'exit' ? 0 : 1 }}
+        animate={{ opacity: closing ? 0 : 1 }}
         transition={{
-          duration: phase === 'exit' ? TIMING.backdropOut : TIMING.backdropIn,
-          delay: phase === 'exit' ? TIMING.backdropOutDelay : 0,
+          duration: closing ? TIMING.backdropOut : TIMING.backdropIn,
+          delay: closing ? TIMING.wormholeOut * 0.35 : 0,
         }}
         onClick={closeOnBackdrop && interactive ? requestClose : undefined}
       />
 
-      <motion.div
-        className={`fixed pointer-events-none ${phase === 'exit' ? 'z-[62]' : 'z-[58]'}`}
-        style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
-        initial={{
-          top: origin.top,
-          left: origin.left,
-          width: origin.width,
-          height: origin.height,
-          opacity: 1,
-        }}
-        animate={{
-          ...flipPosition,
-          opacity: flipOpacity,
-        }}
-        transition={{
-          duration: phase === 'exit' ? TIMING.flipOut : TIMING.flipIn,
-          delay: phase === 'exit' ? TIMING.flipOutDelay : 0,
-          ease: phase === 'exit' ? CLOSE_FLY_EASE : OPEN_EASE,
-        }}
-      >
+      {showFlipCard && (
         <motion.div
-          className="relative w-full h-full"
-          style={{ transformStyle: 'preserve-3d' }}
-          initial={{ rotateY: 0 }}
-          animate={{ rotateY: flipRotate }}
+          className="fixed pointer-events-none z-[62]"
+          style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
+          initial={originBox}
+          animate={flipCardBox}
           transition={{
-            duration: phase === 'exit' ? TIMING.flipOut : TIMING.flipIn,
-            delay: phase === 'exit' ? TIMING.flipOutDelay : 0,
-            ease: phase === 'exit' ? CLOSE_FLY_EASE : OPEN_EASE,
+            duration: stage === 'flip' ? 0 : TIMING.expandToCenter,
+            ease: EXPAND_EASE,
+          }}
+        >
+          <motion.div
+            className="relative w-full h-full"
+            style={{ transformStyle: 'preserve-3d' }}
+            initial={{ rotateY: 0 }}
+            animate={{ rotateY: 180 }}
+            transition={{
+              duration: stage === 'flip' ? TIMING.flipInPlace : 0,
+              ease: FLIP_EASE,
+            }}
+          >
+            <div
+              className="absolute inset-0 rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 shadow-2xl"
+              style={frontFaceStyle}
+            />
+            <div className="absolute inset-0" style={backFaceStyle}>
+              <BrandModalBack className="w-full h-full rounded-2xl border-0" />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {showModal && (
+        <motion.div
+          className="fixed z-[60] pointer-events-auto"
+          style={{
+            top: targetRect.top,
+            left: targetRect.left,
+            width: targetRect.width,
+            maxHeight: targetRect.height,
+            transformOrigin: 'center center',
+          }}
+          initial={false}
+          animate={
+            closing
+              ? {
+                  scale: 0,
+                  opacity: 0,
+                  rotate: -540,
+                  filter: 'blur(14px)',
+                }
+              : {
+                  scale: 1,
+                  opacity: 1,
+                  rotate: 0,
+                  filter: 'blur(0px)',
+                }
+          }
+          transition={{
+            duration: TIMING.wormholeOut,
+            ease: WORMHOLE_EASE,
           }}
         >
           <div
-            className="absolute inset-0 rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 shadow-2xl"
-            style={frontFaceStyle}
-          />
-          <div className="absolute inset-0" style={backFaceStyle}>
-            <BrandModalBack className="w-full h-full rounded-2xl border-0" />
+            className={`relative bg-slate-900 border border-slate-700 rounded-2xl w-full h-full shadow-2xl flex flex-col min-w-0 overflow-hidden ${
+              closing ? 'pointer-events-none' : ''
+            }`}
+            style={{
+              maxHeight: 'min(90dvh, 36rem)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative flex flex-col flex-1 min-h-0 min-w-0">
+              <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-slate-700 shrink-0">
+                <div className="min-w-0">
+                  <h2 id={titleId} className="text-lg font-bold text-white leading-snug">
+                    {title}
+                  </h2>
+                  {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+                </div>
+                <button
+                  type="button"
+                  onClick={interactive ? requestClose : undefined}
+                  className="text-slate-400 hover:text-white text-xl leading-none shrink-0 disabled:opacity-40"
+                  aria-label="Close"
+                  disabled={!interactive}
+                >
+                  ×
+                </button>
+              </div>
+
+              {headerExtra}
+
+              <div className="p-3 sm:p-4 overflow-y-auto overscroll-contain flex-1 min-h-0 min-w-0">
+                {children}
+              </div>
+
+              {footer && (
+                <div className="p-3 sm:p-4 border-t border-slate-700 shrink-0">{footer}</div>
+              )}
+
+              {showBlinds && (
+                <div className="absolute inset-0 z-20 flex pointer-events-none overflow-hidden rounded-2xl">
+                  <motion.div
+                    className="w-1/2 h-full border-r border-orange-500/20"
+                    style={{ background: BRAND_GRADIENT }}
+                    initial={{ x: '0%' }}
+                    animate={{ x: '-100%' }}
+                    transition={{ duration: TIMING.blindsIn, ease: BLINDS_EASE }}
+                  />
+                  <motion.div
+                    className="w-1/2 h-full border-l border-orange-500/20"
+                    style={{ background: BRAND_GRADIENT }}
+                    initial={{ x: '0%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ duration: TIMING.blindsIn, ease: BLINDS_EASE }}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </motion.div>
-      </motion.div>
-
-      <motion.div
-        className={`relative bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 overflow-hidden z-[60] ${
-          phase === 'exit' ? 'pointer-events-none' : ''
-        }`}
-        style={{
-          maxWidth: sizeMaxWidth[size ?? 'md'],
-          maxHeight: 'min(90dvh, 36rem)',
-          marginTop: 'max(1rem, 6vh)',
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: phase === 'exit' ? 0 : 1 }}
-        transition={{
-          duration: phase === 'exit' ? TIMING.contentFadeOut : TIMING.contentFadeIn,
-          delay: phase === 'exit' ? 0 : TIMING.contentFadeInDelay,
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="relative flex flex-col flex-1 min-h-0 min-w-0">
-          <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-slate-700 shrink-0">
-            <div className="min-w-0">
-              <h2 id={titleId} className="text-lg font-bold text-white leading-snug">
-                {title}
-              </h2>
-              {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
-            </div>
-            <button
-              type="button"
-              onClick={interactive ? requestClose : undefined}
-              className="text-slate-400 hover:text-white text-xl leading-none shrink-0 disabled:opacity-40"
-              aria-label="Close"
-              disabled={!interactive}
-            >
-              ×
-            </button>
-          </div>
-
-          {headerExtra}
-
-          <div className="p-3 sm:p-4 overflow-y-auto overscroll-contain flex-1 min-h-0 min-w-0">
-            {children}
-          </div>
-
-          {footer && (
-            <div className="p-3 sm:p-4 border-t border-slate-700 shrink-0">{footer}</div>
-          )}
-
-          <AnimatePresence>
-            {(phase === 'enter' || phase === 'exit') && (
-              <motion.div
-                className="absolute inset-0 z-20 flex pointer-events-none overflow-hidden rounded-2xl"
-                initial={false}
-              >
-                <motion.div
-                  className="w-1/2 h-full border-r border-orange-500/20"
-                  style={{ background: BRAND_GRADIENT }}
-                  initial={{ x: '0%' }}
-                  animate={{ x: blindsOpen ? '-100%' : '0%' }}
-                  transition={{
-                    duration: phase === 'exit' ? TIMING.blindsOut : TIMING.blindsIn,
-                    delay: phase === 'enter' ? TIMING.blindsInDelay : 0,
-                    ease: phase === 'exit' ? CLOSE_BLINDS_EASE : BLINDS_OPEN_EASE,
-                  }}
-                />
-                <motion.div
-                  className="w-1/2 h-full border-l border-orange-500/20"
-                  style={{ background: BRAND_GRADIENT }}
-                  initial={{ x: '0%' }}
-                  animate={{ x: blindsOpen ? '100%' : '0%' }}
-                  transition={{
-                    duration: phase === 'exit' ? TIMING.blindsOut : TIMING.blindsIn,
-                    delay: phase === 'enter' ? TIMING.blindsInDelay : 0,
-                    ease: phase === 'exit' ? CLOSE_BLINDS_EASE : BLINDS_OPEN_EASE,
-                  }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
+      )}
     </div>
   )
 }
