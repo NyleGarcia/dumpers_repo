@@ -35,9 +35,9 @@ const BRAND_GRADIENT =
  */
 const TIMING = {
   backdropIn: 0.18,
-  flipInPlace: 0.45,
+  flipInPlace: 0.6,
   expandToCenter: 0.5,
-  blindsIn: 0.42,
+  blindsIn: 0.8,
   wormholeOut: 0.62,
   backdropOut: 0.22,
 } as const

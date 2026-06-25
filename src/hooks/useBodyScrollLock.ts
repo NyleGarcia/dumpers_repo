@@ -1,11 +1,18 @@
 import { useEffect } from 'react'
 
 let lockCount = 0
-let previousOverflow = ''
-let previousPaddingRight = ''
+let previousHtmlOverflow = ''
+let previousBodyOverflow = ''
+let previousBodyPaddingRight = ''
 
 function getScrollbarWidth(): number {
   return window.innerWidth - document.documentElement.clientWidth
+}
+
+function usesStableScrollbarGutter(): boolean {
+  if (typeof document === 'undefined') return false
+  const gutter = getComputedStyle(document.documentElement).scrollbarGutter
+  return gutter.includes('stable')
 }
 
 export function useBodyScrollLock(enabled = true): void {
@@ -14,20 +21,30 @@ export function useBodyScrollLock(enabled = true): void {
 
     lockCount += 1
     if (lockCount === 1) {
-      previousOverflow = document.body.style.overflow
-      previousPaddingRight = document.body.style.paddingRight
+      const html = document.documentElement
+      const body = document.body
+
+      previousHtmlOverflow = html.style.overflow
+      previousBodyOverflow = body.style.overflow
+      previousBodyPaddingRight = body.style.paddingRight
+
+      html.style.overflow = 'hidden'
+      body.style.overflow = 'hidden'
+
+      // index.css sets scrollbar-gutter: stable — gutter already reserves space;
+      // adding paddingRight here causes the page to jump horizontally.
       const scrollbarWidth = getScrollbarWidth()
-      document.body.style.overflow = 'hidden'
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`
+      if (scrollbarWidth > 0 && !usesStableScrollbarGutter()) {
+        body.style.paddingRight = `${scrollbarWidth}px`
       }
     }
 
     return () => {
       lockCount -= 1
       if (lockCount === 0) {
-        document.body.style.overflow = previousOverflow
-        document.body.style.paddingRight = previousPaddingRight
+        document.documentElement.style.overflow = previousHtmlOverflow
+        document.body.style.overflow = previousBodyOverflow
+        document.body.style.paddingRight = previousBodyPaddingRight
       }
     }
   }, [enabled])
