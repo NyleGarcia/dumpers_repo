@@ -96,7 +96,7 @@ export interface MiningLedgerComputed {
   miningRows: MiningRowComputed[]
   pivotProfitEstimate: number
   pivotProfitActual: number
-  /** Sum of mining run profit actual — split by shares for crew payout actual. */
+  /** Ore profit actual − deductibles + other profits; split by shares for crew payout actual. */
   totalPayout: number
   deductibleTotal: number
   otherProfitTotal: number
@@ -250,9 +250,10 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
   )
 
   const poolEstimate = -deductibleTotal + pivotProfitEstimate + otherProfitTotal
-  const poolActual = -deductibleTotal + pivotProfitActual + otherProfitTotal
-
-  const totalPayout = pivotProfitActual
+  /** Mining ore profit actual only (no deductibles or other profits). */
+  const poolActual = pivotProfitActual
+  /** Crew payout actual pool: ore profit actual − deductibles + other profits. */
+  const totalPayout = -deductibleTotal + pivotProfitActual + otherProfitTotal
 
   const totalShares = data.crew.reduce(
     (sum, member) => sum + (Number.isFinite(member.shares) ? member.shares : 0),

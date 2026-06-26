@@ -145,9 +145,11 @@ function CrewPlayerNameField({
   const [query, setQuery] = useState(value)
   const [options, setOptions] = useState<VerifiedMemberSearchResult[]>([])
   const [open, setOpen] = useState(false)
+  const [focused, setFocused] = useState(false)
   const [alertState, setAlertState] = useState<CrewRsiAlertState>('idle')
   const skipValidationRef = useRef(false)
   const validateSeqRef = useRef(0)
+  const inputRef = useRef<HTMLInputElement>(null)
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
 
@@ -163,18 +165,26 @@ function CrewPlayerNameField({
 
   useEffect(() => {
     const trimmed = query.trim()
-    if (trimmed.length < 2) {
+    if (linkedUserId || trimmed.length < 2) {
       setOptions([])
+      setOpen(false)
       if (!linkedUserId) setAlertState('idle')
       return
     }
     const timeout = setTimeout(async () => {
       const { data } = await searchVerifiedMembersForLedger(trimmed)
       setOptions(data)
-      setOpen(data.length > 0)
+      if (
+        focused &&
+        !linkedUserId &&
+        inputRef.current &&
+        document.activeElement === inputRef.current
+      ) {
+        setOpen(data.length > 0)
+      }
     }, 250)
     return () => clearTimeout(timeout)
-  }, [query, linkedUserId])
+  }, [query, linkedUserId, focused])
 
   useEffect(() => {
     if (skipValidationRef.current) {
@@ -226,19 +236,27 @@ function CrewPlayerNameField({
     <div className="w-44 max-w-44 shrink-0">
       <div className="flex items-center gap-1 min-w-0">
         <input
+          ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => {
             const next = sanitizeRsiHandleInput(e.target.value)
             setQuery(next)
             onChange(next, null)
-            setOpen(next.trim().length >= 2)
           }}
           onBlur={() => {
+            setFocused(false)
             window.setTimeout(() => setOpen(false), 150)
           }}
-          onFocus={() => {
-            if (options.length > 0) setOpen(true)
+          onFocus={(e) => {
+            setFocused(true)
+            if (
+              e.isTrusted &&
+              options.length > 0 &&
+              !linkedUserId
+            ) {
+              setOpen(true)
+            }
           }}
           placeholder="RSI handle"
           className="site-input flex-1 min-w-0 w-0 px-2 py-1 text-xs"
@@ -541,13 +559,14 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
               <span className="text-slate-500 block">Pool (actual)</span>
               <span className="text-slate-400 font-mono tabular-nums whitespace-nowrap">{formatLedgerMoney(computed.poolActual)}</span>
+              <span className="text-[10px] text-slate-600 block">Ore profit act. only</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[8.5rem]">
               <span className="text-slate-500 block">Total payout</span>
               <span className="text-amber-300 font-mono tabular-nums whitespace-nowrap">
                 {formatLedgerMoney(computed.totalPayout)}
               </span>
-              <span className="text-[10px] text-slate-600 block">Sum of ore profit act.</span>
+              <span className="text-[10px] text-slate-600 block">Ore − deductibles + extras</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
               <span className="text-slate-500 block">Total shares</span>
@@ -713,8 +732,8 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               <div>
                 <h3 className="text-sm font-semibold text-white">Crew</h3>
                 <p className="text-[10px] text-slate-500">
-                  Payout est. from pool estimate ÷ shares. Payout act. from total payout (ore
-                  profit act.) ÷ shares.
+                  Payout est. from pool estimate ÷ shares. Payout act. from total payout
+                  (ore − deductibles + extras) ÷ shares.
                 </p>
               </div>
               <button
@@ -755,7 +774,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               </colgroup>
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
-                  <th className="py-1 pr-2">Player</th>
+                  <th className="py-1 pr-2">Member</th>
                   <th className="py-1 pr-2">Shares</th>
                   <th className="py-1 pr-2">Role</th>
                   <th className="py-1 pr-2">Payout est.</th>
