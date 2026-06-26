@@ -3,9 +3,27 @@ import { isHarvestResource } from '../config/resourceTypes'
 import { AMMO_ORDER_MIN_QUALITY } from '../config/dfp'
 import { slotQualitiesToParts } from './blueprintQuality'
 import { getResourceBands } from './qualityBands'
-import { getDfpEngine } from './dfpEngine'
+import { ensureDfpEngine, getDfpEngine, isDfpEngineReady, type DfpEngineApi } from './dfpEngine'
 
 const MIN_SCU = 0.001
+
+const EMPTY_DFP_RESULT: DfpResult = {
+  materialTotal: 0,
+  acquisitionPremium: 0,
+  craftLaborPremium: 0,
+  typeModifier: 0,
+  typeKey: 'other',
+  total: 0,
+  lines: [],
+}
+
+function tryGetEngine(): DfpEngineApi | null {
+  if (isDfpEngineReady()) return getDfpEngine()
+  void ensureDfpEngine().catch((err) => {
+    console.error('DFP engine load failed:', err)
+  })
+  return null
+}
 
 export interface DfpLineItem {
   resource: string
@@ -46,7 +64,8 @@ export interface BlueprintDfpInput {
 }
 
 export function isAmmoBlueprint(blueprint: BlueprintDfpInput): boolean {
-  return getDfpEngine().isAmmoBlueprint(blueprint)
+  const eng = tryGetEngine()
+  return eng?.isAmmoBlueprint(blueprint) ?? false
 }
 
 export function formatBlueprintOrderQualityLabel(minQuality: number): string {
@@ -70,8 +89,8 @@ export function formatOrderQualityLabel(minQuality: number): string {
 }
 
 export function resolveDfpTypeKey(blueprint: BlueprintDfpInput): string {
-  const eng = getDfpEngine()
-  if (eng.isAmmoBlueprint(blueprint)) return 'ammo'
+  const eng = tryGetEngine()
+  if (eng?.isAmmoBlueprint(blueprint)) return 'ammo'
   const cat = blueprint.categoryName ?? ''
   if (cat === 'FPSArmours') return 'armor'
   if (cat === 'FPSWeapons') return 'fps_weapon'
@@ -91,7 +110,9 @@ export function calculateMaterialDfpPrice(
   scuQuantity: number,
   bandThresholds?: number[],
 ): number {
-  return getDfpEngine().calculateMaterialDfpPrice(
+  const eng = tryGetEngine()
+  if (!eng) return 0
+  return eng.calculateMaterialDfpPrice(
     resourceName,
     minQuality,
     scuQuantity,
@@ -121,8 +142,10 @@ export function calculateBlueprintDfpWithParts(
   slotQualities?: Record<number, number> | null,
   craftQuantity = 1,
 ): DfpResult {
+  const eng = tryGetEngine()
+  if (!eng) return { ...EMPTY_DFP_RESULT, typeKey: resolveDfpTypeKey(blueprint) }
   const parts = slotQualities ? slotQualitiesToParts(slotQualities) : undefined
-  const raw = getDfpEngine().calculateBlueprintDfp(blueprint, {
+  const raw = eng.calculateBlueprintDfp(blueprint, {
     parts,
     craftQuantity,
     bandThresholdsForResource: (name) => getResourceBands(name),
@@ -152,7 +175,9 @@ export function calculateBlueprintDfpForOrder(
 }
 
 export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {
-  const raw = getDfpEngine().calculateBlueprintDfp(blueprint)
+  const eng = tryGetEngine()
+  if (!eng) return { ...EMPTY_DFP_RESULT, typeKey: resolveDfpTypeKey(blueprint) }
+  const raw = eng.calculateBlueprintDfp(blueprint)
   return {
     materialTotal: raw.materialTotal,
     acquisitionPremium: raw.acquisitionPremium ?? 0,

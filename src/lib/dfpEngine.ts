@@ -39,6 +39,30 @@ export interface DfpEngineApi {
 
 let engine: DfpEngineApi | null = null
 let loadPromise: Promise<DfpEngineApi> | null = null
+const readyListeners = new Set<() => void>()
+
+function notifyReady(): void {
+  for (const listener of readyListeners) {
+    listener()
+  }
+}
+
+export function subscribeDfpEngineReady(listener: () => void): () => void {
+  readyListeners.add(listener)
+  return () => readyListeners.delete(listener)
+}
+
+const FETCH_TIMEOUT_MS = 20_000
+
+async function fetchWithTimeout(url: string, init?: RequestInit): Promise<Response> {
+  const controller = new AbortController()
+  const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
+  try {
+    return await fetch(url, { ...init, signal: controller.signal, cache: 'no-cache' })
+  } finally {
+    window.clearTimeout(timeoutId)
+  }
+}
 
 function engineBaseUrl(): string {
   if (import.meta.env.DEV) return ''
@@ -58,7 +82,7 @@ function assetUrl(base: string, file: string): string {
 }
 
 async function verifyAndImport(moduleUrl: string, expectedSha256: string): Promise<DfpEngineApi> {
-  const res = await fetch(moduleUrl, { cache: 'no-cache' })
+  const res = await fetchWithTimeout(moduleUrl)
   if (!res.ok) throw new Error(`DFP engine fetch failed (${res.status}) from ${moduleUrl}`)
   const source = await res.text()
   const sha256 = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(source))
@@ -83,7 +107,7 @@ export async function ensureDfpEngine(): Promise<DfpEngineApi> {
     loadPromise = (async () => {
       const base = engineBaseUrl()
       const manifestUrl = assetUrl(base, 'dfp-version.json')
-      const manifestRes = await fetch(manifestUrl, { cache: 'no-cache' })
+      const manifestRes = await fetchWithTimeout(manifestUrl)
       if (!manifestRes.ok) {
         throw new Error(`DFP manifest fetch failed (${manifestRes.status}) from ${manifestUrl}`)
       }
@@ -91,6 +115,7 @@ export async function ensureDfpEngine(): Promise<DfpEngineApi> {
       const moduleName = manifest.module ?? 'dfp-engine.js'
       const loaded = await verifyAndImport(assetUrl(base, moduleName), manifest.sha256)
       engine = loaded
+      notifyReady()
       return loaded
     })()
   }
@@ -103,5 +128,9 @@ export function getDfpEngine(): DfpEngineApi {
 }
 
 export function isDfpEngineReady(): boolean {
+  return engine != null
+}
+
+export function getDfpEngineSnapshot(): boolean {
   return engine != null
 }

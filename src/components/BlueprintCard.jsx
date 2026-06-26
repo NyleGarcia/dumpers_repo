@@ -7,6 +7,7 @@ import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
 import { calculateBlueprintDfpWithParts, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
 import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
 import { useAuth } from '../contexts/AuthContext'
+import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
 
 export default function BlueprintCard({
   blueprint,
@@ -25,6 +26,7 @@ export default function BlueprintCard({
   ownerCount,
 }) {
   const { dfpDisplayEnabled } = useAuth()
+  const dfpEngineReady = useDfpEngineReady()
 
   const defaultSlotQualities = useMemo(
     () => buildDefaultSlotQualities(blueprint),
@@ -32,7 +34,7 @@ export default function BlueprintCard({
   )
   const dfp = useMemo(
     () => calculateBlueprintDfpWithParts(blueprint, defaultSlotQualities),
-    [blueprint, defaultSlotQualities]
+    [blueprint, defaultSlotQualities, dfpEngineReady]
   )
 
   if (!(blueprint.internalName || blueprint.file) || !blueprint.blueprintName) return null

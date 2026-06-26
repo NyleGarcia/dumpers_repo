@@ -254,45 +254,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [checkBanned, handleBannedUser, fetchProfile, fetchAcquiredBlueprints, fetchSiteSettings])
 
   useEffect(() => {
-    // Handle OAuth callback - clean up URL hash after auth processes it
-    const handleOAuthCallback = async () => {
-      const hash = window.location.hash
-      if (hash && hash.includes('access_token')) {
-        // Let Supabase process the hash first
+    let cancelled = false
+
+    const bootstrapAuth = async () => {
+      try {
+        const hash = window.location.hash
+        const isOAuthCallback = hash.includes('access_token')
+
         const { data: { session }, error } = await supabase.auth.getSession()
-        
-        if (session && !error) {
-          // Clean up the URL by removing the hash
+
+        if (isOAuthCallback && session && !error) {
           window.history.replaceState(null, '', window.location.pathname)
         }
-        
+
+        if (cancelled) return
+
         setSession(session)
         setUser(session?.user ?? null)
 
         if (session?.user) {
           await loadUserData(session.user, false)
         }
-
-        setLoading(false)
-        return true
+      } catch (err) {
+        console.error('Auth bootstrap failed:', err)
+      } finally {
+        if (!cancelled) setLoading(false)
       }
-      return false
     }
 
-    handleOAuthCallback().then(async (wasCallback) => {
-      if (!wasCallback) {
-        // Normal session check (not an OAuth callback)
-        const { data: { session } } = await supabase.auth.getSession()
-        setSession(session)
-        setUser(session?.user ?? null)
-
-        if (session?.user) {
-          await loadUserData(session.user, false)
-        }
-
-        setLoading(false)
-      }
-    })
+    void bootstrapAuth()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session)
@@ -306,7 +296,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      cancelled = true
+      subscription.unsubscribe()
+    }
   }, [loadUserData])
 
   useEffect(() => {

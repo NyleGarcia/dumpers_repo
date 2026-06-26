@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { RouteErrorPage, RouteNotFoundPage } from './RouteErrorPage'
 import { routeTree } from '../routes/root'
@@ -37,6 +37,12 @@ export default function RouterApp() {
   } = useAuth()
 
   const canAccess = (minRole: UserRole) => roleAtLeast(profile?.role, minRole)
+
+  useEffect(() => {
+    if (!loading) {
+      void router.invalidate()
+    }
+  }, [loading, profile?.role, visibilityContext.isGuestPreview, visibilityContext.isGhostMode])
 
   return (
     <RouterProvider

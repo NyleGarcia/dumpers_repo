@@ -15,22 +15,21 @@ if (appElement) {
   const root = ReactDOM.createRoot(appElement)
 
   setupCacheBusting()
+  void checkAppVersion()
 
-  void checkAppVersion().then(() => {
-    root.render(
-      <React.StrictMode>
-        <AuthProvider>
-          <MiningTrackerProvider>
-            <OrderDraftProvider>
-              <DfpInitGate>
-                <QueryClientProvider>
-                  <RouterApp />
-                </QueryClientProvider>
-              </DfpInitGate>
-            </OrderDraftProvider>
-          </MiningTrackerProvider>
-        </AuthProvider>
-      </React.StrictMode>
-    )
-  })
+  root.render(
+    <React.StrictMode>
+      <AuthProvider>
+        <MiningTrackerProvider>
+          <OrderDraftProvider>
+            <DfpInitGate>
+              <QueryClientProvider>
+                <RouterApp />
+              </QueryClientProvider>
+            </DfpInitGate>
+          </OrderDraftProvider>
+        </MiningTrackerProvider>
+      </AuthProvider>
+    </React.StrictMode>
+  )
 }
