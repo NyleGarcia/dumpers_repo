@@ -208,6 +208,16 @@ serve(async (req) => {
   }
 
   try {
+    let includeHeld = false
+    if (req.method === 'POST') {
+      try {
+        const body = await req.json()
+        includeHeld = body?.include_held === true
+      } catch {
+        // Empty or non-JSON body — cron/default behavior.
+      }
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
@@ -255,6 +265,7 @@ serve(async (req) => {
 
     const { data: messages, error: msgError } = await supabase.rpc('get_pending_discord_messages', {
       p_limit: 50,
+      p_include_held: includeHeld,
     })
 
     if (msgError) {

@@ -126,11 +126,18 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
     const result = await processDiscordQueue()
 
     if (result.success) {
+      const deliveryErrors = result.errors?.length
+        ? ` Delivery issues: ${result.errors.join('; ')}`
+        : ''
+      const noneProcessed =
+        (result.processed ?? 0) === 0 && (queueStatus?.pending_count ?? 0) + (queueStatus?.held_count ?? 0) > 0
+
       setMessage({
-        type: 'success',
-        text: `Processed ${result.processed} messages, sent ${result.sent} notifications`,
+        type: noneProcessed || result.errors?.length ? 'error' : 'success',
+        text: noneProcessed
+          ? `No messages were processed.${deliveryErrors || ' The message may be waiting on coalesce or webhook delivery failed — redeploy send-discord and apply migration 093.'}`
+          : `Processed ${result.processed} messages, sent ${result.sent} notifications.${deliveryErrors}`,
       })
-      // Refresh queue status
       const statusRes = await getDiscordQueueStatus()
       if (statusRes.success && statusRes.status) {
         setQueueStatus(statusRes.status)
@@ -382,10 +389,18 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                 <h3 className="text-white font-medium text-sm">Message Queue</h3>
                 {queueStatus && (
                   <div className="text-xs text-slate-400 mt-1 space-y-0.5">
-                    <p>Pending: {queueStatus.pending_count}</p>
+                    <p>Ready to send: {queueStatus.pending_count}</p>
+                    {(queueStatus.held_count ?? 0) > 0 && (
+                      <p className="text-amber-300/80">
+                        Coalescing: {queueStatus.held_count}
+                        {queueStatus.next_held_until && (
+                          <> · sends after {new Date(queueStatus.next_held_until).toLocaleString()}</>
+                        )}
+                      </p>
+                    )}
                     <p>Processed today: {queueStatus.processed_today}</p>
                     {queueStatus.oldest_pending && (
-                      <p>Oldest: {new Date(queueStatus.oldest_pending).toLocaleString()}</p>
+                      <p>Oldest ready: {new Date(queueStatus.oldest_pending).toLocaleString()}</p>
                     )}
                   </div>
                 )}
@@ -393,7 +408,10 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
               <div className="flex gap-2">
                 <button
                   onClick={handleProcessQueue}
-                  disabled={processing || (queueStatus?.pending_count ?? 0) === 0}
+                  disabled={
+                    processing ||
+                    ((queueStatus?.pending_count ?? 0) === 0 && (queueStatus?.held_count ?? 0) === 0)
+                  }
                   className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
                 >
                   {processing ? '...' : 'Process Now'}

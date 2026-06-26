@@ -98,8 +98,12 @@ export interface DiscordWebhook {
 }
 
 export interface QueueStatus {
+  /** Ready to send now (not waiting on coalesce timer). */
   pending_count: number
+  /** Waiting on market coalesce debounce (`held_until`). */
+  held_count?: number
   oldest_pending: string | null
+  next_held_until?: string | null
   processed_today: number
 }
 
@@ -469,10 +473,13 @@ export async function processDiscordQueue(): Promise<{
   success: boolean
   processed?: number
   sent?: number
+  errors?: string[]
   error?: string
 }> {
   try {
-    const { data, error } = await supabase.functions.invoke('send-discord')
+    const { data, error } = await supabase.functions.invoke('send-discord', {
+      body: { include_held: true },
+    })
 
     if (error) {
       return { success: false, error: error.message }
@@ -486,6 +493,7 @@ export async function processDiscordQueue(): Promise<{
       success: true,
       processed: data?.processed ?? 0,
       sent: data?.sent ?? 0,
+      errors: Array.isArray(data?.errors) ? (data.errors as string[]) : undefined,
     }
   } catch (err) {
     return { success: false, error: (err as Error).message }
