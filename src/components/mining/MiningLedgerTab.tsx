@@ -42,6 +42,10 @@ interface MiningLedgerTabProps {
   isGuestPreview: boolean
 }
 
+/** Sticky section title row — stays visible while the page scrolls; tables grow below with no inner scroll. */
+const LEDGER_SECTION_HEAD =
+  'sticky top-14 z-[5] flex flex-wrap items-center justify-between gap-2 py-2 mb-1 bg-slate-950/95 backdrop-blur-sm border-b border-slate-800/60'
+
 function oreCatalogEntries(catalog: BlueprintResourceRow[]) {
   return catalog.filter((row) => {
     const type = getResourceType(row.resource_key)
@@ -533,24 +537,11 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               <span className="text-slate-400 font-mono tabular-nums">{formatLedgerMoney(computed.poolActual)}</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <label className="text-slate-500 block" htmlFor="ledger-total-payout">
-                Total payout
-              </label>
-              <input
-                id="ledger-total-payout"
-                type="number"
-                value={data.totalPayout ?? ''}
-                onChange={(e) =>
-                  updateData((prev) => ({
-                    ...prev,
-                    totalPayout: e.target.value === '' ? null : Number(e.target.value) || 0,
-                  }))
-                }
-                placeholder="Haul total aUEC"
-                className="site-input w-full mt-0.5 px-1 py-0.5 text-xs font-mono tabular-nums text-amber-300"
-                min={0}
-                step="any"
-              />
+              <span className="text-slate-500 block">Total payout</span>
+              <span className="text-amber-300 font-mono tabular-nums">
+                {formatLedgerMoney(computed.totalPayout)}
+              </span>
+              <span className="text-[10px] text-slate-600 block">Sum of ore profit act.</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
               <span className="text-slate-500 block">Total shares</span>
@@ -563,8 +554,8 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
           </div>
 
           {/* Mining runs */}
-          <section className="overflow-x-auto">
-            <div className="flex items-center justify-between mb-2">
+          <section>
+            <div className={LEDGER_SECTION_HEAD}>
               <h3 className="text-sm font-semibold text-white">Mining runs</h3>
               <button
                 type="button"
@@ -590,7 +581,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 + Add row
               </button>
             </div>
-            <table className="w-full text-xs min-w-[720px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
                   <th className="py-1 pr-2">Ore</th>
@@ -699,12 +690,13 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
           </section>
 
           {/* Crew */}
-          <section className="overflow-x-auto">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <section>
+            <div className={LEDGER_SECTION_HEAD}>
               <div>
                 <h3 className="text-sm font-semibold text-white">Crew</h3>
                 <p className="text-[10px] text-slate-500">
-                  Payout est. from pool estimate ÷ shares. Payout act. from total payout ÷ shares.
+                  Payout est. from pool estimate ÷ shares. Payout act. from total payout (ore
+                  profit act.) ÷ shares.
                 </p>
               </div>
               <button
@@ -721,6 +713,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                         shares: 1,
                         role: '',
                         isPaid: false,
+                        paidPayoutAuec: null,
                       },
                     ],
                   }))
@@ -730,7 +723,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 + Add member
               </button>
             </div>
-            <table className="w-full text-xs min-w-[640px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
                   <th className="py-1 pr-2">Player</th>
@@ -799,7 +792,12 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                         <input
                           type="checkbox"
                           checked={row.isPaid}
-                          onChange={(e) => patchCrew(row.id, { isPaid: e.target.checked })}
+                          onChange={(e) =>
+                            patchCrew(row.id, {
+                              isPaid: e.target.checked,
+                              paidPayoutAuec: e.target.checked ? member.payoutActual : null,
+                            })
+                          }
                           className="rounded border-slate-600"
                         />
                       </td>
@@ -831,7 +829,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
           {/* Deductibles + Other profits */}
           <div className="grid sm:grid-cols-2 gap-4">
             <section>
-              <div className="flex items-center justify-between mb-2">
+              <div className={LEDGER_SECTION_HEAD}>
                 <h3 className="text-sm font-semibold text-white">Deductibles</h3>
                 <button
                   type="button"
@@ -895,7 +893,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               ))}
             </section>
             <section>
-              <div className="flex items-center justify-between mb-2">
+              <div className={LEDGER_SECTION_HEAD}>
                 <h3 className="text-sm font-semibold text-white">Other profits</h3>
                 <button
                   type="button"
@@ -961,8 +959,8 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
           </div>
 
           {/* Price list */}
-          <section className="overflow-x-auto">
-            <div className="flex items-center justify-between mb-2">
+          <section>
+            <div className={LEDGER_SECTION_HEAD}>
               <h3 className="text-sm font-semibold text-white">Ore prices (Purchased Q0, per 100 cSCU yield)</h3>
               <button
                 type="button"
@@ -976,7 +974,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               Defaults use Purchased (Q0) DFP per 100 cSCU of yield. Profit = (yield cSCU ÷ 100) ×
               price. Override any row manually, or Reset from catalog if values look 100× too high.
             </p>
-            <table className="w-full text-xs max-w-lg">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
                   <th className="py-1">Ore</th>
@@ -1149,7 +1147,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
             className="site-input w-full px-3 py-2 text-sm mb-2"
           />
           {collabOptions.length > 0 && (
-            <ul className="mb-4 border border-slate-700 rounded-lg overflow-hidden">
+            <ul className="mb-4 border border-slate-700 rounded-lg overflow-hidden bg-slate-800/40">
               {collabOptions.map((member) => {
                 const label = member.rsi_handle || member.display_name || 'Unknown'
                 const already = detail.collaborators.some((c) => c.user_id === member.id)
@@ -1168,10 +1166,12 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                         updateData((prev) => seedCrewMemberOnce(prev, member.id, label))
                         setCollabSearch('')
                       }}
-                      className="w-full px-3 py-2 text-left text-sm hover:bg-slate-800 disabled:opacity-40"
+                      className="w-full px-3 py-2 text-left text-sm text-slate-100 hover:bg-slate-700/80 hover:text-white disabled:text-slate-400 disabled:hover:bg-transparent"
                     >
-                      {label}
-                      {already ? ' (already added)' : ''}
+                      <span className={already ? 'text-slate-400' : 'text-white'}>{label}</span>
+                      {already ? (
+                        <span className="text-slate-500"> (already added)</span>
+                      ) : null}
                     </button>
                   </li>
                 )
@@ -1181,13 +1181,19 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
           <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
             Current access
           </h4>
-          <ul className="space-y-1 text-sm">
-            <li className="text-slate-300">
-              {detail.creator_display ?? 'Creator'} <span className="text-slate-500">(creator)</span>
+          <ul className="space-y-2 text-sm">
+            <li className="text-slate-100">
+              {detail.creator_display ?? 'Creator'}{' '}
+              <span className="text-slate-500">(creator)</span>
             </li>
             {detail.collaborators.map((collab) => (
-              <li key={collab.user_id} className="flex items-center justify-between gap-2">
-                <span>{collab.rsi_handle || collab.display_name || collab.user_id}</span>
+              <li
+                key={collab.user_id}
+                className="flex items-center justify-between gap-2 text-slate-100"
+              >
+                <span className="font-medium">
+                  {collab.rsi_handle || collab.display_name || collab.user_id}
+                </span>
                 <button
                   type="button"
                   onClick={async () => {

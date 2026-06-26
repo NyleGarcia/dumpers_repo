@@ -42,6 +42,8 @@ export interface MiningLedgerCrewMember {
   shares: number
   role: string
   isPaid: boolean
+  /** Payout actual at time paid (used for notifications and export). */
+  paidPayoutAuec: number | null
 }
 
 export type { CrewRsiAlertState } from './rsiHandleCheck'
@@ -56,8 +58,6 @@ export { CREW_RSI_VALID_NOT_REGISTERED_TOOLTIP as UNKNOWN_CREW_MEMBER_TOOLTIP } 
 
 export interface MiningLedgerData {
   schemaVersion: typeof MINING_LEDGER_SCHEMA_VERSION
-  /** Manager-entered total haul aUEC; split by shares for crew payout actual. */
-  totalPayout: number | null
   /** Site user IDs already auto-added to crew once (creator + access grants). */
   seededCrewUserIds: string[]
   miningRows: MiningLedgerMiningRow[]
@@ -96,6 +96,8 @@ export interface MiningLedgerComputed {
   miningRows: MiningRowComputed[]
   pivotProfitEstimate: number
   pivotProfitActual: number
+  /** Sum of mining run profit actual — split by shares for crew payout actual. */
+  totalPayout: number
   deductibleTotal: number
   otherProfitTotal: number
   poolEstimate: number
@@ -133,7 +135,6 @@ export function newLedgerRowId(): string {
 export function createEmptyMiningLedgerData(): MiningLedgerData {
   return {
     schemaVersion: MINING_LEDGER_SCHEMA_VERSION,
-    totalPayout: null,
     seededCrewUserIds: [],
     miningRows: [],
     deductibles: [{ id: newLedgerRowId(), label: 'Refining', cost: 0 }],
@@ -207,6 +208,7 @@ export function seedCrewMemberOnce(
         shares: 1,
         role: '',
         isPaid: false,
+        paidPayoutAuec: null,
       },
     ],
   }
@@ -250,20 +252,19 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
   const poolEstimate = -deductibleTotal + pivotProfitEstimate + otherProfitTotal
   const poolActual = -deductibleTotal + pivotProfitActual + otherProfitTotal
 
+  const totalPayout = pivotProfitActual
+
   const totalShares = data.crew.reduce(
     (sum, member) => sum + (Number.isFinite(member.shares) ? member.shares : 0),
     0
   )
-
-  const haulTotal =
-    data.totalPayout != null && Number.isFinite(data.totalPayout) ? data.totalPayout : null
 
   const crew: CrewMemberComputed[] = data.crew.map((member) => {
     const shares = Number.isFinite(member.shares) ? member.shares : 0
     const payoutEstimate =
       totalShares > 0 ? (poolEstimate / totalShares) * shares : 0
     const payoutActual =
-      haulTotal != null && totalShares > 0 ? (haulTotal / totalShares) * shares : 0
+      totalShares > 0 ? (totalPayout / totalShares) * shares : 0
     return {
       id: member.id,
       playerName: member.playerName,
@@ -284,6 +285,7 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
     miningRows,
     pivotProfitEstimate,
     pivotProfitActual,
+    totalPayout,
     deductibleTotal,
     otherProfitTotal,
     poolEstimate,

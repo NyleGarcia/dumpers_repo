@@ -18,15 +18,14 @@ interface RpcResult {
 function parseLedgerData(raw: unknown): MiningLedgerData {
   const empty = createEmptyMiningLedgerData()
   if (!raw || typeof raw !== 'object') return empty
-  const obj = raw as Partial<MiningLedgerData> & { priceQuality?: number }
-  const { priceQuality: _legacyPriceQuality, ...rest } = obj
+  const obj = raw as Partial<MiningLedgerData> & {
+    priceQuality?: number
+    totalPayout?: number
+  }
+  const { priceQuality: _legacyPriceQuality, totalPayout: _legacyTotalPayout, ...rest } = obj
   return {
     schemaVersion: MINING_LEDGER_SCHEMA_VERSION,
     ...rest,
-    totalPayout:
-      typeof obj.totalPayout === 'number' && Number.isFinite(obj.totalPayout)
-        ? obj.totalPayout
-        : null,
     seededCrewUserIds: Array.isArray(obj.seededCrewUserIds)
       ? obj.seededCrewUserIds.map(String)
       : [],
@@ -45,6 +44,10 @@ function parseLedgerData(raw: unknown): MiningLedgerData {
           shares: Number(row.shares) || 0,
           role: String(row.role ?? ''),
           isPaid: Boolean(row.isPaid),
+          paidPayoutAuec:
+            row.paidPayoutAuec != null && Number.isFinite(Number(row.paidPayoutAuec))
+              ? Number(row.paidPayoutAuec)
+              : null,
         }))
       : [],
   }
