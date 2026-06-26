@@ -5,7 +5,7 @@ import {
   AUEC_SINGLE_TRANSFER_MAX,
   formatAuecFull,
 } from '../lib/auecTransferLimits'
-import { formatDfpRequiredPrice } from '../lib/dfp'
+import { formatDfpAuec } from '../lib/dfp'
 
 interface AuecTransferLimitModalProps {
   totalAuec: number
@@ -52,7 +52,7 @@ export default function AuecTransferLimitModal({
     >
       <div className="space-y-4">
         <p className="text-white text-sm">
-          This order total is <strong>{formatDfpRequiredPrice(totalAuec)}</strong>, which is more than the
+          This order total is <strong>{formatDfpAuec(totalAuec)}</strong>, which is more than the
           commonly reported per-transfer cap in Star Citizen.
         </p>
 

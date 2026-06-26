@@ -222,9 +222,3 @@ export function formatDfpAuec(value: number): string {
   if (!Number.isFinite(value) || value <= 0) return '—'
   return `${Math.round(value).toLocaleString()} aUEC`
 }
-
-export function formatDfpRequiredPrice(value: number): string {
-  const auec = formatDfpAuec(value)
-  if (auec === '—') return 'DFP —'
-  return `${auec} (DFP required)`
-}

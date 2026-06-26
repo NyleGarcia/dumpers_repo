@@ -11,7 +11,7 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import AppModal from '../components/layout/AppModal'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
-import { formatDfpRequiredPrice } from '../lib/dfp'
+import { formatDfpAuec } from '../lib/dfp'
 import { SITE_SLOGAN } from '../config/site'
 import { canRequesterModifyOrder } from '../lib/orderEdit'
 import { orderTotalDfp, pricingForBlueprintLine } from '../lib/orderPricing'
@@ -653,7 +653,7 @@ export default function CustomOrdersRoute() {
                       </span>
                       {dfpDisplayEnabled && totalDfp > 0 && (
                         <span className="px-2 py-0.5 rounded text-xs border bg-amber-950/50 text-amber-200 border-amber-500/30 font-medium">
-                          {formatDfpRequiredPrice(totalDfp)}
+                          {formatDfpAuec(totalDfp)}
                         </span>
                       )}
                       {order.min_fulfiller_reputation != null && (

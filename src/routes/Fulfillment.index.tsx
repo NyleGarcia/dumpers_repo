@@ -14,7 +14,7 @@ import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { SITE_SLOGAN } from '../config/site'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
-import { formatDfpAuec, formatDfpRequiredPrice } from '../lib/dfp'
+import { formatDfpAuec } from '../lib/dfp'
 import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import {
   fulfillerHasAllOrderBlueprints,
@@ -881,7 +881,7 @@ export default function FulfillmentRoute() {
                   <h3 className="text-white font-medium">{selectedOrder.title}</h3>
                   {dfpDisplayEnabled && orderTotalDfp(selectedOrder) > 0 && (
                     <p className="text-amber-200 text-sm font-medium mt-1">
-                      Required price: {formatDfpRequiredPrice(orderTotalDfp(selectedOrder))}
+                      {formatDfpAuec(orderTotalDfp(selectedOrder))}
                     </p>
                   )}
                 </div>

@@ -38,7 +38,6 @@ import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResou
 import {
   formatDfpAuec,
   formatDfpLabel,
-  formatDfpRequiredPrice,
   formatResourceOrderQualityLabel,
   isAmmoBlueprint,
 } from '../lib/dfp'
@@ -845,9 +844,9 @@ export default function ResourceBuyOrderPanel({
             </ul>
             {dfpDisplayEnabled && (
               <div className="px-3 py-3 bg-amber-950/30 border-t border-amber-500/20 flex justify-between">
-                <span className="text-amber-200 text-sm font-medium">Required total (DFP)</span>
+                <span className="text-amber-200 text-sm font-medium">Total</span>
                 <span className="text-amber-100 font-bold">
-                  {formatDfpRequiredPrice(cartTotalDfp)}
+                  {formatDfpAuec(cartTotalDfp)}
                 </span>
               </div>
             )}
