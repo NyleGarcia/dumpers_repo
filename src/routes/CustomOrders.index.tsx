@@ -38,6 +38,7 @@ import { buyerReputationFromRow, type MemberReputationRow } from '../lib/reputat
 import { isSemanticBuyer } from '../lib/listingType'
 import {
   archiveCustomOrderWithRating,
+  abandonCustomOrderFulfillment,
   confirmOrderPickup,
   deleteCustomOrderRequester,
   reportOrderDispute,
@@ -50,6 +51,11 @@ import {
   type CustomOrderStatus,
   type UserOrderLimits,
 } from '../lib/operations'
+import {
+  releaseOrderButtonLabel,
+  releaseOrderConfirmMessage,
+  shouldReleaseOrderToPool,
+} from '../lib/orderRelease'
 import { getDisplayName } from '../lib/supabase'
 
 const STATUS_STYLES: Record<string, string> = {
@@ -184,6 +190,21 @@ export default function CustomOrdersRoute() {
       return
     }
     await loadOrders()
+  }
+
+  const handleReleaseOrCancel = async (order: CustomOrder) => {
+    if (shouldReleaseOrderToPool(order, userId)) {
+      if (!window.confirm(releaseOrderConfirmMessage(order))) return
+      const result = await abandonCustomOrderFulfillment(order.id)
+      if (result.error) {
+        setError(result.error)
+        return
+      }
+      await loadOrders()
+      return
+    }
+
+    await handleStatusChange(order.id, 'cancelled')
   }
 
   const handleDeleteOrder = async (orderId: string) => {
@@ -738,12 +759,17 @@ export default function CustomOrdersRoute() {
                           </button>
                         </>
                       )}
-                      {OPEN_STATUSES.includes(order.status) && !canRequesterModifyOrder(order) && (
+                      {(shouldReleaseOrderToPool(order, userId) ||
+                        (OPEN_STATUSES.includes(order.status) &&
+                          !canRequesterModifyOrder(order) &&
+                          !shouldReleaseOrderToPool(order, userId) &&
+                          order.requester_id === userId &&
+                          order.listing_type !== 'wts')) && (
                         <button
-                          onClick={() => void handleStatusChange(order.id, 'cancelled')}
+                          onClick={() => void handleReleaseOrCancel(order)}
                           className="px-2 py-1 text-xs bg-slate-800 text-slate-400 border border-slate-600 rounded"
                         >
-                          Cancel
+                          {releaseOrderButtonLabel(order, userId)}
                         </button>
                       )}
                     </div>

@@ -691,7 +691,7 @@ export default function FulfillmentRoute() {
                               )}
                             </div>
                             <div className="mt-1">
-                              <OrderRequestLines order={order} blueprintById={blueprintById} />
+                              <OrderRequestLines order={order} blueprintById={blueprintById} showEffectiveStats />
                             </div>
                             {!meetsMinRep && (
                               <p className="text-amber-400/90 text-xs">
@@ -790,7 +790,7 @@ export default function FulfillmentRoute() {
                         )}
                       </p>
                       <div className="mt-2">
-                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
+                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
                       </div>
                       <div className="mt-2">
                         <ReputationBadge
@@ -831,7 +831,7 @@ export default function FulfillmentRoute() {
                   />
                 )}
 
-                <OrderRequestLines order={selectedOrder} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
+                <OrderRequestLines order={selectedOrder} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
                 <OrderDeadlineNotice order={selectedOrder} role="fulfiller" />
 
                 {selectedFulfillmentItems.length > 0 && (
@@ -965,7 +965,7 @@ export default function FulfillmentRoute() {
                             <span className="text-amber-300/90"> · {formatDfpAuec(totalDfp)}</span>
                           )}
                         </p>
-                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
+                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
                       </button>
                     )
                   })}
@@ -975,7 +975,7 @@ export default function FulfillmentRoute() {
               {selectedWtsSale && (
                 <div className="mt-4 p-4 bg-slate-900/60 border border-cyan-700/40 rounded-xl space-y-3">
                   <h3 className="text-white font-medium">{selectedWtsSale.title}</h3>
-                  <OrderRequestLines order={selectedWtsSale} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
+                  <OrderRequestLines order={selectedWtsSale} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
                   <button
                     type="button"
                     onClick={() => void handleAbandon(selectedWtsSale.id)}
@@ -1091,7 +1091,7 @@ export default function FulfillmentRoute() {
                             </p>
                           )}
                           <div className="mt-2">
-                            <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
+                            <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
                           </div>
                         </div>
                         {canArchive && (

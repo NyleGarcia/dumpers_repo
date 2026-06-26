@@ -15,6 +15,13 @@ import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/res
 import { formatQuantityForResource } from '../lib/resourceQuantity'
 import type { CustomOrder } from '../lib/operations'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
+import {
+  blueprintHasQualityModifiers,
+  computeBlueprintEffectiveModifiers,
+  resolveEffectiveSlotQualities,
+  type BlueprintForEffectiveStats,
+} from '../lib/blueprintEffectiveStats'
+import BlueprintEffectiveStatsSummary from './BlueprintEffectiveStatsSummary'
 
 function formatBlueprintQuality(line: OrderBlueprintLine): string {
   const sq = line.slotQualities
@@ -48,15 +55,25 @@ function getSlotQualityDetails(
   line: OrderBlueprintLine,
   blueprint?: BlueprintWithSlots
 ): SlotQualityDetail[] {
-  const sq = line.slotQualities
-  if (!sq || Object.keys(sq).length === 0) return []
+  if (!blueprint?.slots?.length) return []
 
-  return Object.entries(sq)
+  const effectiveQualities = resolveEffectiveSlotQualities(
+    blueprint as BlueprintForEffectiveStats,
+    line.slotQualities,
+    line.minQuality
+  )
+
+  return Object.entries(effectiveQualities)
     .map(([idx, quality]) => {
       const slotIndex = Number(idx)
-      const slot = blueprint?.slots?.[slotIndex]
+      const slot = blueprint.slots?.[slotIndex]
       const slotName = slot?.slotDisplayName || `Slot ${slotIndex + 1}`
-      const resourceName = slot?.options?.[0]?.resourceName || slot?.options?.[0]?.entityName || slot?.options?.[0]?.displayName || slot?.options?.[0]?.itemName || ''
+      const resourceName =
+        slot?.options?.[0]?.resourceName ||
+        slot?.options?.[0]?.entityName ||
+        slot?.options?.[0]?.displayName ||
+        slot?.options?.[0]?.itemName ||
+        ''
       return { slotIndex, slotName, resourceName, quality: Number(quality) }
     })
     .sort((a, b) => a.slotIndex - b.slotIndex)
@@ -66,6 +83,8 @@ interface OrderRequestLinesProps {
   order: CustomOrder
   showDfp?: boolean
   blueprintById?: Map<string, BlueprintWithSlots>
+  /** When true, show resulting stat modifiers for blueprint lines (fulfillment / WTS). */
+  showEffectiveStats?: boolean
 }
 
 export function orderKindLabel(order: CustomOrder): string {
@@ -79,6 +98,7 @@ export default function OrderRequestLines({
   order,
   showDfp = true,
   blueprintById,
+  showEffectiveStats = false,
 }: OrderRequestLinesProps) {
   const blueprintLines = useMemo(() => resolveOrderBlueprintLines(order), [order])
   const resourceLines = useMemo(() => resolveOrderResourceLines(order), [order])
@@ -120,7 +140,19 @@ export default function OrderRequestLines({
           const hasMixedQuality = isMixedQuality(line)
           const isExpanded = expandedLines.has(lineKey)
           const blueprint = blueprintById?.get(line.blueprintId)
-          const slotDetails = hasMixedQuality ? getSlotQualityDetails(line, blueprint) : []
+          const blueprintStats = blueprint as BlueprintForEffectiveStats | undefined
+          const slotDetails = getSlotQualityDetails(line, blueprint)
+          const hasSlotDetails = slotDetails.length > 0
+          const effectiveModifiers =
+            showEffectiveStats &&
+            blueprintStats &&
+            blueprintHasQualityModifiers(blueprintStats)
+              ? computeBlueprintEffectiveModifiers(
+                  blueprintStats,
+                  line.slotQualities,
+                  line.minQuality
+                )
+              : []
 
           return (
             <li key={lineKey} className="text-slate-400 text-xs">
@@ -130,21 +162,24 @@ export default function OrderRequestLines({
                 <span className={hasMixedQuality ? 'text-orange-300' : ''}>
                   · {formatBlueprintQuality(line)}
                 </span>
-                {hasMixedQuality && slotDetails.length > 0 && (
+                {hasSlotDetails && (
                   <button
                     type="button"
                     onClick={() => toggleExpanded(lineKey)}
-                    className="text-orange-400 hover:text-orange-300 text-[10px] underline"
+                    className="text-slate-500 hover:text-slate-400 text-[10px] underline"
                   >
-                    {isExpanded ? 'hide' : 'details'}
+                    {isExpanded ? 'hide materials' : 'materials'}
                   </button>
                 )}
                 {showDfp && line.lineDfpAuec > 0 && (
                   <span className="text-amber-300/90">· {formatDfpAuec(line.lineDfpAuec)}</span>
                 )}
               </div>
-              {isExpanded && slotDetails.length > 0 && (
-                <div className="mt-1 ml-3 pl-2 border-l border-orange-500/30 space-y-0.5">
+              {effectiveModifiers.length > 0 && (
+                <BlueprintEffectiveStatsSummary modifiers={effectiveModifiers} compact />
+              )}
+              {isExpanded && hasSlotDetails && (
+                <div className="mt-1 ml-3 pl-2 border-l border-slate-600/40 space-y-0.5">
                   {slotDetails.map((detail) => (
                     <div key={detail.slotIndex} className="text-[11px]">
                       <span className="text-slate-500">{detail.slotName}</span>

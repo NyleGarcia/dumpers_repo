@@ -24,6 +24,12 @@ import {
   isUniformSlotQuality,
   mergeSlotQualities,
 } from '../lib/blueprintQuality'
+import {
+  blueprintHasQualityModifiers,
+  computeBlueprintEffectiveModifiers,
+  type BlueprintForEffectiveStats,
+} from '../lib/blueprintEffectiveStats'
+import BlueprintEffectiveStatsSummary from './BlueprintEffectiveStatsSummary'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
@@ -212,6 +218,13 @@ export default function ResourceBuyOrderPanel({
     const qty = Math.max(1, Number(bpQty) || 1)
     return pricingForBlueprintLine(selectedBlueprint, effectiveBpSlotQualities, qty)
   }, [selectedBlueprint, selectedIsAmmo, effectiveBpSlotQualities, bpQty])
+
+  const selectedBlueprintEffectiveModifiers = useMemo(() => {
+    if (!selectedBlueprint || selectedIsAmmo) return []
+    const bp = selectedBlueprint as BlueprintForEffectiveStats
+    if (!blueprintHasQualityModifiers(bp)) return []
+    return computeBlueprintEffectiveModifiers(bp, effectiveBpSlotQualities)
+  }, [selectedBlueprint, selectedIsAmmo, effectiveBpSlotQualities])
   const selectedResource = activeCatalog.find((r) => r.resource_key === resourceKey)
   const selectedResourceLabel = selectedResource?.label ?? ''
   const selectedResIsSalvage = selectedResource
@@ -527,6 +540,11 @@ export default function ResourceBuyOrderPanel({
                         compact
                       />
                     ))}
+                    {selectedBlueprintEffectiveModifiers.length > 0 && (
+                      <BlueprintEffectiveStatsSummary
+                        modifiers={selectedBlueprintEffectiveModifiers}
+                      />
+                    )}
                   </div>
                 )}
                 <div className={`grid gap-2 ${selectedIsAmmo ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'}`}>
