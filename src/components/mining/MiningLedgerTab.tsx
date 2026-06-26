@@ -510,15 +510,15 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
     const mul = dir === 'asc' ? 1 : -1
 
     return [...indexed].sort((a, b) => {
-      let cmp = 0
-      if (key === 'resource') {
-        cmp = a.row.resourceLabel.localeCompare(b.row.resourceLabel, undefined, {
-          sensitivity: 'base',
-        })
-        if (cmp === 0) cmp = a.row.resourceKey.localeCompare(b.row.resourceKey)
-      } else {
-        cmp = a.row.quality - b.row.quality
-      }
+      const cmp =
+        key === 'resource'
+          ? (() => {
+              const byLabel = a.row.resourceLabel.localeCompare(b.row.resourceLabel, undefined, {
+                sensitivity: 'base',
+              })
+              return byLabel !== 0 ? byLabel : a.row.resourceKey.localeCompare(b.row.resourceKey)
+            })()
+          : a.row.quality - b.row.quality
       if (cmp !== 0) return cmp * mul
       return a.index - b.index
     })
