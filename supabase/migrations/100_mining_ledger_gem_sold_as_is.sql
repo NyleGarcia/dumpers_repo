@@ -1,4 +1,4 @@
--- Gems: whole-unit count × price per gem (no cSCU ÷ 100).
+-- Gems sold as-is: count from unrefinedCscu only (no yieldActual, no refine factor).
 
 CREATE OR REPLACE FUNCTION public.mining_ledger_ore_profit_actual_total(p_data jsonb)
 RETURNS numeric

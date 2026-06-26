@@ -152,9 +152,14 @@ export function yieldEstimateFromUnrefined(
   unrefinedCscu: number
 ): number {
   if (isGemResource(resourceKey)) {
-    return Math.max(0, Math.trunc(unrefinedCscu))
+    return gemCountFromRow(unrefinedCscu)
   }
   return Math.round(unrefinedCscu * MINING_LEDGER_YIELD_FACTOR)
+}
+
+/** Whole gems sold as-is — no unrefined/refined split. */
+export function gemCountFromRow(unrefinedCscu: number): number {
+  return Math.max(0, Math.trunc(unrefinedCscu))
 }
 
 /**
@@ -242,18 +247,32 @@ export function seedCrewMemberOnce(
 export function computeMiningLedger(data: MiningLedgerData): MiningLedgerComputed {
   const miningRows: MiningRowComputed[] = data.miningRows.map((row) => {
     const isGem = isGemResource(row.resourceKey)
-    const yieldEst = yieldEstimateFromUnrefined(row.resourceKey, row.unrefinedCscu)
-    const yieldAct =
-      row.yieldActual != null
-        ? isGem
-          ? Math.max(0, Math.trunc(row.yieldActual))
-          : row.yieldActual
-        : yieldEst
     const pricePer100 = resolvePricePer100(
       row.resourceKey,
       row.resourceLabel,
       data.priceOverrides
     )
+
+    if (isGem) {
+      const count = gemCountFromRow(row.unrefinedCscu)
+      const profit = profitFromRowYield(row.resourceKey, count, pricePer100)
+      return {
+        id: row.id,
+        resourceKey: row.resourceKey,
+        resourceLabel: row.resourceLabel,
+        quality: row.quality,
+        isGem,
+        unrefinedCscu: count,
+        yieldEstimate: count,
+        yieldActual: count,
+        profitEstimate: profit,
+        profitActual: profit,
+        pricePer100,
+      }
+    }
+
+    const yieldEst = yieldEstimateFromUnrefined(row.resourceKey, row.unrefinedCscu)
+    const yieldAct = row.yieldActual ?? yieldEst
     return {
       id: row.id,
       resourceKey: row.resourceKey,

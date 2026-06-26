@@ -24,10 +24,7 @@ BEGIN
         'aphorite', 'beradom', 'carinite', 'dolivine', 'feynmaline',
         'glacosite', 'hadanite', 'janalite', 'sadaryx'
       ) THEN
-        v_yield := COALESCE(
-          NULLIF(trim(elem->>'yieldActual'), '')::numeric,
-          trunc(COALESCE((elem->>'unrefinedCscu')::numeric, 0))
-        );
+        v_yield := trunc(COALESCE((elem->>'unrefinedCscu')::numeric, 0));
       ELSE
         v_yield := COALESCE(
           NULLIF(trim(elem->>'yieldActual'), '')::numeric,
