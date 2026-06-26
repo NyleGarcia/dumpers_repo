@@ -22,6 +22,8 @@ import {
   toMilliScu,
 } from './resourceQuantity'
 
+import type { BlueprintLineSnapshot } from './blueprintEffectiveStats'
+
 export interface OrderBlueprintLine {
   blueprintId: string
   blueprintTitle: string
@@ -30,6 +32,7 @@ export interface OrderBlueprintLine {
   quantity: number
   unitDfpAuec: number
   lineDfpAuec: number
+  lineSnapshot?: BlueprintLineSnapshot | null
 }
 
 export interface OrderResourceLine {
@@ -73,6 +76,7 @@ export function resolveOrderBlueprintLines(order: CustomOrder): OrderBlueprintLi
         quantity: row.quantity,
         unitDfpAuec: Number(row.unit_dfp_auec),
         lineDfpAuec: Number(row.line_dfp_auec),
+        lineSnapshot: row.line_snapshot ?? null,
       }))
   }
 

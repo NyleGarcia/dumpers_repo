@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import BlueprintTypeahead from './BlueprintTypeahead'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
@@ -26,10 +26,12 @@ import {
 } from '../lib/blueprintQuality'
 import {
   blueprintHasQualityModifiers,
+  buildBlueprintLineSnapshot,
   computeBlueprintEffectiveModifiers,
   type BlueprintForEffectiveStats,
 } from '../lib/blueprintEffectiveStats'
 import BlueprintEffectiveStatsSummary from './BlueprintEffectiveStatsSummary'
+import CartBlueprintLineEditor from './CartBlueprintLineEditor'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
@@ -103,6 +105,23 @@ function formatSlotQualityLabel(line: CartBlueprintLine): string {
   return formatSlotQualitySummary(line.slotQualities)
 }
 
+function CartBlueprintLineStats({
+  line,
+  blueprintById,
+}: {
+  line: CartBlueprintLine
+  blueprintById: Map<string, BlueprintWithSlots>
+}) {
+  const modifiers = useMemo(() => {
+    const bp = blueprintById.get(line.blueprintId) as BlueprintForEffectiveStats | undefined
+    if (!bp || !blueprintHasQualityModifiers(bp)) return []
+    return computeBlueprintEffectiveModifiers(bp, line.slotQualities, line.minQuality)
+  }, [blueprintById, line.blueprintId, line.slotQualities, line.minQuality])
+
+  if (modifiers.length === 0) return null
+  return <BlueprintEffectiveStatsSummary modifiers={modifiers} compact />
+}
+
 export default function ResourceBuyOrderPanel({
   userId,
   blueprints,
@@ -147,6 +166,7 @@ export default function ResourceBuyOrderPanel({
     message: string
   }>({ show: false, message: '' })
   const [pendingListingType, setPendingListingType] = useState<'wtb' | 'wts'>('wtb')
+  const [expandedCartKey, setExpandedCartKey] = useState<string | null>(null)
 
   useEffect(() => {
     if (!editOrder) return
@@ -174,12 +194,21 @@ export default function ResourceBuyOrderPanel({
     )
   }, [editOrder])
 
-  // Initialize cart from draft items
+  // Initialize cart from draft items (consume session draft once loaded into cart)
+  const draftConsumedRef = useRef(false)
   useEffect(() => {
-    if (editOrder || !initialBlueprintLines || initialBlueprintLines.length === 0) return
+    if (editOrder || !initialBlueprintLines || initialBlueprintLines.length === 0) {
+      draftConsumedRef.current = false
+      return
+    }
+    if (draftConsumedRef.current) return
+
+    draftConsumedRef.current = true
     setBpCart(initialBlueprintLines)
     setMode('blueprint')
-  }, [editOrder, initialBlueprintLines])
+    setExpandedCartKey(initialBlueprintLines[0]?.cartKey ?? null)
+    onDraftCleared?.()
+  }, [editOrder, initialBlueprintLines, onDraftCleared])
 
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
@@ -301,10 +330,11 @@ export default function ResourceBuyOrderPanel({
     const pricing = selectedIsAmmo
       ? pricingForBlueprintLine(selectedBlueprint, {}, qty)
       : pricingForBlueprintLine(selectedBlueprint, effectiveBpSlotQualities, qty)
+    const cartKey = nextCartKey()
     setBpCart((prev) => [
       ...prev,
       {
-        cartKey: nextCartKey(),
+        cartKey,
         blueprintId: selectedBlueprint.internalName,
         blueprintTitle: selectedBlueprint.blueprintName || selectedBlueprint.internalName,
         minQuality: pricing.orderMinQuality,
@@ -314,7 +344,40 @@ export default function ResourceBuyOrderPanel({
         lineDfpAuec: pricing.lineDfpAuec,
       },
     ])
+    setExpandedCartKey(cartKey)
     setBpQty('1')
+  }
+
+  const updateBlueprintCartLine = (
+    cartKey: string,
+    updates: Partial<CartBlueprintLine>
+  ) => {
+    setBpCart((prev) =>
+      prev.map((line) => (line.cartKey === cartKey ? { ...line, ...updates } : line))
+    )
+  }
+
+  const removeBlueprintCartLine = (cartKey: string) => {
+    setBpCart((prev) => prev.filter((l) => l.cartKey !== cartKey))
+    if (expandedCartKey === cartKey) setExpandedCartKey(null)
+  }
+
+  const blueprintPayloadFromCart = (line: CartBlueprintLine) => {
+    const bp = blueprintById.get(line.blueprintId) as BlueprintForEffectiveStats | undefined
+    const lineSnapshot =
+      bp && !isAmmoBlueprint(bp)
+        ? buildBlueprintLineSnapshot(bp, line.slotQualities, line.minQuality)
+        : null
+    return {
+      blueprintId: line.blueprintId,
+      blueprintTitle: line.blueprintTitle,
+      minQuality: line.minQuality,
+      slotQualities: line.slotQualities,
+      quantity: line.quantity,
+      unitDfpAuec: line.unitDfpAuec,
+      lineDfpAuec: line.lineDfpAuec,
+      lineSnapshot,
+    }
   }
 
   const addResource = () => {
@@ -356,15 +419,7 @@ export default function ResourceBuyOrderPanel({
       notes,
       totalDfpAuec: cartTotalDfp,
       minFulfillerReputation: minFulfillerRep ? Number(minFulfillerRep) : null,
-      blueprints: bpCart.map((line) => ({
-        blueprintId: line.blueprintId,
-        blueprintTitle: line.blueprintTitle,
-        minQuality: line.minQuality,
-        slotQualities: line.slotQualities,
-        quantity: line.quantity,
-        unitDfpAuec: line.unitDfpAuec,
-        lineDfpAuec: line.lineDfpAuec,
-      })),
+      blueprints: bpCart.map((line) => blueprintPayloadFromCart(line)),
       resources: resCart.map((line) => ({
         resourceKey: line.resourceKey,
         resourceLabel: line.resourceLabel,
@@ -689,30 +744,67 @@ export default function ResourceBuyOrderPanel({
 
         {(bpCart.length > 0 || resCart.length > 0) && (
           <div className="border border-slate-700 rounded-xl overflow-hidden">
-            <ul className="divide-y divide-slate-800">
+            <div className="px-3 py-2 bg-slate-900/60 border-b border-slate-800">
+              <p className="text-slate-400 text-xs font-medium uppercase tracking-wide">
+                Order lines ({bpCart.length + resCart.length})
+              </p>
+            </div>
+            <ul className="divide-y divide-slate-800 p-2 space-y-2">
               {bpCart.map((line) => {
+                const blueprint = blueprintById.get(line.blueprintId)
+                const isExpanded = expandedCartKey === line.cartKey
                 const isMixed = line.slotQualities && !isUniformSlotQuality(line.slotQualities)
+
+                if (isExpanded && blueprint) {
+                  return (
+                    <li key={line.cartKey}>
+                      <CartBlueprintLineEditor
+                        line={line}
+                        blueprint={blueprint}
+                        showDfp={dfpDisplayEnabled}
+                        onUpdate={updateBlueprintCartLine}
+                        onRemove={removeBlueprintCartLine}
+                        onCollapse={() => setExpandedCartKey(null)}
+                      />
+                    </li>
+                  )
+                }
+
                 return (
                   <li
                     key={line.cartKey}
-                    className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40"
+                    className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40 rounded-lg"
                   >
-                    <span className="text-white flex-1 min-w-0">
-                      <span className="block">{line.blueprintTitle} × {line.quantity}</span>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-white block">
+                        {line.blueprintTitle} × {line.quantity}
+                      </span>
                       <span className={`text-xs ${isMixed ? 'text-orange-300' : 'text-slate-400'}`}>
                         {formatSlotQualityLabel(line)}
                       </span>
-                    </span>
-                    {dfpDisplayEnabled && (
-                      <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => setBpCart((p) => p.filter((l) => l.cartKey !== line.cartKey))}
-                      className="text-red-400 text-xs"
-                    >
-                      ×
-                    </button>
+                      <CartBlueprintLineStats line={line} blueprintById={blueprintById} />
+                    </div>
+                    <div className="flex flex-col items-end gap-1 shrink-0 self-start">
+                      {dfpDisplayEnabled && (
+                        <span className="text-amber-300 text-xs">
+                          {formatDfpAuec(line.lineDfpAuec)}
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCartKey(line.cartKey)}
+                        className="text-orange-400 hover:text-orange-300 text-xs underline"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeBlueprintCartLine(line.cartKey)}
+                        className="text-red-400 text-xs"
+                      >
+                        ×
+                      </button>
+                    </div>
                   </li>
                 )
               })}

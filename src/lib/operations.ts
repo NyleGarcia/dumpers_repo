@@ -78,6 +78,12 @@ export interface CustomOrderBlueprint {
   blueprint_title: string | null
   min_quality: number
   slot_qualities: Record<number, number> | null
+  line_snapshot?: { slotSummary: string; stats: Array<{
+    propertyLabel: string
+    percentChange: number
+    baseValue?: number
+    finalValue?: number
+  }> } | null
   quantity: number
   unit_dfp_auec: number
   line_dfp_auec: number
@@ -92,6 +98,15 @@ export interface CustomOrderBlueprintInput {
   quantity: number
   unitDfpAuec: number
   lineDfpAuec: number
+  lineSnapshot?: {
+    slotSummary: string
+    stats: Array<{
+      propertyLabel: string
+      percentChange: number
+      baseValue?: number
+      finalValue?: number
+    }>
+  } | null
 }
 
 export interface CustomOrder {
@@ -682,6 +697,7 @@ export async function createCustomOrder(input: {
       blueprint_title: bp.blueprintTitle,
       min_quality: bp.minQuality,
       slot_qualities: bp.slotQualities ?? null,
+      line_snapshot: bp.lineSnapshot ?? null,
       quantity: bp.quantity,
       unit_dfp_auec: Math.round(bp.unitDfpAuec),
       line_dfp_auec: Math.round(bp.lineDfpAuec),
@@ -780,6 +796,7 @@ export async function updateCustomOrderRequester(input: {
       blueprint_title: bp.blueprintTitle,
       min_quality: bp.minQuality,
       slot_qualities: bp.slotQualities ?? null,
+      line_snapshot: bp.lineSnapshot ?? null,
       quantity: bp.quantity,
       unit_dfp_auec: Math.round(bp.unitDfpAuec),
       line_dfp_auec: Math.round(bp.lineDfpAuec),

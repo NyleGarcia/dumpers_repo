@@ -3,8 +3,22 @@ import type { BlueprintWithSlots } from './blueprintResources'
 import {
   aggregateModifiers,
   calculateSlotModifiers,
+  formatStatValue,
+  type AggregatedModifier,
   type RawModifier,
 } from './qualityModifiers'
+
+export interface StoredEffectiveStat {
+  propertyLabel: string
+  percentChange: number
+  baseValue?: number
+  finalValue?: number
+}
+
+export interface BlueprintLineSnapshot {
+  slotSummary: string
+  stats: StoredEffectiveStat[]
+}
 
 export interface BlueprintForEffectiveStats extends BlueprintWithSlots {
   vehicleBaseStats?: Record<string, number | null>
@@ -85,4 +99,78 @@ export function computeBlueprintEffectiveModifiers(
   })
 
   return aggregateModifiers(allSlotModifiers, mergedBaseStats)
+}
+
+export function serializeEffectiveStats(modifiers: AggregatedModifier[]): StoredEffectiveStat[] {
+  return modifiers.map((mod) => ({
+    propertyLabel: mod.propertyLabel,
+    percentChange: Math.round(mod.percentChange * 10) / 10,
+    ...(mod.baseValue !== undefined && mod.finalValue !== undefined
+      ? { baseValue: mod.baseValue, finalValue: mod.finalValue }
+      : {}),
+  }))
+}
+
+export function formatStoredStatLine(stat: StoredEffectiveStat): string {
+  const pct =
+    stat.percentChange >= 0
+      ? `+${stat.percentChange.toFixed(1)}%`
+      : `${stat.percentChange.toFixed(1)}%`
+  if (stat.baseValue !== undefined && stat.finalValue !== undefined) {
+    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue)} → ${formatStatValue(stat.finalValue)} (${pct})`
+  }
+  return `${stat.propertyLabel}: ${pct}`
+}
+
+/** Discord/markdown-friendly single stat (no property label prefix when used in list). */
+export function formatStoredStatCompact(stat: StoredEffectiveStat): string {
+  const pct =
+    stat.percentChange >= 0
+      ? `+${stat.percentChange.toFixed(1)}%`
+      : `${stat.percentChange.toFixed(1)}%`
+  if (stat.baseValue !== undefined && stat.finalValue !== undefined) {
+    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue)}→${formatStatValue(stat.finalValue)} (${pct})`
+  }
+  return `${stat.propertyLabel}: ${pct}`
+}
+
+export function buildBlueprintLineSnapshot(
+  blueprint: BlueprintForEffectiveStats,
+  slotQualities?: Record<number, number> | null,
+  minQuality?: number
+): BlueprintLineSnapshot {
+  const effectiveQualities = resolveEffectiveSlotQualities(
+    blueprint,
+    slotQualities,
+    minQuality
+  )
+  const slotSummary = Object.entries(effectiveQualities)
+    .sort(([a], [b]) => Number(a) - Number(b))
+    .map(([idx, quality]) => {
+      const slotIndex = Number(idx)
+      const slot = blueprint.slots?.[slotIndex]
+      const slotName = slot?.slotDisplayName || `Slot ${slotIndex + 1}`
+      const resourceName =
+        slot?.options?.[0]?.resourceName ||
+        slot?.options?.[0]?.entityName ||
+        slot?.options?.[0]?.displayName ||
+        slot?.options?.[0]?.itemName ||
+        ''
+      return resourceName
+        ? `${slotName} (${resourceName}) Q${quality}`
+        : `${slotName} Q${quality}`
+    })
+    .join(' · ')
+
+  const modifiers = computeBlueprintEffectiveModifiers(blueprint, slotQualities, minQuality)
+  return {
+    slotSummary,
+    stats: serializeEffectiveStats(modifiers),
+  }
+}
+
+export function statsFromLineSnapshot(
+  snapshot?: BlueprintLineSnapshot | null
+): StoredEffectiveStat[] {
+  return snapshot?.stats ?? []
 }
