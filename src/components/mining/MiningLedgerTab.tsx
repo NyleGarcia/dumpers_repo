@@ -345,7 +345,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
   const handleExport = useCallback(() => {
     if (!activeId) return
     const payload = buildLedgerExportJson(activeId, ledgerName, data, computed)
-    const safeName = ledgerName.replace(/[^\w\-]+/g, '_').slice(0, 40) || 'ledger'
+    const safeName = ledgerName.replace(/[^\w-]+/g, '_').slice(0, 40) || 'ledger'
     downloadLedgerJson(payload, `mining-ledger-${safeName}-${shortLedgerId(activeId)}.json`)
   }, [activeId, ledgerName, data, computed])
 
