@@ -31,6 +31,7 @@ export const OFFLINE_MODE_SECTION = {
   membersOnly: [
     'Custom Orders — post WTB buy requests and WTS sell listings (partial OK by default)',
     'Fulfillment — browse, accept full or partial WTS buys, and complete trades',
+    'Mining Ledger — crew payout tracking (requires verified RSI Handle on your account)',
     'View member directory / browse collections',
     'Cross-device data sync',
   ],

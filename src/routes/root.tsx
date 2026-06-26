@@ -35,7 +35,14 @@ const miningTrackerRoute = createRoute({
     ore: typeof search.ore === 'string' ? search.ore : undefined,
     location: typeof search.location === 'string' ? search.location : undefined,
     add: search.add === true || search.add === 'true' || search.add === '1',
-    view: search.view === 'guide' ? 'guide' : search.view === 'tracker' ? 'tracker' : undefined,
+    view:
+      search.view === 'guide'
+        ? 'guide'
+        : search.view === 'ledger'
+          ? 'ledger'
+          : search.view === 'tracker'
+            ? 'tracker'
+            : undefined,
   }),
 })
 

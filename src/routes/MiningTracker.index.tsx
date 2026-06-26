@@ -35,6 +35,7 @@ import {
 import { isBroadGuideLocation } from '../lib/miningLocationAliases'
 import TrackOreButtons from '../components/TrackOreButton'
 import SiteTooltip from '../components/SiteTooltip'
+import MiningLedgerTab from '../components/mining/MiningLedgerTab'
 import {
   guideLocationChipTooltip,
   guideLocationOreTooltip,
@@ -54,7 +55,7 @@ import {
 import { formatHandMineableHabitatAtSite } from '../lib/handMineableHabitats'
 import type { DepositType } from '../lib/localGuestCache'
 
-type ViewMode = 'tracker' | 'guide'
+type ViewMode = 'tracker' | 'guide' | 'ledger'
 
 const miningTrackerRoute = getRouteApi('/mining-tracker')
 
@@ -114,6 +115,8 @@ export default function MiningTrackerRoute() {
       setSelectedOreName('')
     } else if (search.view === 'guide') {
       setViewMode('guide')
+    } else if (search.view === 'ledger') {
+      setViewMode('ledger')
     }
   }, [search.view])
 
@@ -206,9 +209,12 @@ export default function MiningTrackerRoute() {
   return (
     <FeaturePageLayout
       title="Mining Tracker"
-      subtitle={viewMode === 'tracker' 
-        ? 'Cluster RS reference with spawn-weighted chance % for ores you are hunting.'
-        : 'Browse all ores by rarity or find ores at specific locations.'
+      subtitle={
+        viewMode === 'tracker'
+          ? 'Cluster RS reference with spawn-weighted chance % for ores you are hunting.'
+          : viewMode === 'guide'
+            ? 'Browse all ores by rarity or find ores at specific locations.'
+            : 'Track mining crew shares, payouts, and paid status for your runs.'
       }
       badge={isGuestPreview ? 'Local only' : undefined}
       meta={
@@ -264,14 +270,24 @@ export default function MiningTrackerRoute() {
         >
           Mining Guide
         </button>
+        <button
+          onClick={() => setViewMode('ledger')}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+            viewMode === 'ledger'
+              ? 'site-filter-selected-orange'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          Ledger
+        </button>
       </div>
-      {loading && (
+      {loading && viewMode !== 'ledger' && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
         </div>
       )}
 
-      {error && (
+      {error && viewMode !== 'ledger' && (
         <div className="text-center py-12">
           <p className="text-slate-400 mb-4">{error}</p>
           <button
@@ -457,6 +473,10 @@ export default function MiningTrackerRoute() {
             )}
           </section>
         </div>
+      )}
+
+      {viewMode === 'ledger' && (
+        <MiningLedgerTab isGuestPreview={isGuestPreview} />
       )}
 
       {/* Mining Guide View */}
