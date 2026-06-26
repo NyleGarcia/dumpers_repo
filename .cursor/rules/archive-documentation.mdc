@@ -10,12 +10,25 @@ When adding new features or modifying existing features, check and update the In
 ## What to Update
 
 The Archive documentation lives in:
-- `src/components/archive/ArchiveWelcome.tsx` - Main site guide with page explanations
+- `src/lib/archiveGuide/pageGuides.ts` — page-by-page `PAGE_GUIDES` entries
+- `src/lib/archiveGuide/welcomeSections.ts` — welcome sections (rules, tips, DFP, etc.)
+- `src/components/archive/ArchiveWelcome.tsx` — renders the welcome guide (icons in `PAGE_GUIDE_ICONS`)
+- `public/archive-guide.html` — **printable offline guide** (auto-generated; do not edit by hand)
+
+After updating archive content, run:
+
+```bash
+npm run generate-archive-guide
+```
+
+This regenerates `public/archive-guide.html` with working `#anchor` navigation, no site URLs, and content suitable for Save-as-PDF offline.
 
 ### When Adding a New Feature
 
-1. Add an entry to `PAGE_GUIDES` array in `ArchiveWelcome.tsx` if the feature is user-facing
-2. Include: `id`, `title`, `icon` (SVG), `description`, `details` array, and `relatesTo` array
+1. Add an entry to `PAGE_GUIDES` in `src/lib/archiveGuide/pageGuides.ts` if the feature is user-facing
+2. Add a matching icon in `PAGE_GUIDE_ICONS` inside `ArchiveWelcome.tsx`
+3. Include: `id`, `title`, `description`, `details` array, and `relatesTo` array
+4. Run `npm run generate-archive-guide`
 3. Keep descriptions focused on **what members can do**, not technical implementation
 
 ### When Modifying Existing Features
@@ -63,3 +76,4 @@ Before completing a feature implementation, verify:
 - [ ] If yes, is there a `PAGE_GUIDES` entry for it?
 - [ ] Does the entry accurately describe current behavior?
 - [ ] Are related features listed in `relatesTo`?
+- [ ] Did you run `npm run generate-archive-guide` so the printable HTML stays in sync?

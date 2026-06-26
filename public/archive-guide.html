@@ -10,14 +10,11 @@
       --slate-900: #0f172a;
       --slate-800: #1e293b;
       --slate-700: #334155;
-      --slate-600: #475569;
       --slate-500: #64748b;
       --slate-400: #94a3b8;
       --slate-300: #cbd5e1;
     }
-    
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #0f172a;
@@ -27,576 +24,273 @@
       max-width: 900px;
       margin: 0 auto;
     }
-    
     @media print {
       body { background: white; color: #1e293b; padding: 0; }
       .page-break { page-break-before: always; }
-      a { color: inherit; text-decoration: none; }
+      a[href^="#"] { color: inherit; text-decoration: none; }
       .no-print { display: none; }
     }
-    
     h1 { color: var(--orange); font-size: 2rem; margin-bottom: 0.5rem; }
     h2 { color: var(--orange); font-size: 1.5rem; margin: 2rem 0 1rem; border-bottom: 1px solid var(--slate-700); padding-bottom: 0.5rem; }
     h3 { color: #fbbf24; font-size: 1.1rem; margin: 1.5rem 0 0.75rem; }
     h4 { color: var(--slate-300); font-size: 1rem; margin: 1rem 0 0.5rem; }
-    
     p { margin-bottom: 1rem; }
-    
     .subtitle { color: var(--slate-400); font-size: 1rem; margin-bottom: 2rem; }
-    
+    .meta { color: var(--slate-500); font-size: 0.85rem; margin-bottom: 1.5rem; }
     .toc { background: var(--slate-800); border: 1px solid var(--slate-700); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; }
     .toc h3 { margin-top: 0; color: var(--slate-300); }
-    .toc ul { list-style: none; }
+    .toc ul { list-style: none; margin: 0; }
     .toc li { margin: 0.5rem 0; }
     .toc a { color: var(--orange); text-decoration: none; }
-    .toc a:hover { text-decoration: underline; }
-    
     .section { background: var(--slate-800); border: 1px solid var(--slate-700); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
-    .section.highlight { border-color: var(--orange); background: linear-gradient(to bottom right, var(--slate-800), #431407); }
-    
+    .section.highlight { border-color: var(--orange); }
     ul, ol { margin: 1rem 0 1rem 1.5rem; }
     li { margin: 0.5rem 0; }
-    
     .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0; }
     @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-    
-    .card { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--slate-700); border-radius: 8px; padding: 1rem; }
+    .card { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--slate-700); border-radius: 8px; padding: 1rem; margin: 1rem 0; }
     .card.green { border-color: #22c55e40; }
-    .card.amber { border-color: #f59e0b40; }
-    .card.blue { border-color: #3b82f640; }
-    .card.red { border-color: #ef444440; }
-    .card.purple { border-color: #a855f740; }
-    
-    .card h4 { margin-top: 0; }
     .card.green h4 { color: #4ade80; }
+    .card.amber { border-color: #f59e0b40; }
     .card.amber h4 { color: #fbbf24; }
+    .card.blue { border-color: #3b82f640; }
     .card.blue h4 { color: #60a5fa; }
+    .card.red { border-color: #ef444440; }
     .card.red h4 { color: #f87171; }
+    .card.purple { border-color: #a855f740; }
     .card.purple h4 { color: #c084fc; }
-    
     .note { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1rem; margin: 1rem 0; }
     .note.warning { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); }
     .note.danger { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); }
-    
-    .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-    .badge.orange { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
-    
-    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--slate-700); }
-    th { color: var(--slate-400); font-weight: 500; }
-    
-    .external-link { color: var(--slate-400); font-style: italic; }
-    
     hr { border: none; border-top: 1px solid var(--slate-700); margin: 2rem 0; }
-    
     footer { text-align: center; color: var(--slate-500); font-size: 0.8rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--slate-700); }
   </style>
 </head>
 <body>
 
 <h1>Dumper's Repo</h1>
-<p class="subtitle">Complete Archive Guide - A community-driven platform for Star Citizen crafting, resource tracking, and fair-value pricing.</p>
+<p class="subtitle">A community-driven platform for Star Citizen crafting, resource tracking, and fair-value pricing.</p>
+<p class="meta">Printable archive guide · Generated 2026-06-26 · Use the table of contents for offline navigation</p>
 
 <nav class="toc">
   <h3>Table of Contents</h3>
   <ul>
     <li><a href="#about">What is Dumper's Repo?</a></li>
-    <li><a href="#offline">Offline Mode</a></li>
+    <li><a href="#offline-mode">Offline Mode</a></li>
     <li><a href="#dfp">Why Dumper's Fair-Value Price (DFP)?</a></li>
     <li><a href="#ratings">Buyer &amp; Fulfiller Ratings</a></li>
-    <li><a href="#reputation">Building Your Reputation</a></li>
+    <li><a href="#pending-rep">Building Your Reputation</a></li>
     <li><a href="#order-rules">Order System Rules</a></li>
-    <li><a href="#protection">Protecting Yourself in Trades</a></li>
-    <li><a href="#pages">Page-by-Page Guide</a></li>
-    <li><a href="#mining">Mining Guide Reference</a></li>
-    <li><a href="#components">Component Database Reference</a></li>
-    <li><a href="#ordnance">Ordnance Reference</a></li>
-    <li><a href="#factions">Factions Reference</a></li>
-    <li><a href="#resources">External Resources</a></li>
+    <li><a href="#ordering-tips">Best Ordering Practices</a></li>
+    <li><a href="#trade-protection">Protecting Yourself in Trades</a></li>
+    <li><a href="#page-guides">Page-by-Page Guide</a></li>
+    <li><a href="#archive-tips">Quick Tips</a></li>
     <li><a href="#data-sources">Data Sources</a></li>
+    <li><a href="#external-resources">External Resources</a></li>
   </ul>
 </nav>
 
 <section id="about">
   <h2>What is Dumper's Repo?</h2>
-  <div class="section">
-    <p><strong>Dumper's Repo</strong> is a comprehensive toolkit for Star Citizen players who want to engage with the game's crafting and economy systems without getting ripped off.</p>
+  <div class="section"><p><strong>Dumper's Repo</strong> is a comprehensive toolkit for Star Citizen players who want to engage with the game's crafting and economy systems without getting ripped off.</p>
     <p>Whether you're tracking which blueprints you've unlocked, managing your mined resources, coordinating crafting orders with your org, or just trying to figure out what a fair price is for that pile of Quantanium you just refined — Dumper's Repo has you covered.</p>
-    <p>The site is designed to be a one-stop shop for crafters, miners, and traders who want transparency and fairness in their in-game economic activities.</p>
-  </div>
+    <p>The site is designed to be a one-stop shop for crafters, miners, and traders who want transparency and fairness in their in-game economic activities.</p></div>
 </section>
 
-<section id="offline">
+<section id="offline-mode">
   <h2>Offline Mode</h2>
-  <div class="section">
-    <p>Want to try out the tools before signing up? <strong>Offline Mode</strong> lets you explore most features without creating an account.</p>
-    
+  <div class="section"><p>Want to try out the tools before signing up? <strong>Offline Mode</strong> lets you explore most features without creating an account.</p>
     <div class="grid">
-      <div class="card green">
-        <h4>What Works Offline</h4>
-        <ul>
-          <li>Browse all blueprints and archive data</li>
-          <li>Mark blueprints as acquired (local only)</li>
-          <li>Build your Mission Tracker list (local only)</li>
-          <li>Track resources in Resource Tracker (local only)</li>
-          <li>Use the Mining Tracker for RS references</li>
-          <li>Preview pending fulfillment orders</li>
-        </ul>
-      </div>
-      
-      <div class="card amber">
-        <h4>Members-Only Features</h4>
-        <ul>
-          <li>Create custom crafting orders</li>
-          <li>Accept and fulfill orders for aUEC</li>
-          <li>View member directory / browse collections</li>
-          <li>Site Total resource aggregation</li>
-          <li>Cross-device data sync</li>
-        </ul>
-      </div>
+      <div class="card green"><h4>What Works Offline</h4><ul><li>Browse all blueprints and archive data</li><li>Mark blueprints as acquired (local only)</li><li>Build your Mission Tracker list (local only)</li><li>Track resources in Resource Tracker (local only)</li><li>Use the Mining Tracker for RS references</li><li>Preview Fulfillment — see how many WTB/WTS orders are waiting (sign in to accept)</li></ul></div>
+      <div class="card amber"><h4>Members-Only Features</h4><ul><li>Custom Orders — post WTB buy requests and WTS sell listings (partial OK by default)</li><li>Fulfillment — browse, accept full or partial WTS buys, and complete trades</li><li>View member directory / browse collections</li><li>Cross-device data sync</li></ul></div>
     </div>
-    
-    <div class="note">
-      <h4>Data Migration</h4>
-      <p>Offline progress is stored in your browser using the same IDs as member accounts. Old offline data from before a recent update is cleared automatically when you visit. On your <strong>first sign-in</strong> (when the welcome onboarding appears), valid offline data migrates to your account — unmatched items are skipped. If you already have an account, your offline stash stays separate in the browser.</p>
-    </div>
-    
-    <p><em>Offline data is stored in your browser. It persists across sessions but won't sync between devices or browsers until you create an account.</em></p>
-  </div>
+    <div class="note"><h4>Data Migration</h4><p>Offline progress is stored in your browser using the same IDs as member accounts. Old offline data from before a recent update is cleared automatically when you visit. On your <strong>first sign-in</strong> (when the welcome onboarding appears), valid offline data migrates to your account — unmatched or outdated items are skipped, not forced in. If you already have an account, your offline stash stays separate in the browser.</p></div>
+    <p><em>Offline data is stored in your browser. It persists across sessions but won't sync between devices or browsers until you create an account.</em></p></div>
 </section>
 
 <section id="dfp" class="page-break">
   <h2>Why Dumper's Fair-Value Price (DFP)?</h2>
-  <div class="section highlight">
-    <div class="card red" style="margin-bottom: 1rem;">
-      <h4>The Problem</h4>
-      <p>"Grey market" trading sites are plagued with price gouging. People asking 5 billion aUEC for items that take maybe an hour to acquire yourself. It's predatory, it's frustrating, and CIG/RSI rightfully despises these practices.</p>
-    </div>
-    
-    <div class="card green" style="margin-bottom: 1rem;">
-      <h4>The Solution</h4>
-      <p><strong>Dumper's Fair-Value Price (DFP)</strong> is an algorithmic pricing system that calculates what resources and crafted items are actually worth based on:</p>
-      <ul>
-        <li>Time investment required to acquire/craft</li>
-        <li>Resource rarity and availability</li>
-        <li>Quality tier (500-1000 scale, with exponential value curves)</li>
-        <li>Blueprint acquisition difficulty and reputation requirements</li>
-      </ul>
-    </div>
-    
-    <div class="card blue">
-      <h4>The Goal</h4>
-      <p>Create a pricing standard the community can rally behind. When everyone uses DFP, buyers know they're getting fair deals, sellers know they're being compensated fairly, and the exploitative grey market loses its power.</p>
-    </div>
-  </div>
+  <div class="section"><div class="section highlight">
+    <div class="card red"><h4>The Problem</h4><p>&quot;Grey market&quot; trading sites are plagued with price gouging. People asking 5 billion aUEC for items that take maybe an hour to acquire yourself. It's predatory, it's frustrating, and CIG/RSI rightfully despises these practices.</p></div>
+    <div class="card green"><h4>The Solution</h4><p><strong>Dumper's Fair-Value Price (DFP)</strong> is an algorithmic pricing system that calculates what resources and crafted items are actually worth based on:</p><ul><li>Time investment required to acquire/craft</li><li>Resource rarity and availability</li><li>Quality tier (500-1000 scale, with exponential value curves)</li><li>Blueprint acquisition difficulty and reputation requirements</li></ul></div>
+    <div class="card blue"><h4>The Goal</h4><p>Create a pricing standard the community can rally behind. When everyone uses DFP, buyers know they're getting fair deals, sellers know they're being compensated fairly, and the exploitative grey market loses its power.</p></div>
+  </div></div>
 </section>
 
 <section id="ratings">
   <h2>Buyer &amp; Fulfiller Ratings</h2>
-  <div class="section">
-    <p>The Custom Orders and Fulfillment system includes a <strong>reputation rating system</strong> to help build trust between buyers and fulfillers.</p>
-    
+  <div class="section"><p>Custom Orders and Fulfillment use one <strong>reputation rating system</strong> for both <strong>WTB</strong> (want to buy) and <strong>WTS</strong> (want to sell) listings. There is no separate sell rating — the same 1–5 star archive flow and buyer/fulfiller scores apply to both tags.</p>
+    <div class="card "><h4>WTB vs WTS — who is the buyer?</h4><ul><li><strong>WTB</strong> — you post a buy request; someone fulfills it for you. You are the <strong>buyer</strong>; they are the seller/fulfiller.</li><li><strong>WTS</strong> — you post a sell listing; someone buys it on Fulfillment (full listing or partial lines). You are the <strong>seller</strong>; they are the buyer.</li><li>Partial WTS purchases are separate child orders — same rating flow as any other deal.</li><li>Ratings always land in the same two buckets: <strong>buyer rep</strong> and <strong>fulfiller rep</strong> (seller side), regardless of tag.</li></ul></div>
     <div class="grid">
-      <div class="card green">
-        <h4>As a Buyer</h4>
-        <ul>
-          <li>Create orders specifying what you need</li>
-          <li>Rate fulfillers after delivery (1-5 stars)</li>
-          <li>Your ratings help others choose reliable fulfillers</li>
-        </ul>
-      </div>
-      
-      <div class="card purple">
-        <h4>As a Fulfiller</h4>
-        <ul>
-          <li>Claim and complete orders to build reputation</li>
-          <li>Your average rating is visible to buyers</li>
-          <li>Higher ratings = more trust from the community</li>
-        </ul>
-      </div>
+      <div class="card green"><h4>As a Buyer</h4><ul><li><strong>WTB:</strong> post on Custom Orders; rate your fulfiller after pickup</li><li><strong>WTS:</strong> buy full or partial on Fulfillment; rate the seller after pickup</li><li>Rate the other party 1–5 stars when archiving a completed order</li><li>Your buyer rep helps sellers/fulfillers decide whether to trade with you</li></ul></div>
+      <div class="card purple"><h4>As a Seller / Fulfiller</h4><ul><li><strong>WTB:</strong> accept on Fulfillment and craft/deliver; rate the buyer after completion</li><li><strong>WTS:</strong> post on Custom Orders; mark ready when a buyer accepts (each partial sale counts separately); rate the buyer after completion</li><li>Your fulfiller rep (seller side) is visible on listings and buy requests</li><li>Higher ratings build trust for both craft fulfillment and direct sales</li></ul></div>
     </div>
-    
-    <div class="note warning">
-      <p><strong>Note:</strong> Both buyers and fulfillers must have a verified RSI Handle to participate in the order system. This ensures accountability and helps prevent scams.</p>
-    </div>
-  </div>
+    <div class="note warning"><p><strong>Note:</strong> Both buyers and fulfillers must have a verified RSI Handle to participate in the order system. This ensures accountability and helps prevent scams.</p></div></div>
 </section>
 
-<section id="reputation">
+<section id="pending-rep">
   <h2>Building Your Reputation</h2>
-  <div class="section">
-    <p>New members start with <strong>"Pending" reputation</strong> until they complete 5 successful orders (as either buyer or fulfiller). During this time, there are some limits to help protect the community:</p>
-    
+  <div class="section"><p>New members start with <strong>&quot;Pending&quot; reputation</strong> until they complete 5 successful marketplace transactions (as buyer or seller/fulfiller, on either WTB or WTS). During this time, limits apply by <strong>role</strong>, not by tag:</p>
     <div class="grid">
-      <div class="card green">
-        <h4>Pending Buyer Limits</h4>
-        <ul>
-          <li>Maximum of 2 active orders at a time</li>
-          <li>Total order value capped at 1,000,000 aUEC</li>
-          <li>Limits are lifted after 5 completed orders</li>
-        </ul>
-      </div>
-      
-      <div class="card purple">
-        <h4>Pending Fulfiller Limits</h4>
-        <ul>
-          <li>Can only accept 1 order at a time</li>
-          <li>Complete it before accepting another</li>
-          <li>Limits are lifted after 5 completed fulfillments</li>
-        </ul>
-      </div>
+      <div class="card green"><h4>Pending Buyer Limits</h4><ul><li>Applies when you are the <strong>buyer</strong> — WTB posts and WTS purchases (including partial buys)</li><li>Maximum of 2 active buyer-side orders at a time</li><li>Total buyer-side value capped at 1,000,000 aUEC</li><li>Minimum 10,000 aUEC per <strong>WTB</strong> post while pending</li><li>Posting <strong>WTS</strong> listings is not capped by the 2-order / 1M buyer limits</li><li>Limits lift after 5 completed transactions as a buyer</li></ul></div>
+      <div class="card purple"><h4>Pending Seller / Fulfiller Limits</h4><ul><li>Applies when you are the <strong>seller</strong> — WTB fulfillments and active WTS sales (each partial child order counts)</li><li>Can only have 1 active seller-side job at a time</li><li>Complete or release it before accepting another WTB or WTS handoff</li><li>Limits lift after 5 completed transactions as a seller/fulfiller</li></ul></div>
     </div>
-    
-    <div class="note">
-      <p><strong>Important:</strong> Everyone must rate their completed orders before creating or accepting new ones. This keeps the rating system fair and encourages timely feedback.</p>
-    </div>
-  </div>
+    <div class="note"><p><strong>Important:</strong> Everyone must rate completed WTB and WTS transactions before posting new orders or accepting new ones on Fulfillment. Until you do, those actions are paused — you can still browse listings and manage any orders already in progress. Archive unrated deals from the <strong>Completed</strong> tab on Custom Orders.</p></div></div>
 </section>
 
 <section id="order-rules" class="page-break">
   <h2>Order System Rules &amp; Expectations</h2>
-  <div class="section">
-    <p>The order system is built on <strong>trust and fairness</strong>. To protect all members, we enforce the following rules — especially for users still building their reputation.</p>
-    
-    <div class="card green">
-      <h4>✓ What's Expected</h4>
-      <ul>
-        <li>Create orders for items/resources you genuinely need</li>
-        <li>Complete transactions in good faith</li>
-        <li>Rate orders promptly after completion</li>
-        <li>Communicate clearly with your buyer/fulfiller</li>
-        <li>Use your verified RSI Handle for all in-game trades</li>
-      </ul>
-    </div>
-    
-    <div class="card red">
-      <h4>✗ What's Not Allowed</h4>
-      <ul>
-        <li>Creating duplicate orders for the same item while one is being fulfilled</li>
-        <li>Making artificially small orders to farm reputation quickly</li>
-        <li>Repeatedly trading with the same person to inflate ratings</li>
-        <li>Using multiple accounts to manipulate the order system</li>
-        <li>Cancelling orders without good reason to waste fulfillers' time</li>
-        <li>Refusing to rate completed orders</li>
-      </ul>
-    </div>
-    
-    <div class="card amber">
-      <h4>⚠ Pending Rep Requirements</h4>
-      <ul>
-        <li><strong>Minimum order value:</strong> 10,000 aUEC per order</li>
-        <li><strong>No duplicate orders:</strong> Cannot create another order for the same blueprint if one is pending or being fulfilled</li>
-        <li><strong>Order limits:</strong> Max 2 active orders / 1M aUEC total as buyer, 1 order at a time as fulfiller</li>
-      </ul>
-    </div>
-    
-    <div class="card blue">
-      <h4>⏱ Time Limits</h4>
-      <ul>
-        <li><strong>Fulfiller deadline:</strong> 72 hours to mark an accepted order ready, or it releases back to the pool</li>
-        <li><strong>Buyer pickup:</strong> 72 hours to confirm pickup after ready, or the order auto-completes (buyer may receive a strike)</li>
-        <li><strong>Rating deadline:</strong> 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf</li>
-        <li><strong>3 strikes in 30 days</strong> triggers an automatic report to officers</li>
-      </ul>
-    </div>
-    
+  <div class="section"><p>The order system is built on <strong>trust and fairness</strong>. To protect all members, we enforce the following rules — especially for users still building their reputation.</p>
+    <div class="card green"><h4>✓ What's Expected</h4><ul><li>Post <strong>WTB</strong> only for items you genuinely want crafted or supplied</li><li>Post <strong>WTS</strong> only for stock you actually have on hand</li><li>WTS listings default to partial purchase — check “full listing” only when the bundle must sell together</li><li>Complete transactions in good faith on both Custom Orders and Fulfillment</li><li>Rate promptly after completion (same archive + stars flow for both tags)</li><li>Communicate clearly with your buyer or seller</li><li>Use your verified RSI Handle for all in-game trades</li></ul></div>
+    <div class="card red"><h4>✗ What's Not Allowed</h4><ul><li>Duplicate <strong>WTB</strong> posts for the same blueprint while one is active</li><li>Making artificially small <strong>WTB</strong> orders to farm reputation quickly</li><li>Repeatedly trading with the same person to inflate ratings (WTB or WTS)</li><li>Using multiple accounts to manipulate the marketplace</li><li>Abandoning accepted jobs without good reason</li><li>Refusing to rate completed WTB or WTS transactions</li></ul></div>
+    <div class="card amber"><h4>⚠ Pending Rep Requirements</h4><ul><li><strong>Minimum WTB value:</strong> 10,000 aUEC per buy post while reputation is pending</li><li><strong>No duplicate WTB:</strong> Cannot post another buy request for the same blueprint if one is pending or in progress</li><li><strong>Buyer limits:</strong> Max 2 active buyer-side orders / 1M aUEC (WTB posts + WTS purchases, including partial buys)</li><li><strong>Seller limits:</strong> Max 1 active seller-side job (WTB fulfillment or WTS sale in progress; each partial sale counts)</li></ul></div>
+    <div class="card blue"><h4>⏱ Time Limits</h4><ul><li><strong>Seller deadline:</strong> 72 hours to mark ready after accept (WTB craft or WTS handoff), or the deal releases back to the pool</li><li><strong>Partial WTS cancel:</strong> Cancelling a partial purchase restores quantities to the seller's listing</li><li><strong>Buyer pickup:</strong> 72 hours to confirm after ready, or auto-complete (buyer may receive a strike)</li><li><strong>Rating deadline:</strong> 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf</li><li><strong>3 strikes in 30 days</strong> may lead to account restrictions</li></ul></div>
     <div class="note danger">
       <h4>Consequences for Violations</h4>
-      <ul>
-        <li><strong>Reputation reset:</strong> All ratings cleared, returning you to "Pending" status with limits</li>
-        <li><strong>Order history cleared:</strong> Archived orders may be removed along with your reputation</li>
-        <li><strong>Account ban:</strong> Severe or repeated violations may result in permanent removal from the platform</li>
-      </ul>
-      <p><em>Suspicious activity is automatically detected and reported to site staff for review.</em></p>
-    </div>
-  </div>
+      <ul><li><strong>Reputation reset:</strong> All ratings cleared, returning you to &quot;Pending&quot; status with limits</li><li><strong>Order history cleared:</strong> Archived orders may be removed along with your reputation</li><li><strong>Account ban:</strong> Severe or repeated violations may result in permanent removal from the platform</li></ul>
+      <p><em>Repeated or serious violations may result in account review and disciplinary action by site staff.</em></p>
+    </div></div>
 </section>
 
-<section id="protection">
+<section id="ordering-tips">
+  <h2>Best Ordering Practices</h2>
+  <div class="section"><p>These tips focus on <strong>WTB</strong> buy requests (Submit Buy Order). See the Custom Orders page guide for WTS partial listings and the order builder.</p>
+    <p>For <strong>WTS</strong> sell listings: post only stock you have on hand; partial purchase is the default so buyers can cherry-pick lines. Check “Buyers must purchase the full listing” only when you need an all-or-nothing sale. Mark ready promptly once a buyer accepts (full or partial).</p>
+    <p>For WTB posts, follow these tips to get fulfilled faster and make it easier for sellers to help you.</p>
+    <div class="card emerald"><h4>✓ Use Live Stat Preview</h4><p>Expand cart lines in the order builder to set per-slot material qualities. The live DFP total and effective stat preview update as you go — match what you actually have or expect to craft with.</p></div>
+    <div class="card emerald"><h4>✓ Separate Easy from Hard</h4><p>Create <strong>separate orders</strong> for easy items (Q500–Q700) and harder items (Q800–Q1000). Mixing them forces fulfillers to either source rare high-quality materials for everything or skip your order entirely. Split them up and get your easy items faster.</p></div>
+    <div class="card emerald"><h4>✓ Check Blueprint Ownership</h4><p>Each blueprint card shows how many members own it. If <strong>no one owns a blueprint</strong>, your order may sit unfulfilled until someone acquires it. Consider ordering common blueprints separately from rare ones so your easier items don't get blocked.</p></div>
+    <div class="card emerald"><h4>✓ One Hard Item Per Order</h4><p>For Q800+ or rare blueprints, consider <strong>one item per order</strong>. This lets specialized fulfillers pick up what they can craft well, rather than needing someone who happens to have all your specific blueprints and high-quality materials.</p></div>
+    <div class="card amber"><h4>⚠ Avoid Mixed-Ownership Orders</h4><p>If your order includes blueprints that some members own and others that <strong>no one owns yet</strong>, the entire order is unfulfillable. A fulfiller must own *every* blueprint in an order to accept it. You'll see a warning when creating such orders.</p></div>
+    <div class="note"><p><strong>Tip:</strong> Smaller, focused orders tend to get picked up faster than large mixed orders. Fulfillers can quickly see if they can help and jump in immediately.</p></div></div>
+</section>
+
+<section id="trade-protection">
   <h2>Protecting Yourself in Trades</h2>
-  <div class="section">
-    <p>In-game trades happen outside the site. Keep your own records so disputes can be resolved fairly.</p>
-    <ul>
-      <li>Screenshot aUEC transfers before and after handoff</li>
-      <li>Record video of the exchange when possible</li>
-      <li>Note the other party's RSI Handle, location, and time</li>
-      <li>Keep Spectrum or in-game chat logs</li>
-      <li>If a fulfiller marked ready but you didn't receive goods, use <strong>Report Problem</strong> on the order — do not wait for the 72-hour auto-complete</li>
-    </ul>
-    <p><em>Evidence is not uploaded on the site. If officers need proof, they may ask you to email screenshots or share a cloud storage link (Google Drive, Imgur, etc.).</em></p>
-  </div>
+  <div class="section"><p>In-game trades happen outside the site. Keep your own records so disputes can be resolved fairly.</p>
+    <ul><li>Screenshot aUEC transfers before and after handoff</li><li>Record video of the exchange when possible</li><li>Note the other party's RSI Handle, location, and time</li><li>Keep Spectrum or in-game chat logs</li><li>If a fulfiller marked ready but you didn't receive goods, use <strong>Report Problem</strong> on the order — do not wait for the 72-hour auto-complete</li></ul>
+    <p><em>Evidence is <strong>not uploaded on the site</strong>. If support needs proof during a dispute, they may ask you to email screenshots or share a cloud storage link (Google Drive, Imgur, etc.).</em></p></div>
 </section>
 
-<section id="pages" class="page-break">
+<section id="page-guides" class="page-break">
   <h2>Page-by-Page Guide</h2>
-  
-  <h3>Blueprints</h3>
+  <h3 id="page-blueprints">Blueprints</h3>
   <div class="section">
     <p>The main hub for browsing all available crafting blueprints in Star Citizen.</p>
-    <ul>
-      <li>Browse and filter blueprints by type, manufacturer, and availability</li>
-      <li>See what reputation level is required to unlock each blueprint</li>
-      <li>Mark blueprints as "acquired" to track your collection progress</li>
-      <li>View the resources and components required to craft each item</li>
-      <li>Click any blueprint to see detailed crafting requirements and DFP values</li>
-      <li>Use the Quality Simulator to preview how resource quality affects final stats</li>
-      <li>Offline Mode: acquired marks save locally until you sign in</li>
-    </ul>
-    <p><em>Related to: Mission Tracker, Resource Tracker</em></p>
+    <ul><li>Browse and filter blueprints by type, manufacturer, and availability</li><li>See what reputation level is required to unlock each blueprint</li><li>Mark blueprints as &quot;acquired&quot; to track your collection progress</li><li>View the resources and components required to craft each item</li><li>Click any blueprint to see detailed crafting requirements and DFP values</li><li>Use the quality sliders to preview how resource quality affects final stats and DFP pricing</li><li>Add a blueprint to your order draft from the detail view — continue on Custom Orders</li><li>Browse other members' blueprint collections from the member picker (hidden in Ghost Mode)</li><li>Offline Mode: acquired marks save locally until you sign in</li></ul>
+    <p><em>Related to: Mission Tracker • Resource Tracker • Custom Orders</em></p>
   </div>
-  
-  <h3>Mission Tracker</h3>
+  <h3 id="page-targets">Mission Tracker</h3>
   <div class="section">
     <p>Your personal wishlist of blueprints you're working towards unlocking.</p>
-    <ul>
-      <li>Track blueprints from the main Blueprints page</li>
-      <li>See which faction contracts will reward your tracked blueprints</li>
-      <li>Track your progress toward the required reputation levels</li>
-      <li>Prioritize which factions to grind based on your goals</li>
-      <li>Remove blueprints once you've acquired them</li>
-      <li>Offline Mode: list saves locally until you sign in (then migrates automatically)</li>
-    </ul>
-    <p><em>Related to: Blueprints, Factions</em></p>
+    <ul><li>Track blueprints from the main Blueprints page</li><li>Browse Missions: pick a faction, then browse its mission pools</li><li>Missions with multiple regional pools are grouped under one title with location rows underneath</li><li>Faction cards show which star systems that faction appears in</li><li>See X/X progress (owned vs total) for each mission location</li><li>Add unowned blueprints to your tracker directly from the browse view</li><li>My Tracker: view your tracked blueprints and build a mission checklist</li><li>Mission rows use color-coded tags — see the legend below when this section is expanded</li><li>Location tags: violet system/region tags plus green planet/moon tags (no tooltips)</li><li>System-wide missions show only the system name (e.g. Pyro); region missions add Pyro A/B/C/D plus locations</li><li>Other tags: amber category, cyan rep requirement, red illegal, purple unlock level under blueprint names</li><li>Investigation missions are mostly Hockrow Agency's Jorrit Dossier line at ASD's Onyx Facility (Stanton)</li><li>Jorrit Dossier is a linear story chain — complete each step to unlock the next; repeat runs drop blueprints</li><li>Collection missions include Wikelo Emporium craft contracts in Stanton (turn in gathered items for blueprints)</li><li>BHG Hathor PAF bounties (Verified Bounty · Hathor · Planetary Alignment Facility) resolve to Stanton — Daymar and Aberdeen platform sites</li><li>Prioritize which factions to grind based on your goals</li><li>Offline Mode: list saves locally until you sign in (then migrates automatically)</li></ul>
+    <p><em>Related to: Blueprints • Factions</em></p>
   </div>
-  
-  <h3>Resource Tracker</h3>
+  <h3 id="page-resources">Resource Tracker</h3>
   <div class="section">
     <p>Track your personal inventory of mined and refined resources.</p>
-    <ul>
-      <li>Log quantities and quality levels of resources you've collected</li>
-      <li>Quality ranges from 500 (base) to 1000 (perfect) — higher quality = exponentially higher value</li>
-      <li>DFP automatically calculates fair market values for your resources</li>
-      <li>See your total inventory value at a glance</li>
-      <li>Perfect for tracking what you have available for crafting or trading</li>
-      <li>Offline Mode: inventory saves locally until you sign in (then migrates automatically)</li>
-    </ul>
-    <p><em>Related to: Blueprints, Mining Guide, Mining Tracker</em></p>
+    <ul><li>Log quantities and quality levels of resources you've collected</li><li>Track store-purchased refined materials at Purchased (Q0)</li><li>Switch between Cards (edit quantities) and List (read-only overview with notes)</li><li>Filter by quality band on both views — each Q-tier stays on its own row</li><li>Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value</li><li>Salvage and trade goods use fixed Q0 tiers</li><li>Perfect for tracking what you have available for crafting or trading</li><li>Offline Mode: inventory saves locally until you sign in (then migrates automatically)</li></ul>
+    <p><em>Related to: Blueprints • Mining Tracker</em></p>
   </div>
-  
-  <h3>Mining Tracker</h3>
+  <h3 id="page-mining-tracker">Mining Tracker</h3>
   <div class="section">
-    <p>In-game cluster RS reference for ores you are hunting.</p>
-    <ul>
-      <li>Add ores from the Mining Guide using the Track button (ores with RS signatures only)</li>
-      <li>Choose how many RS multiples to display (2–10×, defaults to 3×)</li>
-      <li>Compare scanner readings in-game: cluster RS = node count × base RS</li>
-      <li>Search by ore name to quickly add to your list (minimum 2 characters)</li>
-      <li>Hand-mineables and gems cannot be tracked (no RS signature)</li>
-      <li>Logged-in users sync to their account; Offline Mode saves locally</li>
-    </ul>
-    <p><em>Related to: Mining Guide, Resource Tracker</em></p>
+    <p>Track ores by RS signature, browse the ore/location guide, and compare cluster readings.</p>
+    <ul><li>RS Tracker tab: base RS plus cluster rows with Chance % from game spawn data</li><li>Up to two cards per ore — separate Surface and Asteroid profiles</li><li>Location-tracked cards show At {site} with that site's spawn and cluster data</li><li>Track Surface / Track Asteroid for overall profiles; Track Surface · {site} from location context</li><li>Mining Guide tab: browse By Ore (rarity filters, location chips) or By Location (ores at each site)</li><li>Broad compendium entries (e.g. Pyro Asteroid Clusters) use Overall aggregate data — tag shows Overall; vague buckets like All Pyro Planets stay on ore cards only, not as By Location sites</li><li>Compendium subsite labels (e.g. Magda Sand Caves) are folded into their parent moon — not listed as separate locations</li><li>Site-specific locations show Best or spawn % tags; hover tooltips explain spawn, cluster, and composition</li><li>Ore tooltips and detail popups include instability and resistance from extracted game data</li><li>Overall tags list member-visible locations in tooltips when cluster odds map to multiple sites</li><li>Compare in-game: cluster RS = node count × base RS</li><li>Hand-mineables and gems are not in the RS Tracker reference yet</li><li>Hand-mineable gems show cave vs surface availability per planet from extracted game data</li><li>Logged-in users sync to their account; Offline Mode saves locally</li></ul>
+    <p><em>Related to: Resource Tracker</em></p>
   </div>
-  
-  <h3>Custom Orders</h3>
+  <h3 id="page-orders">Custom Orders</h3>
   <div class="section">
-    <p>Create and manage custom crafting orders for players.</p>
-    <ul>
-      <li>Specify exactly what resources and quantities you need</li>
-      <li>Set quality requirements for each resource</li>
-      <li>DFP automatically calculates fair pricing for the order</li>
-      <li>Track order status from creation to fulfillment</li>
-      <li>Rate fulfillers when orders are completed (affects their reputation)</li>
-      <li>Requires a verified RSI Handle to create orders</li>
-      <li>New members: limited to 2 orders / 1M aUEC until 5 completed orders</li>
-      <li>72 hours to confirm pickup after fulfiller marks ready; use Report Problem if goods were not delivered</li>
-    </ul>
-    <p><em>Related to: Resource Tracker, Fulfillment</em></p>
+    <p>Build, post, and manage WTB buy requests and WTS sell listings from one order form.</p>
+    <ul><li>Click New order to open the order builder for blueprints and/or resources</li><li>Submit Buy Order posts a WTB request (you want someone to craft or supply)</li><li>Submit Sell Order posts a WTS listing (you are offering stock on hand)</li><li>Live DFP total and effective stat preview while you compose the cart</li><li>Expand any cart line to edit per-slot material qualities and see stat changes before posting</li><li>Add blueprints from the Blueprints page into a session draft, then continue on Custom Orders</li><li>WTS listings allow partial purchases by default — buyers pick lines and quantities on Fulfillment</li><li>Check “Buyers must purchase the full listing” on WTS if the whole bundle must sell together</li><li>Same fields for both tags: lines, quality tiers, min reputation, notes, DFP pricing</li><li>WTB/WTS tag and Partial OK / Full listing only badges shown on your orders</li><li>Edit or delete pending listings while no one has accepted</li><li>Release or cancel in-progress WTS sales — partial purchases restore unsold qty to the listing</li><li>Track active, completed, and archived orders; confirm pickup and rate the other party</li><li>Partial WTS purchases are full child orders — same handoff, deadlines, ratings, and rep limits</li><li>Requires a verified RSI Handle; new-member buyer limits apply to WTB posts and WTS purchases</li><li>Offline Mode cannot create or manage orders</li></ul>
+    <p><em>Related to: Resource Tracker • Fulfillment • Blueprints • Discord Webhooks</em></p>
   </div>
-  
-  <h3>Fulfillment</h3>
+  <h3 id="page-fulfillment">Fulfillment</h3>
   <div class="section">
-    <p>View and fulfill pending custom orders from other players.</p>
-    <ul>
-      <li>Browse orders that need resources you can provide</li>
-      <li>Claim orders to indicate you're working on them</li>
-      <li>Mark partial or complete fulfillment as you deliver</li>
-      <li>Earn aUEC at fair DFP rates for your contributions</li>
-      <li>Build your fulfiller reputation through ratings from buyers</li>
-      <li>Requires a verified RSI Handle to fulfill orders</li>
-      <li>New members: can only work on 1 order at a time until 5 completed</li>
-      <li>72 hours to mark ready after accepting or the order releases back to the pool</li>
-      <li>Verify you have materials before accepting 800+ quality blueprint orders</li>
-    </ul>
-    <p><em>Related to: Custom Orders, Resource Tracker</em></p>
+    <p>Browse, filter, and act on other members' WTB and WTS orders.</p>
+    <ul><li>Main filter: All, WTB only, or WTS only</li><li>WTB orders — accept to fulfill/craft for the buyer; itemized lines show materials and effective stats</li><li>WTS full listings (Full listing only badge) — Buy listing accepts the entire offer at once</li><li>WTS partial listings (Partial OK badge) — check lines, set quantities, and buy only what you want</li><li>Each partial purchase becomes its own order through the normal handoff, pickup, and rating flow</li><li>WTB/WTS and Partial OK / Full listing only badges on every row</li><li>Seller-side WTS: start handoff, mark ready, and manage active sales including partial child orders</li><li>Buyer-side WTS: confirm pickup and archive/rate like any other purchase</li><li>Cancel or release returns partial purchases to the seller's listing with quantities restored</li><li>Same reputation ratings for all paths — no separate partial rating</li><li>Requires a verified RSI Handle; fulfiller and buyer pending limits apply by role</li><li>Offline Mode shows a pending-order count teaser only — sign in to browse or accept</li><li>Verify you have materials before accepting 800+ quality WTB blueprint orders</li></ul>
+    <p><em>Related to: Custom Orders • Resource Tracker</em></p>
   </div>
-  
-  <h3>Settings</h3>
+  <h3 id="page-discord-webhooks">Discord Webhooks</h3>
+  <div class="section">
+    <p>Route marketplace and personal deal alerts to your own Discord channel.</p>
+    <ul><li>Paste a webhook URL from your Discord server (Integrations → Webhooks)</li><li>My activity: pings when someone else moves your deal forward (accepted, ready, completed, released, etc.) — requires verified RSI Handle</li><li>Marketplace activity (opt-in): new WTB/WTS listings, acceptances, and cancellations from other members — no RSI verification required</li><li>Use the same channel URL in both sections if you want everything in one Discord channel</li><li>Coalesced marketplace digests require New WTB, New WTS, or Listing cancelled — not Listing accepted alone</li><li>You never receive marketplace pings for your own posts or actions (no self-echo)</li><li>Order alerts include itemized lines with material summaries and effective stats when available</li><li>Repeated post/cancel bursts from the same member may arrive as one grouped marketplace ping</li><li>Support: staff replies and ticket resolved notices on your tickets</li><li>One channel name and webhook URL per alert type — leave the URL blank to unregister</li><li>Set up from your avatar menu → Webhooks after sign-in — hidden in Ghost Mode</li></ul>
+    <p><em>Related to: Custom Orders • Fulfillment • Notifications</em></p>
+  </div>
+  <h3 id="page-notifications">Notifications</h3>
+  <div class="section">
+    <p>In-app alerts for marketplace activity from the header bell.</p>
+    <ul><li>Bell icon in the header shows your unread notification count</li><li>Alerts cover marketplace events such as order acceptances, ready-for-pickup, and status changes</li><li>Itemized order summaries reflect blueprint stats and materials when the order includes them</li><li>Click Clear on a notification to dismiss it — dismissed rows are deleted (no read history kept)</li><li>Use Clear all to dismiss every notification at once</li><li>Unavailable while your account is pending approval or when Ghost Mode is on</li></ul>
+    <p><em>Related to: Custom Orders • Fulfillment</em></p>
+  </div>
+  <h3 id="page-settings">Settings</h3>
   <div class="section">
     <p>Manage your profile, privacy, and account from your avatar menu.</p>
-    <ul>
-      <li>Set or update your RSI Handle for verification and orders</li>
-      <li>Enable Ghost Mode to hide from member lists while keeping personal blueprint and resource tracking</li>
-      <li>Ghost Mode keeps blueprints, Mission Tracker, Resource Tracker, and the Archive — orders and fulfillment stay hidden</li>
-      <li>Turn Ghost Mode off anytime from Privacy settings</li>
-    </ul>
-    <p><em>Related to: Blueprints, Mission Tracker, Resource Tracker</em></p>
+    <ul><li>Set or update your RSI Handle for verification and orders</li><li>Deduct inventory on craft complete: when enabled, finishing a WTB fulfillment deducts materials from My Resources (requires verified RSI Handle)</li><li>Enable Ghost Mode to hide from member lists while keeping personal tools</li><li>Ghost Mode keeps blueprints, Mission Tracker, Resource Tracker, Mining Tracker, and the Info Archive — orders, fulfillment, webhooks, and support stay hidden</li><li>Turn Ghost Mode off anytime from Privacy settings</li></ul>
+    <p><em>Related to: Blueprints • Mission Tracker • Resource Tracker • Mining Tracker</em></p>
   </div>
-  
-  <h3>Support</h3>
+  <h3 id="page-support">Support</h3>
   <div class="section">
     <p>Report issues or get help from site staff.</p>
-    <ul>
-      <li>Access Support from your user menu (click your avatar)</li>
-      <li>Report bugs or technical issues with the site</li>
-      <li>Report inappropriate behavior from other members</li>
-      <li>Get help with RSI Handle verification issues</li>
-      <li>View the status of your open tickets and respond to staff questions</li>
-      <li>All ticket data is deleted after resolution for your privacy</li>
-    </ul>
-    <p><em>Related to: Settings, Blueprints</em></p>
+    <ul><li>Access Support from your user menu (click your avatar)</li><li>Report bugs or technical issues with the site</li><li>Report inappropriate behavior from other members</li><li>Get help with RSI Handle verification issues</li><li>View the status of your open tickets and respond to staff questions</li><li>All ticket data is deleted after resolution for your privacy</li></ul>
+    <p><em>Related to: Settings • Blueprints</em></p>
   </div>
-</section>
-
-<section id="mining" class="page-break">
-  <h2>Mining Guide Reference</h2>
+  <h3 id="page-components">Component Database</h3>
   <div class="section">
-    <p>The Mining Guide provides comprehensive data about ore locations throughout the Star Citizen universe.</p>
-    
-    <h4>Features</h4>
-    <ul>
-      <li><strong>View by Ore:</strong> See all locations where a specific ore can be found</li>
-      <li><strong>View by Location:</strong> See all ores available at a specific mining site</li>
-      <li><strong>Rarity Tiers:</strong> Ores are categorized by rarity from Common to Legendary</li>
-      <li><strong>RS Signatures:</strong> Each mineable ore has a unique Resource Signature value</li>
-      <li><strong>Track Button:</strong> Add ores to your Mining Tracker (signature-only ores)</li>
-    </ul>
-    
-    <h4>Understanding RS (Resource Signatures)</h4>
-    <p>When scanning asteroids or surface deposits, your ship scanner shows a cluster RS value. This value equals the number of nodes × the ore's base RS signature. Use the Mining Tracker to quickly reference signature multiples while scanning.</p>
-    
-    <div class="note">
-      <p><strong>Note:</strong> Hand-mineables (gems) and ground vehicle mineables do not have traditional RS signatures and cannot be tracked in the Mining Tracker.</p>
-    </div>
+    <p>Browse ship components by type, size, grade, and manufacturer.</p>
+    <ul><li>Filter by component type: coolers, power plants, shields, quantum drives</li><li>Browse by size (S1-S4) and grade (A-D)</li><li>See manufacturer information for each component</li><li>Click any component to view detailed stats</li><li>Compare upgrade paths between similar components</li></ul>
+    <p><em>Related to: Blueprints</em></p>
   </div>
-</section>
-
-<section id="components">
-  <h2>Component Database Reference</h2>
-  <div class="section">
-    <p>Browse and search ship components with detailed specifications.</p>
-    
-    <h4>Filter Options</h4>
-    <ul>
-      <li><strong>Type:</strong> Power Plant, Cooler, Shield Generator, Quantum Drive, etc.</li>
-      <li><strong>Manufacturer:</strong> Aegis, Origin, RSI, Hurston Dynamics, etc.</li>
-      <li><strong>Size:</strong> Component size (1-4 typically)</li>
-      <li><strong>Grade:</strong> A (best), B, C, D (lowest)</li>
-    </ul>
-    
-    <h4>Component Grades</h4>
-    <table>
-      <tr><th>Grade</th><th>Description</th></tr>
-      <tr><td>A</td><td>Military-grade, highest performance</td></tr>
-      <tr><td>B</td><td>High performance, slightly below A</td></tr>
-      <tr><td>C</td><td>Standard civilian performance</td></tr>
-      <tr><td>D</td><td>Budget/starter tier</td></tr>
-    </table>
-    
-    <h4>Component Classes</h4>
-    <ul>
-      <li><strong>Military:</strong> Combat-focused, high performance</li>
-      <li><strong>Civilian:</strong> Balanced for general use</li>
-      <li><strong>Stealth:</strong> Reduced emissions for covert operations</li>
-      <li><strong>Competition:</strong> Racing and high-speed applications</li>
-      <li><strong>Industrial:</strong> Durability and efficiency focused</li>
-    </ul>
-  </div>
-</section>
-
-<section id="ordnance">
-  <h2>Ordnance Reference</h2>
+  <h3 id="page-ordnance">Ordnance Reference</h3>
   <div class="section">
     <p>Compare missiles and torpedoes by size, guidance type, and manufacturer.</p>
-    
-    <h4>Guidance Types</h4>
-    <table>
-      <tr><th>Type</th><th>Tracks</th><th>Best Against</th></tr>
-      <tr><td>Cross-Section (CS)</td><td>Physical signature</td><td>Large targets</td></tr>
-      <tr><td>Electromagnetic (EM)</td><td>EM emissions</td><td>Active shields/power</td></tr>
-      <tr><td>Infrared (IR)</td><td>Heat signature</td><td>Running engines</td></tr>
-    </table>
-    
-    <h4>Missiles vs Torpedoes</h4>
-    <ul>
-      <li><strong>Missiles:</strong> Smaller, faster, more agile. Good for dogfighting.</li>
-      <li><strong>Torpedoes:</strong> Larger, slower, massive damage. Best for capital ships and stations.</li>
-    </ul>
-    
-    <h4>Gimbal Mounts</h4>
-    <p>Some ordnance supports gimbal mounting, allowing limited tracking independent of ship orientation.</p>
+    <ul><li>Browse all missiles and torpedoes in the game</li><li>Filter by guidance type: Cross-Section (CS), Electromagnetic (EM), Infrared (IR)</li><li>Filter by size (S1-S9) to find compatible ordnance for your ship</li><li>See manufacturer and full designation for each missile</li><li>Understand guidance system differences for combat effectiveness</li></ul>
+    <p><em>Related to: Blueprints • Component Database</em></p>
+  </div>
+  <h3 id="page-factions">Faction Reference</h3>
+  <div class="section">
+    <p>Understand reputation systems, standing tiers, and blueprint rewards.</p>
+    <ul><li>View all factions and their reputation tiers</li><li>See the reputation points required for each standing level</li><li>Understand how faction standing affects blueprint availability</li><li>Plan your reputation grind based on desired blueprints</li><li>Cross-reference with Mission Tracker for efficient progression</li></ul>
+    <p><em>Related to: Mission Tracker • Blueprints</em></p>
+  </div>
+  <h3 id="page-lore">Resource Lore</h3>
+  <div class="section">
+    <p>In-game flavor text and descriptions for commodities, ship components, armor, weapons, and more.</p>
+    <ul><li>Browse lore for ores, commodities, ship components, armor, weapons, and flair items</li><li>Search entries by name or description text</li><li>Filter by category to explore related items and materials</li><li>Learn the in-universe backstory for gear you use and resources you trade</li><li>Data sourced directly from Star Citizen game files</li></ul>
+    <p><em>Related to: Resource Tracker • Mining Tracker</em></p>
+  </div>
+  <h3 id="page-general">General Archive</h3>
+  <div class="section">
+    <p>External resources, quick tips, and data attribution.</p>
+    <ul><li>Links to useful Star Citizen community resources</li><li>Quick tips for mining, trading, and crafting</li><li>Data source attribution and acknowledgments</li><li>Information about how Dumper's Repo data is sourced and updated</li></ul>
+    <p><em>Related to: Component Database • Resource Lore</em></p>
   </div>
 </section>
 
-<section id="factions" class="page-break">
-  <h2>Factions Reference</h2>
-  <div class="section">
-    <p>Each faction tracks your reputation separately. Completing contracts and missions increases your standing, unlocking access to higher-tier contracts and blueprint rewards.</p>
-    
-    <div class="note warning">
-      <p><strong>Note:</strong> Different factions use different rank names — Covalex uses "Trainee → Master" while Bounty Hunters Guild uses "Applicant → Guild Steward". Some factions also have multiple career tracks (e.g., Bounty Hunting vs Security).</p>
-    </div>
-    
-    <h4>Reputation Progression</h4>
-    <p>All factions follow a similar progression pattern from neutral/hostile through various tiers to their highest rank. Higher standings unlock:</p>
-    <ul>
-      <li>Better-paying contracts</li>
-      <li>Exclusive blueprint rewards</li>
-      <li>Access to restricted areas or services</li>
-      <li>Special faction-specific perks</li>
-    </ul>
-    
-    <h4>Common Standing Tiers (Example)</h4>
-    <table>
-      <tr><th>Tier</th><th>Typical Rep Required</th></tr>
-      <tr><td>Neutral/Applicant</td><td>0</td></tr>
-      <tr><td>Entry Level</td><td>1,000+</td></tr>
-      <tr><td>Mid Tier</td><td>5,000+</td></tr>
-      <tr><td>High Tier</td><td>15,000+</td></tr>
-      <tr><td>Elite/Max</td><td>30,000+</td></tr>
-    </table>
-    <p><em>Note: Exact values vary by faction. Check the Factions section in the Archive for specific details.</em></p>
-  </div>
-</section>
-
-<section id="resources">
-  <h2>External Resources</h2>
-  <div class="section">
-    <p>The following external sites provide additional Star Citizen tools and information:</p>
-    <ul>
-      <li><strong>Star Citizen Wiki</strong> (starcitizen.tools) - Community wiki with comprehensive game information</li>
-      <li><strong>Erkul Games</strong> (erkul.games) - DPS calculator and ship loadout planner</li>
-      <li><strong>Universal Item Finder</strong> (finder.cstone.space) - Search for in-game items and their locations</li>
-      <li><strong>Cornerstone</strong> (cstone.space) - Trading and economy tracker</li>
-      <li><strong>Star Citizen Trade Tools</strong> (sc-trade.tools) - Mining and trading calculators</li>
-      <li><strong>RSI Website</strong> (robertsspaceindustries.com) - Official Star Citizen website</li>
-    </ul>
-    
-    <h4>Organizations</h4>
-    <ul>
-      <li><strong>RSI Organization Hub</strong> (robertsspaceindustries.com/community/orgs) - Browse all Star Citizen organizations</li>
-      <li><strong>Black Star [BSTR]</strong> (robertsspaceindustries.com/orgs/BSTR) - Site Sponsor - Industrial and defense enterprise focused on extraction, production, and trade</li>
-    </ul>
-  </div>
+<section id="archive-tips">
+  <h2>Quick Tips</h2>
+  <div class="section"><div class="grid"><div class="card "><h4>Blueprint Rewards</h4><p>Blueprints are awarded from contracts at specific reputation levels. Check Mission Tracker to track which blueprints you're working towards and the missions that can award them.</p></div><div class="card "><h4>Resource Tracking</h4><p>Use the Resource Tracker to keep inventory of your mined and refined materials. Dumper's Fair-Value Price (DFP) calculates fair market values based on quality tiers.</p></div><div class="card "><h4>Quality Tiers</h4><p>Resource quality ranges from 500 (base) to 1000 (perfect). Higher quality resources have exponentially higher DFP values, especially at Q850 and above.</p></div><div class="card "><h4>Standing Progression</h4><p>All factions use the same standing ladder from Neutral to Elite Contractor. Higher standings unlock better-paying contracts and exclusive blueprint rewards.</p></div></div></div>
 </section>
 
 <section id="data-sources">
   <h2>Data Sources &amp; Attribution</h2>
-  <div class="section">
-    <ul>
-      <li><strong>MrKraken's StarStrings</strong> - Community-curated localization and mission data extracted from game files. Used for mining locations, components, ordnance, and blueprint-to-standing mappings.</li>
-      <li><strong>Star Citizen Wiki API</strong> - Official community wiki API for blueprint metadata, component information, and game data.</li>
-      <li><strong>scunpacked-data</strong> - Pre-extracted game data repository used for contract/mission analysis and reputation requirements.</li>
-    </ul>
-    <p><em>This site is not affiliated with Cloud Imperium Games or Roberts Space Industries. All game content and materials are trademarks and copyrights of their respective owners.</em></p>
-  </div>
+  <div class="section"><div class="grid"><div class="card "><h4>Game catalog data</h4><p>Blueprints, components, ordnance, mining spawns, factions, Archive lore, and RS signature references are extracted directly from Star Citizen game files, then parsed into bundled JSON shipped with the site.</p></div><div class="card "><h4>DFP pricing</h4><p>Dumper's Fair-Value Price (DFP) is a proprietary pricing engine loaded from the official franchise bundle. The site does not pull live prices from third-party market APIs.</p></div><div class="card "><h4>Not included here</h4><p>Live in-game shop inventories are not part of Dumper's Repo. For item locations and market lookup, use the external tools listed in the General Archive section.</p></div></div>
+    <p><em>This site is not affiliated with Cloud Imperium Games or Roberts Space Industries. All game content and materials are trademarks and copyrights of their respective owners.</em></p></div>
+</section>
+
+<section id="external-resources">
+  <h2>External Resources</h2>
+  <div class="section"><p>The following external sites provide additional Star Citizen tools and information (names only — look them up when online):</p>
+    <ul><li><strong>Star Citizen Wiki</strong> — Community wiki with comprehensive game information</li><li><strong>Erkul Games</strong> — DPS calculator and ship loadout planner</li><li><strong>Universal Item Finder</strong> — Search for in-game items and their locations</li><li><strong>Cornerstone</strong> — Trading and economy tracker</li><li><strong>Star Citizen Trade Tools</strong> — Mining and trading calculators</li><li><strong>RSI Website</strong> — Official Star Citizen website</li></ul>
+    <h4>Organizations</h4>
+    <ul><li><strong>RSI Organization Hub</strong> — Browse all Star Citizen organizations on the official RSI site</li><li><strong>Black Star [BSTR]</strong> (Site Sponsor) — Industrial and defense enterprise focused on extraction, production, and trade</li></ul></div>
 </section>
 
 <hr>
 
 <footer>
   <p><strong>Dumper's Repo</strong> — Complete Archive Guide</p>
-  <p>Generated from live site data. For the most up-to-date information, visit the site directly.</p>
-  <p class="no-print">To save as PDF: Use your browser's Print function (Ctrl+P / Cmd+P) and select "Save as PDF"</p>
+  <p>Generated 2026-06-26 from the live Archive content module.</p>
+  <p class="no-print">To save as PDF: use your browser Print (Ctrl+P / Cmd+P) and choose Save as PDF. Internal links (#sections) work in most PDF viewers.</p>
 </footer>
 
 </body>
