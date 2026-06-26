@@ -167,7 +167,7 @@ export default function ResourceBuyOrderPanel({
   }>({ show: false, message: '' })
   const [pendingListingType, setPendingListingType] = useState<'wtb' | 'wts'>('wtb')
   const [expandedCartKey, setExpandedCartKey] = useState<string | null>(null)
-  const [sellEntireListing, setSellEntireListing] = useState(true)
+  const [sellEntireListing, setSellEntireListing] = useState(false)
 
   useEffect(() => {
     if (!editOrder) return
@@ -190,7 +190,7 @@ export default function ResourceBuyOrderPanel({
         ? String(editOrder.min_fulfiller_reputation)
         : ''
     )
-    setSellEntireListing(editOrder.sell_entire_listing !== false)
+    setSellEntireListing(editOrder.sell_entire_listing === true)
     setMode(
       resolveOrderBlueprintLines(editOrder).length > 0 ? 'blueprint' : 'resource'
     )
@@ -896,9 +896,8 @@ export default function ResourceBuyOrderPanel({
                 Buyers must purchase the full listing
               </span>
               <p className="text-slate-500 text-xs mt-1">
-                Applies to sell (WTS) orders only. When unchecked, buyers can pick individual items
-                and quantities on Fulfillment. Unsold stock stays listed; cancelled purchases restore
-                quantities to your listing.
+                Applies to sell (WTS) orders only. Off by default — buyers can pick items and
+                quantities on Fulfillment. Check this if the whole listing must sell together.
               </p>
             </div>
           </label>

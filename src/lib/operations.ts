@@ -722,7 +722,7 @@ export async function createCustomOrder(input: {
     })),
     p_listing_type: input.listingType ?? 'wtb',
     p_sell_entire_listing:
-      input.listingType === 'wts' ? (input.sellEntireListing ?? true) : true,
+      input.listingType === 'wts' ? (input.sellEntireListing ?? false) : true,
   })
 
   if (error) {
@@ -827,7 +827,7 @@ export async function updateCustomOrderRequester(input: {
       quantity: item.quantity,
     })),
     p_sell_entire_listing:
-      input.listingType === 'wts' ? (input.sellEntireListing ?? true) : true,
+      input.listingType === 'wts' ? (input.sellEntireListing ?? false) : true,
   })
 
   if (error) return { error: error.message }
