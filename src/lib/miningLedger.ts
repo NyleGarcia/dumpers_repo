@@ -4,7 +4,6 @@ export const MINING_LEDGER_SCHEMA_VERSION = 1 as const
 export const MINING_LEDGER_YIELD_FACTOR = 0.45
 /** Ledger ore defaults always use store-purchased Q0 DFP (no quality picker). */
 export const MINING_LEDGER_PRICE_QUALITY = 0 as const
-export const CSCU_PER_SCU = 100
 
 export interface MiningLedgerMiningRow {
   id: string
@@ -28,7 +27,7 @@ export interface MiningLedgerOtherProfit {
   profit: number
 }
 
-/** Manual price per 100 SCU of refined yield; omit pricePer100 to use Purchased Q0 DFP default. */
+/** Manual price per 100 cSCU of refined yield; omit pricePer100 to use Purchased Q0 DFP default. */
 export interface MiningLedgerPriceOverride {
   resourceKey: string
   resourceLabel: string
@@ -142,12 +141,16 @@ export function yieldEstimateFromUnrefined(unrefinedCscu: number): number {
   return Math.round(unrefinedCscu * MINING_LEDGER_YIELD_FACTOR)
 }
 
-/** Yield is in cSCU; pricePer100Scu is aUEC per 100 SCU of refined yield. */
-export function profitFromYieldCscu(yieldCscu: number, pricePer100Scu: number): number {
-  if (!Number.isFinite(yieldCscu) || !Number.isFinite(pricePer100Scu)) return 0
-  return (yieldCscu / CSCU_PER_SCU / 100) * pricePer100Scu
+/**
+ * Spreadsheet formula: profit = (yield / 100) × price.
+ * Yield is cSCU; price is aUEC per 100 cSCU of refined yield (column labels said SCU, math is cSCU).
+ */
+export function profitFromYieldCscu(yieldCscu: number, pricePer100Cscu: number): number {
+  if (!Number.isFinite(yieldCscu) || !Number.isFinite(pricePer100Cscu)) return 0
+  return (yieldCscu / 100) * pricePer100Cscu
 }
 
+/** Purchased Q0 DFP for 100 cSCU of yield (= 1 SCU). */
 export function defaultPricePer100(resourceKey: string, resourceLabel: string): number {
   const { unitDfpAuec } = pricingForResourceLine(
     resourceKey,
@@ -155,7 +158,7 @@ export function defaultPricePer100(resourceKey: string, resourceLabel: string): 
     MINING_LEDGER_PRICE_QUALITY,
     1
   )
-  return unitDfpAuec * 100
+  return unitDfpAuec
 }
 
 export function resolvePricePer100(

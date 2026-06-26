@@ -298,6 +298,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
 
   const [showCloseModal, setShowCloseModal] = useState(false)
   const [closeModalDismissed, setCloseModalDismissed] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showNewModal, setShowNewModal] = useState(false)
   const [newLedgerName, setNewLedgerName] = useState('')
   const [showAccessModal, setShowAccessModal] = useState(false)
@@ -355,6 +356,12 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
     const { error: closeError } = await closeLedger()
     setShowCloseModal(false)
     if (closeError) setError(closeError)
+  }
+
+  const handleDeleteLedger = async () => {
+    const { error: deleteError } = await closeLedger()
+    setShowDeleteModal(false)
+    if (deleteError) setError(deleteError)
   }
 
   const handleCreateLedger = async () => {
@@ -473,6 +480,13 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               className="px-3 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800"
             >
               Export JSON
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowDeleteModal(true)}
+              className="px-3 py-1.5 text-xs rounded-lg border border-red-500/40 text-red-400 hover:bg-red-500/10"
+            >
+              Delete ledger
             </button>
           </>
         )}
@@ -658,179 +672,6 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
             </table>
           </section>
 
-          {/* Deductibles + Other profits */}
-          <div className="grid sm:grid-cols-2 gap-4">
-            <section>
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-white">Deductibles</h3>
-                <button
-                  type="button"
-                  onClick={() =>
-                    updateData((prev) => ({
-                      ...prev,
-                      deductibles: [
-                        ...prev.deductibles,
-                        { id: newLedgerRowId(), label: '', cost: 0 },
-                      ],
-                    }))
-                  }
-                  className="text-xs text-orange-400 hover:text-orange-300"
-                >
-                  + Add
-                </button>
-              </div>
-              {data.deductibles.map((row: MiningLedgerDeductible) => (
-                <div key={row.id} className="flex gap-2 mb-1">
-                  <input
-                    type="text"
-                    value={row.label}
-                    onChange={(e) =>
-                      updateData((prev) => ({
-                        ...prev,
-                        deductibles: prev.deductibles.map((d) =>
-                          d.id === row.id ? { ...d, label: e.target.value } : d
-                        ),
-                      }))
-                    }
-                    placeholder="Label"
-                    className="site-input flex-1 px-2 py-1 text-xs"
-                  />
-                  <input
-                    type="number"
-                    value={row.cost || ''}
-                    onChange={(e) =>
-                      updateData((prev) => ({
-                        ...prev,
-                        deductibles: prev.deductibles.map((d) =>
-                          d.id === row.id ? { ...d, cost: Number(e.target.value) || 0 } : d
-                        ),
-                      }))
-                    }
-                    className="site-input w-24 px-2 py-1 text-xs"
-                  />
-                </div>
-              ))}
-            </section>
-            <section>
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-white">Other profits</h3>
-                <button
-                  type="button"
-                  onClick={() =>
-                    updateData((prev) => ({
-                      ...prev,
-                      otherProfits: [
-                        ...prev.otherProfits,
-                        { id: newLedgerRowId(), extra: '', profit: 0 },
-                      ],
-                    }))
-                  }
-                  className="text-xs text-orange-400 hover:text-orange-300"
-                >
-                  + Add
-                </button>
-              </div>
-              {data.otherProfits.map((row: MiningLedgerOtherProfit) => (
-                <div key={row.id} className="flex gap-2 mb-1">
-                  <input
-                    type="text"
-                    value={row.extra}
-                    onChange={(e) =>
-                      updateData((prev) => ({
-                        ...prev,
-                        otherProfits: prev.otherProfits.map((d) =>
-                          d.id === row.id ? { ...d, extra: e.target.value } : d
-                        ),
-                      }))
-                    }
-                    placeholder="Extra"
-                    className="site-input flex-1 px-2 py-1 text-xs"
-                  />
-                  <input
-                    type="number"
-                    value={row.profit || ''}
-                    onChange={(e) =>
-                      updateData((prev) => ({
-                        ...prev,
-                        otherProfits: prev.otherProfits.map((d) =>
-                          d.id === row.id ? { ...d, profit: Number(e.target.value) || 0 } : d
-                        ),
-                      }))
-                    }
-                    className="site-input w-24 px-2 py-1 text-xs"
-                  />
-                </div>
-              ))}
-            </section>
-          </div>
-
-          {/* Price list */}
-          <section className="overflow-x-auto">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-white">Ore prices (Purchased Q0, per 100 SCU yield)</h3>
-              <button
-                type="button"
-                onClick={seedPriceTable}
-                className="text-xs text-slate-400 hover:text-white"
-              >
-                Reset from catalog
-              </button>
-            </div>
-            <p className="text-[10px] text-slate-500 mb-2">
-              Defaults use Purchased (Q0) DFP per SCU. Profit uses cSCU yield amounts from mining
-              runs. Override any row manually.
-            </p>
-            <table className="w-full text-xs max-w-lg">
-              <thead>
-                <tr className="text-slate-500 text-left border-b border-slate-700/50">
-                  <th className="py-1">Ore</th>
-                  <th className="py-1">Price / 100 SCU</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ensurePriceOverrides(data, oreEntries).map((row) => {
-                  const defaultPrice = defaultPricePer100(row.resourceKey, row.resourceLabel)
-                  const effective =
-                    row.pricePer100 != null && Number.isFinite(row.pricePer100)
-                      ? row.pricePer100
-                      : defaultPrice
-                  return (
-                    <tr key={row.resourceKey} className="border-b border-slate-800/40">
-                      <td className="py-1 pr-2 text-slate-300">{row.resourceLabel}</td>
-                      <td className="py-1">
-                        <input
-                          type="number"
-                          value={row.pricePer100 ?? ''}
-                          placeholder={String(Math.round(defaultPrice))}
-                          onChange={(e) => {
-                            const val = e.target.value
-                            updateData((prev) => {
-                              const next = ensurePriceOverrides(prev, oreEntries).map((p) =>
-                                p.resourceKey === row.resourceKey
-                                  ? {
-                                      ...p,
-                                      pricePer100: val === '' ? null : Number(val) || 0,
-                                    }
-                                  : p
-                              )
-                              return { ...prev, priceOverrides: next }
-                            })
-                          }}
-                          className="site-input w-32 px-2 py-0.5 text-xs font-mono"
-                        />
-                        {row.pricePer100 == null && (
-                          <span className="text-slate-600 ml-1 tabular-nums">
-                            ({Math.round(effective).toLocaleString()})
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </section>
-
           {/* Crew */}
           <section className="overflow-x-auto">
             <div className="flex items-center justify-between mb-2">
@@ -955,6 +796,205 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               </tbody>
             </table>
           </section>
+
+          {/* Deductibles + Other profits */}
+          <div className="grid sm:grid-cols-2 gap-4">
+            <section>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-semibold text-white">Deductibles</h3>
+                <button
+                  type="button"
+                  onClick={() =>
+                    updateData((prev) => ({
+                      ...prev,
+                      deductibles: [
+                        ...prev.deductibles,
+                        { id: newLedgerRowId(), label: '', cost: 0 },
+                      ],
+                    }))
+                  }
+                  className="text-xs text-orange-400 hover:text-orange-300"
+                >
+                  + Add
+                </button>
+              </div>
+              {data.deductibles.map((row: MiningLedgerDeductible) => (
+                <div key={row.id} className="flex gap-2 mb-1 items-center">
+                  <input
+                    type="text"
+                    value={row.label}
+                    onChange={(e) =>
+                      updateData((prev) => ({
+                        ...prev,
+                        deductibles: prev.deductibles.map((d) =>
+                          d.id === row.id ? { ...d, label: e.target.value } : d
+                        ),
+                      }))
+                    }
+                    placeholder="Label"
+                    className="site-input flex-1 px-2 py-1 text-xs"
+                  />
+                  <input
+                    type="number"
+                    value={row.cost || ''}
+                    onChange={(e) =>
+                      updateData((prev) => ({
+                        ...prev,
+                        deductibles: prev.deductibles.map((d) =>
+                          d.id === row.id ? { ...d, cost: Number(e.target.value) || 0 } : d
+                        ),
+                      }))
+                    }
+                    className="site-input w-24 px-2 py-1 text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateData((prev) => ({
+                        ...prev,
+                        deductibles: prev.deductibles.filter((d) => d.id !== row.id),
+                      }))
+                    }
+                    className="text-slate-500 hover:text-red-400 shrink-0 px-1"
+                    aria-label="Remove deductible"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </section>
+            <section>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-semibold text-white">Other profits</h3>
+                <button
+                  type="button"
+                  onClick={() =>
+                    updateData((prev) => ({
+                      ...prev,
+                      otherProfits: [
+                        ...prev.otherProfits,
+                        { id: newLedgerRowId(), extra: '', profit: 0 },
+                      ],
+                    }))
+                  }
+                  className="text-xs text-orange-400 hover:text-orange-300"
+                >
+                  + Add
+                </button>
+              </div>
+              {data.otherProfits.map((row: MiningLedgerOtherProfit) => (
+                <div key={row.id} className="flex gap-2 mb-1 items-center">
+                  <input
+                    type="text"
+                    value={row.extra}
+                    onChange={(e) =>
+                      updateData((prev) => ({
+                        ...prev,
+                        otherProfits: prev.otherProfits.map((d) =>
+                          d.id === row.id ? { ...d, extra: e.target.value } : d
+                        ),
+                      }))
+                    }
+                    placeholder="Extra"
+                    className="site-input flex-1 px-2 py-1 text-xs"
+                  />
+                  <input
+                    type="number"
+                    value={row.profit || ''}
+                    onChange={(e) =>
+                      updateData((prev) => ({
+                        ...prev,
+                        otherProfits: prev.otherProfits.map((d) =>
+                          d.id === row.id ? { ...d, profit: Number(e.target.value) || 0 } : d
+                        ),
+                      }))
+                    }
+                    className="site-input w-24 px-2 py-1 text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateData((prev) => ({
+                        ...prev,
+                        otherProfits: prev.otherProfits.filter((d) => d.id !== row.id),
+                      }))
+                    }
+                    className="text-slate-500 hover:text-red-400 shrink-0 px-1"
+                    aria-label="Remove extra profit"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </section>
+          </div>
+
+          {/* Price list */}
+          <section className="overflow-x-auto">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold text-white">Ore prices (Purchased Q0, per 100 cSCU yield)</h3>
+              <button
+                type="button"
+                onClick={seedPriceTable}
+                className="text-xs text-slate-400 hover:text-white"
+              >
+                Reset from catalog
+              </button>
+            </div>
+            <p className="text-[10px] text-slate-500 mb-2">
+              Defaults use Purchased (Q0) DFP per 100 cSCU of yield. Profit = (yield cSCU ÷ 100) ×
+              price. Override any row manually, or Reset from catalog if values look 100× too high.
+            </p>
+            <table className="w-full text-xs max-w-lg">
+              <thead>
+                <tr className="text-slate-500 text-left border-b border-slate-700/50">
+                  <th className="py-1">Ore</th>
+                  <th className="py-1">Price / 100 cSCU</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ensurePriceOverrides(data, oreEntries).map((row) => {
+                  const defaultPrice = defaultPricePer100(row.resourceKey, row.resourceLabel)
+                  const effective =
+                    row.pricePer100 != null && Number.isFinite(row.pricePer100)
+                      ? row.pricePer100
+                      : defaultPrice
+                  return (
+                    <tr key={row.resourceKey} className="border-b border-slate-800/40">
+                      <td className="py-1 pr-2 text-slate-300">{row.resourceLabel}</td>
+                      <td className="py-1">
+                        <input
+                          type="number"
+                          value={row.pricePer100 ?? ''}
+                          placeholder={String(Math.round(defaultPrice))}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            updateData((prev) => {
+                              const next = ensurePriceOverrides(prev, oreEntries).map((p) =>
+                                p.resourceKey === row.resourceKey
+                                  ? {
+                                      ...p,
+                                      pricePer100: val === '' ? null : Number(val) || 0,
+                                    }
+                                  : p
+                              )
+                              return { ...prev, priceOverrides: next }
+                            })
+                          }}
+                          className="site-input w-32 px-2 py-0.5 text-xs font-mono"
+                        />
+                        {row.pricePer100 == null && (
+                          <span className="text-slate-600 ml-1 tabular-nums">
+                            ({Math.round(effective).toLocaleString()})
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </section>
         </>
       )}
 
@@ -984,6 +1024,36 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               className="px-4 py-1.5 text-sm rounded-lg bg-orange-600 hover:bg-orange-500 text-white"
             >
               Create
+            </button>
+          </div>
+        </AppModal>
+      )}
+
+      {showDeleteModal && (
+        <AppModal
+          title="Delete ledger"
+          subtitle={ledgerName ? `"${ledgerName}"` : undefined}
+          onClose={() => setShowDeleteModal(false)}
+          size="sm"
+        >
+          <p className="text-sm text-slate-300 mb-4">
+            Permanently delete this ledger from the site? This cannot be undone. Use{' '}
+            <strong className="text-white">Export JSON</strong> first if you need a copy.
+          </p>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setShowDeleteModal(false)}
+              className="px-3 py-1.5 text-sm text-slate-400"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleDeleteLedger()}
+              className="px-4 py-1.5 text-sm rounded-lg bg-red-600 hover:bg-red-500 text-white"
+            >
+              Delete ledger
             </button>
           </div>
         </AppModal>
