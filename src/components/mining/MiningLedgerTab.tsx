@@ -220,8 +220,8 @@ function CrewPlayerNameField({
   }, [query, linkedUserId])
 
   return (
-    <div className="relative min-w-[140px]">
-      <div className="flex items-center gap-1">
+    <div className="w-44 max-w-44 shrink-0">
+      <div className="flex items-center gap-1 min-w-0">
         <input
           type="text"
           value={query}
@@ -238,21 +238,21 @@ function CrewPlayerNameField({
             if (options.length > 0) setOpen(true)
           }}
           placeholder="RSI handle"
-          className="site-input w-full px-2 py-1 text-xs min-w-0"
+          className="site-input flex-1 min-w-0 w-0 px-2 py-1 text-xs"
           spellCheck={false}
           autoComplete="off"
         />
         <CrewRsiAlertIcon state={alertState} />
       </div>
       {open && options.length > 0 && (
-        <ul className="absolute z-20 mt-1 w-full max-h-40 overflow-y-auto rounded-lg border border-slate-600 bg-slate-900 shadow-lg">
+        <ul className="relative z-30 mt-1 w-44 max-w-44 rounded-lg border border-slate-600 bg-slate-900 shadow-lg">
           {options.map((member) => {
             const label = member.rsi_handle || member.display_name || 'Unknown'
             return (
               <li key={member.id}>
                 <button
                   type="button"
-                  className="w-full px-2 py-1.5 text-left text-xs hover:bg-slate-800 text-white"
+                  className="w-full px-2 py-1.5 text-left text-xs hover:bg-slate-800 text-white truncate"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {
                     skipValidationRef.current = true
@@ -313,6 +313,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
 
   const oreEntries = useMemo(() => oreCatalogEntries(catalog), [catalog])
   const computed = useMemo(() => computeMiningLedger(data), [data])
+  const isLedgerCreator = Boolean(user && detail && detail.created_by === user.id)
 
   useEffect(() => {
     if (computed.allCrewPaid && activeId && data.crew.length > 0 && !closeModalDismissed) {
@@ -477,13 +478,15 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
         </button>
         {activeId && (
           <>
-            <button
-              type="button"
-              onClick={() => setShowAccessModal(true)}
-              className="px-3 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800"
-            >
-              Manage access
-            </button>
+            {isLedgerCreator && (
+              <button
+                type="button"
+                onClick={() => setShowAccessModal(true)}
+                className="px-3 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800"
+              >
+                Manage access
+              </button>
+            )}
             <button
               type="button"
               onClick={handleExport}
@@ -723,7 +726,17 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 + Add member
               </button>
             </div>
-            <table className="w-full text-xs">
+            <table className="w-full text-xs table-fixed">
+              <colgroup>
+                <col className="w-44" />
+                <col className="w-16" />
+                <col className="w-24" />
+                <col />
+                <col />
+                <col className="w-10" />
+                <col />
+                <col className="w-8" />
+              </colgroup>
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
                   <th className="py-1 pr-2">Player</th>
@@ -741,8 +754,8 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                   const row = data.crew.find((c) => c.id === member.id)
                   if (!row) return null
                   return (
-                    <tr key={member.id} className="border-b border-slate-800/60">
-                      <td className="py-1 pr-2">
+                    <tr key={member.id} className="border-b border-slate-800/60 align-top">
+                      <td className="py-1 pr-2 w-44 max-w-44 align-top">
                         <CrewPlayerNameField
                           value={row.playerName}
                           linkedUserId={row.linkedUserId}
@@ -782,7 +795,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                             setCopyToast(`Copied ${Math.round(member.payoutActual).toLocaleString()} to clipboard`)
                             window.setTimeout(() => setCopyToast(null), 2000)
                           }}
-                          className="font-mono text-amber-300 tabular-nums hover:text-amber-200 underline decoration-dotted cursor-copy"
+                          className="font-mono text-amber-300 tabular-nums hover:text-amber-200 cursor-copy whitespace-nowrap"
                           title="Click to copy payout amount"
                         >
                           {formatLedgerMoney(member.payoutActual)}
@@ -1124,7 +1137,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
         </AppModal>
       )}
 
-      {showAccessModal && detail && (
+      {showAccessModal && detail && isLedgerCreator && (
         <AppModal
           title="Ledger access"
           subtitle="RSI-verified members only — per-ledger access"

@@ -88,6 +88,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Ledger ore profit uses Purchased (Q0) DFP per 100 cSCU of yield with cSCU unrefined/yield columns',
       'Ledger payout est. auto-calculates from pool estimate and shares; total payout is the sum of ore profit actual, split by shares for payout actual',
       'Creating a ledger adds you to crew once; granting access adds that member to crew once (removals stay removed)',
+      'Manage access (ledger creator only) grants edit rights to other RSI-verified members',
       'Ledger managers and crew receive site notifications for access changes, ledger close, and recorded payouts',
       'Crew RSI handles are validated live — green = verified site member, yellow = valid RSI not on site, red = invalid handle',
       'RSI Handles cannot contain spaces; autocomplete suggests verified members as you type',
