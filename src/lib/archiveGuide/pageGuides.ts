@@ -85,7 +85,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Hand-mineable gems show cave vs surface availability per planet from extracted game data',
       'Logged-in users sync to their account; Offline Mode saves locally',
       'Ledger tab (RSI-verified members only): track crew shares and payouts for a mining run',
-      'Ledger ore profit uses Purchased (Q0) DFP per 100 cSCU of yield with cSCU unrefined/yield columns',
+      'Ledger ore profit uses Purchased (Q0) DFP per 100 cSCU of yield with cSCU unrefined/yield columns; gems use whole-unit counts with per-gem pricing (never divided by 100)',
       'Ledger payout est. auto-calculates from pool estimate and shares; total payout is ore profit actual minus deductibles plus other profits, split by shares for payout actual',
       'Pool (actual) in the ledger summary shows mining ore profit actual only',
       'Creating a ledger adds you to crew once; granting access adds that member to crew once (removals stay removed)',

@@ -1,4 +1,5 @@
 import { pricingForResourceLine } from './orderPricing'
+import { isGemResource } from '../config/resourceTypes'
 
 export const MINING_LEDGER_SCHEMA_VERSION = 1 as const
 export const MINING_LEDGER_YIELD_FACTOR = 0.45
@@ -27,7 +28,7 @@ export interface MiningLedgerOtherProfit {
   profit: number
 }
 
-/** Manual price per 100 cSCU of refined yield; omit pricePer100 to use Purchased Q0 DFP default. */
+/** Manual ore price per 100 cSCU yield, or gem price per whole gem; omit to use Purchased Q0 DFP default. */
 export interface MiningLedgerPriceOverride {
   resourceKey: string
   resourceLabel: string
@@ -72,11 +73,13 @@ export interface MiningRowComputed {
   resourceKey: string
   resourceLabel: string
   quality: number
+  isGem: boolean
   unrefinedCscu: number
   yieldEstimate: number
   yieldActual: number
   profitEstimate: number
   profitActual: number
+  /** Ore: aUEC per 100 cSCU yield. Gems: aUEC per whole gem. */
   pricePer100: number
 }
 
@@ -144,20 +147,42 @@ export function createEmptyMiningLedgerData(): MiningLedgerData {
   }
 }
 
-export function yieldEstimateFromUnrefined(unrefinedCscu: number): number {
+export function yieldEstimateFromUnrefined(
+  resourceKey: string,
+  unrefinedCscu: number
+): number {
+  if (isGemResource(resourceKey)) {
+    return Math.max(0, Math.trunc(unrefinedCscu))
+  }
   return Math.round(unrefinedCscu * MINING_LEDGER_YIELD_FACTOR)
 }
 
 /**
- * Spreadsheet formula: profit = (yield / 100) × price.
- * Yield is cSCU; price is aUEC per 100 cSCU of refined yield (column labels said SCU, math is cSCU).
+ * Ore: profit = (yield cSCU / 100) × price per 100 cSCU.
+ * Gems: profit = whole gem count × price per gem (never divided by 100).
+ */
+export function profitFromRowYield(
+  resourceKey: string,
+  yieldAmount: number,
+  pricePer100: number
+): number {
+  if (!Number.isFinite(yieldAmount) || !Number.isFinite(pricePer100)) return 0
+  if (isGemResource(resourceKey)) {
+    return Math.trunc(Math.max(0, yieldAmount)) * pricePer100
+  }
+  return (yieldAmount / 100) * pricePer100
+}
+
+/**
+ * Spreadsheet formula for ore: profit = (yield / 100) × price.
+ * Yield is cSCU; price is aUEC per 100 cSCU of refined yield.
  */
 export function profitFromYieldCscu(yieldCscu: number, pricePer100Cscu: number): number {
   if (!Number.isFinite(yieldCscu) || !Number.isFinite(pricePer100Cscu)) return 0
   return (yieldCscu / 100) * pricePer100Cscu
 }
 
-/** Purchased Q0 DFP for 100 cSCU of yield (= 1 SCU). */
+/** Purchased Q0 DFP per 100 cSCU yield for ore, or per gem for gems (qty=1). */
 export function defaultPricePer100(resourceKey: string, resourceLabel: string): number {
   const { unitDfpAuec } = pricingForResourceLine(
     resourceKey,
@@ -216,8 +241,14 @@ export function seedCrewMemberOnce(
 
 export function computeMiningLedger(data: MiningLedgerData): MiningLedgerComputed {
   const miningRows: MiningRowComputed[] = data.miningRows.map((row) => {
-    const yieldEst = yieldEstimateFromUnrefined(row.unrefinedCscu)
-    const yieldAct = row.yieldActual ?? yieldEst
+    const isGem = isGemResource(row.resourceKey)
+    const yieldEst = yieldEstimateFromUnrefined(row.resourceKey, row.unrefinedCscu)
+    const yieldAct =
+      row.yieldActual != null
+        ? isGem
+          ? Math.max(0, Math.trunc(row.yieldActual))
+          : row.yieldActual
+        : yieldEst
     const pricePer100 = resolvePricePer100(
       row.resourceKey,
       row.resourceLabel,
@@ -228,11 +259,12 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
       resourceKey: row.resourceKey,
       resourceLabel: row.resourceLabel,
       quality: row.quality,
+      isGem,
       unrefinedCscu: row.unrefinedCscu,
       yieldEstimate: yieldEst,
       yieldActual: yieldAct,
-      profitEstimate: profitFromYieldCscu(yieldEst, pricePer100),
-      profitActual: profitFromYieldCscu(yieldAct, pricePer100),
+      profitEstimate: profitFromRowYield(row.resourceKey, yieldEst, pricePer100),
+      profitActual: profitFromRowYield(row.resourceKey, yieldAct, pricePer100),
       pricePer100,
     }
   })

@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useResourceCatalog } from '../../hooks/useResourceCatalog'
 import { useMiningLedger } from '../../hooks/useMiningLedger'
 import { DEFAULT_STOCK_QUALITY } from '../../config/dfp'
-import { getResourceType } from '../../config/resourceTypes'
+import { getResourceType, isGemResource } from '../../config/resourceTypes'
 import type { BlueprintResourceRow } from '../../lib/operations'
 import {
   buildLedgerExportJson,
@@ -606,6 +606,10 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 + Add row
               </button>
             </div>
+            <p className="text-[10px] text-slate-500 mb-1">
+              Ore amounts are cSCU (yield est. uses 45% refine factor). Gems are whole units — no
+              cSCU division; profit = count × price per gem.
+            </p>
             <div className={LEDGER_TABLE_SCROLL}>
             <table className="w-full min-w-[52rem] text-xs table-fixed">
               <colgroup>
@@ -620,11 +624,11 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               </colgroup>
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
-                  <th className="py-1 pr-2">Ore</th>
+                  <th className="py-1 pr-2">Ore / Gem</th>
                   <th className="py-1 pr-2">Q</th>
-                  <th className="py-1 pr-2">Unrefined cSCU</th>
-                  <th className="py-1 pr-2">Yield est. (cSCU)</th>
-                  <th className="py-1 pr-2">Yield act. (cSCU)</th>
+                  <th className="py-1 pr-2">Amount</th>
+                  <th className="py-1 pr-2">Yield est.</th>
+                  <th className="py-1 pr-2">Yield act.</th>
                   <th className="py-1 pr-2">Profit est.</th>
                   <th className="py-1 pr-2">Profit act.</th>
                   <th className="py-1 w-8" />
@@ -633,6 +637,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               <tbody>
                 {data.miningRows.map((row) => {
                   const calc = computed.miningRows.find((r) => r.id === row.id)
+                  const isGem = calc?.isGem ?? isGemResource(row.resourceKey)
                   return (
                     <tr key={row.id} className="border-b border-slate-800/60">
                       <td className="py-1 pr-2">
@@ -640,9 +645,17 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           value={row.resourceKey}
                           onChange={(e) => {
                             const entry = oreEntries.find((o) => o.resource_key === e.target.value)
+                            const nextIsGem = isGemResource(e.target.value)
                             patchMiningRow(row.id, {
                               resourceKey: e.target.value,
                               resourceLabel: entry?.label ?? e.target.value,
+                              unrefinedCscu: nextIsGem
+                                ? Math.max(0, Math.trunc(row.unrefinedCscu))
+                                : row.unrefinedCscu,
+                              yieldActual:
+                                row.yieldActual != null && nextIsGem
+                                  ? Math.max(0, Math.trunc(row.yieldActual))
+                                  : row.yieldActual,
                             })
                           }}
                           className="site-input w-[8.5rem] max-w-[8.5rem] px-1 py-0.5 text-xs"
@@ -670,13 +683,18 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           value={row.unrefinedCscu || ''}
                           onChange={(e) =>
                             patchMiningRow(row.id, {
-                              unrefinedCscu: Number(e.target.value) || 0,
+                              unrefinedCscu: isGem
+                                ? Math.max(0, Math.trunc(Number(e.target.value) || 0))
+                                : Number(e.target.value) || 0,
                             })
                           }
                           className="site-input w-[6rem] max-w-[6rem] shrink-0 px-1 py-0.5 text-xs"
                           min={0}
-                          step="any"
+                          step={isGem ? 1 : 'any'}
                         />
+                        <span className="text-[10px] text-slate-600 ml-0.5">
+                          {isGem ? 'gems' : 'cSCU'}
+                        </span>
                       </td>
                       <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
                         {calc?.yieldEstimate ?? '—'}
@@ -689,12 +707,16 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           onChange={(e) =>
                             patchMiningRow(row.id, {
                               yieldActual:
-                                e.target.value === '' ? null : Number(e.target.value) || 0,
+                                e.target.value === ''
+                                  ? null
+                                  : isGem
+                                    ? Math.max(0, Math.trunc(Number(e.target.value) || 0))
+                                    : Number(e.target.value) || 0,
                             })
                           }
                           className="site-input w-[6rem] max-w-[6rem] shrink-0 px-1 py-0.5 text-xs"
                           min={0}
-                          step="any"
+                          step={isGem ? 1 : 'any'}
                         />
                       </td>
                       <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
@@ -1010,7 +1032,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
           {/* Price list */}
           <section>
             <div className={LEDGER_SECTION_HEAD}>
-              <h3 className="text-sm font-semibold text-white">Ore prices (Purchased Q0, per 100 cSCU yield)</h3>
+              <h3 className="text-sm font-semibold text-white">Resource prices (Purchased Q0)</h3>
               <button
                 type="button"
                 onClick={seedPriceTable}
@@ -1020,18 +1042,20 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               </button>
             </div>
             <p className="text-[10px] text-slate-500 mb-2">
-              Defaults use Purchased (Q0) DFP per 100 cSCU of yield. Profit = (yield cSCU ÷ 100) ×
-              price. Override any row manually, or Reset from catalog if values look 100× too high.
+              Ore defaults: Purchased (Q0) DFP per 100 cSCU yield — profit = (yield cSCU ÷ 100) ×
+              price. Gem defaults: DFP per whole gem — profit = gem count × price (never divided by
+              100). Override any row manually, or Reset from catalog if values look 100× too high.
             </p>
             <table className="w-full text-xs">
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
-                  <th className="py-1">Ore</th>
-                  <th className="py-1">Price / 100 cSCU</th>
+                  <th className="py-1">Resource</th>
+                  <th className="py-1">Price</th>
                 </tr>
               </thead>
               <tbody>
                 {ensurePriceOverrides(data, oreEntries).map((row) => {
+                  const isGem = isGemResource(row.resourceKey)
                   const defaultPrice = defaultPricePer100(row.resourceKey, row.resourceLabel)
                   const effective =
                     row.pricePer100 != null && Number.isFinite(row.pricePer100)
@@ -1060,7 +1084,12 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                             })
                           }}
                           className="site-input w-32 px-2 py-0.5 text-xs font-mono"
+                          min={0}
+                          step={isGem ? 1 : 'any'}
                         />
+                        <span className="text-slate-600 ml-1 tabular-nums text-[10px]">
+                          {isGem ? 'aUEC / gem' : 'aUEC / 100 cSCU'}
+                        </span>
                         {row.pricePer100 == null && (
                           <span className="text-slate-600 ml-1 tabular-nums">
                             ({Math.round(effective).toLocaleString()})
