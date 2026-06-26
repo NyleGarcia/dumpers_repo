@@ -129,14 +129,21 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
       const deliveryErrors = result.errors?.length
         ? ` Delivery issues: ${result.errors.join('; ')}`
         : ''
+      const deliveryNotices = result.notices?.length
+        ? ` ${result.notices.join(' ')}`
+        : ''
       const noneProcessed =
         (result.processed ?? 0) === 0 && (queueStatus?.pending_count ?? 0) + (queueStatus?.held_count ?? 0) > 0
+      const processedButNotSent =
+        (result.processed ?? 0) > 0 && (result.sent ?? 0) === 0
 
       setMessage({
-        type: noneProcessed || result.errors?.length ? 'error' : 'success',
+        type: noneProcessed || result.errors?.length || processedButNotSent ? 'error' : 'success',
         text: noneProcessed
           ? `No messages were processed.${deliveryErrors || ' The message may be waiting on coalesce or webhook delivery failed — redeploy send-discord and apply migration 093.'}`
-          : `Processed ${result.processed} messages, sent ${result.sent} notifications.${deliveryErrors}`,
+          : processedButNotSent
+            ? `Processed ${result.processed} message(s) but sent 0 Discord notifications.${deliveryNotices || deliveryErrors || ' No webhooks matched this event type.'}`
+            : `Processed ${result.processed} messages, sent ${result.sent} notifications.${deliveryErrors}${deliveryNotices}`,
       })
       const statusRes = await getDiscordQueueStatus()
       if (statusRes.success && statusRes.status) {
@@ -434,6 +441,15 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                 Clear All
               </button>
             </div>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Marketplace alerts require matching subscriptions on{' '}
+              <span className="text-slate-400">/discord-subscribe</span>. Coalesced digests need{' '}
+              <span className="text-slate-400">market_wtb_new</span>,{' '}
+              <span className="text-slate-400">market_wts_new</span>, or{' '}
+              <span className="text-slate-400">market_cancelled</span> — not just{' '}
+              <span className="text-slate-400">market_accepted</span>. You never receive Discord for
+              your own marketplace posts.
+            </p>
           </div>
 
           {/* Registered Webhooks */}

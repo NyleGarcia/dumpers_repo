@@ -474,6 +474,7 @@ export async function processDiscordQueue(): Promise<{
   processed?: number
   sent?: number
   errors?: string[]
+  notices?: string[]
   error?: string
 }> {
   try {
@@ -494,6 +495,7 @@ export async function processDiscordQueue(): Promise<{
       processed: data?.processed ?? 0,
       sent: data?.sent ?? 0,
       errors: Array.isArray(data?.errors) ? (data.errors as string[]) : undefined,
+      notices: Array.isArray(data?.notices) ? (data.notices as string[]) : undefined,
     }
   } catch (err) {
     return { success: false, error: (err as Error).message }

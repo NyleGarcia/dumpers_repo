@@ -139,6 +139,17 @@ function isMarketEvent(eventType: string): boolean {
   return eventType.startsWith('market_')
 }
 
+function marketSubscribeHint(eventType: string): string {
+  if (eventType === 'market_coalesced') {
+    return 'market_wtb_new, market_wts_new, or market_cancelled'
+  }
+  return eventType
+}
+
+function personalSubscribeHint(eventType: string): string {
+  return `${eventType} on your personal webhook at /discord-subscribe`
+}
+
 function isLegacyPublicEvent(eventType: string): boolean {
   return ['orders', 'order_new', 'order_fulfilled', 'order_cancelled', 'blueprints'].includes(
     eventType
@@ -287,6 +298,7 @@ serve(async (req) => {
     let processed = 0
     let sent = 0
     const errors: string[] = []
+    const notices: string[] = []
 
     for (const msg of messages as QueuedMessage[]) {
       const rawFields = Array.isArray(msg.fields)
@@ -336,7 +348,9 @@ serve(async (req) => {
             shouldMarkProcessed = false
             errors.push(`Failed to get personal webhooks for ${msg.event_type}: ${webhookError.message}`)
           } else if ((webhooks || []).length === 0) {
-            console.log(`No personal webhooks for ${msg.event_type} / ${msg.target_user_id}`)
+            notices.push(
+              `${msg.event_type} (“${msg.title.slice(0, 60)}”): no personal webhook subscribed — enable ${personalSubscribeHint(msg.event_type)}`
+            )
           } else {
             const result = await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
             deliverySent += result.sent
@@ -358,7 +372,22 @@ serve(async (req) => {
           shouldMarkProcessed = false
           errors.push(`Failed to get market webhooks for ${msg.event_type}: ${webhookError.message}`)
         } else if ((webhooks || []).length === 0) {
-          console.log(`No market webhooks for ${msg.event_type}`)
+          const { data: includingActor } = await supabase.rpc(
+            'get_discord_webhooks_for_market_event',
+            { p_event_type: msg.event_type, p_exclude_user_id: null }
+          )
+          const hint = marketSubscribeHint(msg.event_type)
+          if ((includingActor || []).length === 0) {
+            notices.push(
+              `${msg.event_type} (“${msg.title.slice(0, 60)}”): no webhooks subscribed — add ${hint} on /discord-subscribe`
+            )
+          } else if (msg.actor_user_id) {
+            notices.push(
+              `${msg.event_type} (“${msg.title.slice(0, 60)}”): skipped your webhook(s) — marketplace alerts never echo your own posts/actions`
+            )
+          } else {
+            notices.push(`${msg.event_type}: no matching active webhooks`)
+          }
         } else {
           const result = await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
           deliverySent += result.sent
@@ -379,7 +408,9 @@ serve(async (req) => {
           shouldMarkProcessed = false
           errors.push(`Failed to get webhooks for ${msg.event_type}: ${webhookError.message}`)
         } else if ((webhooks || []).length === 0) {
-          console.log(`No legacy webhooks for ${msg.event_type}`)
+          notices.push(
+            `${msg.event_type} (“${msg.title.slice(0, 60)}”): no legacy webhooks subscribed`
+          )
         } else {
           const result = await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
           deliverySent += result.sent
@@ -410,6 +441,7 @@ serve(async (req) => {
         processed,
         sent,
         errors: errors.length > 0 ? errors : undefined,
+        notices: notices.length > 0 ? notices : undefined,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
