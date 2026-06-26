@@ -1,0 +1,238 @@
+import React, { useMemo, useState } from 'react'
+import { formatDfpAuec, formatResourceOrderQualityLabel } from '../lib/dfp'
+import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
+import { formatQuantityForResource } from '../lib/resourceQuantity'
+import type { CustomOrder } from '../lib/operations'
+
+export interface WtsLineSelection {
+  lineId: string
+  kind: 'blueprint' | 'resource'
+  quantity: number
+}
+
+interface WtsPartialPurchasePanelProps {
+  order: CustomOrder
+  showDfp?: boolean
+  disabled?: boolean
+  submitting?: boolean
+  onPurchase: (selections: WtsLineSelection[]) => void | Promise<void>
+}
+
+export default function WtsPartialPurchasePanel({
+  order,
+  showDfp = true,
+  disabled = false,
+  submitting = false,
+  onPurchase,
+}: WtsPartialPurchasePanelProps) {
+  const blueprintLines = useMemo(
+    () =>
+      [...(order.blueprints ?? [])]
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .map((row) => ({
+          lineId: row.id,
+          title: row.blueprint_title ?? row.blueprint_id,
+          available: row.quantity,
+          unitDfpAuec: Number(row.unit_dfp_auec),
+          isBlueprint: true as const,
+        })),
+    [order.blueprints]
+  )
+
+  const resourceLines = useMemo(
+    () =>
+      [...(order.resource_lines ?? [])]
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .map((row) => ({
+          lineId: row.id,
+          title: row.resource_label,
+          resourceKey: row.resource_key,
+          minQuality: row.min_quality,
+          available: Number(row.quantity_scu),
+          unitDfpAuec: Number(row.unit_dfp_auec),
+          isBlueprint: false as const,
+        })),
+    [order.resource_lines]
+  )
+
+  const [selected, setSelected] = useState<Record<string, boolean>>({})
+  const [quantities, setQuantities] = useState<Record<string, string>>({})
+
+  const toggleLine = (lineId: string, defaultQty: number) => {
+    setSelected((prev) => {
+      const next = { ...prev, [lineId]: !prev[lineId] }
+      if (next[lineId] && quantities[lineId] == null) {
+        setQuantities((q) => ({ ...q, [lineId]: String(defaultQty === Math.trunc(defaultQty) ? Math.min(1, defaultQty) || 1 : defaultQty) }))
+      }
+      return next
+    })
+  }
+
+  const selectionTotal = useMemo(() => {
+    let total = 0
+    for (const line of blueprintLines) {
+      if (!selected[line.lineId]) continue
+      const qty = Math.min(
+        line.available,
+        Math.max(1, Math.trunc(Number(quantities[line.lineId]) || 0))
+      )
+      total += line.unitDfpAuec * qty
+    }
+    for (const line of resourceLines) {
+      if (!selected[line.lineId]) continue
+      const qty = Math.min(line.available, Math.max(0.001, Number(quantities[line.lineId]) || 0))
+      total += Math.round(line.unitDfpAuec * qty)
+    }
+    return total
+  }, [blueprintLines, resourceLines, selected, quantities])
+
+  const buildSelections = (): WtsLineSelection[] => {
+    const out: WtsLineSelection[] = []
+    for (const line of blueprintLines) {
+      if (!selected[line.lineId]) continue
+      const qty = Math.min(
+        line.available,
+        Math.max(1, Math.trunc(Number(quantities[line.lineId]) || 0))
+      )
+      out.push({ lineId: line.lineId, kind: 'blueprint', quantity: qty })
+    }
+    for (const line of resourceLines) {
+      if (!selected[line.lineId]) continue
+      const qty = Math.min(line.available, Math.max(0.001, Number(quantities[line.lineId]) || 0))
+      out.push({ lineId: line.lineId, kind: 'resource', quantity: qty })
+    }
+    return out
+  }
+
+  return (
+    <div className="mt-3 p-3 rounded-lg border border-cyan-500/30 bg-cyan-950/20 space-y-3">
+      <div>
+        <p className="text-cyan-200 text-xs font-medium">Partial purchase available</p>
+        <p className="text-slate-400 text-[11px] mt-0.5">
+          Check the items you want and set quantities. Unsold stock stays listed.
+        </p>
+      </div>
+
+      <div className="space-y-2">
+        {blueprintLines.map((line) => {
+          const isOn = !!selected[line.lineId]
+          return (
+            <div
+              key={line.lineId}
+              className={`rounded-lg border p-2.5 ${
+                isOn ? 'border-cyan-500/40 bg-slate-900/50' : 'border-slate-700 bg-slate-900/30'
+              }`}
+            >
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isOn}
+                  onChange={() => toggleLine(line.lineId, 1)}
+                  className="mt-1 accent-cyan-500"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <span className="text-white text-sm font-medium">{line.title}</span>
+                    <span className="text-slate-500 text-xs">
+                      {line.available} listed
+                      {showDfp && line.unitDfpAuec > 0 && (
+                        <span className="text-amber-300/80 ml-1">
+                          · {formatDfpAuec(line.unitDfpAuec)}/ea
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  {isOn && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-slate-500 text-xs">Buying</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={line.available}
+                        value={quantities[line.lineId] ?? '1'}
+                        onChange={(e) =>
+                          setQuantities((q) => ({ ...q, [line.lineId]: e.target.value }))
+                        }
+                        className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm"
+                      />
+                      <span className="text-slate-500 text-xs">of {line.available}</span>
+                    </div>
+                  )}
+                </div>
+              </label>
+            </div>
+          )
+        })}
+
+        {resourceLines.map((line) => {
+          const isOn = !!selected[line.lineId]
+          return (
+            <div
+              key={line.lineId}
+              className={`rounded-lg border p-2.5 ${
+                isOn ? 'border-cyan-500/40 bg-slate-900/50' : 'border-slate-700 bg-slate-900/30'
+              }`}
+            >
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isOn}
+                  onChange={() => toggleLine(line.lineId, line.available)}
+                  className="mt-1 accent-cyan-500"
+                />
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <span className={`text-sm ${resourceLabelClassName(line.resourceKey)}`}>
+                      {line.title}
+                    </span>
+                    <span className="text-slate-500 text-xs">
+                      {formatQuantityForResource(line.resourceKey, line.available)}{' '}
+                      {resourceQuantityUnitLabel(line.resourceKey)} listed ·{' '}
+                      {formatResourceOrderQualityLabel(line.resourceKey, line.title, line.minQuality)}
+                    </span>
+                  </div>
+                  {isOn && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-slate-500 text-xs">Buying</span>
+                      <input
+                        type="number"
+                        min={0.001}
+                        max={line.available}
+                        step={0.001}
+                        value={quantities[line.lineId] ?? String(line.available)}
+                        onChange={(e) =>
+                          setQuantities((q) => ({ ...q, [line.lineId]: e.target.value }))
+                        }
+                        className="w-24 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm"
+                      />
+                    </div>
+                  )}
+                </div>
+              </label>
+            </div>
+          )
+        })}
+      </div>
+
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-1 border-t border-cyan-500/20">
+        {showDfp && (
+          <p className="text-amber-200 text-sm">
+            Selected total: <span className="font-medium">{formatDfpAuec(selectionTotal)}</span>
+          </p>
+        )}
+        <button
+          type="button"
+          disabled={disabled || submitting || selectionTotal <= 0}
+          onClick={() => {
+            const selections = buildSelections()
+            if (selections.length === 0) return
+            void onPurchase(selections)
+          }}
+          className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
+        >
+          {submitting ? 'Purchasing...' : 'Buy selected items'}
+        </button>
+      </div>
+    </div>
+  )
+}

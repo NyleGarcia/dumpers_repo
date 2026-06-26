@@ -21,6 +21,10 @@ export function releaseOrderButtonLabel(
 ): string {
   if (!userId || !shouldReleaseOrderToPool(order, userId)) return 'Cancel'
 
+  if (order.source_listing_id) {
+    return order.assignee_id === userId ? 'Cancel purchase' : 'Cancel sale'
+  }
+
   if (order.listing_type === 'wts' && order.assignee_id === userId) {
     return 'Release listing'
   }
@@ -31,6 +35,9 @@ export function releaseOrderButtonLabel(
 }
 
 export function releaseOrderConfirmMessage(order: CustomOrder): string {
+  if (order.source_listing_id) {
+    return 'Cancel this partial purchase? Selected items will return to the seller\'s listing.'
+  }
   if (order.listing_type === 'wts') {
     return 'Release this listing back to the fulfillment pool? Another member can buy it.'
   }

@@ -123,6 +123,10 @@ export interface CustomOrder {
   min_fulfiller_reputation: number | null
   assignee_id: string | null
   accepted_at: string | null
+  /** WTS listings: when true, buyer must purchase all lines at listed quantities. */
+  sell_entire_listing?: boolean
+  /** WTS partial purchase orders reference the parent listing. */
+  source_listing_id?: string | null
   ready_at: string | null
   completed_at: string | null
   dispute_opened_at: string | null
@@ -674,6 +678,8 @@ export async function createCustomOrder(input: {
   resources: CustomOrderResourceInput[]
   items: { resourceKey: string; quantity: number }[]
   orderOverridesMap?: Record<string, boolean>
+  /** WTS only — default true (full listing required). */
+  sellEntireListing?: boolean
 }): Promise<CreateOrderResult> {
   if (input.blueprints.length === 0 && input.resources.length === 0) {
     return { error: 'Add at least one blueprint or resource to the order' }
@@ -715,6 +721,8 @@ export async function createCustomOrder(input: {
       quantity: item.quantity,
     })),
     p_listing_type: input.listingType ?? 'wtb',
+    p_sell_entire_listing:
+      input.listingType === 'wts' ? (input.sellEntireListing ?? true) : true,
   })
 
   if (error) {
@@ -765,6 +773,9 @@ export async function updateCustomOrderRequester(input: {
   resources: CustomOrderResourceInput[]
   items: { resourceKey: string; quantity: number }[]
   orderOverridesMap?: Record<string, boolean>
+  /** WTS only — default true (full listing required). */
+  sellEntireListing?: boolean
+  listingType?: 'wtb' | 'wts'
 }): Promise<{ error?: string }> {
   if (input.blueprints.length === 0 && input.resources.length === 0) {
     return { error: 'Add at least one blueprint or resource to the order' }
@@ -815,10 +826,44 @@ export async function updateCustomOrderRequester(input: {
       resource_key: item.resourceKey,
       quantity: item.quantity,
     })),
+    p_sell_entire_listing:
+      input.listingType === 'wts' ? (input.sellEntireListing ?? true) : true,
   })
 
   if (error) return { error: error.message }
   return {}
+}
+
+export async function acceptWtsPartialPurchase(
+  listingId: string,
+  selections: { lineId: string; kind: 'blueprint' | 'resource'; quantity: number }[]
+): Promise<{ purchaseOrderId?: string; listingId?: string; error?: string }> {
+  const { data, error } = await supabase.rpc('accept_wts_partial', {
+    p_listing_id: listingId,
+    p_selections: selections.map((sel) => ({
+      line_id: sel.lineId,
+      kind: sel.kind,
+      quantity: sel.quantity,
+    })),
+  })
+
+  if (error) return { error: error.message }
+
+  const result = data as {
+    success?: boolean
+    purchase_order_id?: string
+    listing_id?: string
+    error?: string
+  }
+
+  if (!result?.success) {
+    return { error: result?.error ?? 'Failed to purchase selected items' }
+  }
+
+  return {
+    purchaseOrderId: result.purchase_order_id,
+    listingId: result.listing_id,
+  }
 }
 
 export async function deleteCustomOrderRequester(

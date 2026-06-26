@@ -36,3 +36,17 @@ export function isSemanticSeller(order: CustomOrder, userId: string): boolean {
 export function listingTypeLabel(type: ListingType): string {
   return type === 'wts' ? 'WTS' : 'WTB'
 }
+
+/** Pending WTS listing that allows partial purchases. */
+export function isWtsPartialListing(order: CustomOrder): boolean {
+  return (
+    orderListingType(order) === 'wts' &&
+    order.sell_entire_listing === false &&
+    !order.source_listing_id
+  )
+}
+
+/** Child order created from a partial WTS purchase. */
+export function isWtsPartialPurchaseOrder(order: CustomOrder): boolean {
+  return orderListingType(order) === 'wts' && !!order.source_listing_id
+}

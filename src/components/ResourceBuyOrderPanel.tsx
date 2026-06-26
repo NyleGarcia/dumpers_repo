@@ -167,6 +167,7 @@ export default function ResourceBuyOrderPanel({
   }>({ show: false, message: '' })
   const [pendingListingType, setPendingListingType] = useState<'wtb' | 'wts'>('wtb')
   const [expandedCartKey, setExpandedCartKey] = useState<string | null>(null)
+  const [sellEntireListing, setSellEntireListing] = useState(true)
 
   useEffect(() => {
     if (!editOrder) return
@@ -189,6 +190,7 @@ export default function ResourceBuyOrderPanel({
         ? String(editOrder.min_fulfiller_reputation)
         : ''
     )
+    setSellEntireListing(editOrder.sell_entire_listing !== false)
     setMode(
       resolveOrderBlueprintLines(editOrder).length > 0 ? 'blueprint' : 'resource'
     )
@@ -439,12 +441,15 @@ export default function ResourceBuyOrderPanel({
           orderId: editOrder!.id,
           ...payload,
           orderOverridesMap,
+          listingType: editOrder!.listing_type === 'wts' ? 'wts' : 'wtb',
+          sellEntireListing,
         })
       : await createCustomOrder({
           requesterId: userId,
           listingType,
           ...payload,
           orderOverridesMap,
+          sellEntireListing: listingType === 'wts' ? sellEntireListing : true,
         })
 
     setSubmitting(false)
@@ -876,6 +881,27 @@ export default function ResourceBuyOrderPanel({
               </option>
             ))}
           </select>
+        </div>
+
+        <div className="bg-slate-900/60 border border-cyan-700/30 rounded-xl p-4 space-y-2">
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={sellEntireListing}
+              onChange={(e) => setSellEntireListing(e.target.checked)}
+              className="mt-0.5 accent-cyan-500"
+            />
+            <div>
+              <span className="text-slate-300 text-sm font-medium">
+                Buyers must purchase the full listing
+              </span>
+              <p className="text-slate-500 text-xs mt-1">
+                Applies to sell (WTS) orders only. When unchecked, buyers can pick individual items
+                and quantities on Fulfillment. Unsold stock stays listed; cancelled purchases restore
+                quantities to your listing.
+              </p>
+            </div>
+          </label>
         </div>
 
         <textarea

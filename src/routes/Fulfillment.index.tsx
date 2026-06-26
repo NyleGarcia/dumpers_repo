@@ -5,6 +5,9 @@ import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
 import OrderRatingModal from '../components/OrderRatingModal'
 import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
+import WtsPartialPurchasePanel, {
+  type WtsLineSelection,
+} from '../components/WtsPartialPurchasePanel'
 import ReputationBadge from '../components/ReputationBadge'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
@@ -18,6 +21,7 @@ import {
   getOrderAcceptBlockers,
 } from '../lib/orderAccept'
 import { canFulfillerArchive } from '../lib/orderArchive'
+import { releaseOrderConfirmMessage, releaseOrderButtonLabel } from '../lib/orderRelease'
 import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
 import { orderHasHighQualityBlueprint } from '../lib/orderDeadlines'
 import { orderTotalDfp, resolveOrderFulfillmentItems } from '../lib/orderPricing'
@@ -35,6 +39,7 @@ import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useAuth } from '../contexts/AuthContext'
 import {
   acceptCustomOrder,
+  acceptWtsPartialPurchase,
   abandonCustomOrderFulfillment,
   archiveCustomOrderWithRating,
   completeOrderCraft,
@@ -53,6 +58,7 @@ import {
 } from '../lib/operations'
 import { displayNameFromFields } from '../lib/supabase'
 import {
+  isWtsPartialListing,
   matchesListingTypeFilter,
   orderListingType,
   type ListingTypeFilter,
@@ -305,6 +311,35 @@ export default function FulfillmentRoute() {
     return { canFulfill: shortages.length === 0, shortages }
   }, [selectedOrder, selectedFulfillmentItems, quantityByKey, labelMap, craftDeductInventory])
 
+  const handleAcceptPartial = async (listingId: string, selections: WtsLineSelection[]) => {
+    setAcceptingOrderId(listingId)
+    setError(null)
+
+    const result = await acceptWtsPartialPurchase(listingId, selections)
+
+    if (result.error) {
+      setAcceptingOrderId(null)
+      setError(result.error)
+      return
+    }
+
+    if (result.purchaseOrderId) {
+      const { data: refreshed } = await fetchCustomOrders()
+      const purchaseOrder = refreshed.find((o) => o.id === result.purchaseOrderId)
+      if (purchaseOrder) {
+        const syncResult = await syncFulfillmentItems(purchaseOrder)
+        if (syncResult.error) {
+          setAcceptingOrderId(null)
+          setError(syncResult.error)
+          return
+        }
+      }
+    }
+
+    setAcceptingOrderId(null)
+    await loadData()
+  }
+
   const handleAccept = async (orderId: string) => {
     const order = orders.find((o) => o.id === orderId)
     if (!order) return
@@ -332,9 +367,12 @@ export default function FulfillmentRoute() {
   }
 
   const handleAbandon = async (orderId: string) => {
+    const order = orders.find((o) => o.id === orderId)
     if (
       !window.confirm(
-        'Release this order back to the fulfillment pool? Another member can accept it.'
+        order
+          ? releaseOrderConfirmMessage(order)
+          : 'Release this order back to the fulfillment pool? Another member can accept it.'
       )
     ) {
       return
@@ -648,6 +686,7 @@ export default function FulfillmentRoute() {
                   {visiblePendingOrders.map((order) => {
                     const totalDfp = orderTotalDfp(order)
                     const isWts = orderListingType(order) === 'wts'
+                    const allowsPartial = isWts && isWtsPartialListing(order)
                     const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
                     const acceptBlockers = getOrderAcceptBlockers({
                       order,
@@ -669,10 +708,21 @@ export default function FulfillmentRoute() {
                         className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                          <div className="space-y-2">
+                          <div className="space-y-2 flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <p className="text-white font-medium">{order.title}</p>
                               <ListingTypeBadge order={order} />
+                              {isWts && (
+                                <span
+                                  className={`px-2 py-0.5 rounded text-[10px] font-medium border ${
+                                    allowsPartial
+                                      ? 'bg-cyan-950/40 text-cyan-200 border-cyan-500/30'
+                                      : 'bg-slate-800 text-slate-400 border-slate-600'
+                                  }`}
+                                >
+                                  {allowsPartial ? 'Partial OK' : 'Full listing only'}
+                                </span>
+                              )}
                             </div>
                             <p className="text-slate-500 text-xs">
                               {isWts ? 'Seller' : 'Buyer'}:{' '}
@@ -713,19 +763,32 @@ export default function FulfillmentRoute() {
                               </p>
                             )}
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => void handleAccept(order.id)}
-                            disabled={!canAccept || accepting}
-                            className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
-                          >
-                            {accepting
-                              ? 'Accepting...'
-                              : isWts
-                                ? 'Buy listing'
-                                : 'Accept order'}
-                          </button>
+                          {!allowsPartial && (
+                            <button
+                              type="button"
+                              onClick={() => void handleAccept(order.id)}
+                              disabled={!canAccept || accepting}
+                              className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
+                            >
+                              {accepting
+                                ? 'Accepting...'
+                                : isWts
+                                  ? 'Buy listing'
+                                  : 'Accept order'}
+                            </button>
+                          )}
                         </div>
+                        {allowsPartial && (
+                          <WtsPartialPurchasePanel
+                            order={order}
+                            showDfp={dfpDisplayEnabled}
+                            disabled={!meetsMinRep || !canAcceptLimits}
+                            submitting={accepting}
+                            onPurchase={(selections) =>
+                              void handleAcceptPartial(order.id, selections)
+                            }
+                          />
+                        )}
                       </div>
                     )
                   })}
@@ -956,6 +1019,11 @@ export default function FulfillmentRoute() {
                         <span className="text-white font-medium flex items-center gap-2 flex-wrap">
                           {order.title}
                           <ListingTypeBadge order={order} />
+                          {order.source_listing_id && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-medium border bg-cyan-950/40 text-cyan-200 border-cyan-500/30">
+                              Partial purchase
+                            </span>
+                          )}
                         </span>
                         <p className="text-slate-500 text-xs mt-1">
                           {order.status.replace(/_/g, ' ')}
@@ -982,7 +1050,9 @@ export default function FulfillmentRoute() {
                     disabled={submitting}
                     className="w-full py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 border border-slate-600 rounded-lg text-sm"
                   >
-                    Cancel sale
+                    {submitting
+                      ? 'Working...'
+                      : releaseOrderButtonLabel(selectedWtsSale, userId ?? undefined)}
                   </button>
                   {selectedWtsSale.status === 'accepted' && (
                     <button

@@ -35,7 +35,7 @@ import {
   type OrderListTab,
 } from '../lib/orderArchive'
 import { buyerReputationFromRow, type MemberReputationRow } from '../lib/reputation'
-import { isSemanticBuyer } from '../lib/listingType'
+import { isSemanticBuyer, isWtsPartialListing, isWtsPartialPurchaseOrder } from '../lib/listingType'
 import {
   archiveCustomOrderWithRating,
   abandonCustomOrderFulfillment,
@@ -634,6 +634,16 @@ export default function CustomOrdersRoute() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-white font-medium">{order.title}</h3>
                       <ListingTypeBadge order={order} />
+                      {isWtsPartialListing(order) && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium border bg-cyan-950/40 text-cyan-200 border-cyan-500/30">
+                          Partial OK
+                        </span>
+                      )}
+                      {isWtsPartialPurchaseOrder(order) && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium border bg-cyan-950/40 text-cyan-200 border-cyan-500/30">
+                          Partial purchase
+                        </span>
+                      )}
                       <span
                         className={`px-2 py-0.5 rounded text-xs border ${
                           STATUS_STYLES[order.status] ?? STATUS_STYLES.pending
