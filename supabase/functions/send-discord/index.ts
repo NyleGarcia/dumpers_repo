@@ -32,7 +32,15 @@ const COLORS: Record<string, number> = {
   my_support_resolved: 0x22c55e,
   support: 0x8b5cf6,
   admin: 0xef4444,
+  blueprints: 0x5865f2,
 }
+
+const DISCORD_EMBED_CHAR_LIMIT = 5800
+const DISCORD_FIELD_VALUE_LIMIT = 1024
+const DISCORD_FIELD_NAME_LIMIT = 256
+const DISCORD_TITLE_LIMIT = 256
+const DISCORD_DESCRIPTION_LIMIT = 4096
+const DISCORD_MAX_FIELDS = 25
 
 interface DiscordSettings {
   enabled: boolean
@@ -77,6 +85,48 @@ interface DiscordEmbed {
   timestamp?: string
 }
 
+function truncate(text: string, max: number): string {
+  if (text.length <= max) return text
+  return text.slice(0, Math.max(0, max - 1)) + '…'
+}
+
+function embedCharCount(embed: DiscordEmbed): number {
+  let total = embed.title.length
+  if (embed.description) total += embed.description.length
+  if (embed.footer?.text) total += embed.footer.text.length
+  for (const field of embed.fields ?? []) {
+    total += field.name.length + field.value.length
+  }
+  return total
+}
+
+function sanitizeEmbed(embed: DiscordEmbed): DiscordEmbed {
+  const next: DiscordEmbed = {
+    ...embed,
+    title: truncate(embed.title, DISCORD_TITLE_LIMIT),
+    description: embed.description
+      ? truncate(embed.description, DISCORD_DESCRIPTION_LIMIT)
+      : undefined,
+    fields: (embed.fields ?? [])
+      .slice(0, DISCORD_MAX_FIELDS)
+      .map((field) => ({
+        name: truncate(field.name, DISCORD_FIELD_NAME_LIMIT),
+        value: truncate(field.value, DISCORD_FIELD_VALUE_LIMIT),
+        inline: field.inline,
+      })),
+  }
+
+  while (embedCharCount(next) > DISCORD_EMBED_CHAR_LIMIT && (next.fields?.length ?? 0) > 0) {
+    next.fields = next.fields!.slice(0, -1)
+  }
+
+  if (embedCharCount(next) > DISCORD_EMBED_CHAR_LIMIT && next.description) {
+    next.description = truncate(next.description, 512)
+  }
+
+  return next
+}
+
 function isStaffEvent(eventType: string): boolean {
   return eventType === 'support' || eventType === 'admin'
 }
@@ -90,14 +140,16 @@ function isMarketEvent(eventType: string): boolean {
 }
 
 function isLegacyPublicEvent(eventType: string): boolean {
-  return ['orders', 'order_new', 'order_fulfilled', 'order_cancelled'].includes(eventType)
+  return ['orders', 'order_new', 'order_fulfilled', 'order_cancelled', 'blueprints'].includes(
+    eventType
+  )
 }
 
 async function sendToWebhook(
   webhookUrl: string,
   embed: DiscordEmbed,
   webhookName: string
-): Promise<boolean> {
+): Promise<{ ok: boolean; status?: number; body?: string }> {
   try {
     const response = await fetch(webhookUrl, {
       method: 'POST',
@@ -110,14 +162,15 @@ async function sendToWebhook(
 
     if (response.status === 204 || response.ok) {
       console.log(`Successfully sent to ${webhookName}`)
-      return true
+      return { ok: true, status: response.status }
     }
 
-    console.error(`Failed to send to ${webhookName}: ${response.status}`)
-    return false
+    const body = await response.text()
+    console.error(`Failed to send to ${webhookName}: ${response.status} ${body}`)
+    return { ok: false, status: response.status, body }
   } catch (error) {
     console.error(`Error sending to ${webhookName}:`, error)
-    return false
+    return { ok: false, body: (error as Error).message }
   }
 }
 
@@ -125,22 +178,28 @@ async function deliverToWebhooks(
   supabase: ReturnType<typeof createClient>,
   webhooks: Webhook[],
   embed: DiscordEmbed
-): Promise<number> {
+): Promise<{ sent: number; attempted: number; lastError?: string }> {
   let sent = 0
+  let lastError: string | undefined
+  const safeEmbed = sanitizeEmbed(embed)
 
   for (const webhook of webhooks) {
-    const success = await sendToWebhook(webhook.webhook_url, embed, webhook.webhook_name)
+    const result = await sendToWebhook(webhook.webhook_url, safeEmbed, webhook.webhook_name)
 
     await supabase.rpc('record_discord_webhook_result', {
       p_webhook_id: webhook.id,
-      p_success: success,
+      p_success: result.ok,
     })
 
-    if (success) sent++
+    if (result.ok) {
+      sent++
+    } else {
+      lastError = result.body || `HTTP ${result.status ?? 'error'}`
+    }
     await new Promise((resolve) => setTimeout(resolve, 100))
   }
 
-  return sent
+  return { sent, attempted: webhooks.length, lastError }
 }
 
 serve(async (req) => {
@@ -219,23 +278,37 @@ serve(async (req) => {
     const errors: string[] = []
 
     for (const msg of messages as QueuedMessage[]) {
+      const rawFields = Array.isArray(msg.fields)
+        ? msg.fields
+        : msg.fields
+          ? (Object.values(msg.fields) as Array<{ name: string; value: string; inline?: boolean }>)
+          : undefined
+
       const embed: DiscordEmbed = {
         title: msg.title,
         description: msg.description || undefined,
         color: msg.color || COLORS[msg.event_type] || 0x5865f2,
-        fields: msg.fields || undefined,
+        fields: rawFields,
         footer: { text: `Dumper's Repo • ${msg.event_type}` },
         timestamp: msg.created_at,
       }
 
+      let deliverySent = 0
+      let shouldMarkProcessed = true
+
       if (isStaffEvent(msg.event_type)) {
         if (settings.official_webhook_url) {
-          const success = await sendToWebhook(
+          const result = await sendToWebhook(
             settings.official_webhook_url,
-            embed,
+            sanitizeEmbed(embed),
             settings.official_webhook_name || 'Official'
           )
-          if (success) sent++
+          if (result.ok) {
+            deliverySent++
+          } else {
+            shouldMarkProcessed = false
+            errors.push(`Staff ${msg.event_type}: ${result.body ?? result.status}`)
+          }
         } else {
           console.log(`Skipping staff message (${msg.event_type}): No official webhook configured`)
         }
@@ -249,9 +322,19 @@ serve(async (req) => {
           )
 
           if (webhookError) {
+            shouldMarkProcessed = false
             errors.push(`Failed to get personal webhooks for ${msg.event_type}: ${webhookError.message}`)
+          } else if ((webhooks || []).length === 0) {
+            console.log(`No personal webhooks for ${msg.event_type} / ${msg.target_user_id}`)
           } else {
-            sent += await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+            const result = await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+            deliverySent += result.sent
+            if (result.attempted > 0 && result.sent === 0) {
+              shouldMarkProcessed = false
+              errors.push(
+                `Personal ${msg.event_type} delivery failed: ${result.lastError ?? 'all webhooks failed'}`
+              )
+            }
           }
         }
       } else if (isMarketEvent(msg.event_type)) {
@@ -261,9 +344,19 @@ serve(async (req) => {
         )
 
         if (webhookError) {
+          shouldMarkProcessed = false
           errors.push(`Failed to get market webhooks for ${msg.event_type}: ${webhookError.message}`)
+        } else if ((webhooks || []).length === 0) {
+          console.log(`No market webhooks for ${msg.event_type}`)
         } else {
-          sent += await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+          const result = await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+          deliverySent += result.sent
+          if (result.attempted > 0 && result.sent === 0) {
+            shouldMarkProcessed = false
+            errors.push(
+              `Market ${msg.event_type} delivery failed: ${result.lastError ?? 'all webhooks failed'}`
+            )
+          }
         }
       } else if (isLegacyPublicEvent(msg.event_type)) {
         const { data: webhooks, error: webhookError } = await supabase.rpc(
@@ -272,16 +365,32 @@ serve(async (req) => {
         )
 
         if (webhookError) {
+          shouldMarkProcessed = false
           errors.push(`Failed to get webhooks for ${msg.event_type}: ${webhookError.message}`)
+        } else if ((webhooks || []).length === 0) {
+          console.log(`No legacy webhooks for ${msg.event_type}`)
         } else {
-          sent += await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+          const result = await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+          deliverySent += result.sent
+          if (result.attempted > 0 && result.sent === 0) {
+            shouldMarkProcessed = false
+            errors.push(
+              `Legacy ${msg.event_type} delivery failed: ${result.lastError ?? 'all webhooks failed'}`
+            )
+          }
         }
       } else {
         console.log(`Skipping unknown event type: ${msg.event_type}`)
       }
 
-      await supabase.rpc('mark_discord_message_processed', { p_message_id: msg.id })
-      processed++
+      sent += deliverySent
+
+      if (shouldMarkProcessed) {
+        await supabase.rpc('mark_discord_message_processed', { p_message_id: msg.id })
+        processed++
+      } else {
+        console.log(`Leaving message ${msg.id} queued for retry (${msg.event_type})`)
+      }
     }
 
     return new Response(
