@@ -43,6 +43,7 @@ function parseLedgerData(raw: unknown): MiningLedgerData {
               : null,
           shares: Number(row.shares) || 0,
           role: String(row.role ?? ''),
+          alternateCompensation: String(row.alternateCompensation ?? ''),
           isPaid: Boolean(row.isPaid),
           paidPayoutAuec:
             row.paidPayoutAuec != null && Number.isFinite(Number(row.paidPayoutAuec))

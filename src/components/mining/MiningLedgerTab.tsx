@@ -15,11 +15,14 @@ import {
   downloadLedgerJson,
   formatLedgerMoney,
   newLedgerRowId,
+  parseLedgerExportJson,
   seedCrewMemberOnce,
   shortLedgerId,
+  type MiningLedgerComputed,
   type MiningLedgerCrewMember,
   type MiningLedgerData,
   type MiningLedgerDeductible,
+  type MiningLedgerExportPayload,
   type MiningLedgerMiningRow,
   type MiningLedgerOtherProfit,
   type MiningLedgerPriceOverride,
@@ -299,10 +302,12 @@ function CrewPlayerNameField({
   value,
   linkedUserId,
   onChange,
+  onAlertStateChange,
 }: {
   value: string
   linkedUserId: string | null
   onChange: (name: string, linkedUserId: string | null) => void
+  onAlertStateChange?: (state: CrewRsiAlertState) => void
 }) {
   const [query, setQuery] = useState(value)
   const [options, setOptions] = useState<VerifiedMemberSearchResult[]>([])
@@ -324,6 +329,10 @@ function CrewPlayerNameField({
       setAlertState('verified_member')
     }
   }, [linkedUserId, value])
+
+  useEffect(() => {
+    onAlertStateChange?.(alertState)
+  }, [alertState, onAlertStateChange])
 
   useEffect(() => {
     const trimmed = query.trim()
@@ -461,6 +470,168 @@ function CrewPlayerNameField({
   )
 }
 
+function ImportedLedgerViewModal({
+  payload,
+  computed,
+  onClose,
+}: {
+  payload: MiningLedgerExportPayload
+  computed: MiningLedgerComputed
+  onClose: () => void
+}) {
+  const exportedLabel = payload.exportedAt
+    ? new Date(payload.exportedAt).toLocaleString()
+    : 'Unknown'
+
+  return (
+    <AppModal
+      title={payload.ledger.name || 'Imported ledger'}
+      subtitle={`Read-only export · ${exportedLabel}${payload.ledger.id ? ` · ${shortLedgerId(payload.ledger.id)}` : ''}`}
+      onClose={onClose}
+      size="lg"
+    >
+      <div className="space-y-4 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <span className="text-slate-500 block">Pool (actual)</span>
+            <span className="text-white font-mono tabular-nums">
+              {formatLedgerMoney(computed.poolActual)}
+            </span>
+          </div>
+          <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <span className="text-slate-500 block">Total payout</span>
+            <span className="text-amber-300 font-mono tabular-nums">
+              {formatLedgerMoney(computed.totalPayout)}
+            </span>
+          </div>
+          <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <span className="text-slate-500 block">Total shares</span>
+            <span className="text-white font-mono tabular-nums">{computed.totalShares}</span>
+          </div>
+          <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <span className="text-slate-500 block">Pricing</span>
+            <span className="text-slate-300 text-[11px]">Purchased Q0 DFP</span>
+          </div>
+        </div>
+
+        {computed.miningRows.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold text-white mb-1">Mining runs</h3>
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-slate-500 text-left border-b border-slate-700/50">
+                  <th className="py-1 pr-2">Resource</th>
+                  <th className="py-1 pr-2">Q</th>
+                  <th className="py-1 pr-2">Amount</th>
+                  <th className="py-1 pr-2">Profit act.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {computed.miningRows.map((row) => (
+                  <tr key={row.id} className="border-b border-slate-800/60">
+                    <td className={`py-1 pr-2 ${resourceLabelClassName(row.resourceKey)}`}>
+                      {row.resourceLabel}
+                    </td>
+                    <td className="py-1 pr-2 font-mono tabular-nums">{row.quality}</td>
+                    <td className="py-1 pr-2 font-mono tabular-nums">
+                      {row.unrefinedCscu}
+                      <span className="text-slate-600 ml-1">{row.isGem ? 'gems' : 'cSCU unref.'}</span>
+                    </td>
+                    <td className="py-1 pr-2 font-mono text-amber-300/90 tabular-nums">
+                      {formatLedgerMoney(row.profitActual)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+        )}
+
+        {payload.data.deductibles.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold text-white mb-1">Deductibles</h3>
+            <ul className="space-y-1">
+              {payload.data.deductibles.map((row) => (
+                <li key={row.id} className="flex justify-between gap-2 text-slate-300">
+                  <span>{row.label || '—'}</span>
+                  <span className="font-mono tabular-nums text-red-400/90">
+                    −{formatLedgerMoney(row.cost)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {payload.data.otherProfits.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold text-white mb-1">Other profits</h3>
+            <ul className="space-y-1">
+              {payload.data.otherProfits.map((row) => (
+                <li key={row.id} className="flex justify-between gap-2 text-slate-300">
+                  <span>{row.extra || '—'}</span>
+                  <span className="font-mono tabular-nums text-emerald-400/90">
+                    +{formatLedgerMoney(row.profit)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {computed.crew.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold text-white mb-1">Crew</h3>
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-slate-500 text-left border-b border-slate-700/50">
+                  <th className="py-1 pr-2">Member</th>
+                  <th className="py-1 pr-2">Shares</th>
+                  <th className="py-1 pr-2">Role</th>
+                  <th className="py-1 pr-2">Payout act. / Alternate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {computed.crew.map((member) => {
+                  const crewRow = payload.data.crew.find((c) => c.id === member.id)
+                  return (
+                    <tr key={member.id} className="border-b border-slate-800/60">
+                      <td className="py-1 pr-2 text-slate-200">{member.playerName || '—'}</td>
+                      <td className="py-1 pr-2 font-mono tabular-nums">{member.shares}</td>
+                      <td className="py-1 pr-2 text-slate-400">{member.role || '—'}</td>
+                      <td className="py-1 pr-2" colSpan={member.noShareSplit ? 1 : undefined}>
+                        {member.noShareSplit ? (
+                          <span className="text-slate-300 italic">
+                            {crewRow && 'alternateCompensation' in crewRow
+                              ? String(
+                                  (crewRow as { alternateCompensation?: string })
+                                    .alternateCompensation || '—'
+                                )
+                              : '—'}
+                          </span>
+                        ) : (
+                          <span className="font-mono text-amber-300/90 tabular-nums">
+                            {formatLedgerMoney(member.payoutActual)}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </section>
+        )}
+
+        <p className="text-[10px] text-slate-600">
+          Prices use Purchased Q0 catalog defaults at view time. Manual price overrides from exports
+          are not loaded.
+        </p>
+      </div>
+    </AppModal>
+  )
+}
+
 export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps) {
   const { user, profile } = useAuth()
   const isRsiVerified = profile?.rsi_handle_verified ?? false
@@ -497,6 +668,12 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
     key: MiningRunSortKey
     dir: SortDir
   } | null>(null)
+  const [crewRsiById, setCrewRsiById] = useState<Record<string, CrewRsiAlertState>>({})
+  const [importedLedgerView, setImportedLedgerView] = useState<{
+    payload: MiningLedgerExportPayload
+    computed: MiningLedgerComputed
+  } | null>(null)
+  const importJsonInputRef = useRef<HTMLInputElement>(null)
 
   const oreEntries = useMemo(() => oreCatalogEntries(catalog), [catalog])
   const computed = useMemo(() => computeMiningLedger(data), [data])
@@ -546,7 +723,38 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
 
   useEffect(() => {
     setMiningRunSort(null)
+    setCrewRsiById({})
   }, [activeId])
+
+  const handleCrewRsiState = useCallback((crewId: string, state: CrewRsiAlertState) => {
+    setCrewRsiById((prev) => (prev[crewId] === state ? prev : { ...prev, [crewId]: state }))
+  }, [])
+
+  const handleImportJsonFile = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0]
+      event.target.value = ''
+      if (!file) return
+
+      try {
+        const text = await file.text()
+        const parsed: unknown = JSON.parse(text)
+        const result = parseLedgerExportJson(parsed)
+        if (!result.ok) {
+          setError(result.error)
+          return
+        }
+        setError(null)
+        setImportedLedgerView({
+          payload: result.payload,
+          computed: result.computed,
+        })
+      } catch {
+        setError('Could not read JSON file — check that it is valid Mining Ledger export JSON.')
+      }
+    },
+    [setError]
+  )
 
   useEffect(() => {
     if (computed.allCrewPaid && activeId && data.crew.length > 0 && !closeModalDismissed) {
@@ -709,6 +917,20 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
         >
           New ledger
         </button>
+        <button
+          type="button"
+          onClick={() => importJsonInputRef.current?.click()}
+          className="px-3 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800"
+        >
+          View JSON export
+        </button>
+        <input
+          ref={importJsonInputRef}
+          type="file"
+          accept="application/json,.json"
+          className="hidden"
+          onChange={(e) => void handleImportJsonFile(e)}
+        />
         {activeId && (
           <>
             {isLedgerCreator && (
@@ -781,8 +1003,13 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               <span className="text-[10px] text-slate-600 block">Ore − deductibles + extras</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
-              <span className="text-slate-500 block">Total shares</span>
-              <span className="text-white font-mono tabular-nums">{computed.totalShares}</span>
+              <span className="text-slate-500 block">Splitting shares</span>
+              <span className="text-white font-mono tabular-nums">{computed.splittingShares}</span>
+              {computed.splittingShares !== computed.totalShares && (
+                <span className="text-[10px] text-slate-600 block">
+                  {computed.totalShares} incl. 0-share
+                </span>
+              )}
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
               <span className="text-slate-500 block">Ore pricing</span>
@@ -962,8 +1189,8 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               <div>
                 <h3 className="text-sm font-semibold text-white">Crew</h3>
                 <p className="text-[10px] text-slate-500">
-                  Payout est. from pool estimate ÷ shares. Payout act. from total payout
-                  (ore − deductibles + extras) ÷ shares.
+                  Pool splits among members with shares &gt; 0 only. Members at 0 shares use
+                  alternate compensation (text) instead of aUEC payout.
                 </p>
               </div>
               <button
@@ -979,6 +1206,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                         linkedUserId: null,
                         shares: 1,
                         role: '',
+                        alternateCompensation: '',
                         isPaid: false,
                         paidPayoutAuec: null,
                       },
@@ -1027,15 +1255,22 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           onChange={(name, linkedUserId) =>
                             patchCrew(row.id, { playerName: name, linkedUserId })
                           }
+                          onAlertStateChange={(state) => handleCrewRsiState(row.id, state)}
                         />
                       </td>
                       <td className="py-1 pr-2">
                         <input
                           type="number"
                           value={row.shares || ''}
-                          onChange={(e) =>
-                            patchCrew(row.id, { shares: Number(e.target.value) || 0 })
-                          }
+                          onChange={(e) => {
+                            const nextShares = Number(e.target.value) || 0
+                            patchCrew(row.id, {
+                              shares: nextShares,
+                              ...(nextShares <= 0
+                                ? { paidPayoutAuec: null, alternateCompensation: row.alternateCompensation ?? '' }
+                                : { alternateCompensation: '' }),
+                            })
+                          }}
                           className="site-input w-16 max-w-16 shrink-0 px-1 py-0.5 text-xs"
                           min={0}
                           step="any"
@@ -1049,38 +1284,82 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           className="site-input w-24 max-w-24 shrink-0 px-1 py-0.5 text-xs"
                         />
                       </td>
-                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
-                        {formatLedgerMoney(member.payoutEstimate)}
-                      </td>
-                      <td className="py-1 pr-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            await copyPayoutAmount(member.payoutActual)
-                            setCopyToast(`Copied ${Math.round(member.payoutActual).toLocaleString()} to clipboard`)
-                            window.setTimeout(() => setCopyToast(null), 2000)
-                          }}
-                          className="font-mono text-amber-300 tabular-nums hover:text-amber-200 cursor-copy whitespace-nowrap"
-                          title="Click to copy payout amount"
-                        >
-                          {formatLedgerMoney(member.payoutActual)}
-                        </button>
-                      </td>
+                      {member.noShareSplit ? (
+                        <td colSpan={2} className="py-1 pr-2">
+                          <input
+                            type="text"
+                            value={row.alternateCompensation}
+                            onChange={(e) =>
+                              patchCrew(row.id, { alternateCompensation: e.target.value })
+                            }
+                            placeholder="Alternate compensation (not from pool split)"
+                            className="site-input w-full min-w-0 px-2 py-1 text-xs"
+                          />
+                        </td>
+                      ) : (
+                        <>
+                          <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
+                            {formatLedgerMoney(member.payoutEstimate)}
+                          </td>
+                          <td className="py-1 pr-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                await copyPayoutAmount(member.payoutActual)
+                                setCopyToast(
+                                  `Copied ${Math.round(member.payoutActual).toLocaleString()} to clipboard`
+                                )
+                                window.setTimeout(() => setCopyToast(null), 2000)
+                              }}
+                              className="font-mono text-amber-300 tabular-nums hover:text-amber-200 cursor-copy whitespace-nowrap"
+                              title="Click to copy payout amount"
+                            >
+                              {formatLedgerMoney(member.payoutActual)}
+                            </button>
+                          </td>
+                        </>
+                      )}
                       <td className="py-1 pr-2">
-                        <input
-                          type="checkbox"
-                          checked={row.isPaid}
-                          onChange={(e) =>
-                            patchCrew(row.id, {
-                              isPaid: e.target.checked,
-                              paidPayoutAuec: e.target.checked ? member.payoutActual : null,
-                            })
-                          }
-                          className="rounded border-slate-600"
-                        />
+                        {(() => {
+                          const rsiState =
+                            crewRsiById[row.id] ??
+                            (row.linkedUserId ? 'verified_member' : 'idle')
+                          const blockPaid = rsiState === 'invalid_rsi'
+                          const paidCheckbox = (
+                            <input
+                              type="checkbox"
+                              checked={row.isPaid}
+                              disabled={blockPaid}
+                              onChange={(e) => {
+                                if (e.target.checked && blockPaid) return
+                                patchCrew(row.id, {
+                                  isPaid: e.target.checked,
+                                  paidPayoutAuec:
+                                    e.target.checked && !member.noShareSplit
+                                      ? member.payoutActual
+                                      : null,
+                                })
+                              }}
+                              className="rounded border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed"
+                              aria-label={
+                                blockPaid
+                                  ? 'Cannot mark paid — invalid RSI handle'
+                                  : 'Mark crew paid'
+                              }
+                            />
+                          )
+                          if (!blockPaid) return paidCheckbox
+                          return (
+                            <SiteTooltip content={CREW_RSI_INVALID_HANDLE_TOOLTIP} side="top">
+                              <span className="inline-flex">{paidCheckbox}</span>
+                            </SiteTooltip>
+                          )
+                        })()}
                       </td>
                       <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
-                        {formatLedgerMoney(member.outstandingActual)}
+                        {member.noShareSplit
+                          ? '—'
+                          : formatLedgerMoney(member.outstandingActual)}
                       </td>
                       <td className="py-1">
                         <button
@@ -1497,6 +1776,14 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
             )}
           </ul>
         </AppModal>
+      )}
+
+      {importedLedgerView && (
+        <ImportedLedgerViewModal
+          payload={importedLedgerView.payload}
+          computed={importedLedgerView.computed}
+          onClose={() => setImportedLedgerView(null)}
+        />
       )}
     </div>
   )

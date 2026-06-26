@@ -42,6 +42,8 @@ export interface MiningLedgerCrewMember {
   linkedUserId: string | null
   shares: number
   role: string
+  /** When shares = 0: how this member is compensated outside the pool split. */
+  alternateCompensation: string
   isPaid: boolean
   /** Payout actual at time paid (used for notifications and export). */
   paidPayoutAuec: number | null
@@ -87,6 +89,8 @@ export interface CrewMemberComputed {
   id: string
   playerName: string
   shares: number
+  /** Excluded from pool split — uses alternateCompensation text instead. */
+  noShareSplit: boolean
   role: string
   isPaid: boolean
   payoutEstimate: number
@@ -106,6 +110,8 @@ export interface MiningLedgerComputed {
   poolEstimate: number
   poolActual: number
   totalShares: number
+  /** Sum of shares for members with shares > 0 (pool split denominator). */
+  splittingShares: number
   crew: CrewMemberComputed[]
   allCrewPaid: boolean
 }
@@ -237,6 +243,7 @@ export function seedCrewMemberOnce(
         linkedUserId: userId,
         shares: 1,
         role: '',
+        alternateCompensation: '',
         isPaid: false,
         paidPayoutAuec: null,
       },
@@ -310,23 +317,33 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
     (sum, member) => sum + (Number.isFinite(member.shares) ? member.shares : 0),
     0
   )
+  const splittingShares = data.crew.reduce((sum, member) => {
+    const shares = Number.isFinite(member.shares) ? member.shares : 0
+    return shares > 0 ? sum + shares : sum
+  }, 0)
 
   const crew: CrewMemberComputed[] = data.crew.map((member) => {
     const shares = Number.isFinite(member.shares) ? member.shares : 0
+    const noShareSplit = shares <= 0
     const payoutEstimate =
-      totalShares > 0 ? (poolEstimate / totalShares) * shares : 0
+      !noShareSplit && splittingShares > 0
+        ? (poolEstimate / splittingShares) * shares
+        : 0
     const payoutActual =
-      totalShares > 0 ? (totalPayout / totalShares) * shares : 0
+      !noShareSplit && splittingShares > 0
+        ? (totalPayout / splittingShares) * shares
+        : 0
     return {
       id: member.id,
       playerName: member.playerName,
       shares,
+      noShareSplit,
       role: member.role,
       isPaid: member.isPaid,
       payoutEstimate,
       payoutActual,
-      outstandingEstimate: member.isPaid ? 0 : payoutEstimate,
-      outstandingActual: member.isPaid ? 0 : payoutActual,
+      outstandingEstimate: noShareSplit || member.isPaid ? 0 : payoutEstimate,
+      outstandingActual: noShareSplit || member.isPaid ? 0 : payoutActual,
     }
   })
 
@@ -343,6 +360,7 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
     poolEstimate,
     poolActual,
     totalShares,
+    splittingShares,
     crew,
     allCrewPaid,
   }
@@ -369,6 +387,7 @@ export function buildLedgerExportJson(
   data: MiningLedgerData,
   computed: MiningLedgerComputed
 ): MiningLedgerExportPayload {
+  const exportData = ledgerDataWithoutPriceOverrides(data)
   return {
     exportedAt: new Date().toISOString(),
     ledger: {
@@ -381,10 +400,116 @@ export function buildLedgerExportJson(
       crew: computed.crew.map(({ isPaid: _isPaid, ...rest }) => rest),
     },
     data: {
+      ...exportData,
+      crew: exportData.crew.map(({ isPaid: _isPaid, ...rest }) => rest),
+    },
+  }
+}
+
+/** Strip manual price overrides — exports use catalog Q0 defaults only. */
+export function ledgerDataWithoutPriceOverrides(data: MiningLedgerData): MiningLedgerData {
+  return { ...data, priceOverrides: [] }
+}
+
+export type ParseLedgerExportResult =
+  | { ok: true; payload: MiningLedgerExportPayload; computed: MiningLedgerComputed }
+  | { ok: false; error: string }
+
+function normalizeImportedLedgerData(raw: Record<string, unknown>): MiningLedgerData {
+  const empty = createEmptyMiningLedgerData()
+  return {
+    schemaVersion: MINING_LEDGER_SCHEMA_VERSION,
+    seededCrewUserIds: Array.isArray(raw.seededCrewUserIds)
+      ? raw.seededCrewUserIds.map(String)
+      : [],
+    miningRows: Array.isArray(raw.miningRows)
+      ? (raw.miningRows as MiningLedgerMiningRow[])
+      : [],
+    deductibles: Array.isArray(raw.deductibles)
+      ? (raw.deductibles as MiningLedgerDeductible[])
+      : empty.deductibles,
+    otherProfits: Array.isArray(raw.otherProfits)
+      ? (raw.otherProfits as MiningLedgerOtherProfit[])
+      : [],
+    priceOverrides: [],
+    crew: Array.isArray(raw.crew)
+      ? (raw.crew as MiningLedgerCrewMember[]).map((row) => ({
+          id: String(row.id),
+          playerName: String(row.playerName ?? ''),
+          linkedUserId:
+            row.linkedUserId != null && row.linkedUserId !== ''
+              ? String(row.linkedUserId)
+              : null,
+          shares: Number(row.shares) || 0,
+          role: String(row.role ?? ''),
+          alternateCompensation: String(row.alternateCompensation ?? ''),
+          isPaid: Boolean(row.isPaid),
+          paidPayoutAuec:
+            row.paidPayoutAuec != null && Number.isFinite(Number(row.paidPayoutAuec))
+              ? Number(row.paidPayoutAuec)
+              : null,
+        }))
+      : [],
+  }
+}
+
+/** Validate and parse a downloaded Mining Ledger JSON export for read-only viewing. */
+export function parseLedgerExportJson(raw: unknown): ParseLedgerExportResult {
+  if (!raw || typeof raw !== 'object') {
+    return { ok: false, error: 'File is not a valid JSON object.' }
+  }
+
+  const root = raw as Record<string, unknown>
+  const dataRaw = root.data
+  if (!dataRaw || typeof dataRaw !== 'object') {
+    return { ok: false, error: 'Missing ledger data section.' }
+  }
+
+  const dataObj = dataRaw as Record<string, unknown>
+  if (!Array.isArray(dataObj.miningRows)) {
+    return { ok: false, error: 'Invalid or missing mining rows (miningRows).' }
+  }
+  if (!Array.isArray(dataObj.crew)) {
+    return { ok: false, error: 'Invalid or missing crew array.' }
+  }
+
+  const ledgerMeta =
+    root.ledger && typeof root.ledger === 'object'
+      ? (root.ledger as Record<string, unknown>)
+      : null
+
+  const hasExportShape =
+    typeof root.exportedAt === 'string' ||
+    (ledgerMeta != null && typeof ledgerMeta.name === 'string')
+
+  if (!hasExportShape) {
+    return {
+      ok: false,
+      error: 'Not a Mining Ledger export (expected exportedAt or ledger.name).',
+    }
+  }
+
+  const data = ledgerDataWithoutPriceOverrides(normalizeImportedLedgerData(dataObj))
+  const computed = computeMiningLedger(data)
+
+  const payload: MiningLedgerExportPayload = {
+    exportedAt: typeof root.exportedAt === 'string' ? root.exportedAt : '',
+    ledger: {
+      id: String(ledgerMeta?.id ?? ''),
+      name: String(ledgerMeta?.name ?? 'Imported ledger'),
+      orePriceQuality: MINING_LEDGER_PRICE_QUALITY,
+    },
+    computed: {
+      ...computed,
+      crew: computed.crew.map(({ isPaid: _isPaid, ...rest }) => rest),
+    },
+    data: {
       ...data,
       crew: data.crew.map(({ isPaid: _isPaid, ...rest }) => rest),
     },
   }
+
+  return { ok: true, payload, computed }
 }
 
 export function downloadLedgerJson(payload: MiningLedgerExportPayload, fileName: string): void {
