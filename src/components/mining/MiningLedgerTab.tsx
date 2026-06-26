@@ -4,7 +4,7 @@ import SiteTooltip from '../SiteTooltip'
 import { useAuth } from '../../contexts/AuthContext'
 import { useResourceCatalog } from '../../hooks/useResourceCatalog'
 import { useMiningLedger } from '../../hooks/useMiningLedger'
-import { STOCK_QUALITY_TIERS } from '../../config/dfp'
+import { DEFAULT_STOCK_QUALITY } from '../../config/dfp'
 import { getResourceType } from '../../config/resourceTypes'
 import type { BlueprintResourceRow } from '../../lib/operations'
 import {
@@ -513,20 +513,8 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               <span className="text-amber-300 font-mono tabular-nums">{formatLedgerMoney(computed.poolActual)}</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <span className="text-slate-500 block">Price quality</span>
-              <select
-                value={data.priceQuality}
-                onChange={(e) =>
-                  updateData((prev) => ({ ...prev, priceQuality: Number(e.target.value) }))
-                }
-                className="site-input w-full mt-0.5 px-1 py-0.5 text-xs"
-              >
-                {STOCK_QUALITY_TIERS.filter((q) => q > 0).map((q) => (
-                  <option key={q} value={q}>
-                    Q{q}
-                  </option>
-                ))}
-              </select>
+              <span className="text-slate-500 block">Ore pricing</span>
+              <span className="text-slate-300 text-[11px]">Purchased Q0 DFP</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
               <span className="text-slate-500 block">Total shares</span>
@@ -549,7 +537,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                         id: newLedgerRowId(),
                         resourceKey: oreEntries[0]?.resource_key ?? '',
                         resourceLabel: oreEntries[0]?.label ?? '',
-                        quality: prev.priceQuality,
+                        quality: DEFAULT_STOCK_QUALITY,
                         unrefinedCscu: 0,
                         yieldActual: null,
                       },
@@ -568,8 +556,8 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                   <th className="py-1 pr-2">Ore</th>
                   <th className="py-1 pr-2">Q</th>
                   <th className="py-1 pr-2">Unrefined cSCU</th>
-                  <th className="py-1 pr-2">Yield est.</th>
-                  <th className="py-1 pr-2">Yield act.</th>
+                  <th className="py-1 pr-2">Yield est. (cSCU)</th>
+                  <th className="py-1 pr-2">Yield act. (cSCU)</th>
                   <th className="py-1 pr-2">Profit est.</th>
                   <th className="py-1 pr-2">Profit act.</th>
                   <th className="py-1 w-8" />
@@ -779,7 +767,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
           {/* Price list */}
           <section className="overflow-x-auto">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-white">Ore prices (per 100 SCU yield)</h3>
+              <h3 className="text-sm font-semibold text-white">Ore prices (Purchased Q0, per 100 SCU yield)</h3>
               <button
                 type="button"
                 onClick={seedPriceTable}
@@ -789,8 +777,8 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               </button>
             </div>
             <p className="text-[10px] text-slate-500 mb-2">
-              Defaults use the same resource values as Custom Orders (DFP at selected quality).
-              Override any row manually.
+              Defaults use Purchased (Q0) DFP per SCU. Profit uses cSCU yield amounts from mining
+              runs. Override any row manually.
             </p>
             <table className="w-full text-xs max-w-lg">
               <thead>
@@ -801,11 +789,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
               </thead>
               <tbody>
                 {ensurePriceOverrides(data, oreEntries).map((row) => {
-                  const defaultPrice = defaultPricePer100(
-                    row.resourceKey,
-                    row.resourceLabel,
-                    data.priceQuality
-                  )
+                  const defaultPrice = defaultPricePer100(row.resourceKey, row.resourceLabel)
                   const effective =
                     row.pricePer100 != null && Number.isFinite(row.pricePer100)
                       ? row.pricePer100

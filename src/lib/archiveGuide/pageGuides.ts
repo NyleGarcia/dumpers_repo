@@ -85,6 +85,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Hand-mineable gems show cave vs surface availability per planet from extracted game data',
       'Logged-in users sync to their account; Offline Mode saves locally',
       'Ledger tab (RSI-verified members only): track crew shares and payouts for a mining run',
+      'Ledger ore profit uses Purchased (Q0) DFP and cSCU yield amounts (unrefined and yield columns)',
       'Crew RSI handles are validated live — green = verified site member, yellow = valid RSI not on site, red = invalid handle',
       'RSI Handles cannot contain spaces; autocomplete suggests verified members as you type',
       'Mark crew paid, export JSON, share ledger access with other RSI-verified members',

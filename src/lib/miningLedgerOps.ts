@@ -18,10 +18,11 @@ interface RpcResult {
 function parseLedgerData(raw: unknown): MiningLedgerData {
   const empty = createEmptyMiningLedgerData()
   if (!raw || typeof raw !== 'object') return empty
-  const obj = raw as Partial<MiningLedgerData>
+  const obj = raw as Partial<MiningLedgerData> & { priceQuality?: number }
+  const { priceQuality: _legacyPriceQuality, ...rest } = obj
   return {
     schemaVersion: MINING_LEDGER_SCHEMA_VERSION,
-    priceQuality: typeof obj.priceQuality === 'number' ? obj.priceQuality : empty.priceQuality,
+    ...rest,
     miningRows: Array.isArray(obj.miningRows) ? obj.miningRows : [],
     deductibles: Array.isArray(obj.deductibles) ? obj.deductibles : empty.deductibles,
     otherProfits: Array.isArray(obj.otherProfits) ? obj.otherProfits : [],

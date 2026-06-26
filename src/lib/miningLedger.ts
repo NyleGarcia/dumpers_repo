@@ -1,8 +1,10 @@
-import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import { pricingForResourceLine } from './orderPricing'
 
 export const MINING_LEDGER_SCHEMA_VERSION = 1 as const
 export const MINING_LEDGER_YIELD_FACTOR = 0.45
+/** Ledger ore defaults always use store-purchased Q0 DFP (no quality picker). */
+export const MINING_LEDGER_PRICE_QUALITY = 0 as const
+export const CSCU_PER_SCU = 100
 
 export interface MiningLedgerMiningRow {
   id: string
@@ -26,7 +28,7 @@ export interface MiningLedgerOtherProfit {
   profit: number
 }
 
-/** Manual price per 100 SCU of yield; omit pricePer100 to use catalog DFP default. */
+/** Manual price per 100 SCU of refined yield; omit pricePer100 to use Purchased Q0 DFP default. */
 export interface MiningLedgerPriceOverride {
   resourceKey: string
   resourceLabel: string
@@ -55,7 +57,6 @@ export { CREW_RSI_VALID_NOT_REGISTERED_TOOLTIP as UNKNOWN_CREW_MEMBER_TOOLTIP } 
 
 export interface MiningLedgerData {
   schemaVersion: typeof MINING_LEDGER_SCHEMA_VERSION
-  priceQuality: number
   miningRows: MiningLedgerMiningRow[]
   deductibles: MiningLedgerDeductible[]
   otherProfits: MiningLedgerOtherProfit[]
@@ -129,7 +130,6 @@ export function newLedgerRowId(): string {
 export function createEmptyMiningLedgerData(): MiningLedgerData {
   return {
     schemaVersion: MINING_LEDGER_SCHEMA_VERSION,
-    priceQuality: DEFAULT_STOCK_QUALITY,
     miningRows: [],
     deductibles: [{ id: newLedgerRowId(), label: 'Refining', cost: 0 }],
     otherProfits: [],
@@ -142,43 +142,41 @@ export function yieldEstimateFromUnrefined(unrefinedCscu: number): number {
   return Math.round(unrefinedCscu * MINING_LEDGER_YIELD_FACTOR)
 }
 
-export function profitFromYield(yieldScu: number, pricePer100: number): number {
-  if (!Number.isFinite(yieldScu) || !Number.isFinite(pricePer100)) return 0
-  return (yieldScu / 100) * pricePer100
+/** Yield is in cSCU; pricePer100Scu is aUEC per 100 SCU of refined yield. */
+export function profitFromYieldCscu(yieldCscu: number, pricePer100Scu: number): number {
+  if (!Number.isFinite(yieldCscu) || !Number.isFinite(pricePer100Scu)) return 0
+  return (yieldCscu / CSCU_PER_SCU / 100) * pricePer100Scu
 }
 
-export function defaultPricePer100(
-  resourceKey: string,
-  resourceLabel: string,
-  priceQuality: number
-): number {
-  const { unitDfpAuec } = pricingForResourceLine(resourceKey, resourceLabel, priceQuality, 1)
+export function defaultPricePer100(resourceKey: string, resourceLabel: string): number {
+  const { unitDfpAuec } = pricingForResourceLine(
+    resourceKey,
+    resourceLabel,
+    MINING_LEDGER_PRICE_QUALITY,
+    1
+  )
   return unitDfpAuec * 100
 }
 
 export function resolvePricePer100(
   resourceKey: string,
   resourceLabel: string,
-  priceQuality: number,
   overrides: MiningLedgerPriceOverride[]
 ): number {
   const override = overrides.find((row) => row.resourceKey === resourceKey)
   if (override?.pricePer100 != null && Number.isFinite(override.pricePer100)) {
     return override.pricePer100
   }
-  return defaultPricePer100(resourceKey, resourceLabel, priceQuality)
+  return defaultPricePer100(resourceKey, resourceLabel)
 }
 
 export function computeMiningLedger(data: MiningLedgerData): MiningLedgerComputed {
-  const priceQuality = data.priceQuality || DEFAULT_STOCK_QUALITY
-
   const miningRows: MiningRowComputed[] = data.miningRows.map((row) => {
     const yieldEst = yieldEstimateFromUnrefined(row.unrefinedCscu)
     const yieldAct = row.yieldActual ?? yieldEst
     const pricePer100 = resolvePricePer100(
       row.resourceKey,
       row.resourceLabel,
-      priceQuality,
       data.priceOverrides
     )
     return {
@@ -189,8 +187,8 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
       unrefinedCscu: row.unrefinedCscu,
       yieldEstimate: yieldEst,
       yieldActual: yieldAct,
-      profitEstimate: profitFromYield(yieldEst, pricePer100),
-      profitActual: profitFromYield(yieldAct, pricePer100),
+      profitEstimate: profitFromYieldCscu(yieldEst, pricePer100),
+      profitActual: profitFromYieldCscu(yieldAct, pricePer100),
       pricePer100,
     }
   })
@@ -255,7 +253,7 @@ export interface MiningLedgerExportPayload {
   ledger: {
     id: string
     name: string
-    priceQuality: number
+    orePriceQuality: typeof MINING_LEDGER_PRICE_QUALITY
   }
   computed: Omit<MiningLedgerComputed, 'crew'> & {
     crew: Omit<CrewMemberComputed, 'isPaid'>[]
@@ -276,7 +274,7 @@ export function buildLedgerExportJson(
     ledger: {
       id: ledgerId,
       name: ledgerName,
-      priceQuality: data.priceQuality,
+      orePriceQuality: MINING_LEDGER_PRICE_QUALITY,
     },
     computed: {
       ...computed,
