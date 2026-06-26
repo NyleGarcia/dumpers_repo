@@ -46,6 +46,9 @@ interface MiningLedgerTabProps {
 const LEDGER_SECTION_HEAD =
   'sticky top-14 z-[5] flex flex-wrap items-center justify-between gap-2 py-2 mb-1 bg-slate-950/95 backdrop-blur-sm border-b border-slate-800/60'
 
+/** Horizontal scroll for wide tables only — no vertical clipping inside sections. */
+const LEDGER_TABLE_SCROLL = 'overflow-x-auto overflow-y-visible'
+
 function oreCatalogEntries(catalog: BlueprintResourceRow[]) {
   return catalog.filter((row) => {
     const type = getResourceType(row.resource_key)
@@ -530,27 +533,27 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
       ) : (
         <>
           {/* Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+          <div className={`${LEDGER_TABLE_SCROLL} grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs min-w-0`}>
+            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
               <span className="text-slate-500 block">Pool (est.)</span>
-              <span className="text-white font-mono tabular-nums">{formatLedgerMoney(computed.poolEstimate)}</span>
+              <span className="text-white font-mono tabular-nums whitespace-nowrap">{formatLedgerMoney(computed.poolEstimate)}</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
               <span className="text-slate-500 block">Pool (actual)</span>
-              <span className="text-slate-400 font-mono tabular-nums">{formatLedgerMoney(computed.poolActual)}</span>
+              <span className="text-slate-400 font-mono tabular-nums whitespace-nowrap">{formatLedgerMoney(computed.poolActual)}</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[8.5rem]">
               <span className="text-slate-500 block">Total payout</span>
-              <span className="text-amber-300 font-mono tabular-nums">
+              <span className="text-amber-300 font-mono tabular-nums whitespace-nowrap">
                 {formatLedgerMoney(computed.totalPayout)}
               </span>
               <span className="text-[10px] text-slate-600 block">Sum of ore profit act.</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
               <span className="text-slate-500 block">Total shares</span>
               <span className="text-white font-mono tabular-nums">{computed.totalShares}</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
               <span className="text-slate-500 block">Ore pricing</span>
               <span className="text-slate-300 text-[11px]">Purchased Q0 DFP</span>
             </div>
@@ -584,7 +587,18 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 + Add row
               </button>
             </div>
-            <table className="w-full text-xs">
+            <div className={LEDGER_TABLE_SCROLL}>
+            <table className="w-full min-w-[52rem] text-xs table-fixed">
+              <colgroup>
+                <col style={{ width: '9rem' }} />
+                <col style={{ width: '4rem' }} />
+                <col style={{ width: '6.5rem' }} />
+                <col style={{ width: '6.5rem' }} />
+                <col style={{ width: '6.5rem' }} />
+                <col style={{ width: '7.5rem' }} />
+                <col style={{ width: '7.5rem' }} />
+                <col style={{ width: '2rem' }} />
+              </colgroup>
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
                   <th className="py-1 pr-2">Ore</th>
@@ -612,7 +626,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                               resourceLabel: entry?.label ?? e.target.value,
                             })
                           }}
-                          className="site-input w-full px-1 py-0.5 text-xs max-w-[140px]"
+                          className="site-input w-[8.5rem] max-w-[8.5rem] px-1 py-0.5 text-xs"
                         >
                           {oreEntries.map((entry) => (
                             <option key={entry.resource_key} value={entry.resource_key}>
@@ -628,7 +642,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           onChange={(e) =>
                             patchMiningRow(row.id, { quality: Number(e.target.value) || 0 })
                           }
-                          className="site-input w-16 px-1 py-0.5 text-xs"
+                          className="site-input w-16 max-w-16 shrink-0 px-1 py-0.5 text-xs"
                         />
                       </td>
                       <td className="py-1 pr-2">
@@ -640,12 +654,12 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                               unrefinedCscu: Number(e.target.value) || 0,
                             })
                           }
-                          className="site-input w-20 px-1 py-0.5 text-xs"
+                          className="site-input w-[6rem] max-w-[6rem] shrink-0 px-1 py-0.5 text-xs"
                           min={0}
                           step="any"
                         />
                       </td>
-                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums">
+                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
                         {calc?.yieldEstimate ?? '—'}
                       </td>
                       <td className="py-1 pr-2">
@@ -659,15 +673,15 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                                 e.target.value === '' ? null : Number(e.target.value) || 0,
                             })
                           }
-                          className="site-input w-20 px-1 py-0.5 text-xs"
+                          className="site-input w-[6rem] max-w-[6rem] shrink-0 px-1 py-0.5 text-xs"
                           min={0}
                           step="any"
                         />
                       </td>
-                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums">
+                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
                         {calc ? formatLedgerMoney(calc.profitEstimate) : '—'}
                       </td>
-                      <td className="py-1 pr-2 font-mono text-amber-300/90 tabular-nums">
+                      <td className="py-1 pr-2 font-mono text-amber-300/90 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
                         {calc ? formatLedgerMoney(calc.profitActual) : '—'}
                       </td>
                       <td className="py-1">
@@ -690,6 +704,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 })}
               </tbody>
             </table>
+            </div>
           </section>
 
           {/* Crew */}
@@ -726,16 +741,17 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 + Add member
               </button>
             </div>
-            <table className="w-full text-xs table-fixed">
+            <div className={LEDGER_TABLE_SCROLL}>
+            <table className="w-full min-w-[56rem] text-xs table-fixed">
               <colgroup>
-                <col className="w-44" />
-                <col className="w-16" />
-                <col className="w-24" />
-                <col />
-                <col />
-                <col className="w-10" />
-                <col />
-                <col className="w-8" />
+                <col style={{ width: '11rem' }} />
+                <col style={{ width: '4rem' }} />
+                <col style={{ width: '6rem' }} />
+                <col style={{ width: '7.5rem' }} />
+                <col style={{ width: '7.5rem' }} />
+                <col style={{ width: '2.5rem' }} />
+                <col style={{ width: '7.5rem' }} />
+                <col style={{ width: '2rem' }} />
               </colgroup>
               <thead>
                 <tr className="text-slate-500 text-left border-b border-slate-700/50">
@@ -771,7 +787,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           onChange={(e) =>
                             patchCrew(row.id, { shares: Number(e.target.value) || 0 })
                           }
-                          className="site-input w-16 px-1 py-0.5 text-xs"
+                          className="site-input w-16 max-w-16 shrink-0 px-1 py-0.5 text-xs"
                           min={0}
                           step="any"
                         />
@@ -781,13 +797,13 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           type="text"
                           value={row.role}
                           onChange={(e) => patchCrew(row.id, { role: e.target.value })}
-                          className="site-input w-24 px-1 py-0.5 text-xs"
+                          className="site-input w-24 max-w-24 shrink-0 px-1 py-0.5 text-xs"
                         />
                       </td>
-                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums">
+                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
                         {formatLedgerMoney(member.payoutEstimate)}
                       </td>
-                      <td className="py-1 pr-2">
+                      <td className="py-1 pr-2 whitespace-nowrap overflow-hidden text-ellipsis">
                         <button
                           type="button"
                           onClick={async () => {
@@ -814,7 +830,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                           className="rounded border-slate-600"
                         />
                       </td>
-                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums">
+                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
                         {formatLedgerMoney(member.outstandingActual)}
                       </td>
                       <td className="py-1">
@@ -837,6 +853,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 })}
               </tbody>
             </table>
+            </div>
           </section>
 
           {/* Deductibles + Other profits */}
