@@ -86,6 +86,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Logged-in users sync to their account; Offline Mode saves locally',
       'Ledger tab (RSI-verified members only): track crew shares and payouts for a mining run',
       'Ledger ore profit uses Purchased (Q0) DFP per 100 cSCU of yield with cSCU unrefined/yield columns',
+      'Ledger payout est. auto-calculates from pool estimate and shares; enter total haul payout to split payout actual by shares',
+      'Creating a ledger adds you to crew once; granting access adds that member to crew once (removals stay removed)',
       'Crew RSI handles are validated live — green = verified site member, yellow = valid RSI not on site, red = invalid handle',
       'RSI Handles cannot contain spaces; autocomplete suggests verified members as you type',
       'Mark crew paid, export JSON, share ledger access with other RSI-verified members',

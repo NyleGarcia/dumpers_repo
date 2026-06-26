@@ -15,6 +15,7 @@ import {
   downloadLedgerJson,
   formatLedgerMoney,
   newLedgerRowId,
+  seedCrewMemberOnce,
   shortLedgerId,
   type MiningLedgerCrewMember,
   type MiningLedgerData,
@@ -274,7 +275,7 @@ function CrewPlayerNameField({
 }
 
 export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps) {
-  const { profile } = useAuth()
+  const { user, profile } = useAuth()
   const isRsiVerified = profile?.rsi_handle_verified ?? false
   const { catalog, loading: catalogLoading } = useResourceCatalog()
   const {
@@ -366,8 +367,13 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
 
   const handleCreateLedger = async () => {
     const name = newLedgerName.trim()
-    if (!name) return
-    const id = await createLedger(name)
+    if (!name || !user) return
+    const playerName =
+      profile?.rsi_handle?.trim() ||
+      profile?.display_name?.trim() ||
+      user.email?.split('@')[0] ||
+      'Unknown'
+    const id = await createLedger(name, { userId: user.id, playerName })
     if (id) {
       setShowNewModal(false)
       setNewLedgerName('')
@@ -517,22 +523,42 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
       ) : (
         <>
           {/* Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
               <span className="text-slate-500 block">Pool (est.)</span>
               <span className="text-white font-mono tabular-nums">{formatLedgerMoney(computed.poolEstimate)}</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
               <span className="text-slate-500 block">Pool (actual)</span>
-              <span className="text-amber-300 font-mono tabular-nums">{formatLedgerMoney(computed.poolActual)}</span>
+              <span className="text-slate-400 font-mono tabular-nums">{formatLedgerMoney(computed.poolActual)}</span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <span className="text-slate-500 block">Ore pricing</span>
-              <span className="text-slate-300 text-[11px]">Purchased Q0 DFP</span>
+              <label className="text-slate-500 block" htmlFor="ledger-total-payout">
+                Total payout
+              </label>
+              <input
+                id="ledger-total-payout"
+                type="number"
+                value={data.totalPayout ?? ''}
+                onChange={(e) =>
+                  updateData((prev) => ({
+                    ...prev,
+                    totalPayout: e.target.value === '' ? null : Number(e.target.value) || 0,
+                  }))
+                }
+                placeholder="Haul total aUEC"
+                className="site-input w-full mt-0.5 px-1 py-0.5 text-xs font-mono tabular-nums text-amber-300"
+                min={0}
+                step="any"
+              />
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
               <span className="text-slate-500 block">Total shares</span>
               <span className="text-white font-mono tabular-nums">{computed.totalShares}</span>
+            </div>
+            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <span className="text-slate-500 block">Ore pricing</span>
+              <span className="text-slate-300 text-[11px]">Purchased Q0 DFP</span>
             </div>
           </div>
 
@@ -674,8 +700,13 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
 
           {/* Crew */}
           <section className="overflow-x-auto">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-white">Crew</h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div>
+                <h3 className="text-sm font-semibold text-white">Crew</h3>
+                <p className="text-[10px] text-slate-500">
+                  Payout est. from pool estimate ÷ shares. Payout act. from total payout ÷ shares.
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={() =>
@@ -1128,9 +1159,14 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                       type="button"
                       disabled={already}
                       onClick={async () => {
+                        const label = member.rsi_handle || member.display_name || 'Unknown'
                         const { error: addError } = await addCollaborator(member.id)
-                        if (addError) setError(addError)
-                        else setCollabSearch('')
+                        if (addError) {
+                          setError(addError)
+                          return
+                        }
+                        updateData((prev) => seedCrewMemberOnce(prev, member.id, label))
+                        setCollabSearch('')
                       }}
                       className="w-full px-3 py-2 text-left text-sm hover:bg-slate-800 disabled:opacity-40"
                     >

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   createEmptyMiningLedgerData,
+  seedCrewMemberOnce,
   type MiningLedgerData,
   type MiningLedgerDetail,
   type MiningLedgerListItem,
@@ -126,9 +127,13 @@ export function useMiningLedger() {
   }, [init, flushSave])
 
   const createLedger = useCallback(
-    async (name: string) => {
+    async (name: string, seed?: { userId: string; playerName: string }) => {
       setError(null)
-      const { id, error: createError } = await createMiningLedger(name)
+      let initialData = createEmptyMiningLedgerData()
+      if (seed) {
+        initialData = seedCrewMemberOnce(initialData, seed.userId, seed.playerName)
+      }
+      const { id, error: createError } = await createMiningLedger(name, initialData)
       if (createError || !id) {
         setError(createError ?? 'Failed to create ledger')
         return null

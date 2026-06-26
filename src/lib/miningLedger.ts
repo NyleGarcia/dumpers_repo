@@ -56,6 +56,10 @@ export { CREW_RSI_VALID_NOT_REGISTERED_TOOLTIP as UNKNOWN_CREW_MEMBER_TOOLTIP } 
 
 export interface MiningLedgerData {
   schemaVersion: typeof MINING_LEDGER_SCHEMA_VERSION
+  /** Manager-entered total haul aUEC; split by shares for crew payout actual. */
+  totalPayout: number | null
+  /** Site user IDs already auto-added to crew once (creator + access grants). */
+  seededCrewUserIds: string[]
   miningRows: MiningLedgerMiningRow[]
   deductibles: MiningLedgerDeductible[]
   otherProfits: MiningLedgerOtherProfit[]
@@ -129,6 +133,8 @@ export function newLedgerRowId(): string {
 export function createEmptyMiningLedgerData(): MiningLedgerData {
   return {
     schemaVersion: MINING_LEDGER_SCHEMA_VERSION,
+    totalPayout: null,
+    seededCrewUserIds: [],
     miningRows: [],
     deductibles: [{ id: newLedgerRowId(), label: 'Refining', cost: 0 }],
     otherProfits: [],
@@ -171,6 +177,39 @@ export function resolvePricePer100(
     return override.pricePer100
   }
   return defaultPricePer100(resourceKey, resourceLabel)
+}
+
+/** Add a verified site member to crew once per ledger (creator or access grant). */
+export function seedCrewMemberOnce(
+  data: MiningLedgerData,
+  userId: string,
+  playerName: string
+): MiningLedgerData {
+  const seeded = data.seededCrewUserIds ?? []
+  if (seeded.includes(userId)) return data
+
+  const alreadyOnCrew = data.crew.some((member) => member.linkedUserId === userId)
+  const nextSeeded = [...seeded, userId]
+
+  if (alreadyOnCrew) {
+    return { ...data, seededCrewUserIds: nextSeeded }
+  }
+
+  return {
+    ...data,
+    seededCrewUserIds: nextSeeded,
+    crew: [
+      ...data.crew,
+      {
+        id: newLedgerRowId(),
+        playerName,
+        linkedUserId: userId,
+        shares: 1,
+        role: '',
+        isPaid: false,
+      },
+    ],
+  }
 }
 
 export function computeMiningLedger(data: MiningLedgerData): MiningLedgerComputed {
@@ -216,11 +255,15 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
     0
   )
 
+  const haulTotal =
+    data.totalPayout != null && Number.isFinite(data.totalPayout) ? data.totalPayout : null
+
   const crew: CrewMemberComputed[] = data.crew.map((member) => {
     const shares = Number.isFinite(member.shares) ? member.shares : 0
     const payoutEstimate =
       totalShares > 0 ? (poolEstimate / totalShares) * shares : 0
-    const payoutActual = totalShares > 0 ? (poolActual / totalShares) * shares : 0
+    const payoutActual =
+      haulTotal != null && totalShares > 0 ? (haulTotal / totalShares) * shares : 0
     return {
       id: member.id,
       playerName: member.playerName,

@@ -23,6 +23,13 @@ function parseLedgerData(raw: unknown): MiningLedgerData {
   return {
     schemaVersion: MINING_LEDGER_SCHEMA_VERSION,
     ...rest,
+    totalPayout:
+      typeof obj.totalPayout === 'number' && Number.isFinite(obj.totalPayout)
+        ? obj.totalPayout
+        : null,
+    seededCrewUserIds: Array.isArray(obj.seededCrewUserIds)
+      ? obj.seededCrewUserIds.map(String)
+      : [],
     miningRows: Array.isArray(obj.miningRows) ? obj.miningRows : [],
     deductibles: Array.isArray(obj.deductibles) ? obj.deductibles : empty.deductibles,
     otherProfits: Array.isArray(obj.otherProfits) ? obj.otherProfits : [],
@@ -82,13 +89,16 @@ export async function fetchMiningLedger(ledgerId: string): Promise<{
   }
 }
 
-export async function createMiningLedger(name: string): Promise<{
+export async function createMiningLedger(
+  name: string,
+  initialData?: MiningLedgerData
+): Promise<{
   id: string | null
   error: string | null
 }> {
   const { data, error } = await supabase.rpc('create_mining_ledger', {
     p_name: name,
-    p_data: createEmptyMiningLedgerData(),
+    p_data: initialData ?? createEmptyMiningLedgerData(),
   })
   if (error) return { id: null, error: error.message }
   const result = data as RpcResult
