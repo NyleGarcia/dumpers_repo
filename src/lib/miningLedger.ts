@@ -3,6 +3,8 @@ import { isGemResource } from '../config/resourceTypes'
 
 export const MINING_LEDGER_SCHEMA_VERSION = 1 as const
 export const MINING_LEDGER_YIELD_FACTOR = 0.45
+/** Default crew share count when a member is added (explicit 0 = alternate compensation). */
+export const DEFAULT_CREW_SHARES = 1 as const
 /** Ledger ore defaults always use store-purchased Q0 DFP (no quality picker). */
 export const MINING_LEDGER_PRICE_QUALITY = 0 as const
 
@@ -45,7 +47,7 @@ export interface MiningLedgerCrewMember {
   /** When shares = 0: how this member is compensated outside the pool split. */
   alternateCompensation: string
   isPaid: boolean
-  /** Payout actual at time paid (used for notifications and export). */
+  /** Cumulative aUEC paid so far (partial or full); null/0 = none. */
   paidPayoutAuec: number | null
 }
 
@@ -95,6 +97,7 @@ export interface CrewMemberComputed {
   isPaid: boolean
   payoutEstimate: number
   payoutActual: number
+  paidAuec: number
   outstandingEstimate: number
   outstandingActual: number
 }
@@ -164,8 +167,29 @@ export function yieldEstimateFromUnrefined(
 }
 
 /** Whole gems sold as-is — no unrefined/refined split. */
+export function crewPaidAuec(member: Pick<MiningLedgerCrewMember, 'paidPayoutAuec'>): number {
+  const v = member.paidPayoutAuec
+  if (v == null || !Number.isFinite(v)) return 0
+  return Math.max(0, Math.round(v))
+}
+
+export function clampCrewPaidAuec(paid: number, payoutActual: number): number {
+  const max = Math.max(0, Math.round(payoutActual))
+  if (max <= 0) return 0
+  return Math.min(Math.max(0, Math.round(paid)), max)
+}
+
 export function gemCountFromRow(unrefinedCscu: number): number {
   return Math.max(0, Math.trunc(unrefinedCscu))
+}
+
+/** Parse crew shares; missing/invalid → DEFAULT_CREW_SHARES (explicit 0 kept for alternate pay). */
+export function parseCrewShares(raw: unknown): number {
+  if (raw === 0 || raw === '0') return 0
+  if (raw == null || raw === '') return DEFAULT_CREW_SHARES
+  const n = Number(raw)
+  if (!Number.isFinite(n) || n < 0) return DEFAULT_CREW_SHARES
+  return n
 }
 
 /**
@@ -241,7 +265,7 @@ export function seedCrewMemberOnce(
         id: newLedgerRowId(),
         playerName,
         linkedUserId: userId,
-        shares: 1,
+        shares: DEFAULT_CREW_SHARES,
         role: '',
         alternateCompensation: '',
         isPaid: false,
@@ -333,22 +357,38 @@ export function computeMiningLedger(data: MiningLedgerData): MiningLedgerCompute
       !noShareSplit && splittingShares > 0
         ? (totalPayout / splittingShares) * shares
         : 0
+    const payoutActualRounded = Math.round(payoutActual)
+    const payoutEstimateRounded = Math.round(payoutEstimate)
+    const paidAuec = noShareSplit ? 0 : clampCrewPaidAuec(crewPaidAuec(member), payoutActualRounded)
+    const settled = noShareSplit
+      ? member.isPaid
+      : member.isPaid ||
+        (payoutActualRounded > 0 && paidAuec >= payoutActualRounded)
     return {
       id: member.id,
       playerName: member.playerName,
       shares,
       noShareSplit,
       role: member.role,
-      isPaid: member.isPaid,
+      isPaid: settled,
       payoutEstimate,
       payoutActual,
-      outstandingEstimate: noShareSplit || member.isPaid ? 0 : payoutEstimate,
-      outstandingActual: noShareSplit || member.isPaid ? 0 : payoutActual,
+      paidAuec,
+      outstandingEstimate:
+        noShareSplit || settled ? 0 : Math.max(0, payoutEstimateRounded - paidAuec),
+      outstandingActual:
+        noShareSplit || settled ? 0 : Math.max(0, payoutActualRounded - paidAuec),
     }
   })
 
   const allCrewPaid =
-    data.crew.length > 0 && data.crew.every((member) => member.isPaid)
+    data.crew.length > 0 &&
+    data.crew.every((member) => {
+      const shares = Number.isFinite(member.shares) ? member.shares : 0
+      if (shares <= 0) return member.isPaid
+      const computedMember = crew.find((row) => row.id === member.id)
+      return computedMember?.isPaid ?? false
+    })
 
   return {
     miningRows,
@@ -440,7 +480,7 @@ function normalizeImportedLedgerData(raw: Record<string, unknown>): MiningLedger
             row.linkedUserId != null && row.linkedUserId !== ''
               ? String(row.linkedUserId)
               : null,
-          shares: Number(row.shares) || 0,
+          shares: parseCrewShares(row.shares),
           role: String(row.role ?? ''),
           alternateCompensation: String(row.alternateCompensation ?? ''),
           isPaid: Boolean(row.isPaid),

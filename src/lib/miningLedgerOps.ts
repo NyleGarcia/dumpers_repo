@@ -1,6 +1,7 @@
 import { supabase } from './supabase'
 import {
   createEmptyMiningLedgerData,
+  parseCrewShares,
   type MiningLedgerCollaborator,
   type MiningLedgerData,
   type MiningLedgerDetail,
@@ -41,7 +42,7 @@ function parseLedgerData(raw: unknown): MiningLedgerData {
             row.linkedUserId != null && row.linkedUserId !== ''
               ? String(row.linkedUserId)
               : null,
-          shares: Number(row.shares) || 0,
+          shares: parseCrewShares(row.shares),
           role: String(row.role ?? ''),
           alternateCompensation: String(row.alternateCompensation ?? ''),
           isPaid: Boolean(row.isPaid),
