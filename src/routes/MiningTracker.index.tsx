@@ -37,6 +37,7 @@ import { isBroadGuideLocation } from '../lib/miningLocationAliases'
 import TrackOreButtons from '../components/TrackOreButton'
 import SiteTooltip from '../components/SiteTooltip'
 import MiningLedgerTab from '../components/mining/MiningLedgerTab'
+import RockCalculator from '../components/mining/RockCalculator'
 import {
   guideLocationChipTooltip,
   guideLocationOreTooltip,
@@ -54,7 +55,7 @@ import {
   rsTrackerCardUnmappedNote,
 } from '../lib/handMineables'
 import { formatHandMineableHabitatAtSite } from '../lib/handMineableHabitats'
-import type { DepositType } from '../lib/localGuestCache'
+import type { DepositType, MiningTrackerEntry } from '../lib/localGuestCache'
 
 type ViewMode = 'tracker' | 'guide' | 'ledger'
 
@@ -70,6 +71,9 @@ export default function MiningTrackerRoute() {
   const [oreSearch, setOreSearch] = useState('')
   const [selectedOreName, setSelectedOreName] = useState<string>('')
   const [listRarityFilter, setListRarityFilter] = useState<string>('')
+  const [calculatorEntryId, setCalculatorEntryId] = useState<string | null>(null)
+  const [calculatorLoadEntry, setCalculatorLoadEntry] = useState<MiningTrackerEntry | null>(null)
+  const [calculatorLoadToken, setCalculatorLoadToken] = useState(0)
   
   // Guide view state
   const [guideRarityFilter, setGuideRarityFilter] = useState<string | null>(null)
@@ -308,7 +312,8 @@ export default function MiningTrackerRoute() {
       )}
 
       {!loading && !error && data && viewMode === 'tracker' && (
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 items-start">
+          <div className="min-w-0 space-y-6">
           <section className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[200px] max-w-sm">
               <input
@@ -410,11 +415,32 @@ export default function MiningTrackerRoute() {
                       className="block"
                     >
                       <div
-                        className={`p-4 rounded-xl border w-56 text-left relative ${colors.bg} ${colors.border}`}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => {
+                          setCalculatorEntryId(entry.id)
+                          setCalculatorLoadEntry(entry)
+                          setCalculatorLoadToken((t) => t + 1)
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            setCalculatorEntryId(entry.id)
+                            setCalculatorLoadEntry(entry)
+                            setCalculatorLoadToken((t) => t + 1)
+                          }
+                        }}
+                        className={`p-4 rounded-xl border w-56 text-left relative cursor-pointer transition-shadow hover:brightness-110 ${colors.bg} ${colors.border} ${
+                          calculatorEntryId === entry.id ? 'ring-2 ring-orange-400 ring-offset-1 ring-offset-slate-950' : ''
+                        }`}
+                        title="Load in Rock Calculator"
                       >
                         <button
                           type="button"
-                          onClick={() => removeEntry(entry.id)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            removeEntry(entry.id)
+                          }}
                           className="absolute top-2 right-2 p-1 text-slate-500 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-colors"
                           aria-label="Remove"
                         >
@@ -479,6 +505,9 @@ export default function MiningTrackerRoute() {
               </div>
             )}
           </section>
+          </div>
+
+          <RockCalculator loadEntry={calculatorLoadEntry} loadToken={calculatorLoadToken} />
         </div>
       )}
 

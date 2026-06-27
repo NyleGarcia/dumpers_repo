@@ -248,4 +248,65 @@ export function depositTypeUpper(depositType: DepositType | undefined): string {
   return depositType === 'asteroid' ? 'ASTEROID' : 'SURFACE'
 }
 
+export interface RockCompositionProfile {
+  compositionParts: CompositionPart[]
+  sourceLabel: string
+  depositType: DepositType
+}
+
+function rockProfileFromLocation(
+  loc: LocationSpawnProfile | null,
+  depositType: DepositType
+): RockCompositionProfile | null {
+  if (!loc?.compositionParts?.length) return null
+  return {
+    compositionParts: loc.compositionParts,
+    sourceLabel: loc.displayName ?? loc.guideName ?? loc.locationName,
+    depositType,
+  }
+}
+
+/** Resolve preset rock composition for the Rock Calculator (mirrors tracker profile rules). */
+export function getRockCompositionProfile(
+  oreName: string,
+  depositType: DepositType,
+  options?: { profileMode?: ProfileMode; locationName?: string }
+): RockCompositionProfile | null {
+  if (options?.profileMode === 'location' && options.locationName) {
+    return rockProfileFromLocation(
+      getLocationProfile(oreName, options.locationName, depositType),
+      depositType
+    )
+  }
+
+  const overall = getOverallProfile(oreName, depositType)
+  if (overall?.bestLocation) {
+    const fromBest = rockProfileFromLocation(
+      getLocationProfile(oreName, overall.bestLocation, depositType),
+      depositType
+    )
+    if (fromBest) return fromBest
+  }
+
+  const candidates = getLocationProfilesForOre(oreName).filter(
+    (loc) => loc.depositType === depositType && loc.compositionParts?.length
+  )
+  if (candidates.length === 0) return null
+
+  const best = candidates.reduce((a, b) =>
+    a.effectiveSpawnPercent > b.effectiveSpawnPercent ? a : b
+  )
+  return rockProfileFromLocation(best, depositType)
+}
+
+export function getRockCompositionProfileForEntry(
+  entry: MiningTrackerEntry
+): RockCompositionProfile | null {
+  const depositType: DepositType = entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
+  return getRockCompositionProfile(entry.oreName, depositType, {
+    profileMode: entry.profileMode,
+    locationName: entry.locationName,
+  })
+}
+
 export { spawns as miningSpawnData }

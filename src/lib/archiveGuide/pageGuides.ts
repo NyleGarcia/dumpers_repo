@@ -71,6 +71,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Track ores by RS signature, browse the ore/location guide, and compare cluster readings.',
     details: [
       'RS Tracker tab: base RS plus cluster rows with Chance % from game spawn data',
+      'Rock Calculator column: enter total rock SCU and in-game material % to get exact cSCU per material (0.001 precision)',
+      'Rock Calculator shows estimated Purchased (Q0) DFP next to each material cSCU amount',
+      'Click a tracked card to load its composition into the Rock Calculator; Surface/Asteroid toggle defaults to Asteroid',
+      'Rock Calculator warns when entered material percentages exceed 100%',
       'Up to two cards per ore — separate Surface and Asteroid profiles',
       'Location-tracked cards show At {site} with that site\'s spawn and cluster data',
       'Track Surface / Track Asteroid for overall profiles; Track Surface · {site} from location context',
