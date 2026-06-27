@@ -4,6 +4,7 @@ import {
   getContractsForMissionLabel,
   getRewardMissionsForBlueprint,
 } from './blueprintMissionRewards'
+import { resolveMissionIsLawful } from './missionLawfulStatus'
 
 export interface MissionRepInfo {
   repMin: number | null
@@ -57,15 +58,42 @@ type MissionPoolEntry = {
 
 const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
 const missionsByPool = blueprintMissionData.missionsByPool as Record<string, MissionPoolEntry[]>
+const contractEntries = blueprintMissionData.contracts as Array<{
+  debugName?: string
+  title: string
+  displayTitle?: string
+  faction: string
+  factionKey?: string
+  blueprintPools?: { key: string }[]
+}>
 
-const UNLAWFUL_FACTIONS = [
-  'headhunters', 'xenothreat', 'ruto', 'vaughn', 'ninetails',
-  'tarpits', 'bitzeros', 'dead saints'
-]
+function findContractForPoolMission(poolKey: string, mission?: MissionPoolEntry): {
+  factionKey?: string
+  debugName?: string
+  faction: string
+} | null {
+  const normalizedKey = poolKey.toLowerCase()
+  const titleNeedle = (mission?.displayTitle || mission?.title || '').toLowerCase()
 
-function isUnlawfulFaction(factionName: string): boolean {
-  const lower = factionName.toLowerCase()
-  return UNLAWFUL_FACTIONS.some(f => lower.includes(f))
+  for (const contract of contractEntries) {
+    const pools = contract.blueprintPools ?? []
+    if (!pools.some((pool) => pool.key.toLowerCase() === normalizedKey)) continue
+
+    if (titleNeedle) {
+      const contractTitle = (contract.displayTitle || contract.title || '').toLowerCase()
+      if (
+        contractTitle !== titleNeedle &&
+        !contractTitle.includes(titleNeedle) &&
+        !titleNeedle.includes(contractTitle)
+      ) {
+        continue
+      }
+    }
+
+    return contract
+  }
+
+  return null
 }
 
 function buildBlueprintToPoolIndex(): Map<string, string[]> {
@@ -220,6 +248,8 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     mission = poolMissions[0]
   }
 
+  const matchedContract = findContractForPoolMission(normalizedKey, mission)
+
   return {
     repMin: mission.repPoints,
     repMax: mission.repPoints,
@@ -228,7 +258,11 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     variantCount: poolMissions.length,
     missionGiver: mission.faction,
     matched: true,
-    isLawful: !isUnlawfulFaction(mission.faction),
+    isLawful: resolveMissionIsLawful({
+      factionKey: matchedContract?.factionKey,
+      factionName: matchedContract?.faction ?? mission.faction,
+      debugName: matchedContract?.debugName,
+    }),
     aUecMin: 0,
     aUecMax: 0,
     missionType: null,
@@ -300,7 +334,9 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
           variantCount: missions.length,
           missionGiver: mission.faction,
           matched: true,
-          isLawful: !isUnlawfulFaction(mission.faction),
+          isLawful: resolveMissionIsLawful({
+            factionName: mission.faction,
+          }),
           aUecMin: 0,
           aUecMax: 0,
           missionType: null,
@@ -319,6 +355,8 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
 
 function contractToMissionRepInfo(contract: {
   faction: string
+  factionKey?: string
+  debugName?: string
   title: string
   system: string
   region: string | null
@@ -334,7 +372,11 @@ function contractToMissionRepInfo(contract: {
     variantCount: 1,
     missionGiver: contract.faction,
     matched: true,
-    isLawful: !isUnlawfulFaction(contract.faction),
+    isLawful: resolveMissionIsLawful({
+      factionKey: contract.factionKey,
+      factionName: contract.faction,
+      debugName: contract.debugName,
+    }),
     aUecMin: 0,
     aUecMax: 0,
     missionType: null,

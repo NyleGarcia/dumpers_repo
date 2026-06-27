@@ -1315,6 +1315,18 @@ function buildBlueprintRewardMissionsFromContracts(internalName, missionBlueprin
  * - aUEC rewards
  * - Rep points awarded
  */
+function resolveContractIsLawful(factionKey, debugName) {
+  const key = String(factionKey || '').toLowerCase()
+  const debug = String(debugName || '')
+
+  if (key.startsWith('unlawful_')) return false
+  if (key.startsWith('lawful_')) return true
+  if (key === 'unknown' || key === '') return true
+  if (/_(defendentitiesandescort|defenddestructibleentities)_/i.test(debug)) return true
+
+  return true
+}
+
 function parseContractGenerators(localization) {
   console.log('\n[CONTRACT PARSING] Parsing contract generators for mission data...')
   
@@ -1780,7 +1792,8 @@ function parseContractGenerators(localization) {
             blueprintPools,
             minStanding,
             maxStanding,
-            repPoints
+            repPoints,
+            isLawful: resolveContractIsLawful(factionKey, contract.debugName),
           }
           
           contracts.push(contractData)
@@ -1795,6 +1808,9 @@ function parseContractGenerators(localization) {
               displayTitle,
               titleKey,
               faction: factionName,
+              factionKey,
+              debugName: contract.debugName,
+              isLawful: contractData.isLawful,
               system,
               region,
               category,

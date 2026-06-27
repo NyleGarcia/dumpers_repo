@@ -199,6 +199,7 @@ function attachMissionRep<T extends { mission: string }>(
     region?: string | null
     category?: string | null
     faction?: string | null
+    isLawful?: boolean
   }
 ): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category'> {
   const fallbackRep = getMissionRepInfo(entry.mission)
@@ -211,7 +212,7 @@ function attachMissionRep<T extends { mission: string }>(
         variantCount: 1,
         missionGiver: repOverride.faction ?? parseMissionGiver(entry.mission),
         matched: true,
-        isLawful: fallbackRep.isLawful,
+        isLawful: repOverride.isLawful ?? fallbackRep.isLawful,
         aUecMin: 0,
         aUecMax: 0,
         missionType: null,
@@ -223,7 +224,9 @@ function attachMissionRep<T extends { mission: string }>(
       }
     : fallbackRep
 
-  if (repOverride?.faction) {
+  if (repOverride?.isLawful != null) {
+    rep.isLawful = repOverride.isLawful
+  } else if (repOverride?.faction) {
     rep.isLawful = fallbackRep.isLawful
   }
 
@@ -294,6 +297,7 @@ export function getMissionsForBlueprint(
           region: reward.region,
           category: reward.category,
           faction: reward.faction,
+          isLawful: reward.isLawful,
         }
       )
     )

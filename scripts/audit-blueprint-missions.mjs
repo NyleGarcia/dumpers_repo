@@ -59,6 +59,22 @@ function isBadTitle(contract) {
   return false
 }
 
+function isHeadhunterLawfulEscort(contract) {
+  return /_(defendentitiesandescort|defenddestructibleentities)_/i.test(contract.debugName || '')
+}
+
+function resolveContractIsLawful(contract) {
+  const factionKey = String(contract.factionKey || '').toLowerCase()
+  const debugName = contract.debugName || ''
+
+  if (factionKey.startsWith('unlawful_')) return false
+  if (factionKey.startsWith('lawful_')) return true
+  if (factionKey === 'unknown' || factionKey === '') return true
+  if (isHeadhunterLawfulEscort(contract)) return true
+
+  return true
+}
+
 function isBrowseEligible(contract) {
   const title = contract.displayTitle || contract.title || ''
   if (!title.trim()) return false
@@ -94,6 +110,15 @@ for (const contract of contracts) {
   if (isBadTitle(contract)) {
     issues.push(`Bad title [${faction}] ${contract.debugName} → "${contract.displayTitle || contract.title}"`)
   }
+
+  if (
+    isHeadhunterLawfulEscort(contract) &&
+    contract.factionKey === 'unlawful_headhunters'
+  ) {
+    issues.push(
+      `Headhunter escort mis-tagged unlawful [${contract.debugName}] factionKey=${contract.factionKey}`
+    )
+  }
 }
 
 console.log('Blueprint mission audit')
@@ -118,6 +143,25 @@ if (bhg.length) {
       `  [${contract.system}] ${contract.displayTitle || contract.title} (${contract.debugName})`
     )
   }
+}
+
+console.log('')
+console.log('Lawful / illegal summary (by factionKey):')
+const lawfulSummary = {}
+for (const contract of contracts) {
+  if (!contractHasBlueprints(contract)) continue
+  const faction = contract.faction || 'Unknown'
+  if (!lawfulSummary[faction]) {
+    lawfulSummary[faction] = { lawful: 0, illegal: 0, unknownKey: 0 }
+  }
+  if (resolveContractIsLawful(contract)) lawfulSummary[faction].lawful++
+  else lawfulSummary[faction].illegal++
+  if ((contract.factionKey || 'unknown') === 'unknown') lawfulSummary[faction].unknownKey++
+}
+for (const [faction, stats] of Object.entries(lawfulSummary).sort((a, b) => a[0].localeCompare(b[0]))) {
+  console.log(
+    `  ${faction}: ${stats.lawful} lawful, ${stats.illegal} illegal (${stats.unknownKey} unknown factionKey)`
+  )
 }
 
 if (issues.length) {

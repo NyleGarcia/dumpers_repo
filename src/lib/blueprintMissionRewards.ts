@@ -1,5 +1,6 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
 import { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
+import { resolveMissionIsLawful } from './missionLawfulStatus'
 
 export { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
 
@@ -19,6 +20,9 @@ export interface BlueprintRewardMission {
   standingName: string | null
   maxStandingName: string | null
   faction: string
+  factionKey?: string
+  debugName?: string
+  isLawful: boolean
   title: string
 }
 
@@ -123,6 +127,13 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
           standingName: contract.minStanding?.name ?? null,
           maxStandingName: contract.maxStanding?.name ?? null,
           faction: contract.faction,
+          factionKey: contract.factionKey,
+          debugName: contract.debugName,
+          isLawful: resolveMissionIsLawful({
+            factionKey: contract.factionKey,
+            factionName: contract.faction,
+            debugName: contract.debugName,
+          }),
           title: contractDisplayTitle(contract),
         }
 
@@ -234,6 +245,9 @@ export interface ContractMissionBrowseEntry {
   mission: string
   title: string
   faction: string
+  factionKey?: string
+  debugName?: string
+  isLawful: boolean
   system: string | null
   region: string | null
   category: string | null
@@ -295,6 +309,13 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       mission: contractMissionLabel(contract),
       title: contractDisplayTitle(contract),
       faction: contract.faction,
+      factionKey: contract.factionKey,
+      debugName: contract.debugName,
+      isLawful: resolveMissionIsLawful({
+        factionKey: contract.factionKey,
+        factionName: contract.faction,
+        debugName: contract.debugName,
+      }),
       system: contract.system || null,
       region: contract.region ?? null,
       category: contract.category ?? null,

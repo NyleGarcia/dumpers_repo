@@ -24,7 +24,6 @@ type BlueprintRecord = {
 }
 
 type MissionDisplay = ContractMissionBrowseEntry & {
-  isLawful: boolean
   blueprintCount: number
 }
 
@@ -40,16 +39,6 @@ const SYSTEM_COLORS: Record<BrowseSystem, { bg: string; border: string; text: st
   pyro: { bg: 'bg-orange-950/50', border: 'border-orange-500/40', text: 'text-orange-300' },
   nyx: { bg: 'bg-purple-950/50', border: 'border-purple-500/40', text: 'text-purple-300' },
   unknown: { bg: 'bg-slate-800/50', border: 'border-slate-600/40', text: 'text-slate-400' },
-}
-
-const UNLAWFUL_FACTIONS = [
-  'headhunters', 'xenothreat', 'ruto', 'vaughn', 'ninetails',
-  'tarpits', 'bitzeros', 'dead saints',
-]
-
-function isUnlawfulFaction(faction: string): boolean {
-  const lower = faction.toLowerCase()
-  return UNLAWFUL_FACTIONS.some(f => lower.includes(f))
 }
 
 interface MissionGroup {
@@ -80,6 +69,7 @@ function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
     const existing = map.get(mission.title)
     if (existing) {
       existing.variants.push(mission)
+      existing.isLawful = existing.isLawful && mission.isLawful
     } else {
       map.set(mission.title, {
         title: mission.title,
@@ -120,7 +110,6 @@ export default function BrowseMissionsView({
   const missions = useMemo((): MissionDisplay[] => {
     return getContractMissionBrowseCatalog().map((contract) => ({
       ...contract,
-      isLawful: !isUnlawfulFaction(contract.faction || ''),
       blueprintCount: contract.blueprints.length,
     }))
   }, [])
@@ -147,9 +136,10 @@ export default function BrowseMissionsView({
 
     for (const m of missions) {
       if (!map[m.faction]) {
-        map[m.faction] = { missions: [], isLawful: m.isLawful, systems: new Set() }
+        map[m.faction] = { missions: [], isLawful: true, systems: new Set() }
       }
       map[m.faction].missions.push(m)
+      if (!m.isLawful) map[m.faction].isLawful = false
       for (const system of getMissionBrowseSystems(m)) {
         map[m.faction].systems.add(system)
       }
