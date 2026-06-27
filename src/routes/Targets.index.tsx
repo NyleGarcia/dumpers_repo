@@ -4,7 +4,7 @@ import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
-import { resolveIsOrderable } from '../lib/blueprintOrderable'
+import { resolveIsOrderable, catalogIsReward } from '../lib/blueprintOrderable'
 import { buildMissionList, getMissionsForBlueprint, missionKey, type Region } from '../lib/missions'
 import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import {
@@ -12,6 +12,7 @@ import {
   formatBlueprintDropChance,
   formatRepReward,
   getBlueprintUnlockInfo,
+  getPoolsForBlueprint,
 } from '../lib/missionAcquisition'
 import BrowseMissionsView from '../components/BrowseMissionsView'
 import MissionLocationTags from '../components/MissionLocationTags'
@@ -231,6 +232,18 @@ function MissionChecklistGroups({
       ))}
     </div>
   )
+}
+
+function formatEmptyMissionMessage(blueprintId: string): string {
+  if (getRewardMissionsForBlueprint(blueprintId).length > 0) {
+    return 'No reward missions for this blueprint.'
+  }
+  const pools = getPoolsForBlueprint(blueprintId)
+  if (catalogIsReward(blueprintId) && pools.length > 0) {
+    const poolLabel = pools[0].replace(/^xenothreat2_/i, 'XenoThreat ').replace(/_/g, ' ')
+    return `In reward pool ${poolLabel} — mission link pending data update.`
+  }
+  return 'No reward missions for this blueprint.'
 }
 
 export default function TargetsRoute() {
@@ -503,7 +516,7 @@ export default function TargetsRoute() {
                           <div className="mt-1">
                             <BlueprintUnlockBadge
                               blueprintId={bp.internalName}
-                              isReward={resolveIsOrderable(bp, overridesMap)}
+                              isReward={getRewardMissionsForBlueprint(bp.internalName).length > 0}
                             />
                           </div>
                         </div>
@@ -546,7 +559,7 @@ export default function TargetsRoute() {
 
                     {!collapsedIds.has(bp.internalName) && (
                       missions.length === 0 ? (
-                        <p className="px-3 py-3 text-xs text-slate-500">No reward missions for this blueprint.</p>
+                        <p className="px-3 py-3 text-xs text-slate-500">{formatEmptyMissionMessage(bp.internalName)}</p>
                       ) : (
                         <ul className="divide-y divide-slate-800/80">
                           {missions.map((m) => {

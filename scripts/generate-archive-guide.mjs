@@ -27,6 +27,7 @@ const {
   OFFLINE_MODE_SECTION,
   DFP_SECTION,
   RATINGS_SECTION,
+  ORDER_LIFECYCLE_SECTION,
   PENDING_REP_SECTION,
   ORDER_RULES_SECTION,
   ORDERING_TIPS_SECTION,
@@ -197,6 +198,16 @@ ${sectionWrap(
     ${card('The Goal', `<p>${escapeHtml(DFP_SECTION.goal.body)}</p>`, 'blue')}
   </div>`,
   true
+)}
+
+${sectionWrap(
+  ORDER_LIFECYCLE_SECTION.id,
+  ORDER_LIFECYCLE_SECTION.title,
+  `<p>${rich(ORDER_LIFECYCLE_SECTION.intro)}</p>
+    ${ORDER_LIFECYCLE_SECTION.steps
+      .map((step) => card(step.title, `<p>${rich(step.body)}</p>`, 'blue'))
+      .join('\n    ')}
+    <div class="note"><p><strong>Reminders:</strong></p>${ul(ORDER_LIFECYCLE_SECTION.reminders)}</div>`
 )}
 
 ${sectionWrap(

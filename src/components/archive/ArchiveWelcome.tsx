@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import type { ArchiveSection } from '../../routes/Archive.index'
 import { MISSION_LOCATION_TAG_STYLES } from '../../lib/missionLocations'
 import { PAGE_GUIDES } from '../../lib/archiveGuide/pageGuides'
-import { ORDER_RULES_SECTION } from '../../lib/archiveGuide/welcomeSections'
+import { ORDER_RULES_SECTION, ORDER_LIFECYCLE_SECTION, RATINGS_SECTION, PENDING_REP_SECTION } from '../../lib/archiveGuide/welcomeSections'
 
 interface QuickLink {
   id: string
@@ -218,6 +218,21 @@ const PAGE_GUIDE_ICONS: Record<string, React.ReactNode> = {
     </svg>
   ),
 }
+
+/** Lightweight **bold** markers from welcomeSections → React nodes. */
+function renderRich(text: string): React.ReactNode {
+  const parts = text.split(/\*\*(.+?)\*\*/g)
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="text-slate-300">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  )
+}
+
 export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
   const [expandedGuide, setExpandedGuide] = useState<string | null>(null)
 
@@ -399,6 +414,35 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </div>
       </section>
 
+      {/* Order lifecycle */}
+      <section id="order-lifecycle" className="space-y-4">
+        <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+          {ORDER_LIFECYCLE_SECTION.title}
+        </h3>
+        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+          <p className="text-sm text-slate-400 leading-relaxed">{renderRich(ORDER_LIFECYCLE_SECTION.intro)}</p>
+          <div className="space-y-3">
+            {ORDER_LIFECYCLE_SECTION.steps.map((step) => (
+              <div key={step.title} className="p-3 bg-blue-900/20 rounded-lg border border-blue-500/20">
+                <h4 className="text-sm font-medium text-blue-300 mb-1">{step.title}</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">{renderRich(step.body)}</p>
+              </div>
+            ))}
+          </div>
+          <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+            <h4 className="text-sm font-medium text-white mb-2">Reminders</h4>
+            <ul className="text-xs text-slate-400 space-y-1.5">
+              {ORDER_LIFECYCLE_SECTION.reminders.map((item) => (
+                <li key={item}>• {renderRich(item)}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Rating System */}
       <section id="ratings" className="space-y-4">
         <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
@@ -445,10 +489,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 As a Buyer
               </h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• <strong className="text-amber-300">WTB:</strong> post on Custom Orders; rate your fulfiller after pickup</li>
-                <li>• <strong className="text-cyan-300">WTS:</strong> buy full or partial on Fulfillment; rate the seller after pickup</li>
-                <li>• Rate the other party 1–5 stars when archiving a completed order</li>
-                <li>• Your buyer rep helps sellers/fulfillers decide whether to trade with you</li>
+                {RATINGS_SECTION.asBuyer.items.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
             
@@ -460,10 +503,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 As a Seller / Fulfiller
               </h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• <strong className="text-amber-300">WTB:</strong> accept on Fulfillment and craft/deliver; rate the buyer after completion</li>
-                <li>• <strong className="text-cyan-300">WTS:</strong> post on Custom Orders; mark ready when a buyer accepts (each partial sale counts separately); rate the buyer after completion</li>
-                <li>• Your fulfiller rep (seller side) is visible on listings and buy requests</li>
-                <li>• Higher ratings build trust for both craft fulfillment and direct sales</li>
+                {RATINGS_SECTION.asSeller.items.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
           </div>
@@ -527,7 +569,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>
-                <strong>Important:</strong> Everyone must rate completed WTB and WTS transactions before posting new orders or accepting new ones on Fulfillment. Until you do, those actions are paused — you can still browse listings and manage any orders already in progress. Archive unrated deals from the <strong className="text-slate-300">Completed</strong> tab on Custom Orders.
+                <strong>Important:</strong> {renderRich(PENDING_REP_SECTION.important)}
               </span>
             </p>
           </div>
@@ -555,13 +597,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 What's Expected
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• Post <strong className="text-amber-300">WTB</strong> only for items you genuinely want crafted or supplied</li>
-                <li>• Post <strong className="text-cyan-300">WTS</strong> only for stock you actually have on hand</li>
-                <li>• WTS listings default to partial purchase — check “full listing” only when the bundle must sell together</li>
-                <li>• Complete transactions in good faith on both Custom Orders and Fulfillment</li>
-                <li>• Rate promptly after completion (same archive + stars flow for both tags)</li>
-                <li>• Communicate clearly with your buyer or seller</li>
-                <li>• Use your verified RSI Handle for all in-game trades</li>
+                {ORDER_RULES_SECTION.expected.items.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
 

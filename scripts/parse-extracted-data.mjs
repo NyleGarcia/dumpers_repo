@@ -30,6 +30,11 @@ import {
   parseHandMineableHabitatRaw,
   preferredGuideNameForSpawnKey,
 } from './lib/miningOreNames.mjs'
+import {
+  BLUEPRINT_MISSION_TRACKING_EXCLUSIONS,
+  REWARD_POOL_TRACKING_EXCLUSIONS,
+  REDWIND_BRIDGE,
+} from './lib/orphanPoolBridges.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -53,6 +58,7 @@ const EXPECTED_PATHS = {
   fpsWeapons: 'libs/foundry/records/entities/scitem/weapons/fps_weapons',
   // New paths for contract-based mission data
   contractGenerators: 'libs/foundry/records/contracts/contractgenerator',
+  contractScenarios: 'libs/foundry/records/contracts/contractscenarios',
   reputationRewards: 'libs/foundry/records/reputation/rewards',
   factionReputation: 'libs/foundry/records/factions/factionreputation',
 }
@@ -1244,6 +1250,13 @@ function parseBlueprintRewards() {
   console.log(`  Found ${Object.keys(missionBlueprints).length} missions with blueprint rewards`)
   console.log(`  Found ${Object.keys(blueprintMissions).length} unique blueprints`)
 
+  for (const excluded of REWARD_POOL_TRACKING_EXCLUSIONS) {
+    delete missionBlueprints[excluded]
+  }
+  for (const excluded of BLUEPRINT_MISSION_TRACKING_EXCLUSIONS) {
+    delete blueprintMissions[excluded]
+  }
+
   return { missionBlueprints, blueprintMissions }
 }
 
@@ -1333,7 +1346,7 @@ function parseContractGenerators(localization) {
   const contractFiles = findJsonFiles(EXPECTED_PATHS.contractGenerators)
   if (contractFiles.length === 0) {
     validationIssues.push('No contract generator files found')
-    return { contracts: [], missionsByPool: {}, poolsByBlueprint: {} }
+    return { contracts: [], missionsByPool: {}, poolsByBlueprint: {}, factionNames: {} }
   }
   
   console.log(`  Found ${contractFiles.length} contract generator files`)
@@ -1828,7 +1841,249 @@ function parseContractGenerators(localization) {
   console.log(`  Found ${contractsWithBlueprints} contracts with blueprint rewards`)
   console.log(`  Indexed ${Object.keys(missionsByPool).length} unique blueprint pools`)
   
-  return { contracts, missionsByPool, poolsByBlueprint }
+  return { contracts, missionsByPool, poolsByBlueprint, factionNames }
+}
+
+function normalizeBlueprintPoolKeyFromPath(poolPath) {
+  if (!poolPath) return null
+  const poolMatch = String(poolPath).match(/([^/\\]+)\.json$/i)
+  if (!poolMatch) return null
+  return poolMatch[1]
+    .replace(/^BlueprintPoolRecord\./i, '')
+    .replace(/^bp_rewards_/i, '')
+    .replace(/^bp_missionreward_/i, '')
+    .toLowerCase()
+}
+
+function indexContractInMissionsByPool(contract, missionsByPool) {
+  for (const pool of contract.blueprintPools || []) {
+    if (!missionsByPool[pool.key]) missionsByPool[pool.key] = []
+    missionsByPool[pool.key].push({
+      title: contract.title,
+      displayTitle: contract.displayTitle,
+      titleKey: contract.titleKey,
+      faction: contract.faction,
+      factionKey: contract.factionKey,
+      debugName: contract.debugName,
+      isLawful: contract.isLawful,
+      system: contract.system,
+      region: contract.region,
+      category: contract.category,
+      minStanding: contract.minStanding,
+      maxStanding: contract.maxStanding,
+      repPoints: contract.repPoints,
+    })
+  }
+}
+
+/**
+ * Contract scenario progress (tiered blueprint pools), e.g. XenoThreat Clear Air.
+ */
+function parseContractScenarios(localization, factionNames) {
+  console.log('\n[CONTRACT SCENARIOS] Parsing scenario progress blueprint rewards...')
+  const scenarioFiles = findJsonFiles(EXPECTED_PATHS.contractScenarios)
+  if (scenarioFiles.length === 0) {
+    console.log('  No contract scenario files found')
+    return []
+  }
+
+  const contracts = []
+  let tierCount = 0
+
+  for (const file of scenarioFiles) {
+    const json = readJson(file)
+    const recordName = json?._RecordName_ || basename(file, '.json')
+    const scenarioKey = recordName.replace(/^ScenarioProgress\./i, '')
+    const tiers = json?._RecordValue_?.factionRewardTiers || []
+
+    for (const factionTier of tiers) {
+      const factionPath = factionTier.faction || ''
+      const factionMatch = factionPath.match(/faction_reputation_(\w+)\.json/i)
+        || factionPath.match(/factionreputation_(\w+)\.json/i)
+      const factionKey = factionMatch ? factionMatch[1].toLowerCase() : 'unknown'
+      const factionName =
+        factionNames[`factionreputation_${factionKey}`]
+        || factionNames[factionKey]
+        || resolveFactionDisplayName({
+          rawName: factionKey,
+          factionKey: `factionreputation_${factionKey}`,
+          hints: file,
+        })
+
+      for (const progression of factionTier.tierProgressions || []) {
+        const progressionTextKey = progression.progressionText?.startsWith('@')
+          ? progression.progressionText.slice(1)
+          : progression.progressionText
+        const progressionLabel =
+          (progressionTextKey && localization[progressionTextKey]
+            && !localization[progressionTextKey].includes('~mission')
+            && localization[progressionTextKey].trim().length > 3
+            && !/^your total:?$/i.test(localization[progressionTextKey].trim()))
+            ? localization[progressionTextKey].trim()
+          : 'Clear Air Scenario Progress'
+
+        for (const tierReward of progression.tierRewards || []) {
+          const poolPaths = tierReward.blueprintPool || []
+          const blueprintPools = []
+          for (const poolPath of poolPaths) {
+            const key = normalizeBlueprintPoolKeyFromPath(poolPath)
+            if (key) blueprintPools.push({ key, chance: 1, path: poolPath })
+          }
+          if (blueprintPools.length === 0) continue
+
+          const minPoints = tierReward.minPoints ?? 0
+          const title = `XenoThreat ${progressionLabel} — ${minPoints.toLocaleString()} pts`
+          const debugName = `${scenarioKey}_tier_${minPoints}`
+
+          contracts.push({
+            id: debugName,
+            debugName,
+            title,
+            displayTitle: title,
+            titleKey: progressionTextKey || '',
+            faction: factionName,
+            factionKey,
+            system: 'Pyro',
+            region: null,
+            category: 'Scenario Progress',
+            blueprintPools,
+            minStanding: {
+              name: `${minPoints.toLocaleString()} scenario pts`,
+              minReputation: minPoints,
+            },
+            maxStanding: {
+              name: `${minPoints.toLocaleString()} scenario pts`,
+              minReputation: minPoints,
+            },
+            repPoints: 0,
+            isLawful: resolveContractIsLawful(factionKey, debugName),
+            source: 'contractScenario',
+          })
+          tierCount++
+        }
+      }
+    }
+  }
+
+  console.log(`  Added ${tierCount} scenario tier contracts from ${scenarioFiles.length} file(s)`)
+  return contracts
+}
+
+/**
+ * Red Wind blueprint pool is defined in game data but not attached to hauling contracts.
+ */
+function parseRedWindBridgedContracts(localization, factionNames) {
+  console.log('\n[RED WIND BRIDGE] Attaching redwind pool to Red Wind Linehaul generators...')
+  const bridgePath = join(EXTRACTED_DATA, 'libs/foundry/records', REDWIND_BRIDGE.generatorSubpath)
+  if (!existsSync(bridgePath)) {
+    console.log('  Red Wind generator path not found')
+    return []
+  }
+
+  const files = readdirSync(bridgePath).filter((name) => name.endsWith('.json'))
+  const factionKey = 'lawful_redwindlinehaul'
+  const factionName =
+    factionNames[`factionreputation_${factionKey}`]
+    || factionNames[factionKey]
+    || 'Red Wind Linehaul'
+
+  const contracts = []
+
+  const REDWIND_GENERATOR_TITLES = {
+    redwind_hauling: 'Red Wind Interstellar Hauling',
+    redwind_recovercargo: 'Red Wind Cargo Recovery',
+    redwind_recoveritem: 'Red Wind Package Recovery',
+  }
+
+  for (const fileName of files) {
+    const file = join(bridgePath, fileName)
+    const json = readJson(file)
+    const generator = json?._RecordValue_?.generators?.[0]
+    if (!generator) continue
+
+    const fileStem = basename(fileName, '.json')
+    const sampleContract = generator.contracts?.[0]
+    let title = REDWIND_GENERATOR_TITLES[fileStem] || generator.debugName || fileStem
+    let titleKey = ''
+    if (sampleContract?.paramOverrides?.stringParamOverrides) {
+      const titleParam = sampleContract.paramOverrides.stringParamOverrides.find((p) => p.param === 'Title')
+      if (titleParam?.value) {
+        titleKey = titleParam.value
+        const localized = titleKey.startsWith('@')
+          ? localization[titleKey.slice(1)] || titleKey
+          : titleParam.value
+        if (localized && !localized.includes('~mission') && !isUnresolvedDisplayName(localized)) {
+          title = localized
+        }
+      }
+    }
+
+    const debugName = `bridged_${basename(fileName, '.json')}`
+    const nameBlob = `${generator.debugName || ''} ${sampleContract?.debugName || ''} ${title}`.toLowerCase()
+    let system = 'Stanton'
+    if (nameBlob.includes('nyx')) system = 'Nyx'
+    else if (nameBlob.includes('pyro')) system = 'Pyro'
+
+    let category = 'Hauling'
+    const missionTypeFile = generator.contractParams?.missionTypeOverride
+      || sampleContract?.paramOverrides?.missionTypeOverride
+    if (missionTypeFile) {
+      const catMatch = missionTypeFile.match(/missiontype\/pu\/([^/\\]+)\.json$/i)
+      if (catMatch) {
+        category = catMatch[1].replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+      }
+    }
+
+    contracts.push({
+      id: debugName,
+      debugName,
+      title,
+      displayTitle: resolveContractDisplayTitle({
+        title,
+        titleKey,
+        debugName,
+        localization,
+        category,
+        system,
+      }),
+      titleKey,
+      faction: factionName,
+      factionKey,
+      system,
+      region: null,
+      category,
+      blueprintPools: [{
+        key: REDWIND_BRIDGE.poolKey,
+        chance: 1,
+        path: 'bridged:redwind',
+      }],
+      minStanding: null,
+      maxStanding: null,
+      repPoints: 0,
+      isLawful: true,
+      source: 'orphanPoolBridge',
+    })
+  }
+
+  console.log(`  Added ${contracts.length} bridged Red Wind contract(s)`)
+  return contracts
+}
+
+function mergeSupplementalContracts(contractData, localization, factionNames) {
+  const scenarioContracts = parseContractScenarios(localization, factionNames)
+  const redwindContracts = parseRedWindBridgedContracts(localization, factionNames)
+  const supplemental = [...scenarioContracts, ...redwindContracts]
+
+  for (const contract of supplemental) {
+    contractData.contracts.push(contract)
+    indexContractInMissionsByPool(contract, contractData.missionsByPool)
+  }
+
+  if (supplemental.length > 0) {
+    console.log(`  Total contracts after scenario/bridge merge: ${contractData.contracts.length}`)
+  }
+
+  return contractData
 }
 
 /** Prefer canonical base names for *_01_01_01 variants when a shorter in-game key exists. */
@@ -3951,6 +4206,7 @@ async function main() {
   
   // Parse contract generators for complete mission -> blueprint mapping
   const contractData = parseContractGenerators(localization)
+  mergeSupplementalContracts(contractData, localization, contractData.factionNames)
   
   // Parse weapons, ordnance, and modules
   console.log('\n[6/7] Parsing FPS weapons, ordnance, and salvage modules...')

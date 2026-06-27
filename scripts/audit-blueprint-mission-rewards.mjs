@@ -6,14 +6,25 @@
 import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
+import { BLUEPRINT_MISSION_TRACKING_EXCLUSIONS } from './lib/orphanPoolBridges.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const missionData = JSON.parse(readFileSync(join(root, 'src/data/game-blueprint-missions.json'), 'utf-8'))
 const blueprintData = JSON.parse(readFileSync(join(root, 'src/data/game-blueprints.json'), 'utf-8'))
 
 const missionBlueprints = missionData.missionBlueprints
+const blueprintMissions = missionData.blueprintMissions || {}
 const contracts = missionData.contracts
 const missionsByPool = missionData.missionsByPool
+
+const linkedPoolKeys = new Set()
+for (const contract of contracts) {
+  for (const pool of contract.blueprintPools || []) {
+    linkedPoolKeys.add(pool.key)
+  }
+}
+
+const orphanPools = Object.keys(missionBlueprints).filter((key) => !linkedPoolKeys.has(key))
 
 function buildExpectedRewards(internalName) {
   const bpName = internalName.toLowerCase()
@@ -92,6 +103,11 @@ function oldPoolBleedRewards(internalName) {
   return rewards
 }
 
+const orphanBlueprintEntries = Object.entries(blueprintMissions).filter(([name]) => {
+  if (BLUEPRINT_MISSION_TRACKING_EXCLUSIONS.includes(name)) return false
+  return buildExpectedRewards(name).length === 0
+})
+
 const failures = []
 const rewardBlueprints = blueprintData.blueprints.filter((bp) => bp.isReward)
 
@@ -163,6 +179,8 @@ for (const bp of rewardBlueprints) {
 
 console.log('=== Blueprint Mission Reward Audit ===')
 console.log(`Reward blueprints: ${rewardBlueprints.length}`)
+console.log(`Orphan reward pools (no contract link): ${orphanPools.length}`)
+console.log(`Trackable blueprints with zero contract missions: ${orphanBlueprintEntries.length}`)
 console.log(`Bundled JSON mismatches: ${bundledMismatch}`)
 console.log(`Phantom pool-bleed rows (old logic, not in contract data): ${poolBleedRows}`)
 console.log(`Unlock badges corrected (old lowest-rep was wrong): ${unlockWouldRegress}`)
@@ -172,6 +190,28 @@ if (regressSamples.length) {
   for (const sample of regressSamples) {
     console.log(`  ${sample.name}: ${sample.old.name} (${sample.old.rep}) → ${sample.new.name} (${sample.new.rep})`)
   }
+}
+
+if (orphanPools.length > 0) {
+  console.error('\nFAIL: orphan reward pools with no contract references:')
+  for (const pool of orphanPools.slice(0, 30)) {
+    const bps = (missionBlueprints[pool] || []).map((b) => b.name).join(', ')
+    console.error(`  - ${pool} (${bps})`)
+  }
+  if (orphanPools.length > 30) console.error(`  ... and ${orphanPools.length - 30} more`)
+  process.exit(1)
+}
+
+if (orphanBlueprintEntries.length > 0) {
+  console.error('\nFAIL: blueprints in reward pools but no contract-accurate missions:')
+  for (const [name, pools] of orphanBlueprintEntries.slice(0, 30)) {
+    const display = blueprintData.blueprints.find((bp) => (bp.internalName || '').toLowerCase() === name)?.blueprintName
+    console.error(`  - ${display || name} → pools: ${pools.join(', ')}`)
+  }
+  if (orphanBlueprintEntries.length > 30) {
+    console.error(`  ... and ${orphanBlueprintEntries.length - 30} more`)
+  }
+  process.exit(1)
 }
 
 if (bundledMismatch > 0) {

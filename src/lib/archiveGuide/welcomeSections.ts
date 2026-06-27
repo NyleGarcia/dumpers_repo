@@ -82,22 +82,52 @@ export const RATINGS_SECTION = {
   asBuyer: {
     title: 'As a Buyer',
     items: [
-      '**WTB:** post on Custom Orders; rate your fulfiller after pickup',
-      '**WTS:** buy full or partial on Fulfillment; rate the seller after pickup',
-      'Rate the other party 1–5 stars when archiving a completed order',
+      '**WTB:** post on Custom Orders; after pickup confirm on **Active**, open **Completed** and click **Archive & rate**',
+      '**WTS:** buy on Fulfillment; confirm pickup on Custom Orders → **Active**, then **Archive & rate** on **Completed**',
+      'Rate the other party 1–5 stars in the archive modal — this is required, not optional',
       'Your buyer rep helps sellers/fulfillers decide whether to trade with you',
     ],
   },
   asSeller: {
     title: 'As a Seller / Fulfiller',
     items: [
-      '**WTB:** accept on Fulfillment and craft/deliver; rate the buyer after completion',
-      '**WTS:** post on Custom Orders; mark ready when a buyer accepts (each partial sale counts separately); rate the buyer after completion',
+      '**WTB:** accept on Fulfillment, complete craft, then **Archive & rate** the buyer from **Rate completed orders** or Custom Orders → **Completed**',
+      '**WTS:** mark ready on Fulfillment when the buyer can pick up; after they confirm pickup, **Archive & rate** from **Fulfillment → Rate completed orders** or Custom Orders → **Completed**',
       'Your fulfiller rep (seller side) is visible on listings and buy requests',
       'Higher ratings build trust for both craft fulfillment and direct sales',
     ],
   },
   note: 'Both buyers and fulfillers must have a verified RSI Handle to participate in the order system. This ensures accountability and helps prevent scams.',
+}
+
+export const ORDER_LIFECYCLE_SECTION = {
+  id: 'order-lifecycle',
+  title: 'How a WTB/WTS Deal Finishes',
+  intro:
+    'Every marketplace trade follows the same stages on **Custom Orders** and **Fulfillment**. The physical handoff happens in Star Citizen; the site tracks status, deadlines, and reputation.',
+  steps: [
+    {
+      title: '1. Accept or buy',
+      body: 'A **WTB** fulfiller accepts on Fulfillment, or a buyer purchases a **WTS** listing (full or partial). Both sides see the other party’s **in-game name** on the order card — add them in Star Citizen to coordinate.',
+    },
+    {
+      title: '2. Seller prepares the order',
+      body: 'WTB: fulfiller crafts and marks ready. WTS: seller marks ready for pickup. All seller actions appear **directly on the order card** on Fulfillment — status callouts explain what to do next.',
+    },
+    {
+      title: '3. Buyer confirms pickup',
+      body: 'After the seller marks ready, the buyer clicks **Confirm pickup** on **Custom Orders → Active**. The order moves to **Completed** — pickup is not the final step.',
+    },
+    {
+      title: '4. Both archive & rate (required)',
+      body: 'Each party must click the purple **Archive & rate** button to submit a 1–5 star rating. Buyers: **Custom Orders → Completed**. Sellers: **Fulfillment → Rate completed orders** or **Custom Orders → Completed**. Until both rate, new posts and accepts on Fulfillment stay paused.',
+    },
+  ],
+  reminders: [
+    'Header **Notifications** include clickable links (Confirm pickup, Archive & rate, Browse Fulfillment, etc.)',
+    'If the other party rates first, you have **24 hours** to archive & rate or a 5-star rating is auto-applied on your behalf',
+    'Use **Report Problem** on Active if goods were not received — do not wait for the 72-hour auto-complete',
+  ],
 }
 
 export const PENDING_REP_SECTION = {
@@ -126,7 +156,7 @@ export const PENDING_REP_SECTION = {
     ],
   },
   important:
-    'Everyone must rate completed WTB and WTS transactions before posting new orders or accepting new ones on Fulfillment. Until you do, those actions are paused — you can still browse listings and manage any orders already in progress. Archive unrated deals from the **Completed** tab on Custom Orders.',
+    'Everyone must **archive & rate** completed WTB and WTS transactions before posting new orders or accepting new ones on Fulfillment. Until you do, those actions are paused — you can still browse listings and manage any orders already in progress. Open **Custom Orders → Completed** or **Fulfillment → Rate completed orders** and click the purple **Archive & rate** button on each finished deal.',
 }
 
 export const ORDER_RULES_SECTION = {
@@ -141,7 +171,8 @@ export const ORDER_RULES_SECTION = {
       'Post **WTS** only for stock you actually have on hand',
       'WTS listings default to partial purchase — check “full listing” only when the bundle must sell together',
       'Complete transactions in good faith on both Custom Orders and Fulfillment',
-      'Rate promptly after completion (same archive + stars flow for both tags)',
+      'Archive & rate promptly after pickup — purple button on Completed / Rate completed orders',
+      'Add the other party in-game using the name shown on each order card',
       'Communicate clearly with your buyer or seller',
       'Use your verified RSI Handle for all in-game trades',
     ],
@@ -172,6 +203,7 @@ export const ORDER_RULES_SECTION = {
       '**Seller deadline:** 72 hours to mark ready after accept (WTB craft or WTS handoff), or the deal releases back to the pool',
       '**Partial WTS cancel:** Cancelling a partial purchase restores quantities to the seller\'s listing',
       '**Buyer pickup:** 72 hours to confirm after ready, or auto-complete (buyer may receive a strike)',
+      '**Archive & rate:** Required after pickup — both parties must click **Archive & rate** on completed orders',
       '**Rating deadline:** 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf',
       '**3 strikes in 30 days** may lead to account restrictions',
     ],
@@ -312,6 +344,7 @@ export const PRINTABLE_TOC = [
   { id: 'about', label: "What is Dumper's Repo?" },
   { id: 'offline-mode', label: 'Offline Mode' },
   { id: 'dfp', label: "Why Dumper's Fair-Value Price (DFP)?" },
+  { id: 'order-lifecycle', label: 'How a Deal Finishes' },
   { id: 'ratings', label: 'Buyer & Fulfiller Ratings' },
   { id: 'pending-rep', label: 'Building Your Reputation' },
   { id: 'order-rules', label: 'Order System Rules' },
