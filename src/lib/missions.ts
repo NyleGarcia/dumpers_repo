@@ -1,4 +1,4 @@
-import { getMissionRepInfo } from './missionAcquisition'
+import { formatScenarioPointsRequirement, getMissionRepInfo } from './missionAcquisition'
 import { getRewardMissionsForBlueprint } from './blueprintMissionRewards'
 
 export type Region = 'stanton' | 'pyro' | 'nyx'
@@ -98,7 +98,7 @@ export function buildMissionList(
       const mission = reward.mission?.trim()
       if (!mission) continue
 
-      const key = missionKey(`${mission}|${reward.minReputation ?? ''}|${reward.maxReputation ?? ''}`)
+      const key = missionTierKey(reward)
       
       // Aggregate locations for this mission tier
       if (!missionLocations.has(key)) {
@@ -121,6 +121,8 @@ export function buildMissionList(
           minReputation: reward.minReputation,
           minStandingName: reward.standingName,
           repPoints: reward.repPoints,
+          scenarioPointsRequired: reward.scenarioPointsRequired,
+          scenarioProgressLabel: reward.scenarioProgressLabel,
           system: reward.system,
           region: reward.region,
           category: reward.category,
@@ -185,6 +187,18 @@ export interface TargetBlueprintMissionOption {
   subRegion: string | null
   system: string | null
   category: string | null
+  scenarioPointsRequired?: number | null
+}
+
+function missionTierKey(reward: {
+  mission: string
+  minReputation?: number | null
+  maxReputation?: number | null
+  scenarioPointsRequired?: number | null
+}): string {
+  return missionKey(
+    `${reward.mission}|${reward.minReputation ?? ''}|${reward.maxReputation ?? ''}|${reward.scenarioPointsRequired ?? ''}`
+  )
 }
 
 function attachMissionRep<T extends { mission: string }>(
@@ -195,15 +209,39 @@ function attachMissionRep<T extends { mission: string }>(
     minReputation?: number | null
     minStandingName?: string | null
     repPoints?: number | null
+    scenarioPointsRequired?: number | null
+    scenarioProgressLabel?: string | null
     system?: string | null
     region?: string | null
     category?: string | null
     faction?: string | null
     isLawful?: boolean
   }
-): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category'> {
+): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category' | 'scenarioPointsRequired'> {
   const fallbackRep = getMissionRepInfo(entry.mission)
-  const rep = repOverride?.minReputation != null || repOverride?.minStandingName
+  const rep = repOverride?.scenarioPointsRequired != null
+    ? {
+        repMin: repOverride.repPoints ?? null,
+        repMax: repOverride.repPoints ?? null,
+        minReputation: null,
+        minStandingName: formatScenarioPointsRequirement(
+          repOverride.scenarioPointsRequired,
+          repOverride.scenarioProgressLabel
+        ),
+        variantCount: 1,
+        missionGiver: repOverride.faction ?? parseMissionGiver(entry.mission),
+        matched: true,
+        isLawful: repOverride.isLawful ?? fallbackRep.isLawful,
+        aUecMin: 0,
+        aUecMax: 0,
+        missionType: null,
+        missionLocations: locations ?? (repOverride.system ? [repOverride.system] : []),
+        repPoints: repOverride.repPoints ?? 0,
+        region: repOverride.region ?? null,
+        system: repOverride.system ?? null,
+        category: repOverride.category ?? null,
+      }
+    : repOverride?.minReputation != null || repOverride?.minStandingName
     ? {
         repMin: repOverride.repPoints ?? null,
         repMax: repOverride.repPoints ?? null,
@@ -245,6 +283,7 @@ function attachMissionRep<T extends { mission: string }>(
     subRegion: rep.region,
     system: rep.system,
     category: rep.category,
+    scenarioPointsRequired: repOverride?.scenarioPointsRequired ?? null,
   }
 }
 
@@ -262,7 +301,7 @@ export function getMissionsForBlueprint(
   for (const reward of rewardMissions) {
     const mission = reward.mission?.trim()
     if (!mission) continue
-    const key = missionKey(`${mission}|${reward.minReputation ?? ''}|${reward.maxReputation ?? ''}`)
+    const key = missionTierKey(reward)
     if (!missionLocations.has(key)) {
       missionLocations.set(key, new Set())
     }
@@ -275,7 +314,7 @@ export function getMissionsForBlueprint(
     const mission = reward.mission?.trim()
     if (!mission) continue
 
-    const key = missionKey(`${mission}|${reward.minReputation ?? ''}|${reward.maxReputation ?? ''}`)
+    const key = missionTierKey(reward)
     if (seen.has(key)) continue
     seen.add(key)
 
@@ -293,6 +332,8 @@ export function getMissionsForBlueprint(
           minReputation: reward.minReputation,
           minStandingName: reward.standingName,
           repPoints: reward.repPoints,
+          scenarioPointsRequired: reward.scenarioPointsRequired,
+          scenarioProgressLabel: reward.scenarioProgressLabel,
           system: reward.system,
           region: reward.region,
           category: reward.category,

@@ -151,6 +151,15 @@ export function missionLookupKey(missionLabel: string): string {
   return missionLabel.replace('MissionBrokerEntry.', '')
 }
 
+export function formatScenarioPointsRequirement(
+  scenarioPointsRequired: number | null | undefined,
+  label?: string | null
+): string | null {
+  if (scenarioPointsRequired == null) return null
+  const prefix = label?.trim() || 'Scenario progress'
+  return `${prefix} (${scenarioPointsRequired.toLocaleString()} pts)`
+}
+
 export function formatRepReward(repMin: number | null, repMax: number | null): string | null {
   if (repMin == null && repMax == null) return null
   if (repMin != null && repMax != null && repMin !== repMax) {
@@ -415,10 +424,10 @@ export function getBlueprintUnlockInfo(blueprintFileId: string): BlueprintUnlock
   const repPoints = rewardMissions.reduce((max, reward) => Math.max(max, reward.repPoints), 0)
 
   return {
-    unlockMinReputation: unlockStanding?.minReputation ?? null,
+    unlockMinReputation: unlockStanding?.isScenarioProgress ? null : (unlockStanding?.minReputation ?? null),
     unlockStandingName: unlockStanding?.standingName ?? null,
     factionName,
-    isAvailableByDefault: unlockStanding?.minReputation === 0,
+    isAvailableByDefault: unlockStanding?.minReputation === 0 && !unlockStanding?.isScenarioProgress,
     matched: true,
     matchedMissionCount: rewardMissions.length,
     unmatchedMissionCount: Math.max(0, poolKeys.length - rewardMissions.length),
@@ -434,6 +443,11 @@ export function formatBlueprintUnlockBadge(blueprintFileId: string, isReward?: b
   if (!info.matched) {
     if (isReward === false) return 'Craft-only — no mission unlock'
     return 'Rep unknown'
+  }
+
+  const unlockStanding = getBlueprintUnlockStanding(blueprintFileId)
+  if (unlockStanding?.isScenarioProgress && unlockStanding.scenarioPointsRequired != null) {
+    return `${unlockStanding.standingName} (${unlockStanding.scenarioPointsRequired.toLocaleString()} pts)`
   }
 
   if (info.unlockMinReputation != null && info.unlockMinReputation > 0) {

@@ -1346,7 +1346,7 @@ function parseContractGenerators(localization) {
   const contractFiles = findJsonFiles(EXPECTED_PATHS.contractGenerators)
   if (contractFiles.length === 0) {
     validationIssues.push('No contract generator files found')
-    return { contracts: [], missionsByPool: {}, poolsByBlueprint: {}, factionNames: {} }
+    return { contracts: [], missionsByPool: {}, poolsByBlueprint: {}, factionNames: {}, standingDefs: {}, repRewardAmounts: {} }
   }
   
   console.log(`  Found ${contractFiles.length} contract generator files`)
@@ -1841,7 +1841,39 @@ function parseContractGenerators(localization) {
   console.log(`  Found ${contractsWithBlueprints} contracts with blueprint rewards`)
   console.log(`  Indexed ${Object.keys(missionsByPool).length} unique blueprint pools`)
   
-  return { contracts, missionsByPool, poolsByBlueprint, factionNames }
+  return { contracts, missionsByPool, poolsByBlueprint, factionNames, standingDefs, repRewardAmounts }
+}
+
+function resolveStandingFromPath(standingPath, standingDefs, localization) {
+  if (!standingPath) return null
+  const match = standingPath.match(/([^/\\]+)\.json$/i)
+  if (!match) return null
+
+  const standingKey = `sreputationstandingparams.${match[1]}`.toLowerCase()
+  const def = standingDefs[standingKey]
+  if (def) {
+    return { name: def.displayName, minReputation: def.minReputation }
+  }
+
+  const rankMatch = match[1].match(/rank(\d+)$/i)
+  const rankNum = rankMatch ? rankMatch[1] : '0'
+  const locKey = `RepScope_Contractor_Rank${rankNum}`
+  const resolvedName = localization[locKey] || localization[`RepStanding_TransportGuild_Rank${rankNum}`] || `Rank ${rankNum}`
+  return { name: resolvedName, minReputation: 0 }
+}
+
+function extractContractRepPoints(contract, repRewardAmounts) {
+  if (!contract?.contractResults?.contractResults) return 0
+  for (const result of contract.contractResults.contractResults) {
+    if (!result || result._Type_ !== 'ContractResult_LegacyReputation') continue
+    const rewardPath = result.contractResultReputationAmounts?.reward
+    if (!rewardPath) continue
+    const rewardMatch = rewardPath.match(/([^/\\]+)\.json$/i)
+    if (rewardMatch) {
+      return repRewardAmounts[rewardMatch[1].toLowerCase()] || 0
+    }
+  }
+  return 0
 }
 
 function normalizeBlueprintPoolKeyFromPath(poolPath) {
@@ -1932,8 +1964,8 @@ function parseContractScenarios(localization, factionNames) {
           if (blueprintPools.length === 0) continue
 
           const minPoints = tierReward.minPoints ?? 0
-          const title = `XenoThreat ${progressionLabel} — ${minPoints.toLocaleString()} pts`
           const debugName = `${scenarioKey}_tier_${minPoints}`
+          const title = `XenoThreat ${progressionLabel} — ${minPoints.toLocaleString()} pts`
 
           contracts.push({
             id: debugName,
@@ -1947,14 +1979,10 @@ function parseContractScenarios(localization, factionNames) {
             region: null,
             category: 'Scenario Progress',
             blueprintPools,
-            minStanding: {
-              name: `${minPoints.toLocaleString()} scenario pts`,
-              minReputation: minPoints,
-            },
-            maxStanding: {
-              name: `${minPoints.toLocaleString()} scenario pts`,
-              minReputation: minPoints,
-            },
+            minStanding: null,
+            maxStanding: null,
+            scenarioPointsRequired: minPoints,
+            scenarioProgressLabel: progressionLabel,
             repPoints: 0,
             isLawful: resolveContractIsLawful(factionKey, debugName),
             source: 'contractScenario',
@@ -1972,7 +2000,7 @@ function parseContractScenarios(localization, factionNames) {
 /**
  * Red Wind blueprint pool is defined in game data but not attached to hauling contracts.
  */
-function parseRedWindBridgedContracts(localization, factionNames) {
+function parseRedWindBridgedContracts(localization, factionNames, standingDefs, repRewardAmounts) {
   console.log('\n[RED WIND BRIDGE] Attaching redwind pool to Red Wind Linehaul generators...')
   const bridgePath = join(EXTRACTED_DATA, 'libs/foundry/records', REDWIND_BRIDGE.generatorSubpath)
   if (!existsSync(bridgePath)) {
@@ -2034,6 +2062,10 @@ function parseRedWindBridgedContracts(localization, factionNames) {
       }
     }
 
+    const minStanding = sampleContract ? resolveStandingFromPath(sampleContract.minStanding, standingDefs, localization) : null
+    const maxStanding = sampleContract ? resolveStandingFromPath(sampleContract.maxStanding, standingDefs, localization) : null
+    const repPoints = sampleContract ? extractContractRepPoints(sampleContract, repRewardAmounts) : 0
+
     contracts.push({
       id: debugName,
       debugName,
@@ -2057,9 +2089,9 @@ function parseRedWindBridgedContracts(localization, factionNames) {
         chance: 1,
         path: 'bridged:redwind',
       }],
-      minStanding: null,
-      maxStanding: null,
-      repPoints: 0,
+      minStanding,
+      maxStanding,
+      repPoints,
       isLawful: true,
       source: 'orphanPoolBridge',
     })
@@ -2069,9 +2101,9 @@ function parseRedWindBridgedContracts(localization, factionNames) {
   return contracts
 }
 
-function mergeSupplementalContracts(contractData, localization, factionNames) {
+function mergeSupplementalContracts(contractData, localization, factionNames, standingDefs, repRewardAmounts) {
   const scenarioContracts = parseContractScenarios(localization, factionNames)
-  const redwindContracts = parseRedWindBridgedContracts(localization, factionNames)
+  const redwindContracts = parseRedWindBridgedContracts(localization, factionNames, standingDefs, repRewardAmounts)
   const supplemental = [...scenarioContracts, ...redwindContracts]
 
   for (const contract of supplemental) {
@@ -4206,7 +4238,13 @@ async function main() {
   
   // Parse contract generators for complete mission -> blueprint mapping
   const contractData = parseContractGenerators(localization)
-  mergeSupplementalContracts(contractData, localization, contractData.factionNames)
+  mergeSupplementalContracts(
+    contractData,
+    localization,
+    contractData.factionNames,
+    contractData.standingDefs,
+    contractData.repRewardAmounts
+  )
   
   // Parse weapons, ordnance, and modules
   console.log('\n[6/7] Parsing FPS weapons, ordnance, and salvage modules...')

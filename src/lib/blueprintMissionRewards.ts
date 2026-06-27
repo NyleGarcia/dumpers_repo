@@ -19,6 +19,9 @@ export interface BlueprintRewardMission {
   maxReputation: number | null
   standingName: string | null
   maxStandingName: string | null
+  /** Clear Air / scenario milestone points — not faction rep. */
+  scenarioPointsRequired?: number | null
+  scenarioProgressLabel?: string | null
   faction: string
   factionKey?: string
   debugName?: string
@@ -52,6 +55,8 @@ type ContractEntry = {
   blueprintPools: ContractBlueprintPool[]
   minStanding: { name: string; minReputation: number } | null
   maxStanding: { name: string; minReputation: number } | null
+  scenarioPointsRequired?: number | null
+  scenarioProgressLabel?: string | null
   repPoints: number
 }
 
@@ -126,6 +131,8 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
           maxReputation: contract.maxStanding?.minReputation ?? null,
           standingName: contract.minStanding?.name ?? null,
           maxStandingName: contract.maxStanding?.name ?? null,
+          scenarioPointsRequired: contract.scenarioPointsRequired ?? null,
+          scenarioProgressLabel: contract.scenarioProgressLabel ?? null,
           faction: contract.faction,
           factionKey: contract.factionKey,
           debugName: contract.debugName,
@@ -153,6 +160,7 @@ function rewardGroupKey(reward: BlueprintRewardMission): string {
     reward.mission,
     reward.minReputation ?? 'null',
     reward.maxReputation ?? 'null',
+    reward.scenarioPointsRequired ?? 'null',
   ].join('|')
 }
 
@@ -192,17 +200,40 @@ export function getRewardMissionsForBlueprint(blueprintId: string): BlueprintRew
 
 export interface BlueprintUnlockStanding {
   standingName: string
-  minReputation: number
+  minReputation: number | null
+  scenarioPointsRequired?: number | null
   isExactTierLock: boolean
+  isScenarioProgress: boolean
 }
 
 /**
  * Required standing to farm this blueprint from mission rewards.
  * Uses exact-tier-locked contracts first (minStanding === maxStanding), then lowest rep.
+ * Scenario progress tiers use scenarioPointsRequired instead of faction rep.
  */
 export function getBlueprintUnlockStanding(blueprintId: string): BlueprintUnlockStanding | null {
   const rewards = getRewardMissionsForBlueprint(blueprintId)
   if (rewards.length === 0) return null
+
+  const scenarioRewards = rewards.filter((r) => r.scenarioPointsRequired != null)
+  if (scenarioRewards.length > 0) {
+    let best = scenarioRewards[0]
+    for (const reward of scenarioRewards) {
+      if (
+        reward.scenarioPointsRequired != null &&
+        (best.scenarioPointsRequired == null || reward.scenarioPointsRequired < best.scenarioPointsRequired)
+      ) {
+        best = reward
+      }
+    }
+    return {
+      standingName: best.scenarioProgressLabel || 'Clear Air progress',
+      minReputation: null,
+      scenarioPointsRequired: best.scenarioPointsRequired ?? null,
+      isExactTierLock: true,
+      isScenarioProgress: true,
+    }
+  }
 
   const exactTier = rewards.filter(
     (reward) =>
@@ -226,6 +257,7 @@ export function getBlueprintUnlockStanding(blueprintId: string): BlueprintUnlock
     standingName: best.standingName ?? 'Unknown',
     minReputation: best.minReputation,
     isExactTierLock: exactTier.length > 0,
+    isScenarioProgress: false,
   }
 }
 
