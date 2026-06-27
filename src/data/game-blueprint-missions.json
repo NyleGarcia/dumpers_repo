@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-06-27T20:24:41.915Z",
+  "_extracted": "2026-06-27T20:36:28.126Z",
   "missionBlueprints": {
     "adagioresourcegatheringshipsalvage": [
       {
@@ -12408,8 +12408,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_foxwell_defendentitiesandescort.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -12431,8 +12437,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_foxwell_defendentitiesandescort.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -12454,8 +12466,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_foxwell_defendentitiesandescort.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 150,
       "isLawful": true
     },
@@ -12477,8 +12495,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_foxwell_defendentitiesandescort.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -12500,8 +12524,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_foxwell_defendentitiesandescort.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 250,
       "isLawful": true
     },
@@ -12523,8 +12553,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_foxwell_defendentitiesandescort.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 300,
       "isLawful": true
     },
@@ -13416,8 +13452,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonfoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -13439,8 +13481,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonfoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -13462,8 +13510,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonfoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -13485,8 +13539,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonfoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 150,
       "isLawful": true
     },
@@ -13513,8 +13573,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonfoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -13541,8 +13607,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonfoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 250,
       "isLawful": true
     },
@@ -13569,8 +13641,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonfoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 300,
       "isLawful": true
     },
@@ -13592,8 +13670,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyrofoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -13615,8 +13699,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyrofoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 0,
       "isLawful": true
     },
@@ -13638,8 +13728,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyrofoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -13661,8 +13757,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyrofoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 150,
       "isLawful": true
     },
@@ -13689,8 +13791,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyrofoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -13717,8 +13825,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyrofoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 250,
       "isLawful": true
     },
@@ -13745,8 +13859,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyrofoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 300,
       "isLawful": true
     },
@@ -13768,8 +13888,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxfoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -13791,8 +13917,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxfoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -13814,8 +13946,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxfoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -13837,8 +13975,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxfoxwelleasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 150,
       "isLawful": true
     },
@@ -13865,8 +14009,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxfoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -13893,8 +14043,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxfoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 250,
       "isLawful": true
     },
@@ -13921,8 +14077,14 @@
           "path": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxfoxwellhard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 300,
       "isLawful": true
     },
@@ -14555,8 +14717,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_fullstrikeonstationb.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 300,
       "isLawful": true
     },
@@ -14583,8 +14751,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_assistshipincombatb.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -14611,8 +14785,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_bombingrunb.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -15569,8 +15749,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15592,8 +15778,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15615,8 +15807,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15638,8 +15836,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 150,
       "isLawful": true
     },
@@ -15666,8 +15870,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -15694,8 +15904,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 250,
       "isLawful": true
     },
@@ -15722,8 +15938,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_stantonheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 300,
       "isLawful": true
     },
@@ -15745,8 +15967,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyroheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15768,8 +15996,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyroheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15791,8 +16025,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyroheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15814,8 +16054,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyroheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 2000,
       "isLawful": true
     },
@@ -15842,8 +16088,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyroheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -15870,8 +16122,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyroheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 250,
       "isLawful": true
     },
@@ -15898,8 +16156,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_pyroheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 300,
       "isLawful": true
     },
@@ -15921,8 +16185,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Applicant",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Rank VI",
+        "minReputation": 480000
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15944,8 +16214,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Applicant",
+        "minReputation": 0
+      },
+      "maxStanding": {
+        "name": "Rank VI",
+        "minReputation": 480000
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15967,8 +16243,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 100,
       "isLawful": true
     },
@@ -15990,8 +16272,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxheadhunterseasy.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 150,
       "isLawful": true
     },
@@ -16018,8 +16306,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 200,
       "isLawful": true
     },
@@ -16046,8 +16340,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 250,
       "isLawful": true
     },
@@ -16074,8 +16374,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_nyxheadhuntershard.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 300,
       "isLawful": true
     },
@@ -21230,8 +21536,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_rdc_exclusive.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 0,
       "isLawful": true
     },
@@ -21253,8 +21565,14 @@
           "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_rdc_exclusive.json"
         }
       ],
-      "minStanding": null,
-      "maxStanding": null,
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
       "repPoints": 0,
       "isLawful": true
     },
@@ -31959,8 +32277,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -31974,8 +32298,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -31989,8 +32319,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Contractor",
+          "minReputation": 2200
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 150
       },
       {
@@ -32004,8 +32340,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -32019,8 +32361,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -32034,8 +32382,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       },
       {
@@ -32939,8 +33293,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -32954,8 +33314,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -32969,8 +33335,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -32984,8 +33356,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Contractor",
+          "minReputation": 2200
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 150
       },
       {
@@ -32999,8 +33377,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -33014,8 +33398,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -33029,8 +33419,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -33046,8 +33442,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -33061,8 +33463,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -33076,8 +33484,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -33093,8 +33507,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -33108,8 +33528,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 0
       },
       {
@@ -33123,8 +33549,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -33138,8 +33570,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Contractor",
+          "minReputation": 2200
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 150
       },
       {
@@ -33153,8 +33591,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -33168,8 +33612,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -33183,8 +33633,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -33200,8 +33656,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -33215,8 +33677,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -33230,8 +33698,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -33247,8 +33721,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -33262,8 +33742,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -33277,8 +33763,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -33292,8 +33784,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Contractor",
+          "minReputation": 2200
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 150
       },
       {
@@ -33307,8 +33805,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -33322,8 +33826,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -33337,8 +33847,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -33354,8 +33870,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -33369,8 +33891,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -33384,8 +33912,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -33753,8 +34287,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -33770,8 +34310,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -33787,8 +34333,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Combat Support",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       }
     ],
@@ -33804,8 +34356,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Combat Support",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       }
     ],
@@ -33821,8 +34379,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       }
     ],
@@ -33838,8 +34402,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       }
     ],
@@ -34452,8 +35022,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Ship Mining",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Contractor",
+          "minReputation": 2200
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 0
       },
       {
@@ -34467,8 +35043,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Ship Mining",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 0
       }
     ],
@@ -34656,8 +35238,14 @@
         "system": "Stanton",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -34671,8 +35259,14 @@
         "system": "Stanton",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -34686,8 +35280,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -34701,8 +35301,14 @@
         "system": "Stanton",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Contractor",
+          "minReputation": 2200
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 150
       },
       {
@@ -34716,8 +35322,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Mercenary",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -34731,8 +35343,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -34746,8 +35364,14 @@
         "system": "Stanton",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -34763,8 +35387,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Mercenary",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -34778,8 +35408,14 @@
         "system": "Stanton",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -34793,8 +35429,14 @@
         "system": "Stanton",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -34810,8 +35452,14 @@
         "system": "Pyro",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -34825,8 +35473,14 @@
         "system": "Pyro",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Neutral",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -34840,8 +35494,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -34855,8 +35515,14 @@
         "system": "Pyro",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Contractor",
+          "minReputation": 2200
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 2000
       },
       {
@@ -34870,8 +35536,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Mercenary",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -34885,8 +35557,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -34900,8 +35578,14 @@
         "system": "Pyro",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -34917,8 +35601,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Mercenary",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -34932,8 +35622,14 @@
         "system": "Pyro",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -34947,8 +35643,14 @@
         "system": "Pyro",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -34964,8 +35666,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Applicant",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Rank VI",
+          "minReputation": 480000
+        },
         "repPoints": 100
       },
       {
@@ -34979,8 +35687,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Applicant",
+          "minReputation": 0
+        },
+        "maxStanding": {
+          "name": "Rank VI",
+          "minReputation": 480000
+        },
         "repPoints": 100
       },
       {
@@ -34994,8 +35708,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 100
       },
       {
@@ -35009,8 +35729,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Contractor",
+          "minReputation": 2200
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 150
       },
       {
@@ -35024,8 +35750,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Mercenary",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -35039,8 +35771,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -35054,8 +35792,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],
@@ -35071,8 +35815,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Mercenary",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Sr. Contractor",
+          "minReputation": 5800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 200
       },
       {
@@ -35086,8 +35836,14 @@
         "system": "Nyx",
         "region": null,
         "category": "Security Escort",
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 250
       },
       {
@@ -35101,8 +35857,14 @@
         "system": "Nyx",
         "region": null,
         "category": null,
-        "minStanding": null,
-        "maxStanding": null,
+        "minStanding": {
+          "name": "Head Contractor",
+          "minReputation": 38000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
         "repPoints": 300
       }
     ],

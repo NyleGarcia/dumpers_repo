@@ -1621,43 +1621,12 @@ function parseContractGenerators(localization) {
           }
         }
         
-        // Extract standing requirements
-        let minStanding = null
-        let maxStanding = null
-        if (contract.minStanding) {
-          const minMatch = contract.minStanding.match(/([^/]+)\.json$/i)
-          if (minMatch) {
-            // Standing key format: "sreputationstandingparams.reputationstanding_factionrep_rank0"
-            const standingKey = `sreputationstandingparams.${minMatch[1]}`.toLowerCase()
-            const def = standingDefs[standingKey]
-            if (def) {
-              minStanding = { name: def.displayName, minReputation: def.minReputation }
-            } else {
-              // Try to derive name from localization or create readable fallback
-              const rankMatch = minMatch[1].match(/rank(\d+)$/i)
-              const rankNum = rankMatch ? rankMatch[1] : '0'
-              const locKey = `RepScope_Contractor_Rank${rankNum}`
-              const resolvedName = localization[locKey] || `Rank ${rankNum}`
-              minStanding = { name: resolvedName, minReputation: 0 }
-            }
-          }
-        }
-        if (contract.maxStanding) {
-          const maxMatch = contract.maxStanding.match(/([^/]+)\.json$/i)
-          if (maxMatch) {
-            const standingKey = `sreputationstandingparams.${maxMatch[1]}`.toLowerCase()
-            const def = standingDefs[standingKey]
-            if (def) {
-              maxStanding = { name: def.displayName, minReputation: def.minReputation }
-            } else {
-              const rankMatch = maxMatch[1].match(/rank(\d+)$/i)
-              const rankNum = rankMatch ? rankMatch[1] : '0'
-              const locKey = `RepScope_Contractor_Rank${rankNum}`
-              const resolvedName = localization[locKey] || `Rank ${rankNum}`
-              maxStanding = { name: resolvedName, minReputation: 0 }
-            }
-          }
-        }
+        // Extract standing requirements (direct fields or ContractPrerequisite_Reputation)
+        const { minStanding, maxStanding } = extractContractStandingRequirements(
+          contract,
+          standingDefs,
+          localization
+        )
         
         // Extract system from contract-specific signals only (not whole generator file paths).
         let system = 'Unknown'
@@ -1860,6 +1829,25 @@ function resolveStandingFromPath(standingPath, standingDefs, localization) {
   const locKey = `RepScope_Contractor_Rank${rankNum}`
   const resolvedName = localization[locKey] || localization[`RepStanding_TransportGuild_Rank${rankNum}`] || `Rank ${rankNum}`
   return { name: resolvedName, minReputation: 0 }
+}
+
+/** Standing on contract fields, or in additionalPrerequisites (InterSec TSG, etc.). */
+function extractContractStandingRequirements(contract, standingDefs, localization) {
+  let minStanding = resolveStandingFromPath(contract.minStanding, standingDefs, localization)
+  let maxStanding = resolveStandingFromPath(contract.maxStanding, standingDefs, localization)
+
+  if (minStanding || maxStanding) {
+    return { minStanding, maxStanding }
+  }
+
+  for (const prereq of contract.additionalPrerequisites || []) {
+    if (prereq?._Type_ !== 'ContractPrerequisite_Reputation' || prereq.exclude) continue
+    minStanding = resolveStandingFromPath(prereq.minStanding, standingDefs, localization)
+    maxStanding = resolveStandingFromPath(prereq.maxStanding, standingDefs, localization)
+    if (minStanding || maxStanding) break
+  }
+
+  return { minStanding, maxStanding }
 }
 
 function extractContractRepPoints(contract, repRewardAmounts) {
