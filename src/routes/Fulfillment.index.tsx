@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import AssignedOrderCard from '../components/AssignedOrderCard'
-import OrderRatingModal from '../components/OrderRatingModal'
+import OrderArchiveCallout from '../components/OrderArchiveCallout'
+import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
 import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
 import TradeContactChip from '../components/TradeContactChip'
@@ -22,7 +23,10 @@ import {
   fulfillerHasAllOrderBlueprints,
   getOrderAcceptBlockers,
 } from '../lib/orderAccept'
-import { canFulfillerArchive } from '../lib/orderArchive'
+import {
+  archiveRatingInfo,
+  canUserArchiveOrder,
+} from '../lib/orderArchive'
 import { releaseOrderConfirmMessage } from '../lib/orderRelease'
 import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
 import { orderHasHighQualityBlueprint } from '../lib/orderDeadlines'
@@ -84,7 +88,12 @@ export default function FulfillmentRoute() {
   const [acceptingOrderId, setAcceptingOrderId] = useState<string | null>(null)
   const [minBuyerRepFilter, setMinBuyerRepFilter] = useState('')
   const [onlyMyBlueprintOrders, setOnlyMyBlueprintOrders] = useState(false)
-  const [archiveOrder, setArchiveOrder] = useState<CustomOrder | null>(null)
+  const [archiveRatingModal, setArchiveRatingModal] = useState<{
+    orderId: string
+    target: OrderRatingTarget
+    rateeName: string
+    orderTitle: string
+  } | null>(null)
   const [archiving, setArchiving] = useState(false)
   const [orderLimits, setOrderLimits] = useState<UserOrderLimits | null>(null)
   const [guestPendingCount, setGuestPendingCount] = useState<number | null>(null)
@@ -263,17 +272,38 @@ export default function FulfillmentRoute() {
           matchesListingTypeFilter(o, listingTypeFilter) &&
           o.assignee_id === userId &&
           orderListingType(o) === 'wtb' &&
-          (o.status === 'ready_for_pickup' || o.status === 'completed') &&
-          !o.fulfiller_archived_at
+          o.status === 'ready_for_pickup'
       ),
     [orders, userId, listingTypeFilter]
   )
 
+  const myOrdersNeedingRating = useMemo(
+    () =>
+      orders.filter(
+        (o) =>
+          matchesListingTypeFilter(o, listingTypeFilter) &&
+          o.status === 'completed' &&
+          canUserArchiveOrder(o, userId)
+      ),
+    [orders, userId, listingTypeFilter]
+  )
+
+  const openArchiveForOrder = (order: CustomOrder) => {
+    const info = archiveRatingInfo(order, userId)
+    if (!info) return
+    setArchiveRatingModal({
+      orderId: order.id,
+      target: info.target,
+      rateeName: displayNameFromFields(info.rateeFields),
+      orderTitle: order.title,
+    })
+  }
+
   const handleArchiveConfirm = async (stars: number, comment?: string) => {
-    if (!archiveOrder) return
+    if (!archiveRatingModal) return
 
     setArchiving(true)
-    const result = await archiveCustomOrderWithRating(archiveOrder.id, stars, comment)
+    const result = await archiveCustomOrderWithRating(archiveRatingModal.orderId, stars, comment)
     setArchiving(false)
 
     if (result.error) {
@@ -281,7 +311,7 @@ export default function FulfillmentRoute() {
       return
     }
 
-    setArchiveOrder(null)
+    setArchiveRatingModal(null)
     await loadData()
   }
 
@@ -574,9 +604,10 @@ export default function FulfillmentRoute() {
               </p>
               <Link
                 to="/orders"
+                search={{ tab: 'completed' }}
                 className="mt-2 inline-block text-sm text-red-300 hover:text-red-200 underline"
               >
-                Go to Orders page →
+                Go to Completed tab →
               </Link>
             </div>
           </div>
@@ -912,61 +943,89 @@ export default function FulfillmentRoute() {
             )}
 
             <div>
-            <h2 className="text-white font-medium mb-3">Finished orders</h2>
+            {myOrdersNeedingRating.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-white font-medium mb-1">Rate completed orders</h2>
+                <p className="text-slate-500 text-xs mb-3">
+                  Pickup is done — archive &amp; rate each order below to finish the deal. Both
+                  parties must rate before new orders unlock.
+                </p>
+                <div className="space-y-2">
+                  {myOrdersNeedingRating.map((order) => {
+                    const totalDfp = orderTotalDfp(order)
+                    return (
+                      <div
+                        key={order.id}
+                        className="p-4 bg-purple-950/20 border border-purple-500/30 rounded-xl space-y-3"
+                      >
+                        <div>
+                          <p className="text-white text-sm font-medium flex items-center gap-2 flex-wrap">
+                            {order.title}
+                            <ListingTypeBadge order={order} />
+                          </p>
+                          <p className="text-slate-500 text-xs mt-1">
+                            completed
+                            {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                          </p>
+                          {order.listing_type === 'wts' && order.assignee && (
+                            <div className="mt-2">
+                              <TradeContactChip role="buyer" profile={order.assignee} compact />
+                            </div>
+                          )}
+                          {order.listing_type === 'wtb' && order.requester && (
+                            <div className="mt-2">
+                              <TradeContactChip role="customer" profile={order.requester} compact />
+                            </div>
+                          )}
+                        </div>
+                        <OrderArchiveCallout
+                          order={order}
+                          userId={userId}
+                          onArchive={() => openArchiveForOrder(order)}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            <h2 className="text-white font-medium mb-3">Awaiting pickup confirmation</h2>
             {myFinishedOrders.length === 0 ? (
               <div className="p-6 mb-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                No orders waiting on pickup or archive yet.
+                No WTB orders waiting on customer pickup confirmation.
               </div>
             ) : (
               <div className="space-y-2 mb-6">
                 {myFinishedOrders.map((order) => {
                   const totalDfp = orderTotalDfp(order)
-                  const canArchive = canFulfillerArchive(order, userId)
 
                   return (
                     <div
                       key={order.id}
-                      className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
+                      className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3"
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-white text-sm font-medium">{order.title}</p>
-                          <p className="text-slate-500 text-xs mt-1">
-                            {order.status.replace(/_/g, ' ')}
-                            {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
-                          </p>
-                          <div className="mt-2">
-                            <TradeContactChip role="customer" profile={order.requester} compact />
-                          </div>
-                          <div className="mt-2">
-                            <ReputationBadge
-                              label="Buyer rep"
-                              reputation={buyerReputationFromRow(reputations[order.requester_id])}
-                            />
-                          </div>
-                          {order.status === 'ready_for_pickup' && (
-                            <p className="text-cyan-300/80 text-xs mt-2">
-                              Waiting for customer pickup confirmation.
-                            </p>
-                          )}
-                          {order.status === 'completed' && (
-                            <p className="text-green-300/80 text-xs mt-2">
-                              Pickup confirmed — archive and rate the customer when you are done.
-                            </p>
-                          )}
-                          <div className="mt-2">
-                            <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
-                          </div>
+                      <div>
+                        <p className="text-white text-sm font-medium">{order.title}</p>
+                        <p className="text-slate-500 text-xs mt-1">
+                          {order.status.replace(/_/g, ' ')}
+                          {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                        </p>
+                        <div className="mt-2">
+                          <TradeContactChip role="customer" profile={order.requester} compact />
                         </div>
-                        {canArchive && (
-                          <button
-                            type="button"
-                            onClick={() => setArchiveOrder(order)}
-                            className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded shrink-0"
-                          >
-                            Archive
-                          </button>
-                        )}
+                        <div className="mt-2">
+                          <ReputationBadge
+                            label="Buyer rep"
+                            reputation={buyerReputationFromRow(reputations[order.requester_id])}
+                          />
+                        </div>
+                        <p className="text-cyan-300/80 text-xs mt-2">
+                          Waiting for customer pickup confirmation in Custom Orders.
+                        </p>
+                        <div className="mt-2">
+                          <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
+                        </div>
                       </div>
                     </div>
                   )
@@ -1026,13 +1085,13 @@ export default function FulfillmentRoute() {
         </div>
       )}
 
-      {archiveOrder && (
+      {archiveRatingModal && (
         <OrderRatingModal
-          target="customer"
-          rateeName={displayNameFromFields(archiveOrder.requester)}
-          orderTitle={archiveOrder.title}
+          target={archiveRatingModal.target}
+          rateeName={archiveRatingModal.rateeName}
+          orderTitle={archiveRatingModal.orderTitle}
           onConfirm={(stars, comment) => void handleArchiveConfirm(stars, comment)}
-          onCancel={() => setArchiveOrder(null)}
+          onCancel={() => setArchiveRatingModal(null)}
           confirming={archiving}
         />
       )}

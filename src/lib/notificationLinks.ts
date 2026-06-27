@@ -70,7 +70,7 @@ export function getNotificationActionLink(
       return { to: ordersPath('active'), label: 'Confirm pickup' }
 
     case 'order_completed':
-      return { to: ordersPath('completed'), label: 'View order' }
+      return { to: ordersPath('completed'), label: 'Archive & rate' }
 
     case 'order_abandoned':
       if (listingType === 'wts' && !payload.source_listing_id) {

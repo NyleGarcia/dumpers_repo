@@ -11,6 +11,32 @@ interface OrderDeadlineNoticeProps {
   role: 'buyer' | 'fulfiller' | 'seller'
 }
 
+function myArchivedAt(
+  order: CustomOrder,
+  role: 'buyer' | 'fulfiller' | 'seller'
+): string | null | undefined {
+  if (role === 'buyer') {
+    return order.listing_type === 'wts' ? order.fulfiller_archived_at : order.requester_archived_at
+  }
+  if (role === 'seller') {
+    return order.requester_archived_at
+  }
+  return order.fulfiller_archived_at
+}
+
+function otherArchivedAt(
+  order: CustomOrder,
+  role: 'buyer' | 'fulfiller' | 'seller'
+): string | null | undefined {
+  if (role === 'buyer') {
+    return order.listing_type === 'wts' ? order.requester_archived_at : order.fulfiller_archived_at
+  }
+  if (role === 'seller') {
+    return order.fulfiller_archived_at
+  }
+  return order.requester_archived_at
+}
+
 export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNoticeProps) {
   if (order.dispute_opened_at) {
     return (
@@ -62,18 +88,8 @@ export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNotice
   }
 
   if (order.status === 'completed') {
-    const myArchived =
-      role === 'buyer'
-        ? order.requester_archived_at
-        : role === 'seller'
-          ? order.requester_archived_at
-          : order.fulfiller_archived_at
-    const otherArchived =
-      role === 'buyer'
-        ? order.fulfiller_archived_at
-        : role === 'seller'
-          ? order.fulfiller_archived_at
-          : order.requester_archived_at
+    const myArchived = myArchivedAt(order, role)
+    const otherArchived = otherArchivedAt(order, role)
 
     if (myArchived) return null
 
@@ -83,8 +99,8 @@ export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNotice
       if (hours === null) return null
       return (
         <div className="mt-2 p-2 rounded-lg bg-purple-900/20 border border-purple-500/30 text-purple-300 text-xs">
-          Rate within {formatHoursRemaining(hours)} or a 5-star rating is auto-applied on your
-          behalf.
+          They already rated — archive &amp; rate within {formatHoursRemaining(hours)} or a 5-star
+          rating is auto-applied on your behalf.
         </div>
       )
     }
@@ -92,8 +108,9 @@ export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNotice
     if (order.completed_at) {
       return (
         <div className="mt-2 p-2 rounded-lg bg-purple-900/20 border border-purple-500/30 text-purple-300 text-xs">
-          Rate this order when you archive. If the other party rates first, you have 24 hours to rate
-          or a 5-star rating is auto-applied on your behalf.
+          Click <strong className="text-purple-100">Archive &amp; rate</strong> to finish this
+          order. If the other party rates first, you have 24 hours to rate or a 5-star rating is
+          auto-applied on your behalf.
         </div>
       )
     }

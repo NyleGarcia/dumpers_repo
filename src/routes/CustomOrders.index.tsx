@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, getRouteApi } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
+import OrderArchiveCallout from '../components/OrderArchiveCallout'
 import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
 import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
@@ -27,12 +28,12 @@ import { setAnalyticsSubTool } from '../lib/analytics'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { filterOrderableBlueprints } from '../lib/blueprintOrderable'
 import {
-  canCustomerArchive,
-  canFulfillerArchive,
+  archiveRatingInfo,
   canSemanticBuyerConfirmPickup,
   isArchivedForUser,
   isCompletedStageOrder,
   isOpenOrder,
+  orderDeadlineRoleForUser,
   orderMatchesTab,
   type OrderListTab,
 } from '../lib/orderArchive'
@@ -271,6 +272,12 @@ export default function CustomOrdersRoute() {
       ),
       orderTitle: order.title,
     })
+  }
+
+  const openArchiveForOrder = (order: CustomOrder) => {
+    const info = archiveRatingInfo(order, userId)
+    if (!info) return
+    openArchiveModal(order, info.target, info.rateeFields, info.rateeId)
   }
 
   const handleArchiveConfirm = async (stars: number, comment?: string) => {
@@ -629,7 +636,7 @@ export default function CustomOrdersRoute() {
           <p className="text-slate-400">
             {listTab === 'active' && 'No open orders.'}
             {listTab === 'completed' &&
-              'No completed orders. Finished crafts appear here when ready for pickup.'}
+              'No completed orders. After pickup is confirmed, orders appear here for Archive & rate.'}
             {listTab === 'archive' && 'No archived orders yet.'}
           </p>
         </div>
@@ -712,7 +719,13 @@ export default function CustomOrdersRoute() {
                     </div>
                     <OrderDeadlineNotice
                       order={order}
-                      role={isSemanticBuyer(order, userId ?? '') ? 'buyer' : 'fulfiller'}
+                      role={orderDeadlineRoleForUser(order, userId ?? undefined)}
+                    />
+                    <OrderArchiveCallout
+                      order={order}
+                      userId={userId}
+                      onArchive={() => openArchiveForOrder(order)}
+                      className="mt-3"
                     />
                   </div>
 
@@ -736,36 +749,6 @@ export default function CustomOrdersRoute() {
                             Report problem
                           </button>
                         </>
-                      )}
-                      {canCustomerArchive(order, userId) && (
-                        <button
-                          onClick={() =>
-                            openArchiveModal(
-                              order,
-                              'fulfiller',
-                              order.listing_type === 'wts' ? order.requester : order.assignee,
-                              order.listing_type === 'wts' ? order.requester_id : order.assignee_id
-                            )
-                          }
-                          className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded"
-                        >
-                          Archive
-                        </button>
-                      )}
-                      {canFulfillerArchive(order, userId) && (
-                        <button
-                          onClick={() =>
-                            openArchiveModal(
-                              order,
-                              'customer',
-                              order.listing_type === 'wts' ? order.assignee : order.requester,
-                              order.listing_type === 'wts' ? order.assignee_id : order.requester_id
-                            )
-                          }
-                          className="px-2 py-1 text-xs bg-slate-800 text-slate-300 border border-slate-600 rounded"
-                        >
-                          Archive
-                        </button>
                       )}
                       {canRequesterModifyOrder(order) && (
                         <>

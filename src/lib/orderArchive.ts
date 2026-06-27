@@ -2,6 +2,48 @@ import type { CustomOrder } from './operations'
 import { isSemanticBuyer, isSemanticSeller } from './listingType'
 
 export type OrderListTab = 'active' | 'completed' | 'archive'
+export type OrderDeadlineRole = 'buyer' | 'seller' | 'fulfiller'
+
+export function orderDeadlineRoleForUser(
+  order: CustomOrder,
+  userId: string | undefined
+): OrderDeadlineRole {
+  if (!userId) return 'fulfiller'
+  if (isSemanticBuyer(order, userId)) return 'buyer'
+  if (order.listing_type === 'wts' && isSemanticSeller(order, userId)) return 'seller'
+  return 'fulfiller'
+}
+
+export function canUserArchiveOrder(order: CustomOrder, userId: string | undefined): boolean {
+  return canCustomerArchive(order, userId) || canFulfillerArchive(order, userId)
+}
+
+export function archiveRatingInfo(
+  order: CustomOrder,
+  userId: string | undefined
+): {
+  target: 'fulfiller' | 'customer'
+  rateeFields: { rsi_handle: string | null; display_name: string | null; email: string | null } | null
+  rateeId: string
+} | null {
+  if (canCustomerArchive(order, userId)) {
+    const rateeFields =
+      order.listing_type === 'wts' ? order.requester : order.assignee
+    const rateeId =
+      order.listing_type === 'wts' ? order.requester_id : (order.assignee_id ?? '')
+    if (!rateeFields || !rateeId) return null
+    return { target: 'fulfiller', rateeFields, rateeId }
+  }
+  if (canFulfillerArchive(order, userId)) {
+    const rateeFields =
+      order.listing_type === 'wts' ? order.assignee : order.requester
+    const rateeId =
+      order.listing_type === 'wts' ? (order.assignee_id ?? '') : order.requester_id
+    if (!rateeFields || !rateeId) return null
+    return { target: 'customer', rateeFields, rateeId }
+  }
+  return null
+}
 
 export function isArchivedForUser(order: CustomOrder, userId: string | undefined): boolean {
   if (!userId) return order.status === 'archived'
