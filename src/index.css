@@ -84,6 +84,10 @@
     @apply bg-purple-950/80 text-purple-200 border border-purple-500/45;
   }
 
+  .site-filter-selected-cyan {
+    @apply bg-cyan-950/80 text-cyan-200 border border-cyan-500/45;
+  }
+
   .site-filter-selected-slate {
     @apply bg-slate-800/90 text-slate-200 border border-slate-500/50;
   }
@@ -137,6 +141,7 @@
   .site-filter-selected-amber,
   .site-filter-selected-red,
   .site-filter-selected-purple,
+  .site-filter-selected-cyan,
   .site-filter-selected-slate {
     @apply relative isolate;
     animation: site-btn-burn-glow 1.8s ease-in-out infinite alternate;
@@ -151,6 +156,7 @@
   .site-filter-selected-amber::before,
   .site-filter-selected-red::before,
   .site-filter-selected-purple::before,
+  .site-filter-selected-cyan::before,
   .site-filter-selected-slate::before {
     content: '';
     position: absolute;
@@ -187,6 +193,7 @@
     .site-filter-selected-amber,
     .site-filter-selected-red,
     .site-filter-selected-purple,
+    .site-filter-selected-cyan,
     .site-filter-selected-slate {
       animation: none;
       box-shadow:

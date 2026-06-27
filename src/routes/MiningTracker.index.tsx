@@ -312,7 +312,7 @@ export default function MiningTrackerRoute() {
       )}
 
       {!loading && !error && data && viewMode === 'tracker' && (
-        <div className="flex gap-6 items-start min-w-[720px]">
+        <div className="flex gap-6 items-start min-w-[760px]">
           <div className="flex-1 min-w-0 space-y-6">
           <section className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[200px] max-w-sm">

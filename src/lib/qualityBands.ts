@@ -51,6 +51,7 @@ export function normalizeResourceName(name: string | null | undefined): string {
  */
 const RESOURCE_ALIASES: Record<string, string> = {
   'quantanium': 'quantainium',  // Blueprint uses "Quantanium", game uses "Quantainium"
+  'aluminium': 'aluminum',      // RS Tracker / UK spelling vs game "Aluminum" bands
   'pressurizedice': 'rawice',   // Pressurized_Ice maps to RawIce
   'yormandieye': 'beryl',       // Yormandi Eye is a variant of Beryl (use Beryl's bands)
 }

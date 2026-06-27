@@ -116,9 +116,8 @@ export function parseQualitySlotValue(raw: string, fallback = DEFAULT_QUALITY): 
   return Number.isFinite(value) ? value : fallback
 }
 
-export function formatRockQualityOptionLabel(quality: number, bandIndex?: number): string {
+export function formatRockQualityOptionLabel(quality: number): string {
   if (quality === PURCHASED_STOCK_QUALITY) return 'Q0'
-  if (bandIndex !== undefined) return `B${bandIndex + 1}`
   return `Q${quality}`
 }
 

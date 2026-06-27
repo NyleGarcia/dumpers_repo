@@ -13,6 +13,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'The main hub for browsing all available crafting blueprints in Star Citizen.',
     details: [
       'Browse and filter blueprints by type, manufacturer, and availability',
+      'Material filter (cyan): type or pick any crafting material to show blueprints that require it — runs before category filters',
       'See what reputation level is required to unlock each blueprint',
       'Mark blueprints as "acquired" to track your collection progress',
       'View the resources and components required to craft each item',
@@ -75,7 +76,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Each material row has a compact Q band picker for ledger export (Purchased Q0 plus Bands 1–8; Band 2 default); DFP column always shows Purchased (Q0) value',
       'Click a tracked card to load its composition into the Rock Calculator; Surface/Asteroid toggle defaults to Asteroid',
       'Rock Calculator location dropdown lists every spawn site for the ore and deposit type (defaults to first)',
-      'Primary ore with two scanner bands shows separate High and Low % fields (ranges from game composition data)',
+      'Primary ore with two scanner bands shows separate High and Low % fields when game composition has duplicate element slots (e.g. Iron, Aluminium)',
       'RSI-verified members can append calculated cSCU rows to a mining ledger at each row\'s selected Q band; matching ore + quality merges cSCU',
       'Rock Calculator warns when entered material percentages exceed 100%',
       'Up to two cards per ore — separate Surface and Asteroid profiles',

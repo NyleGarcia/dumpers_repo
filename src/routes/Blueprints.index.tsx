@@ -2,6 +2,7 @@ import React from 'react'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
+import BlueprintMaterialFilter from '../components/BlueprintMaterialFilter'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import RsiVerifiedBadge from '../components/RsiVerifiedBadge'
 import { useAuth } from '../contexts/AuthContext'
@@ -21,6 +22,10 @@ import {
   getBlueprintSubType,
 } from '../lib/blueprintTaxonomy'
 import { preloadOrgLogoCandidates } from '../lib/orgLogo'
+import {
+  blueprintUsesMaterial,
+  extractBlueprintResources,
+} from '../lib/blueprintResources'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -74,6 +79,7 @@ export default function BlueprintsRoute() {
   const { isOnTargetList, toggleTarget } = useTargetList(overridesMap)
   
   const [searchTerm, setSearchTerm] = React.useState('')
+  const [selectedMaterial, setSelectedMaterial] = React.useState<string | null>(null)
   const [selectedMainCategory, setSelectedMainCategory] = React.useState(null)
   const [selectedSubCategory, setSelectedSubCategory] = React.useState(null)
   const [selectedSize, setSelectedSize] = React.useState(null)
@@ -95,6 +101,11 @@ export default function BlueprintsRoute() {
   const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
 
   const { data: blueprints, isLoading } = useBlueprintData()
+
+  const allBlueprintMaterials = React.useMemo(
+    () => extractBlueprintResources(blueprints ?? []),
+    [blueprints]
+  )
 
   // Fetch blueprint owner counts when blueprints load (only for logged-in users)
   useAsyncEffect(async ({ cancelled }) => {
@@ -181,9 +192,14 @@ export default function BlueprintsRoute() {
     })
   }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, user?.id, filterAcquiredBlueprints, myAcquiredBlueprints, viewedUserBlueprints, overridesMap, acquisitionFilter])
 
-  // Category data with counts based on current global filters
+  const materialFilteredBlueprints = React.useMemo(() => {
+    if (!selectedMaterial) return baseFilteredBlueprints
+    return baseFilteredBlueprints.filter((bp) => blueprintUsesMaterial(bp, selectedMaterial))
+  }, [baseFilteredBlueprints, selectedMaterial])
+
+  // Category data with counts based on material filter (then category/sub-filters)
   const categoryData = React.useMemo(() => {
-    if (!baseFilteredBlueprints.length) return { subTypes: {}, sizes: {}, armorWeights: {}, armorSlots: {}, mainCounts: {} }
+    if (!materialFilteredBlueprints.length) return { subTypes: {}, sizes: {}, armorWeights: {}, armorSlots: {}, mainCounts: {} }
     
     const subTypes = {}
     const sizes = {}
@@ -191,7 +207,7 @@ export default function BlueprintsRoute() {
     const armorSlots = {}
     const mainCounts = {}
     
-    baseFilteredBlueprints.forEach(bp => {
+    materialFilteredBlueprints.forEach(bp => {
       if (!bp.categoryName) return
       
       const mainCat = Object.keys(MAIN_CATEGORY_GROUPS).find(key => 
@@ -234,7 +250,7 @@ export default function BlueprintsRoute() {
     })
     
     return { subTypes, sizes, armorWeights, armorSlots, mainCounts }
-  }, [baseFilteredBlueprints])
+  }, [materialFilteredBlueprints])
 
   // Filtered counts for armor that respect current selections
   const filteredArmorCounts = React.useMemo(() => {
@@ -244,7 +260,7 @@ export default function BlueprintsRoute() {
     const slots = {}
     const types = {}
     
-    baseFilteredBlueprints.forEach(bp => {
+    materialFilteredBlueprints.forEach(bp => {
       if (!bp.categoryName) return
       
       const validCategories = MAIN_CATEGORY_GROUPS['FPS Armour'] || []
@@ -277,7 +293,7 @@ export default function BlueprintsRoute() {
     })
     
     return { weights, slots, types }
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedArmorWeight, selectedArmorSlot, selectedSubCategory])
+  }, [materialFilteredBlueprints, selectedMainCategory, selectedArmorWeight, selectedArmorSlot, selectedSubCategory])
 
   // Subcategory counts filtered by selected size (for Vehicle categories) or armor weight/slot (for FPS Armour)
   const filteredSubTypeCounts = React.useMemo(() => {
@@ -289,7 +305,7 @@ export default function BlueprintsRoute() {
     }
     
     const counts = {}
-    baseFilteredBlueprints.forEach(bp => {
+    materialFilteredBlueprints.forEach(bp => {
       if (!bp.categoryName) return
       
       const validCategories = MAIN_CATEGORY_GROUPS[selectedMainCategory] || []
@@ -305,11 +321,11 @@ export default function BlueprintsRoute() {
     })
     
     return counts
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedSize, filteredArmorCounts])
+  }, [materialFilteredBlueprints, selectedMainCategory, selectedSize, filteredArmorCounts])
 
-  // Final filtered blueprints (applies category filters on top of base, sorted A-Z)
+  // Final filtered blueprints (applies category filters on top of material filter, sorted A-Z)
   const filteredBlueprints = React.useMemo(() => {
-    let results = baseFilteredBlueprints
+    let results = materialFilteredBlueprints
 
     if (selectedMainCategory) {
       results = results.filter(bp => {
@@ -342,7 +358,7 @@ export default function BlueprintsRoute() {
     return results.sort((a, b) => 
       (a.blueprintName || '').localeCompare(b.blueprintName || '')
     )
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize, selectedArmorWeight, selectedArmorSlot])
+  }, [materialFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize, selectedArmorWeight, selectedArmorSlot])
 
   const handleMainCategoryClick = (cat) => {
     if (selectedMainCategory === cat) {
@@ -505,7 +521,13 @@ export default function BlueprintsRoute() {
         })()}
 
         {/* Main Category Tags */}
-        <div className="flex flex-wrap gap-1.5 lg:gap-2">
+        <div className="flex flex-wrap gap-1.5 lg:gap-2 items-center">
+            <BlueprintMaterialFilter
+              materials={allBlueprintMaterials}
+              selectedMaterial={selectedMaterial}
+              onSelect={setSelectedMaterial}
+              onClear={() => setSelectedMaterial(null)}
+            />
             {Object.keys(MAIN_CATEGORY_GROUPS).map(cat => {
               const count = categoryData.mainCounts[cat] || 0
               return (
@@ -647,8 +669,24 @@ export default function BlueprintsRoute() {
         {/* Results count */}
         <div className="text-slate-500 text-sm">
           Showing {filteredBlueprints.length} blueprints
-          {(selectedMainCategory || selectedSubCategory || selectedSize) && (
-            <span> (filtered from {baseFilteredBlueprints.length})</span>
+          {(selectedMaterial ||
+            selectedMainCategory ||
+            selectedSubCategory ||
+            selectedSize ||
+            selectedArmorWeight ||
+            selectedArmorSlot) && (
+            <span>
+              {' '}
+              (filtered from{' '}
+              {selectedMainCategory ||
+              selectedSubCategory ||
+              selectedSize ||
+              selectedArmorWeight ||
+              selectedArmorSlot
+                ? materialFilteredBlueprints.length
+                : baseFilteredBlueprints.length}
+              )
+            </span>
           )}
         </div>
       </div>
@@ -660,6 +698,7 @@ export default function BlueprintsRoute() {
             <p className="text-slate-400 text-xl font-medium mb-4">No blueprints found</p>
             <button
               onClick={() => {
+                setSelectedMaterial(null)
                 setSelectedMainCategory(null)
                 setSelectedSubCategory(null)
                 setSelectedSize(null)

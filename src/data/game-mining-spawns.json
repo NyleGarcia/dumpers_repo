@@ -1,6 +1,4 @@
 {
-  "_source": "Star Citizen Game Files (extracted harvestable/HPP data)",
-  "_extracted": "2026-06-27T20:58:41.352Z",
   "clusterPresets": {
     "HarvestableClusterPreset.Asteroid_Cluster_Pyro": {
       "probabilityOfClustering": 30,
@@ -510,7 +508,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -558,7 +556,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -606,7 +604,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -654,7 +652,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -702,7 +700,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -750,7 +748,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -798,7 +796,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -846,7 +844,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -894,7 +892,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.1199,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -942,7 +940,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -990,7 +988,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -1038,7 +1036,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.1201,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -1086,7 +1084,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -1134,7 +1132,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.12,
           "harvestablePreset": "mining_legendary_quantainium",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Quantainium",
           "compositionParts": [
             {
               "elementName": "Quantainium",
@@ -1174,7 +1172,8 @@
         "mining_legendary_quantainium"
       ],
       "compositionRecordIds": [
-        "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium"
+        "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+        "MineableComposition.LegendaryShipMineables_Quantainium"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.LegendaryShipMineable_Cluster"
@@ -1330,7 +1329,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.1502,
           "harvestablePreset": "mining_legendary_stileron",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Stileron",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Stileron",
           "compositionParts": [
             {
               "elementName": "Sileron",
@@ -1378,7 +1377,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.1502,
           "harvestablePreset": "mining_legendary_stileron",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Stileron",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Stileron",
           "compositionParts": [
             {
               "elementName": "Sileron",
@@ -1426,7 +1425,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.15,
           "harvestablePreset": "mining_legendary_stileron",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Stileron",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Stileron",
           "compositionParts": [
             {
               "elementName": "Sileron",
@@ -1474,7 +1473,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.1502,
           "harvestablePreset": "mining_legendary_stileron",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Stileron",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Stileron",
           "compositionParts": [
             {
               "elementName": "Sileron",
@@ -1522,7 +1521,7 @@
           "poolSharePercent": 2,
           "effectiveSpawnPercent": 0.15,
           "harvestablePreset": "mining_legendary_stileron",
-          "compositionRecordName": "MineableComposition.LegendaryShipMineablesAsteroid_Stileron",
+          "compositionRecordName": "MineableComposition.LegendaryShipMineables_Stileron",
           "compositionParts": [
             {
               "elementName": "Sileron",
@@ -1562,7 +1561,8 @@
         "mining_legendary_stileron"
       ],
       "compositionRecordIds": [
-        "MineableComposition.LegendaryShipMineablesAsteroid_Stileron"
+        "MineableComposition.LegendaryShipMineablesAsteroid_Stileron",
+        "MineableComposition.LegendaryShipMineables_Stileron"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.LegendaryShipMineable_Cluster"
@@ -1822,7 +1822,7 @@
           "poolSharePercent": 10,
           "effectiveSpawnPercent": 0.6,
           "harvestablePreset": "mining_epic_ouratite",
-          "compositionRecordName": "MineableComposition.EpicShipMineablesAsteroid_Ouratite",
+          "compositionRecordName": "MineableComposition.EpicShipMineables_Ouratite",
           "compositionParts": [
             {
               "elementName": "Ouratite",
@@ -1877,7 +1877,7 @@
           "poolSharePercent": 10,
           "effectiveSpawnPercent": 0.6,
           "harvestablePreset": "mining_epic_ouratite",
-          "compositionRecordName": "MineableComposition.EpicShipMineablesAsteroid_Ouratite",
+          "compositionRecordName": "MineableComposition.EpicShipMineables_Ouratite",
           "compositionParts": [
             {
               "elementName": "Ouratite",
@@ -1932,7 +1932,7 @@
           "poolSharePercent": 10,
           "effectiveSpawnPercent": 0.6,
           "harvestablePreset": "mining_epic_ouratite",
-          "compositionRecordName": "MineableComposition.EpicShipMineablesAsteroid_Ouratite",
+          "compositionRecordName": "MineableComposition.EpicShipMineables_Ouratite",
           "compositionParts": [
             {
               "elementName": "Ouratite",
@@ -1979,7 +1979,8 @@
         "mining_epic_ouratite"
       ],
       "compositionRecordIds": [
-        "MineableComposition.EpicShipMineablesAsteroid_Ouratite"
+        "MineableComposition.EpicShipMineablesAsteroid_Ouratite",
+        "MineableComposition.EpicShipMineables_Ouratite"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.EpicShipMineable_Cluster"
@@ -2163,7 +2164,7 @@
           "poolSharePercent": 10,
           "effectiveSpawnPercent": 0.75,
           "harvestablePreset": "mining_epic_riccite",
-          "compositionRecordName": "MineableComposition.EpicShipMineablesAsteroid_Riccite",
+          "compositionRecordName": "MineableComposition.EpicShipMineables_Riccite",
           "compositionParts": [
             {
               "elementName": "Riccite",
@@ -2218,7 +2219,7 @@
           "poolSharePercent": 10,
           "effectiveSpawnPercent": 0.75,
           "harvestablePreset": "mining_epic_riccite",
-          "compositionRecordName": "MineableComposition.EpicShipMineablesAsteroid_Riccite",
+          "compositionRecordName": "MineableComposition.EpicShipMineables_Riccite",
           "compositionParts": [
             {
               "elementName": "Riccite",
@@ -2273,7 +2274,7 @@
           "poolSharePercent": 10,
           "effectiveSpawnPercent": 0.75,
           "harvestablePreset": "mining_epic_riccite",
-          "compositionRecordName": "MineableComposition.EpicShipMineablesAsteroid_Riccite",
+          "compositionRecordName": "MineableComposition.EpicShipMineables_Riccite",
           "compositionParts": [
             {
               "elementName": "Riccite",
@@ -2328,7 +2329,7 @@
           "poolSharePercent": 10,
           "effectiveSpawnPercent": 0.75,
           "harvestablePreset": "mining_epic_riccite",
-          "compositionRecordName": "MineableComposition.EpicShipMineablesAsteroid_Riccite",
+          "compositionRecordName": "MineableComposition.EpicShipMineables_Riccite",
           "compositionParts": [
             {
               "elementName": "Riccite",
@@ -2383,7 +2384,7 @@
           "poolSharePercent": 10,
           "effectiveSpawnPercent": 0.75,
           "harvestablePreset": "mining_epic_riccite",
-          "compositionRecordName": "MineableComposition.EpicShipMineablesAsteroid_Riccite",
+          "compositionRecordName": "MineableComposition.EpicShipMineables_Riccite",
           "compositionParts": [
             {
               "elementName": "Riccite",
@@ -2430,7 +2431,8 @@
         "mining_epic_riccite"
       ],
       "compositionRecordIds": [
-        "MineableComposition.EpicShipMineablesAsteroid_Riccite"
+        "MineableComposition.EpicShipMineablesAsteroid_Riccite",
+        "MineableComposition.EpicShipMineables_Riccite"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.EpicShipMineable_Cluster"
@@ -2887,7 +2889,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.08,
           "harvestablePreset": "mining_rare_beryl",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Beryl",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Beryl",
           "compositionParts": [
             {
               "elementName": "Beryl",
@@ -2935,7 +2937,8 @@
         "mining_rare_beryl"
       ],
       "compositionRecordIds": [
-        "MineableComposition.RareShipMineablesAsteroid_Beryl"
+        "MineableComposition.RareShipMineablesAsteroid_Beryl",
+        "MineableComposition.RareShipMineables_Beryl"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.RareShipMineable_Cluster",
@@ -3136,7 +3139,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.08,
           "harvestablePreset": "mining_rare_taranite",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Taranite",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Taranite",
           "compositionParts": [
             {
               "elementName": "Taranite",
@@ -3192,7 +3195,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.08,
           "harvestablePreset": "mining_rare_taranite",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Taranite",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Taranite",
           "compositionParts": [
             {
               "elementName": "Taranite",
@@ -3248,7 +3251,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.08,
           "harvestablePreset": "mining_rare_taranite",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Taranite",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Taranite",
           "compositionParts": [
             {
               "elementName": "Taranite",
@@ -3304,7 +3307,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.08,
           "harvestablePreset": "mining_rare_taranite",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Taranite",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Taranite",
           "compositionParts": [
             {
               "elementName": "Taranite",
@@ -3352,7 +3355,8 @@
         "mining_rare_taranite"
       ],
       "compositionRecordIds": [
-        "MineableComposition.RareShipMineablesAsteroid_Taranite"
+        "MineableComposition.RareShipMineablesAsteroid_Taranite",
+        "MineableComposition.RareShipMineables_Taranite"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.RareShipMineable_Cluster"
@@ -3508,7 +3512,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.35,
           "harvestablePreset": "mining_rare_borase",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Borase",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Borase",
           "compositionParts": [
             {
               "elementName": "Borase",
@@ -3576,7 +3580,7 @@
           "poolSharePercent": 18.02,
           "effectiveSpawnPercent": 1.3514,
           "harvestablePreset": "mining_rare_borase",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Borase",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Borase",
           "compositionParts": [
             {
               "elementName": "Borase",
@@ -3644,7 +3648,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.35,
           "harvestablePreset": "mining_rare_borase",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Borase",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Borase",
           "compositionParts": [
             {
               "elementName": "Borase",
@@ -3712,7 +3716,7 @@
           "poolSharePercent": 9,
           "effectiveSpawnPercent": 0.675,
           "harvestablePreset": "mining_rare_borase",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Borase",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Borase",
           "compositionParts": [
             {
               "elementName": "Borase",
@@ -3840,7 +3844,8 @@
         "mining_rare_borase"
       ],
       "compositionRecordIds": [
-        "MineableComposition.RareShipMineablesAsteroid_Borase"
+        "MineableComposition.RareShipMineablesAsteroid_Borase",
+        "MineableComposition.RareShipMineables_Borase"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.RareShipMineable_Cluster"
@@ -3996,7 +4001,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.35,
           "harvestablePreset": "mining_rare_gold",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Gold",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Gold",
           "compositionParts": [
             {
               "elementName": "Gold",
@@ -4064,7 +4069,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.35,
           "harvestablePreset": "mining_rare_gold",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Gold",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Gold",
           "compositionParts": [
             {
               "elementName": "Gold",
@@ -4132,7 +4137,7 @@
           "poolSharePercent": 9,
           "effectiveSpawnPercent": 0.675,
           "harvestablePreset": "mining_rare_gold",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Gold",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Gold",
           "compositionParts": [
             {
               "elementName": "Gold",
@@ -4200,7 +4205,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.35,
           "harvestablePreset": "mining_rare_gold",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Gold",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Gold",
           "compositionParts": [
             {
               "elementName": "Gold",
@@ -4328,7 +4333,8 @@
         "mining_rare_gold"
       ],
       "compositionRecordIds": [
-        "MineableComposition.RareShipMineablesAsteroid_Gold"
+        "MineableComposition.RareShipMineablesAsteroid_Gold",
+        "MineableComposition.RareShipMineables_Gold"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.RareShipMineable_Cluster"
@@ -4620,7 +4626,7 @@
           "poolSharePercent": 9,
           "effectiveSpawnPercent": 0.675,
           "harvestablePreset": "mining_rare_bexalite",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Bexalite",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Bexalite",
           "compositionParts": [
             {
               "elementName": "Bexalite",
@@ -4688,7 +4694,7 @@
           "poolSharePercent": 9,
           "effectiveSpawnPercent": 0.675,
           "harvestablePreset": "mining_rare_bexalite",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Bexalite",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Bexalite",
           "compositionParts": [
             {
               "elementName": "Bexalite",
@@ -4756,7 +4762,7 @@
           "poolSharePercent": 18,
           "effectiveSpawnPercent": 1.35,
           "harvestablePreset": "mining_rare_bexalite",
-          "compositionRecordName": "MineableComposition.RareShipMineablesAsteroid_Bexalite",
+          "compositionRecordName": "MineableComposition.RareShipMineables_Bexalite",
           "compositionParts": [
             {
               "elementName": "Bexalite",
@@ -4884,7 +4890,8 @@
         "mining_rare_bexalite"
       ],
       "compositionRecordIds": [
-        "MineableComposition.RareShipMineablesAsteroid_Bexalite"
+        "MineableComposition.RareShipMineablesAsteroid_Bexalite",
+        "MineableComposition.RareShipMineables_Bexalite"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.RareShipMineable_Cluster"
@@ -4972,7 +4979,7 @@
           "poolSharePercent": 28.53,
           "effectiveSpawnPercent": 2.1396,
           "harvestablePreset": "mining_uncommon_laranite",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Laranite",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Laranite",
           "compositionParts": [
             {
               "elementName": "Laranite",
@@ -5096,7 +5103,7 @@
           "poolSharePercent": 28.47,
           "effectiveSpawnPercent": 1.7083,
           "harvestablePreset": "mining_uncommon_laranite",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Laranite",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Laranite",
           "compositionParts": [
             {
               "elementName": "Laranite",
@@ -5158,7 +5165,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 1.71,
           "harvestablePreset": "mining_uncommon_laranite",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Laranite",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Laranite",
           "compositionParts": [
             {
               "elementName": "Laranite",
@@ -5212,6 +5219,7 @@
         "mining_asteroiduncommon_laranite"
       ],
       "compositionRecordIds": [
+        "MineableComposition.UncommonShipMineables_Laranite",
         "MineableComposition.UncommonShipMineablesAsteroid_Laranite"
       ],
       "clusterPresetKeys": [
@@ -5368,7 +5376,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 2.1375,
           "harvestablePreset": "mining_uncommon_aslarite",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Aslarite",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Aslarite",
           "compositionParts": [
             {
               "elementName": "Aslarite",
@@ -5436,7 +5444,7 @@
           "poolSharePercent": 14.2,
           "effectiveSpawnPercent": 1.065,
           "harvestablePreset": "mining_uncommon_aslarite",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Aslarite",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Aslarite",
           "compositionParts": [
             {
               "elementName": "Aslarite",
@@ -5640,7 +5648,7 @@
           "poolSharePercent": 14.2,
           "effectiveSpawnPercent": 0.852,
           "harvestablePreset": "mining_uncommon_aslarite",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Aslarite",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Aslarite",
           "compositionParts": [
             {
               "elementName": "Aslarite",
@@ -5708,7 +5716,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 1.71,
           "harvestablePreset": "mining_uncommon_aslarite",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Aslarite",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Aslarite",
           "compositionParts": [
             {
               "elementName": "Aslarite",
@@ -5768,7 +5776,8 @@
         "mining_uncommon_aslarite"
       ],
       "compositionRecordIds": [
-        "MineableComposition.UncommonShipMineablesAsteroid_Aslarite"
+        "MineableComposition.UncommonShipMineablesAsteroid_Aslarite",
+        "MineableComposition.UncommonShipMineables_Aslarite"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.UncommonShipMineable_Cluster"
@@ -5924,7 +5933,7 @@
           "poolSharePercent": 14.2,
           "effectiveSpawnPercent": 1.065,
           "harvestablePreset": "mining_uncommon_titanium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Titanium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Titanium",
           "compositionParts": [
             {
               "elementName": "Titanium",
@@ -6196,7 +6205,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 1.71,
           "harvestablePreset": "mining_uncommon_titanium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Titanium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Titanium",
           "compositionParts": [
             {
               "elementName": "Titanium",
@@ -6264,7 +6273,7 @@
           "poolSharePercent": 14.2,
           "effectiveSpawnPercent": 0.852,
           "harvestablePreset": "mining_uncommon_titanium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Titanium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Titanium",
           "compositionParts": [
             {
               "elementName": "Titanium",
@@ -6324,7 +6333,8 @@
         "mining_uncommon_titanium"
       ],
       "compositionRecordIds": [
-        "MineableComposition.UncommonShipMineablesAsteroid_Titanium"
+        "MineableComposition.UncommonShipMineablesAsteroid_Titanium",
+        "MineableComposition.UncommonShipMineables_Titanium"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.UncommonShipMineable_Cluster"
@@ -6474,7 +6484,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 2.1375,
           "harvestablePreset": "mining_uncommon_tungsten",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Tungsten",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Tungsten",
           "compositionParts": [
             {
               "elementName": "Tungsten",
@@ -6536,7 +6546,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 2.1375,
           "harvestablePreset": "mining_uncommon_tungsten",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Tungsten",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Tungsten",
           "compositionParts": [
             {
               "elementName": "Tungsten",
@@ -6652,7 +6662,8 @@
         "mining_uncommon_tungsten"
       ],
       "compositionRecordIds": [
-        "MineableComposition.UncommonShipMineablesAsteroid_Tungsten"
+        "MineableComposition.UncommonShipMineablesAsteroid_Tungsten",
+        "MineableComposition.UncommonShipMineables_Tungsten"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.UncommonShipMineable_Cluster"
@@ -6740,7 +6751,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 0.0285,
           "harvestablePreset": "mining_uncommon_agricium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Agricium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Agricium",
           "compositionParts": [
             {
               "elementName": "Agricium",
@@ -6808,7 +6819,7 @@
           "poolSharePercent": 14.2,
           "effectiveSpawnPercent": 1.065,
           "harvestablePreset": "mining_uncommon_agricium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Agricium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Agricium",
           "compositionParts": [
             {
               "elementName": "Agricium",
@@ -6876,7 +6887,7 @@
           "poolSharePercent": 14.2,
           "effectiveSpawnPercent": 1.065,
           "harvestablePreset": "mining_uncommon_agricium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Agricium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Agricium",
           "compositionParts": [
             {
               "elementName": "Agricium",
@@ -7148,7 +7159,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 1.71,
           "harvestablePreset": "mining_uncommon_agricium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Agricium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Agricium",
           "compositionParts": [
             {
               "elementName": "Agricium",
@@ -7216,7 +7227,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 1.71,
           "harvestablePreset": "mining_uncommon_agricium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Agricium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Agricium",
           "compositionParts": [
             {
               "elementName": "Agricium",
@@ -7284,7 +7295,7 @@
           "poolSharePercent": 28.5,
           "effectiveSpawnPercent": 1.71,
           "harvestablePreset": "mining_uncommon_agricium",
-          "compositionRecordName": "MineableComposition.UncommonShipMineablesAsteroid_Agricium",
+          "compositionRecordName": "MineableComposition.UncommonShipMineables_Agricium",
           "compositionParts": [
             {
               "elementName": "Agricium",
@@ -7344,6 +7355,7 @@
         "mining_asteroiduncommon_agricium"
       ],
       "compositionRecordIds": [
+        "MineableComposition.UncommonShipMineables_Agricium",
         "MineableComposition.UncommonShipMineablesAsteroid_Agricium"
       ],
       "clusterPresetKeys": [
@@ -7761,7 +7773,7 @@
           "poolSharePercent": 32.73,
           "effectiveSpawnPercent": 2.455,
           "harvestablePreset": "mining_common_hephaestanite",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Hephaestanite",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Hephaestanite",
           "compositionParts": [
             {
               "elementName": "Hephaestanite",
@@ -7829,7 +7841,7 @@
           "poolSharePercent": 26.7,
           "effectiveSpawnPercent": 2.0025,
           "harvestablePreset": "mining_common_hephaestanite",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Hephaestanite",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Hephaestanite",
           "compositionParts": [
             {
               "elementName": "Hephaestanite",
@@ -7897,7 +7909,7 @@
           "poolSharePercent": 26.8,
           "effectiveSpawnPercent": 2.01,
           "harvestablePreset": "mining_common_hephaestanite",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Hephaestanite",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Hephaestanite",
           "compositionParts": [
             {
               "elementName": "Hephaestanite",
@@ -8169,7 +8181,7 @@
           "poolSharePercent": 22,
           "effectiveSpawnPercent": 1.32,
           "harvestablePreset": "mining_common_hephaestanite",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Hephaestanite",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Hephaestanite",
           "compositionParts": [
             {
               "elementName": "Hephaestanite",
@@ -8237,7 +8249,7 @@
           "poolSharePercent": 32.7,
           "effectiveSpawnPercent": 1.962,
           "harvestablePreset": "mining_common_hephaestanite",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Hephaestanite",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Hephaestanite",
           "compositionParts": [
             {
               "elementName": "Hephaestanite",
@@ -8305,7 +8317,7 @@
           "poolSharePercent": 32.63,
           "effectiveSpawnPercent": 1.958,
           "harvestablePreset": "mining_common_hephaestanite",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Hephaestanite",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Hephaestanite",
           "compositionParts": [
             {
               "elementName": "Hephaestanite",
@@ -8365,6 +8377,7 @@
         "mining_asteroidcommon_hephaestanite"
       ],
       "compositionRecordIds": [
+        "MineableComposition.CommonShipMineables_Hephaestanite",
         "MineableComposition.CommonShipMineablesAsteroid_Hephaestanite"
       ],
       "clusterPresetKeys": [
@@ -8515,7 +8528,7 @@
           "poolSharePercent": 32.63,
           "effectiveSpawnPercent": 2.4474,
           "harvestablePreset": "mining_common_tin",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Tin",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Tin",
           "compositionParts": [
             {
               "elementName": "Tin",
@@ -8577,7 +8590,7 @@
           "poolSharePercent": 32.63,
           "effectiveSpawnPercent": 2.4474,
           "harvestablePreset": "mining_common_tin",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Tin",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Tin",
           "compositionParts": [
             {
               "elementName": "Tin",
@@ -8639,7 +8652,7 @@
           "poolSharePercent": 36,
           "effectiveSpawnPercent": 2.7,
           "harvestablePreset": "mining_common_tin",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Tin",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Tin",
           "compositionParts": [
             {
               "elementName": "Tin",
@@ -8701,7 +8714,7 @@
           "poolSharePercent": 44,
           "effectiveSpawnPercent": 2.64,
           "harvestablePreset": "mining_common_tin",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Tin",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Tin",
           "compositionParts": [
             {
               "elementName": "Tin",
@@ -8763,7 +8776,7 @@
           "poolSharePercent": 22,
           "effectiveSpawnPercent": 1.32,
           "harvestablePreset": "mining_common_tin",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Tin",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Tin",
           "compositionParts": [
             {
               "elementName": "Tin",
@@ -8825,7 +8838,7 @@
           "poolSharePercent": 34.8,
           "effectiveSpawnPercent": 2.088,
           "harvestablePreset": "mining_common_tin",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Tin",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Tin",
           "compositionParts": [
             {
               "elementName": "Tin",
@@ -8879,7 +8892,8 @@
         "mining_common_tin"
       ],
       "compositionRecordIds": [
-        "MineableComposition.CommonShipMineablesAsteroid_Tin"
+        "MineableComposition.CommonShipMineablesAsteroid_Tin",
+        "MineableComposition.CommonShipMineables_Tin"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.CommonShipMineable_Cluster"
@@ -9035,7 +9049,7 @@
           "poolSharePercent": 35,
           "effectiveSpawnPercent": 2.625,
           "harvestablePreset": "mining_common_quartz",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Quartz",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Quartz",
           "compositionParts": [
             {
               "elementName": "Quartz",
@@ -9103,7 +9117,7 @@
           "poolSharePercent": 25.7,
           "effectiveSpawnPercent": 1.542,
           "harvestablePreset": "mining_common_quartz",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Quartz",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Quartz",
           "compositionParts": [
             {
               "elementName": "Quartz",
@@ -9171,7 +9185,7 @@
           "poolSharePercent": 34.7,
           "effectiveSpawnPercent": 2.082,
           "harvestablePreset": "mining_common_quartz",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Quartz",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Quartz",
           "compositionParts": [
             {
               "elementName": "Quartz",
@@ -9239,7 +9253,7 @@
           "poolSharePercent": 25.7,
           "effectiveSpawnPercent": 1.542,
           "harvestablePreset": "mining_common_quartz",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Quartz",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Quartz",
           "compositionParts": [
             {
               "elementName": "Quartz",
@@ -9299,7 +9313,8 @@
         "mining_common_quartz"
       ],
       "compositionRecordIds": [
-        "MineableComposition.CommonShipMineablesAsteroid_Quartz"
+        "MineableComposition.CommonShipMineablesAsteroid_Quartz",
+        "MineableComposition.CommonShipMineables_Quartz"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.CommonShipMineable_Cluster"
@@ -9635,7 +9650,7 @@
           "poolSharePercent": 22,
           "effectiveSpawnPercent": 1.32,
           "harvestablePreset": "mining_common_corundum",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Corundum",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Corundum",
           "compositionParts": [
             {
               "elementName": "Corundum",
@@ -9697,7 +9712,7 @@
           "poolSharePercent": 29.8,
           "effectiveSpawnPercent": 1.788,
           "harvestablePreset": "mining_common_corundum",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Corundum",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Corundum",
           "compositionParts": [
             {
               "elementName": "Corundum",
@@ -9751,7 +9766,8 @@
         "mining_common_corundum"
       ],
       "compositionRecordIds": [
-        "MineableComposition.CommonShipMineablesAsteroid_Corundum"
+        "MineableComposition.CommonShipMineablesAsteroid_Corundum",
+        "MineableComposition.CommonShipMineables_Corundum"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.CommonShipMineable_Cluster"
@@ -10025,7 +10041,7 @@
           "poolSharePercent": 32.63,
           "effectiveSpawnPercent": 2.4474,
           "harvestablePreset": "mining_common_copper",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Copper",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Copper",
           "compositionParts": [
             {
               "elementName": "Copper",
@@ -10087,7 +10103,7 @@
           "poolSharePercent": 25.73,
           "effectiveSpawnPercent": 1.9294,
           "harvestablePreset": "mining_common_copper",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Copper",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Copper",
           "compositionParts": [
             {
               "elementName": "Copper",
@@ -10149,7 +10165,7 @@
           "poolSharePercent": 20.8,
           "effectiveSpawnPercent": 1.56,
           "harvestablePreset": "mining_common_copper",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Copper",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Copper",
           "compositionParts": [
             {
               "elementName": "Copper",
@@ -10645,7 +10661,7 @@
           "poolSharePercent": 34.77,
           "effectiveSpawnPercent": 2.0859,
           "harvestablePreset": "mining_common_copper",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Copper",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Copper",
           "compositionParts": [
             {
               "elementName": "Copper",
@@ -10707,7 +10723,7 @@
           "poolSharePercent": 25.8,
           "effectiveSpawnPercent": 1.548,
           "harvestablePreset": "mining_common_copper",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Copper",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Copper",
           "compositionParts": [
             {
               "elementName": "Copper",
@@ -10769,7 +10785,7 @@
           "poolSharePercent": 40,
           "effectiveSpawnPercent": 2.4,
           "harvestablePreset": "mining_common_copper",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Copper",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Copper",
           "compositionParts": [
             {
               "elementName": "Copper",
@@ -10831,7 +10847,7 @@
           "poolSharePercent": 40,
           "effectiveSpawnPercent": 2.4,
           "harvestablePreset": "mining_common_copper",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Copper",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Copper",
           "compositionParts": [
             {
               "elementName": "Copper",
@@ -10885,7 +10901,8 @@
         "mining_common_copper"
       ],
       "compositionRecordIds": [
-        "MineableComposition.CommonShipMineablesAsteroid_Copper"
+        "MineableComposition.CommonShipMineablesAsteroid_Copper",
+        "MineableComposition.CommonShipMineables_Copper"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.CommonShipMineable_Cluster"
@@ -11177,7 +11194,7 @@
           "poolSharePercent": 36,
           "effectiveSpawnPercent": 2.7,
           "harvestablePreset": "mining_common_silicon",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Silicon",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Silicon",
           "compositionParts": [
             {
               "elementName": "Silicon",
@@ -11245,7 +11262,7 @@
           "poolSharePercent": 36,
           "effectiveSpawnPercent": 2.7,
           "harvestablePreset": "mining_common_silicon",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Silicon",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Silicon",
           "compositionParts": [
             {
               "elementName": "Silicon",
@@ -11313,7 +11330,7 @@
           "poolSharePercent": 26.8,
           "effectiveSpawnPercent": 2.01,
           "harvestablePreset": "mining_common_silicon",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Silicon",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Silicon",
           "compositionParts": [
             {
               "elementName": "Silicon",
@@ -11449,7 +11466,7 @@
           "poolSharePercent": 25.8,
           "effectiveSpawnPercent": 1.548,
           "harvestablePreset": "mining_common_silicon",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Silicon",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Silicon",
           "compositionParts": [
             {
               "elementName": "Silicon",
@@ -11517,7 +11534,7 @@
           "poolSharePercent": 34.8,
           "effectiveSpawnPercent": 2.088,
           "harvestablePreset": "mining_common_silicon",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Silicon",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Silicon",
           "compositionParts": [
             {
               "elementName": "Silicon",
@@ -11585,7 +11602,7 @@
           "poolSharePercent": 25.8,
           "effectiveSpawnPercent": 1.548,
           "harvestablePreset": "mining_common_silicon",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Silicon",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Silicon",
           "compositionParts": [
             {
               "elementName": "Silicon",
@@ -11645,7 +11662,8 @@
         "mining_common_silicon"
       ],
       "compositionRecordIds": [
-        "MineableComposition.CommonShipMineablesAsteroid_Silicon"
+        "MineableComposition.CommonShipMineablesAsteroid_Silicon",
+        "MineableComposition.CommonShipMineables_Silicon"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.CommonShipMineable_Cluster"
@@ -12013,7 +12031,7 @@
           "poolSharePercent": 32.73,
           "effectiveSpawnPercent": 2.455,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12069,7 +12087,7 @@
           "poolSharePercent": 32.63,
           "effectiveSpawnPercent": 2.4474,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12125,7 +12143,7 @@
           "poolSharePercent": 35,
           "effectiveSpawnPercent": 2.625,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12181,7 +12199,7 @@
           "poolSharePercent": 25.73,
           "effectiveSpawnPercent": 1.9294,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12237,7 +12255,7 @@
           "poolSharePercent": 36,
           "effectiveSpawnPercent": 2.7,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12293,7 +12311,7 @@
           "poolSharePercent": 43.5,
           "effectiveSpawnPercent": 3.2625,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12349,7 +12367,7 @@
           "poolSharePercent": 26.7,
           "effectiveSpawnPercent": 2.0025,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12405,7 +12423,7 @@
           "poolSharePercent": 26.8,
           "effectiveSpawnPercent": 2.01,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12461,7 +12479,7 @@
           "poolSharePercent": 26.8,
           "effectiveSpawnPercent": 2.01,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12909,7 +12927,7 @@
           "poolSharePercent": 34.8,
           "effectiveSpawnPercent": 2.088,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -12965,7 +12983,7 @@
           "poolSharePercent": 34.77,
           "effectiveSpawnPercent": 2.0859,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -13021,7 +13039,7 @@
           "poolSharePercent": 25.7,
           "effectiveSpawnPercent": 1.542,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -13077,7 +13095,7 @@
           "poolSharePercent": 32.6,
           "effectiveSpawnPercent": 1.956,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -13133,7 +13151,7 @@
           "poolSharePercent": 32.73,
           "effectiveSpawnPercent": 1.964,
           "harvestablePreset": "mining_common_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Iron",
           "compositionParts": [
             {
               "elementName": "Iron",
@@ -13181,7 +13199,8 @@
         "mining_common_iron"
       ],
       "compositionRecordIds": [
-        "MineableComposition.CommonShipMineablesAsteroid_Iron"
+        "MineableComposition.CommonShipMineablesAsteroid_Iron",
+        "MineableComposition.CommonShipMineables_Iron"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.CommonShipMineable_Cluster"
@@ -13269,43 +13288,25 @@
           "poolSharePercent": 13.8,
           "effectiveSpawnPercent": 0.0138,
           "harvestablePreset": "mining_asteroidcommon_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13349,43 +13350,25 @@
           "poolSharePercent": 13.8,
           "effectiveSpawnPercent": 0.0138,
           "harvestablePreset": "mining_asteroidcommon_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13429,43 +13412,25 @@
           "poolSharePercent": 14.9,
           "effectiveSpawnPercent": 0.0149,
           "harvestablePreset": "mining_asteroidcommon_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13509,43 +13474,25 @@
           "poolSharePercent": 10.3,
           "effectiveSpawnPercent": 0.0309,
           "harvestablePreset": "mining_asteroidcommon_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13589,43 +13536,25 @@
           "poolSharePercent": 17.9,
           "effectiveSpawnPercent": 0.0179,
           "harvestablePreset": "mining_asteroidcommon_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13669,43 +13598,25 @@
           "poolSharePercent": 23.85,
           "effectiveSpawnPercent": 0.0179,
           "harvestablePreset": "mining_asteroidcommon_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13749,43 +13660,25 @@
           "poolSharePercent": 17.8,
           "effectiveSpawnPercent": 0.0267,
           "harvestablePreset": "mining_asteroidcommon_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13829,43 +13722,25 @@
           "poolSharePercent": 44,
           "effectiveSpawnPercent": 2.64,
           "harvestablePreset": "mining_common_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13909,43 +13784,25 @@
           "poolSharePercent": 22,
           "effectiveSpawnPercent": 1.32,
           "harvestablePreset": "mining_common_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -13989,43 +13846,25 @@
           "poolSharePercent": 29.7,
           "effectiveSpawnPercent": 1.782,
           "harvestablePreset": "mining_common_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -14069,43 +13908,25 @@
           "poolSharePercent": 34.8,
           "effectiveSpawnPercent": 2.088,
           "harvestablePreset": "mining_common_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -14149,43 +13970,25 @@
           "poolSharePercent": 34.7,
           "effectiveSpawnPercent": 2.082,
           "harvestablePreset": "mining_common_aluminum",
-          "compositionRecordName": "MineableComposition.Asteroid_CType_Aluminium",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Aluminum",
           "compositionParts": [
             {
               "elementName": "Aluminium",
-              "minPercentage": 30,
-              "maxPercentage": 70,
+              "minPercentage": 2.82,
+              "maxPercentage": 6.82,
               "qualityScale": 1
             },
             {
-              "elementName": "Hephaestanite",
-              "minPercentage": 30,
-              "maxPercentage": 60,
-              "qualityScale": 1
+              "elementName": "Aluminium",
+              "minPercentage": 39.18,
+              "maxPercentage": 83.18,
+              "qualityScale": 0.49
             },
             {
-              "elementName": "Gold",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Taranite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Bexalite",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Quantainium",
-              "minPercentage": 20,
-              "maxPercentage": 50,
-              "qualityScale": 1
+              "elementName": "Corundum",
+              "minPercentage": 5,
+              "maxPercentage": 10,
+              "qualityScale": 0.789
             }
           ],
           "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
@@ -14221,7 +14024,8 @@
         "mining_common_aluminum"
       ],
       "compositionRecordIds": [
-        "MineableComposition.Asteroid_CType_Aluminium"
+        "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
+        "MineableComposition.CommonShipMineables_Aluminum"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.CommonShipMineable_Cluster"
@@ -14589,7 +14393,7 @@
           "poolSharePercent": 20.8,
           "effectiveSpawnPercent": 1.56,
           "harvestablePreset": "mining_common_ice",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Ice",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Ice",
           "compositionParts": [
             {
               "elementName": "Ice",
@@ -15037,7 +14841,7 @@
           "poolSharePercent": 32.7,
           "effectiveSpawnPercent": 1.962,
           "harvestablePreset": "mining_common_ice",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Ice",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Ice",
           "compositionParts": [
             {
               "elementName": "Ice",
@@ -15093,7 +14897,7 @@
           "poolSharePercent": 32.63,
           "effectiveSpawnPercent": 1.958,
           "harvestablePreset": "mining_common_ice",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Ice",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Ice",
           "compositionParts": [
             {
               "elementName": "Ice",
@@ -15149,7 +14953,7 @@
           "poolSharePercent": 40,
           "effectiveSpawnPercent": 2.4,
           "harvestablePreset": "mining_common_ice",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Ice",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Ice",
           "compositionParts": [
             {
               "elementName": "Ice",
@@ -15205,7 +15009,7 @@
           "poolSharePercent": 40,
           "effectiveSpawnPercent": 2.4,
           "harvestablePreset": "mining_common_ice",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Ice",
+          "compositionRecordName": "MineableComposition.CommonShipMineables_Ice",
           "compositionParts": [
             {
               "elementName": "Ice",
@@ -15253,7 +15057,8 @@
         "mining_common_ice"
       ],
       "compositionRecordIds": [
-        "MineableComposition.CommonShipMineablesAsteroid_Ice"
+        "MineableComposition.CommonShipMineablesAsteroid_Ice",
+        "MineableComposition.CommonShipMineables_Ice"
       ],
       "clusterPresetKeys": [
         "HarvestableClusterPreset.CommonShipMineable_Cluster"

@@ -216,6 +216,69 @@ function buildOverallProfile(locations, depositType, oreName, locationAliases) {
   }
 }
 
+function parseCompositionParts(compositionJson, extractedDataRoot) {
+  return (compositionJson?._RecordValue_?.compositionArray ?? []).map((part) => {
+    const elemPath = part.mineableElement
+    const elemFile =
+      typeof elemPath === 'string'
+        ? resolveRef(elemPath, extractedDataRoot)
+        : resolveRef(elemPath?._RecordPath_ || elemPath, extractedDataRoot)
+    let elementName = 'Unknown'
+    if (elemFile) {
+      const elem = readJson(elemFile)
+      const rn = elem?._RecordName_ || basename(elemFile, '.json')
+      elementName = rn.replace(/^MineableElement\./i, '').replace(/_ore$|_raw$/i, '')
+    }
+    return {
+      elementName,
+      minPercentage: part.minPercentage,
+      maxPercentage: part.maxPercentage,
+      qualityScale: part.qualityScale,
+    }
+  })
+}
+
+function compositionFromJson(compositionJson, extractedDataRoot) {
+  if (!compositionJson?._RecordName_) return null
+  return {
+    recordName: compositionJson._RecordName_,
+    depositName: compositionJson._RecordValue_?.depositName,
+    parts: parseCompositionParts(compositionJson, extractedDataRoot),
+  }
+}
+
+function compositionFromEntityClass(entityPath, extractedDataRoot, compositions) {
+  const entity = readJson(entityPath)
+  const components = entity?._RecordValue_?.Components ?? []
+  for (const component of components) {
+    if (component._Type_ !== 'MineableParams') continue
+    const compositionPath = resolveRef(component.composition, extractedDataRoot)
+    if (!compositionPath) return null
+    const compositionJson = readJson(compositionPath)
+    const recordName = compositionJson?._RecordName_
+    if (recordName && compositions.has(recordName)) {
+      return compositions.get(recordName)
+    }
+    return compositionFromJson(compositionJson, extractedDataRoot)
+  }
+  return null
+}
+
+function buildPresetCompositionMap(extractedDataRoot, compositions) {
+  const map = new Map()
+  const presetDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/harvestablepresets')
+  for (const file of walkJsonFiles(presetDir)) {
+    const presetBasename = basename(file, '.json')
+    if (!/^mining_/i.test(presetBasename)) continue
+    const preset = readJson(file)
+    const entityPath = resolveRef(preset?._RecordValue_?.entityClass, extractedDataRoot)
+    if (!entityPath) continue
+    const comp = compositionFromEntityClass(entityPath, extractedDataRoot, compositions)
+    if (comp) map.set(presetBasename, comp)
+  }
+  return map
+}
+
 function loadCompositions(extractedDataRoot) {
   const compDir = join(extractedDataRoot, 'libs/foundry/records/mining/rockcompositionpresets')
   const map = new Map()
@@ -223,35 +286,14 @@ function loadCompositions(extractedDataRoot) {
     const json = readJson(file)
     if (!json?._RecordName_) continue
     const key = json._RecordName_
-    const parts = (json._RecordValue_?.compositionArray ?? []).map((part) => {
-      const elemPath = part.mineableElement
-      const elemFile =
-        typeof elemPath === 'string'
-          ? resolveRef(elemPath, extractedDataRoot)
-          : resolveRef(elemPath?._RecordPath_ || elemPath, extractedDataRoot)
-      let elementName = 'Unknown'
-      if (elemFile) {
-        const elem = readJson(elemFile)
-        const rn = elem?._RecordName_ || basename(elemFile, '.json')
-        elementName = rn.replace(/^MineableElement\./i, '').replace(/_ore$|_raw$/i, '')
-      }
-      return {
-        elementName,
-        minPercentage: part.minPercentage,
-        maxPercentage: part.maxPercentage,
-        qualityScale: part.qualityScale,
-      }
-    })
-    map.set(key, {
-      recordName: key,
-      depositName: json._RecordValue_?.depositName,
-      parts,
-    })
+    const parsed = compositionFromJson(json, extractedDataRoot)
+    if (parsed) map.set(key, parsed)
   }
   return map
 }
 
-function findCompositionForPreset(presetBasename, compositions) {
+/** @deprecated Fuzzy fallback only — prefer presetCompositionMap from entity MineableParams. */
+function findCompositionForPresetLegacy(presetBasename, compositions) {
   const slug = presetBasename.replace(/^mining_asteroid/i, 'mining_').replace(/^mining_/i, '')
   for (const [key, comp] of compositions.entries()) {
     if (key.toLowerCase().includes(slug.replace(/_/g, ''))) return comp
@@ -263,6 +305,12 @@ function findCompositionForPreset(presetBasename, compositions) {
     if (key.toLowerCase().includes(oreSlug)) return comp
   }
   return null
+}
+
+function findCompositionForPreset(presetBasename, compositions, presetCompositionMap) {
+  const fromEntity = presetCompositionMap.get(presetBasename)
+  if (fromEntity) return fromEntity
+  return findCompositionForPresetLegacy(presetBasename, compositions)
 }
 
 function buildLocationIndex(miningLocations) {
@@ -305,6 +353,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
   }
 
   const compositions = loadCompositions(extractedDataRoot)
+  const presetCompositionMap = buildPresetCompositionMap(extractedDataRoot, compositions)
   const locationIndex = buildLocationIndex(miningLocations)
   const hppDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/providerpresets')
   const rawLinks = []
@@ -357,7 +406,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
         const poolSharePercent = Math.round((relWeight / poolSum) * 10000) / 100
         const effectiveSpawnPercent = Math.round(((relWeight / poolSum) * groupProb) * 10000) / 10000
 
-        const comp = findCompositionForPreset(presetBasename, compositions)
+        const comp = findCompositionForPreset(presetBasename, compositions, presetCompositionMap)
 
         rawLinks.push({
           oreName,

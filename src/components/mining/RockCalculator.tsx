@@ -23,7 +23,6 @@ import {
   formatScannerBandLabel,
   formatScannerBandTooltip,
   isPercentOverLimit,
-  oreResourceKeyFromElementName,
   parsePercentInput,
   parseQualitySlotValue,
   parseTotalScuInput,
@@ -32,9 +31,7 @@ import {
 import {
   getResourceBands,
   PURCHASED_STOCK_QUALITY,
-  supportsPurchasedQuality,
 } from '../../lib/qualityBands'
-import { stockQualityTiersForResource } from '../../config/dfp'
 import {
   appendCalculatorRowsToLedger,
   buildCalculatorLedgerRows,
@@ -260,7 +257,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
 
   return (
-    <aside className="sticky top-14 self-start w-[280px] shrink-0">
+    <aside className="sticky top-14 self-start w-[320px] shrink-0">
       <div className="rounded-xl border border-slate-700 bg-slate-900/70 overflow-hidden">
         <div className="px-3 py-2.5 bg-slate-800/90 border-b border-slate-700 min-h-[3.25rem]">
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
@@ -448,8 +445,8 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[10px] uppercase tracking-wide text-slate-500">Materials</p>
                 <div className="flex items-center justify-end gap-1.5 text-[9px] uppercase tracking-wide text-slate-600 shrink-0">
-                  <span className="w-[3.25rem] text-right">%</span>
-                  <span className="w-[2rem] text-center">Q</span>
+                  <span className="w-[6.5rem] text-right">%</span>
+                  <span className="w-[4.5rem] text-center">Q</span>
                   <span className="w-[3.25rem] text-right">cSCU</span>
                   <span className="w-[3.5rem] text-right">DFP</span>
                 </div>
@@ -467,7 +464,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                       <span className="text-[10px] text-slate-500 shrink-0">{row.rangeHint}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <div className="relative w-[3.25rem] shrink-0">
+                      <div className="relative w-[6.5rem] shrink-0">
                         <input
                           type="number"
                           min={0}
@@ -481,10 +478,10 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                               [row.slotKey]: e.target.value,
                             }))
                           }
-                          className="site-input w-full px-1 py-1 pr-3.5 text-[10px] font-mono tabular-nums text-right"
+                          className="site-input w-full px-1.5 py-1 pr-4 text-[10px] font-mono tabular-nums text-right"
                           aria-label={`${row.label} percentage`}
                         />
-                        <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
+                        <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
                           %
                         </span>
                       </div>
@@ -546,7 +543,10 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
 }
 
 const MATERIAL_QUALITY_SELECT_CLASS =
-  'w-[2rem] shrink-0 px-0.5 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
+  'w-[4.5rem] shrink-0 px-1 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
+
+const MATERIAL_QUALITY_INPUT_CLASS =
+  'w-[4.5rem] shrink-0 px-1 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
 
 interface MaterialQualitySelectProps {
   elementName: string
@@ -555,9 +555,7 @@ interface MaterialQualitySelectProps {
 }
 
 function MaterialQualitySelect({ elementName, value, onChange }: MaterialQualitySelectProps) {
-  const resourceKey = oreResourceKeyFromElementName(elementName)
   const bands = getResourceBands(elementName)
-  const showPurchased = supportsPurchasedQuality(resourceKey, elementName)
   const qualityNum = Number.parseInt(value, 10)
   const title = formatRockQualitySelectTitle(elementName, qualityNum, bands)
 
@@ -567,37 +565,41 @@ function MaterialQualitySelect({ elementName, value, onChange }: MaterialQuality
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={MATERIAL_QUALITY_SELECT_CLASS}
-        aria-label={`${elementName} quality band`}
+        aria-label={`${elementName} quality`}
         title={title}
       >
-        {showPurchased && (
-          <option value={PURCHASED_STOCK_QUALITY}>
-            {formatRockQualityOptionLabel(PURCHASED_STOCK_QUALITY)}
-          </option>
-        )}
-        {bands.map((bandValue, idx) => (
-          <option key={idx} value={bandValue}>
-            {formatRockQualityOptionLabel(bandValue, idx)}
+        <option value={PURCHASED_STOCK_QUALITY}>
+          {formatRockQualityOptionLabel(PURCHASED_STOCK_QUALITY)}
+        </option>
+        {bands.map((bandValue) => (
+          <option key={bandValue} value={bandValue}>
+            {formatRockQualityOptionLabel(bandValue)}
           </option>
         ))}
       </select>
     )
   }
 
-  const tiers = stockQualityTiersForResource(resourceKey, elementName)
   return (
-    <select
+    <input
+      type="number"
+      min={0}
+      max={1000}
+      step={1}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={MATERIAL_QUALITY_SELECT_CLASS}
-      aria-label={`${elementName} quality`}
-      title={title}
-    >
-      {tiers.map((tier) => (
-        <option key={tier} value={tier}>
-          {formatRockQualityOptionLabel(tier)}
-        </option>
-      ))}
-    </select>
+      onChange={(e) => {
+        const raw = e.target.value
+        if (raw === '') {
+          onChange('0')
+          return
+        }
+        const parsed = Number.parseInt(raw, 10)
+        if (!Number.isFinite(parsed)) return
+        onChange(String(Math.min(1000, Math.max(0, parsed))))
+      }}
+      className={MATERIAL_QUALITY_INPUT_CLASS}
+      aria-label={`${elementName} quality (0–1000)`}
+      title="No game bands for this resource — enter Q0–Q1000"
+    />
   )
 }

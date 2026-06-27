@@ -61,6 +61,27 @@ export function extractBlueprintResources(
   return [...byKey.values()].sort((a, b) => a.label.localeCompare(b.label))
 }
 
+/** All distinct material labels required by a blueprint (any slot option). */
+export function getBlueprintMaterialLabels(blueprint: BlueprintWithSlots): string[] {
+  const labels = new Set<string>()
+  for (const slot of blueprint.slots ?? []) {
+    for (const option of slot.options ?? []) {
+      const label =
+        option.resourceName || option.entityName || option.displayName || option.itemName
+      if (label) labels.add(label)
+    }
+  }
+  return [...labels]
+}
+
+export function blueprintUsesMaterial(
+  blueprint: BlueprintWithSlots,
+  materialLabel: string
+): boolean {
+  if (!materialLabel) return true
+  return getBlueprintMaterialLabels(blueprint).includes(materialLabel)
+}
+
 export function buildResourceLabelMap(
   catalog: { resource_key: string; label: string }[]
 ): Record<string, string> {
