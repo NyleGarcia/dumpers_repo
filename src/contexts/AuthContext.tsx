@@ -12,7 +12,9 @@ import { normalizeGuestBlueprintId } from '../lib/guestCatalog'
 import {
   ensureGuestCacheSchema,
   readGuestAcquiredBlueprints,
+  readGuestGroupBlueprintVariants,
   writeGuestAcquiredBlueprints,
+  writeGuestGroupBlueprintVariants,
 } from '../lib/localGuestCache'
 import { maybeMigrateOfflineData } from '../lib/offlineMigration'
 import { fetchOrgLogoStatus, resolveOrgLogoUrl } from '../lib/orgLogo'
@@ -40,6 +42,8 @@ interface AuthContextType {
   updateRsiHandle: (handle: string) => Promise<boolean>
   updateGhostMode: (enabled: boolean) => Promise<boolean>
   updateCraftDeductInventory: (enabled: boolean) => Promise<boolean>
+  updateGroupBlueprintVariants: (enabled: boolean) => Promise<boolean>
+  groupBlueprintVariants: boolean
   fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   refreshProfile: () => Promise<void>
@@ -83,6 +87,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [orgLogoUpdatedAt, setOrgLogoUpdatedAt] = useState<string | null>(null)
   const [orgLogoConfigured, setOrgLogoConfigured] = useState(false)
   const [isGuestPreview, setIsGuestPreview] = useState(() => readGuestPreviewSession())
+  const [guestGroupBlueprintVariants, setGuestGroupBlueprintVariants] = useState(
+    () => readGuestGroupBlueprintVariants()
+  )
 
   const enterGuestPreview = useCallback(() => {
     writeGuestPreviewSession(true)
@@ -470,6 +477,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
+  const updateGroupBlueprintVariants = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser) {
+      if (isGuestPreview) {
+        writeGuestGroupBlueprintVariants(enabled)
+        setGuestGroupBlueprintVariants(enabled)
+        return true
+      }
+      return false
+    }
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ group_blueprint_variants: enabled })
+      .eq('id', activeUser.id)
+
+    if (error) {
+      console.error('Error updating group blueprint variants setting:', error)
+      return false
+    }
+
+    setProfile(prev => prev ? { ...prev, group_blueprint_variants: enabled } : null)
+    return true
+  }, [isGuestPreview])
+
   const updateDfpDisplayEnabled = useCallback(async (enabled: boolean): Promise<boolean> => {
     const activeProfile = profileRef.current
     if (activeProfile?.role !== 'super-admin') return false
@@ -574,6 +606,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isSuperAdmin = profile?.role === 'super-admin'
   const isPending = profile?.role === 'pending'
   const isGhostMode = profile?.ghost_mode ?? false
+  const groupBlueprintVariants =
+    profile?.group_blueprint_variants ?? (guestPreviewActive ? guestGroupBlueprintVariants : false)
   const guestPreviewActive = !user && isGuestPreview
   const canModifyBlueprints = guestPreviewActive || (!!profile && profile.role !== 'pending')
   const isApproved = !!profile && profile.role !== 'pending'
@@ -623,6 +657,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateRsiHandle,
       updateGhostMode,
       updateCraftDeductInventory,
+      updateGroupBlueprintVariants,
+      groupBlueprintVariants,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       refreshProfile,
@@ -663,6 +699,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateRsiHandle,
       updateGhostMode,
       updateCraftDeductInventory,
+      updateGroupBlueprintVariants,
+      groupBlueprintVariants,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       refreshProfile,

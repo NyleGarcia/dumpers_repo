@@ -21,9 +21,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Use the quality sliders to preview how resource quality affects final stats and DFP pricing',
       'Add a blueprint to your order draft from the detail view — continue on Custom Orders',
       'Browse other members\' blueprint collections from the member picker (hidden in Ghost Mode)',
+      'Optional Display setting: group FPS weapon and armor variants into expandable family cards (off by default; only affects visible FPS items on this page)',
       'Offline Mode: acquired marks save locally until you sign in',
     ],
-    relatesTo: ['Mission Tracker', 'Resource Tracker', 'Custom Orders'],
+    relatesTo: ['Mission Tracker', 'Resource Tracker', 'Custom Orders', 'Settings'],
   },
   {
     id: 'targets',

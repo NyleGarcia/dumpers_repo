@@ -15,6 +15,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updateRsiHandle: _updateRsiHandle,
     updateGhostMode,
     updateCraftDeductInventory,
+    updateGroupBlueprintVariants,
+    groupBlueprintVariants,
     updateDfpDisplayEnabled,
     dfpDisplayEnabled,
     autoApproveEnabled,
@@ -29,7 +31,9 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [craftDeductInventory, setCraftDeductInventory] = useState(
     profile?.craft_deduct_inventory ?? false
   )
+  const [groupVariantsEnabled, setGroupVariantsEnabled] = useState(groupBlueprintVariants)
   const [savingCraftDeduct, setSavingCraftDeduct] = useState(false)
+  const [savingGroupBlueprintVariants, setSavingGroupBlueprintVariants] = useState(false)
   const [savingDfpDisplay, setSavingDfpDisplay] = useState(false)
   const [savingAutoApprove, setSavingAutoApprove] = useState(false)
   const [showWelcomeAlways, setShowWelcomeAlways] = useState(false)
@@ -97,10 +101,12 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setRsiHandle(profile?.rsi_handle || '')
     setGhostMode(profile?.ghost_mode ?? false)
     setCraftDeductInventory(profile?.craft_deduct_inventory ?? false)
+    setGroupVariantsEnabled(groupBlueprintVariants)
   }, [
     profile?.rsi_handle,
     profile?.ghost_mode,
     profile?.craft_deduct_inventory,
+    groupBlueprintVariants,
   ])
 
   const handleValidateRsi = async () => {
@@ -232,6 +238,22 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setSavingCraftDeduct(false)
   }
 
+  const handleGroupBlueprintVariantsChange = async (enabled: boolean) => {
+    const previous = groupVariantsEnabled
+    setGroupVariantsEnabled(enabled)
+    setSavingGroupBlueprintVariants(true)
+    setMessage(null)
+
+    const success = await updateGroupBlueprintVariants(enabled)
+
+    if (!success) {
+      setGroupVariantsEnabled(previous)
+      setMessage({ type: 'error', text: 'Failed to update blueprint variant grouping.' })
+    }
+
+    setSavingGroupBlueprintVariants(false)
+  }
+
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'DELETE') return
 
@@ -351,6 +373,19 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 disabled={!isVerified}
               />
             </div>
+          </SettingsSection>
+
+          <SettingsSection
+            title="Display"
+            description="Customize how the Blueprints catalog is shown"
+          >
+            <SettingsToggle
+              label="Group FPS blueprint variants"
+              description="Collapse FPS weapon and armor color or skin variants into expandable family cards on the Blueprints page. Only groups variants currently visible — filters automatically split groups apart. Off by default."
+              checked={groupVariantsEnabled}
+              onChange={handleGroupBlueprintVariantsChange}
+              saving={savingGroupBlueprintVariants}
+            />
           </SettingsSection>
 
           <SettingsSection

@@ -2,6 +2,7 @@ import React from 'react'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
+import BlueprintVariantGroupCard from '../components/BlueprintVariantGroupCard'
 import BlueprintMaterialFilter from '../components/BlueprintMaterialFilter'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import RsiVerifiedBadge from '../components/RsiVerifiedBadge'
@@ -26,6 +27,7 @@ import {
   blueprintUsesMaterial,
   extractBlueprintResources,
 } from '../lib/blueprintResources'
+import { buildBlueprintGridItems } from '../lib/blueprintVariantGroups'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -72,6 +74,7 @@ export default function BlueprintsRoute() {
     isSuperAdmin,
     isGuestPreview,
     orgLogoUpdatedAt,
+    groupBlueprintVariants,
   } = useAuth()
   const isGuest = !user && isGuestPreview
 
@@ -99,6 +102,7 @@ export default function BlueprintsRoute() {
   const [loadingUserBlueprints, setLoadingUserBlueprints] = React.useState(false)
   const [acquisitionFilter, setAcquisitionFilter] = React.useState<'all' | 'acquired' | 'not_acquired'>('all')
   const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
+  const [expandedGroupKey, setExpandedGroupKey] = React.useState<string | null>(null)
 
   const { data: blueprints, isLoading } = useBlueprintData()
 
@@ -359,6 +363,95 @@ export default function BlueprintsRoute() {
       (a.blueprintName || '').localeCompare(b.blueprintName || '')
     )
   }, [materialFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize, selectedArmorWeight, selectedArmorSlot])
+
+  const blueprintGridItems = React.useMemo(
+    () => buildBlueprintGridItems(filteredBlueprints, groupBlueprintVariants),
+    [filteredBlueprints, groupBlueprintVariants]
+  )
+
+  const gridFilterSignature = React.useMemo(
+    () =>
+      [
+        searchTerm,
+        selectedMaterial,
+        selectedMainCategory,
+        selectedSubCategory,
+        selectedSize,
+        selectedArmorWeight,
+        selectedArmorSlot,
+        showOnlyRewards,
+        acquisitionFilter,
+        selectedUserId,
+        groupBlueprintVariants,
+      ].join('\0'),
+    [
+      searchTerm,
+      selectedMaterial,
+      selectedMainCategory,
+      selectedSubCategory,
+      selectedSize,
+      selectedArmorWeight,
+      selectedArmorSlot,
+      showOnlyRewards,
+      acquisitionFilter,
+      selectedUserId,
+      groupBlueprintVariants,
+    ]
+  )
+
+  React.useEffect(() => {
+    setExpandedGroupKey(null)
+  }, [gridFilterSignature])
+
+  const renderBlueprintCard = React.useCallback(
+    (bp) => {
+      const effectiveIsOrderable = resolveIsOrderable(bp, overridesMap)
+      const catalogReward = bp.isReward === true
+      const canTarget =
+        (isApproved || isGuest) &&
+        !displayAcquiredBlueprints[bp.internalName] &&
+        canAddBlueprintToTargetList(bp, overridesMap)
+
+      return (
+        <BlueprintCard
+          blueprint={bp}
+          onClick={(_clickedBp, e) => {
+            setModalOriginRect(e.currentTarget.getBoundingClientRect())
+            setSelectedBlueprint(bp)
+          }}
+          isAcquired={!!displayAcquiredBlueprints[bp.internalName]}
+          onToggleAcquired={() => toggleAcquired(bp.internalName)}
+          canModify={canModifyBlueprints}
+          isPending={isPending}
+          showTargetControl={canTarget}
+          isOnTargetList={isOnTargetList(bp.internalName)}
+          onToggleTarget={() => toggleTarget(bp.internalName)}
+          effectiveIsOrderable={effectiveIsOrderable}
+          catalogIsReward={catalogReward}
+          isSuperAdmin={isSuperAdmin && !isViewingOther}
+          onToggleOrderable={(next) =>
+            void setOrderable(bp.internalName, next, catalogReward)
+          }
+          ownerCount={blueprintOwnerCounts[bp.internalName]}
+        />
+      )
+    },
+    [
+      overridesMap,
+      isApproved,
+      isGuest,
+      displayAcquiredBlueprints,
+      toggleAcquired,
+      canModifyBlueprints,
+      isPending,
+      isOnTargetList,
+      toggleTarget,
+      isSuperAdmin,
+      isViewingOther,
+      setOrderable,
+      blueprintOwnerCounts,
+    ]
+  )
 
   const handleMainCategoryClick = (cat) => {
     if (selectedMainCategory === cat) {
@@ -716,38 +809,33 @@ export default function BlueprintsRoute() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full min-w-0">
-            {filteredBlueprints.map(bp => {
-              const effectiveIsOrderable = resolveIsOrderable(bp, overridesMap)
-              const catalogReward = bp.isReward === true
-              // Use display (viewer's) acquired status for canTarget check
-              // Allow both approved members AND offline/guest users to track
-              const canTarget =
-                (isApproved || isGuest) &&
-                !displayAcquiredBlueprints[bp.internalName] &&
-                canAddBlueprintToTargetList(bp, overridesMap)
+            {blueprintGridItems.map((item) => {
+              if (item.kind === 'single') {
+                return (
+                  <React.Fragment key={item.blueprint.internalName}>
+                    {renderBlueprintCard(item.blueprint)}
+                  </React.Fragment>
+                )
+              }
+
+              const acquiredCount = item.members.filter(
+                (bp) => displayAcquiredBlueprints[bp.internalName]
+              ).length
 
               return (
-                <BlueprintCard
-                  key={bp.internalName}
-                  blueprint={bp}
-                  onClick={(_bp, e) => {
-                    setModalOriginRect(e.currentTarget.getBoundingClientRect())
-                    setSelectedBlueprint(bp)
-                  }}
-                  isAcquired={!!displayAcquiredBlueprints[bp.internalName]}
-                  onToggleAcquired={() => toggleAcquired(bp.internalName)}
-                  canModify={canModifyBlueprints}
-                  isPending={isPending}
-                  showTargetControl={canTarget}
-                  isOnTargetList={isOnTargetList(bp.internalName)}
-                  onToggleTarget={() => toggleTarget(bp.internalName)}
-                  effectiveIsOrderable={effectiveIsOrderable}
-                  catalogIsReward={catalogReward}
-                  isSuperAdmin={isSuperAdmin && !isViewingOther}
-                  onToggleOrderable={(next) =>
-                    void setOrderable(bp.internalName, next, catalogReward)
+                <BlueprintVariantGroupCard
+                  key={item.familyKey}
+                  familyLabel={item.familyLabel}
+                  categoryName={item.categoryName}
+                  members={item.members}
+                  expanded={expandedGroupKey === item.familyKey}
+                  onToggle={() =>
+                    setExpandedGroupKey((current) =>
+                      current === item.familyKey ? null : item.familyKey
+                    )
                   }
-                  ownerCount={blueprintOwnerCounts[bp.internalName]}
+                  acquiredCount={acquiredCount}
+                  renderBlueprintCard={renderBlueprintCard}
                 />
               )
             })}

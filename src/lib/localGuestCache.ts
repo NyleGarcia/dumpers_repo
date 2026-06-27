@@ -44,6 +44,7 @@ export interface GuestTargetListData {
 }
 
 export const GUEST_RESOURCES_STORAGE_KEY = 'dumpers_guest_resources'
+export const GUEST_GROUP_BLUEPRINT_VARIANTS_KEY = 'dumpers_guest_group_blueprint_variants'
 
 export interface GuestResourceEntry {
   resource_key: string
@@ -128,6 +129,7 @@ export function clearAllGuestLocalData(): void {
   localStorage.removeItem(GUEST_TARGET_LIST_STORAGE_KEY)
   localStorage.removeItem(GUEST_MISSION_PREFS_STORAGE_KEY)
   localStorage.removeItem(GUEST_RESOURCES_STORAGE_KEY)
+  localStorage.removeItem(GUEST_GROUP_BLUEPRINT_VARIANTS_KEY)
   localStorage.removeItem(MINING_TRACKER_STORAGE_KEY)
   localStorage.removeItem('dumpers_mining_tracker_multiplier')
   localStorage.removeItem(GUEST_CACHE_VERSION_KEY)
@@ -363,4 +365,18 @@ export function sanitizeMigrationBatch<T>(items: T[]): T[] {
 export function sanitizeBlueprintId(id: unknown): string | null {
   if (typeof id !== 'string') return null
   return normalizeGuestBlueprintId(id)
+}
+
+export function readGuestGroupBlueprintVariants(): boolean {
+  if (typeof localStorage === 'undefined') return false
+  return localStorage.getItem(GUEST_GROUP_BLUEPRINT_VARIANTS_KEY) === '1'
+}
+
+export function writeGuestGroupBlueprintVariants(enabled: boolean): void {
+  if (typeof localStorage === 'undefined') return
+  if (enabled) {
+    localStorage.setItem(GUEST_GROUP_BLUEPRINT_VARIANTS_KEY, '1')
+  } else {
+    localStorage.removeItem(GUEST_GROUP_BLUEPRINT_VARIANTS_KEY)
+  }
 }

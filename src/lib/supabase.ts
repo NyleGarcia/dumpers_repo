@@ -25,6 +25,7 @@ export interface Profile {
   approved_by: string | null
   ghost_mode: boolean
   craft_deduct_inventory: boolean
+  group_blueprint_variants: boolean
 }
 
 export function getDisplayName(profile: Profile | null): string {

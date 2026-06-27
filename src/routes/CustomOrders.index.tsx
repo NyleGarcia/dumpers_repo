@@ -104,6 +104,7 @@ function profileFromOrderFields(
     approved_by: null,
     ghost_mode: false,
     craft_deduct_inventory: false,
+    group_blueprint_variants: false,
   }
 }
 
