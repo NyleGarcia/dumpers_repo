@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useSearch, useNavigate } from '@tanstack/react-router'
+import { setAnalyticsSubTool } from '../lib/analytics'
 import ArchiveWelcome from '../components/archive/ArchiveWelcome'
 import ComponentsSection from '../components/archive/ComponentsSection'
 import OrdnanceSection from '../components/archive/OrdnanceSection'
@@ -27,6 +28,10 @@ export default function ArchivePage() {
   const navigate = useNavigate()
 
   const currentSection: ArchiveSection = searchParams.section || 'welcome'
+
+  useEffect(() => {
+    setAnalyticsSubTool(currentSection)
+  }, [currentSection])
 
   const setSection = useCallback(
     (section: ArchiveSection) => {

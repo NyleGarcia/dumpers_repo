@@ -16,6 +16,7 @@ import {
 import BrowseMissionsView from '../components/BrowseMissionsView'
 import MissionLocationTags from '../components/MissionLocationTags'
 import { readMissionTrackerUiState, writeMissionTrackerUiState } from '../lib/missionTrackerUiState'
+import { setAnalyticsSubTool } from '../lib/analytics'
 
 type ViewMode = 'tracker' | 'browse'
 
@@ -248,6 +249,10 @@ export default function TargetsRoute() {
       collapsedBlueprintIds: [...collapsedIds],
     })
   }, [viewMode, collapsedIds])
+
+  useEffect(() => {
+    setAnalyticsSubTool(viewMode === 'browse' ? 'browse_missions' : 'my_tracker')
+  }, [viewMode])
 
   const toggleCollapsed = useCallback((id: string) => {
     setCollapsedIds(prev => {

@@ -22,6 +22,7 @@ import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useBlueprintData } from './blueprints'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
 import { useAuth } from '../contexts/AuthContext'
+import { setAnalyticsSubTool } from '../lib/analytics'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { filterOrderableBlueprints } from '../lib/blueprintOrderable'
 import {
@@ -182,6 +183,10 @@ export default function CustomOrdersRoute() {
   useEffect(() => {
     void loadOrders()
   }, [loadOrders])
+
+  useEffect(() => {
+    setAnalyticsSubTool(listTab)
+  }, [listTab])
 
   const handleStatusChange = async (orderId: string, status: CustomOrderStatus) => {
     const result = await updateCustomOrderStatus(orderId, status)

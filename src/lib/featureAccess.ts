@@ -15,6 +15,7 @@ export type FeatureId =
   | 'site_total'
   | 'support_tickets'
   | 'support_dashboard'
+  | 'site_analytics'
   | 'mining_tracker'
 
 export interface VisibilityContext {
@@ -108,6 +109,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'support_dashboard':
       return ctx.isOfficerOrAbove
+
+    case 'site_analytics':
+      return ctx.isSuperAdmin
 
     case 'mining_tracker':
       return !!ctx.role

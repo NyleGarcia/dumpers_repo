@@ -12,6 +12,7 @@ import DiscordSettingsModal from './DiscordSettingsModal'
 import WelcomeModal from './WelcomeModal'
 import SupportTicketsModal from './SupportTicketsModal'
 import AppChrome from './layout/AppChrome'
+import AnalyticsTracker from './AnalyticsTracker'
 
 export default function Layout() {
   const {
@@ -97,6 +98,7 @@ export default function Layout() {
 
   return (
     <>
+      <AnalyticsTracker />
       <AppChrome
         navGroups={navGroups}
         displayName={displayName}

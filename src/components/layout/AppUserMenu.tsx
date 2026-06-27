@@ -372,6 +372,16 @@ export default function AppUserMenu({
               </>
             )}
 
+            {isSuperAdmin && (
+              <Link
+                to="/analytics"
+                onClick={close}
+                className="block w-full px-4 py-2 text-left text-violet-400 hover:bg-slate-700 transition-colors"
+              >
+                Site Analytics
+              </Link>
+            )}
+
             {/* Officer Tools (not for super-admins - they have DB Actions) */}
             {!isGhostMode && isOfficerOrAbove && !isSuperAdmin && (
               <>

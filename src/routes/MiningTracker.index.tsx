@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import { setAnalyticsSubTool } from '../lib/analytics'
 import { useMiningData, type MiningData } from '../hooks/useArchiveData'
 import { useMiningTracker } from '../hooks/useMiningTracker'
 import { useAuth } from '../contexts/AuthContext'
@@ -119,6 +120,12 @@ export default function MiningTrackerRoute() {
       setViewMode('ledger')
     }
   }, [search.view])
+
+  useEffect(() => {
+    const subTool =
+      viewMode === 'guide' ? 'mining_guide' : viewMode === 'ledger' ? 'ledger' : 'rs_tracker'
+    setAnalyticsSubTool(subTool)
+  }, [viewMode])
 
   useEffect(() => {
     if (!search.ore || !data || search.add !== true) return

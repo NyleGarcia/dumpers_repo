@@ -118,6 +118,9 @@ export default function AppChrome({
 
       <footer className="site-footer site-shell mt-8 space-y-1">
         <p>{SITE_COPYRIGHT}</p>
+        <p className="text-xs text-slate-600">
+          Anonymous usage metrics (tool visits and active time) help improve the site. Ghost Mode sessions are not tracked.
+        </p>
         <DfpOptOutFooter />
       </footer>
     </div>

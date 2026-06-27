@@ -11,6 +11,7 @@ import { SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
+import { setAnalyticsSubTool } from '../lib/analytics'
 import { inventoryLineKey } from '../lib/inventoryStock'
 import {
   type GuestResourceEntry,
@@ -43,6 +44,10 @@ export default function ResourceTrackerRoute() {
   useEffect(() => {
     if ((isGhostMode || isGuest) && activeTab === 'site') setActiveTab('personal')
   }, [isGhostMode, isGuest, activeTab])
+
+  useEffect(() => {
+    setAnalyticsSubTool(activeTab === 'site' ? 'site_total' : 'my_resources')
+  }, [activeTab])
 
   // Load guest resources from localStorage on mount / guest enter
   useEffect(() => {

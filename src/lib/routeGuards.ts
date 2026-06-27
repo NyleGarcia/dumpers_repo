@@ -22,6 +22,16 @@ export function requireMinRole(minRole: UserRole) {
   }
 }
 
+export function requireSuperAdmin() {
+  return ({ context }: { context: { auth: RouterAuthContext } }) => {
+    if (context.auth.loading) return
+
+    if (context.auth.profile?.role !== 'super-admin') {
+      throw redirect({ to: '/' })
+    }
+  }
+}
+
 export function requireFeature(featureId: FeatureId) {
   return ({ context }: { context: { auth: RouterAuthContext } }) => {
     if (context.auth.loading) return

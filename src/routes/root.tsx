@@ -11,7 +11,8 @@ import SupportDashboardRoute from './SupportDashboard.index'
 import GuestLockedRoute from './GuestLocked.index'
 import MiningTrackerRoute from './MiningTracker.index'
 import DiscordSubscribeRoute from './DiscordSubscribe.index'
-import { requireFeature } from '../lib/routeGuards'
+import AnalyticsRoute from './Analytics.index'
+import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
 const rootRoute = createRootRoute({
@@ -97,6 +98,13 @@ const guestLockedRoute = createRoute({
   }),
 })
 
+const analyticsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/analytics',
+  component: AnalyticsRoute,
+  beforeLoad: requireSuperAdmin(),
+})
+
 const discordSubscribeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/discord-subscribe',
@@ -113,6 +121,7 @@ export const routeTree = rootRoute.addChildren([
   archiveRoute,
   supportDashboardRoute,
   guestLockedRoute,
+  analyticsRoute,
   discordSubscribeRoute,
 ])
 
