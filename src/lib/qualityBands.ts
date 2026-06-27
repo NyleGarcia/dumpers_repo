@@ -6,6 +6,7 @@
  * Data is now extracted directly from game files via parse-extracted-data.mjs
  */
 
+import { SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import { stockQualityTiersForResource } from '../config/dfp'
 import { isSalvageResource } from '../config/extraResources'
 import { isHarvestResource } from '../config/resourceTypes'
@@ -179,6 +180,59 @@ export function getAllResourcesWithBands(): string[] {
 /** True when a resource normally has mined/refined quality tiers (not salvage-only Q0). */
 export function supportsPurchasedQuality(resourceKey: string, label?: string): boolean {
   return stockQualityTiersForResource(resourceKey, label).length > 1
+}
+
+/** Valid ledger/calculator quality values for a resource (Purchased Q0 + bands, or stock tiers). */
+export function getLedgerQualityOptions(resourceKey: string, resourceLabel: string): number[] {
+  const tiers = stockQualityTiersForResource(resourceKey, resourceLabel)
+  const selectedIsSalvage = tiers.length === 1 && tiers[0] === SALVAGE_ORDER_MIN_QUALITY
+  if (selectedIsSalvage) return [SALVAGE_ORDER_MIN_QUALITY]
+
+  const bands = getResourceBands(resourceLabel)
+  const showPurchased = supportsPurchasedQuality(resourceKey, resourceLabel)
+  if (bands && bands.length > 0) {
+    return [...(showPurchased ? [PURCHASED_STOCK_QUALITY] : []), ...bands]
+  }
+  return [...tiers]
+}
+
+/** Snap quality to a known band tier (Q0 + game bands, or stock tiers) for ledger storage. */
+export function resolveLedgerQuality(
+  resourceKey: string,
+  resourceLabel: string,
+  quality: number
+): number {
+  const options = getLedgerQualityOptions(resourceKey, resourceLabel)
+  if (options.includes(quality)) return quality
+
+  if (quality === PURCHASED_STOCK_QUALITY && options.includes(PURCHASED_STOCK_QUALITY)) {
+    return PURCHASED_STOCK_QUALITY
+  }
+
+  const bands = getResourceBands(resourceLabel)
+  if (bands && bands.length > 0) {
+    let closest = bands[0]
+    let minDist = Math.abs(quality - closest)
+    for (const band of bands) {
+      const dist = Math.abs(quality - band)
+      if (dist < minDist) {
+        minDist = dist
+        closest = band
+      }
+    }
+    return closest
+  }
+
+  let closest = options[0] ?? DEFAULT_QUALITY
+  let minDist = Math.abs(quality - closest)
+  for (const tier of options) {
+    const dist = Math.abs(quality - tier)
+    if (dist < minDist) {
+      minDist = dist
+      closest = tier
+    }
+  }
+  return closest
 }
 
 /** User-facing quality label for Resource Tracker stock cards and add panel preview. */

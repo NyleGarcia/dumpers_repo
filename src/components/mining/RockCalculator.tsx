@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ORE_SIGNATURES } from '../../lib/miningConstants'
 import {
   depositTypeLabel,
@@ -11,18 +11,39 @@ import { normalizeMiningOreName } from '../../lib/handMineables'
 import type { MiningTrackerEntry } from '../../lib/localGuestCache'
 import {
   buildDefaultPercentSlots,
+  buildDefaultQualitySlots,
   calculateMaterialDfpValue,
   calculateMaterialScu,
   compositionSlotKey,
   formatCompositionRangeHint,
-  formatCompositionRowLabel,
   formatMaterialScu,
   formatRockDfpValue,
+  formatRockQualityOptionLabel,
+  formatRockQualitySelectTitle,
+  formatScannerBandLabel,
+  formatScannerBandTooltip,
   isPercentOverLimit,
+  oreResourceKeyFromElementName,
   parsePercentInput,
+  parseQualitySlotValue,
   parseTotalScuInput,
   sumPercentages,
 } from '../../lib/rockCalculator'
+import {
+  getResourceBands,
+  PURCHASED_STOCK_QUALITY,
+  supportsPurchasedQuality,
+} from '../../lib/qualityBands'
+import { stockQualityTiersForResource } from '../../config/dfp'
+import {
+  appendCalculatorRowsToLedger,
+  buildCalculatorLedgerRows,
+  formatCalculatorLedgerMergeMessage,
+} from '../../lib/rockCalculatorLedger'
+import { fetchMiningLedgers } from '../../lib/miningLedgerOps'
+import type { MiningLedgerListItem } from '../../lib/miningLedger'
+import { useAuth } from '../../contexts/AuthContext'
+import { useResourceCatalog } from '../../hooks/useResourceCatalog'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
   (a, b) => a.localeCompare(b)
@@ -40,11 +61,21 @@ interface RockCalculatorProps {
 }
 
 export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorProps) {
+  const { user, profile, isGuestPreview } = useAuth()
+  const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
+  const { catalog } = useResourceCatalog()
+
   const [oreName, setOreName] = useState('')
   const [depositType, setDepositType] = useState<DepositType>('asteroid')
   const [selectedLocation, setSelectedLocation] = useState<string | undefined>(undefined)
   const [totalScuInput, setTotalScuInput] = useState('')
   const [percentBySlot, setPercentBySlot] = useState<Record<string, string>>({})
+  const [qualityBySlot, setQualityBySlot] = useState<Record<string, string>>({})
+
+  const [ledgers, setLedgers] = useState<MiningLedgerListItem[]>([])
+  const [selectedLedgerId, setSelectedLedgerId] = useState('')
+  const [ledgerSaving, setLedgerSaving] = useState(false)
+  const [ledgerToast, setLedgerToast] = useState<string | null>(null)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [searchOpen, setSearchOpen] = useState(false)
@@ -63,6 +94,17 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     setSearchQuery(loadEntry.oreName)
     setTotalScuInput('')
   }, [loadEntry, loadToken])
+
+  useEffect(() => {
+    if (!isRsiVerified) return
+    void fetchMiningLedgers().then(({ data }) => setLedgers(data))
+  }, [isRsiVerified])
+
+  useEffect(() => {
+    if (!ledgerToast) return
+    const timer = window.setTimeout(() => setLedgerToast(null), 3500)
+    return () => window.clearTimeout(timer)
+  }, [ledgerToast])
 
   const searchOptions = useMemo(() => searchRsOres(searchQuery), [searchQuery])
 
@@ -126,6 +168,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
   useEffect(() => {
     if (!composition?.compositionParts.length) return
     setPercentBySlot(buildDefaultPercentSlots(composition.compositionParts))
+    setQualityBySlot(buildDefaultQualitySlots(composition.compositionParts))
   }, [compositionKey, loadToken, composition?.compositionParts])
 
   const totalScu = parseTotalScuInput(totalScuInput)
@@ -135,6 +178,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     return composition.compositionParts.map((part, index) => {
       const slotKey = compositionSlotKey(index)
       const percent = parsePercentInput(percentBySlot[slotKey] ?? '0')
+      const quality = parseQualitySlotValue(qualityBySlot[slotKey] ?? '')
       const scu = totalScu != null ? calculateMaterialScu(totalScu, percent) : null
       const dfp =
         totalScu != null && scu != null
@@ -145,16 +189,54 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
         part,
         index,
         percent,
+        quality,
         scu,
         dfp,
-        label: formatCompositionRowLabel(part, composition.compositionParts),
+        label: formatScannerBandLabel(part, index, composition.compositionParts),
+        bandTooltip: formatScannerBandTooltip(part, index, composition.compositionParts),
         rangeHint: formatCompositionRangeHint(part),
       }
     })
-  }, [composition, percentBySlot, totalScu])
+  }, [composition, percentBySlot, qualityBySlot, totalScu])
 
   const percentTotal = sumPercentages(materialRows.map((row) => row.percent))
   const percentOver = isPercentOverLimit(percentTotal)
+
+  const hasLedgerRowsToAdd = materialRows.some((row) => row.percent > 0 && (row.scu ?? 0) > 0)
+  const canAddToLedger =
+    isRsiVerified &&
+    selectedLedgerId !== '' &&
+    totalScu != null &&
+    hasLedgerRowsToAdd &&
+    !ledgerSaving
+
+  const handleAddToLedger = useCallback(async () => {
+    if (!canAddToLedger) return
+    setLedgerSaving(true)
+    setLedgerToast(null)
+
+    const rows = buildCalculatorLedgerRows(
+      materialRows.map((row) => ({
+        elementName: row.part.elementName,
+        scu: row.scu ?? 0,
+        percent: row.percent,
+        quality: row.quality,
+      })),
+      catalog
+    )
+
+    const { error, mergedCount, addedCount } = await appendCalculatorRowsToLedger(
+      selectedLedgerId,
+      rows
+    )
+    setLedgerSaving(false)
+
+    if (error) {
+      setLedgerToast(error)
+      return
+    }
+    setLedgerToast(formatCalculatorLedgerMergeMessage(mergedCount, addedCount))
+  }, [canAddToLedger, materialRows, catalog, selectedLedgerId])
 
   const handleSelectOre = (name: string) => {
     setOreName(name)
@@ -275,6 +357,46 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
             </div>
           </div>
 
+          {isRsiVerified && (
+            <div>
+              <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
+                Mining ledger
+              </label>
+              <div className="flex gap-1.5">
+                <select
+                  value={selectedLedgerId}
+                  onChange={(e) => setSelectedLedgerId(e.target.value)}
+                  className="site-input flex-1 min-w-0 px-1.5 py-1.5 text-xs truncate"
+                  aria-label="Select mining ledger"
+                >
+                  <option value="">No Ledger Selected</option>
+                  {ledgers.map((ledger) => (
+                    <option key={ledger.id} value={ledger.id}>
+                      {ledger.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => void handleAddToLedger()}
+                  disabled={!canAddToLedger}
+                  className="shrink-0 px-2 py-1.5 text-[10px] font-semibold rounded-md bg-orange-600/90 text-white hover:bg-orange-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  {ledgerSaving ? 'Adding…' : 'Add to Ledger'}
+                </button>
+              </div>
+              {ledgerToast ? (
+                <p
+                  className={`mt-1 text-[10px] ${
+                    /^(Added|Merged)/.test(ledgerToast) ? 'text-emerald-400' : 'text-red-400'
+                  }`}
+                >
+                  {ledgerToast}
+                </p>
+              ) : null}
+            </div>
+          )}
+
           {showDepositToggle && (
             <div>
               <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
@@ -325,7 +447,9 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[10px] uppercase tracking-wide text-slate-500">Materials</p>
-                <div className="flex gap-2 text-[9px] uppercase tracking-wide text-slate-600 shrink-0">
+                <div className="flex items-center justify-end gap-1.5 text-[9px] uppercase tracking-wide text-slate-600 shrink-0">
+                  <span className="w-[3.25rem] text-right">%</span>
+                  <span className="w-[2rem] text-center">Q</span>
                   <span className="w-[3.25rem] text-right">cSCU</span>
                   <span className="w-[3.5rem] text-right">DFP</span>
                 </div>
@@ -334,13 +458,16 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                 {materialRows.map((row) => (
                   <li key={row.slotKey} className="space-y-0.5">
                     <div className="flex items-baseline justify-between gap-1">
-                      <span className="text-xs text-slate-200 truncate" title={row.label}>
+                      <span
+                        className="text-xs text-slate-200 truncate"
+                        title={row.bandTooltip ? `${row.label} (${row.bandTooltip})` : row.label}
+                      >
                         {row.label}
                       </span>
                       <span className="text-[10px] text-slate-500 shrink-0">{row.rangeHint}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <div className="relative flex-1 min-w-0">
+                      <div className="relative w-[3.25rem] shrink-0">
                         <input
                           type="number"
                           min={0}
@@ -354,13 +481,20 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                               [row.slotKey]: e.target.value,
                             }))
                           }
-                          className="site-input w-full px-2 py-1 pr-6 text-xs font-mono tabular-nums"
+                          className="site-input w-full px-1 py-1 pr-3.5 text-[10px] font-mono tabular-nums text-right"
                           aria-label={`${row.label} percentage`}
                         />
-                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 pointer-events-none">
+                        <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
                           %
                         </span>
                       </div>
+                      <MaterialQualitySelect
+                        elementName={row.part.elementName}
+                        value={qualityBySlot[row.slotKey] ?? String(row.quality)}
+                        onChange={(next) =>
+                          setQualityBySlot((prev) => ({ ...prev, [row.slotKey]: next }))
+                        }
+                      />
                       <span
                         className="w-[3.25rem] text-right text-[10px] font-mono tabular-nums text-amber-300 shrink-0"
                         title="cSCU in rock"
@@ -377,7 +511,10 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                   </li>
                 ))}
               </ul>
-              <p className="text-[10px] text-slate-600">DFP uses Purchased (Q0) catalog prices.</p>
+              <p className="text-[10px] text-slate-600">
+                DFP uses Purchased (Q0) catalog prices. Q band applies to ledger export only
+                (Band 2 default; matching ore + quality merges cSCU).
+              </p>
             </div>
           ) : null}
 
@@ -405,5 +542,62 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
         </div>
       </div>
     </aside>
+  )
+}
+
+const MATERIAL_QUALITY_SELECT_CLASS =
+  'w-[2rem] shrink-0 px-0.5 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
+
+interface MaterialQualitySelectProps {
+  elementName: string
+  value: string
+  onChange: (value: string) => void
+}
+
+function MaterialQualitySelect({ elementName, value, onChange }: MaterialQualitySelectProps) {
+  const resourceKey = oreResourceKeyFromElementName(elementName)
+  const bands = getResourceBands(elementName)
+  const showPurchased = supportsPurchasedQuality(resourceKey, elementName)
+  const qualityNum = Number.parseInt(value, 10)
+  const title = formatRockQualitySelectTitle(elementName, qualityNum, bands)
+
+  if (bands) {
+    return (
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={MATERIAL_QUALITY_SELECT_CLASS}
+        aria-label={`${elementName} quality band`}
+        title={title}
+      >
+        {showPurchased && (
+          <option value={PURCHASED_STOCK_QUALITY}>
+            {formatRockQualityOptionLabel(PURCHASED_STOCK_QUALITY)}
+          </option>
+        )}
+        {bands.map((bandValue, idx) => (
+          <option key={idx} value={bandValue}>
+            {formatRockQualityOptionLabel(bandValue, idx)}
+          </option>
+        ))}
+      </select>
+    )
+  }
+
+  const tiers = stockQualityTiersForResource(resourceKey, elementName)
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={MATERIAL_QUALITY_SELECT_CLASS}
+      aria-label={`${elementName} quality`}
+      title={title}
+    >
+      {tiers.map((tier) => (
+        <option key={tier} value={tier}>
+          {formatRockQualityOptionLabel(tier)}
+        </option>
+      ))}
+    </select>
   )
 }

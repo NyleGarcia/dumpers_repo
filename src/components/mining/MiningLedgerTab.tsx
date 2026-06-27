@@ -4,7 +4,9 @@ import SiteTooltip from '../SiteTooltip'
 import { useAuth } from '../../contexts/AuthContext'
 import { useResourceCatalog } from '../../hooks/useResourceCatalog'
 import { useMiningLedger } from '../../hooks/useMiningLedger'
-import { DEFAULT_STOCK_QUALITY } from '../../config/dfp'
+import ResourceQualitySelect, {
+  getDefaultQualityForResource,
+} from '../ResourceQualitySelect'
 import { getResourceType, isGemResource, resourceLabelClassName } from '../../config/resourceTypes'
 import type { BlueprintResourceRow } from '../../lib/operations'
 import {
@@ -43,6 +45,7 @@ import {
   sanitizeRsiHandleInput,
   type CrewRsiAlertState,
 } from '../../lib/rsiHandleCheck'
+import { resolveLedgerQuality } from '../../lib/qualityBands'
 
 interface MiningLedgerTabProps {
   isGuestPreview: boolean
@@ -83,6 +86,7 @@ function miningRowResourcePatch(
   return {
     resourceKey,
     resourceLabel,
+    quality: Number(getDefaultQualityForResource(resourceKey, resourceLabel)),
     unrefinedCscu: nextIsGem
       ? Math.max(0, Math.trunc(prevRow.unrefinedCscu))
       : prevRow.unrefinedCscu,
@@ -1069,7 +1073,12 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                         id: newLedgerRowId(),
                         resourceKey: oreEntries[0]?.resource_key ?? '',
                         resourceLabel: oreEntries[0]?.label ?? '',
-                        quality: DEFAULT_STOCK_QUALITY,
+                        quality: Number(
+                          getDefaultQualityForResource(
+                            oreEntries[0]?.resource_key ?? '',
+                            oreEntries[0]?.label ?? ''
+                          )
+                        ),
                         unrefinedCscu: 0,
                         yieldActual: null,
                       },
@@ -1090,7 +1099,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
             <table className="w-full min-w-[52rem] text-xs table-fixed">
               <colgroup>
                 <col style={{ width: '9rem' }} />
-                <col style={{ width: '4rem' }} />
+                <col style={{ width: '9rem' }} />
                 <col style={{ width: '6.5rem' }} />
                 <col style={{ width: '6.5rem' }} />
                 <col style={{ width: '6.5rem' }} />
@@ -1137,13 +1146,19 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                         />
                       </td>
                       <td className="py-1 pr-2">
-                        <input
-                          type="number"
-                          value={row.quality}
-                          onChange={(e) =>
-                            patchMiningRow(row.id, { quality: Number(e.target.value) || 0 })
+                        <ResourceQualitySelect
+                          resourceKey={row.resourceKey}
+                          resourceLabel={row.resourceLabel}
+                          quality={String(row.quality)}
+                          onQualityChange={(q) =>
+                            patchMiningRow(row.id, {
+                              quality: resolveLedgerQuality(
+                                row.resourceKey,
+                                row.resourceLabel,
+                                Number(q)
+                              ),
+                            })
                           }
-                          className="site-input w-16 max-w-16 shrink-0 px-1 py-0.5 text-xs"
                         />
                       </td>
                       <td className="py-1 pr-2">

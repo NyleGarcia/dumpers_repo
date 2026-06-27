@@ -5,7 +5,7 @@ export const MINING_LEDGER_SCHEMA_VERSION = 1 as const
 export const MINING_LEDGER_YIELD_FACTOR = 0.45
 /** Default crew share count when a member is added (explicit 0 = alternate compensation). */
 export const DEFAULT_CREW_SHARES = 1 as const
-/** Ledger ore defaults always use store-purchased Q0 DFP (no quality picker). */
+/** Ledger DFP always uses store-purchased Q0; row quality tracks mined band for merge/sorting only. */
 export const MINING_LEDGER_PRICE_QUALITY = 0 as const
 
 export interface MiningLedgerMiningRow {
@@ -181,6 +181,42 @@ export function clampCrewPaidAuec(paid: number, payoutActual: number): number {
 
 export function gemCountFromRow(unrefinedCscu: number): number {
   return Math.max(0, Math.trunc(unrefinedCscu))
+}
+
+/** cSCU amounts in ledger rows use 0.001 precision. */
+export function roundLedgerCscu(value: number): number {
+  if (!Number.isFinite(value)) return 0
+  return Math.round(value * 1000) / 1000
+}
+
+/** Combine incoming mining rows with existing rows matching resourceKey + quality. */
+export function mergeMiningRowsByResourceQuality(
+  existing: MiningLedgerMiningRow[],
+  incoming: MiningLedgerMiningRow[]
+): { miningRows: MiningLedgerMiningRow[]; mergedCount: number; addedCount: number } {
+  const rows = existing.map((row) => ({ ...row }))
+  let mergedCount = 0
+  let addedCount = 0
+
+  for (const inc of incoming) {
+    const matchIdx = rows.findIndex(
+      (row) => row.resourceKey === inc.resourceKey && row.quality === inc.quality
+    )
+    if (matchIdx >= 0) {
+      const prev = rows[matchIdx]
+      rows[matchIdx] = {
+        ...prev,
+        resourceLabel: inc.resourceLabel || prev.resourceLabel,
+        unrefinedCscu: roundLedgerCscu(prev.unrefinedCscu + inc.unrefinedCscu),
+      }
+      mergedCount++
+    } else {
+      rows.push(inc)
+      addedCount++
+    }
+  }
+
+  return { miningRows: rows, mergedCount, addedCount }
 }
 
 /** Parse crew shares; missing/invalid → DEFAULT_CREW_SHARES (explicit 0 kept for alternate pay). */

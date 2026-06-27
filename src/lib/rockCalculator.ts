@@ -1,6 +1,11 @@
 import type { CompositionPart } from './miningClusterProfiles'
 import { pricingForResourceLine } from './orderPricing'
-import { MINING_LEDGER_PRICE_QUALITY } from './miningLedger'
+import {
+  DEFAULT_QUALITY,
+  getDefaultBandQuality,
+  getResourceBands,
+  PURCHASED_STOCK_QUALITY,
+} from './qualityBands'
 
 export const PERCENT_OVER_LIMIT = 100.001
 
@@ -37,15 +42,48 @@ export function parseTotalScuInput(raw: string): number | null {
   return value
 }
 
+const SCANNER_BAND_SUFFIXES = ['High', 'Low'] as const
+
+/** In-game scanner label: duplicate element slots become High / Low by qualityScale. */
+export function formatScannerBandLabel(
+  part: CompositionPart,
+  index: number,
+  allParts: CompositionPart[]
+): string {
+  const sameElement = allParts
+    .map((p, i) => ({ part: p, index: i }))
+    .filter(({ part: p }) => p.elementName === part.elementName)
+
+  if (sameElement.length <= 1) return part.elementName
+
+  const sorted = [...sameElement].sort((a, b) => b.part.qualityScale - a.part.qualityScale)
+  const rank = sorted.findIndex(({ index: i }) => i === index)
+  if (rank < 0) return part.elementName
+
+  const suffix =
+    rank < SCANNER_BAND_SUFFIXES.length
+      ? SCANNER_BAND_SUFFIXES[rank]
+      : `Band ${rank + 1}`
+  return `${part.elementName} · ${suffix}`
+}
+
+export function formatScannerBandTooltip(
+  part: CompositionPart,
+  index: number,
+  allParts: CompositionPart[]
+): string | undefined {
+  const duplicateCount = allParts.filter((p) => p.elementName === part.elementName).length
+  if (duplicateCount <= 1) return undefined
+  return `Q×${part.qualityScale}`
+}
+
+/** @deprecated Use formatScannerBandLabel with slot index. */
 export function formatCompositionRowLabel(
   part: CompositionPart,
   allParts: CompositionPart[]
 ): string {
-  const duplicateCount = allParts.filter((p) => p.elementName === part.elementName).length
-  if (duplicateCount > 1 || part.qualityScale !== 1) {
-    return `${part.elementName} (Q×${part.qualityScale})`
-  }
-  return part.elementName
+  const index = allParts.indexOf(part)
+  return formatScannerBandLabel(part, index >= 0 ? index : 0, allParts)
 }
 
 export function formatCompositionRangeHint(part: CompositionPart): string {
@@ -64,20 +102,54 @@ export function buildDefaultPercentSlots(parts: CompositionPart[]): Record<strin
   return initial
 }
 
-function oreResourceKey(elementName: string): string {
+/** Band 2 (or Q500 fallback) per composition slot when ore/location profile loads. */
+export function buildDefaultQualitySlots(parts: CompositionPart[]): Record<string, string> {
+  const initial: Record<string, string> = {}
+  parts.forEach((part, index) => {
+    initial[compositionSlotKey(index)] = String(getDefaultBandQuality(part.elementName))
+  })
+  return initial
+}
+
+export function parseQualitySlotValue(raw: string, fallback = DEFAULT_QUALITY): number {
+  const value = Number.parseInt(raw, 10)
+  return Number.isFinite(value) ? value : fallback
+}
+
+export function formatRockQualityOptionLabel(quality: number, bandIndex?: number): string {
+  if (quality === PURCHASED_STOCK_QUALITY) return 'Q0'
+  if (bandIndex !== undefined) return `B${bandIndex + 1}`
+  return `Q${quality}`
+}
+
+export function formatRockQualitySelectTitle(
+  elementName: string,
+  quality: number,
+  bands?: number[]
+): string {
+  if (quality === PURCHASED_STOCK_QUALITY) return 'Purchased (Q0)'
+  const resolvedBands = bands ?? getResourceBands(elementName)
+  if (resolvedBands) {
+    const idx = resolvedBands.indexOf(quality)
+    if (idx >= 0) return `Band ${idx + 1}: Q${quality}`
+  }
+  return `Q${quality}`
+}
+
+export function oreResourceKeyFromElementName(elementName: string): string {
   return elementName
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_|_$/g, '')
 }
 
-/** Purchased Q0 Dumper's Fair-Value Price for the given cSCU amount. */
+/** Purchased Q0 Dumper's Fair-Value Price for the given cSCU amount (calculator display only). */
 export function calculateMaterialDfpValue(elementName: string, scu: number): number {
   if (!Number.isFinite(scu) || scu <= 0) return 0
   const { lineDfpAuec } = pricingForResourceLine(
-    oreResourceKey(elementName),
+    oreResourceKeyFromElementName(elementName),
     elementName,
-    MINING_LEDGER_PRICE_QUALITY,
+    PURCHASED_STOCK_QUALITY,
     scu
   )
   if (!Number.isFinite(lineDfpAuec) || lineDfpAuec <= 0) return 0
