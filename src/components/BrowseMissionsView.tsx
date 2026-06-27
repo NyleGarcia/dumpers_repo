@@ -574,7 +574,7 @@ export default function BrowseMissionsView({
                 const systemsArray = Array.from(data.systems)
                 const cardClass =
                   status === 'mixed'
-                    ? 'bg-gradient-to-r from-green-950/40 from-50% to-red-950/40 to-50% border-slate-600/80 hover:border-slate-500'
+                    ? 'bg-slate-900/70 border-slate-600/80 hover:border-slate-500'
                     : status === 'lawful'
                       ? 'bg-green-950/30 border-green-500/30 hover:border-green-500/50'
                       : 'bg-red-950/30 border-red-500/30 hover:border-red-500/50'
@@ -582,10 +582,16 @@ export default function BrowseMissionsView({
                   <button
                     key={faction}
                     onClick={() => setSelectedFaction(faction)}
-                    className={`p-3 rounded-lg border text-left transition-all hover:scale-[1.01] ${cardClass}`}
+                    className={`relative p-3 rounded-lg border text-left transition-all hover:scale-[1.01] overflow-hidden ${cardClass}`}
                   >
+                    {status === 'mixed' && (
+                      <>
+                        <span className="absolute inset-y-0 left-0 w-1 bg-green-500/80" aria-hidden />
+                        <span className="absolute inset-y-0 right-0 w-1 bg-red-500/80" aria-hidden />
+                      </>
+                    )}
                     <h4
-                      className={`font-medium ${
+                      className={`font-medium pl-1 ${
                         status === 'mixed'
                           ? 'text-slate-100'
                           : status === 'lawful'
@@ -596,16 +602,16 @@ export default function BrowseMissionsView({
                       {faction}
                     </h4>
                     {status === 'mixed' && (
-                      <div className="flex flex-wrap items-center gap-1.5 mt-1">
-                        <span className="text-[10px] px-1.5 py-0.5 bg-green-950/70 text-green-300 border border-green-500/40 rounded">
+                      <div className="flex flex-wrap items-center gap-1.5 mt-1 pl-1">
+                        <span className="text-[10px] px-1.5 py-0.5 bg-green-950/50 text-green-300 border border-green-500/40 rounded">
                           {typeCounts.lawful} lawful
                         </span>
-                        <span className="text-[10px] px-1.5 py-0.5 bg-red-950/70 text-red-400 border border-red-500/40 rounded">
+                        <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
                           {typeCounts.illegal} illegal
                         </span>
                       </div>
                     )}
-                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap pl-1">
                       {systemsArray.map(sys => (
                         <span
                           key={sys}
@@ -615,7 +621,7 @@ export default function BrowseMissionsView({
                         </span>
                       ))}
                     </div>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-slate-500 mt-1 pl-1">
                       {typeCounts.lawful + typeCounts.illegal} mission type
                       {typeCounts.lawful + typeCounts.illegal !== 1 ? 's' : ''} · {contractCount}{' '}
                       contract variant{contractCount !== 1 ? 's' : ''}
