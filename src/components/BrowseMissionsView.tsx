@@ -41,6 +41,8 @@ const SYSTEM_COLORS: Record<BrowseSystem, { bg: string; border: string; text: st
   unknown: { bg: 'bg-slate-800/50', border: 'border-slate-600/40', text: 'text-slate-400' },
 }
 
+type LawfulFilter = 'all' | 'lawful' | 'illegal'
+
 interface MissionGroup {
   title: string
   isLawful: boolean
@@ -129,6 +131,7 @@ export default function BrowseMissionsView({
     () => readMissionTrackerUiState().browse.selectedMissionKey
   )
   const [searchTerm, setSearchTerm] = useState(() => readMissionTrackerUiState().browse.searchTerm)
+  const [lawfulFilter, setLawfulFilter] = useState<LawfulFilter>('all')
 
   const missions = useMemo((): MissionDisplay[] => {
     return getContractMissionBrowseCatalog().map((contract) => ({
@@ -187,6 +190,15 @@ export default function BrowseMissionsView({
     })
   }, [selectedFaction, selectedMissionKey, searchTerm])
 
+  useEffect(() => {
+    setLawfulFilter('all')
+  }, [selectedFaction])
+
+  const selectedFactionData = selectedFaction ? missionsByFaction[selectedFaction] : null
+  const isMixedFaction = selectedFactionData
+    ? factionLawfulStatus(selectedFactionData) === 'mixed'
+    : false
+
   const filteredFactionList = useMemo(() => {
     const entries = Object.entries(missionsByFaction)
 
@@ -217,6 +229,28 @@ export default function BrowseMissionsView({
 
     return groupMissionsByTitle(filtered)
   }, [selectedFaction, missionsByFaction, searchTerm])
+
+  const lawfulMissionGroups = useMemo(
+    () => selectedFactionMissionGroups.filter((group) => group.isLawful),
+    [selectedFactionMissionGroups]
+  )
+
+  const illegalMissionGroups = useMemo(
+    () => selectedFactionMissionGroups.filter((group) => !group.isLawful),
+    [selectedFactionMissionGroups]
+  )
+
+  const visibleMissionGroups = useMemo(() => {
+    if (!isMixedFaction || lawfulFilter === 'all') return selectedFactionMissionGroups
+    if (lawfulFilter === 'lawful') return lawfulMissionGroups
+    return illegalMissionGroups
+  }, [
+    isMixedFaction,
+    lawfulFilter,
+    selectedFactionMissionGroups,
+    lawfulMissionGroups,
+    illegalMissionGroups,
+  ])
 
   const getMissionBlueprintStats = (mission: MissionDisplay) => {
     const acquiredCount = mission.blueprints.filter((bp) => {
@@ -429,6 +463,71 @@ export default function BrowseMissionsView({
     )
   }
 
+  const renderMissionSection = (
+    title: string,
+    tone: 'lawful' | 'illegal',
+    groups: MissionGroup[]
+  ) => {
+    if (groups.length === 0) return null
+
+    const headerClass = tone === 'lawful'
+      ? 'text-green-300 border-green-500/30 bg-green-950/20'
+      : 'text-red-300 border-red-500/30 bg-red-950/20'
+
+    return (
+      <section className="space-y-2">
+        <div className={`rounded-lg border px-3 py-2 ${headerClass}`}>
+          <h3 className="text-sm font-semibold">
+            {title}
+            <span className="ml-2 text-xs font-normal opacity-80">
+              {groups.length} mission type{groups.length !== 1 ? 's' : ''}
+            </span>
+          </h3>
+        </div>
+        <div className="space-y-2">
+          {groups.map((group) => renderMissionGroup(group))}
+        </div>
+      </section>
+    )
+  }
+
+  const renderLawfulFilterToggle = () => {
+    if (!isMixedFaction) return null
+
+    const filterButtonClass = (active: boolean, tone: 'neutral' | 'lawful' | 'illegal') => {
+      if (!active) return 'text-slate-400 hover:text-white'
+      if (tone === 'lawful') return 'bg-green-950/60 text-green-300 border border-green-500/40'
+      if (tone === 'illegal') return 'bg-red-950/60 text-red-300 border border-red-500/40'
+      return 'site-filter-selected-orange'
+    }
+
+    return (
+      <div className="flex flex-wrap items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
+        <button
+          type="button"
+          onClick={() => setLawfulFilter('all')}
+          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${filterButtonClass(lawfulFilter === 'all', 'neutral')}`}
+        >
+          All
+        </button>
+        <button
+          type="button"
+          onClick={() => setLawfulFilter('lawful')}
+          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${filterButtonClass(lawfulFilter === 'lawful', 'lawful')}`}
+        >
+          Lawful ({lawfulMissionGroups.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setLawfulFilter('illegal')}
+          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${filterButtonClass(lawfulFilter === 'illegal', 'illegal')}`}
+        >
+          Illegal ({illegalMissionGroups.length})
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-sm">
@@ -475,7 +574,7 @@ export default function BrowseMissionsView({
                 const systemsArray = Array.from(data.systems)
                 const cardClass =
                   status === 'mixed'
-                    ? 'bg-slate-900/70 border-slate-600/80 hover:border-slate-500'
+                    ? 'bg-gradient-to-r from-green-950/40 from-50% to-red-950/40 to-50% border-slate-600/80 hover:border-slate-500'
                     : status === 'lawful'
                       ? 'bg-green-950/30 border-green-500/30 hover:border-green-500/50'
                       : 'bg-red-950/30 border-red-500/30 hover:border-red-500/50'
@@ -483,16 +582,10 @@ export default function BrowseMissionsView({
                   <button
                     key={faction}
                     onClick={() => setSelectedFaction(faction)}
-                    className={`relative p-3 rounded-lg border text-left transition-all hover:scale-[1.01] overflow-hidden ${cardClass}`}
+                    className={`p-3 rounded-lg border text-left transition-all hover:scale-[1.01] ${cardClass}`}
                   >
-                    {status === 'mixed' && (
-                      <>
-                        <span className="absolute inset-y-0 left-0 w-1 bg-green-500/80" aria-hidden />
-                        <span className="absolute inset-y-0 right-0 w-1 bg-red-500/80" aria-hidden />
-                      </>
-                    )}
                     <h4
-                      className={`font-medium pl-1 ${
+                      className={`font-medium ${
                         status === 'mixed'
                           ? 'text-slate-100'
                           : status === 'lawful'
@@ -503,16 +596,16 @@ export default function BrowseMissionsView({
                       {faction}
                     </h4>
                     {status === 'mixed' && (
-                      <div className="flex flex-wrap items-center gap-1.5 mt-1 pl-1">
-                        <span className="text-[10px] px-1.5 py-0.5 bg-green-950/50 text-green-300 border border-green-500/40 rounded">
+                      <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                        <span className="text-[10px] px-1.5 py-0.5 bg-green-950/70 text-green-300 border border-green-500/40 rounded">
                           {typeCounts.lawful} lawful
                         </span>
-                        <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
+                        <span className="text-[10px] px-1.5 py-0.5 bg-red-950/70 text-red-400 border border-red-500/40 rounded">
                           {typeCounts.illegal} illegal
                         </span>
                       </div>
                     )}
-                    <div className="flex items-center gap-2 mt-1.5 flex-wrap pl-1">
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                       {systemsArray.map(sys => (
                         <span
                           key={sys}
@@ -522,7 +615,7 @@ export default function BrowseMissionsView({
                         </span>
                       ))}
                     </div>
-                    <p className="text-xs text-slate-500 mt-1 pl-1">
+                    <p className="text-xs text-slate-500 mt-1">
                       {typeCounts.lawful + typeCounts.illegal} mission type
                       {typeCounts.lawful + typeCounts.illegal !== 1 ? 's' : ''} · {contractCount}{' '}
                       contract variant{contractCount !== 1 ? 's' : ''}
@@ -549,9 +642,30 @@ export default function BrowseMissionsView({
             </svg>
           </div>
 
-          <div className="space-y-2">
-            {selectedFactionMissionGroups.map(group => renderMissionGroup(group))}
-          </div>
+          {renderLawfulFilterToggle()}
+
+          {isMixedFaction && lawfulFilter === 'all' ? (
+            lawfulMissionGroups.length === 0 && illegalMissionGroups.length === 0 ? (
+              <p className="text-sm text-slate-500 py-6 text-center">
+                No missions match your search.
+              </p>
+            ) : (
+              <div className="space-y-6">
+                {renderMissionSection('Lawful missions', 'lawful', lawfulMissionGroups)}
+                {renderMissionSection('Illegal missions', 'illegal', illegalMissionGroups)}
+              </div>
+            )
+          ) : (
+            <div className="space-y-2">
+              {visibleMissionGroups.map((group) => renderMissionGroup(group))}
+            </div>
+          )}
+
+          {(!isMixedFaction || lawfulFilter !== 'all') && visibleMissionGroups.length === 0 && (
+            <p className="text-sm text-slate-500 py-6 text-center">
+              No missions match your search{isMixedFaction && lawfulFilter !== 'all' ? ` in ${lawfulFilter} contracts` : ''}.
+            </p>
+          )}
         </>
       )}
 
