@@ -3,9 +3,9 @@ import { ORE_SIGNATURES } from '../../lib/miningConstants'
 import {
   depositTypeLabel,
   getDepositTypes,
+  getRockCalculatorLocationOptions,
   getRockCompositionProfile,
   type DepositType,
-  type ProfileMode,
 } from '../../lib/miningClusterProfiles'
 import { normalizeMiningOreName } from '../../lib/handMineables'
 import type { MiningTrackerEntry } from '../../lib/localGuestCache'
@@ -42,8 +42,7 @@ interface RockCalculatorProps {
 export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorProps) {
   const [oreName, setOreName] = useState('')
   const [depositType, setDepositType] = useState<DepositType>('asteroid')
-  const [profileMode, setProfileMode] = useState<ProfileMode>('overall')
-  const [locationName, setLocationName] = useState<string | undefined>(undefined)
+  const [selectedLocation, setSelectedLocation] = useState<string | undefined>(undefined)
   const [totalScuInput, setTotalScuInput] = useState('')
   const [percentBySlot, setPercentBySlot] = useState<Record<string, string>>({})
 
@@ -52,14 +51,15 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
   const [searchFocused, setSearchFocused] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
 
+  const loadEntryRef = useRef(loadEntry)
+  loadEntryRef.current = loadEntry
+
   useEffect(() => {
     if (!loadEntry) return
     const entryDeposit: DepositType =
       loadEntry.depositType === 'asteroid' ? 'asteroid' : 'surface'
     setOreName(loadEntry.oreName)
     setDepositType(entryDeposit)
-    setProfileMode(loadEntry.profileMode)
-    setLocationName(loadEntry.locationName)
     setSearchQuery(loadEntry.oreName)
     setTotalScuInput('')
   }, [loadEntry, loadToken])
@@ -77,24 +77,51 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     [oreName]
   )
 
+  const locationOptions = useMemo(
+    () => (oreName ? getRockCalculatorLocationOptions(oreName, depositType) : []),
+    [oreName, depositType]
+  )
+
+  useEffect(() => {
+    if (locationOptions.length === 0) {
+      setSelectedLocation(undefined)
+      return
+    }
+
+    const entry = loadEntryRef.current
+    let preferred: string | undefined
+    if (entry && entry.oreName === oreName) {
+      const entryDeposit: DepositType =
+        entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
+      if (entryDeposit === depositType && entry.locationName) {
+        preferred = entry.locationName
+      }
+    }
+
+    const match = preferred
+      ? locationOptions.find((opt) => opt.value === preferred || opt.label === preferred)
+      : undefined
+
+    setSelectedLocation(match?.value ?? locationOptions[0].value)
+  }, [oreName, depositType, loadToken, locationOptions])
+
   const composition = useMemo(() => {
-    if (!oreName) return null
+    if (!oreName || !selectedLocation) return null
     return getRockCompositionProfile(oreName, depositType, {
-      profileMode,
-      locationName,
+      profileMode: 'location',
+      locationName: selectedLocation,
     })
-  }, [oreName, depositType, profileMode, locationName])
+  }, [oreName, depositType, selectedLocation])
 
   const compositionKey = useMemo(() => {
     if (!composition?.compositionParts.length) return null
     return [
       oreName,
       depositType,
-      profileMode,
-      locationName ?? '',
+      selectedLocation ?? '',
       composition.compositionParts.map((p) => p.elementName).join('|'),
     ].join(':')
-  }, [composition, oreName, depositType, profileMode, locationName])
+  }, [composition, oreName, depositType, selectedLocation])
 
   useEffect(() => {
     if (!composition?.compositionParts.length) return
@@ -108,8 +135,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     return composition.compositionParts.map((part, index) => {
       const slotKey = compositionSlotKey(index)
       const percent = parsePercentInput(percentBySlot[slotKey] ?? '0')
-      const scu =
-        totalScu != null ? calculateMaterialScu(totalScu, percent) : null
+      const scu = totalScu != null ? calculateMaterialScu(totalScu, percent) : null
       const dfp =
         totalScu != null && scu != null
           ? calculateMaterialDfpValue(part.elementName, scu)
@@ -134,8 +160,6 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     setOreName(name)
     setSearchQuery(name)
     setSearchOpen(false)
-    setProfileMode('overall')
-    setLocationName(undefined)
     setTotalScuInput('')
     const types = getDepositTypes(name)
     if (types.length === 1) {
@@ -147,14 +171,14 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
 
   const handleDepositTypeChange = (next: DepositType) => {
     setDepositType(next)
-    setProfileMode('overall')
-    setLocationName(undefined)
   }
 
   const showDepositToggle = availableDepositTypes.length > 1
+  const selectedLocationLabel =
+    locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
 
   return (
-    <aside className="sticky top-14 self-start w-full xl:w-[280px] shrink-0">
+    <aside className="sticky top-14 self-start w-[280px] shrink-0">
       <div className="rounded-xl border border-slate-700 bg-slate-900/70 overflow-hidden">
         <div className="px-3 py-2.5 bg-slate-800/90 border-b border-slate-700 min-h-[3.25rem]">
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
@@ -168,9 +192,9 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                   {depositTypeLabel(depositType)}
                 </span>
               </div>
-              {composition?.sourceLabel ? (
-                <p className="text-[11px] text-slate-500 mt-0.5 truncate" title={composition.sourceLabel}>
-                  {composition.sourceLabel}
+              {selectedLocationLabel ? (
+                <p className="text-[11px] text-slate-500 mt-0.5 truncate" title={selectedLocationLabel}>
+                  {selectedLocationLabel}
                 </p>
               ) : null}
             </>
@@ -180,53 +204,75 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
         </div>
 
         <div className="p-3 space-y-3">
-          <div className="relative">
+          <div>
             <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
-              Ore
+              Ore &amp; location
             </label>
-            <input
-              ref={searchRef}
-              type="text"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-                const exact = RS_ORE_NAMES.find(
-                  (name) => name.toLowerCase() === e.target.value.trim().toLowerCase()
-                )
-                if (exact) handleSelectOre(exact)
-              }}
-              onFocus={(e) => {
-                setSearchFocused(true)
-                if (e.isTrusted && searchOptions.length > 0) setSearchOpen(true)
-              }}
-              onBlur={() => {
-                setSearchFocused(false)
-                window.setTimeout(() => {
-                  setSearchOpen(false)
-                  if (oreName) setSearchQuery(oreName)
-                }, 150)
-              }}
-              placeholder="Type to search..."
-              className="site-input w-full px-2 py-1.5 text-sm"
-              spellCheck={false}
-              autoComplete="off"
-            />
-            {searchOpen && searchOptions.length > 0 && (
-              <ul className="absolute z-30 left-0 right-0 mt-1 rounded-lg border border-slate-600 bg-slate-900 shadow-lg max-h-40 overflow-y-auto">
-                {searchOptions.map((name) => (
-                  <li key={name}>
-                    <button
-                      type="button"
-                      className="w-full px-2 py-1.5 text-left text-sm hover:bg-slate-800 text-slate-200"
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => handleSelectOre(name)}
-                    >
-                      {name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <div className="flex gap-1.5">
+              <div className="relative flex-1 min-w-0">
+                <input
+                  ref={searchRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value)
+                    const exact = RS_ORE_NAMES.find(
+                      (name) => name.toLowerCase() === e.target.value.trim().toLowerCase()
+                    )
+                    if (exact) handleSelectOre(exact)
+                  }}
+                  onFocus={(e) => {
+                    setSearchFocused(true)
+                    if (e.isTrusted && searchOptions.length > 0) setSearchOpen(true)
+                  }}
+                  onBlur={() => {
+                    setSearchFocused(false)
+                    window.setTimeout(() => {
+                      setSearchOpen(false)
+                      if (oreName) setSearchQuery(oreName)
+                    }, 150)
+                  }}
+                  placeholder="Search ore..."
+                  className="site-input w-full px-2 py-1.5 text-sm"
+                  spellCheck={false}
+                  autoComplete="off"
+                />
+                {searchOpen && searchOptions.length > 0 && (
+                  <ul className="absolute z-30 left-0 right-0 mt-1 rounded-lg border border-slate-600 bg-slate-900 shadow-lg max-h-40 overflow-y-auto">
+                    {searchOptions.map((name) => (
+                      <li key={name}>
+                        <button
+                          type="button"
+                          className="w-full px-2 py-1.5 text-left text-sm hover:bg-slate-800 text-slate-200"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => handleSelectOre(name)}
+                        >
+                          {name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <select
+                value={selectedLocation ?? ''}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                disabled={!oreName || locationOptions.length === 0}
+                className="site-input w-[6.75rem] shrink-0 px-1.5 py-1.5 text-xs truncate disabled:opacity-40"
+                title="Spawn location"
+                aria-label="Spawn location"
+              >
+                {locationOptions.length === 0 ? (
+                  <option value="">—</option>
+                ) : (
+                  locationOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
           </div>
 
           {showDepositToggle && (
@@ -269,7 +315,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
             />
           </div>
 
-          {oreName && !composition?.compositionParts.length ? (
+          {oreName && selectedLocation && !composition?.compositionParts.length ? (
             <p className="text-xs text-slate-500 py-2">
               No composition data for this profile.
             </p>

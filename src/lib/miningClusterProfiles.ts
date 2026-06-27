@@ -254,6 +254,36 @@ export interface RockCompositionProfile {
   depositType: DepositType
 }
 
+export interface RockCalculatorLocationOption {
+  /** Guide/spawn key passed to getLocationProfile. */
+  value: string
+  label: string
+}
+
+/** Every distinct site where this ore spawns for the given deposit type (sorted A–Z). */
+export function getRockCalculatorLocationOptions(
+  oreName: string,
+  depositType: DepositType
+): RockCalculatorLocationOption[] {
+  const profiles = getLocationProfilesForOre(oreName).filter(
+    (loc) => loc.depositType === depositType
+  )
+
+  const seen = new Set<string>()
+  const options: RockCalculatorLocationOption[] = []
+
+  for (const loc of profiles) {
+    const label = loc.displayName ?? loc.guideName ?? loc.locationName
+    const value = loc.guideName ?? loc.locationName
+    const dedupeKey = `${value}|${label}`
+    if (seen.has(dedupeKey)) continue
+    seen.add(dedupeKey)
+    options.push({ value, label })
+  }
+
+  return options.sort((a, b) => a.label.localeCompare(b.label))
+}
+
 function rockProfileFromLocation(
   loc: LocationSpawnProfile | null,
   depositType: DepositType

@@ -74,6 +74,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Rock Calculator column: enter total rock SCU and in-game material % to get exact cSCU per material (0.001 precision)',
       'Rock Calculator shows estimated Purchased (Q0) DFP next to each material cSCU amount',
       'Click a tracked card to load its composition into the Rock Calculator; Surface/Asteroid toggle defaults to Asteroid',
+      'Rock Calculator location dropdown lists every spawn site for the ore and deposit type (defaults to first)',
       'Rock Calculator warns when entered material percentages exceed 100%',
       'Up to two cards per ore — separate Surface and Asteroid profiles',
       'Location-tracked cards show At {site} with that site\'s spawn and cluster data',

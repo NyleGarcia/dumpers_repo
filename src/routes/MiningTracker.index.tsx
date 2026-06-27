@@ -312,8 +312,8 @@ export default function MiningTrackerRoute() {
       )}
 
       {!loading && !error && data && viewMode === 'tracker' && (
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 items-start">
-          <div className="min-w-0 space-y-6">
+        <div className="flex gap-6 items-start min-w-[720px]">
+          <div className="flex-1 min-w-0 space-y-6">
           <section className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[200px] max-w-sm">
               <input
