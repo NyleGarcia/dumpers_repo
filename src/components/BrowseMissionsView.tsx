@@ -76,6 +76,7 @@ function countMissionTypesByLawful(missions: MissionDisplay[]): { lawful: number
 interface BrowseMissionsViewProps {
   acquiredBlueprints: Record<string, boolean>
   onAddToTracker: (blueprintId: string) => void
+  onMarkAcquired: (blueprintId: string) => void | Promise<void>
   isOnTargetList: (blueprintId: string) => boolean
 }
 
@@ -121,6 +122,7 @@ function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
 export default function BrowseMissionsView({
   acquiredBlueprints,
   onAddToTracker,
+  onMarkAcquired,
   isOnTargetList,
 }: BrowseMissionsViewProps) {
   const { data: blueprints = [] } = useBlueprintData()
@@ -735,13 +737,25 @@ export default function BrowseMissionsView({
                       </span>
                     )}
                   </div>
-                  {!bp.isAcquired && !bp.isTracked && bp.fullBlueprint && (
-                    <button
-                      onClick={() => onAddToTracker(bp.fullBlueprint!.internalName)}
-                      className="shrink-0 px-2 py-1 text-[10px] font-medium text-amber-300 border border-amber-500/40 rounded hover:bg-amber-950/40 transition-colors"
-                    >
-                      Track
-                    </button>
+                  {!bp.isAcquired && bp.fullBlueprint && (
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      {!bp.isTracked && (
+                        <button
+                          type="button"
+                          onClick={() => onAddToTracker(bp.fullBlueprint!.internalName)}
+                          className="px-2 py-1 text-[10px] font-medium text-amber-300 border border-amber-500/40 rounded hover:bg-amber-950/40 transition-colors"
+                        >
+                          Track
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => void onMarkAcquired(bp.fullBlueprint!.internalName)}
+                        className="px-2 py-1 text-[10px] font-bold text-emerald-900 bg-emerald-500 hover:bg-emerald-400 border border-emerald-400 rounded shadow-sm transition-colors"
+                      >
+                        ✓ Got It!
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>

@@ -424,6 +424,7 @@ export default function TargetsRoute() {
         <BrowseMissionsView
           acquiredBlueprints={acquiredBlueprints}
           onAddToTracker={handleAddToTrackerFromBrowse}
+          onMarkAcquired={toggleAcquired}
           isOnTargetList={isOnTargetList}
         />
       )}
