@@ -8,7 +8,7 @@ import {
 
 interface OrderDeadlineNoticeProps {
   order: CustomOrder
-  role: 'buyer' | 'fulfiller'
+  role: 'buyer' | 'fulfiller' | 'seller'
 }
 
 export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNoticeProps) {
@@ -20,7 +20,11 @@ export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNotice
     )
   }
 
-  if (role === 'fulfiller' && ['accepted', 'in_progress'].includes(order.status) && order.accepted_at) {
+  if (
+    (role === 'fulfiller' || role === 'seller') &&
+    ['accepted', 'in_progress'].includes(order.status) &&
+    order.accepted_at
+  ) {
     const deadline = deadlineFromStart(order.accepted_at, 72)
     const hours = hoursRemaining(deadline)
     if (hours === null) return null
@@ -59,9 +63,17 @@ export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNotice
 
   if (order.status === 'completed') {
     const myArchived =
-      role === 'buyer' ? order.requester_archived_at : order.fulfiller_archived_at
+      role === 'buyer'
+        ? order.requester_archived_at
+        : role === 'seller'
+          ? order.requester_archived_at
+          : order.fulfiller_archived_at
     const otherArchived =
-      role === 'buyer' ? order.fulfiller_archived_at : order.requester_archived_at
+      role === 'buyer'
+        ? order.fulfiller_archived_at
+        : role === 'seller'
+          ? order.fulfiller_archived_at
+          : order.requester_archived_at
 
     if (myArchived) return null
 

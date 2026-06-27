@@ -6,6 +6,7 @@ import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRat
 import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
 import ReputationBadge from '../components/ReputationBadge'
+import TradeContactChip from '../components/TradeContactChip'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import AppModal from '../components/layout/AppModal'
@@ -670,21 +671,27 @@ export default function CustomOrdersRoute() {
                     <p className="text-slate-500 text-xs mt-1">
                       {order.requester_id === userId ? 'Posted' : 'Purchased'}{' '}
                       {new Date(order.created_at).toLocaleString()}
+                      {order.accepted_at &&
+                        order.assignee &&
+                        order.requester_id === userId &&
+                        ` · Accepted ${new Date(order.accepted_at).toLocaleString()}`}
                     </p>
                     {order.assignee && order.requester_id === userId && (
-                      <p className="text-emerald-400/80 text-xs mt-1">
-                        Accepted by{' '}
-                        {getDisplayName(profileFromOrderFields(order.assignee_id!, order.assignee))}
-                        {order.accepted_at &&
-                          ` · ${new Date(order.accepted_at).toLocaleString()}`}
-                      </p>
+                      <TradeContactChip
+                        role={order.listing_type === 'wts' ? 'buyer' : 'fulfiller'}
+                        profile={order.assignee}
+                        className="mt-2"
+                      />
                     )}
-                    {order.requester && order.listing_type === 'wts' && order.assignee_id === userId && (
-                      <p className="text-emerald-400/80 text-xs mt-1">
-                        Seller:{' '}
-                        {getDisplayName(profileFromOrderFields(order.requester_id, order.requester))}
-                      </p>
-                    )}
+                    {order.requester &&
+                      order.assignee_id === userId &&
+                      order.requester_id !== userId && (
+                        <TradeContactChip
+                          role={order.listing_type === 'wts' ? 'seller' : 'customer'}
+                          profile={order.requester}
+                          className="mt-2"
+                        />
+                      )}
                     {order.notes && <p className="text-slate-400 text-sm mt-2">{order.notes}</p>}
 
                     {dfpDisplayEnabled && exceedsSingleTransferLimit(totalDfp) && (

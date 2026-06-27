@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
-import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
+import AssignedOrderCard from '../components/AssignedOrderCard'
 import OrderRatingModal from '../components/OrderRatingModal'
 import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
+import TradeContactChip from '../components/TradeContactChip'
+import WtsSaleOrderCard from '../components/WtsSaleOrderCard'
 import WtsPartialPurchasePanel, {
   type WtsLineSelection,
 } from '../components/WtsPartialPurchasePanel'
@@ -21,7 +23,7 @@ import {
   getOrderAcceptBlockers,
 } from '../lib/orderAccept'
 import { canFulfillerArchive } from '../lib/orderArchive'
-import { releaseOrderConfirmMessage, releaseOrderButtonLabel } from '../lib/orderRelease'
+import { releaseOrderConfirmMessage } from '../lib/orderRelease'
 import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
 import { orderHasHighQualityBlueprint } from '../lib/orderDeadlines'
 import { orderTotalDfp, resolveOrderFulfillmentItems } from '../lib/orderPricing'
@@ -77,10 +79,8 @@ export default function FulfillmentRoute() {
   const [reputations, setReputations] = useState<Record<string, MemberReputationRow>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
-  const [selectedWtsSaleId, setSelectedWtsSaleId] = useState<string | null>(null)
-  const [notes, setNotes] = useState('')
-  const [submitting, setSubmitting] = useState(false)
+  const [craftNotesByOrderId, setCraftNotesByOrderId] = useState<Record<string, string>>({})
+  const [submittingOrderId, setSubmittingOrderId] = useState<string | null>(null)
   const [acceptingOrderId, setAcceptingOrderId] = useState<string | null>(null)
   const [minBuyerRepFilter, setMinBuyerRepFilter] = useState('')
   const [onlyMyBlueprintOrders, setOnlyMyBlueprintOrders] = useState(false)
@@ -285,31 +285,27 @@ export default function FulfillmentRoute() {
     await loadData()
   }
 
-  const selectedOrder = myAssignedOrders.find((o) => o.id === selectedOrderId) ?? null
-  const selectedWtsSale = myWtsSales.find((o) => o.id === selectedWtsSaleId) ?? null
-
-  const selectedFulfillmentItems = useMemo(
-    () => (selectedOrder ? fulfillmentItemsForOrder(selectedOrder) : []),
-    [selectedOrder, fulfillmentItemsForOrder]
-  )
-
-  const stockCheck = useMemo(() => {
-    if (!selectedOrder || !craftDeductInventory) {
-      return { canFulfill: true, shortages: [] as string[] }
-    }
-
-    const shortages: string[] = []
-    for (const item of selectedFulfillmentItems) {
-      const available = quantityByKey[item.resourceKey] ?? 0
-      if (available < item.quantity) {
-        shortages.push(
-          `${getResourceLabel(item.resourceKey, labelMap)} (need ${formatQuantityForResource(item.resourceKey, item.quantity)} ${resourceQuantityUnitLabel(item.resourceKey)}, have ${formatQuantityForResource(item.resourceKey, available)} ${resourceQuantityUnitLabel(item.resourceKey)})`
-        )
+  const getStockCheckForOrder = useCallback(
+    (order: CustomOrder) => {
+      if (!craftDeductInventory) {
+        return { canFulfill: true, shortages: [] as string[] }
       }
-    }
 
-    return { canFulfill: shortages.length === 0, shortages }
-  }, [selectedOrder, selectedFulfillmentItems, quantityByKey, labelMap, craftDeductInventory])
+      const items = fulfillmentItemsForOrder(order)
+      const shortages: string[] = []
+      for (const item of items) {
+        const available = quantityByKey[item.resourceKey] ?? 0
+        if (available < item.quantity) {
+          shortages.push(
+            `${getResourceLabel(item.resourceKey, labelMap)} (need ${formatQuantityForResource(item.resourceKey, item.quantity)} ${resourceQuantityUnitLabel(item.resourceKey)}, have ${formatQuantityForResource(item.resourceKey, available)} ${resourceQuantityUnitLabel(item.resourceKey)})`
+          )
+        }
+      }
+
+      return { canFulfill: shortages.length === 0, shortages }
+    },
+    [craftDeductInventory, fulfillmentItemsForOrder, quantityByKey, labelMap]
+  )
 
   const handleAcceptPartial = async (listingId: string, selections: WtsLineSelection[]) => {
     setAcceptingOrderId(listingId)
@@ -378,44 +374,51 @@ export default function FulfillmentRoute() {
       return
     }
 
-    setSubmitting(true)
+    setSubmittingOrderId(orderId)
     setError(null)
 
     const result = await abandonCustomOrderFulfillment(orderId)
 
-    setSubmitting(false)
+    setSubmittingOrderId(null)
 
     if (result.error) {
       setError(result.error)
       return
     }
 
-    if (selectedOrderId === orderId) setSelectedOrderId(null)
-    if (selectedWtsSaleId === orderId) setSelectedWtsSaleId(null)
+    setCraftNotesByOrderId((prev) => {
+      const next = { ...prev }
+      delete next[orderId]
+      return next
+    })
     await loadData()
   }
 
   const handleMarkWtsReady = async (orderId: string) => {
-    setSubmitting(true)
+    setSubmittingOrderId(orderId)
     setError(null)
-    const result = await completeOrderCraft(orderId, notes.trim() || undefined)
-    setSubmitting(false)
+    const note = craftNotesByOrderId[orderId]?.trim()
+    const result = await completeOrderCraft(orderId, note || undefined)
+    setSubmittingOrderId(null)
     if (result.error) {
       setError(result.error)
       return
     }
-    setSelectedWtsSaleId(null)
-    setNotes('')
+    setCraftNotesByOrderId((prev) => {
+      const next = { ...prev }
+      delete next[orderId]
+      return next
+    })
     await loadData()
   }
 
   const handleStartWork = async (orderId: string) => {
-    setSubmitting(true)
+    setSubmittingOrderId(orderId)
     setError(null)
 
     const result = await startCustomOrderWork(orderId)
 
-    setSubmitting(false)
+    setSubmittingOrderId(null)
 
     if (result.error) {
       setError(result.error)
@@ -425,30 +428,35 @@ export default function FulfillmentRoute() {
     await loadData()
   }
 
-  const handleCompleteCraft = async () => {
-    if (!selectedOrder) return
+  const handleCompleteCraft = async (orderId: string) => {
+    const order = orders.find((o) => o.id === orderId)
+    if (!order) return
 
-    setSubmitting(true)
+    setSubmittingOrderId(orderId)
     setError(null)
 
-    const syncResult = await syncFulfillmentItems(selectedOrder)
+    const syncResult = await syncFulfillmentItems(order)
     if (syncResult.error) {
-      setSubmitting(false)
+      setSubmittingOrderId(null)
       setError(syncResult.error)
       return
     }
 
-    const result = await completeOrderCraft(selectedOrder.id, notes.trim() || undefined)
+    const note = craftNotesByOrderId[orderId]?.trim()
+    const result = await completeOrderCraft(orderId, note || undefined)
 
-    setSubmitting(false)
+    setSubmittingOrderId(null)
 
     if (result.error) {
       setError(result.error)
       return
     }
 
-    setSelectedOrderId(null)
-    setNotes('')
+    setCraftNotesByOrderId((prev) => {
+      const next = { ...prev }
+      delete next[orderId]
+      return next
+    })
     await loadData()
   }
 
@@ -724,11 +732,15 @@ export default function FulfillmentRoute() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-slate-500 text-xs">
-                              {isWts ? 'Seller' : 'Buyer'}:{' '}
-                              {displayNameFromFields(order.requester)}
-                              {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
-                            </p>
+                            <TradeContactChip
+                              role={isWts ? 'seller' : 'buyer'}
+                              profile={order.requester}
+                              compact
+                              className="mt-1"
+                            />
+                            {dfpDisplayEnabled && totalDfp > 0 && (
+                              <p className="text-amber-300/90 text-xs">{formatDfpAuec(totalDfp)}</p>
+                            )}
                             <div className="flex flex-wrap gap-2">
                               {!isWts && (
                                 <ReputationBadge label="Buyer rep" reputation={buyerRep} />
@@ -805,191 +817,33 @@ export default function FulfillmentRoute() {
             ) : (
               <div className="space-y-2">
                 {myAssignedOrders.map((order) => {
-                  const isSelected = selectedOrderId === order.id
-                  const totalDfp = orderTotalDfp(order)
                   const orderItems = fulfillmentItemsForOrder(order)
-                  const shortages = craftDeductInventory
-                    ? orderItems.filter((item) => {
-                        const available = quantityByKey[item.resourceKey] ?? 0
-                        return available < item.quantity
-                      })
-                    : []
+                  const stockCheck = getStockCheckForOrder(order)
+                  const isSubmitting = submittingOrderId === order.id
 
                   return (
-                    <button
+                    <AssignedOrderCard
                       key={order.id}
-                      type="button"
-                      onClick={() => setSelectedOrderId(order.id)}
-                      className={`w-full text-left p-4 rounded-xl border transition-colors ${
-                        isSelected
-                          ? 'bg-purple-950/30 border-purple-500/40'
-                          : 'bg-slate-900/60 border-slate-700 hover:border-slate-600'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-white font-medium flex items-center gap-2 flex-wrap">
-                          {order.title}
-                          <ListingTypeBadge order={order} />
-                        </span>
-                        {craftDeductInventory && (
-                          <span
-                            className={`text-xs px-2 py-0.5 rounded border ${
-                              shortages.length > 0
-                                ? 'bg-red-950/50 text-red-300 border-red-500/30'
-                                : 'bg-green-950/50 text-green-300 border-green-500/30'
-                            }`}
-                          >
-                            {shortages.length > 0 ? 'Short stock' : 'Stock OK'}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-slate-500 text-xs mt-1">
-                        {order.status.replace(/_/g, ' ')}
-                        {dfpDisplayEnabled && totalDfp > 0 && (
-                          <span className="text-amber-300/90">
-                            {' '}
-                            · {formatDfpAuec(totalDfp)}
-                          </span>
-                        )}
-                      </p>
-                      <div className="mt-2">
-                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
-                      </div>
-                      <div className="mt-2">
-                        <ReputationBadge
-                          label="Buyer rep"
-                          reputation={buyerReputationFromRow(reputations[order.requester_id])}
-                        />
-                      </div>
-                      {dfpDisplayEnabled && exceedsSingleTransferLimit(totalDfp) && (
-                        <AuecTransferLimitNotice
-                          totalAuec={totalDfp}
-                          context="fulfiller"
-                          compact
-                        />
-                      )}
-                      <OrderDeadlineNotice order={order} role="fulfiller" />
-                    </button>
+                      order={order}
+                      blueprintById={blueprintById}
+                      dfpDisplayEnabled={dfpDisplayEnabled}
+                      craftDeductInventory={craftDeductInventory}
+                      reputations={reputations}
+                      labelMap={labelMap}
+                      quantityByKey={quantityByKey}
+                      orderItems={orderItems}
+                      stockCheck={stockCheck}
+                      notes={craftNotesByOrderId[order.id] ?? ''}
+                      onNotesChange={(value) =>
+                        setCraftNotesByOrderId((prev) => ({ ...prev, [order.id]: value }))
+                      }
+                      submitting={isSubmitting}
+                      onAbandon={() => void handleAbandon(order.id)}
+                      onStartWork={() => void handleStartWork(order.id)}
+                      onCompleteCraft={() => void handleCompleteCraft(order.id)}
+                    />
                   )
                 })}
-              </div>
-            )}
-
-            {selectedOrder && (
-              <div className="mt-4 p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3">
-                <div>
-                  <h3 className="text-white font-medium">{selectedOrder.title}</h3>
-                  {dfpDisplayEnabled && orderTotalDfp(selectedOrder) > 0 && (
-                    <p className="text-amber-200 text-sm font-medium mt-1">
-                      {formatDfpAuec(orderTotalDfp(selectedOrder))}
-                    </p>
-                  )}
-                </div>
-
-                {dfpDisplayEnabled && exceedsSingleTransferLimit(orderTotalDfp(selectedOrder)) && (
-                  <AuecTransferLimitNotice
-                    totalAuec={orderTotalDfp(selectedOrder)}
-                    context="fulfiller"
-                    compact
-                  />
-                )}
-
-                <OrderRequestLines order={selectedOrder} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
-                <OrderDeadlineNotice order={selectedOrder} role="fulfiller" />
-
-                {selectedFulfillmentItems.length > 0 && (
-                  <div className="space-y-2">
-                    {craftDeductInventory && (
-                      <p className="text-slate-500 text-xs">
-                        Inventory deduction is on — stock is checked from My Resources.
-                      </p>
-                    )}
-                    {selectedFulfillmentItems.map((item) => {
-                      const available = quantityByKey[item.resourceKey] ?? 0
-                      const enough = available >= item.quantity
-
-                      return (
-                        <div
-                          key={item.resourceKey}
-                          className="flex items-center justify-between text-sm bg-slate-800/50 rounded-lg px-3 py-2"
-                        >
-                          <span className="text-slate-300">
-                            {getResourceLabel(item.resourceKey, labelMap)}
-                          </span>
-                          <span
-                            className={`tabular-nums ${
-                              craftDeductInventory
-                                ? enough
-                                  ? 'text-green-400'
-                                  : 'text-red-400'
-                                : 'text-slate-400'
-                            }`}
-                          >
-                            {formatQuantityForResource(item.resourceKey, item.quantity)}{' '}
-                            {resourceQuantityUnitLabel(item.resourceKey)}
-                            {craftDeductInventory && (
-                              <>
-                                {' '}
-                                needed · {formatQuantityForResource(item.resourceKey, available)}{' '}
-                                {resourceQuantityUnitLabel(item.resourceKey)} in My Resources
-                              </>
-                            )}
-                          </span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-
-                {craftDeductInventory && !stockCheck.canFulfill && (
-                  <p className="text-red-300 text-xs">
-                    Short: {stockCheck.shortages.join(', ')}. Add stock in{' '}
-                    <Link to="/resources" className="text-red-200 underline">
-                      Resource Tracker → My Resources
-                    </Link>
-                    .
-                  </p>
-                )}
-
-                <button
-                  type="button"
-                  onClick={() => void handleAbandon(selectedOrder.id)}
-                  disabled={submitting}
-                  className="w-full py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 border border-slate-600 rounded-lg text-sm font-medium"
-                >
-                  {submitting ? 'Releasing...' : 'Abandon job — return to pool'}
-                </button>
-
-                {selectedOrder.status === 'accepted' && (
-                  <button
-                    type="button"
-                    onClick={() => void handleStartWork(selectedOrder.id)}
-                    disabled={submitting}
-                    className="w-full py-2 bg-blue-700 hover:bg-blue-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
-                  >
-                    {submitting ? 'Starting...' : 'Start work'}
-                  </button>
-                )}
-
-                {(selectedOrder.status === 'accepted' || selectedOrder.status === 'in_progress') && (
-                  <>
-                    <textarea
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      placeholder="Craft notes (optional)"
-                      rows={2}
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-                    />
-
-                    <button
-                      onClick={() => void handleCompleteCraft()}
-                      disabled={(craftDeductInventory && !stockCheck.canFulfill) || submitting}
-                      className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium"
-                    >
-                      {submitting ? 'Completing...' : 'Complete craft & mark ready for pickup'}
-                    </button>
-                  </>
-                )}
               </div>
             )}
             </div>
@@ -1002,79 +856,19 @@ export default function FulfillmentRoute() {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {myWtsSales.map((order) => {
-                    const isSelected = selectedWtsSaleId === order.id
-                    const totalDfp = orderTotalDfp(order)
-                    return (
-                      <button
-                        key={order.id}
-                        type="button"
-                        onClick={() => setSelectedWtsSaleId(order.id)}
-                        className={`w-full text-left p-4 rounded-xl border transition-colors ${
-                          isSelected
-                            ? 'bg-cyan-950/30 border-cyan-500/40'
-                            : 'bg-slate-900/60 border-slate-700 hover:border-slate-600'
-                        }`}
-                      >
-                        <span className="text-white font-medium flex items-center gap-2 flex-wrap">
-                          {order.title}
-                          <ListingTypeBadge order={order} />
-                          {order.source_listing_id && (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-medium border bg-cyan-950/40 text-cyan-200 border-cyan-500/30">
-                              Partial purchase
-                            </span>
-                          )}
-                        </span>
-                        <p className="text-slate-500 text-xs mt-1">
-                          {order.status.replace(/_/g, ' ')}
-                          {order.assignee &&
-                            ` · Buyer: ${displayNameFromFields(order.assignee)}`}
-                          {dfpDisplayEnabled && totalDfp > 0 && (
-                            <span className="text-amber-300/90"> · {formatDfpAuec(totalDfp)}</span>
-                          )}
-                        </p>
-                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-
-              {selectedWtsSale && (
-                <div className="mt-4 p-4 bg-slate-900/60 border border-cyan-700/40 rounded-xl space-y-3">
-                  <h3 className="text-white font-medium">{selectedWtsSale.title}</h3>
-                  <OrderRequestLines order={selectedWtsSale} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
-                  <button
-                    type="button"
-                    onClick={() => void handleAbandon(selectedWtsSale.id)}
-                    disabled={submitting}
-                    className="w-full py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 border border-slate-600 rounded-lg text-sm"
-                  >
-                    {submitting
-                      ? 'Working...'
-                      : releaseOrderButtonLabel(selectedWtsSale, userId ?? undefined)}
-                  </button>
-                  {selectedWtsSale.status === 'accepted' && (
-                    <button
-                      type="button"
-                      onClick={() => void handleStartWork(selectedWtsSale.id)}
-                      disabled={submitting}
-                      className="w-full py-2 bg-blue-700 hover:bg-blue-600 disabled:opacity-50 text-white rounded-lg text-sm"
-                    >
-                      Start handoff
-                    </button>
-                  )}
-                  {(selectedWtsSale.status === 'accepted' ||
-                    selectedWtsSale.status === 'in_progress') && (
-                    <button
-                      type="button"
-                      onClick={() => void handleMarkWtsReady(selectedWtsSale.id)}
-                      disabled={submitting}
-                      className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 text-white rounded-lg text-sm"
-                    >
-                      Mark ready for pickup
-                    </button>
-                  )}
+                  {myWtsSales.map((order) => (
+                    <WtsSaleOrderCard
+                      key={order.id}
+                      order={order}
+                      userId={userId ?? ''}
+                      blueprintById={blueprintById}
+                      dfpDisplayEnabled={dfpDisplayEnabled}
+                      submitting={submittingOrderId === order.id}
+                      onAbandon={() => void handleAbandon(order.id)}
+                      onStartWork={() => void handleStartWork(order.id)}
+                      onMarkReady={() => void handleMarkWtsReady(order.id)}
+                    />
+                  ))}
                 </div>
               )}
             </div>
@@ -1097,19 +891,18 @@ export default function FulfillmentRoute() {
                     return (
                       <div
                         key={order.id}
-                        className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
+                        className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-2"
                       >
                         <p className="text-white text-sm font-medium">{order.title}</p>
-                        <p className="text-slate-500 text-xs mt-1">
+                        <p className="text-slate-500 text-xs">
                           {order.status.replace(/_/g, ' ')}
-                          {order.assignee &&
-                            ` · Fulfiller: ${displayNameFromFields(order.assignee)}`}
                           {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                         </p>
+                        {order.assignee && (
+                          <TradeContactChip role="fulfiller" profile={order.assignee} compact />
+                        )}
                         {order.assignee_id && (
-                          <div className="mt-2">
-                            <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} />
-                          </div>
+                          <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} />
                         )}
                       </div>
                     )
@@ -1140,10 +933,11 @@ export default function FulfillmentRoute() {
                           <p className="text-white text-sm font-medium">{order.title}</p>
                           <p className="text-slate-500 text-xs mt-1">
                             {order.status.replace(/_/g, ' ')}
-                            {order.requester &&
-                              ` · Customer: ${displayNameFromFields(order.requester)}`}
                             {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                           </p>
+                          <div className="mt-2">
+                            <TradeContactChip role="customer" profile={order.requester} compact />
+                          </div>
                           <div className="mt-2">
                             <ReputationBadge
                               label="Buyer rep"
