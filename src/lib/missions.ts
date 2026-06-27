@@ -43,6 +43,8 @@ export interface BlueprintMissionSource {
 export interface MissionListEntry {
   missionKey: string
   mission: string
+  /** Display title without faction prefix (matches Browse Missions). */
+  title: string
   giver: string
   linkedBlueprintIds: string[]
   linkedBlueprintNames: string[]
@@ -73,6 +75,18 @@ export function parseMissionGiver(mission: string): string {
   const colon = mission.indexOf(':')
   if (colon <= 0) return 'Unknown'
   return mission.slice(0, colon).trim()
+}
+
+/** Contract title without the leading "Giver: " prefix used in stored mission labels. */
+export function stripMissionGiverPrefix(mission: string, giver?: string): string {
+  const trimmed = mission.trim()
+  if (giver) {
+    const prefix = `${giver}: `
+    if (trimmed.startsWith(prefix)) return trimmed.slice(prefix.length).trim()
+  }
+  const colon = trimmed.indexOf(':')
+  if (colon > 0) return trimmed.slice(colon + 1).trim()
+  return trimmed
 }
 
 export function missionKey(mission: string): string {
@@ -114,6 +128,7 @@ export function buildMissionList(
         entry = attachMissionRep({
           missionKey: key,
           mission,
+          title: reward.title?.trim() || stripMissionGiverPrefix(mission, reward.faction),
           giver: parseMissionGiver(mission),
           linkedBlueprintIds: [],
           linkedBlueprintNames: [],

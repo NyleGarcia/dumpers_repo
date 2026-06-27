@@ -27,6 +27,16 @@ type MissionDisplay = ContractMissionBrowseEntry & {
   blueprintCount: number
 }
 
+function missionMatchesSearch(
+  mission: Pick<ContractMissionBrowseEntry, 'title' | 'mission' | 'category'>,
+  term: string
+): boolean {
+  if (mission.title.toLowerCase().includes(term)) return true
+  if (mission.mission.toLowerCase().includes(term)) return true
+  if (mission.category?.toLowerCase().includes(term)) return true
+  return false
+}
+
 const SYSTEM_LABELS: Record<BrowseSystem, string> = {
   stanton: 'Stanton',
   pyro: 'Pyro',
@@ -209,10 +219,7 @@ export default function BrowseMissionsView({
     const term = searchTerm.toLowerCase()
     return entries.filter(([faction, data]) =>
       faction.toLowerCase().includes(term) ||
-      data.missions.some(m =>
-        m.title.toLowerCase().includes(term) ||
-        (m.category && m.category.toLowerCase().includes(term))
-      )
+      data.missions.some((m) => missionMatchesSearch(m, term))
     )
   }, [missionsByFaction, searchTerm])
 
@@ -223,10 +230,7 @@ export default function BrowseMissionsView({
     let filtered = factionMissions
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
-      filtered = factionMissions.filter(m =>
-        m.title.toLowerCase().includes(term) ||
-        (m.category && m.category.toLowerCase().includes(term))
-      )
+      filtered = factionMissions.filter((m) => missionMatchesSearch(m, term))
     }
 
     return groupMissionsByTitle(filtered)

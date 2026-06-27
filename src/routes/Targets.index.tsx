@@ -5,8 +5,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { resolveIsOrderable, catalogIsReward } from '../lib/blueprintOrderable'
-import { buildMissionList, getMissionsForBlueprint, missionKey, type Region } from '../lib/missions'
-import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
+import { buildMissionList, getMissionsForBlueprint, missionKey, type MissionListEntry, type Region } from '../lib/missions'
+import { findBrowseMissionEntry, getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import {
   formatBlueprintUnlockBadge,
   formatBlueprintDropChance,
@@ -17,7 +17,7 @@ import {
 } from '../lib/missionAcquisition'
 import BrowseMissionsView from '../components/BrowseMissionsView'
 import MissionLocationTags from '../components/MissionLocationTags'
-import { readMissionTrackerUiState, writeMissionTrackerUiState } from '../lib/missionTrackerUiState'
+import { readMissionTrackerUiState, writeMissionTrackerUiState, makeBrowseMissionKey } from '../lib/missionTrackerUiState'
 import { setAnalyticsSubTool } from '../lib/analytics'
 
 type ViewMode = 'tracker' | 'browse'
@@ -162,9 +162,11 @@ function BlueprintUnlockBadge({
 function MissionChecklistGroups({
   groups,
   onRemove,
+  onOpenInBrowse,
 }: {
   groups: ReturnType<typeof buildMissionList>
   onRemove: (mission: { missionKey: string; mission: string }) => void
+  onOpenInBrowse?: (mission: MissionListEntry) => void
 }) {
   if (groups.length === 0) {
     return (
@@ -195,7 +197,20 @@ function MissionChecklistGroups({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>{mission.mission}</p>
+                      {onOpenInBrowse ? (
+                        <button
+                          type="button"
+                          onClick={() => onOpenInBrowse(mission)}
+                          className={`text-sm text-left hover:underline underline-offset-2 ${
+                            mission.isLawful ? 'text-green-300 hover:text-green-200' : 'text-red-400 hover:text-red-300'
+                          }`}
+                          title="View blueprints for this mission in Browse Missions"
+                        >
+                          {mission.title}
+                        </button>
+                      ) : (
+                        <p className={`text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>{mission.title}</p>
+                      )}
                       <MissionMetaLine
                         regions={mission.regions}
                         subRegion={mission.subRegion}
@@ -274,6 +289,24 @@ export default function TargetsRoute() {
       else next.add(id)
       return next
     })
+  }, [])
+
+  const openMissionInBrowse = useCallback((mission: MissionListEntry) => {
+    const entry = findBrowseMissionEntry(mission.mission, {
+      faction: mission.giver,
+      system: mission.system,
+    })
+    if (!entry) return
+
+    writeMissionTrackerUiState({
+      topView: 'browse',
+      browse: {
+        selectedFaction: entry.faction,
+        selectedMissionKey: makeBrowseMissionKey(entry),
+        searchTerm: '',
+      },
+    })
+    setViewMode('browse')
   }, [])
 
   // Build a map of blueprint ID to its mission keys for cleanup
@@ -621,6 +654,7 @@ export default function TargetsRoute() {
               onRemove={(mission) =>
                 void removeMissionFromChecklist(mission.missionKey, mission.mission)
               }
+              onOpenInBrowse={openMissionInBrowse}
             />
           </section>
         </div>

@@ -380,3 +380,45 @@ export const contractMissionBrowseCatalog = buildContractBrowseCatalog()
 export function getContractMissionBrowseCatalog(): ContractMissionBrowseEntry[] {
   return contractMissionBrowseCatalog
 }
+
+export function findBrowseMissionEntry(
+  missionLabel: string,
+  options?: { system?: string | null; faction?: string | null }
+): ContractMissionBrowseEntry | null {
+  const catalog = getContractMissionBrowseCatalog()
+  const trimmed = missionLabel.trim()
+  if (!trimmed) return null
+
+  let matches = catalog.filter((entry) => entry.mission === trimmed)
+
+  if (matches.length === 0 && options?.faction) {
+    const title = trimmed.startsWith(`${options.faction}: `)
+      ? trimmed.slice(options.faction.length + 2).trim()
+      : trimmed
+    matches = catalog.filter(
+      (entry) => entry.faction === options.faction && entry.title === title
+    )
+  }
+
+  if (matches.length === 0) {
+    const colon = trimmed.indexOf(':')
+    if (colon > 0) {
+      const faction = trimmed.slice(0, colon).trim()
+      const title = trimmed.slice(colon + 1).trim()
+      matches = catalog.filter((entry) => entry.faction === faction && entry.title === title)
+    }
+  }
+
+  if (matches.length === 0) {
+    matches = catalog.filter((entry) => entry.title === trimmed)
+  }
+
+  if (options?.system && matches.length > 1) {
+    const bySystem = matches.filter(
+      (entry) => entry.system?.toLowerCase() === options.system!.toLowerCase()
+    )
+    if (bySystem.length > 0) matches = bySystem
+  }
+
+  return matches[0] ?? null
+}
