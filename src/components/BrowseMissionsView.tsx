@@ -48,6 +48,29 @@ interface MissionGroup {
   variants: MissionDisplay[]
 }
 
+interface FactionBrowseData {
+  missions: MissionDisplay[]
+  hasLawful: boolean
+  hasIllegal: boolean
+  systems: Set<BrowseSystem>
+}
+
+function factionLawfulStatus(data: FactionBrowseData): 'lawful' | 'illegal' | 'mixed' {
+  if (data.hasLawful && data.hasIllegal) return 'mixed'
+  if (data.hasIllegal) return 'illegal'
+  return 'lawful'
+}
+
+function countMissionTypesByLawful(missions: MissionDisplay[]): { lawful: number; illegal: number } {
+  const lawfulTitles = new Set<string>()
+  const illegalTitles = new Set<string>()
+  for (const mission of missions) {
+    if (mission.isLawful) lawfulTitles.add(mission.title)
+    else illegalTitles.add(mission.title)
+  }
+  return { lawful: lawfulTitles.size, illegal: illegalTitles.size }
+}
+
 interface BrowseMissionsViewProps {
   acquiredBlueprints: Record<string, boolean>
   onAddToTracker: (blueprintId: string) => void
@@ -132,14 +155,15 @@ export default function BrowseMissionsView({
   }, [blueprints])
 
   const missionsByFaction = useMemo(() => {
-    const map: Record<string, { missions: MissionDisplay[]; isLawful: boolean; systems: Set<BrowseSystem> }> = {}
+    const map: Record<string, FactionBrowseData> = {}
 
     for (const m of missions) {
       if (!map[m.faction]) {
-        map[m.faction] = { missions: [], isLawful: true, systems: new Set() }
+        map[m.faction] = { missions: [], hasLawful: false, hasIllegal: false, systems: new Set() }
       }
       map[m.faction].missions.push(m)
-      if (!m.isLawful) map[m.faction].isLawful = false
+      if (m.isLawful) map[m.faction].hasLawful = true
+      else map[m.faction].hasIllegal = true
       for (const system of getMissionBrowseSystems(m)) {
         map[m.faction].systems.add(system)
       }
@@ -276,7 +300,11 @@ export default function BrowseMissionsView({
 
     return (
       <>
-        {!mission.isLawful && (
+        {mission.isLawful ? (
+          <span className="text-[10px] px-1.5 py-0.5 bg-green-950/50 text-green-300 border border-green-500/40 rounded">
+            Lawful
+          </span>
+        ) : (
           <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
             Illegal
           </span>
@@ -441,23 +469,50 @@ export default function BrowseMissionsView({
             {filteredFactionList
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([faction, data]) => {
-                const uniqueTitles = new Set(data.missions.map(m => m.title)).size
+                const status = factionLawfulStatus(data)
+                const typeCounts = countMissionTypesByLawful(data.missions)
                 const contractCount = data.missions.length
                 const systemsArray = Array.from(data.systems)
+                const cardClass =
+                  status === 'mixed'
+                    ? 'bg-slate-900/70 border-slate-600/80 hover:border-slate-500'
+                    : status === 'lawful'
+                      ? 'bg-green-950/30 border-green-500/30 hover:border-green-500/50'
+                      : 'bg-red-950/30 border-red-500/30 hover:border-red-500/50'
                 return (
                   <button
                     key={faction}
                     onClick={() => setSelectedFaction(faction)}
-                    className={`p-3 rounded-lg border text-left transition-all hover:scale-[1.01] ${
-                      data.isLawful
-                        ? 'bg-green-950/30 border-green-500/30 hover:border-green-500/50'
-                        : 'bg-red-950/30 border-red-500/30 hover:border-red-500/50'
-                    }`}
+                    className={`relative p-3 rounded-lg border text-left transition-all hover:scale-[1.01] overflow-hidden ${cardClass}`}
                   >
-                    <h4 className={`font-medium ${data.isLawful ? 'text-green-300' : 'text-red-400'}`}>
+                    {status === 'mixed' && (
+                      <>
+                        <span className="absolute inset-y-0 left-0 w-1 bg-green-500/80" aria-hidden />
+                        <span className="absolute inset-y-0 right-0 w-1 bg-red-500/80" aria-hidden />
+                      </>
+                    )}
+                    <h4
+                      className={`font-medium pl-1 ${
+                        status === 'mixed'
+                          ? 'text-slate-100'
+                          : status === 'lawful'
+                            ? 'text-green-300'
+                            : 'text-red-400'
+                      }`}
+                    >
                       {faction}
                     </h4>
-                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                    {status === 'mixed' && (
+                      <div className="flex flex-wrap items-center gap-1.5 mt-1 pl-1">
+                        <span className="text-[10px] px-1.5 py-0.5 bg-green-950/50 text-green-300 border border-green-500/40 rounded">
+                          {typeCounts.lawful} lawful
+                        </span>
+                        <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
+                          {typeCounts.illegal} illegal
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap pl-1">
                       {systemsArray.map(sys => (
                         <span
                           key={sys}
@@ -467,8 +522,10 @@ export default function BrowseMissionsView({
                         </span>
                       ))}
                     </div>
-                    <p className="text-xs text-slate-500 mt-1">
-                      {uniqueTitles} mission type{uniqueTitles !== 1 ? 's' : ''} · {contractCount} contract variant{contractCount !== 1 ? 's' : ''}
+                    <p className="text-xs text-slate-500 mt-1 pl-1">
+                      {typeCounts.lawful + typeCounts.illegal} mission type
+                      {typeCounts.lawful + typeCounts.illegal !== 1 ? 's' : ''} · {contractCount}{' '}
+                      contract variant{contractCount !== 1 ? 's' : ''}
                     </p>
                   </button>
                 )
