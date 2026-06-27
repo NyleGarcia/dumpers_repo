@@ -27,7 +27,7 @@ const factions: FactionsData = Object.entries(gameReputationData.factionStanding
     factionKey: string
     scopeName?: string
     standings?: Array<{ displayName: string; minReputation: number; gated?: boolean }>
-    careers?: Record<string, { scopeKey: string; standings: Array<{ displayName: string; minReputation: number; gated?: boolean }> }>
+    careers?: Record<string, { scopeKey: string; name?: string; standings: Array<{ displayName: string; minReputation: number; gated?: boolean }> }>
   }
   
   // Convert standings format (displayName -> name)
@@ -41,7 +41,7 @@ const factions: FactionsData = Object.entries(gameReputationData.factionStanding
   if (factionData.careers && Object.keys(factionData.careers).length > 0) {
     careers = Object.entries(factionData.careers).reduce((careerAcc, [careerKey, careerData]) => {
       // Format career name from key (e.g., "bounty_bountyhuntersguild" -> "Bounty")
-      const careerName = careerKey
+      const careerName = careerData.name || careerKey
         .split('_')[0]
         .replace(/([A-Z])/g, ' $1')
         .trim()

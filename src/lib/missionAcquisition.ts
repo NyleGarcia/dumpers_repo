@@ -11,6 +11,7 @@ export interface MissionRepInfo {
   repMax: number | null
   minReputation: number | null
   minStandingName: string | null
+  repCareerLabel: string | null
   variantCount: number
   missionGiver: string | null
   matched: boolean
@@ -53,6 +54,7 @@ type MissionPoolEntry = {
   category: string | null
   minStanding: { name: string; minReputation: number } | null
   maxStanding: { name: string; minReputation: number } | null
+  repCareerLabel?: string | null
   repPoints: number
 }
 
@@ -64,6 +66,7 @@ const contractEntries = blueprintMissionData.contracts as Array<{
   displayTitle?: string
   faction: string
   factionKey?: string
+  repCareerLabel?: string | null
   blueprintPools?: { key: string }[]
 }>
 
@@ -172,21 +175,31 @@ export function formatRepReward(repMin: number | null, repMax: number | null): s
 
 export function formatStandingRequirement(
   standingName: string | null,
-  minReputation: number | null
+  minReputation: number | null,
+  repCareerLabel?: string | null
 ): string | null {
   if (standingName == null && minReputation == null) return null
-  if (minReputation === 0) return 'Neutral (0 rep)'
-  if (standingName && minReputation != null) {
-    return `${standingName} (${minReputation.toLocaleString()} rep)`
+  let standing: string | null
+  if (minReputation === 0) {
+    standing = 'Neutral (0 rep)'
+  } else if (standingName && minReputation != null) {
+    standing = `${standingName} (${minReputation.toLocaleString()} rep)`
+  } else if (standingName) {
+    standing = standingName
+  } else if (minReputation != null) {
+    standing = `${minReputation.toLocaleString()} rep`
+  } else {
+    standing = null
   }
-  if (standingName) return standingName
-  if (minReputation != null) return `${minReputation.toLocaleString()} rep`
-  return null
+  if (!standing) return null
+  if (repCareerLabel) return `${repCareerLabel} · ${standing}`
+  return standing
 }
 
 export function formatStandingRange(
   minStanding: { name: string; minReputation: number } | null | undefined,
-  maxStanding: { name: string; minReputation: number } | null | undefined
+  maxStanding: { name: string; minReputation: number } | null | undefined,
+  repCareerLabel?: string | null
 ): string | null {
   if (!minStanding && !maxStanding) return null
 
@@ -195,11 +208,12 @@ export function formatStandingRange(
     maxStanding &&
     minStanding.minReputation !== maxStanding.minReputation
   ) {
-    return `${minStanding.name} (${minStanding.minReputation.toLocaleString()}) – ${maxStanding.name} (${maxStanding.minReputation.toLocaleString()})`
+    const range = `${minStanding.name} (${minStanding.minReputation.toLocaleString()}) – ${maxStanding.name} (${maxStanding.minReputation.toLocaleString()})`
+    return repCareerLabel ? `${repCareerLabel} · ${range}` : range
   }
 
   const locked = minStanding ?? maxStanding
-  return formatStandingRequirement(locked?.name ?? null, locked?.minReputation ?? null)
+  return formatStandingRequirement(locked?.name ?? null, locked?.minReputation ?? null, repCareerLabel)
 }
 
 export function formatBlueprintDropChance(chance: number | null | undefined): string | null {
@@ -218,6 +232,7 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     repMax: null,
     minReputation: null,
     minStandingName: null,
+    repCareerLabel: null,
     variantCount: 0,
     missionGiver: null,
     matched: false,
@@ -264,6 +279,7 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     repMax: mission.repPoints,
     minReputation: mission.minStanding?.minReputation ?? null,
     minStandingName: mission.minStanding?.name ?? null,
+    repCareerLabel: mission.repCareerLabel ?? matchedContract?.repCareerLabel ?? null,
     variantCount: poolMissions.length,
     missionGiver: mission.faction,
     matched: true,
@@ -293,6 +309,7 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     repMax: null,
     minReputation: null,
     minStandingName: null,
+    repCareerLabel: null,
     variantCount: 0,
     missionGiver: null,
     matched: false,
@@ -340,6 +357,7 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
           repMax: mission.repPoints,
           minReputation: mission.minStanding?.minReputation ?? null,
           minStandingName: mission.minStanding?.name ?? null,
+    repCareerLabel: mission.repCareerLabel ?? matchedContract?.repCareerLabel ?? null,
           variantCount: missions.length,
           missionGiver: mission.faction,
           matched: true,
@@ -371,6 +389,7 @@ function contractToMissionRepInfo(contract: {
   region: string | null
   category: string | null
   minStanding: { name: string; minReputation: number } | null
+  repCareerLabel?: string | null
   repPoints: number
 }): MissionRepInfo {
   return {
@@ -378,6 +397,7 @@ function contractToMissionRepInfo(contract: {
     repMax: contract.repPoints,
     minReputation: contract.minStanding?.minReputation ?? null,
     minStandingName: contract.minStanding?.name ?? null,
+    repCareerLabel: contract.repCareerLabel ?? null,
     variantCount: 1,
     missionGiver: contract.faction,
     matched: true,

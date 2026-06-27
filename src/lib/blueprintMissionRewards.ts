@@ -19,6 +19,9 @@ export interface BlueprintRewardMission {
   maxReputation: number | null
   standingName: string | null
   maxStandingName: string | null
+  /** mobiGlas career tab this standing belongs to (e.g. Security, Bounty, Standing). */
+  repCareerLabel?: string | null
+  repScopeKey?: string | null
   /** Clear Air / scenario milestone points — not faction rep. */
   scenarioPointsRequired?: number | null
   scenarioProgressLabel?: string | null
@@ -55,6 +58,8 @@ type ContractEntry = {
   blueprintPools: ContractBlueprintPool[]
   minStanding: { name: string; minReputation: number } | null
   maxStanding: { name: string; minReputation: number } | null
+  repCareerLabel?: string | null
+  repScopeKey?: string | null
   scenarioPointsRequired?: number | null
   scenarioProgressLabel?: string | null
   repPoints: number
@@ -131,6 +136,8 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
           maxReputation: contract.maxStanding?.minReputation ?? null,
           standingName: contract.minStanding?.name ?? null,
           maxStandingName: contract.maxStanding?.name ?? null,
+          repCareerLabel: contract.repCareerLabel ?? null,
+          repScopeKey: contract.repScopeKey ?? null,
           scenarioPointsRequired: contract.scenarioPointsRequired ?? null,
           scenarioProgressLabel: contract.scenarioProgressLabel ?? null,
           faction: contract.faction,
@@ -285,6 +292,8 @@ export interface ContractMissionBrowseEntry {
   category: string | null
   minStanding: { name: string; minReputation: number } | null
   maxStanding: { name: string; minReputation: number } | null
+  repCareerLabel?: string | null
+  repScopeKey?: string | null
   repPoints: number
   poolKeys: string[]
   /** Lowest pool roll chance when any attached pool is < 100%. */
@@ -353,6 +362,8 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       category: contract.category ?? null,
       minStanding: contract.minStanding,
       maxStanding: contract.maxStanding,
+      repCareerLabel: contract.repCareerLabel ?? null,
+      repScopeKey: contract.repScopeKey ?? null,
       repPoints: contract.repPoints ?? 0,
       poolKeys,
       minPoolChance,

@@ -23,6 +23,12 @@ import {
   SPAWN_CODE_GUIDE_NAMES,
 } from './lib/miningLocationAliases.mjs'
 import {
+  enrichContractStandingFields,
+  extractContractReputationPrerequisite,
+  resolveScopeDisplayName,
+  getPreferredDisplayScopeKey,
+} from './lib/reputationStandingResolver.mjs'
+import {
   isHandMineableOre,
   isHandMineableType,
   normalizeCompendiumOreName,
@@ -1295,6 +1301,8 @@ function buildBlueprintRewardMissionsFromContracts(internalName, missionBlueprin
         maxReputation: contract.maxStanding?.minReputation ?? null,
         standingName: contract.minStanding?.name ?? null,
         maxStandingName: contract.maxStanding?.name ?? null,
+        repCareerLabel: contract.repCareerLabel ?? null,
+        repScopeKey: contract.repScopeKey ?? null,
       })
     }
   }
@@ -1622,6 +1630,7 @@ function parseContractGenerators(localization) {
         }
         
         // Extract standing requirements (direct fields or ContractPrerequisite_Reputation)
+        const repPrereq = extractContractReputationPrerequisite(contract)
         const { minStanding, maxStanding } = extractContractStandingRequirements(
           contract,
           standingDefs,
@@ -1776,6 +1785,9 @@ function parseContractGenerators(localization) {
             maxStanding,
             repPoints,
             isLawful: resolveContractIsLawful(factionKey, contract.debugName),
+            __minStandingPath: repPrereq?.minStandingPath ?? null,
+            __maxStandingPath: repPrereq?.maxStandingPath ?? null,
+            __repScopePath: repPrereq?.scopePath ?? null,
           }
           
           contracts.push(contractData)
@@ -1833,19 +1845,13 @@ function resolveStandingFromPath(standingPath, standingDefs, localization) {
 
 /** Standing on contract fields, or in additionalPrerequisites (InterSec TSG, etc.). */
 function extractContractStandingRequirements(contract, standingDefs, localization) {
-  let minStanding = resolveStandingFromPath(contract.minStanding, standingDefs, localization)
-  let maxStanding = resolveStandingFromPath(contract.maxStanding, standingDefs, localization)
-
-  if (minStanding || maxStanding) {
-    return { minStanding, maxStanding }
+  const prereq = extractContractReputationPrerequisite(contract)
+  if (!prereq) {
+    return { minStanding: null, maxStanding: null }
   }
 
-  for (const prereq of contract.additionalPrerequisites || []) {
-    if (prereq?._Type_ !== 'ContractPrerequisite_Reputation' || prereq.exclude) continue
-    minStanding = resolveStandingFromPath(prereq.minStanding, standingDefs, localization)
-    maxStanding = resolveStandingFromPath(prereq.maxStanding, standingDefs, localization)
-    if (minStanding || maxStanding) break
-  }
+  let minStanding = resolveStandingFromPath(prereq.minStandingPath, standingDefs, localization)
+  let maxStanding = resolveStandingFromPath(prereq.maxStandingPath, standingDefs, localization)
 
   return { minStanding, maxStanding }
 }
@@ -1892,8 +1898,36 @@ function indexContractInMissionsByPool(contract, missionsByPool) {
       minStanding: contract.minStanding,
       maxStanding: contract.maxStanding,
       repPoints: contract.repPoints,
+      repCareerLabel: contract.repCareerLabel ?? null,
+      repScopeKey: contract.repScopeKey ?? null,
     })
   }
+}
+
+function enrichContractStandingData(contractData, reputationSystem, localization) {
+  console.log('\n[CONTRACT STANDINGS] Resolving scope-aware reputation requirements...')
+  let updated = 0
+
+  for (const contract of contractData.contracts) {
+    const enriched = enrichContractStandingFields(contract, reputationSystem, localization)
+    if (!enriched.minStanding && !enriched.maxStanding) continue
+
+    contract.minStanding = enriched.minStanding
+    contract.maxStanding = enriched.maxStanding
+    contract.repScopeKey = enriched.repScopeKey
+    contract.repCareerLabel = enriched.repCareerLabel
+    delete contract.__minStandingPath
+    delete contract.__maxStandingPath
+    delete contract.__repScopePath
+    updated++
+  }
+
+  contractData.missionsByPool = {}
+  for (const contract of contractData.contracts) {
+    indexContractInMissionsByPool(contract, contractData.missionsByPool)
+  }
+
+  console.log(`  Updated ${updated} contract(s) with scope-aware standing labels`)
 }
 
 /**
@@ -3686,7 +3720,8 @@ function parseFactionReputations(localization = {}) {
       displayNameKey: val.displayName || '',
       descriptionKey: val.description || '',
       recordName,
-      filePath: `libs/foundry/records/factions/factionreputation/${file}`
+      filePath: `libs/foundry/records/factions/factionreputation/${file}`,
+      reputationContextFile: val.reputationContextPropertiesUI || null,
     }
   }
   
@@ -4028,6 +4063,43 @@ function parseReputationContexts(scopes) {
 }
 
 /**
+ * Build career standings for Archive faction cards.
+ */
+function buildCareerStandingsFromScope(scopeKey, scopes, localization) {
+  const displayScopeKey = getPreferredDisplayScopeKey(scopeKey, scopes)
+  const scope = scopes[displayScopeKey] || scopes[scopeKey]
+  if (!scope?.standings?.length) return null
+
+  const standings = scope.standings
+    .filter((s) => s.displayName && !s.displayName.includes('PLACEHOLDER'))
+    .map((s) => ({
+      displayName: s.displayName,
+      minReputation: s.minReputation,
+      gated: s.gated,
+    }))
+
+  if (standings.length === 0) return null
+
+  return {
+    scopeKey,
+    displayScopeKey,
+    displayName: resolveScopeDisplayName(displayScopeKey, scopes, localization)
+      || resolveScopeDisplayName(scopeKey, scopes, localization)
+      || scopeKey,
+    standings,
+  }
+}
+
+function resolveFactionContext(faction, factionContexts) {
+  const contextPath = faction.reputationContextFile
+  if (!contextPath) return null
+
+  const contextFile = basename(String(contextPath).replace(/\\/g, '/'))
+  const contextName = contextFile.replace(/^reputationcontext_/i, '').replace(/\.json$/i, '')
+  return factionContexts[contextName] ?? null
+}
+
+/**
  * Build complete reputation system data
  */
 function parseReputationSystem(localization = {}) {
@@ -4041,125 +4113,57 @@ function parseReputationSystem(localization = {}) {
   const rewardAmounts = parseReputationRewardAmounts()
   const { missions, missionsByFaction } = parseMissionBrokerData(localization)
   
-  // Build faction standings map using context files for proper scope mapping
+  // Build faction standings from each faction's reputationContextPropertiesUI file
   const factionStandings = {}
   for (const [factionKey, faction] of Object.entries(factions)) {
-    // Extract the faction identifier from the key (e.g., "factionreputation_lawful_bountyhuntersguild" -> "bountyhuntersguild")
-    // ALWAYS lowercase for consistent storage/lookup
-    const factionId = factionKey
-      .replace('factionreputation_', '')
-      .replace('lawful_', '')
-      .replace('unlawful_', '')
-      .toLowerCase()
-    
-    // Find matching context by faction ID - prioritize exact matches, then longer/more specific matches
-    const contextEntries = Object.entries(factionContexts)
-    
-    // First try exact match
-    let contextEntry = contextEntries.find(([ctxName]) => 
-      ctxName.toLowerCase() === factionId.toLowerCase()
-    )
-    
-    // If no exact match, try partial matches but prefer longer context names (more specific)
-    if (!contextEntry) {
-      const partialMatches = contextEntries.filter(([ctxName]) => 
-        factionId.toLowerCase().includes(ctxName.toLowerCase()) ||
-        ctxName.toLowerCase().includes(factionId.toLowerCase())
-      ).sort((a, b) => b[0].length - a[0].length) // Sort by length descending (more specific first)
-      
-      if (partialMatches.length > 0) {
-        contextEntry = partialMatches[0]
+    const context = resolveFactionContext(faction, factionContexts)
+    if (!context) continue
+
+    const careers = {}
+    for (const career of context.careerScopes || []) {
+      const built = buildCareerStandingsFromScope(career.scopeKey, scopes, localization)
+      if (!built) continue
+
+      const careerKey = career.scopeName || career.scopeKey
+      careers[careerKey] = {
+        scopeKey: built.scopeKey,
+        displayScopeKey: built.displayScopeKey,
+        name: built.displayName,
+        standings: built.standings,
       }
     }
-    
-    if (contextEntry) {
-      const [ctxName, context] = contextEntry
-      
-      // Use career scopes if available (these have proper standing names)
-      if (context.careerScopes.length > 0) {
-        // Build careers object with multiple career paths
-        const careers = {}
-        for (const career of context.careerScopes) {
-          // Filter out placeholders and get valid standings
-          const validStandings = (career.standings || [])
-            .filter(s => !s.displayName.includes('PLACEHOLDER') && s.displayName)
-            .map(s => ({
-              displayName: s.displayName,
-              minReputation: s.minReputation,
-              gated: s.gated
-            }))
-          
-          if (validStandings.length > 0) {
-            careers[career.scopeName] = {
-              scopeKey: career.scopeKey,
-              standings: validStandings
-            }
-          }
-        }
-        
-        // Use the first career with valid standings as the default
-        const firstValidCareer = Object.values(careers)[0]
-        
+
+    const careerList = Object.values(careers)
+    const defaultCareer =
+      careerList.find((c) => c.scopeKey !== 'FactionReputationScope')
+      || careerList[0]
+
+    if (careerList.length > 0) {
+      factionStandings[factionKey] = {
+        faction: faction.name,
+        factionKey,
+        careers: Object.keys(careers).length > 0 ? careers : undefined,
+        scopeName: defaultCareer?.displayScopeKey || defaultCareer?.scopeKey,
+        standings: defaultCareer?.standings || [],
+      }
+      continue
+    }
+
+    if (context.primaryScope?.standings?.length) {
+      const built = buildCareerStandingsFromScope(context.primaryScope.scopeKey, scopes, localization)
+      if (built) {
         factionStandings[factionKey] = {
           faction: faction.name,
           factionKey,
-          careers: Object.keys(careers).length > 0 ? careers : undefined,
-          scopeName: firstValidCareer?.scopeKey || ctxName,
-          standings: firstValidCareer?.standings || []
-        }
-      } else if (context.primaryScope) {
-        // Fall back to primary scope
-        const validStandings = (context.primaryScope.standings || [])
-          .filter(s => !s.displayName.includes('PLACEHOLDER') && s.displayName)
-          .map(s => ({
-            displayName: s.displayName,
-            minReputation: s.minReputation,
-            gated: s.gated
-          }))
-        
-        factionStandings[factionKey] = {
-          faction: faction.name,
-          factionKey,
-          scopeName: context.primaryScope.scopeKey,
-          standings: validStandings
-        }
-      }
-    }
-    
-    // Fallback: try direct scope matching if no context found
-    if (!factionStandings[factionKey]) {
-      // Try to find a scope that matches this faction specifically (not generic "guild")
-      const specificMatches = Object.entries(scopes).filter(([scopeName]) => {
-        const normalizedScope = scopeName.toLowerCase().replace('reputationscope_', '')
-        const normalizedFaction = factionId.toLowerCase()
-        // Match faction-specific scopes like "bounty_bountyhuntersguild" but not generic "guild"
-        return normalizedScope.includes(normalizedFaction) || 
-               (normalizedFaction.includes(normalizedScope) && normalizedScope.length > 5)
-      }).sort((a, b) => b[0].length - a[0].length) // Prefer longer (more specific) matches
-      
-      if (specificMatches.length > 0) {
-        const [scopeName, scope] = specificMatches[0]
-        const validStandings = (scope.standings || [])
-          .filter(s => !s.displayName.includes('PLACEHOLDER') && s.displayName)
-          .map(s => ({
-            displayName: s.displayName,
-            minReputation: s.minReputation,
-            gated: s.gated
-          }))
-        
-        if (validStandings.length > 0) {
-          factionStandings[factionKey] = {
-            faction: faction.name,
-            factionKey,
-            scopeName,
-            standings: validStandings
-          }
+          scopeName: built.displayScopeKey || built.scopeKey,
+          standings: built.standings,
         }
       }
     }
   }
   
   return {
+    standingsByPath,
     standingsByCategory,
     scopes,
     factions,
@@ -4233,6 +4237,7 @@ async function main() {
     contractData.standingDefs,
     contractData.repRewardAmounts
   )
+  enrichContractStandingData(contractData, reputationSystem, localization)
   
   // Parse weapons, ordnance, and modules
   console.log('\n[6/7] Parsing FPS weapons, ordnance, and salvage modules...')

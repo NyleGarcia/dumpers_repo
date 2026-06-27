@@ -85,7 +85,7 @@ const TIPS: { title: string; content: string }[] = [
   },
   {
     title: 'Standing Progression',
-    content: 'All factions use the same standing ladder from Neutral to Elite Contractor. Higher standings unlock better-paying contracts and exclusive blueprint rewards.',
+    content: 'Each faction has its own reputation tiers — and many have multiple career tracks (Security, Bounty, Hauling, etc.) with different rank names. Mission tags show which career path a requirement belongs to when known.',
   },
 ]
 

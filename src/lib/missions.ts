@@ -51,6 +51,7 @@ export interface MissionListEntry {
   repMax?: number | null
   minReputation?: number | null
   minStandingName?: string | null
+  repCareerLabel?: string | null
   dropChance?: number | null
   regions: Region[]
   // Enhanced mission info
@@ -120,6 +121,7 @@ export function buildMissionList(
         }, reward.chance, reward.locations, {
           minReputation: reward.minReputation,
           minStandingName: reward.standingName,
+          repCareerLabel: reward.repCareerLabel,
           repPoints: reward.repPoints,
           scenarioPointsRequired: reward.scenarioPointsRequired,
           scenarioProgressLabel: reward.scenarioProgressLabel,
@@ -177,6 +179,7 @@ export interface TargetBlueprintMissionOption {
   repMax?: number | null
   minReputation?: number | null
   minStandingName?: string | null
+  repCareerLabel?: string | null
   dropChance?: number | null
   regions: Region[]
   // Enhanced mission info
@@ -208,6 +211,7 @@ function attachMissionRep<T extends { mission: string }>(
   repOverride?: {
     minReputation?: number | null
     minStandingName?: string | null
+    repCareerLabel?: string | null
     repPoints?: number | null
     scenarioPointsRequired?: number | null
     scenarioProgressLabel?: string | null
@@ -217,7 +221,7 @@ function attachMissionRep<T extends { mission: string }>(
     faction?: string | null
     isLawful?: boolean
   }
-): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category' | 'scenarioPointsRequired'> {
+): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'minReputation' | 'minStandingName' | 'repCareerLabel' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category' | 'scenarioPointsRequired'> {
   const fallbackRep = getMissionRepInfo(entry.mission)
   const rep = repOverride?.scenarioPointsRequired != null
     ? {
@@ -247,6 +251,7 @@ function attachMissionRep<T extends { mission: string }>(
         repMax: repOverride.repPoints ?? null,
         minReputation: repOverride.minReputation ?? null,
         minStandingName: repOverride.minStandingName ?? null,
+        repCareerLabel: repOverride.repCareerLabel ?? null,
         variantCount: 1,
         missionGiver: repOverride.faction ?? parseMissionGiver(entry.mission),
         matched: true,
@@ -274,6 +279,7 @@ function attachMissionRep<T extends { mission: string }>(
     repMax: rep.repMax,
     minReputation: rep.minReputation,
     minStandingName: rep.minStandingName,
+    repCareerLabel: rep.repCareerLabel ?? repOverride?.repCareerLabel ?? null,
     dropChance: dropChance ?? null,
     regions: categorizeRegions(locations),
     isLawful: rep.isLawful,
@@ -331,6 +337,7 @@ export function getMissionsForBlueprint(
         {
           minReputation: reward.minReputation,
           minStandingName: reward.standingName,
+          repCareerLabel: reward.repCareerLabel,
           repPoints: reward.repPoints,
           scenarioPointsRequired: reward.scenarioPointsRequired,
           scenarioProgressLabel: reward.scenarioProgressLabel,

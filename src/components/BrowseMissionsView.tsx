@@ -325,7 +325,7 @@ export default function BrowseMissionsView({
         ? [systemRegion]
         : []
 
-    const standingLabel = formatStandingRange(mission.minStanding, mission.maxStanding)
+    const standingLabel = formatStandingRange(mission.minStanding, mission.maxStanding, mission.repCareerLabel)
     const repText = formatRepReward(mission.repPoints, mission.repPoints)
     const poolRollText =
       mission.hasPartialPoolRoll && mission.minPoolChance < 1

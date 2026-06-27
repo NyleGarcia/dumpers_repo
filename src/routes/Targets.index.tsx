@@ -11,6 +11,7 @@ import {
   formatBlueprintUnlockBadge,
   formatBlueprintDropChance,
   formatRepReward,
+  formatStandingRequirement,
   getBlueprintUnlockInfo,
   getPoolsForBlueprint,
 } from '../lib/missionAcquisition'
@@ -38,9 +39,11 @@ function MissionCategoryBadge({ category }: { category?: string | null }) {
 function MissionRepBadge({
   minStandingName,
   minReputation,
+  repCareerLabel,
 }: {
   minStandingName?: string | null
   minReputation?: number | null
+  repCareerLabel?: string | null
 }) {
   if (minReputation == null && minStandingName == null) {
     return (
@@ -51,13 +54,7 @@ function MissionRepBadge({
   }
 
   const isNeutral = minReputation === 0
-  const label = minStandingName
-    ? minReputation != null
-      ? `${minStandingName} (${minReputation.toLocaleString()})`
-      : minStandingName
-    : minReputation != null
-      ? `${minReputation.toLocaleString()} rep`
-      : null
+  const label = formatStandingRequirement(minStandingName ?? null, minReputation ?? null, repCareerLabel)
 
   return (
     <span
@@ -81,6 +78,7 @@ function MissionMetaLine({
   repMax,
   minStandingName,
   minReputation,
+  repCareerLabel,
   dropChance,
   isLawful = true,
   aUecMin = 0,
@@ -94,6 +92,7 @@ function MissionMetaLine({
   repMax?: number | null
   minStandingName?: string | null
   minReputation?: number | null
+  repCareerLabel?: string | null
   dropChance?: number | null
   isLawful?: boolean
   aUecMin?: number
@@ -119,7 +118,7 @@ function MissionMetaLine({
       )}
       <MissionCategoryBadge category={category} />
       <MissionLocationTags regions={regions} subRegion={subRegion} system={system} />
-      <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} />
+      <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} repCareerLabel={repCareerLabel} />
       {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
       {aUecText && <span className="text-[10px] text-yellow-400/90">{aUecText}</span>}
       {dropText && <span className="text-[10px] text-amber-400/80">{dropText}</span>}
@@ -206,6 +205,7 @@ function MissionChecklistGroups({
                         repMax={mission.repMax}
                         minStandingName={mission.minStandingName}
                         minReputation={mission.minReputation}
+                        repCareerLabel={mission.repCareerLabel}
                         dropChance={mission.dropChance}
                         isLawful={mission.isLawful}
                         aUecMin={mission.aUecMin}
@@ -594,6 +594,7 @@ export default function TargetsRoute() {
                                     repMax={m.repMax}
                                     minStandingName={m.minStandingName}
                                     minReputation={m.minReputation}
+                                    repCareerLabel={m.repCareerLabel}
                                     dropChance={m.dropChance}
                                     isLawful={m.isLawful}
                                     aUecMin={m.aUecMin}
