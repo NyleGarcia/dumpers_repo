@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, getRouteApi } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
 import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
@@ -84,6 +84,8 @@ const OPEN_STATUSES: CustomOrderStatus[] = [
   'ready_for_pickup',
 ]
 
+const customOrdersRoute = getRouteApi('/orders')
+
 function profileFromOrderFields(
   userId: string,
   fields?: { rsi_handle: string | null; display_name: string | null; email: string | null } | null
@@ -122,6 +124,7 @@ export default function CustomOrdersRoute() {
   }, [blueprints])
   const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
   const { draftItems, draftCount, clearDraft } = useOrderDraft()
+  const search = customOrdersRoute.useSearch()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -188,6 +191,10 @@ export default function CustomOrdersRoute() {
   useEffect(() => {
     setAnalyticsSubTool(listTab)
   }, [listTab])
+
+  useEffect(() => {
+    if (search.tab) setListTab(search.tab)
+  }, [search.tab])
 
   const handleStatusChange = async (orderId: string, status: CustomOrderStatus) => {
     const result = await updateCustomOrderStatus(orderId, status)

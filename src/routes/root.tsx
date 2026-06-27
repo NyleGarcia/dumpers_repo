@@ -66,6 +66,12 @@ const customOrdersRoute = createRoute({
   path: '/orders',
   component: CustomOrdersRoute,
   beforeLoad: requireFeature('custom_orders'),
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab:
+      search.tab === 'completed' || search.tab === 'archive'
+        ? (search.tab as 'completed' | 'archive')
+        : undefined,
+  }),
 })
 
 const fulfillmentRoute = createRoute({

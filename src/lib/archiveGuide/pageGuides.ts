@@ -181,6 +181,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Bell icon in the header shows your unread notification count',
       'Alerts cover marketplace events such as order acceptances, ready-for-pickup, and status changes',
+      'Order alerts include a clickable link in the message — Fulfillment for seller/fulfiller actions, Custom Orders for pickup and buyer steps',
       'Itemized order summaries reflect blueprint stats and materials when the order includes them',
       'Click Clear on a notification to dismiss it — dismissed rows are deleted (no read history kept)',
       'Use Clear all to dismiss every notification at once',
