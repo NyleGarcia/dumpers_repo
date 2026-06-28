@@ -485,16 +485,20 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                           className="block text-[10px] leading-tight text-slate-200 truncate"
                           title={
                             row.bandTooltip
-                              ? `${row.label} (${row.bandTooltip})${
-                                  row.rangeHint ? ` · ${row.rangeHint}` : ''
-                                }`
-                              : row.rangeHint
-                                ? `${row.label} · ${row.rangeHint}`
-                                : row.label
+                              ? `${row.label} (${row.bandTooltip})`
+                              : row.label
                           }
                         >
                           {row.label}
                         </span>
+                        {row.rangeHint ? (
+                          <span
+                            className="block text-[9px] leading-tight text-slate-500 tabular-nums"
+                            title="Typical composition range for this material"
+                          >
+                            {row.rangeHint}
+                          </span>
+                        ) : null}
                         <div className="relative">
                           <input
                             type="number"
