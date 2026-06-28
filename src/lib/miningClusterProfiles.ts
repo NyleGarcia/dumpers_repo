@@ -1,6 +1,7 @@
 import gameMiningSpawnsData from '../data/game-mining-spawns.json'
 import type { MiningTrackerEntry } from './localGuestCache'
 import { getSpawnKeysForGuideLocation, isBroadGuideLocation, spawnKeyMatchesGuideLocation, formatOverallTagLabel } from './miningLocationAliases'
+import { getDisplayNameForSpawnKey, getPrimaryCompendiumGuideName } from './miningLocationNames'
 
 export type DepositType = 'surface' | 'asteroid'
 export type ProfileMode = 'overall' | 'location'
@@ -282,6 +283,79 @@ export function getRockCalculatorLocationOptions(
   }
 
   return options.sort((a, b) => a.label.localeCompare(b.label))
+}
+
+/** Match a spawn key or guide label to a Rock Calculator location dropdown option. */
+export function findRockCalculatorLocationOption(
+  oreName: string,
+  depositType: DepositType,
+  locationRef: string,
+  options: RockCalculatorLocationOption[]
+): RockCalculatorLocationOption | undefined {
+  if (!locationRef || options.length === 0) return undefined
+
+  const direct = options.find((opt) => opt.value === locationRef || opt.label === locationRef)
+  if (direct) return direct
+
+  const loc = getLocationProfile(oreName, locationRef, depositType)
+  if (loc) {
+    const candidates = [loc.guideName, loc.locationName, loc.displayName, loc.spawnKey].filter(
+      Boolean
+    ) as string[]
+    const byProfile = options.find(
+      (opt) => candidates.includes(opt.value) || candidates.includes(opt.label)
+    )
+    if (byProfile) return byProfile
+  }
+
+  const displayName = getDisplayNameForSpawnKey(locationRef)
+  if (displayName && displayName !== locationRef) {
+    const byDisplay = options.find((opt) => opt.value === displayName || opt.label === displayName)
+    if (byDisplay) return byDisplay
+  }
+
+  const guideName = getPrimaryCompendiumGuideName(locationRef)
+  if (guideName) {
+    return options.find((opt) => opt.value === guideName || opt.label === guideName)
+  }
+
+  return undefined
+}
+
+/** Preferred Rock Calculator site when loading a tracked ore card (overall → best spawn). */
+export function resolveRockCalculatorLocationFromEntry(
+  entry: MiningTrackerEntry | null,
+  oreName: string,
+  depositType: DepositType,
+  locationOptions: RockCalculatorLocationOption[]
+): RockCalculatorLocationOption | undefined {
+  if (!entry || entry.oreName !== oreName || locationOptions.length === 0) return undefined
+
+  const entryDeposit: DepositType = entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
+  if (entryDeposit !== depositType) return undefined
+
+  if (entry.profileMode === 'location' && entry.locationName) {
+    return findRockCalculatorLocationOption(
+      oreName,
+      depositType,
+      entry.locationName,
+      locationOptions
+    )
+  }
+
+  if (entry.profileMode === 'overall') {
+    const overall = getOverallProfile(oreName, depositType)
+    if (overall?.bestLocation) {
+      return findRockCalculatorLocationOption(
+        oreName,
+        depositType,
+        overall.bestLocation,
+        locationOptions
+      )
+    }
+  }
+
+  return undefined
 }
 
 function rockProfileFromLocation(

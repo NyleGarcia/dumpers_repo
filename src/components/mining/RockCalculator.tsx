@@ -4,6 +4,7 @@ import {
   depositTypeLabel,
   getDepositTypes,
   getRockCalculatorLocationOptions,
+  resolveRockCalculatorLocationFromEntry,
   getRockCompositionProfile,
   type DepositType,
 } from '../../lib/miningClusterProfiles'
@@ -137,19 +138,12 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
       return
     }
 
-    const entry = loadEntryRef.current
-    let preferred: string | undefined
-    if (entry && entry.oreName === oreName) {
-      const entryDeposit: DepositType =
-        entry.depositType === 'asteroid' ? 'asteroid' : 'surface'
-      if (entryDeposit === depositType && entry.locationName) {
-        preferred = entry.locationName
-      }
-    }
-
-    const match = preferred
-      ? locationOptions.find((opt) => opt.value === preferred || opt.label === preferred)
-      : undefined
+    const match = resolveRockCalculatorLocationFromEntry(
+      loadEntryRef.current,
+      oreName,
+      depositType,
+      locationOptions
+    )
 
     setSelectedLocation(match?.value ?? locationOptions[0].value)
   }, [oreName, depositType, loadToken, locationOptions])
