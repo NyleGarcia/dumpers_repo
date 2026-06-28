@@ -17,8 +17,10 @@ export default function BlueprintCard({
   canModify = true,
   isPending = false,
   showTargetControl = false,
+  showMissionsControl = false,
   isOnTargetList = false,
   onToggleTarget,
+  onOpenMissions,
   effectiveIsOrderable = false,
   catalogIsReward = false,
   isSuperAdmin = false,
@@ -59,6 +61,13 @@ export default function BlueprintCard({
     }
   }
 
+  const handleMissionsClick = (e) => {
+    e.stopPropagation()
+    if (showMissionsControl && onOpenMissions) {
+      onOpenMissions()
+    }
+  }
+
   const handleOrderableToggle = (e) => {
     e.stopPropagation()
     if (isSuperAdmin && onToggleOrderable) {
@@ -69,7 +78,7 @@ export default function BlueprintCard({
   const hasOverride = isSuperAdmin && effectiveIsOrderable !== catalogIsReward
   const hasCategoryTags = categoryTags.length > 0
   const hasRewardLabel = typeof blueprint.isReward === 'boolean' || isSuperAdmin
-  const showFooter = showTargetControl || hasCategoryTags || hasRewardLabel
+  const showFooter = showTargetControl || showMissionsControl || hasCategoryTags || hasRewardLabel
 
   return (
     <div
@@ -217,18 +226,36 @@ export default function BlueprintCard({
                     </div>
                   )}
                 </div>
-                {showTargetControl && (
-                  <button
-                    onClick={handleTargetClick}
-                    className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
-                      isOnTargetList
-                        ? 'bg-orange-600/30 text-orange-300 hover:bg-orange-600/40'
-                        : 'bg-slate-700/50 text-slate-400 hover:bg-orange-600/20 hover:text-orange-300'
-                    }`}
-                    title={isOnTargetList ? 'Remove from Mission Tracker' : 'Add to Mission Tracker'}
-                  >
-                    {isOnTargetList ? 'Tracked' : 'Track'}
-                  </button>
+                {(showTargetControl || showMissionsControl) && (
+                  <div className="flex items-center gap-1 shrink-0">
+                    {showTargetControl && !isOnTargetList && (
+                      <button
+                        onClick={handleTargetClick}
+                        className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-orange-600/20 hover:text-orange-300"
+                        title="Add to Mission Tracker"
+                      >
+                        Track
+                      </button>
+                    )}
+                    {showMissionsControl && (
+                      <button
+                        onClick={handleMissionsClick}
+                        className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-sky-600/20 hover:text-sky-300"
+                        title="View missions that reward this blueprint"
+                      >
+                        Missions
+                      </button>
+                    )}
+                    {showTargetControl && isOnTargetList && (
+                      <button
+                        onClick={handleTargetClick}
+                        className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-orange-600/30 text-orange-300 hover:bg-orange-600/40"
+                        title="Remove from Mission Tracker"
+                      >
+                        Tracked
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

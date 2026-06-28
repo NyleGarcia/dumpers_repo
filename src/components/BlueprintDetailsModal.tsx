@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { type BlueprintWithSlots } from '../lib/blueprintResources'
 import {
   calculateSlotModifiers,
@@ -21,7 +21,10 @@ import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import BlueprintCategoryTags from './BlueprintCategoryTags'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
+import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import BrandRevealModalShell from './layout/BrandRevealModalShell'
+import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
+import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
 
 interface SlotOption {
   type?: string
@@ -97,12 +100,19 @@ export default function BlueprintDetailsModal({
   canAddToOrder = false,
   ownerCount,
 }: BlueprintDetailsModalProps) {
-  // Track quality for each slot (indexed by slot position)
+  const navigate = useNavigate()
   const [slotQualities, setSlotQualities] = useState<Record<number, number>>({})
   const [addedToOrder, setAddedToOrder] = useState(false)
+  const [missionsModalOpen, setMissionsModalOpen] = useState(false)
   const { addToDraft, draftCount } = useOrderDraft()
 
   const blueprintWithSlots = blueprint as BlueprintWithSlots
+  const rewardMissions = useMemo(
+    () => getRewardMissionsForBlueprint(blueprint.internalName ?? blueprint.file ?? ''),
+    [blueprint.internalName, blueprint.file]
+  )
+  const hasRewardMissions = rewardMissions.length > 0
+  const canBrowseMissions = isApproved || isGuest
 
   useEffect(() => {
     setSlotQualities(buildDefaultSlotQualities(blueprintWithSlots))
@@ -266,10 +276,10 @@ export default function BlueprintDetailsModal({
           <CombinedModifiersSection modifiers={aggregatedModifiers} />
         )}
 
-        {blueprint.rewardMissions && blueprint.rewardMissions.length > 0 && (
+        {hasRewardMissions && (
           <div className="bg-amber-950/20 border border-amber-500/25 rounded-xl p-3 sm:p-4">
             <h3 className="text-amber-300/90 text-sm font-semibold mb-2">
-              Reward Missions ({blueprint.rewardMissions.length})
+              Reward Missions ({rewardMissions.length})
             </h3>
             {!isApproved && !isGuest ? (
               <p className="text-sm text-slate-400">
@@ -278,8 +288,8 @@ export default function BlueprintDetailsModal({
               </p>
             ) : isAcquired ? (
               <p className="text-sm text-slate-400">
-                This blueprint is already in your pool. Reward missions are only tracked in Mission Tracker
-                while you are still hunting a blueprint.
+                This blueprint is already in your pool. Use Missions to see which contracts still drop it for
+                other members.
               </p>
             ) : isOnTarget ? (
               <p className="text-sm text-slate-400">
@@ -289,17 +299,31 @@ export default function BlueprintDetailsModal({
               </p>
             ) : !canAddToTargetList ? (
               <p className="text-sm text-slate-400">
-                This blueprint cannot be tracked (no reward missions to track).
+                Browse missions below to see which contracts reward this blueprint.
               </p>
             ) : (
-              <div className="flex items-center gap-3">
+              <p className="text-sm text-slate-400">
+                Track this blueprint or open Missions to jump to a rewarding contract in Browse Missions.
+              </p>
+            )}
+            {canBrowseMissions && (
+              <div className="flex items-center gap-2 mt-3">
+                {canAddToTargetList && !isAcquired && !isOnTarget && (
+                  <button
+                    type="button"
+                    onClick={onToggleTarget}
+                    className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-orange-600/30 text-orange-300 hover:bg-orange-600/40"
+                  >
+                    Track
+                  </button>
+                )}
                 <button
-                  onClick={onToggleTarget}
-                  className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-orange-600/30 text-orange-300 hover:bg-orange-600/40"
+                  type="button"
+                  onClick={() => setMissionsModalOpen(true)}
+                  className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-sky-600/30 text-sky-300 hover:bg-sky-600/40"
                 >
-                  Track
+                  Missions
                 </button>
-                <span className="text-sm text-slate-400">Click to add to Mission Tracker</span>
               </div>
             )}
           </div>
@@ -366,6 +390,19 @@ export default function BlueprintDetailsModal({
           </div>
         )}
       </div>
+      {missionsModalOpen && (
+        <BlueprintRewardMissionsModal
+          blueprintName={blueprint.blueprintName || blueprint.internalName || 'Blueprint'}
+          missions={rewardMissions}
+          onClose={() => setMissionsModalOpen(false)}
+          onSelectMission={(reward) => {
+            if (!stashBrowseMissionFromReward(reward)) return
+            setMissionsModalOpen(false)
+            onClose()
+            void navigate({ to: '/targets' })
+          }}
+        />
+      )}
     </BrandRevealModalShell>
   )
 }

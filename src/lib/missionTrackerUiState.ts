@@ -1,3 +1,5 @@
+import { findBrowseMissionEntry } from './blueprintMissionRewards'
+
 const STORAGE_KEY = 'dumpers_repo_mission_tracker_ui_v1'
 
 export type MissionTrackerTopView = 'tracker' | 'browse'
@@ -77,4 +79,26 @@ export function writeMissionTrackerUiState(
 
 export function makeBrowseMissionKey(mission: { entryKey: string }): string {
   return mission.entryKey
+}
+
+export function stashBrowseMissionFromReward(reward: {
+  mission: string
+  faction: string
+  system?: string | null
+}): boolean {
+  const entry = findBrowseMissionEntry(reward.mission, {
+    faction: reward.faction,
+    system: reward.system,
+  })
+  if (!entry) return false
+
+  writeMissionTrackerUiState({
+    topView: 'browse',
+    browse: {
+      selectedFaction: entry.faction,
+      selectedMissionKey: makeBrowseMissionKey(entry),
+      searchTerm: '',
+    },
+  })
+  return true
 }

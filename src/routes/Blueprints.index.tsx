@@ -1,7 +1,9 @@
 import React from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
+import BlueprintRewardMissionsModal from '../components/BlueprintRewardMissionsModal'
 import BlueprintVariantGroupCard from '../components/BlueprintVariantGroupCard'
 import BlueprintMaterialFilter from '../components/BlueprintMaterialFilter'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
@@ -16,6 +18,8 @@ import {
   canAddBlueprintToTargetList,
   resolveIsOrderable,
 } from '../lib/blueprintOrderable'
+import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
+import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
 import {
   formatSubtypeLabel,
   getArmorSlot as getArmorSlotFromPath,
@@ -61,7 +65,8 @@ const STATIC_SUBTYPE_OPTIONS = {
 const formatSubType = formatSubtypeLabel
 
 export default function BlueprintsRoute() {
-  const { 
+  const navigate = useNavigate()
+  const {
     acquiredBlueprints: myAcquiredBlueprints, 
     toggleAcquired, 
     canModifyBlueprints,
@@ -103,6 +108,10 @@ export default function BlueprintsRoute() {
   const [acquisitionFilter, setAcquisitionFilter] = React.useState<'all' | 'acquired' | 'not_acquired'>('all')
   const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
   const [expandedGroupKey, setExpandedGroupKey] = React.useState<string | null>(null)
+  const [rewardMissionsModal, setRewardMissionsModal] = React.useState<{
+    id: string
+    name: string
+  } | null>(null)
 
   const { data: blueprints, isLoading } = useBlueprintData()
 
@@ -403,6 +412,22 @@ export default function BlueprintsRoute() {
     setExpandedGroupKey(null)
   }, [gridFilterSignature])
 
+  const rewardMissionsModalList = React.useMemo(() => {
+    if (!rewardMissionsModal) return []
+    return getRewardMissionsForBlueprint(rewardMissionsModal.id)
+  }, [rewardMissionsModal])
+
+  const handleSelectRewardMission = React.useCallback(
+    (reward: Parameters<typeof stashBrowseMissionFromReward>[0]) => {
+      if (!stashBrowseMissionFromReward(reward)) return
+      setRewardMissionsModal(null)
+      setSelectedBlueprint(null)
+      setModalOriginRect(null)
+      void navigate({ to: '/targets' })
+    },
+    [navigate]
+  )
+
   const renderBlueprintCard = React.useCallback(
     (bp) => {
       const effectiveIsOrderable = resolveIsOrderable(bp, overridesMap)
@@ -411,6 +436,9 @@ export default function BlueprintsRoute() {
         (isApproved || isGuest) &&
         !displayAcquiredBlueprints[bp.internalName] &&
         canAddBlueprintToTargetList(bp, overridesMap)
+      const canShowMissions =
+        (isApproved || isGuest) &&
+        getRewardMissionsForBlueprint(bp.internalName).length > 0
 
       return (
         <BlueprintCard
@@ -424,8 +452,15 @@ export default function BlueprintsRoute() {
           canModify={canModifyBlueprints}
           isPending={isPending}
           showTargetControl={canTarget}
+          showMissionsControl={canShowMissions}
           isOnTargetList={isOnTargetList(bp.internalName)}
           onToggleTarget={() => toggleTarget(bp.internalName)}
+          onOpenMissions={() =>
+            setRewardMissionsModal({
+              id: bp.internalName,
+              name: bp.blueprintName ?? bp.internalName,
+            })
+          }
           effectiveIsOrderable={effectiveIsOrderable}
           catalogIsReward={catalogReward}
           isSuperAdmin={isSuperAdmin && !isViewingOther}
@@ -860,6 +895,15 @@ export default function BlueprintsRoute() {
           onToggleTarget={() => toggleTarget(selectedBlueprint.internalName)}
           canAddToOrder={!isGuest && isApproved && canAddBlueprintToOrder(selectedBlueprint, overridesMap)}
           ownerCount={blueprintOwnerCounts[selectedBlueprint.internalName]}
+        />
+      )}
+
+      {rewardMissionsModal && (
+        <BlueprintRewardMissionsModal
+          blueprintName={rewardMissionsModal.name}
+          missions={rewardMissionsModalList}
+          onClose={() => setRewardMissionsModal(null)}
+          onSelectMission={handleSelectRewardMission}
         />
       )}
     </FeaturePageLayout>

@@ -1,9 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useBlueprintData } from '../routes/blueprints'
 import MissionLocationTags from './MissionLocationTags'
+import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import { getBrowseSystemsForMission } from '../lib/missionLocations'
 import type { Region } from '../lib/missions'
-import { getContractMissionBrowseCatalog, type ContractMissionBrowseEntry } from '../lib/blueprintMissionRewards'
+import {
+  getContractMissionBrowseCatalog,
+  getRewardMissionsForBlueprint,
+  type BlueprintRewardMission,
+  type ContractMissionBrowseEntry,
+} from '../lib/blueprintMissionRewards'
 import {
   formatBlueprintDropChance,
   formatRepReward,
@@ -12,6 +18,7 @@ import {
 import {
   makeBrowseMissionKey,
   readMissionTrackerUiState,
+  stashBrowseMissionFromReward,
   writeMissionTrackerUiState,
   type BrowseSystem,
 } from '../lib/missionTrackerUiState'
@@ -144,6 +151,10 @@ export default function BrowseMissionsView({
   )
   const [searchTerm, setSearchTerm] = useState(() => readMissionTrackerUiState().browse.searchTerm)
   const [lawfulFilter, setLawfulFilter] = useState<LawfulFilter>('all')
+  const [missionsModalBlueprint, setMissionsModalBlueprint] = useState<{
+    id: string
+    name: string
+  } | null>(null)
 
   const missions = useMemo((): MissionDisplay[] => {
     return getContractMissionBrowseCatalog().map((contract) => ({
@@ -293,6 +304,20 @@ export default function BrowseMissionsView({
     const acquired = selectedMissionBlueprints.filter(b => b.isAcquired).length
     return { total, acquired }
   }, [selectedMissionBlueprints])
+
+  const missionsModalList = useMemo(() => {
+    if (!missionsModalBlueprint) return []
+    return getRewardMissionsForBlueprint(missionsModalBlueprint.id)
+  }, [missionsModalBlueprint])
+
+  const navigateToRewardMission = (reward: BlueprintRewardMission) => {
+    if (!stashBrowseMissionFromReward(reward)) return
+
+    setSelectedFaction(readMissionTrackerUiState().browse.selectedFaction)
+    setSelectedMissionKey(readMissionTrackerUiState().browse.selectedMissionKey)
+    setSearchTerm('')
+    setMissionsModalBlueprint(null)
+  }
 
   const handleBack = () => {
     if (selectedMissionKey) {
@@ -743,14 +768,30 @@ export default function BrowseMissionsView({
                   </div>
                   {!bp.isAcquired && bp.fullBlueprint && (
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      {!bp.isTracked && (
-                        <button
-                          type="button"
-                          onClick={() => onAddToTracker(bp.fullBlueprint!.internalName)}
-                          className="px-2 py-1 text-[10px] font-medium text-amber-300 border border-amber-500/40 rounded hover:bg-amber-950/40 transition-colors"
-                        >
-                          Track
-                        </button>
+                      {getRewardMissionsForBlueprint(bp.fullBlueprint.internalName).length > 0 && (
+                        <div className="flex items-center gap-1">
+                          {!bp.isTracked && (
+                            <button
+                              type="button"
+                              onClick={() => onAddToTracker(bp.fullBlueprint!.internalName)}
+                              className="px-2 py-1 text-[10px] font-medium text-amber-300 border border-amber-500/40 rounded hover:bg-amber-950/40 transition-colors"
+                            >
+                              Track
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setMissionsModalBlueprint({
+                                id: bp.fullBlueprint!.internalName,
+                                name: bp.displayName,
+                              })
+                            }
+                            className="px-2 py-1 text-[10px] font-medium text-sky-300 border border-sky-500/40 rounded hover:bg-sky-950/40 transition-colors"
+                          >
+                            Missions
+                          </button>
+                        </div>
                       )}
                       <button
                         type="button"
@@ -766,6 +807,14 @@ export default function BrowseMissionsView({
             ))}
           </div>
         </div>
+      )}
+      {missionsModalBlueprint && (
+        <BlueprintRewardMissionsModal
+          blueprintName={missionsModalBlueprint.name}
+          missions={missionsModalList}
+          onClose={() => setMissionsModalBlueprint(null)}
+          onSelectMission={navigateToRewardMission}
+        />
       )}
     </div>
   )
