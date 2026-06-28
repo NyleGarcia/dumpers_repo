@@ -61,7 +61,7 @@ interface RockCalculatorProps {
 }
 
 const MATERIAL_ROW_GRID =
-  'grid grid-cols-[minmax(0,1fr)_6.5rem_4.5rem_3.25rem_3.5rem] gap-x-1.5 items-center'
+  'grid grid-cols-[minmax(0,1fr)_5rem_4.5rem_3.25rem_4.75rem] gap-x-1.5 items-center'
 
 export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
@@ -527,7 +527,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                                     [row.slotKey]: e.target.value,
                                   }))
                           }
-                          className={`site-input w-full px-1.5 py-1 pr-4 text-[10px] font-mono tabular-nums text-right ${
+                          className={`site-input w-full px-1 py-1 pr-3.5 text-[10px] font-mono tabular-nums text-right ${
                             row.isInert ? 'opacity-60 cursor-not-allowed' : ''
                           }`}
                           aria-label={
@@ -537,7 +537,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                           }
                           title={row.isInert ? 'Auto-calculated as 100% minus other materials' : undefined}
                         />
-                        <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
+                        <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
                           %
                         </span>
                       </div>
