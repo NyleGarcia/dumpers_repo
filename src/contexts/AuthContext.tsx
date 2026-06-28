@@ -606,9 +606,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isSuperAdmin = profile?.role === 'super-admin'
   const isPending = profile?.role === 'pending'
   const isGhostMode = profile?.ghost_mode ?? false
+  const guestPreviewActive = !user && isGuestPreview
   const groupBlueprintVariants =
     profile?.group_blueprint_variants ?? (guestPreviewActive ? guestGroupBlueprintVariants : false)
-  const guestPreviewActive = !user && isGuestPreview
   const canModifyBlueprints = guestPreviewActive || (!!profile && profile.role !== 'pending')
   const isApproved = !!profile && profile.role !== 'pending'
   const visibilityContext = useMemo(
