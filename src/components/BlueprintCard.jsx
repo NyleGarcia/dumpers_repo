@@ -9,6 +9,8 @@ import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
 import { useAuth } from '../contexts/AuthContext'
 import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
 
+const BLUEPRINT_PAPER_PANEL = 'blueprint-paper-panel p-2.5'
+
 export default function BlueprintCard({
   blueprint,
   onClick,
@@ -140,20 +142,20 @@ export default function BlueprintCard({
 
         <div className="flex-1 min-h-0 flex flex-col text-sm">
           {hasRequirements ? (
-            <div className="bg-slate-950/50 rounded-lg p-2.5 border border-slate-800/50">
+            <div className={BLUEPRINT_PAPER_PANEL}>
               <div className="flex items-center justify-between gap-2 text-xs mb-2">
-                <p className="text-slate-400 flex items-center gap-1.5">
+                <p className="text-sky-100/85 flex items-center gap-1.5">
                   <span>⏱️</span>
                   <span className="font-mono">
-                    <strong>{blueprint.craftTime?.hours || 0}h</strong>
+                    <strong className="text-white">{blueprint.craftTime?.hours || 0}h</strong>
                     {' '}
-                    <strong>{blueprint.craftTime?.minutes || 0}m</strong>
+                    <strong className="text-white">{blueprint.craftTime?.minutes || 0}m</strong>
                     {' '}
-                    <strong>{blueprint.craftTime?.seconds || 0}s</strong>
+                    <strong className="text-white">{blueprint.craftTime?.seconds || 0}s</strong>
                   </span>
                 </p>
                 {ownerCount !== undefined && (
-                  <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-400' : 'text-slate-500'}`} title={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
+                  <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`} title={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
                     <span>👤</span>
                     <span>{ownerCount}</span>
                   </span>
@@ -165,12 +167,12 @@ export default function BlueprintCard({
                     const name = opt.resourceName || opt.entityName || opt.displayName || opt.itemName
                     if (!name) return null
                     const chipClass = opt.type === 'item'
-                      ? 'bg-purple-950/30 text-purple-400 border-purple-500/20'
+                      ? 'bg-purple-950/50 text-purple-200 border-purple-400/35'
                       : resourceChipClassName(slugifyResourceName(name))
                     return (
                       <span 
                         key={`${slotIdx}-${optIdx}`} 
-                        className={`inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words ${chipClass}`}
+                        className={`inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words shadow-sm shadow-sky-950/30 ${chipClass}`}
                       >
                         {name}
                       </span>
@@ -178,14 +180,14 @@ export default function BlueprintCard({
                   })
                 ).slice(0, 6)}
                 {blueprint.slots.flatMap(s => s.options || []).filter(o => o.resourceName || o.entityName || o.displayName || o.itemName).length > 6 && (
-                  <span className="text-slate-500 text-xs">+{blueprint.slots.flatMap(s => s.options || []).filter(o => o.resourceName || o.entityName || o.displayName || o.itemName).length - 6} more</span>
+                  <span className="text-sky-200/70 text-xs">+{blueprint.slots.flatMap(s => s.options || []).filter(o => o.resourceName || o.entityName || o.displayName || o.itemName).length - 6} more</span>
                 )}
               </div>
             </div>
           ) : (
-            <div className="bg-slate-950/50 rounded-lg p-2.5 border border-slate-800/50">
+            <div className={BLUEPRINT_PAPER_PANEL}>
               {ownerCount !== undefined && (
-                <p className={`flex items-center justify-end gap-1 text-xs ${ownerCount === 0 ? 'text-amber-400' : 'text-slate-500'}`} title={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
+                <p className={`flex items-center justify-end gap-1 text-xs ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`} title={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
                   <span>👤</span>
                   <span>{ownerCount}</span>
                 </p>
