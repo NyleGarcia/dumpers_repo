@@ -60,6 +60,9 @@ interface RockCalculatorProps {
   loadToken: number
 }
 
+const MATERIAL_ROW_GRID =
+  'grid grid-cols-[minmax(0,1fr)_6.5rem_4.5rem_3.25rem_3.5rem] gap-x-1.5 items-center'
+
 export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
@@ -467,29 +470,41 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
 
           {materialRows.length > 0 ? (
             <div className="space-y-2">
-              <div className="flex items-center justify-between gap-2">
+              <div className={MATERIAL_ROW_GRID}>
                 <p className="text-[10px] uppercase tracking-wide text-slate-500">Materials</p>
-                <div className="flex items-center justify-end gap-1.5 text-[9px] uppercase tracking-wide text-slate-600 shrink-0">
-                  <span className="w-[6.5rem] text-right">%</span>
-                  <span className="w-[4.5rem] text-center">Q</span>
-                  <span className="w-[3.25rem] text-right">cSCU</span>
-                  <span className="w-[3.5rem] text-right">DFP</span>
-                </div>
+                <span className="text-[9px] uppercase tracking-wide text-slate-600 text-right">
+                  %
+                </span>
+                <span className="text-[9px] uppercase tracking-wide text-slate-600 text-center">
+                  Q
+                </span>
+                <span className="text-[9px] uppercase tracking-wide text-slate-600 text-right">
+                  cSCU
+                </span>
+                <span className="text-[9px] uppercase tracking-wide text-slate-600 text-right">
+                  DFP
+                </span>
               </div>
               <ul className="space-y-2">
                 {materialRows.map((row) => (
                   <li key={row.slotKey} className="space-y-0.5">
-                    <div className="flex items-baseline justify-between gap-1">
+                    <div className={MATERIAL_ROW_GRID}>
                       <span
-                        className="text-xs text-slate-200 truncate"
+                        className="text-xs text-slate-200 truncate min-w-0"
                         title={row.bandTooltip ? `${row.label} (${row.bandTooltip})` : row.label}
                       >
                         {row.label}
                       </span>
-                      <span className="text-[10px] text-slate-500 shrink-0">{row.rangeHint}</span>
+                      <span />
+                      <span />
+                      <span className="text-[10px] text-slate-500 text-right tabular-nums">
+                        {row.rangeHint}
+                      </span>
+                      <span />
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="relative w-[6.5rem] shrink-0">
+                    <div className={MATERIAL_ROW_GRID}>
+                      <span />
+                      <div className="relative w-full min-w-0">
                         <input
                           type="number"
                           min={0}
@@ -535,13 +550,13 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                         isInert={row.isInert}
                       />
                       <span
-                        className="w-[3.25rem] text-right text-[10px] font-mono tabular-nums text-amber-300 shrink-0"
+                        className="text-right text-[10px] font-mono tabular-nums text-amber-300 min-w-0"
                         title="cSCU in rock"
                       >
                         {totalScu != null ? formatMaterialScu(row.scu ?? 0) : '—'}
                       </span>
                       <span
-                        className="w-[3.5rem] text-right text-[10px] font-mono tabular-nums text-emerald-300 shrink-0"
+                        className="text-right text-[10px] font-mono tabular-nums text-emerald-300 min-w-0"
                         title="Purchased Q0 DFP"
                       >
                         {totalScu != null ? formatRockDfpValue(row.dfp ?? 0) : '—'}
@@ -589,10 +604,10 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
 }
 
 const MATERIAL_QUALITY_SELECT_CLASS =
-  'w-[4.5rem] shrink-0 px-1 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
+  'w-full min-w-0 px-1 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
 
 const MATERIAL_QUALITY_INPUT_CLASS =
-  'w-[4.5rem] shrink-0 px-1 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
+  'w-full min-w-0 px-1 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
 
 interface MaterialQualitySelectProps {
   elementName: string

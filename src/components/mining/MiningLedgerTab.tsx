@@ -51,9 +51,12 @@ interface MiningLedgerTabProps {
   isGuestPreview: boolean
 }
 
-/** Sticky section title row — stays visible while the page scrolls; tables grow below with no inner scroll. */
+/** Section title row — no sticky band; tables scroll naturally below. */
 const LEDGER_SECTION_HEAD =
-  'sticky top-14 z-[5] flex flex-wrap items-center justify-between gap-2 py-2 mb-1 bg-slate-950/95 backdrop-blur-sm border-b border-slate-800/60'
+  'flex flex-wrap items-center justify-between gap-2 py-1 mb-2'
+
+const LEDGER_ADD_BTN =
+  'inline-flex items-center px-2.5 py-1 text-[11px] font-semibold rounded-md border border-orange-500/45 bg-orange-950/40 text-orange-200 hover:bg-orange-500/15 hover:border-orange-400/55 transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
 
 /** Horizontal scroll for wide tables only — no vertical clipping inside sections. */
 const LEDGER_TABLE_SCROLL = 'overflow-x-auto overflow-y-visible'
@@ -1027,23 +1030,23 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
         <>
           {/* Summary */}
           <div className={`${LEDGER_TABLE_SCROLL} grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs min-w-0`}>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
+            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[7.5rem]">
               <span className="text-slate-500 block">Pool (est.)</span>
               <span className="text-white font-mono tabular-nums whitespace-nowrap">{formatLedgerMoney(computed.poolEstimate)}</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
+            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[7.5rem]">
               <span className="text-slate-500 block">Pool (actual)</span>
               <span className="text-slate-400 font-mono tabular-nums whitespace-nowrap">{formatLedgerMoney(computed.poolActual)}</span>
               <span className="text-[10px] text-slate-600 block">Ore profit act. only</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[8.5rem]">
+            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[8.5rem]">
               <span className="text-slate-500 block">Total payout</span>
               <span className="text-amber-300 font-mono tabular-nums whitespace-nowrap">
                 {formatLedgerMoney(computed.totalPayout)}
               </span>
               <span className="text-[10px] text-slate-600 block">Ore − deductibles + extras</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
+            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[7.5rem]">
               <span className="text-slate-500 block">Splitting shares</span>
               <span className="text-white font-mono tabular-nums">{computed.splittingShares}</span>
               {computed.splittingShares !== computed.totalShares && (
@@ -1052,7 +1055,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                 </span>
               )}
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 min-w-[7.5rem]">
+            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[7.5rem]">
               <span className="text-slate-500 block">Ore pricing</span>
               <span className="text-slate-300 text-[11px]">Purchased (Q0) DFP</span>
             </div>
@@ -1085,7 +1088,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                     ],
                   }))
                 }
-                className="text-xs text-orange-400 hover:text-orange-300"
+                className={LEDGER_ADD_BTN}
                 disabled={oreEntries.length === 0}
               >
                 + Add row
@@ -1269,7 +1272,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                     ],
                   }))
                 }
-                className="text-xs text-orange-400 hover:text-orange-300"
+                className={LEDGER_ADD_BTN}
               >
                 + Add member
               </button>
@@ -1527,7 +1530,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                       ],
                     }))
                   }
-                  className="text-xs text-orange-400 hover:text-orange-300"
+                  className={LEDGER_ADD_BTN}
                 >
                   + Add
                 </button>
@@ -1591,7 +1594,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                       ],
                     }))
                   }
-                  className="text-xs text-orange-400 hover:text-orange-300"
+                  className={LEDGER_ADD_BTN}
                 >
                   + Add
                 </button>
@@ -1839,7 +1842,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
             className="site-input w-full px-3 py-2 text-sm mb-2"
           />
           {collabOptions.length > 0 && (
-            <ul className="mb-4 border border-slate-700 rounded-lg overflow-hidden bg-slate-800/40">
+            <ul className="mb-4 border border-slate-700/50 rounded-lg overflow-hidden">
               {collabOptions.map((member) => {
                 const label = member.rsi_handle || member.display_name || 'Unknown'
                 const already = detail.collaborators.some((c) => c.user_id === member.id)
