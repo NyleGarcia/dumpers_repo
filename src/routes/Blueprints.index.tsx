@@ -843,13 +843,13 @@ export default function BlueprintsRoute() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full min-w-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full min-w-0 items-stretch">
             {blueprintGridItems.map((item) => {
               if (item.kind === 'single') {
                 return (
-                  <React.Fragment key={item.blueprint.internalName}>
+                  <div key={item.blueprint.internalName} className="h-full min-h-0">
                     {renderBlueprintCard(item.blueprint)}
-                  </React.Fragment>
+                  </div>
                 )
               }
 

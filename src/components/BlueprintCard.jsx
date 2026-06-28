@@ -78,19 +78,19 @@ export default function BlueprintCard({
   const hasOverride = isSuperAdmin && effectiveIsOrderable !== catalogIsReward
   const hasCategoryTags = categoryTags.length > 0
   const hasRewardLabel = typeof blueprint.isReward === 'boolean' || isSuperAdmin
-  const showFooter = showTargetControl || showMissionsControl || hasCategoryTags || hasRewardLabel
+  const showActionFooter = showTargetControl || showMissionsControl || hasRewardLabel
 
   return (
     <div
       onClick={(e) => onClick(blueprint, e)}
-      className={`group relative min-w-0 max-w-full bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-all duration-200 overflow-hidden min-h-0 sm:min-h-[120px] ${
+      className={`group relative flex flex-col h-full min-w-0 max-w-full bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-all duration-200 overflow-hidden ${
         isAcquired 
           ? 'border-green-500/50 ring-1 ring-green-500/20' 
           : 'border-slate-700 hover:border-red-500/30'
       }`}
     >
-      <div className="relative z-10">
-        <div className="flex items-start justify-between gap-2 mb-1">
+      <div className="relative z-10 flex flex-col flex-1 min-h-0">
+        <div className="flex items-start justify-between gap-2 mb-1 shrink-0">
           {dfpDisplayEnabled ? (
             <div className="shrink-0 text-left min-w-0">
               <span
@@ -124,7 +124,7 @@ export default function BlueprintCard({
           </button>
         </div>
 
-        <div className="mb-3 min-w-0 text-left">
+        <div className="mb-3 min-w-0 text-left shrink-0">
           <h3
             className="font-bold text-white line-clamp-3 text-sm leading-snug"
             title={blueprint.blueprintName}
@@ -138,7 +138,7 @@ export default function BlueprintCard({
           )}
         </div>
 
-        <div className="space-y-2 text-sm">
+        <div className="flex-1 min-h-0 flex flex-col text-sm">
           {hasRequirements ? (
             <div className="bg-slate-950/50 rounded-lg p-2.5 border border-slate-800/50">
               <div className="flex items-center justify-between gap-2 text-xs mb-2">
@@ -193,41 +193,48 @@ export default function BlueprintCard({
             </div>
           )}
 
-          {showFooter && (
-            <div className="mt-3 pt-2.5 border-t border-slate-700">
-              <div className="flex items-end justify-between gap-2">
-                <div className="flex-1 min-w-0 space-y-1.5">
-                  {hasCategoryTags && <BlueprintCategoryTags blueprint={blueprint} size="sm" />}
-                  {hasRewardLabel && (
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                      <span className="text-xs text-slate-500">
-                        {effectiveIsOrderable ? '★ Reward Blueprint' : '🔶 Standard'}
-                      </span>
-                      {hasOverride && (
-                        <span className="text-[10px] text-slate-600">
-                          (catalog: {catalogIsReward ? 'Reward' : 'Standard'})
-                        </span>
-                      )}
-                      {isSuperAdmin && (
-                        <label
-                          className="inline-flex items-center gap-1 text-[10px] text-purple-300/90 cursor-pointer select-none"
-                          onClick={handleOrderableToggle}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={effectiveIsOrderable}
-                            onChange={handleOrderableToggle}
-                            onClick={(e) => e.stopPropagation()}
-                            className="rounded border-slate-600 bg-slate-800 text-purple-500 focus:ring-purple-500/40"
-                          />
-                          Orderable
-                        </label>
-                      )}
-                    </div>
-                  )}
-                </div>
+          {hasCategoryTags && (
+            <div className="mt-2">
+              <BlueprintCategoryTags blueprint={blueprint} size="sm" />
+            </div>
+          )}
+        </div>
+
+        {showActionFooter && (
+          <div className="mt-auto pt-2.5 border-t border-slate-700 shrink-0">
+            {hasRewardLabel && (
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1.5 min-h-[1rem]">
+                <span className="text-xs text-slate-500">
+                  {effectiveIsOrderable ? '★ Reward Blueprint' : '🔶 Standard'}
+                </span>
+                {hasOverride && (
+                  <span className="text-[10px] text-slate-600">
+                    (catalog: {catalogIsReward ? 'Reward' : 'Standard'})
+                  </span>
+                )}
+              </div>
+            )}
+            <div className="grid grid-cols-[minmax(0,1fr)_7.25rem] items-end gap-2 min-h-[1.375rem]">
+              <div className="min-w-0 self-end justify-self-start">
+                {isSuperAdmin ? (
+                  <label
+                    className="inline-flex items-center gap-1 text-[10px] text-purple-300/90 cursor-pointer select-none whitespace-nowrap"
+                    onClick={handleOrderableToggle}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={effectiveIsOrderable}
+                      onChange={handleOrderableToggle}
+                      onClick={(e) => e.stopPropagation()}
+                      className="rounded border-slate-600 bg-slate-800 text-purple-500 focus:ring-purple-500/40"
+                    />
+                    Orderable
+                  </label>
+                ) : null}
+              </div>
+              <div className="flex items-center justify-end gap-1 self-end justify-self-end">
                 {(showTargetControl || showMissionsControl) && (
-                  <div className="flex items-center gap-1 shrink-0">
+                  <>
                     {showTargetControl && !isOnTargetList && (
                       <button
                         onClick={handleTargetClick}
@@ -255,12 +262,12 @@ export default function BlueprintCard({
                         Tracked
                       </button>
                     )}
-                  </div>
+                  </>
                 )}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )
