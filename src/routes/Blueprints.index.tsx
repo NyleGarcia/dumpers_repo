@@ -19,6 +19,11 @@ import {
   resolveIsOrderable,
 } from '../lib/blueprintOrderable'
 import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
+import {
+  getBlueprintsUiScope,
+  readBlueprintsUiState,
+  writeBlueprintsUiState,
+} from '../lib/blueprintsUiState'
 import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
 import {
   formatSubtypeLabel,
@@ -82,18 +87,37 @@ export default function BlueprintsRoute() {
     groupBlueprintVariants,
   } = useAuth()
   const isGuest = !user && isGuestPreview
+  const uiScope = getBlueprintsUiScope(user?.id, isGuestPreview)
+  const hydratedUiScopeRef = React.useRef<string | null | undefined>(undefined)
+  const skipPersistRef = React.useRef(true)
 
   const { overridesMap, setOrderable } = useBlueprintOrderOverrides()
   const { isOnTargetList, toggleTarget } = useTargetList(overridesMap)
-  
-  const [searchTerm, setSearchTerm] = React.useState('')
-  const [selectedMaterial, setSelectedMaterial] = React.useState<string | null>(null)
-  const [selectedMainCategory, setSelectedMainCategory] = React.useState(null)
-  const [selectedSubCategory, setSelectedSubCategory] = React.useState(null)
-  const [selectedSize, setSelectedSize] = React.useState(null)
-  const [selectedArmorWeight, setSelectedArmorWeight] = React.useState(null)
-  const [selectedArmorSlot, setSelectedArmorSlot] = React.useState(null)
-  const [showOnlyRewards, setShowOnlyRewards] = React.useState(true)
+
+  const [searchTerm, setSearchTerm] = React.useState(
+    () => readBlueprintsUiState(uiScope).searchTerm
+  )
+  const [selectedMaterial, setSelectedMaterial] = React.useState<string | null>(
+    () => readBlueprintsUiState(uiScope).selectedMaterial
+  )
+  const [selectedMainCategory, setSelectedMainCategory] = React.useState(
+    () => readBlueprintsUiState(uiScope).selectedMainCategory
+  )
+  const [selectedSubCategory, setSelectedSubCategory] = React.useState(
+    () => readBlueprintsUiState(uiScope).selectedSubCategory
+  )
+  const [selectedSize, setSelectedSize] = React.useState(
+    () => readBlueprintsUiState(uiScope).selectedSize
+  )
+  const [selectedArmorWeight, setSelectedArmorWeight] = React.useState(
+    () => readBlueprintsUiState(uiScope).selectedArmorWeight
+  )
+  const [selectedArmorSlot, setSelectedArmorSlot] = React.useState(
+    () => readBlueprintsUiState(uiScope).selectedArmorSlot
+  )
+  const [showOnlyRewards, setShowOnlyRewards] = React.useState(
+    () => readBlueprintsUiState(uiScope).showOnlyRewards
+  )
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
   const [modalOriginRect, setModalOriginRect] = React.useState(null)
 
@@ -101,11 +125,67 @@ export default function BlueprintsRoute() {
     preloadOrgLogoCandidates(orgLogoUpdatedAt)
   }, [orgLogoUpdatedAt])
 
+  React.useEffect(() => {
+    if (hydratedUiScopeRef.current === uiScope) return
+    hydratedUiScopeRef.current = uiScope
+    skipPersistRef.current = true
+    if (!uiScope) return
+
+    const saved = readBlueprintsUiState(uiScope)
+    setSearchTerm(saved.searchTerm)
+    setSelectedMaterial(saved.selectedMaterial)
+    setSelectedMainCategory(saved.selectedMainCategory)
+    setSelectedSubCategory(saved.selectedSubCategory)
+    setSelectedSize(saved.selectedSize)
+    setSelectedArmorWeight(saved.selectedArmorWeight)
+    setSelectedArmorSlot(saved.selectedArmorSlot)
+    setShowOnlyRewards(saved.showOnlyRewards)
+    setSelectedUserId(saved.selectedUserId)
+    setAcquisitionFilter(saved.acquisitionFilter)
+  }, [uiScope])
+
+  React.useEffect(() => {
+    if (!uiScope) return
+    if (skipPersistRef.current) {
+      skipPersistRef.current = false
+      return
+    }
+
+    writeBlueprintsUiState(uiScope, {
+      searchTerm,
+      selectedMaterial,
+      selectedMainCategory,
+      selectedSubCategory,
+      selectedSize,
+      selectedArmorWeight,
+      selectedArmorSlot,
+      showOnlyRewards,
+      selectedUserId,
+      acquisitionFilter,
+    })
+  }, [
+    uiScope,
+    searchTerm,
+    selectedMaterial,
+    selectedMainCategory,
+    selectedSubCategory,
+    selectedSize,
+    selectedArmorWeight,
+    selectedArmorSlot,
+    showOnlyRewards,
+    selectedUserId,
+    acquisitionFilter,
+  ])
+
   const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
-  const [selectedUserId, setSelectedUserId] = React.useState('all')
+  const [selectedUserId, setSelectedUserId] = React.useState(
+    () => readBlueprintsUiState(uiScope).selectedUserId
+  )
   const [viewedUserBlueprints, setViewedUserBlueprints] = React.useState({})
   const [loadingUserBlueprints, setLoadingUserBlueprints] = React.useState(false)
-  const [acquisitionFilter, setAcquisitionFilter] = React.useState<'all' | 'acquired' | 'not_acquired'>('all')
+  const [acquisitionFilter, setAcquisitionFilter] = React.useState<
+    'all' | 'acquired' | 'not_acquired'
+  >(() => readBlueprintsUiState(uiScope).acquisitionFilter)
   const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
   const [expandedGroupKey, setExpandedGroupKey] = React.useState<string | null>(null)
   const [rewardMissionsModal, setRewardMissionsModal] = React.useState<{
