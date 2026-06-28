@@ -49,6 +49,7 @@ export interface BlueprintDfpInput {
   internalName?: string
   categoryName?: string
   subCategoryName?: string
+  subtype?: string
   slots?: {
     requiredCount?: number
     options?: {
@@ -96,7 +97,7 @@ export function resolveDfpTypeKey(blueprint: BlueprintDfpInput): string {
   if (cat === 'FPSWeapons') return 'fps_weapon'
   if (cat === 'MissionItem') return 'mission_item'
   if (cat.startsWith('Veh. Comp.')) {
-    const sub = blueprint.subCategoryName ?? 'default'
+    const sub = blueprint.subCategoryName ?? blueprint.subtype ?? 'default'
     const match = cat.match(/S(\d+)/i)
     return match ? `ship_component:${sub}:S${match[1]}` : `ship_component:${sub}`
   }

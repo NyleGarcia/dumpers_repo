@@ -1,5 +1,5 @@
 {
-  "version": "1.5.2-quality-interp",
-  "sha256": "0d11727898b3bfb7512c63d84b392193f422dd0badb3973e713e00b16e6c3240",
+  "version": "1.5.3-calibration",
+  "sha256": "269eda1cb3ab9bc51165435f3d3689f569e89314de61f41ebcc5f6d0f0ec1e11",
   "module": "dfp-engine.js"
 }

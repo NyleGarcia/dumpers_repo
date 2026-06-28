@@ -11,7 +11,7 @@ import {
 import { isHarvestResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.5.2-quality-interp'
+export const DFP_VERSION = '1.5.3-calibration'
 
 /** Banded ores: Q0 + Band 1 flat UEX Sell base; Band 2+ uses log-linear qualityScale on exact band Q. Salvage unchanged. */
 
