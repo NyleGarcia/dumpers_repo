@@ -1,6 +1,7 @@
 import { supabase } from './supabase'
 
 const VISITOR_STORAGE_KEY = 'dumpers_visitor_id'
+const GEO_RESOLVED_STORAGE_KEY = 'dumpers_analytics_geo_resolved_v1'
 const HEARTBEAT_MS = 60_000
 const MAX_PING_SECONDS = 300
 
@@ -41,6 +42,48 @@ export function getAnalyticsVisitorId(): string {
     localStorage.setItem(VISITOR_STORAGE_KEY, id)
   }
   return id
+}
+
+function visitorNeedsGeoLookup(visitorId: string): boolean {
+  return localStorage.getItem(GEO_RESOLVED_STORAGE_KEY) !== visitorId
+}
+
+function markVisitorGeoLookupAttempted(visitorId: string): void {
+  localStorage.setItem(GEO_RESOLVED_STORAGE_KEY, visitorId)
+}
+
+async function recordAnalyticsPing(payload: {
+  visitor_id: string
+  tool_id: string
+  sub_tool_id: string
+  active_seconds: number
+  is_guest: boolean
+  needs_geo: boolean
+}): Promise<void> {
+  const { data, error } = await supabase.functions.invoke('record-analytics-ping', {
+    body: payload,
+  })
+
+  if (!error) {
+    if (payload.needs_geo) {
+      markVisitorGeoLookupAttempted(payload.visitor_id)
+    }
+    return
+  }
+
+  await supabase.rpc('record_analytics_ping', {
+    p_visitor_id: payload.visitor_id,
+    p_tool_id: payload.tool_id,
+    p_sub_tool_id: payload.sub_tool_id,
+    p_active_seconds: payload.active_seconds,
+    p_is_guest: payload.is_guest,
+  })
+
+  if (payload.needs_geo) {
+    markVisitorGeoLookupAttempted(payload.visitor_id)
+  }
+
+  void data
 }
 
 function normalizeSubTool(subToolId?: string): string {
@@ -95,12 +138,16 @@ async function flushPendingTime() {
   if (seconds <= 0) return
 
   try {
-    await supabase.rpc('record_analytics_ping', {
-      p_visitor_id: getAnalyticsVisitorId(),
-      p_tool_id: currentSegment.toolId,
-      p_sub_tool_id: currentSegment.subToolId,
-      p_active_seconds: seconds,
-      p_is_guest: context.isGuest,
+    const visitorId = getAnalyticsVisitorId()
+    const needsGeo = visitorNeedsGeoLookup(visitorId)
+
+    await recordAnalyticsPing({
+      visitor_id: visitorId,
+      tool_id: currentSegment.toolId,
+      sub_tool_id: currentSegment.subToolId,
+      active_seconds: seconds,
+      is_guest: context.isGuest,
+      needs_geo: needsGeo,
     })
   } catch {
     // Analytics must never break the app.
