@@ -60,8 +60,12 @@ interface RockCalculatorProps {
   loadToken: number
 }
 
-const MATERIAL_ROW_GRID =
-  'grid grid-cols-[minmax(0,1fr)_5rem_4.5rem_3.25rem_4.75rem] gap-x-1.5 items-center'
+/** Fixed widths for value columns — material name stacks above % in the first column. */
+const MATERIAL_PERCENT_W = 'w-[5rem]'
+const MATERIAL_QUALITY_W = 'w-[4.5rem]'
+const MATERIAL_SCU_W = 'w-[3.25rem]'
+const MATERIAL_DFP_W = 'w-[4.75rem]'
+const MATERIAL_VALUES_ROW = 'flex items-end justify-end gap-1.5 shrink-0'
 
 export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
@@ -470,93 +474,93 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
 
           {materialRows.length > 0 ? (
             <div className="space-y-2">
-              <div className={MATERIAL_ROW_GRID}>
-                <p className="text-[10px] uppercase tracking-wide text-slate-500">Materials</p>
-                <span className="text-[9px] uppercase tracking-wide text-slate-600 text-right">
-                  %
-                </span>
-                <span className="text-[9px] uppercase tracking-wide text-slate-600 text-center">
-                  Q
-                </span>
-                <span className="text-[9px] uppercase tracking-wide text-slate-600 text-right">
-                  cSCU
-                </span>
-                <span className="text-[9px] uppercase tracking-wide text-slate-600 text-right">
-                  DFP
-                </span>
+              <div
+                className={`${MATERIAL_VALUES_ROW} text-[9px] uppercase tracking-wide text-slate-600`}
+              >
+                <span className={`${MATERIAL_PERCENT_W} text-left`}>Material</span>
+                <span className={`${MATERIAL_QUALITY_W} text-center`}>Q</span>
+                <span className={`${MATERIAL_SCU_W} text-right`}>cSCU</span>
+                <span className={`${MATERIAL_DFP_W} text-right`}>DFP</span>
               </div>
               <ul className="space-y-2">
                 {materialRows.map((row) => (
-                  <li key={row.slotKey} className="space-y-0.5">
-                    <div className={MATERIAL_ROW_GRID}>
-                      <span
-                        className="text-xs text-slate-200 truncate min-w-0"
-                        title={row.bandTooltip ? `${row.label} (${row.bandTooltip})` : row.label}
-                      >
-                        {row.label}
-                      </span>
-                      <span />
-                      <span />
-                      <span className="text-[10px] text-slate-500 text-right tabular-nums">
-                        {row.rangeHint}
-                      </span>
-                      <span />
-                    </div>
-                    <div className={MATERIAL_ROW_GRID}>
-                      <span />
-                      <div className="relative w-full min-w-0">
-                        <input
-                          type="number"
-                          min={0}
-                          max={100}
-                          step={0.1}
-                          inputMode="decimal"
-                          value={
-                            row.isInert
-                              ? row.percent.toFixed(1)
-                              : (percentBySlot[row.slotKey] ?? '0')
+                  <li key={row.slotKey}>
+                    <div className={MATERIAL_VALUES_ROW}>
+                      <div className={`${MATERIAL_PERCENT_W} shrink-0 space-y-0.5`}>
+                        <span
+                          className="block text-[10px] leading-tight text-slate-200 truncate"
+                          title={
+                            row.bandTooltip
+                              ? `${row.label} (${row.bandTooltip})${
+                                  row.rangeHint ? ` · ${row.rangeHint}` : ''
+                                }`
+                              : row.rangeHint
+                                ? `${row.label} · ${row.rangeHint}`
+                                : row.label
                           }
-                          readOnly={row.isInert}
-                          disabled={row.isInert}
-                          onChange={
-                            row.isInert
-                              ? undefined
-                              : (e) =>
-                                  setPercentBySlot((prev) => ({
-                                    ...prev,
-                                    [row.slotKey]: e.target.value,
-                                  }))
-                          }
-                          className={`site-input w-full px-1 py-1 pr-3.5 text-[10px] font-mono tabular-nums text-right ${
-                            row.isInert ? 'opacity-60 cursor-not-allowed' : ''
-                          }`}
-                          aria-label={
-                            row.isInert
-                              ? `${row.label} percentage (auto-calculated)`
-                              : `${row.label} percentage`
-                          }
-                          title={row.isInert ? 'Auto-calculated as 100% minus other materials' : undefined}
-                        />
-                        <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
-                          %
+                        >
+                          {row.label}
                         </span>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            min={0}
+                            max={100}
+                            step={0.1}
+                            inputMode="decimal"
+                            value={
+                              row.isInert
+                                ? row.percent.toFixed(1)
+                                : (percentBySlot[row.slotKey] ?? '0')
+                            }
+                            readOnly={row.isInert}
+                            disabled={row.isInert}
+                            onChange={
+                              row.isInert
+                                ? undefined
+                                : (e) =>
+                                    setPercentBySlot((prev) => ({
+                                      ...prev,
+                                      [row.slotKey]: e.target.value,
+                                    }))
+                            }
+                            className={`site-input w-full px-1 py-1 pr-3.5 text-[10px] font-mono tabular-nums text-right ${
+                              row.isInert ? 'opacity-60 cursor-not-allowed' : ''
+                            }`}
+                            aria-label={
+                              row.isInert
+                                ? `${row.label} percentage (auto-calculated)`
+                                : `${row.label} percentage`
+                            }
+                            title={
+                              row.isInert
+                                ? 'Auto-calculated as 100% minus other materials'
+                                : undefined
+                            }
+                          />
+                          <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
+                            %
+                          </span>
+                        </div>
                       </div>
-                      <MaterialQualitySelect
-                        elementName={row.part.elementName}
-                        value={qualityBySlot[row.slotKey] ?? String(row.quality)}
-                        onChange={(next) =>
-                          setQualityBySlot((prev) => ({ ...prev, [row.slotKey]: next }))
-                        }
-                        isInert={row.isInert}
-                      />
+                      <div className={`${MATERIAL_QUALITY_W} shrink-0`}>
+                        <MaterialQualitySelect
+                          elementName={row.part.elementName}
+                          value={qualityBySlot[row.slotKey] ?? String(row.quality)}
+                          onChange={(next) =>
+                            setQualityBySlot((prev) => ({ ...prev, [row.slotKey]: next }))
+                          }
+                          isInert={row.isInert}
+                        />
+                      </div>
                       <span
-                        className="text-right text-[10px] font-mono tabular-nums text-amber-300 min-w-0"
+                        className={`${MATERIAL_SCU_W} text-right text-[10px] font-mono tabular-nums text-amber-300 shrink-0 pb-1`}
                         title="cSCU in rock"
                       >
                         {totalScu != null ? formatMaterialScu(row.scu ?? 0) : '—'}
                       </span>
                       <span
-                        className="text-right text-[10px] font-mono tabular-nums text-emerald-300 min-w-0"
+                        className={`${MATERIAL_DFP_W} text-right text-[10px] font-mono tabular-nums text-emerald-300 shrink-0 pb-1`}
                         title="Purchased Q0 DFP"
                       >
                         {totalScu != null ? formatRockDfpValue(row.dfp ?? 0) : '—'}
