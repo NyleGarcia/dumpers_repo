@@ -73,7 +73,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Track ores by RS signature, browse the ore/location guide, and compare cluster readings.',
     details: [
       'RS Tracker tab: base RS plus cluster rows with Chance % from game spawn data',
-      'Rock Calculator column: enter total rock SCU and in-game material % to get exact cSCU per material (0.001 precision)',
+      'Rock Calculator column: enter total rock SCU and in-game material % to get exact cSCU per material (0.001 precision); Inert % auto-fills as the remainder (not exported to ledger)',
       'Each material row has a compact Q band picker for ledger export (Purchased Q0 plus Bands 1–8; Band 2 default); DFP column always shows Purchased (Q0) value',
       'Click a tracked card to load its composition into the Rock Calculator; Surface/Asteroid toggle defaults to Asteroid',
       'Rock Calculator location dropdown lists every spawn site for the ore and deposit type (defaults to first)',

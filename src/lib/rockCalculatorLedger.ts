@@ -8,7 +8,7 @@ import {
 } from './miningLedger'
 import { resolveLedgerQuality } from './qualityBands'
 import { fetchMiningLedger, updateMiningLedger } from './miningLedgerOps'
-import { oreResourceKeyFromElementName } from './rockCalculator'
+import { oreResourceKeyFromElementName, isInertElement } from './rockCalculator'
 
 export interface CalculatorLedgerMaterialInput {
   elementName: string
@@ -47,7 +47,10 @@ export function buildCalculatorLedgerRows(
   const oreCatalog = oreCatalogEntries(catalog)
 
   return materials
-    .filter((material) => material.percent > 0 && material.scu > 0)
+    .filter(
+      (material) =>
+        !isInertElement(material.elementName) && material.percent > 0 && material.scu > 0
+    )
     .map((material) => {
       const { resourceKey, resourceLabel } = resolveOreResourceKey(
         material.elementName,

@@ -15,6 +15,7 @@ import {
   calculateMaterialDfpValue,
   calculateMaterialScu,
   compositionSlotKey,
+  computeDerivedInertPercent,
   formatCompositionRangeHint,
   formatMaterialScu,
   formatRockDfpValue,
@@ -22,11 +23,13 @@ import {
   formatRockQualitySelectTitle,
   formatScannerBandLabel,
   formatScannerBandTooltip,
+  isInertElement,
   isPercentOverLimit,
   parsePercentInput,
   parseQualitySlotValue,
   parseTotalScuInput,
   sumPercentages,
+  withInertCompositionPart,
 } from '../../lib/rockCalculator'
 import {
   getResourceBands,
@@ -152,54 +155,76 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     })
   }, [oreName, depositType, selectedLocation])
 
+  const calculatorParts = useMemo(() => {
+    if (!composition?.compositionParts.length) return []
+    return withInertCompositionPart(composition.compositionParts)
+  }, [composition?.compositionParts])
+
   const compositionKey = useMemo(() => {
-    if (!composition?.compositionParts.length) return null
+    if (!calculatorParts.length) return null
     return [
       oreName,
       depositType,
       selectedLocation ?? '',
-      composition.compositionParts.map((p) => p.elementName).join('|'),
+      calculatorParts.map((p) => p.elementName).join('|'),
     ].join(':')
-  }, [composition, oreName, depositType, selectedLocation])
+  }, [calculatorParts, oreName, depositType, selectedLocation])
 
   useEffect(() => {
-    if (!composition?.compositionParts.length) return
-    setPercentBySlot(buildDefaultPercentSlots(composition.compositionParts))
-    setQualityBySlot(buildDefaultQualitySlots(composition.compositionParts))
-  }, [compositionKey, loadToken, composition?.compositionParts])
+    if (!calculatorParts.length) return
+    setPercentBySlot(buildDefaultPercentSlots(calculatorParts))
+    setQualityBySlot(buildDefaultQualitySlots(calculatorParts))
+  }, [compositionKey, loadToken, calculatorParts])
 
   const totalScu = parseTotalScuInput(totalScuInput)
 
   const materialRows = useMemo(() => {
-    if (!composition?.compositionParts.length) return []
-    return composition.compositionParts.map((part, index) => {
-      const slotKey = compositionSlotKey(index)
-      const percent = parsePercentInput(percentBySlot[slotKey] ?? '0')
+    if (!calculatorParts.length) return []
+
+    const baseRows = calculatorParts.map((part, index) => {
+      const slotKey = compositionSlotKey(index, part)
+      const isInert = isInertElement(part.elementName)
+      const percent = isInert ? 0 : parsePercentInput(percentBySlot[slotKey] ?? '0')
       const quality = parseQualitySlotValue(qualityBySlot[slotKey] ?? '')
-      const scu = totalScu != null ? calculateMaterialScu(totalScu, percent) : null
-      const dfp =
-        totalScu != null && scu != null
-          ? calculateMaterialDfpValue(part.elementName, scu)
-          : null
       return {
         slotKey,
         part,
         index,
         percent,
         quality,
-        scu,
-        dfp,
-        label: formatScannerBandLabel(part, index, composition.compositionParts),
-        bandTooltip: formatScannerBandTooltip(part, index, composition.compositionParts),
+        isInert,
+        label: formatScannerBandLabel(part, index, calculatorParts),
+        bandTooltip: formatScannerBandTooltip(part, index, calculatorParts),
         rangeHint: formatCompositionRangeHint(part),
       }
     })
-  }, [composition, percentBySlot, qualityBySlot, totalScu])
 
-  const percentTotal = sumPercentages(materialRows.map((row) => row.percent))
-  const percentOver = isPercentOverLimit(percentTotal)
+    const valuablePercentTotal = sumPercentages(
+      baseRows.filter((row) => !row.isInert).map((row) => row.percent)
+    )
+    const derivedInertPercent = computeDerivedInertPercent(valuablePercentTotal)
 
-  const hasLedgerRowsToAdd = materialRows.some((row) => row.percent > 0 && (row.scu ?? 0) > 0)
+    return baseRows.map((row) => {
+      const percent = row.isInert ? derivedInertPercent : row.percent
+      const scu = totalScu != null ? calculateMaterialScu(totalScu, percent) : null
+      const dfp =
+        totalScu != null && scu != null
+          ? calculateMaterialDfpValue(row.part.elementName, scu)
+          : null
+      return { ...row, percent, scu, dfp }
+    })
+  }, [calculatorParts, percentBySlot, qualityBySlot, totalScu])
+
+  const valuablePercentTotal = sumPercentages(
+    materialRows.filter((row) => !row.isInert).map((row) => row.percent)
+  )
+  const derivedInertPercent = computeDerivedInertPercent(valuablePercentTotal)
+  const percentTotal = valuablePercentTotal + derivedInertPercent
+  const percentOver = isPercentOverLimit(valuablePercentTotal)
+
+  const hasLedgerRowsToAdd = materialRows.some(
+    (row) => !row.isInert && row.percent > 0 && (row.scu ?? 0) > 0
+  )
   const canAddToLedger =
     isRsiVerified &&
     selectedLedgerId !== '' &&
@@ -434,7 +459,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
             />
           </div>
 
-          {oreName && selectedLocation && !composition?.compositionParts.length ? (
+          {oreName && selectedLocation && !calculatorParts.length ? (
             <p className="text-xs text-slate-500 py-2">
               No composition data for this profile.
             </p>
@@ -471,15 +496,31 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                           max={100}
                           step={0.1}
                           inputMode="decimal"
-                          value={percentBySlot[row.slotKey] ?? '0'}
-                          onChange={(e) =>
-                            setPercentBySlot((prev) => ({
-                              ...prev,
-                              [row.slotKey]: e.target.value,
-                            }))
+                          value={
+                            row.isInert
+                              ? row.percent.toFixed(1)
+                              : (percentBySlot[row.slotKey] ?? '0')
                           }
-                          className="site-input w-full px-1.5 py-1 pr-4 text-[10px] font-mono tabular-nums text-right"
-                          aria-label={`${row.label} percentage`}
+                          readOnly={row.isInert}
+                          disabled={row.isInert}
+                          onChange={
+                            row.isInert
+                              ? undefined
+                              : (e) =>
+                                  setPercentBySlot((prev) => ({
+                                    ...prev,
+                                    [row.slotKey]: e.target.value,
+                                  }))
+                          }
+                          className={`site-input w-full px-1.5 py-1 pr-4 text-[10px] font-mono tabular-nums text-right ${
+                            row.isInert ? 'opacity-60 cursor-not-allowed' : ''
+                          }`}
+                          aria-label={
+                            row.isInert
+                              ? `${row.label} percentage (auto-calculated)`
+                              : `${row.label} percentage`
+                          }
+                          title={row.isInert ? 'Auto-calculated as 100% minus other materials' : undefined}
                         />
                         <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
                           %
@@ -491,6 +532,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                         onChange={(next) =>
                           setQualityBySlot((prev) => ({ ...prev, [row.slotKey]: next }))
                         }
+                        isInert={row.isInert}
                       />
                       <span
                         className="w-[3.25rem] text-right text-[10px] font-mono tabular-nums text-amber-300 shrink-0"
@@ -510,7 +552,8 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
               </ul>
               <p className="text-[10px] text-slate-600">
                 DFP uses Purchased (Q0) catalog prices. Q band applies to ledger export only
-                (Band 2 default; matching ore + quality merges cSCU).
+                (Band 2 default; matching ore + quality merges cSCU). Inert % is auto-calculated
+                and is not added to the ledger.
               </p>
             </div>
           ) : null}
@@ -527,11 +570,14 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                   {percentTotal.toFixed(1)}%
                 </span>
               </div>
-              {percentOver ? (
-                <p className="mt-1 text-red-400/90">Percentages exceed 100% — check your scan values.</p>
-              ) : percentTotal > 0 && percentTotal < 100 ? (
+              {!percentOver && derivedInertPercent > 0 ? (
                 <p className="mt-1 text-slate-500">
-                  {(100 - percentTotal).toFixed(1)}% unaccounted
+                  Inert auto: {derivedInertPercent.toFixed(1)}%
+                </p>
+              ) : null}
+              {percentOver ? (
+                <p className="mt-1 text-red-400/90">
+                  Material percentages exceed 100% — check your scan values.
                 </p>
               ) : null}
             </div>
@@ -552,9 +598,31 @@ interface MaterialQualitySelectProps {
   elementName: string
   value: string
   onChange: (value: string) => void
+  isInert?: boolean
 }
 
-function MaterialQualitySelect({ elementName, value, onChange }: MaterialQualitySelectProps) {
+function MaterialQualitySelect({
+  elementName,
+  value,
+  onChange,
+  isInert = false,
+}: MaterialQualitySelectProps) {
+  if (isInert) {
+    return (
+      <select
+        value={String(PURCHASED_STOCK_QUALITY)}
+        disabled
+        className={`${MATERIAL_QUALITY_SELECT_CLASS} opacity-60 cursor-not-allowed`}
+        aria-label="Inert quality (not applicable)"
+        title="Inert has no quality band"
+      >
+        <option value={PURCHASED_STOCK_QUALITY}>
+          {formatRockQualityOptionLabel(PURCHASED_STOCK_QUALITY)}
+        </option>
+      </select>
+    )
+  }
+
   const bands = getResourceBands(elementName)
   const qualityNum = Number.parseInt(value, 10)
   const title = formatRockQualitySelectTitle(elementName, qualityNum, bands)
