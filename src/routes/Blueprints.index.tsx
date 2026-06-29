@@ -118,6 +118,12 @@ export default function BlueprintsRoute() {
   const [showOnlyRewards, setShowOnlyRewards] = React.useState(
     () => readBlueprintsUiState(uiScope).showOnlyRewards
   )
+  const [selectedUserId, setSelectedUserId] = React.useState(
+    () => readBlueprintsUiState(uiScope).selectedUserId
+  )
+  const [acquisitionFilter, setAcquisitionFilter] = React.useState<
+    'all' | 'acquired' | 'not_acquired'
+  >(() => readBlueprintsUiState(uiScope).acquisitionFilter)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
   const [modalOriginRect, setModalOriginRect] = React.useState(null)
 
@@ -178,14 +184,8 @@ export default function BlueprintsRoute() {
   ])
 
   const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
-  const [selectedUserId, setSelectedUserId] = React.useState(
-    () => readBlueprintsUiState(uiScope).selectedUserId
-  )
   const [viewedUserBlueprints, setViewedUserBlueprints] = React.useState({})
   const [loadingUserBlueprints, setLoadingUserBlueprints] = React.useState(false)
-  const [acquisitionFilter, setAcquisitionFilter] = React.useState<
-    'all' | 'acquired' | 'not_acquired'
-  >(() => readBlueprintsUiState(uiScope).acquisitionFilter)
   const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
   const [expandedGroupKey, setExpandedGroupKey] = React.useState<string | null>(null)
   const [rewardMissionsModal, setRewardMissionsModal] = React.useState<{
