@@ -1,5 +1,10 @@
 import componentMetadata from '../data/component-metadata.json'
-import { formatSubtypeLabel, getBlueprintSubType, type BlueprintTaxonomyInput } from './blueprintTaxonomy'
+import {
+  extractComponentSize,
+  formatSubtypeLabel,
+  getBlueprintSubType,
+  type BlueprintTaxonomyInput,
+} from './blueprintTaxonomy'
 
 interface ComponentMeta {
   itemClass?: string
@@ -9,7 +14,9 @@ interface ComponentMeta {
 export type BlueprintSpecInput = Pick<
   BlueprintTaxonomyInput,
   'file' | 'categoryName' | 'subtype' | 'internalName' | 'blueprintName' | 'subCategoryName' | 'armorWeight' | 'armorSlot'
->
+> & {
+  entityClass?: string | null
+}
 
 const metadataByFile = componentMetadata.blueprints as Record<string, ComponentMeta>
 
@@ -32,17 +39,54 @@ function isShipBlueprint(categoryName?: string): boolean {
   )
 }
 
-/** Class + grade (+ component type) subline for ship items, e.g. "Military A Cooler". */
-export function formatBlueprintSpecLine(bp: BlueprintSpecInput): string | null {
-  if (!bp.file || !isShipBlueprint(bp.categoryName)) return null
+function normalizeMetadataKey(raw: string): string {
+  return raw.toLowerCase().replace(/_scitem$/, '')
+}
 
-  const subTypeLabel = formatSubtypeLabel(getBlueprintSubType(bp))
-  const meta = metadataByFile[bp.file.toLowerCase()]
+function resolveComponentMeta(bp: BlueprintSpecInput): ComponentMeta | null {
+  const candidates = [bp.file, bp.internalName, bp.entityClass].filter(Boolean) as string[]
 
-  if (meta?.itemClass && meta?.grade) {
-    const classGrade = `${formatItemClass(meta.itemClass)} ${meta.grade}`
-    return subTypeLabel ? `${classGrade} ${subTypeLabel}` : classGrade
+  for (const raw of candidates) {
+    const meta = metadataByFile[normalizeMetadataKey(raw)]
+    if (meta?.itemClass || meta?.grade) return meta
   }
 
-  return subTypeLabel
+  return null
+}
+
+function resolveComponentSize(bp: BlueprintSpecInput): string | null {
+  const fromCategory = extractComponentSize(bp.categoryName)
+  if (fromCategory) return fromCategory
+
+  for (const raw of [bp.file, bp.internalName, bp.entityClass]) {
+    if (!raw) continue
+    const match = normalizeMetadataKey(raw).match(/_s(\d+)(?:_|$)/)
+    if (match) return `S${match[1]}`
+  }
+
+  return null
+}
+
+/** Size + class + grade + component type subline, e.g. "S2 Military A Cooler". */
+export function formatBlueprintSpecLine(bp: BlueprintSpecInput): string | null {
+  if ((!bp.file && !bp.internalName) || !isShipBlueprint(bp.categoryName)) return null
+
+  const subTypeLabel = formatSubtypeLabel(getBlueprintSubType(bp))
+  const meta = resolveComponentMeta(bp)
+  const size = resolveComponentSize(bp)
+
+  const parts: string[] = []
+  if (size) parts.push(size)
+
+  if (meta?.itemClass && meta?.grade) {
+    parts.push(`${formatItemClass(meta.itemClass)} ${meta.grade}`)
+  } else if (meta?.grade) {
+    parts.push(meta.grade)
+  } else if (meta?.itemClass) {
+    parts.push(formatItemClass(meta.itemClass))
+  }
+
+  if (subTypeLabel) parts.push(subTypeLabel)
+
+  return parts.length > 0 ? parts.join(' ') : null
 }
