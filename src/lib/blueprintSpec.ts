@@ -1,14 +1,15 @@
 import componentMetadata from '../data/component-metadata.json'
+import { formatSubtypeLabel, getBlueprintSubType, type BlueprintTaxonomyInput } from './blueprintTaxonomy'
 
 interface ComponentMeta {
   itemClass?: string
   grade?: string
 }
 
-interface BlueprintSpecInput {
-  file?: string
-  categoryName?: string
-}
+export type BlueprintSpecInput = Pick<
+  BlueprintTaxonomyInput,
+  'file' | 'categoryName' | 'subtype' | 'internalName' | 'blueprintName' | 'subCategoryName' | 'armorWeight' | 'armorSlot'
+>
 
 const metadataByFile = componentMetadata.blueprints as Record<string, ComponentMeta>
 
@@ -31,12 +32,17 @@ function isShipBlueprint(categoryName?: string): boolean {
   )
 }
 
-/** Class + grade subline for ship items only, e.g. "Competition B", "Military A". */
+/** Class + grade (+ component type) subline for ship items, e.g. "Military A Cooler". */
 export function formatBlueprintSpecLine(bp: BlueprintSpecInput): string | null {
   if (!bp.file || !isShipBlueprint(bp.categoryName)) return null
 
+  const subTypeLabel = formatSubtypeLabel(getBlueprintSubType(bp))
   const meta = metadataByFile[bp.file.toLowerCase()]
-  if (!meta?.itemClass || !meta?.grade) return null
 
-  return `${formatItemClass(meta.itemClass)} ${meta.grade}`
+  if (meta?.itemClass && meta?.grade) {
+    const classGrade = `${formatItemClass(meta.itemClass)} ${meta.grade}`
+    return subTypeLabel ? `${classGrade} ${subTypeLabel}` : classGrade
+  }
+
+  return subTypeLabel
 }

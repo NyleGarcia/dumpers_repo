@@ -4,6 +4,7 @@ import MissionLocationTags from './MissionLocationTags'
 import BlueprintMissionMeta from './BlueprintMissionMeta'
 import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import { getBrowseSystemsForMission } from '../lib/missionLocations'
+import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
 import type { Region } from '../lib/missions'
 import {
   getContractMissionBrowseCatalog,
@@ -736,7 +737,9 @@ export default function BrowseMissionsView({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {selectedMissionBlueprints.map(bp => (
+            {selectedMissionBlueprints.map(bp => {
+              const specLine = bp.fullBlueprint ? formatBlueprintSpecLine(bp.fullBlueprint) : null
+              return (
               <div
                 key={bp.name}
                 className={`p-3 rounded-lg border transition-all ${
@@ -754,6 +757,14 @@ export default function BrowseMissionsView({
                     }`}>
                       {bp.displayName}
                     </p>
+                    {specLine && (
+                      <p
+                        className="text-xs text-slate-400 leading-snug mt-0.5 truncate"
+                        title={specLine}
+                      >
+                        {specLine}
+                      </p>
+                    )}
                     <BlueprintMissionMeta
                       isAcquired={bp.isAcquired}
                       isTracked={bp.isTracked}
@@ -798,7 +809,8 @@ export default function BrowseMissionsView({
                   )}
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}
