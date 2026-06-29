@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useBlueprintData } from '../routes/blueprints'
 import MissionLocationTags from './MissionLocationTags'
+import BlueprintMissionMeta from './BlueprintMissionMeta'
 import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import { getBrowseSystemsForMission } from '../lib/missionLocations'
 import type { Region } from '../lib/missions'
@@ -11,7 +12,6 @@ import {
   type ContractMissionBrowseEntry,
 } from '../lib/blueprintMissionRewards'
 import {
-  formatBlueprintDropChance,
   formatRepReward,
   formatStandingRange,
 } from '../lib/missionAcquisition'
@@ -754,17 +754,11 @@ export default function BrowseMissionsView({
                     }`}>
                       {bp.displayName}
                     </p>
-                    {bp.isAcquired && (
-                      <span className="text-[10px] text-green-500">Acquired</span>
-                    )}
-                    {bp.isTracked && !bp.isAcquired && (
-                      <span className="text-[10px] text-amber-400">On tracker</span>
-                    )}
-                    {!bp.isAcquired && formatBlueprintDropChance(bp.dropChance) && (
-                      <span className="text-[10px] text-amber-400/80">
-                        {formatBlueprintDropChance(bp.dropChance)}
-                      </span>
-                    )}
+                    <BlueprintMissionMeta
+                      isAcquired={bp.isAcquired}
+                      isTracked={bp.isTracked}
+                      dropChance={bp.dropChance}
+                    />
                   </div>
                   {!bp.isAcquired && bp.fullBlueprint && (
                     <div className="flex flex-col items-end gap-1 shrink-0">

@@ -1204,15 +1204,17 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
                       )}
                     </div>
                   </div>
-                  <span className="text-xs text-slate-500 uppercase">
-                    {MINING_RARITY_LABELS[ore.rarity]}
-                  </span>
-                  {profile && (
-                    <span className="block text-[10px] text-slate-400 mt-1">
-                      {profile.depositType === 'surface' ? 'Surface' : 'Asteroid'} ·{' '}
-                      {getLocationSpawnTag(ore.ore_name, location, profile.depositType).label}
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1">
+                    <span className="text-xs text-slate-500 uppercase">
+                      {MINING_RARITY_LABELS[ore.rarity]}
                     </span>
-                  )}
+                    {profile && (
+                      <span className="text-[10px] text-slate-400">
+                        {profile.depositType === 'surface' ? 'Surface' : 'Asteroid'} ·{' '}
+                        {getLocationSpawnTag(ore.ore_name, location, profile.depositType).label}
+                      </span>
+                    )}
+                  </div>
                   {!profile && isBroadGuideLocation(location) && (
                     <div className="text-[10px] text-slate-400 mt-1 space-y-0.5">
                       {getDepositTypes(ore.ore_name).map((dt) => {

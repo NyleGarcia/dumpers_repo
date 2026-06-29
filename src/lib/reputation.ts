@@ -5,6 +5,8 @@ export interface MemberReputation {
   ratingCount: number
   score: number | null
   isPending: boolean
+  avgDeliverySeconds: number | null
+  deliverySampleCount: number
 }
 
 export interface MemberReputationRow {
@@ -17,6 +19,8 @@ export interface MemberReputationRow {
   fulfiller_rating_count: number
   fulfiller_reputation: number | null
   fulfiller_is_pending: boolean
+  fulfiller_avg_delivery_seconds?: number | null
+  fulfiller_delivery_sample_count?: number
 }
 
 export function buyerReputationFromRow(row: MemberReputationRow | undefined): MemberReputation {
@@ -26,6 +30,8 @@ export function buyerReputationFromRow(row: MemberReputationRow | undefined): Me
     ratingCount: row.buyer_rating_count,
     score: row.buyer_reputation,
     isPending: row.buyer_is_pending,
+    avgDeliverySeconds: null,
+    deliverySampleCount: 0,
   }
 }
 
@@ -36,6 +42,8 @@ export function fulfillerReputationFromRow(row: MemberReputationRow | undefined)
     ratingCount: row.fulfiller_rating_count,
     score: row.fulfiller_reputation,
     isPending: row.fulfiller_is_pending,
+    avgDeliverySeconds: row.fulfiller_avg_delivery_seconds ?? null,
+    deliverySampleCount: row.fulfiller_delivery_sample_count ?? 0,
   }
 }
 
@@ -45,7 +53,18 @@ export function emptyReputation(): MemberReputation {
     ratingCount: 0,
     score: null,
     isPending: true,
+    avgDeliverySeconds: null,
+    deliverySampleCount: 0,
   }
+}
+
+/** Format seconds as ddd:HH:mm (zero-padded days, hours, minutes). */
+export function formatDeliveryDuration(totalSeconds: number): string {
+  const safe = Math.max(0, Math.floor(totalSeconds))
+  const days = Math.floor(safe / 86400)
+  const hours = Math.floor((safe % 86400) / 3600)
+  const minutes = Math.floor((safe % 3600) / 60)
+  return `${String(days).padStart(3, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
 }
 
 export function formatReputationLabel(rep: MemberReputation): string {

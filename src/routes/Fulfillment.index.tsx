@@ -776,6 +776,13 @@ export default function FulfillmentRoute() {
                               {!isWts && (
                                 <ReputationBadge label="Buyer rep" reputation={buyerRep} />
                               )}
+                              {isWts && (
+                                <ReputationBadge
+                                  label="Seller rep"
+                                  reputation={fulfillerReputationFromRow(reputations[order.requester_id])}
+                                  type="fulfiller"
+                                />
+                              )}
                               {order.min_fulfiller_reputation != null && (
                                 <span className="px-2 py-0.5 rounded text-xs border bg-slate-800 text-slate-300 border-slate-600">
                                   Requires {isWts ? 'buyer' : 'fulfiller'}{' '}
@@ -933,7 +940,7 @@ export default function FulfillmentRoute() {
                           <TradeContactChip role="fulfiller" profile={order.assignee} compact />
                         )}
                         {order.assignee_id && (
-                          <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} />
+                          <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} type="fulfiller" />
                         )}
                       </div>
                     )

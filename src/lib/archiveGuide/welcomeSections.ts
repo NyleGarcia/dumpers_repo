@@ -153,6 +153,7 @@ export const PENDING_REP_SECTION = {
       'Can only have 1 active seller-side job at a time',
       'Complete or release it before accepting another WTB or WTS handoff',
       'Limits lift after 5 completed transactions as a seller/fulfiller',
+      'After that, others see your star rating plus average delivery time (ddd:HH:mm from accept to ready)',
     ],
   },
   important:

@@ -164,6 +164,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Buyer-side WTS: confirm pickup and archive/rate like any other purchase',
       'Cancel or release returns partial purchases to the seller\'s listing with quantities restored',
       'Same reputation ratings for all paths — no separate partial rating',
+      'Visible fulfiller/seller rep shows average delivery time (ddd:HH:mm from accept to ready) after 5 completed trades',
       'Requires a verified RSI Handle; fulfiller and buyer pending limits apply by role',
       'Offline Mode shows a pending-order count teaser only — sign in to browse or accept',
       'Verify you have materials before accepting 800+ quality WTB blueprint orders',

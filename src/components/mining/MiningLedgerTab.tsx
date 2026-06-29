@@ -1682,36 +1682,38 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
                     <tr key={row.resourceKey} className="border-b border-slate-800/40">
                       <td className="py-1 pr-2 text-slate-300">{row.resourceLabel}</td>
                       <td className="py-1">
-                        <input
-                          type="number"
-                          value={row.pricePer100 ?? ''}
-                          placeholder={String(Math.round(defaultPrice))}
-                          onChange={(e) => {
-                            const val = e.target.value
-                            updateData((prev) => {
-                              const next = ensurePriceOverrides(prev, oreEntries).map((p) =>
-                                p.resourceKey === row.resourceKey
-                                  ? {
-                                      ...p,
-                                      pricePer100: val === '' ? null : Number(val) || 0,
-                                    }
-                                  : p
-                              )
-                              return { ...prev, priceOverrides: next }
-                            })
-                          }}
-                          className="site-input w-32 px-2 py-0.5 text-xs font-mono"
-                          min={0}
-                          step={isGem ? 1 : 'any'}
-                        />
-                        <span className="text-slate-600 ml-1 tabular-nums text-[10px]">
-                          {isGem ? 'aUEC / gem' : 'aUEC / 100 cSCU'}
-                        </span>
-                        {row.pricePer100 == null && (
-                          <span className="text-slate-600 ml-1 tabular-nums">
-                            ({Math.round(effective).toLocaleString()})
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                          <input
+                            type="number"
+                            value={row.pricePer100 ?? ''}
+                            placeholder={String(Math.round(defaultPrice))}
+                            onChange={(e) => {
+                              const val = e.target.value
+                              updateData((prev) => {
+                                const next = ensurePriceOverrides(prev, oreEntries).map((p) =>
+                                  p.resourceKey === row.resourceKey
+                                    ? {
+                                        ...p,
+                                        pricePer100: val === '' ? null : Number(val) || 0,
+                                      }
+                                    : p
+                                )
+                                return { ...prev, priceOverrides: next }
+                              })
+                            }}
+                            className="site-input w-32 px-2 py-0.5 text-xs font-mono"
+                            min={0}
+                            step={isGem ? 1 : 'any'}
+                          />
+                          <span className="text-slate-600 tabular-nums text-[10px]">
+                            {isGem ? 'aUEC / gem' : 'aUEC / 100 cSCU'}
                           </span>
-                        )}
+                          {row.pricePer100 == null && (
+                            <span className="text-slate-600 tabular-nums text-[10px]">
+                              ({Math.round(effective).toLocaleString()})
+                            </span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   )

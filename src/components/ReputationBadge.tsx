@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { formatReputationLabel, type MemberReputation } from '../lib/reputation'
+import { formatDeliveryDuration, formatReputationLabel, type MemberReputation } from '../lib/reputation'
 
 interface ReputationBadgeProps {
   label: string
@@ -11,19 +11,35 @@ interface ReputationBadgeProps {
 export default function ReputationBadge({ label, reputation, className = '', type = 'buyer' }: ReputationBadgeProps) {
   const pending = reputation.isPending || reputation.score == null
   const [showRulesModal, setShowRulesModal] = useState(false)
+  const showDeliveryTime =
+    type === 'fulfiller' &&
+    !pending &&
+    reputation.avgDeliverySeconds != null &&
+    reputation.deliverySampleCount > 0
 
   const badgeContent = (
     <>
       <span className="text-slate-500">{label}:</span>
       <span className={pending ? 'italic' : 'font-medium'}>{formatReputationLabel(reputation)}</span>
       {!pending && <span className="text-amber-400/80">★</span>}
+      {showDeliveryTime && (
+        <>
+          <span className="text-slate-600">·</span>
+          <span
+            className="font-mono text-sky-200/90 tabular-nums"
+            title={`Average time from accept to ready for pickup (${reputation.deliverySampleCount} order${reputation.deliverySampleCount === 1 ? '' : 's'})`}
+          >
+            {formatDeliveryDuration(reputation.avgDeliverySeconds!)}
+          </span>
+        </>
+      )}
     </>
   )
 
   if (!pending) {
     return (
       <span
-        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs border bg-amber-950/40 text-amber-200 border-amber-500/30 ${className}`}
+        className={`inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 px-2 py-0.5 rounded text-xs border bg-amber-950/40 text-amber-200 border-amber-500/30 ${className}`}
         title={`Average star rating (${reputation.ratingCount} rating${reputation.ratingCount === 1 ? '' : 's'})`}
       >
         {badgeContent}
