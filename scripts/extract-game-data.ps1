@@ -41,6 +41,29 @@ if (-not $OutputPath) {
 
 $DataP4kPath = Join-Path $StarCitizenPath "Data.p4k"
 
+function Write-Utf8NoBom {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Content
+    )
+    $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+    [System.IO.File]::WriteAllText($Path, $Content, $utf8NoBom)
+}
+
+function Invoke-StarBreakerDcbQuery {
+    param(
+        [Parameter(Mandatory = $true)][string]$RecordType,
+        [Parameter(Mandatory = $true)][string]$OutputFile
+    )
+    $errFile = "$OutputFile.err"
+    $cmdLine = "`"$StarBreakerPath`" dcb query --p4k `"$DataP4kPath`" $RecordType > `"$OutputFile`" 2> `"$errFile`""
+    cmd /c $cmdLine | Out-Null
+    if (-not (Test-Path $OutputFile) -or (Get-Item $OutputFile).Length -eq 0) {
+        $errHint = if (Test-Path $errFile) { Get-Content $errFile -Raw } else { '' }
+        throw "Query produced no output for $RecordType. $errHint"
+    }
+}
+
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "  Star Citizen Game Data Extraction" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
@@ -98,7 +121,8 @@ if (Test-Path $BuildManifestPath) {
             buildDate = $manifest.Data.BuildDateStamp
             extracted = (Get-Date).ToUniversalTime().ToString("o")
         }
-        $gameBuild | ConvertTo-Json -Depth 3 | Set-Content -Path (Join-Path $OutputPath "game-build.json") -Encoding utf8
+        $gameBuildJson = $gameBuild | ConvertTo-Json -Depth 3
+        Write-Utf8NoBom -Path (Join-Path $OutputPath "game-build.json") -Content $gameBuildJson
         Write-Host "Game build: $GameBuildVersion ($($manifest.Data.Branch), internal $($internalVersion))" -ForegroundColor Gray
     }
     catch {
@@ -110,7 +134,7 @@ else {
 }
 
 Write-Host ""
-Write-Host "[1/6] Extracting DataForge database to JSON..." -ForegroundColor Green
+Write-Host "[1/7] Extracting DataForge database to JSON..." -ForegroundColor Green
 Write-Host "      This may take several minutes..." -ForegroundColor Gray
 Write-Host ""
 
@@ -132,7 +156,7 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[2/6] Extracting localization files..." -ForegroundColor Green
+Write-Host "[2/7] Extracting localization files..." -ForegroundColor Green
 Write-Host "      Getting english language strings for lore/descriptions..." -ForegroundColor Gray
 Write-Host ""
 
@@ -152,7 +176,7 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[3/6] Extracting shop socpaks..." -ForegroundColor Green
+Write-Host "[3/7] Extracting shop socpaks..." -ForegroundColor Green
 Write-Host "      Branded shops + rest-stop shop modules..." -ForegroundColor Gray
 Write-Host ""
 
@@ -179,7 +203,7 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[4/6] Extracting shop inventory JSON..." -ForegroundColor Green
+Write-Host "[4/7] Extracting shop inventory JSON..." -ForegroundColor Green
 Write-Host ""
 
 try {
@@ -195,19 +219,13 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[5/6] Extracting quality band data via query..." -ForegroundColor Green
+Write-Host "[5/7] Extracting quality band data via query..." -ForegroundColor Green
 Write-Host "      Running dcb query for CraftingQualityQuantizationRecord..." -ForegroundColor Gray
 Write-Host ""
 
 try {
-    & $StarBreakerPath dcb query `
-        --p4k $DataP4kPath `
-        "CraftingQualityQuantizationRecord" 2>&1 | Out-File -FilePath "$OutputPath\quality-quantization-query.json" -Encoding utf8
-        
-    & $StarBreakerPath dcb query `
-        --p4k $DataP4kPath `
-        "CraftingQualityDistributionRecord" 2>&1 | Out-File -FilePath "$OutputPath\quality-distribution-query.json" -Encoding utf8
-        
+    Invoke-StarBreakerDcbQuery -RecordType "CraftingQualityQuantizationRecord" -OutputFile (Join-Path $OutputPath "quality-quantization-query.json")
+    Invoke-StarBreakerDcbQuery -RecordType "CraftingQualityDistributionRecord" -OutputFile (Join-Path $OutputPath "quality-distribution-query.json")
     Write-Host "  Quality data extracted" -ForegroundColor Gray
 }
 catch {
@@ -215,11 +233,25 @@ catch {
     Write-Host "Quality bands will use fallback data..." -ForegroundColor Yellow
 }
 
+Write-Host ""
+Write-Host "[6/7] Extracting mission broker data via query..." -ForegroundColor Green
+Write-Host "      Running dcb query for MissionBrokerEntry..." -ForegroundColor Gray
+Write-Host ""
+
+try {
+    Invoke-StarBreakerDcbQuery -RecordType "MissionBrokerEntry" -OutputFile (Join-Path $OutputPath "mission-broker-query.json")
+    Write-Host "  Mission broker data extracted" -ForegroundColor Gray
+}
+catch {
+    Write-Host "WARNING: Mission broker query failed: $_" -ForegroundColor Yellow
+    Write-Host "Reputation mission data will be incomplete until this query succeeds..." -ForegroundColor Yellow
+}
+
 $stopwatch.Stop()
 $elapsed = $stopwatch.Elapsed
 
 Write-Host ""
-Write-Host "[6/6] Extraction complete!" -ForegroundColor Green
+Write-Host "[7/7] Extraction complete!" -ForegroundColor Green
 Write-Host ""
 
 # Count extracted files

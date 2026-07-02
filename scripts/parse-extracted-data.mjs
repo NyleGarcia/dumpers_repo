@@ -3751,7 +3751,7 @@ function parseMissionBrokerData(localization = {}) {
   const missionQueryFile = join(EXTRACTED_DATA, 'mission-broker-query.json')
   if (!existsSync(missionQueryFile)) {
     console.log('  Mission broker query file not found')
-    console.log('  Run: starbreaker dcb query "MissionBroker" to generate it')
+    console.log('  Run: starbreaker dcb query "MissionBrokerEntry" to generate it')
     return { missions: {}, missionsByFaction: {} }
   }
   
