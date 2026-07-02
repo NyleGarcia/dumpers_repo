@@ -32,6 +32,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
   const [resourceKey, setResourceKey] = useState('')
   const [quality, setQuality] = useState(String(DEFAULT_STOCK_QUALITY))
   const [quantity, setQuantity] = useState('0')
+  const [note, setNote] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
   const activeCatalog = useMemo(
@@ -88,6 +89,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
       resourceKey,
       quality: Number(quality),
       quantityScu: qty,
+      note: note.trim() || null,
     })
 
     setSubmitting(false)
@@ -128,11 +130,11 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
         className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 min-w-0">
+      <div className="flex flex-col sm:flex-row gap-2 min-w-0 items-stretch">
         <select
           value={resourceKey}
           onChange={(e) => setResourceKey(e.target.value)}
-          className="sm:col-span-2 w-full min-w-0 max-w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm truncate"
+          className="sm:flex-[1.2] w-full min-w-0 max-w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm truncate"
         >
           <option value="">Select resource</option>
           {filtered.map((r) => (
@@ -142,26 +144,40 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
           ))}
         </select>
 
-        {resourceKey ? (
-          <ResourceQualitySelect
-            resourceKey={resourceKey}
-            resourceLabel={selectedLabel}
-            quality={quality}
-            onQualityChange={setQuality}
-          />
-        ) : (
-          <div className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-500 text-sm">
-            Quality
-          </div>
-        )}
+        <div className="sm:flex-1 min-w-0">
+          {resourceKey ? (
+            <ResourceQualitySelect
+              resourceKey={resourceKey}
+              resourceLabel={selectedLabel}
+              quality={quality}
+              onQualityChange={setQuality}
+            />
+          ) : (
+            <div className="h-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-500 text-sm">
+              Quality
+            </div>
+          )}
+        </div>
 
         <ResourceQuantityInput
           resourceKey={resourceKey || undefined}
           value={quantity}
           onValueChange={setQuantity}
           placeholder={qtyUnit}
-          className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
+          className="sm:w-24 shrink-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
         />
+
+        {!isGuestMode && (
+          <input
+            type="text"
+            value={note}
+            onChange={(e) => setNote(e.target.value.slice(0, 64))}
+            placeholder="Note (optional)"
+            maxLength={64}
+            className="sm:flex-1 min-w-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500"
+            aria-label="Stock card note"
+          />
+        )}
       </div>
 
       {resourceKey && (

@@ -451,9 +451,13 @@ export async function addPersonalInventoryLine(input: {
   resourceKey: string
   quality: number
   quantityScu: number
+  note?: string | null
 }): Promise<{ error?: string }> {
   const qty = normalizeResourceQuantity(Math.max(0.001, input.quantityScu))
   const now = new Date().toISOString()
+  const trimmedNote = input.note?.trim()
+    ? input.note.trim().slice(0, 64)
+    : null
 
   const { data: existing, error: fetchError } = await supabase
     .from('personal_resource_inventory')
@@ -467,9 +471,16 @@ export async function addPersonalInventoryLine(input: {
 
   if (existing) {
     const nextQty = addResourceQuantities(Number(existing.quantity), qty)
+    const updatePayload: { quantity: number; updated_at: string; note?: string | null } = {
+      quantity: nextQty,
+      updated_at: now,
+    }
+    if (trimmedNote) {
+      updatePayload.note = trimmedNote
+    }
     const { error } = await supabase
       .from('personal_resource_inventory')
-      .update({ quantity: nextQty, updated_at: now })
+      .update(updatePayload)
       .eq('id', existing.id)
 
     if (error) return { error: error.message }
@@ -481,6 +492,7 @@ export async function addPersonalInventoryLine(input: {
     resource_key: input.resourceKey,
     quality: input.quality,
     quantity: qty,
+    note: trimmedNote,
     updated_at: now,
   })
 

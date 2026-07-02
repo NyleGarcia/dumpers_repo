@@ -31,7 +31,7 @@ export default function ResourceQualitySelect({
 
   if (selectedIsSalvage) {
     return (
-      <div className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-300 text-sm">
+      <div className="w-full h-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-300 text-sm">
         Q0 (no quality)
       </div>
     )
@@ -42,7 +42,7 @@ export default function ResourceQualitySelect({
       <select
         value={quality}
         onChange={(e) => onQualityChange(e.target.value)}
-        className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+        className="w-full min-w-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
         aria-label="Quality band"
       >
         {showPurchased && (
@@ -61,7 +61,7 @@ export default function ResourceQualitySelect({
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="w-full min-w-0 flex items-center gap-2">
       <input
         type="range"
         min={showPurchased ? PURCHASED_STOCK_QUALITY : 1}
