@@ -126,8 +126,43 @@ export async function updateMiningLedger(
   return { error: null }
 }
 
-export async function closeMiningLedger(ledgerId: string): Promise<{ error: string | null }> {
-  const { data, error } = await supabase.rpc('close_mining_ledger', { p_ledger_id: ledgerId })
+export interface MiningLedgerSiteStats {
+  archivedLedgerCount: number
+  crewMemberCount: number
+  totalPayoutAuec: number
+}
+
+export async function fetchMiningLedgerSiteStats(): Promise<{
+  data: MiningLedgerSiteStats | null
+  error: string | null
+}> {
+  const { data, error } = await supabase.rpc('get_mining_ledger_site_stats')
+  if (error) return { data: null, error: error.message }
+
+  const row = data as {
+    archived_ledger_count?: number
+    crew_member_count?: number
+    total_payout_auec?: number
+  } | null
+
+  return {
+    data: {
+      archivedLedgerCount: Number(row?.archived_ledger_count ?? 0),
+      crewMemberCount: Number(row?.crew_member_count ?? 0),
+      totalPayoutAuec: Number(row?.total_payout_auec ?? 0),
+    },
+    error: null,
+  }
+}
+
+export async function closeMiningLedger(
+  ledgerId: string,
+  options?: { recordArchiveStats?: boolean }
+): Promise<{ error: string | null }> {
+  const { data, error } = await supabase.rpc('close_mining_ledger', {
+    p_ledger_id: ledgerId,
+    p_record_archive_stats: options?.recordArchiveStats ?? false,
+  })
   if (error) return { error: error.message }
   const result = data as RpcResult
   if (!result?.success) return { error: result?.error ?? 'Failed to close ledger' }

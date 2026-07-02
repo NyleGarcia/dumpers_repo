@@ -2188,14 +2188,19 @@ const ARMOR_SLOT_DISPLAY = {
   suit: 'Suit',
 }
 
-function detectArmorSlotFromInternalName(internalName) {
+function detectArmorSlotFromInternalName(internalName, displayName = '') {
   const nameForSlot = (internalName || '').toLowerCase()
+  const label = (displayName || '').toLowerCase()
   if (/_helmet(?:_|$)/.test(nameForSlot)) return 'helmet'
   if (/_backpack(?:_|$)/.test(nameForSlot)) return 'backpack'
+  if (/_pants(?:_|$)/.test(nameForSlot)) return 'legs'
   if (/_legs(?:_|$)/.test(nameForSlot)) return 'legs'
   if (/_arms(?:_|$)/.test(nameForSlot)) return 'arms'
   if (/_core(?:_|$)|_torso(?:_|$)|_jacket(?:_|$)/.test(nameForSlot)) return 'core'
   if (/_undersuit(?:_|$)/.test(nameForSlot)) return 'undersuit'
+  if (/flightsuit(?:_|$)/.test(nameForSlot) && !/_helmet(?:_|$)/.test(nameForSlot)) return 'flight'
+  if (/\bflight\b/.test(label) && /\bsuit\b/.test(label)) return 'flight'
+  if (/_suit(?:_|$)/.test(nameForSlot)) return 'suit'
   return null
 }
 
@@ -2208,6 +2213,8 @@ function nameImpliesArmorSlot(name) {
   if (/\blegs\b|\bpants\b/.test(n)) return 'legs'
   if (/backpack/.test(n)) return 'backpack'
   if (/undersuit/.test(n)) return 'undersuit'
+  if (/\bflight\b/.test(n) && /\bsuit\b/.test(n)) return 'flight'
+  if (/flightsuit/.test(n)) return 'flight'
   return null
 }
 
@@ -3224,6 +3231,8 @@ function parseBlueprintDefinitions(localization = {}) {
         armorWeight = 'medium'
       } else if (ecLower.includes('_light_') || ecLower.includes('_light') || ecLower.includes('undersuit')) {
         armorWeight = 'light'
+      } else if (nameForSlot.startsWith('gys_')) {
+        armorWeight = 'medium'
       }
 
       // Armor style subtype (standard, flightsuit, explorer, etc.) — not body slot
@@ -3258,6 +3267,8 @@ function parseBlueprintDefinitions(localization = {}) {
           blueprintName = appendArmorSlotToName(blueprintName, armorSlot)
         }
       }
+
+      armorSlot = detectArmorSlotFromInternalName(internalName || entityClass, blueprintName) || armorSlot
     }
     // Vehicle component types - detect from internalName prefix
     if (category.startsWith('VehicleComponent')) {

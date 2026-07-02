@@ -19,7 +19,45 @@ export interface BlueprintTaxonomyInput {
   armorSlot?: string | null
 }
 
-const ARMOR_SLOT_SUBTYPES = new Set(['helmet', 'arms', 'core', 'legs', 'backpack'])
+const ARMOR_SLOT_SUBTYPES = new Set(['helmet', 'arms', 'core', 'legs', 'backpack', 'flight', 'suit', 'undersuit'])
+
+function isFlightSuitName(internalName: string, displayName = ''): boolean {
+  const filename = (internalName || '').toLowerCase()
+  const label = (displayName || '').toLowerCase()
+  if (/_helmet(?:_|$)/.test(filename)) return false
+  if (/flightsuit(?:_|$)/.test(filename)) return true
+  return /\bflight\b/.test(label) && /\bsuit\b/.test(label)
+}
+
+/** Shared slot detection from internal name / filename (bundled JSON has no folder path). */
+export function detectArmorSlotFromName(name: string, displayName = ''): string | null {
+  const filename = (name || '').toLowerCase()
+  if (!filename && !displayName) return null
+  if (/_helmet(?:_|$)/.test(filename)) return 'helmet'
+  if (/_backpack(?:_|$)/.test(filename)) return 'backpack'
+  if (/_pants(?:_|$)/.test(filename)) return 'legs'
+  if (/_legs(?:_|$)/.test(filename)) return 'legs'
+  if (/_arms(?:_|$)/.test(filename)) return 'arms'
+  if (/_core(?:_|$)|_torso(?:_|$)|_jacket(?:_|$)/.test(filename)) return 'core'
+  if (/_undersuit(?:_|$)/.test(filename)) return 'undersuit'
+  if (isFlightSuitName(filename, displayName)) return 'flight'
+  if (/_suit(?:_|$)/.test(filename)) return 'suit'
+  return null
+}
+
+function getArmorFilename(bp: BlueprintTaxonomyInput): string {
+  const raw = (bp.internalName || bp.file || '').trim()
+  if (!raw) return ''
+  if (raw.includes('\\')) {
+    return raw.split('\\').pop()?.toLowerCase() || ''
+  }
+  return raw.toLowerCase()
+}
+
+function getArmorPathParts(bp: BlueprintTaxonomyInput): string[] {
+  const raw = bp.file?.includes('\\') ? bp.file : null
+  return raw ? raw.split('\\') : []
+}
 
 function getFpsWeaponTypeFromFilename(filename: string): string | null {
   const fn = filename.toLowerCase()
@@ -32,6 +70,8 @@ function getFpsWeaponTypeFromFilename(filename: string): string | null {
 export function formatTaxonomyLabel(value: string | null | undefined): string | null {
   if (!value) return null
   if (value === 'superheavy') return 'Super Heavy'
+  if (value === 'flight') return 'Flight'
+  if (value === 'suit') return 'Suit'
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
@@ -182,14 +222,18 @@ function isFlightArmor(parts: string[], filename: string, blueprintName = ''): b
 export function getArmorWeight(bp: BlueprintTaxonomyInput): string | null {
   if (bp.categoryName && bp.categoryName !== 'FPSArmours') return null
   if (bp.armorWeight) return bp.armorWeight
-  const pathKey = bp.file?.includes('\\') ? bp.file : null
-  if (!pathKey) return null
-  const parts = pathKey.split('\\')
-  const filename = parts[parts.length - 1]?.toLowerCase() || ''
-  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
+
+  const parts = getArmorPathParts(bp)
+  const filename = getArmorFilename(bp)
+  if (!filename) return null
+
+  const isArmorFromPath = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
+  const isArmor = isArmorFromPath || bp.categoryName === 'FPSArmours'
   if (!isArmor) return null
 
-  if (isFlightArmor(parts, filename, bp.blueprintName)) return 'flight'
+  if (isFlightArmor(parts, filename, bp.blueprintName) || filename.includes('flightsuit')) {
+    return 'flight'
+  }
   if (filename.includes('_superheavy_') || filename.includes('_superheavy.')) return 'superheavy'
   if (filename.includes('_heavy_') || filename.includes('_heavy.')) return 'heavy'
   if (filename.includes('_medium_') || filename.includes('_medium.')) return 'medium'
@@ -197,28 +241,33 @@ export function getArmorWeight(bp: BlueprintTaxonomyInput): string | null {
 
   const fromPath = getArmorWeightFromPath(parts)
   if (fromPath) return fromPath
-  if (parts.some((p) => p.toLowerCase() === 'undersuit')) return 'light'
+  if (parts.some((p) => p.toLowerCase() === 'undersuit') || filename.includes('undersuit')) {
+    return 'light'
+  }
+  if (filename.startsWith('gys_')) return 'medium'
 
   return null
 }
 
 export function getArmorSlot(bp: BlueprintTaxonomyInput): string | null {
   if (bp.categoryName && bp.categoryName !== 'FPSArmours') return null
-  if (bp.armorSlot) return bp.armorSlot
-  const pathKey = bp.file?.includes('\\') ? bp.file : null
-  if (!pathKey) return null
-  const parts = pathKey.split('\\')
-  const filename = parts[parts.length - 1]?.toLowerCase() || ''
-  const isArmor = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
+
+  const filename = getArmorFilename(bp)
+  const displayName = bp.blueprintName || ''
+
+  if (bp.armorSlot) {
+    if (bp.armorSlot === 'suit' && isFlightSuitName(filename, displayName)) return 'flight'
+    return bp.armorSlot
+  }
+
+  const parts = getArmorPathParts(bp)
+  if (!filename && !displayName) return null
+
+  const isArmorFromPath = parts.some((p, i) => p === 'armour' && parts[i - 1] === 'fpsgear')
+  const isArmor = isArmorFromPath || bp.categoryName === 'FPSArmours'
   if (!isArmor) return null
 
-  if (filename.includes('_helmet')) return 'helmet'
-  if (filename.includes('_arms')) return 'arms'
-  if (filename.includes('_core') || filename.includes('_jacket')) return 'core'
-  if (filename.includes('_legs') || filename.includes('_pants')) return 'legs'
-  if (filename.includes('_backpack') || filename.includes('backpack_')) return 'backpack'
-
-  return null
+  return detectArmorSlotFromName(filename, displayName)
 }
 
 export function extractComponentSize(categoryName?: string): string | null {

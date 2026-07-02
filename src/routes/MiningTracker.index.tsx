@@ -37,6 +37,8 @@ import { isBroadGuideLocation } from '../lib/miningLocationAliases'
 import TrackOreButtons from '../components/TrackOreButton'
 import SiteTooltip from '../components/SiteTooltip'
 import MiningLedgerTab from '../components/mining/MiningLedgerTab'
+import { fetchMiningLedgerSiteStats, type MiningLedgerSiteStats } from '../lib/miningLedgerOps'
+import { formatLedgerSiteStatsMessage } from '../lib/miningLedger'
 import RockCalculator from '../components/mining/RockCalculator'
 import {
   guideLocationChipTooltip,
@@ -82,6 +84,13 @@ export default function MiningTrackerRoute() {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null)
   const [selectedOre, setSelectedOre] = useState<MiningData | null>(null)
   const [selectedOreGuideLocation, setSelectedOreGuideLocation] = useState<string | null>(null)
+  const [ledgerSiteStats, setLedgerSiteStats] = useState<MiningLedgerSiteStats | null>(null)
+
+  const refreshLedgerSiteStats = useCallback(async () => {
+    if (isGuestPreview) return
+    const { data: stats } = await fetchMiningLedgerSiteStats()
+    if (stats) setLedgerSiteStats(stats)
+  }, [isGuestPreview])
 
   const openOreModal = useCallback((ore: MiningData, guideLocation?: string) => {
     setSelectedOre(ore)
@@ -130,6 +139,11 @@ export default function MiningTrackerRoute() {
       viewMode === 'guide' ? 'mining_guide' : viewMode === 'ledger' ? 'ledger' : 'rs_tracker'
     setAnalyticsSubTool(subTool)
   }, [viewMode])
+
+  useEffect(() => {
+    if (viewMode !== 'ledger' || isGuestPreview) return
+    void refreshLedgerSiteStats()
+  }, [viewMode, isGuestPreview, refreshLedgerSiteStats])
 
   useEffect(() => {
     if (!search.ore || !data || search.add !== true) return
@@ -260,37 +274,44 @@ export default function MiningTrackerRoute() {
       }
     >
       {/* View Mode Switcher */}
-      <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit mb-4">
-        <button
-          onClick={() => setViewMode('tracker')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
-            viewMode === 'tracker' 
-              ? 'site-filter-selected-orange' 
-              : 'text-slate-400 hover:text-white'
-          }`}
-        >
-          RS Tracker
-        </button>
-        <button
-          onClick={() => setViewMode('guide')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
-            viewMode === 'guide' 
-              ? 'site-filter-selected-orange' 
-              : 'text-slate-400 hover:text-white'
-          }`}
-        >
-          Mining Guide
-        </button>
-        <button
-          onClick={() => setViewMode('ledger')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
-            viewMode === 'ledger'
-              ? 'site-filter-selected-orange'
-              : 'text-slate-400 hover:text-white'
-          }`}
-        >
-          Ledger
-        </button>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+        <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
+          <button
+            onClick={() => setViewMode('tracker')}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+              viewMode === 'tracker' 
+                ? 'site-filter-selected-orange' 
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            RS Tracker
+          </button>
+          <button
+            onClick={() => setViewMode('guide')}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+              viewMode === 'guide' 
+                ? 'site-filter-selected-orange' 
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Mining Guide
+          </button>
+          <button
+            onClick={() => setViewMode('ledger')}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+              viewMode === 'ledger'
+                ? 'site-filter-selected-orange'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Ledgers
+          </button>
+        </div>
+        {viewMode === 'ledger' && ledgerSiteStats && !isGuestPreview && (
+          <p className="text-sm text-amber-200/95 font-medium tracking-wide max-w-3xl">
+            {formatLedgerSiteStatsMessage(ledgerSiteStats)}
+          </p>
+        )}
       </div>
       {loading && viewMode !== 'ledger' && (
         <div className="flex items-center justify-center min-h-[300px]">
@@ -512,7 +533,10 @@ export default function MiningTrackerRoute() {
       )}
 
       {viewMode === 'ledger' && (
-        <MiningLedgerTab isGuestPreview={isGuestPreview} />
+        <MiningLedgerTab
+          isGuestPreview={isGuestPreview}
+          onLedgerArchived={refreshLedgerSiteStats}
+        />
       )}
 
       {/* Mining Guide View */}

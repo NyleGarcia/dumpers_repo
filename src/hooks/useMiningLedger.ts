@@ -158,14 +158,14 @@ export function useMiningLedger() {
     [activeId, flushSave, loadLedger]
   )
 
-  const closeLedger = useCallback(async () => {
+  const closeLedger = useCallback(async (options?: { recordArchiveStats?: boolean }) => {
     if (!activeId) return { error: 'No active ledger' }
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current)
       saveTimerRef.current = null
     }
     await flushSave()
-    const { error: closeError } = await closeMiningLedger(activeId)
+    const { error: closeError } = await closeMiningLedger(activeId, options)
     if (closeError) return { error: closeError }
 
     const list = await refreshList()

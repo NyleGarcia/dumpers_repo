@@ -608,6 +608,42 @@ export function formatLedgerMoney(value: number): string {
   return `${Math.round(value).toLocaleString()} aUEC`
 }
 
+/** Round down slightly so billboard copy can truthfully say "over X aUEC". */
+export function floorLedgerPayoutForOverDisplay(totalAuec: number): number {
+  const total = Math.max(0, Math.round(totalAuec))
+  if (total <= 0) return 0
+
+  const step =
+    total < 100 ? 10
+    : total < 1_000 ? 100
+    : total < 10_000 ? 1_000
+    : total < 100_000 ? 10_000
+    : total < 1_000_000 ? 100_000
+    : 1_000_000
+
+  let floored = Math.floor(total / step) * step
+  if (floored >= total) {
+    floored = Math.max(0, floored - step)
+  }
+  return floored
+}
+
+export function formatLedgerSiteStatsMessage(stats: {
+  archivedLedgerCount: number
+  crewMemberCount: number
+  totalPayoutAuec: number
+}): string {
+  const ledgerVerb = stats.archivedLedgerCount === 1 ? 'has' : 'have'
+  const ledgerNoun =
+    stats.archivedLedgerCount === 1 ? 'Crew Ledger' : 'Crew Ledgers'
+  const memberVerb = stats.crewMemberCount === 1 ? 'has' : 'have'
+  const memberNoun =
+    stats.crewMemberCount === 1 ? 'Crew Member' : 'Crew Members'
+  const displayPayout = floorLedgerPayoutForOverDisplay(stats.totalPayoutAuec)
+
+  return `${stats.archivedLedgerCount.toLocaleString()} ${ledgerNoun} ${ledgerVerb} been created and ${stats.crewMemberCount.toLocaleString()} ${memberNoun} ${memberVerb} been paid out over ${formatLedgerMoney(displayPayout)}.`
+}
+
 export function shortLedgerId(id: string): string {
   return id.slice(0, 8).toUpperCase()
 }

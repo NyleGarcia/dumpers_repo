@@ -2,13 +2,15 @@ import { getArmorSlot, type BlueprintTaxonomyInput } from './blueprintTaxonomy'
 
 export const FPS_VARIANT_CATEGORIES = new Set(['FPSWeapons', 'FPSArmours'])
 
-const ARMOR_SLOT_WORDS = ['Helmet', 'Arms', 'Core', 'Legs', 'Backpack'] as const
+const ARMOR_SLOT_WORDS = ['Helmet', 'Arms', 'Core', 'Legs', 'Backpack', 'Flight', 'Suit'] as const
 const ARMOR_SLOT_ORDER: Record<string, number> = {
   helmet: 0,
   arms: 1,
   core: 2,
   legs: 3,
   backpack: 4,
+  flight: 5,
+  suit: 6,
 }
 
 export interface BlueprintVariantInput extends BlueprintTaxonomyInput {

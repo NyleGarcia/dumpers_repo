@@ -49,6 +49,7 @@ import { resolveLedgerQuality } from '../../lib/qualityBands'
 
 interface MiningLedgerTabProps {
   isGuestPreview: boolean
+  onLedgerArchived?: () => void
 }
 
 /** Section title row — no sticky band; tables scroll naturally below. */
@@ -676,7 +677,10 @@ function ImportedLedgerViewModal({
   )
 }
 
-export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps) {
+export default function MiningLedgerTab({
+  isGuestPreview,
+  onLedgerArchived,
+}: MiningLedgerTabProps) {
   const { user, profile } = useAuth()
   const isRsiVerified = profile?.rsi_handle_verified ?? false
   const { catalog, loading: catalogLoading } = useResourceCatalog()
@@ -844,13 +848,14 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
   const handleCloseConfirm = async () => {
     if (!activeId) return
     handleExport()
-    const { error: closeError } = await closeLedger()
+    const { error: closeError } = await closeLedger({ recordArchiveStats: true })
     setShowCloseModal(false)
     if (closeError) setError(closeError)
+    else onLedgerArchived?.()
   }
 
   const handleDeleteLedger = async () => {
-    const { error: deleteError } = await closeLedger()
+    const { error: deleteError } = await closeLedger({ recordArchiveStats: false })
     setShowDeleteModal(false)
     if (deleteError) setError(deleteError)
   }
@@ -922,7 +927,7 @@ export default function MiningLedgerTab({ isGuestPreview }: MiningLedgerTabProps
       <div className="flex flex-wrap items-end gap-3">
         <div className="min-w-[200px]">
           <label className="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">
-            Ledger
+            Ledgers
           </label>
           <select
             value={activeId ?? ''}

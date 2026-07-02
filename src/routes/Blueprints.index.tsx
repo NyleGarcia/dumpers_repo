@@ -56,7 +56,12 @@ const MAIN_CATEGORY_GROUPS = {
 }
 
 const ARMOR_WEIGHT_OPTIONS = ['flight', 'light', 'medium', 'heavy', 'superheavy']
-const ARMOR_SLOT_OPTIONS = ['helmet', 'arms', 'core', 'legs', 'backpack']
+const ARMOR_SLOT_OPTIONS = ['helmet', 'arms', 'core', 'legs', 'backpack', 'flight', 'suit']
+
+const ARMOR_SLOT_LABELS: Record<string, string> = {
+  flight: 'Flight',
+  suit: 'Suits',
+}
 const VEHICLE_SIZE_OPTIONS = {
   'Vehicle Components': ['S0', 'S1', 'S2', 'S3', 'S4'],
   'Vehicle Weapons': ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'],
@@ -826,7 +831,8 @@ export default function BlueprintsRoute() {
                 <>
                   {ARMOR_SLOT_OPTIONS.map(slot => {
                     const count = currentArmorSlots[slot] || 0
-                    const displayName = slot.charAt(0).toUpperCase() + slot.slice(1)
+                    const displayName =
+                      ARMOR_SLOT_LABELS[slot] ?? slot.charAt(0).toUpperCase() + slot.slice(1)
                     return (
                       <button
                         key={slot}
