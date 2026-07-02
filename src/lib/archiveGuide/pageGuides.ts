@@ -134,6 +134,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Add blueprints from the Blueprints page into a session draft, then continue on Custom Orders',
       'WTS listings allow partial purchases by default — buyers pick lines and quantities on Fulfillment',
       'Check “Buyers must purchase the full listing” on WTS if the whole bundle must sell together',
+      'WTS sellers can adjust list price with sliders: ±20% per line (partial listings) or ±10% on the order total (full listing only); 0% is the DFP base',
       'Same fields for both tags: lines, quality tiers, min reputation, notes, DFP pricing',
       'WTB/WTS tag and Partial OK / Full listing only badges shown on your orders',
       'Edit or delete pending listings while no one has accepted',

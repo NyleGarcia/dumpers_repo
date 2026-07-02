@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
 import BlueprintEffectiveStatsSummary from './BlueprintEffectiveStatsSummary'
+import WtsListPriceSlider from './WtsListPriceSlider'
 import { isAmmoBlueprint, formatDfpAuec } from '../lib/dfp'
 import { formatSlotQualitySummary } from '../lib/blueprintQuality'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
@@ -11,6 +12,11 @@ import {
   type BlueprintForEffectiveStats,
 } from '../lib/blueprintEffectiveStats'
 import { pricingForBlueprintLine } from '../lib/orderPricing'
+import {
+  applyPartialLineAdjustment,
+  createCartPricingFields,
+  WTS_PARTIAL_MAX_ADJUST_PCT,
+} from '../lib/wtsListPricing'
 
 export interface EditableCartBlueprintLine {
   cartKey: string
@@ -21,12 +27,16 @@ export interface EditableCartBlueprintLine {
   quantity: number
   unitDfpAuec: number
   lineDfpAuec: number
+  baseUnitDfpAuec: number
+  baseLineDfpAuec: number
+  priceAdjustmentPct: number
 }
 
 interface CartBlueprintLineEditorProps {
   line: EditableCartBlueprintLine
   blueprint: BlueprintWithSlots
   showDfp?: boolean
+  showWtsPriceSlider?: boolean
   onUpdate: (cartKey: string, updates: Partial<EditableCartBlueprintLine>) => void
   onRemove: (cartKey: string) => void
   onCollapse: () => void
@@ -36,6 +46,7 @@ export default function CartBlueprintLineEditor({
   line,
   blueprint,
   showDfp = true,
+  showWtsPriceSlider = false,
   onUpdate,
   onRemove,
   onCollapse,
@@ -52,15 +63,29 @@ export default function CartBlueprintLineEditor({
     return computeBlueprintEffectiveModifiers(bpStats, line.slotQualities, line.minQuality)
   }, [bpStats, isAmmo, line.slotQualities, line.minQuality])
 
+  const applyPricingUpdate = (
+    pricing: ReturnType<typeof pricingForBlueprintLine>,
+    quantity: number,
+    slotQualities?: Record<number, number>
+  ) => {
+    const baseFields = createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec, line.priceAdjustmentPct)
+    const nextLine = applyPartialLineAdjustment(
+      {
+        ...line,
+        ...baseFields,
+        quantity,
+        slotQualities,
+        minQuality: pricing.orderMinQuality,
+      },
+      line.priceAdjustmentPct
+    )
+    onUpdate(line.cartKey, nextLine)
+  }
+
   const handleQualityChange = (slotIndex: number, quality: number) => {
     const nextQualities = { ...effectiveQualities, [slotIndex]: quality }
     const pricing = pricingForBlueprintLine(blueprint, nextQualities, line.quantity)
-    onUpdate(line.cartKey, {
-      slotQualities: nextQualities,
-      minQuality: pricing.orderMinQuality,
-      unitDfpAuec: pricing.unitDfpAuec,
-      lineDfpAuec: pricing.lineDfpAuec,
-    })
+    applyPricingUpdate(pricing, line.quantity, nextQualities)
   }
 
   const handleQuantityChange = (rawQty: string) => {
@@ -70,12 +95,7 @@ export default function CartBlueprintLineEditor({
       isAmmo ? {} : effectiveQualities,
       quantity
     )
-    onUpdate(line.cartKey, {
-      quantity,
-      minQuality: pricing.orderMinQuality,
-      unitDfpAuec: pricing.unitDfpAuec,
-      lineDfpAuec: pricing.lineDfpAuec,
-    })
+    applyPricingUpdate(pricing, quantity, isAmmo ? undefined : effectiveQualities)
   }
 
   return (
@@ -142,6 +162,18 @@ export default function CartBlueprintLineEditor({
           className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm"
         />
       </div>
+
+      {showWtsPriceSlider && (
+        <WtsListPriceSlider
+          label="Unit list price"
+          value={line.priceAdjustmentPct}
+          maxPct={WTS_PARTIAL_MAX_ADJUST_PCT}
+          baseAuec={line.baseUnitDfpAuec}
+          adjustedAuec={line.unitDfpAuec}
+          onChange={(pct) => onUpdate(line.cartKey, applyPartialLineAdjustment(line, pct))}
+          compact
+        />
+      )}
     </div>
   )
 }

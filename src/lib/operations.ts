@@ -98,6 +98,8 @@ export interface CustomOrderBlueprintInput {
   quantity: number
   unitDfpAuec: number
   lineDfpAuec: number
+  /** WTS only — DFP base unit price for server-side list-price bounds validation. */
+  baseUnitDfpAuec?: number
   lineSnapshot?: {
     slotSummary: string
     stats: Array<{
@@ -197,6 +199,8 @@ export interface CustomOrderResourceInput {
   quantityScu: number
   unitDfpAuec: number
   lineDfpAuec: number
+  /** WTS only — DFP base unit price for server-side list-price bounds validation. */
+  baseUnitDfpAuec?: number
 }
 
 export async function syncBlueprintResourceCatalog(
@@ -707,6 +711,8 @@ export async function createCustomOrder(input: {
       quantity: bp.quantity,
       unit_dfp_auec: Math.round(bp.unitDfpAuec),
       line_dfp_auec: Math.round(bp.lineDfpAuec),
+      base_unit_dfp_auec:
+        bp.baseUnitDfpAuec != null ? Math.round(bp.baseUnitDfpAuec) : null,
     })),
     p_resources: input.resources.map((line) => ({
       resource_key: line.resourceKey,
@@ -715,6 +721,8 @@ export async function createCustomOrder(input: {
       quantity_scu: normalizeResourceQuantity(line.quantityScu),
       unit_dfp_auec: Math.round(line.unitDfpAuec),
       line_dfp_auec: Math.round(line.lineDfpAuec),
+      base_unit_dfp_auec:
+        line.baseUnitDfpAuec != null ? Math.round(line.baseUnitDfpAuec) : null,
     })),
     p_items: input.items.map((item) => ({
       resource_key: item.resourceKey,
@@ -811,6 +819,8 @@ export async function updateCustomOrderRequester(input: {
       quantity: bp.quantity,
       unit_dfp_auec: Math.round(bp.unitDfpAuec),
       line_dfp_auec: Math.round(bp.lineDfpAuec),
+      base_unit_dfp_auec:
+        bp.baseUnitDfpAuec != null ? Math.round(bp.baseUnitDfpAuec) : null,
       sort_order: index,
     })),
     p_resources: input.resources.map((line, index) => ({
@@ -820,6 +830,8 @@ export async function updateCustomOrderRequester(input: {
       quantity_scu: normalizeResourceQuantity(line.quantityScu),
       unit_dfp_auec: Math.round(line.unitDfpAuec),
       line_dfp_auec: Math.round(line.lineDfpAuec),
+      base_unit_dfp_auec:
+        line.baseUnitDfpAuec != null ? Math.round(line.baseUnitDfpAuec) : null,
       sort_order: index,
     })),
     p_items: input.items.map((item) => ({

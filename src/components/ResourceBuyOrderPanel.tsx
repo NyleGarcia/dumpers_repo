@@ -32,6 +32,7 @@ import {
 } from '../lib/blueprintEffectiveStats'
 import BlueprintEffectiveStatsSummary from './BlueprintEffectiveStatsSummary'
 import CartBlueprintLineEditor from './CartBlueprintLineEditor'
+import WtsListPriceSlider from './WtsListPriceSlider'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
@@ -64,13 +65,30 @@ import {
   formatQuantityForResource,
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
+import {
+  applyPartialLineAdjustment,
+  clampAdjustmentPct,
+  computeCartListTotalDfp,
+  createCartPricingFields,
+  deriveAdjustmentPct,
+  deriveOrderAdjustmentPct,
+  buildWtsListedTotals,
+  WTS_FULL_MAX_ADJUST_PCT,
+  WTS_PARTIAL_MAX_ADJUST_PCT,
+} from '../lib/wtsListPricing'
 
-interface CartBlueprintLine extends OrderBlueprintLine {
+interface WtsCartFields {
+  baseUnitDfpAuec: number
+  baseLineDfpAuec: number
+  priceAdjustmentPct: number
+}
+
+interface CartBlueprintLine extends OrderBlueprintLine, WtsCartFields {
   cartKey: string
   slotQualities?: Record<number, number>
 }
 
-interface CartResourceLine extends OrderResourceLine {
+interface CartResourceLine extends OrderResourceLine, WtsCartFields {
   cartKey: string
 }
 
@@ -167,22 +185,23 @@ export default function ResourceBuyOrderPanel({
   const [pendingListingType, setPendingListingType] = useState<'wtb' | 'wts'>('wtb')
   const [expandedCartKey, setExpandedCartKey] = useState<string | null>(null)
   const [sellEntireListing, setSellEntireListing] = useState(false)
+  const [orderPriceAdjustmentPct, setOrderPriceAdjustmentPct] = useState(0)
+
+  const showWtsPricingControls =
+    !isEditing || editOrder?.listing_type === 'wts'
+  const isEditingWts = isEditing && editOrder?.listing_type === 'wts'
+
+  const blueprintById = useMemo(() => {
+    const map = new Map<string, BlueprintWithSlots>()
+    blueprints.forEach((bp) => {
+      if (bp.internalName) map.set(bp.internalName, bp)
+    })
+    return map
+  }, [blueprints])
 
   useEffect(() => {
     if (!editOrder) return
 
-    setBpCart(
-      resolveOrderBlueprintLines(editOrder).map((line) => ({
-        ...line,
-        cartKey: nextCartKey(),
-      }))
-    )
-    setResCart(
-      resolveOrderResourceLines(editOrder).map((line) => ({
-        ...line,
-        cartKey: nextCartKey(),
-      }))
-    )
     setNotes(editOrder.notes ?? '')
     setMinFulfillerRep(
       editOrder.min_fulfiller_reputation != null
@@ -195,6 +214,114 @@ export default function ResourceBuyOrderPanel({
     )
   }, [editOrder])
 
+  useEffect(() => {
+    if (!editOrder) return
+
+    const bpLines = resolveOrderBlueprintLines(editOrder).map((line) => ({
+      ...line,
+      cartKey: nextCartKey(),
+    }))
+    const resLines = resolveOrderResourceLines(editOrder).map((line) => ({
+      ...line,
+      cartKey: nextCartKey(),
+    }))
+
+    if (editOrder.listing_type !== 'wts') {
+      setOrderPriceAdjustmentPct(0)
+      setBpCart(
+        bpLines.map((line) => ({
+          ...line,
+          ...createCartPricingFields(line.unitDfpAuec, line.lineDfpAuec),
+        }))
+      )
+      setResCart(
+        resLines.map((line) => ({
+          ...line,
+          ...createCartPricingFields(line.unitDfpAuec, line.lineDfpAuec),
+        }))
+      )
+      return
+    }
+
+    const isFullListing = editOrder.sell_entire_listing === true
+    let baseTotal = 0
+
+    const hydratedBp = bpLines.map((line) => {
+      const blueprint = blueprintById.get(line.blueprintId)
+      const pricing = blueprint
+        ? pricingForBlueprintLine(
+            blueprint,
+            line.slotQualities ?? {},
+            line.quantity
+          )
+        : { unitDfpAuec: line.unitDfpAuec, lineDfpAuec: line.lineDfpAuec, orderMinQuality: line.minQuality }
+      baseTotal += pricing.lineDfpAuec
+
+      if (isFullListing) {
+        return {
+          ...line,
+          ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec),
+          unitDfpAuec: line.unitDfpAuec,
+          lineDfpAuec: line.lineDfpAuec,
+        }
+      }
+
+      const pct = clampAdjustmentPct(
+        deriveAdjustmentPct(pricing.unitDfpAuec, line.unitDfpAuec),
+        WTS_PARTIAL_MAX_ADJUST_PCT
+      )
+      return applyPartialLineAdjustment(
+        {
+          ...line,
+          ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec, pct),
+        },
+        pct
+      )
+    })
+
+    const hydratedRes = resLines.map((line) => {
+      const pricing = pricingForResourceLine(
+        line.resourceKey,
+        line.resourceLabel,
+        line.minQuality,
+        line.quantityScu
+      )
+      baseTotal += pricing.lineDfpAuec
+
+      if (isFullListing) {
+        return {
+          ...line,
+          ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec),
+          unitDfpAuec: line.unitDfpAuec,
+          lineDfpAuec: line.lineDfpAuec,
+        }
+      }
+
+      const pct = clampAdjustmentPct(
+        deriveAdjustmentPct(pricing.unitDfpAuec, line.unitDfpAuec),
+        WTS_PARTIAL_MAX_ADJUST_PCT
+      )
+      return applyPartialLineAdjustment(
+        {
+          ...line,
+          ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec, pct),
+        },
+        pct
+      )
+    })
+
+    setBpCart(hydratedBp)
+    setResCart(hydratedRes)
+    setOrderPriceAdjustmentPct(
+      isFullListing
+        ? clampAdjustmentPct(
+            deriveOrderAdjustmentPct(baseTotal, editOrder.total_dfp_auec),
+            WTS_FULL_MAX_ADJUST_PCT
+          )
+        : 0
+    )
+  }, [editOrder, blueprintById])
+
   // Initialize cart from draft items (consume session draft once loaded into cart)
   const draftConsumedRef = useRef(false)
   useEffect(() => {
@@ -205,19 +332,18 @@ export default function ResourceBuyOrderPanel({
     if (draftConsumedRef.current) return
 
     draftConsumedRef.current = true
-    setBpCart(initialBlueprintLines)
+    setBpCart(
+      initialBlueprintLines.map((line) => ({
+        ...line,
+        baseUnitDfpAuec: line.baseUnitDfpAuec ?? line.unitDfpAuec,
+        baseLineDfpAuec: line.baseLineDfpAuec ?? line.lineDfpAuec,
+        priceAdjustmentPct: line.priceAdjustmentPct ?? 0,
+      }))
+    )
     setMode('blueprint')
     setExpandedCartKey(initialBlueprintLines[0]?.cartKey ?? null)
     onDraftCleared?.()
   }, [editOrder, initialBlueprintLines, onDraftCleared])
-
-  const blueprintById = useMemo(() => {
-    const map = new Map<string, BlueprintWithSlots>()
-    blueprints.forEach((bp) => {
-      if (bp.internalName) map.set(bp.internalName, bp)
-    })
-    return map
-  }, [blueprints])
 
   const activeCatalog = useMemo(
     () => [...catalog].filter((r) => r.is_active).sort((a, b) => a.label.localeCompare(b.label)),
@@ -274,12 +400,53 @@ export default function ResourceBuyOrderPanel({
     [resourceKey, selectedResourceLabel, selectedResNoQuality]
   )
 
-  const cartTotalDfp = useMemo(
+  const cartBaseTotalDfp = useMemo(
     () =>
-      bpCart.reduce((s, l) => s + l.lineDfpAuec, 0) +
-      resCart.reduce((s, l) => s + l.lineDfpAuec, 0),
+      bpCart.reduce((s, l) => s + l.baseLineDfpAuec, 0) +
+      resCart.reduce((s, l) => s + l.baseLineDfpAuec, 0),
     [bpCart, resCart]
   )
+
+  const cartListTotalDfp = useMemo(
+    () =>
+      computeCartListTotalDfp(bpCart, resCart, sellEntireListing, orderPriceAdjustmentPct),
+    [bpCart, resCart, sellEntireListing, orderPriceAdjustmentPct]
+  )
+
+  const wtsListedPreview = useMemo(() => {
+    if (!showWtsPricingControls || !sellEntireListing) return null
+    return buildWtsListedTotals(bpCart, resCart, true, orderPriceAdjustmentPct)
+  }, [showWtsPricingControls, sellEntireListing, bpCart, resCart, orderPriceAdjustmentPct])
+
+  const displayCartTotalDfp =
+    showWtsPricingControls && (sellEntireListing || cartListTotalDfp !== cartBaseTotalDfp)
+      ? cartListTotalDfp
+      : cartBaseTotalDfp
+
+  const showPartialLineSliders = showWtsPricingControls && !sellEntireListing
+  const showOrderTotalSlider = showWtsPricingControls && sellEntireListing
+
+  const getBlueprintLineDfp = (line: CartBlueprintLine) =>
+    wtsListedPreview?.blueprintPrices.get(line.cartKey)?.lineDfpAuec ?? line.lineDfpAuec
+
+  const getResourceLineDfp = (line: CartResourceLine) =>
+    wtsListedPreview?.resourcePrices.get(line.cartKey)?.lineDfpAuec ?? line.lineDfpAuec
+
+  const handleBlueprintLinePriceAdjustment = (cartKey: string, pct: number) => {
+    setBpCart((prev) =>
+      prev.map((line) =>
+        line.cartKey === cartKey ? applyPartialLineAdjustment(line, pct) : line
+      )
+    )
+  }
+
+  const handleResourceLinePriceAdjustment = (cartKey: string, pct: number) => {
+    setResCart((prev) =>
+      prev.map((line) =>
+        line.cartKey === cartKey ? applyPartialLineAdjustment(line, pct) : line
+      )
+    )
+  }
 
   const fulfillmentPreview = useMemo(
     () =>
@@ -341,8 +508,7 @@ export default function ResourceBuyOrderPanel({
         minQuality: pricing.orderMinQuality,
         slotQualities: selectedIsAmmo ? undefined : effectiveBpSlotQualities,
         quantity: qty,
-        unitDfpAuec: pricing.unitDfpAuec,
-        lineDfpAuec: pricing.lineDfpAuec,
+        ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec),
       },
     ])
     setExpandedCartKey(cartKey)
@@ -363,7 +529,44 @@ export default function ResourceBuyOrderPanel({
     if (expandedCartKey === cartKey) setExpandedCartKey(null)
   }
 
-  const blueprintPayloadFromCart = (line: CartBlueprintLine) => {
+  const updateResourceCartLine = (
+    cartKey: string,
+    updates: Partial<CartResourceLine>
+  ) => {
+    setResCart((prev) =>
+      prev.map((line) => (line.cartKey === cartKey ? { ...line, ...updates } : line))
+    )
+  }
+
+  const handleSellEntireListingChange = (checked: boolean) => {
+    setSellEntireListing(checked)
+    if (checked) {
+      setBpCart((prev) =>
+        prev.map((line) => ({
+          ...line,
+          priceAdjustmentPct: 0,
+          unitDfpAuec: line.baseUnitDfpAuec,
+          lineDfpAuec: line.baseLineDfpAuec,
+        }))
+      )
+      setResCart((prev) =>
+        prev.map((line) => ({
+          ...line,
+          priceAdjustmentPct: 0,
+          unitDfpAuec: line.baseUnitDfpAuec,
+          lineDfpAuec: line.baseLineDfpAuec,
+        }))
+      )
+      setOrderPriceAdjustmentPct(0)
+      return
+    }
+    setOrderPriceAdjustmentPct(0)
+  }
+
+  const blueprintPayloadFromCart = (
+    line: CartBlueprintLine,
+    listed?: { unitDfpAuec: number; lineDfpAuec: number }
+  ) => {
     const bp = blueprintById.get(line.blueprintId) as BlueprintForEffectiveStats | undefined
     const lineSnapshot =
       bp && !isAmmoBlueprint(bp)
@@ -375,8 +578,9 @@ export default function ResourceBuyOrderPanel({
       minQuality: line.minQuality,
       slotQualities: line.slotQualities,
       quantity: line.quantity,
-      unitDfpAuec: line.unitDfpAuec,
-      lineDfpAuec: line.lineDfpAuec,
+      unitDfpAuec: listed?.unitDfpAuec ?? line.unitDfpAuec,
+      lineDfpAuec: listed?.lineDfpAuec ?? line.lineDfpAuec,
+      baseUnitDfpAuec: line.baseUnitDfpAuec,
       lineSnapshot,
     }
   }
@@ -399,8 +603,7 @@ export default function ResourceBuyOrderPanel({
         resourceLabel: selectedResource.label,
         minQuality: pricing.orderMinQuality,
         quantityScu: qty,
-        unitDfpAuec: pricing.unitDfpAuec,
-        lineDfpAuec: pricing.lineDfpAuec,
+        ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec),
       },
     ])
     setResQty('1')
@@ -412,23 +615,62 @@ export default function ResourceBuyOrderPanel({
     setSubmitting(true)
     onError?.('')
 
+    const effectiveListingType =
+      isEditing && editOrder?.listing_type === 'wts' ? 'wts' : listingType
+    const useWtsPricing = effectiveListingType === 'wts'
+
+    let totalDfpAuec = cartBaseTotalDfp
+    let blueprintPayloads = bpCart.map((line) =>
+      blueprintPayloadFromCart(line, {
+        unitDfpAuec: line.baseUnitDfpAuec,
+        lineDfpAuec: line.baseLineDfpAuec,
+      })
+    )
+    let resourcePayloads = resCart.map((line) => ({
+      resourceKey: line.resourceKey,
+      resourceLabel: line.resourceLabel,
+      minQuality: line.minQuality,
+      quantityScu: line.quantityScu,
+      unitDfpAuec: line.baseUnitDfpAuec,
+      lineDfpAuec: line.baseLineDfpAuec,
+      baseUnitDfpAuec: line.baseUnitDfpAuec,
+    }))
+
+    if (useWtsPricing) {
+      const listed = buildWtsListedTotals(
+        bpCart,
+        resCart,
+        sellEntireListing,
+        orderPriceAdjustmentPct
+      )
+      totalDfpAuec = listed.totalDfpAuec
+      blueprintPayloads = bpCart.map((line) =>
+        blueprintPayloadFromCart(line, listed.blueprintPrices.get(line.cartKey))
+      )
+      resourcePayloads = resCart.map((line) => {
+        const prices = listed.resourcePrices.get(line.cartKey)!
+        return {
+          resourceKey: line.resourceKey,
+          resourceLabel: line.resourceLabel,
+          minQuality: line.minQuality,
+          quantityScu: line.quantityScu,
+          unitDfpAuec: prices.unitDfpAuec,
+          lineDfpAuec: prices.lineDfpAuec,
+          baseUnitDfpAuec: line.baseUnitDfpAuec,
+        }
+      })
+    }
+
     const payload = {
       title: buildOrderTitle(
         bpCart.reduce((sum, line) => sum + line.quantity, 0),
         resCart.length
       ),
       notes,
-      totalDfpAuec: cartTotalDfp,
+      totalDfpAuec,
       minFulfillerReputation: minFulfillerRep ? Number(minFulfillerRep) : null,
-      blueprints: bpCart.map((line) => blueprintPayloadFromCart(line)),
-      resources: resCart.map((line) => ({
-        resourceKey: line.resourceKey,
-        resourceLabel: line.resourceLabel,
-        minQuality: line.minQuality,
-        quantityScu: line.quantityScu,
-        unitDfpAuec: line.unitDfpAuec,
-        lineDfpAuec: line.lineDfpAuec,
-      })),
+      blueprints: blueprintPayloads,
+      resources: resourcePayloads,
       items: fulfillmentPreview.map((item) => ({
         resourceKey: item.resourceKey,
         quantity: item.quantity,
@@ -480,10 +722,14 @@ export default function ResourceBuyOrderPanel({
       setResCart([])
       setNotes('')
       setMinFulfillerRep('')
+      setOrderPriceAdjustmentPct(0)
       onDraftCleared?.()
     }
     onSubmitted?.()
   }
+
+  const getSubmitTotalForListingType = (listingType: 'wtb' | 'wts') =>
+    listingType === 'wts' ? cartListTotalDfp : cartBaseTotalDfp
 
   const initiateSubmit = (listingType: 'wtb' | 'wts') => {
     if (bpCart.length === 0 && resCart.length === 0) return
@@ -499,7 +745,7 @@ export default function ResourceBuyOrderPanel({
       return
     }
 
-    if (exceedsSingleTransferLimit(cartTotalDfp)) {
+    if (exceedsSingleTransferLimit(getSubmitTotalForListingType(listingType))) {
       setPendingListingType(listingType)
       setShowTransferModal(true)
       return
@@ -513,7 +759,7 @@ export default function ResourceBuyOrderPanel({
 
   const handleConfirmNoOwnerWarning = () => {
     setShowNoOwnerWarning(false)
-    if (exceedsSingleTransferLimit(cartTotalDfp)) {
+    if (exceedsSingleTransferLimit(getSubmitTotalForListingType(pendingListingType))) {
       setShowTransferModal(true)
       return
     }
@@ -524,10 +770,16 @@ export default function ResourceBuyOrderPanel({
   const buyDisabled =
     submitting ||
     cartEmpty ||
-    (hasPendingBuyerRep && !isEditing && cartTotalDfp < minOrderValue)
+    (hasPendingBuyerRep && !isEditing && cartBaseTotalDfp < minOrderValue)
   const sellDisabled = submitting || cartEmpty || !canCreateSellOrder
-  const dfpSuffix =
-    dfpDisplayEnabled && cartTotalDfp > 0 ? ` · ${formatDfpAuec(cartTotalDfp)}` : ''
+  const buyDfpSuffix =
+    dfpDisplayEnabled && cartBaseTotalDfp > 0 ? ` · ${formatDfpAuec(cartBaseTotalDfp)}` : ''
+  const sellDfpSuffix =
+    dfpDisplayEnabled && cartListTotalDfp > 0 ? ` · ${formatDfpAuec(cartListTotalDfp)}` : ''
+  const editDfpSuffix =
+    dfpDisplayEnabled && (isEditingWts ? cartListTotalDfp : cartBaseTotalDfp) > 0
+      ? ` · ${formatDfpAuec(isEditingWts ? cartListTotalDfp : cartBaseTotalDfp)}`
+      : ''
 
   return (
     <>
@@ -766,6 +1018,7 @@ export default function ResourceBuyOrderPanel({
                         line={line}
                         blueprint={blueprint}
                         showDfp={dfpDisplayEnabled}
+                        showWtsPriceSlider={showPartialLineSliders}
                         onUpdate={updateBlueprintCartLine}
                         onRemove={removeBlueprintCartLine}
                         onCollapse={() => setExpandedCartKey(null)}
@@ -777,83 +1030,133 @@ export default function ResourceBuyOrderPanel({
                 return (
                   <li
                     key={line.cartKey}
-                    className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40 rounded-lg"
+                    className="px-3 py-2 text-sm bg-slate-900/40 rounded-lg space-y-2"
                   >
-                    <div className="flex-1 min-w-0">
-                      <span className="text-white block">
-                        {line.blueprintTitle} × {line.quantity}
-                      </span>
-                      <span className={`text-xs ${isMixed ? 'text-orange-300' : 'text-slate-400'}`}>
-                        {formatSlotQualityLabel(line)}
-                      </span>
-                      <CartBlueprintLineStats line={line} blueprintById={blueprintById} />
-                    </div>
-                    <div className="flex flex-col items-end gap-1 shrink-0 self-start">
-                      {dfpDisplayEnabled && (
-                        <span className="text-amber-300 text-xs">
-                          {formatDfpAuec(line.lineDfpAuec)}
+                    <div className="flex justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <span className="text-white block">
+                          {line.blueprintTitle} × {line.quantity}
                         </span>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setExpandedCartKey(line.cartKey)}
-                        className="text-orange-400 hover:text-orange-300 text-xs underline"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => removeBlueprintCartLine(line.cartKey)}
-                        className="text-red-400 text-xs"
-                      >
-                        ×
-                      </button>
+                        <span className={`text-xs ${isMixed ? 'text-orange-300' : 'text-slate-400'}`}>
+                          {formatSlotQualityLabel(line)}
+                        </span>
+                        <CartBlueprintLineStats line={line} blueprintById={blueprintById} />
+                      </div>
+                      <div className="flex flex-col items-end gap-1 shrink-0 self-start">
+                        {dfpDisplayEnabled && (
+                          <span className="text-amber-300 text-xs">
+                            {formatDfpAuec(getBlueprintLineDfp(line))}
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => setExpandedCartKey(line.cartKey)}
+                          className="text-orange-400 hover:text-orange-300 text-xs underline"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeBlueprintCartLine(line.cartKey)}
+                          className="text-red-400 text-xs"
+                        >
+                          ×
+                        </button>
+                      </div>
                     </div>
+                    {showPartialLineSliders && (
+                      <WtsListPriceSlider
+                        label="Unit list price"
+                        value={line.priceAdjustmentPct}
+                        maxPct={WTS_PARTIAL_MAX_ADJUST_PCT}
+                        baseAuec={line.baseUnitDfpAuec}
+                        adjustedAuec={line.unitDfpAuec}
+                        onChange={(pct) => handleBlueprintLinePriceAdjustment(line.cartKey, pct)}
+                        compact
+                      />
+                    )}
                   </li>
                 )
               })}
               {resCart.map((line) => (
                 <li
                   key={line.cartKey}
-                  className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40"
+                  className="px-3 py-2 text-sm bg-slate-900/40 rounded-lg space-y-2"
                 >
-                  <span className="text-white">
-                    <span className={resourceLabelClassName(line.resourceKey)}>
-                      {line.resourceLabel}
-                    </span>{' '}
-                    · {formatQuantityForResource(line.resourceKey, line.quantityScu)}{' '}
-                    {resourceQuantityUnitLabel(line.resourceKey)} ·{' '}
-                    {formatResourceOrderQualityLabel(
-                      line.resourceKey,
-                      line.resourceLabel,
-                      line.minQuality
-                    )}
-                  </span>
-                  {dfpDisplayEnabled && (
-                    <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
+                  <div className="flex justify-between gap-2">
+                    <span className="text-white">
+                      <span className={resourceLabelClassName(line.resourceKey)}>
+                        {line.resourceLabel}
+                      </span>{' '}
+                      · {formatQuantityForResource(line.resourceKey, line.quantityScu)}{' '}
+                      {resourceQuantityUnitLabel(line.resourceKey)} ·{' '}
+                      {formatResourceOrderQualityLabel(
+                        line.resourceKey,
+                        line.resourceLabel,
+                        line.minQuality
+                      )}
+                    </span>
+                    <div className="flex items-start gap-2 shrink-0">
+                      {dfpDisplayEnabled && (
+                        <span className="text-amber-300">{formatDfpAuec(getResourceLineDfp(line))}</span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setResCart((p) => p.filter((l) => l.cartKey !== line.cartKey))}
+                        className="text-red-400 text-xs"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                  {showPartialLineSliders && (
+                    <WtsListPriceSlider
+                      label="Unit list price"
+                      value={line.priceAdjustmentPct}
+                      maxPct={WTS_PARTIAL_MAX_ADJUST_PCT}
+                      baseAuec={line.baseUnitDfpAuec}
+                      adjustedAuec={line.unitDfpAuec}
+                      onChange={(pct) => handleResourceLinePriceAdjustment(line.cartKey, pct)}
+                      compact
+                    />
                   )}
-                  <button
-                    type="button"
-                    onClick={() => setResCart((p) => p.filter((l) => l.cartKey !== line.cartKey))}
-                    className="text-red-400 text-xs"
-                  >
-                    ×
-                  </button>
                 </li>
               ))}
             </ul>
+            {showOrderTotalSlider && (
+              <div className="px-3 py-3 border-t border-cyan-800/30 bg-cyan-950/20">
+                <WtsListPriceSlider
+                  label="Listing total"
+                  value={orderPriceAdjustmentPct}
+                  maxPct={WTS_FULL_MAX_ADJUST_PCT}
+                  baseAuec={cartBaseTotalDfp}
+                  adjustedAuec={cartListTotalDfp}
+                  onChange={(pct) =>
+                    setOrderPriceAdjustmentPct(
+                      clampAdjustmentPct(pct, WTS_FULL_MAX_ADJUST_PCT)
+                    )
+                  }
+                />
+              </div>
+            )}
             {dfpDisplayEnabled && (
               <div className="px-3 py-3 bg-amber-950/30 border-t border-amber-500/20 flex justify-between">
-                <span className="text-amber-200 text-sm font-medium">Total</span>
+                <span className="text-amber-200 text-sm font-medium">
+                  {showWtsPricingControls && displayCartTotalDfp !== cartBaseTotalDfp
+                    ? 'List total'
+                    : 'Total'}
+                </span>
                 <span className="text-amber-100 font-bold">
-                  {formatDfpAuec(cartTotalDfp)}
+                  {formatDfpAuec(displayCartTotalDfp)}
                 </span>
               </div>
             )}
           </div>
         )}
 
-        {dfpDisplayEnabled && exceedsSingleTransferLimit(cartTotalDfp) && (
+        {dfpDisplayEnabled &&
+          (exceedsSingleTransferLimit(cartBaseTotalDfp) ||
+            (showWtsPricingControls && exceedsSingleTransferLimit(cartListTotalDfp))) && (
           <p className="text-orange-300/90 text-xs">
             Over 1M DFP — confirm in-game payment limits before submitting.
           </p>
@@ -887,7 +1190,7 @@ export default function ResourceBuyOrderPanel({
             <input
               type="checkbox"
               checked={sellEntireListing}
-              onChange={(e) => setSellEntireListing(e.target.checked)}
+              onChange={(e) => handleSellEntireListingChange(e.target.checked)}
               className="mt-0.5 accent-cyan-500"
             />
             <div>
@@ -901,6 +1204,17 @@ export default function ResourceBuyOrderPanel({
             </div>
           </label>
         </div>
+
+        {showWtsPricingControls && (
+          <div className="bg-slate-900/60 border border-cyan-700/30 rounded-xl p-4 space-y-2">
+            <p className="text-cyan-300 text-sm font-medium">List price (WTS)</p>
+            <p className="text-slate-500 text-xs">
+              Adjust sell prices relative to Dumper&apos;s Fair-Value Price (DFP). 0% is the DFP
+              base. Partial listings: ±20% per line on unit price. Full listing only: ±10% on the
+              order total, distributed across lines.
+            </p>
+          </div>
+        )}
 
         <textarea
           value={notes}
@@ -924,11 +1238,11 @@ export default function ResourceBuyOrderPanel({
           </div>
         )}
 
-        {hasPendingBuyerRep && !isEditing && cartTotalDfp > 0 && cartTotalDfp < minOrderValue && (
+        {hasPendingBuyerRep && !isEditing && cartBaseTotalDfp > 0 && cartBaseTotalDfp < minOrderValue && (
           <div className="p-3 bg-yellow-900/30 border border-yellow-600/40 rounded-lg">
             <p className="text-yellow-300 text-sm">
               <strong>Minimum order value:</strong> While building your reputation, orders must be at
-              least {formatDfpAuec(minOrderValue)}. Current total: {formatDfpAuec(cartTotalDfp)}
+              least {formatDfpAuec(minOrderValue)}. Current total: {formatDfpAuec(cartBaseTotalDfp)}
             </p>
           </div>
         )}
@@ -944,7 +1258,7 @@ export default function ResourceBuyOrderPanel({
               {submitting
                 ? 'Saving...'
                 : dfpDisplayEnabled
-                  ? `Save changes${dfpSuffix}`
+                  ? `Save changes${editDfpSuffix}`
                   : 'Save changes'}
             </button>
           ) : (
@@ -955,7 +1269,7 @@ export default function ResourceBuyOrderPanel({
                 disabled={buyDisabled}
                 className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
               >
-                {submitting ? 'Submitting...' : `Submit Buy Order${dfpSuffix}`}
+                {submitting ? 'Submitting...' : `Submit Buy Order${buyDfpSuffix}`}
               </button>
               <button
                 type="button"
@@ -963,7 +1277,7 @@ export default function ResourceBuyOrderPanel({
                 disabled={sellDisabled}
                 className="px-4 py-2 bg-cyan-700 hover:bg-cyan-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
               >
-                {submitting ? 'Submitting...' : `Submit Sell Order${dfpSuffix}`}
+                {submitting ? 'Submitting...' : `Submit Sell Order${sellDfpSuffix}`}
               </button>
             </>
           )}
@@ -981,7 +1295,7 @@ export default function ResourceBuyOrderPanel({
 
       {showTransferModal && (
         <AuecTransferLimitModal
-          totalAuec={cartTotalDfp}
+          totalAuec={getSubmitTotalForListingType(pendingListingType)}
           onConfirm={() => void submitOrder(pendingListingType)}
           onCancel={() => setShowTransferModal(false)}
           confirming={submitting}
