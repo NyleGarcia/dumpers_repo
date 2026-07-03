@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-07-02T22:22:59.915Z",
+  "_extracted": "2026-07-03T22:24:26.736Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -296,7 +296,23 @@
         "name": "Beradom",
         "locations": [
           "Bloom",
-          "Pyro I"
+          "Pyro I",
+          "Vatra",
+          "Fairo",
+          "Hurston",
+          "Ita",
+          "Aberdeen",
+          "Arial",
+          "Magda",
+          "Cellin",
+          "Daymar",
+          "Yela",
+          "Lyria",
+          "Wala",
+          "microTech",
+          "Calliope",
+          "Clio",
+          "Euterpe"
         ]
       },
       {
@@ -515,13 +531,47 @@
       {
         "name": "Feynmaline",
         "locations": [
-          "Pyro IV"
+          "Pyro IV",
+          "Ignis",
+          "Fuego",
+          "Terminus",
+          "Hurston",
+          "Ita",
+          "Aberdeen",
+          "Arial",
+          "Magda",
+          "Cellin",
+          "Daymar",
+          "Yela",
+          "Lyria",
+          "Wala",
+          "microTech",
+          "Calliope",
+          "Clio",
+          "Euterpe"
         ]
       },
       {
         "name": "Glacosite",
         "locations": [
-          "Monox"
+          "Monox",
+          "Vatra",
+          "Adir",
+          "Vuur",
+          "Hurston",
+          "Ita",
+          "Aberdeen",
+          "Arial",
+          "Magda",
+          "Cellin",
+          "Daymar",
+          "Yela",
+          "Lyria",
+          "Wala",
+          "microTech",
+          "Calliope",
+          "Clio",
+          "Euterpe"
         ]
       },
       {
@@ -657,7 +707,23 @@
     ],
     "Beradom": [
       "Bloom",
-      "Pyro I"
+      "Pyro I",
+      "Vatra",
+      "Fairo",
+      "Hurston",
+      "Ita",
+      "Aberdeen",
+      "Arial",
+      "Magda",
+      "Cellin",
+      "Daymar",
+      "Yela",
+      "Lyria",
+      "Wala",
+      "microTech",
+      "Calliope",
+      "Clio",
+      "Euterpe"
     ],
     "Beryl": [
       "Aaron Halo",
@@ -760,10 +826,44 @@
       "Euterpe"
     ],
     "Feynmaline": [
-      "Pyro IV"
+      "Pyro IV",
+      "Ignis",
+      "Fuego",
+      "Terminus",
+      "Hurston",
+      "Ita",
+      "Aberdeen",
+      "Arial",
+      "Magda",
+      "Cellin",
+      "Daymar",
+      "Yela",
+      "Lyria",
+      "Wala",
+      "microTech",
+      "Calliope",
+      "Clio",
+      "Euterpe"
     ],
     "Glacosite": [
-      "Monox"
+      "Monox",
+      "Vatra",
+      "Adir",
+      "Vuur",
+      "Hurston",
+      "Ita",
+      "Aberdeen",
+      "Arial",
+      "Magda",
+      "Cellin",
+      "Daymar",
+      "Yela",
+      "Lyria",
+      "Wala",
+      "microTech",
+      "Calliope",
+      "Clio",
+      "Euterpe"
     ],
     "Gold": [
       "ARC-L5",
@@ -1102,6 +1202,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "CRU-L5": [
@@ -1162,6 +1274,18 @@
       {
         "name": "Titanium",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "MIC-L4": [
@@ -1316,6 +1440,10 @@
       {
         "name": "Stileron",
         "rarity": "legendary"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Vuur": [
@@ -1353,6 +1481,10 @@
       },
       {
         "name": "Janalite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
         "rarity": "handMineable"
       }
     ],
@@ -1392,6 +1524,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Aaron Halo": [
@@ -1472,6 +1616,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "ARC-L1": [
@@ -1570,6 +1726,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "CRU-L3": [
@@ -1756,6 +1924,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Keeger Belt": [
@@ -1832,6 +2012,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "MIC-L1": [
@@ -1974,6 +2166,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Bloom": [
@@ -2084,6 +2280,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "CRU-L1": [
@@ -2158,6 +2366,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
       }
     ],
     "HUR-L3": [
@@ -2209,6 +2421,10 @@
       },
       {
         "name": "Janalite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
         "rarity": "handMineable"
       }
     ],
@@ -2312,6 +2528,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Euterpe": [
@@ -2342,6 +2570,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Lyria": [
@@ -2372,6 +2612,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "MIC-L3": [
@@ -2468,6 +2720,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Monox": [
@@ -2540,6 +2804,10 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Vatra": [
@@ -2574,6 +2842,14 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
       }
     ],
     "Calliope": [
@@ -2604,6 +2880,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "microTech": [
@@ -2634,6 +2922,18 @@
       {
         "name": "Quantainium",
         "rarity": "legendary"
+      },
+      {
+        "name": "Beradom",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
       }
     ],
     "Found in All Stanton Deposits (Rare)": [
@@ -2778,7 +3078,9 @@
         "Gold",
         "Riccite"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2800,7 +3102,10 @@
         "Gold",
         "Riccite"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2822,7 +3127,9 @@
         "Borase",
         "Riccite"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Glacosite"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2844,7 +3151,9 @@
         "Gold",
         "Bexalite"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2866,7 +3175,9 @@
         "Borase",
         "Bexalite"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2887,7 +3198,9 @@
         "Aslarite",
         "Bexalite"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Glacosite"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2912,7 +3225,9 @@
         "Riccite",
         "Stileron"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2933,7 +3248,11 @@
         "Ouratite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2968,7 +3287,11 @@
         "Ouratite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -2990,7 +3313,11 @@
         "Ouratite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3012,7 +3339,11 @@
         "Aslarite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3034,7 +3365,11 @@
         "Aslarite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3056,7 +3391,11 @@
         "Tarantite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3079,7 +3418,11 @@
         "Quantainium",
         "Titanium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3105,7 +3448,11 @@
         "Silicon",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3122,7 +3469,11 @@
         "Laranite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3139,7 +3490,11 @@
         "Beryl",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3160,7 +3515,11 @@
         "Hephaestanite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3189,7 +3548,11 @@
         "Hephaestanite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3206,7 +3569,11 @@
         "Taranite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
@@ -3223,7 +3590,11 @@
         "Taranite",
         "Quantainium"
       ],
-      "groundVehicleMineables": [],
+      "groundVehicleMineables": [
+        "Beradom",
+        "Glacosite",
+        "Feynmaline"
+      ],
       "handMineables": [
         "Aphorite",
         "Dolivine",
