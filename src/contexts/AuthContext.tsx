@@ -21,6 +21,26 @@ import { fetchOrgLogoStatus, resolveOrgLogoUrl } from '../lib/orgLogo'
 import { removeTargetBlueprint } from '../lib/targetList'
 import type { User, Session } from '@supabase/supabase-js'
 
+const AUTH_BOOTSTRAP_TIMEOUT_MS = 12_000
+
+function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = window.setTimeout(
+      () => reject(new Error(`${label} timed out after ${ms}ms`)),
+      ms
+    )
+    Promise.resolve(promise)
+      .then((value) => {
+        window.clearTimeout(timer)
+        resolve(value)
+      })
+      .catch((err) => {
+        window.clearTimeout(timer)
+        reject(err)
+      })
+  })
+}
+
 export interface UserWithBlueprints {
   id: string
   display_name: string | null
@@ -268,7 +288,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const hash = window.location.hash
         const isOAuthCallback = hash.includes('access_token')
 
-        const { data: { session }, error } = await supabase.auth.getSession()
+        const { data: { session }, error } = await withTimeout(
+          supabase.auth.getSession(),
+          AUTH_BOOTSTRAP_TIMEOUT_MS,
+          'auth.getSession'
+        )
 
         if (isOAuthCallback && session && !error) {
           window.history.replaceState(null, '', window.location.pathname)
@@ -280,12 +304,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          await loadUserData(session.user, false)
+          void loadUserData(session.user, false)
         }
       } catch (err) {
         console.error('Auth bootstrap failed:', err)
       } finally {
-        if (!cancelled) setLoading(false)
+        setLoading(false)
       }
     }
 
@@ -308,6 +332,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       subscription.unsubscribe()
     }
   }, [loadUserData])
+
+  useEffect(() => {
+    if (!loading) return
+    const id = window.setTimeout(() => {
+      console.warn('Auth loading failsafe: forcing shell render')
+      setLoading(false)
+    }, AUTH_BOOTSTRAP_TIMEOUT_MS + 3_000)
+    return () => window.clearTimeout(id)
+  }, [loading])
 
   useEffect(() => {
     const onFocus = async () => {
