@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-07-03T22:24:26.736Z",
+  "_extracted": "2026-07-03T22:33:14.347Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -20,7 +20,8 @@
           "microTech",
           "Calliope",
           "Clio",
-          "Euterpe"
+          "Euterpe",
+          "Aaron Halo"
         ]
       },
       {
@@ -88,7 +89,9 @@
           "Pyro Asteroid Clusters",
           "Terminus",
           "Vuur",
-          "Yela"
+          "Yela",
+          "Lagrange G",
+          "Lagrange Occupied"
         ]
       },
       {
@@ -114,7 +117,9 @@
           "CRU-L5",
           "MIC-L4",
           "Pyro Asteroid Clusters",
-          "Wala"
+          "Wala",
+          "Lagrange G",
+          "Lagrange Occupied"
         ]
       },
       {
@@ -289,7 +294,8 @@
           "MIC-L1",
           "MIC-L2",
           "MIC-L5",
-          "Pyro Asteroid Clusters"
+          "Pyro Asteroid Clusters",
+          "Hurston"
         ]
       },
       {
@@ -343,7 +349,9 @@
           "Pyro IV",
           "Terminus",
           "Wala",
-          "Yela Ring"
+          "Yela Ring",
+          "Lagrange G",
+          "Lagrange Occupied"
         ]
       },
       {
@@ -364,7 +372,10 @@
           "MIC-L4",
           "Pyro Asteroid Clusters",
           "Yela Ring",
-          "Terminus"
+          "Terminus",
+          "CRU-L1",
+          "Lagrange G",
+          "Lagrange Occupied"
         ]
       },
       {
@@ -398,7 +409,10 @@
           "Vatra",
           "Vuur",
           "Wala",
-          "Yela Ring"
+          "Yela Ring",
+          "Lagrange G",
+          "Lagrange Occupied",
+          "Arial"
         ]
       },
       {
@@ -643,7 +657,9 @@
       "Pyro Asteroid Clusters",
       "Terminus",
       "Vuur",
-      "Yela"
+      "Yela",
+      "Lagrange G",
+      "Lagrange Occupied"
     ],
     "Aluminium": [
       "Aaron Halo",
@@ -663,7 +679,8 @@
       "MIC-L1",
       "MIC-L2",
       "MIC-L5",
-      "Pyro Asteroid Clusters"
+      "Pyro Asteroid Clusters",
+      "Hurston"
     ],
     "Aphorite": [
       "All Moons/Planets/Caves",
@@ -731,7 +748,9 @@
       "CRU-L5",
       "MIC-L4",
       "Pyro Asteroid Clusters",
-      "Wala"
+      "Wala",
+      "Lagrange G",
+      "Lagrange Occupied"
     ],
     "Bexalite": [
       "CRU-L1",
@@ -777,7 +796,9 @@
       "Pyro IV",
       "Terminus",
       "Wala",
-      "Yela Ring"
+      "Yela Ring",
+      "Lagrange G",
+      "Lagrange Occupied"
     ],
     "Corundum": [
       "Aberdeen",
@@ -931,7 +952,10 @@
       "MIC-L4",
       "Pyro Asteroid Clusters",
       "Yela Ring",
-      "Terminus"
+      "Terminus",
+      "CRU-L1",
+      "Lagrange G",
+      "Lagrange Occupied"
     ],
     "Iron": [
       "Aaron Halo",
@@ -962,7 +986,10 @@
       "Vatra",
       "Vuur",
       "Wala",
-      "Yela Ring"
+      "Yela Ring",
+      "Lagrange G",
+      "Lagrange Occupied",
+      "Arial"
     ],
     "Janalite": [
       "Daymar",
@@ -1024,7 +1051,8 @@
       "microTech",
       "Calliope",
       "Clio",
-      "Euterpe"
+      "Euterpe",
+      "Aaron Halo"
     ],
     "Quartz": [
       "Bloom",
@@ -1205,7 +1233,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -1277,7 +1305,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -1527,7 +1555,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -1570,6 +1598,10 @@
       {
         "name": "Titanium",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
       }
     ],
     "Aberdeen": [
@@ -1619,7 +1651,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -1728,8 +1760,12 @@
         "rarity": "legendary"
       },
       {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -1927,7 +1963,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2015,7 +2051,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2283,7 +2319,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2310,6 +2346,10 @@
       {
         "name": "Titanium",
         "rarity": "uncommon"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
       }
     ],
     "CRU-L2": [
@@ -2369,7 +2409,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       }
     ],
     "HUR-L3": [
@@ -2531,7 +2571,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2573,7 +2613,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2615,7 +2655,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2723,7 +2763,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2732,6 +2772,10 @@
       {
         "name": "Feynmaline",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
       }
     ],
     "Monox": [
@@ -2845,7 +2889,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2883,7 +2927,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2925,7 +2969,7 @@
       },
       {
         "name": "Beradom",
-        "rarity": "handMineable"
+        "rarity": "common"
       },
       {
         "name": "Glacosite",
@@ -2960,6 +3004,50 @@
       {
         "name": "Stileron",
         "rarity": "legendary"
+      }
+    ],
+    "Lagrange G": [
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      },
+      {
+        "name": "Beryl",
+        "rarity": "rare"
+      }
+    ],
+    "Lagrange Occupied": [
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      },
+      {
+        "name": "Beryl",
+        "rarity": "rare"
       }
     ]
   },
@@ -3023,7 +3111,8 @@
         "Quartz",
         "Borase",
         "Riccite",
-        "Stileron"
+        "Stileron",
+        "Iron"
       ],
       "groundVehicleMineables": [
         "Beradom"
@@ -3050,7 +3139,8 @@
         "Copper",
         "Laranite",
         "Borase",
-        "Stileron"
+        "Stileron",
+        "Iron"
       ],
       "groundVehicleMineables": [
         "Feynmaline"
@@ -3149,7 +3239,8 @@
         "Silicon",
         "Tungsten",
         "Gold",
-        "Bexalite"
+        "Bexalite",
+        "Iron"
       ],
       "groundVehicleMineables": [
         "Beradom"
@@ -3173,7 +3264,8 @@
         "Hephaestanite",
         "Aslarite",
         "Borase",
-        "Bexalite"
+        "Bexalite",
+        "Iron"
       ],
       "groundVehicleMineables": [
         "Feynmaline"
@@ -3196,7 +3288,8 @@
         "Hephaestanite",
         "Agricium",
         "Aslarite",
-        "Bexalite"
+        "Bexalite",
+        "Iron"
       ],
       "groundVehicleMineables": [
         "Glacosite"
@@ -3246,7 +3339,8 @@
         "Aluminum",
         "Tin",
         "Ouratite",
-        "Quantainium"
+        "Quantainium",
+        "Aluminium"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3285,7 +3379,8 @@
         "Hephaestanite",
         "Corundum",
         "Ouratite",
-        "Quantainium"
+        "Quantainium",
+        "Aluminium"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3311,7 +3406,9 @@
         "Aluminum",
         "Titanium",
         "Ouratite",
-        "Quantainium"
+        "Quantainium",
+        "Aluminium",
+        "Corundum"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3337,7 +3434,9 @@
         "Aluminum",
         "Titanium",
         "Aslarite",
-        "Quantainium"
+        "Quantainium",
+        "Aluminium",
+        "Iron"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3363,7 +3462,8 @@
         "Alumium",
         "Tin",
         "Aslarite",
-        "Quantainium"
+        "Quantainium",
+        "Aluminium"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3389,7 +3489,9 @@
         "Quartz",
         "Agricium",
         "Tarantite",
-        "Quantainium"
+        "Quantainium",
+        "Taranite",
+        "Silicon"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3446,7 +3548,8 @@
         "Agricium",
         "Tarantite",
         "Silicon",
-        "Quantainium"
+        "Quantainium",
+        "Taranite"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3488,7 +3591,8 @@
         "Iron",
         "Laranite",
         "Beryl",
-        "Quantainium"
+        "Quantainium",
+        "Copper"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3607,6 +3711,225 @@
       ],
       "creatures": [],
       "spawnKey": "Stanton4c"
+    },
+    "Glaciem Ring": {
+      "shipMineables": [
+        "Ice",
+        "Aluminium",
+        "Iron",
+        "Lindinium",
+        "Bexalite",
+        "Savrilium",
+        "Torite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Glaciem Ring"
+    },
+    "Keeger Belt": {
+      "shipMineables": [
+        "Ice",
+        "Aluminium",
+        "Iron",
+        "Lindinium",
+        "Bexalite",
+        "Savrilium",
+        "Torite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Keeger Belt"
+    },
+    "Akiro Cluster": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Copper",
+        "Iron",
+        "Riccite",
+        "Stileron",
+        "Torite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Akiro Cluster"
+    },
+    "Pyro Asteroid Clusters": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Titanium",
+        "Borase",
+        "Aslarite",
+        "Taranite",
+        "Aluminium",
+        "Corundum",
+        "Quartz",
+        "Tin",
+        "Riccite",
+        "Stileron",
+        "Torite",
+        "Iron",
+        "Copper",
+        "Agricium",
+        "Bexalite",
+        "Tungsten",
+        "Gold"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool01"
+    },
+    "Aaron Halo": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Aluminium",
+        "Quantainium",
+        "Iron",
+        "Copper",
+        "Aslarite",
+        "Titanium",
+        "Beryl"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Aaron Halo"
+    },
+    "HUR-L1": {
+      "shipMineables": [
+        "Aluminium",
+        "Corundum",
+        "Hephaestanite",
+        "Laranite",
+        "Borase"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange A"
+    },
+    "ARC-L5": {
+      "shipMineables": [
+        "Iron",
+        "Ice",
+        "Copper",
+        "Aslarite",
+        "Gold"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange B"
+    },
+    "CRU-L3": {
+      "shipMineables": [
+        "Aluminium",
+        "Corundum",
+        "Hephaestanite",
+        "Torite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange C"
+    },
+    "ARC-L3": {
+      "shipMineables": [
+        "Iron",
+        "Ice",
+        "Copper",
+        "Agricium",
+        "Beryl"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange D"
+    },
+    "CRU-L1": {
+      "shipMineables": [
+        "Iron",
+        "Ice",
+        "Copper",
+        "Titanium",
+        "Bexalite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange E"
+    },
+    "ARC-L1": {
+      "shipMineables": [
+        "Corundum",
+        "Aluminium",
+        "Hephaestanite",
+        "Tungsten",
+        "Taranite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange F"
+    },
+    "Lagrange G": {
+      "shipMineables": [
+        "Iron",
+        "Ice",
+        "Copper",
+        "Agricium",
+        "Beryl"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange G"
+    },
+    "Lagrange Occupied": {
+      "shipMineables": [
+        "Iron",
+        "Ice",
+        "Copper",
+        "Agricium",
+        "Beryl"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange Occupied"
+    },
+    "Yela Ring": {
+      "shipMineables": [
+        "Iron",
+        "Ice",
+        "Copper",
+        "Titanium",
+        "Ouratite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Stanton2c Belt"
     }
   },
   "handMineableHabitats": {
@@ -4365,8 +4688,8 @@
   ],
   "summary": {
     "totalOres": 38,
-    "totalLocations": 55,
-    "locationsWithDetails": 25,
+    "totalLocations": 57,
+    "locationsWithDetails": 39,
     "handMineableHabitatEntries": 90,
     "locationAliasCount": 47,
     "guideToSpawnKeyCount": 52

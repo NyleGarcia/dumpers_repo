@@ -18,6 +18,7 @@
     "lint": "eslint src",
     "validate-blueprints": "node scripts/validate-blueprints.mjs",
     "audit-mission-rewards": "node scripts/audit-blueprint-mission-rewards.mjs",
+    "audit-hpp-mining-locations": "node scripts/audit-hpp-mining-locations.mjs",
     "rebuild-mission-rewards": "node scripts/rebuild-blueprint-reward-missions.mjs && node scripts/audit-blueprint-mission-rewards.mjs",
     "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs"
   },

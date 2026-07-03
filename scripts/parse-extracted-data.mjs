@@ -36,7 +36,7 @@ import {
   parseHandMineableHabitatRaw,
   preferredGuideNameForSpawnKey,
 } from './lib/miningOreNames.mjs'
-import { mergeGroundVehicleGemLocationsFromHpp } from './lib/mergeGroundVehicleHppLocations.mjs'
+import { mergeHppMineableLocations } from './lib/mergeHppMineableLocations.mjs'
 import {
   BLUEPRINT_MISSION_TRACKING_EXCLUSIONS,
   REWARD_POOL_TRACKING_EXCLUSIONS,
@@ -809,14 +809,15 @@ function parseMiningLocations(localization) {
   const guideToSpawnKeys = buildGuideToSpawnKeys(locationAliases)
   console.log(`  Built ${Object.keys(guideToSpawnKeys).length} guide→spawn key mappings`)
 
-  const groundVehicleHppMerges = mergeGroundVehicleGemLocationsFromHpp({
+  const hppMineableMerges = mergeHppMineableLocations({
     extractedDataRoot: EXTRACTED_DATA,
     locationAliases,
     oreLocations,
     locationOres,
     locationMineables,
+    assignOreRarity,
   })
-  console.log(`  Merged ${groundVehicleHppMerges} ground-vehicle gem site entries from HPP presets`)
+  console.log(`  Merged ${hppMineableMerges} HPP mineable site entries (ship, FPS, ground-vehicle)`)
 
   // Build rarity-organized structure
   const byRarity = {

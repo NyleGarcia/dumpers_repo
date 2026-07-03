@@ -1,6 +1,6 @@
 /**
- * Merge ground-vehicle gem locations from HPP GroundVehicle_Mineables groups.
- * Compendium / localization desc often under-report where gems like Feynmaline spawn.
+ * Merge mineable locations from HPP provider presets (ship, FPS, ground-vehicle).
+ * Compendium / localization desc often under-report per-body spawn coverage.
  */
 
 import { existsSync, readFileSync, readdirSync } from 'fs'
@@ -11,17 +11,11 @@ import {
   SPAWN_CODE_GUIDE_NAMES,
 } from './miningLocationAliases.mjs'
 import {
-  GROUND_VEHICLE_GEMS,
-  normalizeMineableLabel,
-  preferredGuideNameForSpawnKey,
-} from './miningOreNames.mjs'
-
-const GROUND_VEHICLE_PRESET_SLUG_TO_ORE = {
-  feynmaline: 'Feynmaline',
-  glacosite: 'Glacosite',
-  beradom: 'Beradom',
-  beradon: 'Beradom',
-}
+  HPP_MINEABLE_GROUPS,
+  HPP_SKIP_BASENAMES,
+  oreFromHppMineablePreset,
+} from './hppMineablePresets.mjs'
+import { normalizeMineableLabel, preferredGuideNameForSpawnKey } from './miningOreNames.mjs'
 
 function readJson(path) {
   try {
@@ -48,13 +42,6 @@ function harvestablePresetBasename(harvestableRef) {
   return fileName.replace(/\.json$/i, '')
 }
 
-function oreFromGroundVehiclePreset(presetBasename) {
-  const m = String(presetBasename || '').match(/^groundvehiclemining_([a-z]+)$/i)
-  if (!m) return null
-  const ore = GROUND_VEHICLE_PRESET_SLUG_TO_ORE[m[1].toLowerCase()]
-  return ore && GROUND_VEHICLE_GEMS.has(ore) ? ore : null
-}
-
 function guideLocationForHpp(hppKey, locationAliases) {
   const spawnKey = hppRecordToSpawnKey(hppKey)
   const resolved = resolveAliasForSpawnKey(spawnKey, locationAliases)
@@ -62,7 +49,7 @@ function guideLocationForHpp(hppKey, locationAliases) {
     spawnKey,
     resolved.guideName ?? SPAWN_CODE_GUIDE_NAMES[spawnKey] ?? spawnKey
   )
-  return { spawnKey, guideLoc }
+  return { spawnKey, guideLoc, hppKey }
 }
 
 function ensureLocationMineables(locationMineables, guideLoc, spawnKey) {
@@ -82,76 +69,121 @@ function ensureLocationMineables(locationMineables, guideLoc, spawnKey) {
   }
 }
 
-function mergeGemAtSite({ ore, guideLoc, spawnKey, oreLocations, locationOres, locationMineables }) {
+function mergeOreAtSite({
+  ore,
+  guideLoc,
+  spawnKey,
+  mineableField,
+  oreLocations,
+  locationOres,
+  locationMineables,
+  assignOreRarity,
+}) {
   if (!oreLocations[ore]) oreLocations[ore] = []
   if (!oreLocations[ore].includes(guideLoc)) {
     oreLocations[ore].push(guideLoc)
   }
 
+  const rarity = assignOreRarity(ore)
   if (!locationOres[guideLoc]) locationOres[guideLoc] = []
   const existing = locationOres[guideLoc].find((entry) => entry.name === ore)
   if (existing) {
-    if (existing.rarity !== 'handMineable') existing.rarity = 'handMineable'
+    if (rarity === 'handMineable') existing.rarity = 'handMineable'
   } else {
-    locationOres[guideLoc].push({ name: ore, rarity: 'handMineable' })
+    locationOres[guideLoc].push({ name: ore, rarity })
   }
 
   ensureLocationMineables(locationMineables, guideLoc, spawnKey)
-  const gv = locationMineables[guideLoc].groundVehicleMineables
+  const list = locationMineables[guideLoc][mineableField]
   const canonical = normalizeMineableLabel(ore)
-  if (!gv.some((label) => normalizeMineableLabel(label).toLowerCase() === canonical.toLowerCase())) {
-    gv.push(canonical)
+  if (!list.some((label) => normalizeMineableLabel(label).toLowerCase() === canonical.toLowerCase())) {
+    list.push(canonical)
   }
+}
+
+/**
+ * Collect ore×site links from HPP mineable groups (for audits).
+ * @returns {Array<{ ore, guideLoc, spawnKey, hppKey, groupName, mineableField }>}
+ */
+export function collectHppMineableSiteLinks({ extractedDataRoot, locationAliases }) {
+  const hppDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/providerpresets')
+  if (!existsSync(hppDir)) return []
+
+  const links = []
+  const seen = new Set()
+
+  for (const file of walkJsonFiles(hppDir)) {
+    const fileBase = basename(file, '.json')
+    if (!fileBase.startsWith('hpp_') || HPP_SKIP_BASENAMES.has(fileBase)) continue
+
+    const json = readJson(file)
+    if (!json?._RecordValue_) continue
+
+    const hppKey = json._RecordName_ || fileBase
+    const { spawnKey, guideLoc } = guideLocationForHpp(hppKey, locationAliases)
+
+    for (const group of json._RecordValue_.harvestableGroups ?? []) {
+      const mineableField = HPP_MINEABLE_GROUPS[group.groupName]
+      if (!mineableField) continue
+
+      for (const h of group.harvestables ?? []) {
+        const presetBasename = harvestablePresetBasename(h.harvestable)
+        const ore = oreFromHppMineablePreset(presetBasename)
+        if (!ore) continue
+
+        const dedupeKey = `${group.groupName}|${ore}|${guideLoc}`
+        if (seen.has(dedupeKey)) continue
+        seen.add(dedupeKey)
+
+        links.push({
+          ore,
+          guideLoc,
+          spawnKey,
+          hppKey,
+          groupName: group.groupName,
+          mineableField,
+        })
+      }
+    }
+  }
+
+  return links
 }
 
 /**
  * @returns {number} count of ore×site merges applied
  */
-export function mergeGroundVehicleGemLocationsFromHpp({
+export function mergeHppMineableLocations({
   extractedDataRoot,
   locationAliases,
   oreLocations,
   locationOres,
   locationMineables,
+  assignOreRarity,
 }) {
-  const hppDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/providerpresets')
-  if (!existsSync(hppDir)) return 0
-
-  const seen = new Set()
+  const links = collectHppMineableSiteLinks({ extractedDataRoot, locationAliases })
   let mergeCount = 0
 
-  for (const file of walkJsonFiles(hppDir)) {
-    if (!basename(file).startsWith('hpp_')) continue
-    const json = readJson(file)
-    if (!json?._RecordValue_) continue
-
-    const hppKey = json._RecordName_ || basename(file, '.json')
-    const { spawnKey, guideLoc } = guideLocationForHpp(hppKey, locationAliases)
-
-    for (const group of json._RecordValue_.harvestableGroups ?? []) {
-      if (group.groupName !== 'GroundVehicle_Mineables') continue
-
-      for (const h of group.harvestables ?? []) {
-        const presetBasename = harvestablePresetBasename(h.harvestable)
-        const ore = oreFromGroundVehiclePreset(presetBasename)
-        if (!ore) continue
-
-        const dedupeKey = `${ore}|${guideLoc}`
-        if (seen.has(dedupeKey)) continue
-        seen.add(dedupeKey)
-
-        mergeGemAtSite({
-          ore,
-          guideLoc,
-          spawnKey,
-          oreLocations,
-          locationOres,
-          locationMineables,
-        })
-        mergeCount++
-      }
-    }
+  for (const link of links) {
+    mergeOreAtSite({
+      ore: link.ore,
+      guideLoc: link.guideLoc,
+      spawnKey: link.spawnKey,
+      mineableField: link.mineableField,
+      oreLocations,
+      locationOres,
+      locationMineables,
+      assignOreRarity,
+    })
+    mergeCount++
   }
 
   return mergeCount
+}
+
+/**
+ * @deprecated Use mergeHppMineableLocations
+ */
+export function mergeGroundVehicleGemLocationsFromHpp(ctx) {
+  return mergeHppMineableLocations(ctx)
 }
