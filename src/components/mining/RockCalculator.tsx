@@ -284,8 +284,8 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
 
   return (
     <aside className="sticky top-14 self-start w-[320px] shrink-0">
-      <div className="rounded-xl border border-slate-700 bg-slate-900/70 overflow-hidden">
-        <div className="px-3 py-2.5 bg-slate-800/90 border-b border-slate-700 min-h-[3.25rem]">
+      <div className="rounded-xl border border-slate-700 bg-slate-900/70">
+        <div className="px-3 py-2.5 bg-slate-800/90 border-b border-slate-700 min-h-[3.25rem] rounded-t-xl">
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
             Rock Calculator
           </p>
@@ -313,8 +313,8 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
             <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
               Ore &amp; location
             </label>
-            <div className="flex gap-1.5">
-              <div className="relative flex-1 min-w-0">
+            <div className="flex gap-1.5 overflow-visible">
+              <div className="relative flex-1 min-w-0 overflow-visible">
                 <input
                   ref={searchRef}
                   type="text"
@@ -343,7 +343,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                   autoComplete="off"
                 />
                 {searchOpen && searchOptions.length > 0 && (
-                  <ul className="absolute z-30 left-0 right-0 mt-1 rounded-lg border border-slate-600 bg-slate-900 shadow-lg max-h-40 overflow-y-auto">
+                  <ul className="absolute z-50 left-0 right-0 mt-1 rounded-lg border border-slate-600 bg-slate-900 shadow-xl max-h-48 overflow-y-auto overscroll-contain">
                     {searchOptions.map((name) => (
                       <li key={name}>
                         <button
