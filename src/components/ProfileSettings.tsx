@@ -428,7 +428,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               />
               <SettingsToggle
                 label="Auto-approve new signups"
-                description="When enabled, new Google sign-ins are automatically approved as members instead of requiring officer approval."
+                description="When enabled, new sign-ins are automatically approved as members instead of requiring officer approval."
                 checked={autoApproveEnabled}
                 onChange={handleAutoApproveChange}
                 saving={savingAutoApprove}

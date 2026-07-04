@@ -35,6 +35,19 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 
 ---
 
+## 2b. Enable Discord OAuth
+
+1. Go to [Discord Developer Portal](https://discord.com/developers/applications) → New Application
+2. Under OAuth2, note the **Client ID** and generate a **Client Secret**
+3. Add redirect URI: `https://YOUR_PROJECT.supabase.co/auth/v1/callback`
+4. In Supabase: Authentication → Providers → Discord → Enable
+5. Paste Client ID and Client Secret
+6. Ensure your Site URL and Redirect URLs include your app origin(s)
+
+> Supabase maps Discord's `global_name` to `full_name` in `raw_user_meta_data`. The existing `handle_new_user` trigger reads `full_name` and populates `display_name` automatically — no changes needed.
+
+---
+
 ## 3. Run SQL migrations
 
 In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
@@ -135,7 +148,7 @@ Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose s
 
 ## 5. Promote a super-admin
 
-After your first Google sign-in (creates a `pending` profile):
+After your first sign-in (Google or Discord) (creates a `pending` profile):
 
 ```sql
 UPDATE public.profiles
