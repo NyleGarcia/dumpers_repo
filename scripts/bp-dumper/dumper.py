@@ -198,30 +198,49 @@ def main():
     unique_blueprints = []
     source_name = ""
 
-    # Mode 1: JSON File parsing
-    if args.file_path and args.file_path.suffix == ".json":
-        if not args.file_path.is_file():
-            print(f"{Colors.RED}Error: JSON file not found: {args.file_path}{Colors.RESET}", file=sys.stderr)
-            sys.exit(1)
-        try:
-            with open(args.file_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            blueprints_list = data.get("blueprints", [])
-            unique_blueprints = sorted(list(set(
-                bp.get("productName") for bp in blueprints_list if bp.get("productName")
-            )))
-            source_name = args.file_path.name
-        except Exception as e:
-            print(f"{Colors.RED}Error parsing JSON: {e}{Colors.RESET}", file=sys.stderr)
+    # Mode 1: A path is provided
+    if args.file_path:
+        if args.file_path.is_file():
+            if args.file_path.suffix == ".json":
+                # JSON Export File
+                try:
+                    with open(args.file_path, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    blueprints_list = data.get("blueprints", [])
+                    unique_blueprints = sorted(list(set(
+                        bp.get("productName") for bp in blueprints_list if bp.get("productName")
+                    )))
+                    source_name = args.file_path.name
+                except Exception as e:
+                    print(f"{Colors.RED}Error parsing JSON: {e}{Colors.RESET}", file=sys.stderr)
+                    sys.exit(1)
+            else:
+                # Direct single log file parsing (e.g., Game.log)
+                print(f"Scanning single log file: {args.file_path.name}...")
+                all_bps = parse_blueprints_from_log(args.file_path)
+                unique_blueprints = sorted(list(set(all_bps)))
+                source_name = args.file_path.name
+        elif args.file_path.is_dir():
+            # Direct directory scan (e.g. logbackups folder)
+            log_files = list(args.file_path.glob("*.log"))
+            if not log_files:
+                print(f"{Colors.RED}Error: No .log files found in directory: {args.file_path}{Colors.RESET}", file=sys.stderr)
+                sys.exit(1)
+            print(f"Scanning {len(log_files)} log file(s) in {args.file_path.name}...")
+            all_bps = []
+            for path in log_files:
+                all_bps.extend(parse_blueprints_from_log(path))
+            unique_blueprints = sorted(list(set(all_bps)))
+            source_name = f"direct directory scan ({len(log_files)} file(s))"
+        else:
+            print(f"{Colors.RED}Error: Path not found: {args.file_path}{Colors.RESET}", file=sys.stderr)
             sys.exit(1)
 
-    # Mode 2: Direct log scraping (if JSON file is omitted, or a direct directory was given)
+    # Mode 2: Auto-detect installs (no path provided, or --log-dir was passed)
     else:
         log_dirs = []
         if args.log_dir:
             log_dirs = [args.log_dir]
-        elif args.file_path and args.file_path.is_dir():
-            log_dirs = [args.file_path]
         else:
             # Auto-detect installs
             print(f"{Colors.DIM}Scanning local system for Star Citizen installations...{Colors.RESET}")
@@ -246,7 +265,7 @@ def main():
                 
         if not log_dirs or not any(d.is_dir() for d in log_dirs):
             print(f"{Colors.RED}Error: No Star Citizen installations or log directories detected.{Colors.RESET}", file=sys.stderr)
-            print(f"Please run the script pointing to your logbackups folder directly:", file=sys.stderr)
+            print(f"Please run the script pointing to your logbackups folder or a single Game.log directly:", file=sys.stderr)
             print(f"  python dumper.py --log-dir \"C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\\logbackups\"", file=sys.stderr)
             sys.exit(1)
 
