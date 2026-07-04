@@ -11,6 +11,7 @@ import json
 import os
 import re
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -345,6 +346,142 @@ def save_cache_file(cache_path: Path, cache_set: set):
     except Exception:
         pass
 
+def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, args, session=None):
+    print(f"{Colors.CYAN}Watching {path.name} for live events... (Press Ctrl+C to stop){Colors.RESET}")
+    fh = None
+    last_inode = None
+    last_size = 0
+    buffer = bytearray()
+    first_open = True
+    cache_path = Path(__file__).resolve().parent / ".dumper_cache.json"
+
+    try:
+        while True:
+            try:
+                st = path.stat()
+            except FileNotFoundError:
+                if fh:
+                    fh.close()
+                    fh = None
+                    last_inode = None
+                    buffer.clear()
+                    print(f"{Colors.YELLOW}Game.log not found, waiting for it to appear...{Colors.RESET}")
+                time.sleep(1.0)
+                continue
+            except OSError:
+                time.sleep(1.0)
+                continue
+
+            rotated = (
+                fh is None
+                or (last_inode is not None and st.st_ino and st.st_ino != last_inode)
+                or st.st_size < last_size
+            )
+
+            if rotated:
+                if fh:
+                    print(f"{Colors.YELLOW}Log rotation detected — resetting session state{Colors.RESET}")
+                    fh.close()
+                    state.active.clear()
+                    state.guid_map.clear()
+                    state.recent_lifecycle.clear()
+                try:
+                    fh = open(path, "rb")
+                except OSError:
+                    fh = None
+                    time.sleep(1.0)
+                    continue
+                last_inode = st.st_ino or None
+                last_size = 0
+                buffer.clear()
+                if first_open:
+                    print(f"Reading active log from beginning...")
+                    first_open = False
+                else:
+                    print(f"Opened new log session...")
+
+            try:
+                chunk = fh.read()
+            except OSError:
+                time.sleep(1.0)
+                continue
+
+            if chunk:
+                buffer.extend(chunk)
+                nl = buffer.rfind(b"\n")
+                if nl >= 0:
+                    block = bytes(buffer[: nl + 1])
+                    del buffer[: nl + 1]
+                    for raw in block.splitlines():
+                        if not raw:
+                            continue
+                        line = raw.decode("utf-8", errors="replace")
+                        ts = parse_log_timestamp(line) or time.time()
+
+                        if m := PATTERN_MARKER.search(line):
+                            def_id_match = PATTERN_MARKER_DEF_ID.search(line)
+                            def_id = def_id_match.group(1) if def_id_match else None
+                            state.record_marker(m.group(1), m.group(2), m.group(3), def_id)
+
+                        elif m := PATTERN_ACCEPTED.search(line):
+                            active = state.record_accepted(m.group(1), ts)
+                            print(f"  [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
+
+                        elif m := PATTERN_END_MISSION.search(line):
+                            guid, completion, reason = m.group(1), m.group(2), m.group(3)
+                            active = state.record_end(guid, completion, ts)
+                            entry = state.guid_map.get(guid)
+                            debug_name = active.debug_name if active else (entry.debug_name if entry else "Unknown")
+                            
+                            if completion == "Complete":
+                                print(f"  [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                            elif completion == "Abandon":
+                                print(f"  [{path.name}] {Colors.RED}Mission abandoned: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                            elif completion == "Fail":
+                                print(f"  [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                            else:
+                                print(f"  [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+
+                        elif m := PATTERN_BLUEPRINT.search(line):
+                            product_name = m.group(1).strip()
+                            corr = state.correlate_blueprint(ts)
+                            if corr:
+                                print(f"  [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
+                            else:
+                                print(f"  [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
+                            
+                            # Cache validation & dispatch
+                            if product_name not in acquired_blueprints:
+                                acquired_blueprints.add(product_name)
+                                save_cache_file(cache_path, acquired_blueprints)
+                                if args.dry_run:
+                                    print(f"  [Live] {Colors.GREEN}★ Would Import (Dry Run):{Colors.RESET} {product_name}")
+                                else:
+                                    payload = {
+                                        "type": "blueprint_received",
+                                        "blueprint": product_name
+                                    }
+                                    try:
+                                        res = session.post(args.url, json=payload, timeout=15)
+                                        if res.status_code == 200:
+                                            is_duplicate = res.json().get("duplicate", False)
+                                            if is_duplicate:
+                                                print(f"  [Live] {Colors.YELLOW}↻ Already Acquired (Sync):{Colors.RESET} {product_name}")
+                                            else:
+                                                print(f"  [Live] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {product_name}")
+                                        else:
+                                            print(f"  [Live] {Colors.RED}✗ Failed to import:{Colors.RESET} {product_name} (HTTP {res.status_code})")
+                                    except Exception as e:
+                                        print(f"  [Live] {Colors.RED}✗ Connection Error:{Colors.RESET} {product_name} ({e})")
+                last_size = st.st_size
+            else:
+                time.sleep(0.5)
+    except KeyboardInterrupt:
+        print(f"\n{Colors.CYAN}Stopped watching.{Colors.RESET}")
+    finally:
+        if fh:
+            fh.close()
+
 def main():
     if sys.platform == "win32":
         try:
@@ -378,6 +515,11 @@ def main():
         "--dry-run",
         action="store_true",
         help="Dry run: scan and log blueprints locally without making network calls or requiring an API key."
+    )
+    parser.add_argument(
+        "--watch", "-w",
+        action="store_true",
+        help="Watch mode: trails a Game.log file in real-time, importing new blueprints instantly."
     )
     parser.add_argument(
         "--log-dir",
@@ -437,7 +579,17 @@ def main():
         if user_dry_run == 'y':
             args.dry_run = True
 
-        # 3. Prompt URL (only if not dry run)
+        # 3. Prompt Watch Mode
+        try:
+            user_watch = input("Watch mode (trail log file in real-time)? (Y/N, Enter = N): ").strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            print("\nAborted.")
+            sys.exit(0)
+            
+        if user_watch == 'y':
+            args.watch = True
+
+        # 4. Prompt URL (only if not dry run)
         if not args.dry_run:
             default_url = env_vars.get("SUPABASE_WEBHOOK_URL", "")
             url_prompt = "Enter Supabase Edge Function Webhook URL"
@@ -499,6 +651,72 @@ def main():
 
     # Update script args.url with resolved URL for reference
     args.url = url
+
+    # Watch Mode execution
+    if args.watch:
+        watch_file = None
+        if args.file_path:
+            if args.file_path.is_file():
+                watch_file = args.file_path
+            elif args.file_path.is_dir():
+                watch_file = args.file_path / "Game.log"
+        else:
+            if args.log_dir:
+                watch_file = args.log_dir / "Game.log"
+            else:
+                installs = detect_sc_installs()
+                if installs:
+                    chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+                    watch_file = installs[chosen_channel] / "Game.log"
+                else:
+                    fallback = Path(DEFAULT_WIN_PATH)
+                    if fallback.is_dir():
+                        live_dir = fallback / "LIVE"
+                        if live_dir.is_dir():
+                            watch_file = live_dir / "Game.log"
+
+        if not watch_file:
+            print(f"{Colors.RED}Error: Could not resolve a valid directory to locate Game.log for watch mode.{Colors.RESET}", file=sys.stderr)
+            print(f"Please specify the log path directly (e.g. ./dumper.sh --watch /path/to/Game.log)", file=sys.stderr)
+            sys.exit(1)
+
+        # Load local dumper cache
+        cache_path = Path(__file__).resolve().parent / ".dumper_cache.json"
+        acquired_blueprints = load_cache_file(cache_path)
+        
+        session = None
+        if not args.dry_run:
+            try:
+                import requests
+            except ImportError:
+                print("Error: The 'requests' library is not installed. Run 'pip install -r requirements.txt' to import blueprints to your account.", file=sys.stderr)
+                sys.exit(1)
+
+            session = requests.Session()
+            session.headers.update({
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            })
+
+            # Sync from database (Option 2: Webhook GET Sync)
+            print(f"{Colors.DIM}Synchronizing blueprints list from server...{Colors.RESET}")
+            try:
+                res = session.get(args.url, timeout=15)
+                if res.status_code == 200:
+                    response_json = res.json()
+                    if response_json.get("success"):
+                        server_bps = response_json.get("blueprints", [])
+                        acquired_blueprints.update(server_bps)
+                        save_cache_file(cache_path, acquired_blueprints)
+                        print(f"Synced {len(server_bps)} blueprints from account.")
+                else:
+                    print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
+            except Exception as e:
+                print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
+
+        state = WatcherState()
+        watch_log_file(watch_file, state, acquired_blueprints, args, session)
+        return
 
     unique_blueprints = []
     source_name = ""
