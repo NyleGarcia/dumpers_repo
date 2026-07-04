@@ -52,10 +52,7 @@ export default function BlueprintSlotQualityCard({
   const hasModifiers = (option?.modifiers?.length ?? 0) > 0
   const isMineable = (option?.standardCargoUnits ?? 0) > 0
   const isItem = option?.type === 'item'
-  // Crafting modifier curves use raw Q1–1000; band dropdown is for DFP-only mineables.
-  const showRawQualitySlider = hasModifiers || ((isMineable && !isItem) && !bands)
-  const showBandSelect = !hasModifiers && bands && (isMineable || hasModifiers)
-  const showQualitySelector = showRawQualitySlider || showBandSelect
+  const showQualitySelector = hasModifiers || (isMineable && !isItem)
 
   return (
     <div
@@ -102,9 +99,9 @@ export default function BlueprintSlotQualityCard({
         <div className={`mt-3 pt-3 border-t border-slate-700/50 ${compact ? 'mt-2 pt-2' : ''}`}>
           <div className="flex items-center gap-3 mb-2">
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
-              {hasModifiers ? 'Quality' : 'Quality Band'}
+              Quality Band
             </label>
-            {showBandSelect ? (
+            {bands ? (
               <select
                 value={quality}
                 onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
@@ -119,7 +116,7 @@ export default function BlueprintSlotQualityCard({
                   )
                 })}
               </select>
-            ) : showRawQualitySlider ? (
+            ) : (
               <>
                 <input
                   type="range"
@@ -144,7 +141,7 @@ export default function BlueprintSlotQualityCard({
                   className="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
                 />
               </>
-            ) : null}
+            )}
           </div>
 
           {hasModifiers && modifierResults.length > 0 && (

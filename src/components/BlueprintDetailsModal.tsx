@@ -460,7 +460,7 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
       </div>
 
       <p className="text-[10px] text-slate-500 mt-3">
-        Adjust quality sliders to simulate how resource quality affects final item stats.
+        Select quality bands to simulate how mined ore quality affects final item stats.
       </p>
     </div>
   )
