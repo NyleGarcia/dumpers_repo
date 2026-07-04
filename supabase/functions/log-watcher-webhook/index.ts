@@ -17,7 +17,7 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
-  if (req.method !== 'POST') {
+  if (req.method !== 'POST' && req.method !== 'GET') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -82,6 +82,23 @@ serve(async (req) => {
       console.log(`⏳ Pending approval user=${userId.slice(0, 8)}…`)
       return new Response(JSON.stringify({ error: 'Account pending approval' }), {
         status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    // Handle GET: Sync current blueprints list
+    if (req.method === 'GET') {
+      const { data: bpsData, error: bpsError } = await supabase
+        .from('acquired_blueprints')
+        .select('blueprint_id')
+        .eq('user_id', userId)
+
+      if (bpsError) {
+        throw bpsError
+      }
+
+      const list = bpsData.map((row: { blueprint_id: string }) => row.blueprint_id)
+      return new Response(JSON.stringify({ success: true, blueprints: list }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
