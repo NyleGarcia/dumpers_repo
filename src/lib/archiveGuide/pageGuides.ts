@@ -221,8 +221,11 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Connect Google or Discord from Connected Accounts to sign in with either method on one account',
       'When provider emails match, sign-in automatically merges into your existing account',
       'Disconnect a linked provider from Settings if you have at least two sign-in methods connected',
+      'Generate and copy a personal API key from API Access for external tool integration (Log Watcher webhook)',
+      'API keys authorize external tools to update your acquired blueprints automatically',
+      'Regenerate your API key from Settings if it is compromised',
     ],
-    relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker'],
+    relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker', 'Log Watcher'],
   },
   {
     id: 'support',

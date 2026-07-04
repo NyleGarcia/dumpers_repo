@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `089_org_logo.sql` (franchise org logo upload for blueprint modal). Apply through `089` in order if catching up.
+**Latest migration:** `110_user_api_keys.sql` (user API keys for Log Watcher webhook). Apply through `110` in numeric order if catching up.
 
 ---
 
@@ -118,6 +118,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 50 | `087_drop_shop_data.sql` | Drop shop tables and RPCs (Shops feature removed from app) |
 | 51 | `088_mining_tracker_location.sql` | Mining tracker location field |
 | 52 | `089_org_logo.sql` | Supabase Storage bucket + super-admin org logo (`ORG_LOGO.png`) |
+| 53 | `110_user_api_keys.sql` | User API keys for external tool auth (Log Watcher webhook) |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -143,6 +144,7 @@ npx supabase functions deploy unban-user
 npx supabase functions deploy delete-account
 npx supabase functions deploy validate-rsi-handle
 npx supabase functions deploy send-discord
+npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 ```
 
 | Function | Purpose |
@@ -151,8 +153,45 @@ npx supabase functions deploy send-discord
 | `delete-account` | User self-service account deletion |
 | `validate-rsi-handle` | Validate RSI Handles against robertsspaceindustries.com |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
+| `log-watcher-webhook` | Receives blueprint events from external tools; Bearer API key auth |
 
 Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose service_role in frontend code.
+
+### Log Watcher webhook API
+
+Members generate a personal API key from **Settings → API Access**. External tools call the deployed `log-watcher-webhook` Edge Function.
+
+**Base URL:** `https://YOUR_PROJECT.supabase.co/functions/v1/log-watcher-webhook`
+
+**Auth header (all requests):** `Authorization: Bearer dr_<your_api_key>`
+
+**POST — mark blueprint acquired**
+
+```json
+{ "type": "blueprint_received", "blueprint": "<internalName>" }
+```
+
+- `blueprint` must be the catalog **internalName** (e.g. `behr_smg_ballistic_01`), not Game.log display text.
+- Response: `{ "success": true, "blueprint": "...", "duplicate": false }`
+- Idempotent: duplicate inserts return `duplicate: true` without error.
+- Also clears the blueprint from the member's Mission Tracker target list.
+
+**GET — sync acquired blueprint IDs**
+
+```json
+{ "success": true, "blueprints": ["behr_smg_ballistic_01", "..."] }
+```
+
+**Example curl**
+
+```bash
+curl -X POST "https://YOUR_PROJECT.supabase.co/functions/v1/log-watcher-webhook" \
+  -H "Authorization: Bearer dr_YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"blueprint_received","blueprint":"behr_smg_ballistic_01"}'
+```
+
+**Error codes:** 401 invalid/missing key · 403 banned or pending approval · 405 wrong HTTP method · 400 invalid JSON or blueprint ID
 
 > **Removed from repo:** `sync-blueprints` (sccrafter.com) and `sync-starstrings` (StarStrings). Blueprint catalog ships from `game-blueprints.json`; reference data uses game file extraction + optional `sync-game-data-to-db.mjs`.
 
