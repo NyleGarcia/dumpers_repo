@@ -684,13 +684,24 @@ def main():
                 user_key = default_key
             args.key = user_key
 
+        try:
+            user_import_old = input("Import old logs on first run? (Y/N, Enter = Y): ").strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            print("\nAborted.")
+            sys.exit(0)
+            
+        import_old_logs = "true"
+        if user_import_old == "n":
+            import_old_logs = "false"
+
         print()
 
         # Save variables to .env file immediately
         new_env = {
             "LOG_PATH": str(args.file_path) if args.file_path else "",
             "SUPABASE_WEBHOOK_URL": args.url if args.url else "",
-            "LOG_WATCHER_API_KEY": args.key if args.key else ""
+            "LOG_WATCHER_API_KEY": args.key if args.key else "",
+            "IMPORT_OLD_LOGS": import_old_logs
         }
         env_vars.update(new_env)
         save_env_file(env_path, env_vars)
@@ -709,6 +720,125 @@ def main():
 
     # Update script args.url with resolved URL for reference
     args.url = url
+
+    # First run: Import old logs from backup paths if specified
+    if env_vars.get("IMPORT_OLD_LOGS") == "true":
+        print(f"\n{Colors.CYAN}[First Run] Scanning historical logs in backup folder...{Colors.RESET}")
+        old_log_dirs = []
+        if args.log_dir:
+            old_log_dirs = [args.log_dir]
+        else:
+            cp = None
+            if args.file_path:
+                if args.file_path.is_dir():
+                    cp = args.file_path
+                else:
+                    cp = args.file_path.parent
+            if not cp:
+                backup_p = env_vars.get("BACKUP_PATH")
+                if backup_p:
+                    cp = Path(backup_p).parent
+            if not cp:
+                installs = detect_sc_installs()
+                if installs:
+                    chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+                    cp = installs[chosen_channel]
+                else:
+                    fallback = Path(DEFAULT_WIN_PATH)
+                    if fallback.is_dir():
+                        cp = fallback / "LIVE"
+            if cp:
+                old_log_dirs = [cp, cp / "logbackups"]
+
+        if old_log_dirs:
+            files_to_scan = []
+            for d in old_log_dirs:
+                if d.is_dir():
+                    # Exclude active Game.log to prevent parsing lock or watch overlap
+                    for p in d.glob("*.log"):
+                        if p.name != "Game.log":
+                            files_to_scan.append(p)
+
+            if files_to_scan:
+                print(f"Scanning {len(files_to_scan)} historical log file(s)...")
+                # Merge local translations
+                for d in old_log_dirs:
+                    if d.is_dir():
+                        local_loc_map = parse_local_localization(d)
+                        if local_loc_map:
+                            BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+
+                all_bps = []
+                work_items = [(i, len(files_to_scan), path) for i, path in enumerate(files_to_scan, 1)]
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    for res in executor.map(process_log_file, work_items):
+                        all_bps.extend(res)
+
+                unique_old = sorted(list(set(all_bps)))
+                if unique_old:
+                    to_send = []
+                    for raw_name in unique_old:
+                        if raw_name.lower() in BLUEPRINT_NAME_TO_INTERNAL_NAMES:
+                            for id in BLUEPRINT_NAME_TO_INTERNAL_NAMES[raw_name.lower()]:
+                                if id not in acquired_blueprints:
+                                    to_send.append(id)
+                        else:
+                            clean_name = raw_name.strip().lower()
+                            if clean_name not in acquired_blueprints:
+                                to_send.append(clean_name)
+
+                    if to_send:
+                        print(f"Uploading {len(to_send)} historical blueprints...")
+                        success_count = 0
+                        dupe_count = 0
+                        fail_count = 0
+                        for idx, bp_id in enumerate(to_send, 1):
+                            if args.dry_run:
+                                success_count += 1
+                                print(f"  [{idx}/{len(to_send)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {bp_id}")
+                            else:
+                                payload = {
+                                    "type": "blueprint_received",
+                                    "blueprint": bp_id
+                                }
+                                headers = {
+                                    "Authorization": f"Bearer {api_key}",
+                                    "Content-Type": "application/json"
+                                }
+                                try:
+                                    res = session.post(url, json=payload, headers=headers, timeout=15)
+                                    if res.status_code == 200:
+                                        is_duplicate = res.json().get("duplicate", False)
+                                        if is_duplicate:
+                                            dupe_count += 1
+                                            print(f"  [{idx}/{len(to_send)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
+                                        else:
+                                            success_count += 1
+                                            print(f"  [{idx}/{len(to_send)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
+                                    else:
+                                        fail_count += 1
+                                        print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ Failed to import:{Colors.RESET} {bp_id} (HTTP {res.status_code})")
+                                except Exception as e:
+                                    fail_count += 1
+                                    print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ Connection Error:{Colors.RESET} {bp_id} ({e})")
+                        
+                        print(f"\nImport complete: {Colors.GREEN}{success_count} successfully imported{Colors.RESET}, "
+                              f"{Colors.YELLOW}{dupe_count} already acquired{Colors.RESET}, "
+                              f"{Colors.RED}{fail_count} failed{Colors.RESET}")
+                        
+                        acquired_blueprints.update(to_send)
+                        save_cache_file(cache_path, acquired_blueprints)
+                    else:
+                        print("All historical blueprints already acquired.")
+                else:
+                    print("No blueprints found in historical logs.")
+            else:
+                print("No historical logs to scan.")
+
+        # Save disabled state
+        env_vars["IMPORT_OLD_LOGS"] = "false"
+        save_env_file(env_path, env_vars)
+        print(f"{Colors.GREEN}[First Run] Historical import complete. Disabling future auto-imports.{Colors.RESET}\n")
 
     # Watch Mode execution
     if args.watch:

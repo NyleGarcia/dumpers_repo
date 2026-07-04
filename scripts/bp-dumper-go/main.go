@@ -718,6 +718,15 @@ func main() {
 			apiKey = userKey
 		}
 
+		// 6. Import Old Logs Prompt
+		fmt.Print("Import old logs on first run? (Y/N, Enter = Y): ")
+		userImportOld, _ := reader.ReadString('\n')
+		userImportOld = strings.ToLower(strings.TrimSpace(userImportOld))
+		importOldLogs := "true"
+		if userImportOld == "n" {
+			importOldLogs = "false"
+		}
+
 		fmt.Println()
 
 		// Save configuration immediately
@@ -725,6 +734,7 @@ func main() {
 			"LOG_PATH":             filePath,
 			"SUPABASE_WEBHOOK_URL": url,
 			"LOG_WATCHER_API_KEY":  apiKey,
+			"IMPORT_OLD_LOGS":      importOldLogs,
 		}
 		saveEnvFile(envPath, saveVars)
 	}
@@ -783,6 +793,198 @@ func main() {
 				res.Body.Close()
 			}
 		}
+	}
+
+	// First run: Import old logs from backup paths if specified
+	if envVars["IMPORT_OLD_LOGS"] == "true" {
+		fmt.Printf("\n%s[First Run] Scanning historical logs in backup folder...%s\n", color.Cyan, color.Reset)
+		var oldLogDirs []string
+		if logDir != "" {
+			oldLogDirs = []string{logDir}
+		} else {
+			// Find channel/logbackups
+			var cp string
+			if filePath != "" {
+				info, err := os.Stat(filePath)
+				if err == nil {
+					if info.IsDir() {
+						cp = filePath
+					} else {
+						cp = filepath.Dir(filePath)
+					}
+				}
+			}
+			if cp == "" {
+				cp = envVars["BACKUP_PATH"]
+				if cp != "" {
+					cp = filepath.Dir(cp)
+				}
+			}
+			if cp == "" {
+				installs := detectSCInstalls()
+				if len(installs) > 0 {
+					chosenChannel := "LIVE"
+					if _, ok := installs["LIVE"]; !ok {
+						for k := range installs {
+							chosenChannel = k
+							break
+						}
+					}
+					cp = installs[chosenChannel]
+				} else {
+					fallback := DefaultWinPath
+					if info, err := os.Stat(fallback); err == nil && info.IsDir() {
+						cp = filepath.Join(fallback, "LIVE")
+					}
+				}
+			}
+
+			if cp != "" {
+				oldLogDirs = []string{cp, filepath.Join(cp, "logbackups")}
+			}
+		}
+
+		if len(oldLogDirs) > 0 {
+			var filesToScan []string
+			for _, d := range oldLogDirs {
+				matches, _ := filepath.Glob(filepath.Join(d, "*.log"))
+				// Exclude active Game.log to avoid locked files or watch overlap
+				for _, match := range matches {
+					if filepath.Base(match) != "Game.log" {
+						filesToScan = append(filesToScan, match)
+					}
+				}
+			}
+
+			if len(filesToScan) > 0 {
+				fmt.Printf("Scanning %d historical log file(s)...\n", len(filesToScan))
+				// Merge local translations
+				for _, d := range oldLogDirs {
+					localLocMap := parseLocalLocalization(d)
+					for k, v := range localLocMap {
+						blueprintNameToInternalNames[k] = v
+					}
+				}
+
+				var oldBps []string
+				var wg sync.WaitGroup
+				resultsChan := make(chan []string, len(filesToScan))
+				state := NewWatcherState()
+
+				for idx, path := range filesToScan {
+					wg.Add(1)
+					go func(i int, p string) {
+						defer wg.Done()
+						bps, _ := parseBlueprintsFromLog(p, state)
+						resultsChan <- bps
+					}(idx, path)
+				}
+				wg.Wait()
+				close(resultsChan)
+				for bps := range resultsChan {
+					oldBps = append(oldBps, bps...)
+				}
+
+				bpMap := make(map[string]bool)
+				for _, bp := range oldBps {
+					bpMap[bp] = true
+				}
+				var uniqueOld []string
+				for k := range bpMap {
+					uniqueOld = append(uniqueOld, k)
+				}
+
+				if len(uniqueOld) > 0 {
+					var toSend []string
+					for _, rawName := range uniqueOld {
+						if ids, found := blueprintNameToInternalNames[strings.ToLower(rawName)]; found {
+							for _, id := range ids {
+								if !acquiredBlueprints[id] {
+									toSend = append(toSend, id)
+								}
+							}
+						} else {
+							cleanName := strings.ToLower(strings.TrimSpace(rawName))
+							if !acquiredBlueprints[cleanName] {
+								toSend = append(toSend, cleanName)
+							}
+						}
+					}
+
+					if len(toSend) > 0 {
+						fmt.Printf("Uploading %d historical blueprints...\n", len(toSend))
+						successCount := 0
+						dupeCount := 0
+						failCount := 0
+						for idx, bpID := range toSend {
+							if dryRun {
+								successCount++
+								fmt.Printf("  [%d/%d] %s★ Would Import:%s %s\n", idx+1, len(toSend), color.Green, color.Reset, bpID)
+							} else {
+								payload := map[string]string{
+									"type":      "blueprint_received",
+									"blueprint": bpID,
+								}
+								body, _ := json.Marshal(payload)
+								req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
+								if err != nil {
+									failCount++
+									fmt.Printf("  [%d/%d] %s✗ Connection Error:%s %s (%v)\n", idx+1, len(toSend), color.Red, color.Reset, bpID, err)
+									continue
+								}
+								req.Header.Set("Authorization", "Bearer "+apiKey)
+								req.Header.Set("Content-Type", "application/json")
+
+								client := &http.Client{Timeout: 15 * time.Second}
+								res, err := client.Do(req)
+								if err != nil {
+									failCount++
+									fmt.Printf("  [%d/%d] %s✗ Connection Error:%s %s (%v)\n", idx+1, len(toSend), color.Red, color.Reset, bpID, err)
+									continue
+								}
+
+								if res.StatusCode == 200 {
+									var resJSON map[string]interface{}
+									json.NewDecoder(res.Body).Decode(&resJSON)
+									isDupe := resJSON["duplicate"] == true
+									if isDupe {
+										dupeCount++
+										fmt.Printf("  [%d/%d] %s↻ Already Acquired:%s %s\n", idx+1, len(toSend), color.Yellow, color.Reset, bpID)
+									} else {
+										successCount++
+										fmt.Printf("  [%d/%d] %s★ Successfully Imported:%s %s\n", idx+1, len(toSend), color.Green, color.Reset, bpID)
+									}
+								} else {
+									failCount++
+									fmt.Printf("  [%d/%d] %s✗ Failed to import:%s %s (HTTP %d)\n", idx+1, len(toSend), color.Red, color.Reset, bpID, res.StatusCode)
+								}
+								res.Body.Close()
+							}
+						}
+						fmt.Printf("\nImport complete: %s%d successfully imported%s, %s%d already acquired%s, %s%d failed%s\n",
+							color.Green, successCount, color.Reset,
+							color.Yellow, dupeCount, color.Reset,
+							color.Red, failCount, color.Reset,
+						)
+						for _, id := range toSend {
+							acquiredBlueprints[id] = true
+						}
+						saveCacheFile(cachePath, acquiredBlueprints)
+					} else {
+						fmt.Println("All historical blueprints already acquired.")
+					}
+				} else {
+					fmt.Println("No blueprints found in historical logs.")
+				}
+			} else {
+				fmt.Println("No historical logs to scan.")
+			}
+		}
+
+		// Save disabled state
+		envVars["IMPORT_OLD_LOGS"] = "false"
+		saveEnvFile(envPath, envVars)
+		fmt.Printf("%s[First Run] Historical import complete. Disabling future auto-imports.%s\n\n", color.Green, color.Reset)
 	}
 
 	// Watch Mode Routing
