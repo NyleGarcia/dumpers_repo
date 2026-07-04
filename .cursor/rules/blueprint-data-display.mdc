@@ -15,14 +15,13 @@ Some crafting blueprint records exist in game files before their SCItem entity i
 - Preserve `entityClass: null` (or omit only if the source truly has no field).
 - Base stats may be absent until an entity SCItem exists; that is expected.
 
-When `showOnlyRewards` is on, default blueprints are hidden (they are not mission rewards).
-
 ### Site display (Blueprint browser / list UI)
 
 - **Do not show** blueprints with a null/missing `entityClass` in the member-facing BP list.
-- Default blueprints live under the **Default Blueprints** main category only (not FPS Weapons / Armour / etc.).
+- Default blueprints appear under **Default Blueprints** and in their normal category (FPS Weapons, FPS Armour, Ammo).
+- Default blueprints remain visible when the ★ Rewards filter is on (they are not mission rewards, but members always need access).
 - Default blueprints use the **⚙ Default Blueprint** label — not ★ Reward or 🔶 Standard.
-- Starter blueprints are **auto-added** to `acquired_blueprints` on login and **cannot be unchecked** by members.
+- Starter blueprints are **orderable** (WTB/WTS), **auto-added** to `acquired_blueprints` on login, and **cannot be unchecked** by members.
 
 ## Starter / default blueprints
 

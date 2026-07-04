@@ -276,8 +276,7 @@ export default function BlueprintsRoute() {
       if (!isBlueprintListable(bp)) return false
 
       const isDefault = isDefaultBlueprint(bp.internalName)
-      if (showOnlyRewards && isDefault) return false
-      
+
       const matchesSearch = searchTerm === '' || bp.blueprintName.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesReward =
         isDefault || !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
@@ -321,7 +320,6 @@ export default function BlueprintsRoute() {
       if (isDefaultBlueprint(bp.internalName)) {
         mainCounts[DEFAULT_BLUEPRINTS_CATEGORY] =
           (mainCounts[DEFAULT_BLUEPRINTS_CATEGORY] || 0) + 1
-        return
       }
 
       if (!bp.categoryName) return
@@ -378,7 +376,6 @@ export default function BlueprintsRoute() {
     const types = {}
     
     materialFilteredBlueprints.forEach(bp => {
-      if (isDefaultBlueprint(bp.internalName)) return
       if (!bp.categoryName) return
 
       const validCategories = MAIN_CATEGORY_GROUPS['FPS Armour'] || []
@@ -424,9 +421,8 @@ export default function BlueprintsRoute() {
     
     const counts = {}
     materialFilteredBlueprints.forEach(bp => {
-      if (isDefaultBlueprint(bp.internalName)) return
       if (!bp.categoryName) return
-      
+
       const validCategories = MAIN_CATEGORY_GROUPS[selectedMainCategory] || []
       if (!validCategories.includes(bp.categoryName)) return
       
@@ -451,8 +447,6 @@ export default function BlueprintsRoute() {
         if (isDefaultBlueprintsCategory(selectedMainCategory)) {
           return isDefaultBlueprint(bp.internalName)
         }
-
-        if (isDefaultBlueprint(bp.internalName)) return false
 
         const validCategories = MAIN_CATEGORY_GROUPS[selectedMainCategory] || []
         if (!validCategories.includes(bp.categoryName)) return false

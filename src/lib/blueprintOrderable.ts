@@ -62,12 +62,12 @@ export function resolveIsOrderable(
 ): boolean {
   const id = blueprint.internalName
   if (!id) return false
-  if (blueprint.isDefault || isDefaultBlueprint(id)) return false
   if (id in overridesMap) return overridesMap[id]
-  
+  if (blueprint.isDefault || isDefaultBlueprint(id)) return true
+
   // Check if explicitly marked as reward
   if (blueprint.isReward === true) return true
-  
+
   // Check if in our mission reward data
   return catalogIsReward(id)
 }
@@ -77,6 +77,7 @@ export function resolveIsOrderableById(
   overridesMap: Record<string, boolean>
 ): boolean {
   if (blueprintId in overridesMap) return overridesMap[blueprintId]
+  if (isDefaultBlueprint(blueprintId)) return true
   return catalogIsReward(blueprintId)
 }
 
