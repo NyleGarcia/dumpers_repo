@@ -1,6 +1,6 @@
-# Log Importer
+# BP Dumper
 
-A cross-platform utility to batch-import historical blueprint JSON exports from `watcher.py import` to your account.
+A cross-platform utility to batch-import historical blueprint JSON exports from your log watcher to your account.
 
 ## Setup Instructions
 
@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ## How to Run
 
 ### Windows (Quick Start)
-1. Double-click the **`import.bat`** file.
+1. Double-click the **`dumper.bat`** file.
 2. Enter the path to your JSON export file when prompted.
 3. Enter your Secret API Key (generate one in your website settings under "API Access").
 4. Enter the Supabase Webhook URL (from the admin/setup guides).
@@ -30,16 +30,16 @@ pip install -r requirements.txt
 Run the script using python:
 ```bash
 # 1. Add executable permissions (first time only)
-chmod +x import-blueprints.py
+chmod +x dumper.py
 
 # 2. Run the script (via LOG_WATCHER_API_KEY environment variable)
 export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
-python3 import-blueprints.py /path/to/your/export.json --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
+python3 dumper.py /path/to/your/export.json --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
 ```
 
 Or pass the key directly as a CLI argument:
 ```bash
-python3 import-blueprints.py /path/to/your/export.json \
+python3 dumper.py /path/to/your/export.json \
   --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook" \
   --key "dr_your_secret_api_key"
 ```
@@ -47,7 +47,7 @@ python3 import-blueprints.py /path/to/your/export.json \
 ---
 
 ## Output Description
-The script will display the import status of each unique blueprint:
+The script will display the status of each unique blueprint:
 - **`★ Successfully Imported`**: The blueprint was added to your account.
 - **`↻ Already Acquired`**: The blueprint was already present (skipped, no duplicate created).
 - **`✗ Failed`**: The API returned an error (e.g., account pending approval, banned, or invalid ID).

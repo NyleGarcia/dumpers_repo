@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Import blueprints JSON export to the database via Supabase Edge Function.
+Import blueprints JSON export to your account via Supabase Edge Function.
 Works on macOS, Windows, and Linux. Requires Python 3.
 """
 

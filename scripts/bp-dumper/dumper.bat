@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 echo ====================================================
-echo             Log Importer CLI Setup
+echo             BP Dumper CLI Setup
 echo ====================================================
 echo.
 
@@ -60,9 +60,9 @@ if "!URL!"=="" (
 )
 
 echo.
-echo [3/3] Running import script...
+echo [3/3] Running dumper script...
 echo.
-python import-blueprints.py "!JSON_FILE!" --url "!URL!" --key "!API_KEY!"
+python dumper.py "!JSON_FILE!" --url "!URL!" --key "!API_KEY!"
 echo.
 echo ====================================================
 echo Import Complete.
