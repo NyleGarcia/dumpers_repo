@@ -31,14 +31,17 @@ echo.
 echo [2/3] Configuration Settings:
 echo.
 
-:: 1. JSON file path
+:: 1. JSON file path / Directory
 :prompt_file
-set /p "JSON_FILE=Enter path to JSON export file: "
-:: Strip quotes if pasted
-set "JSON_FILE=!JSON_FILE:"=!"
-if not exist "!JSON_FILE!" (
-    echo [ERROR] File does not exist: "!JSON_FILE!"
-    goto prompt_file
+set "JSON_FILE="
+set /p "JSON_FILE=Enter path to JSON export or folder (Leave empty to auto-detect SC logs): "
+if not "!JSON_FILE!"=="" (
+    :: Strip quotes if pasted
+    set "JSON_FILE=!JSON_FILE:"=!"
+    if not exist "!JSON_FILE!" (
+        echo [ERROR] Path does not exist: "!JSON_FILE!"
+        goto prompt_file
+    )
 )
 
 :: 2. Dry run check
@@ -47,7 +50,11 @@ if /i "!DRY_RUN!"=="y" (
     echo.
     echo [3/3] Running dumper script in dry run mode...
     echo.
-    python dumper.py "!JSON_FILE!" --url "http://localhost/mock" --dry-run
+    if "!JSON_FILE!"=="" (
+        python dumper.py --url "http://localhost/mock" --dry-run
+    ) else (
+        python dumper.py "!JSON_FILE!" --url "http://localhost/mock" --dry-run
+    )
     goto end
 )
 
@@ -72,7 +79,11 @@ if "!URL!"=="" (
 echo.
 echo [3/3] Running dumper script...
 echo.
-python dumper.py "!JSON_FILE!" --url "!URL!" --key "!API_KEY!"
+if "!JSON_FILE!"=="" (
+    python dumper.py --url "!URL!" --key "!API_KEY!"
+) else (
+    python dumper.py "!JSON_FILE!" --url "!URL!" --key "!API_KEY!"
+)
 
 :end
 echo.

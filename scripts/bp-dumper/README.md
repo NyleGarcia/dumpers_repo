@@ -21,10 +21,9 @@ pip install -r requirements.txt
 
 ### Windows (Quick Start)
 1. Double-click the **`dumper.bat`** file.
-2. Enter the path to your JSON export file when prompted.
+2. Enter the path to your JSON export file when prompted, **or leave it blank** and press **Enter** to automatically scrape your local Star Citizen installation logs.
 3. Enter your Secret API Key (generate one in your website settings under "API Access").
-4. Enter the Supabase Webhook URL (from the admin/setup guides).
-5. The script will automatically install dependencies and run the import.
+4. Enter the Supabase Webhook URL.
 
 ### macOS & Linux (Quick Start)
 1. Open your terminal inside this folder and run:
@@ -32,21 +31,27 @@ pip install -r requirements.txt
    chmod +x dumper.sh dumper.py
    ./dumper.sh
    ```
-2. Enter the path to your JSON export file when prompted.
+2. Enter the path to your JSON export file when prompted, **or leave it blank** and press **Enter** to automatically scrape local Star Citizen log files.
 3. Choose whether to perform a dry run (local only, no API key required).
 4. Enter your Secret API Key and Supabase Webhook URL when prompted.
 
 ### Advanced Usage (CLI Commands)
 If you prefer to bypass the prompts, you can run `dumper.py` directly:
 ```bash
-# Dry Run Mode (local only, no API key required)
+# Dry Run Mode: Auto-detect and scan local Star Citizen logs (no API key required)
+python3 dumper.py --url "http://localhost/mock" --dry-run
+
+# Dry Run Mode: Scan a specific JSON export file
 python3 dumper.py /path/to/your/export.json --url "http://localhost/mock" --dry-run
 
-# Real Mode (via LOG_WATCHER_API_KEY environment variable)
-export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
-python3 dumper.py /path/to/your/export.json --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
+# Dry Run Mode: Scan a custom log directory
+python3 dumper.py --url "http://localhost/mock" --log-dir "/path/to/logbackups" --dry-run
 
-# Real Mode (passing key directly)
+# Real Mode: Auto-detect logs and import using env key
+export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
+python3 dumper.py --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
+
+# Real Mode: Scan specific JSON export and pass key directly
 python3 dumper.py /path/to/your/export.json \
   --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook" \
   --key "dr_your_secret_api_key"

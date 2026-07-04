@@ -25,16 +25,16 @@ echo ""
 echo "[2/3] Configuration Settings:"
 echo ""
 
-# 1. JSON file path
+# 1. JSON file path / Directory
 while true; do
-    read -p "Enter path to JSON export file: " JSON_FILE
+    read -p "Enter path to JSON export or folder (Leave empty to auto-detect SC logs): " JSON_FILE
     # Remove surrounding quotes if pasted
     JSON_FILE="${JSON_FILE%\"}"
     JSON_FILE="${JSON_FILE#\"}"
-    if [ -f "$JSON_FILE" ]; then
+    if [ -z "$JSON_FILE" ] || [ -f "$JSON_FILE" ] || [ -dir "$JSON_FILE" ] || [ -d "$JSON_FILE" ]; then
         break
     else
-        echo "[ERROR] File does not exist: '$JSON_FILE'"
+        echo "[ERROR] Path does not exist: '$JSON_FILE'"
     fi
 done
 
@@ -44,7 +44,11 @@ if [[ "$DRY_RUN" =~ ^[Yy]$ ]]; then
     echo ""
     echo "[3/3] Running dumper script in dry run mode..."
     echo ""
-    $PYTHON_CMD dumper.py "$JSON_FILE" --url "http://localhost/mock" --dry-run
+    if [ -z "$JSON_FILE" ]; then
+        $PYTHON_CMD dumper.py --url "http://localhost/mock" --dry-run
+    else
+        $PYTHON_CMD dumper.py "$JSON_FILE" --url "http://localhost/mock" --dry-run
+    fi
     exit 0
 fi
 
@@ -75,7 +79,11 @@ done
 echo ""
 echo "[3/3] Running dumper script..."
 echo ""
-$PYTHON_CMD dumper.py "$JSON_FILE" --url "$URL" --key "$API_KEY"
+if [ -z "$JSON_FILE" ]; then
+    $PYTHON_CMD dumper.py --url "$URL" --key "$API_KEY"
+else
+    $PYTHON_CMD dumper.py "$JSON_FILE" --url "$URL" --key "$API_KEY"
+fi
 
 echo ""
 echo "===================================================="
