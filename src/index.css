@@ -33,6 +33,18 @@
     max-width: 92vw;
   }
 
+  .blueprint-card-grid {
+    @apply grid gap-3 sm:gap-4 w-full min-w-0 justify-start;
+    grid-template-columns: repeat(auto-fill, 17.5rem);
+  }
+
+  .blueprint-card-fixed {
+    width: 17.5rem;
+    min-width: 17.5rem;
+    max-width: 17.5rem;
+    flex-shrink: 0;
+  }
+
   .site-page-title {
     @apply text-2xl sm:text-3xl font-black uppercase tracking-wide text-white;
     font-family: Orbitron, sans-serif;

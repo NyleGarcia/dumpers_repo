@@ -952,11 +952,11 @@ export default function BlueprintsRoute() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 min-[1920px]:grid-cols-6 gap-3 sm:gap-4 w-full min-w-0 items-stretch">
+          <div className="blueprint-card-grid items-stretch">
             {blueprintGridItems.map((item) => {
               if (item.kind === 'single') {
                 return (
-                  <div key={item.blueprint.internalName} className="h-full min-h-0">
+                  <div key={item.blueprint.internalName} className="min-h-0">
                     {renderBlueprintCard(item.blueprint)}
                   </div>
                 )
