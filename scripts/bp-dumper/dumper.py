@@ -263,32 +263,34 @@ def parse_blueprints_from_log(path: Path) -> list[str]:
 
                 elif m := PATTERN_ACCEPTED.search(line):
                     active = state.record_accepted(m.group(1), ts)
-                    print(f"  [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
+                    ts_str = time.strftime("%H:%M:%S", time.localtime(ts)) if ts else time.strftime("%H:%M:%S")
+                    print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
 
                 elif m := PATTERN_END_MISSION.search(line):
                     guid, completion, reason = m.group(1), m.group(2), m.group(3)
                     active = state.record_end(guid, completion, ts)
                     entry = state.guid_map.get(guid)
-                    
                     debug_name = active.debug_name if active else (entry.debug_name if entry else "Unknown")
+                    ts_str = time.strftime("%H:%M:%S", time.localtime(ts)) if ts else time.strftime("%H:%M:%S")
                     
                     if completion == "Complete":
-                        print(f"  [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                        print(f"  [{ts_str}] [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
                     elif completion == "Abandon":
-                        print(f"  [{path.name}] {Colors.RED}Mission abandoned: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                        print(f"  [{ts_str}] [{path.name}] {Colors.RED}Mission abandoned: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
                     elif completion == "Fail":
-                        print(f"  [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                        print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
                     else:
-                        print(f"  [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                        print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
 
                 elif m := PATTERN_BLUEPRINT.search(line):
                     product_name = m.group(1).strip()
                     discovered.append(product_name)
                     corr = state.correlate_blueprint(ts)
+                    ts_str = time.strftime("%H:%M:%S", time.localtime(ts)) if ts else time.strftime("%H:%M:%S")
                     if corr:
-                        print(f"  [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
+                        print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
                     else:
-                        print(f"  [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
+                        print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
     except OSError as e:
         print(f"{Colors.YELLOW}Warning: Could not read log file {path.name} ({e}){Colors.RESET}")
     return discovered
@@ -417,6 +419,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                             continue
                         line = raw.decode("utf-8", errors="replace")
                         ts = parse_log_timestamp(line) or time.time()
+                        ts_str = time.strftime("%H:%M:%S", time.localtime(ts))
 
                         if m := PATTERN_MARKER.search(line):
                             def_id_match = PATTERN_MARKER_DEF_ID.search(line)
@@ -425,7 +428,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
 
                         elif m := PATTERN_ACCEPTED.search(line):
                             active = state.record_accepted(m.group(1), ts)
-                            print(f"  [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
+                            print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
 
                         elif m := PATTERN_END_MISSION.search(line):
                             guid, completion, reason = m.group(1), m.group(2), m.group(3)
@@ -434,21 +437,21 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                             debug_name = active.debug_name if active else (entry.debug_name if entry else "Unknown")
                             
                             if completion == "Complete":
-                                print(f"  [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                                print(f"  [{ts_str}] [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
                             elif completion == "Abandon":
-                                print(f"  [{path.name}] {Colors.RED}Mission abandoned: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                                print(f"  [{ts_str}] [{path.name}] {Colors.RED}Mission abandoned: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
                             elif completion == "Fail":
-                                print(f"  [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                                print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
                             else:
-                                print(f"  [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                                print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
 
                         elif m := PATTERN_BLUEPRINT.search(line):
                             product_name = m.group(1).strip()
                             corr = state.correlate_blueprint(ts)
                             if corr:
-                                print(f"  [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
+                                print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
                             else:
-                                print(f"  [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
+                                print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
                             
                             # Cache validation & dispatch
                             if product_name not in acquired_blueprints:
