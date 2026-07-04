@@ -151,7 +151,7 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Weapon_Spread': 'Spread',
   'Weapon_Reloadspeed': 'Reload Speed',
   'Itemresource_Coolantgeneration': 'Coolant Generation',
-  'Itemresource_Powergeneration': 'Power Generation',
+  'Itemresource_Powergeneration': 'Power Pips',
   'Quantum_Speed': 'Quantum Speed',
   'Quantum_Fuelrequirement': 'Fuel Requirement',
   'Radar_Minaimassistdistance': 'Min Aim Assist Distance',

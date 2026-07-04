@@ -38,6 +38,10 @@ import {
 } from './lib/miningOreNames.mjs'
 import { mergeHppMineableLocations } from './lib/mergeHppMineableLocations.mjs'
 import {
+  buildEntityClassPathIndex,
+  extractEntityBaseStats,
+} from './lib/entityBaseStats.mjs'
+import {
   BLUEPRINT_MISSION_TRACKING_EXCLUSIONS,
   REWARD_POOL_TRACKING_EXCLUSIONS,
   REDWIND_BRIDGE,
@@ -2383,6 +2387,7 @@ function parseBlueprintDefinitions(localization = {}) {
   }
   
   const blueprints = []
+  const entityPathIndex = buildEntityClassPathIndex(EXTRACTED_DATA)
   
   for (const file of blueprintFiles) {
     const json = readJson(file)
@@ -3330,6 +3335,24 @@ function parseBlueprintDefinitions(localization = {}) {
     const minutes = Math.floor(totalMinutes % 60)
     const seconds = Math.round((totalMinutes * 60) % 60)
     
+    const craftTimeDisplay = { hours, minutes, seconds }
+    
+    const entityBaseStats = extractEntityBaseStats(entityClass, entityPathIndex)
+    let vehicleBaseStats = null
+    let armorBaseStats = null
+    let weaponBaseStats = null
+    if (entityBaseStats) {
+      if (category.startsWith('VehicleComponent')) {
+        vehicleBaseStats = entityBaseStats
+      } else if (category.startsWith('VehicleWeapons') || category === 'FPSWeapons') {
+        weaponBaseStats = entityBaseStats
+      } else if (category.startsWith('Armor')) {
+        armorBaseStats = entityBaseStats
+      } else {
+        vehicleBaseStats = entityBaseStats
+      }
+    }
+    
     blueprints.push({
       id: json._RecordId_,
       file: internalName,
@@ -3343,8 +3366,11 @@ function parseBlueprintDefinitions(localization = {}) {
       armorSlot,
       armorWeight,
       craftTimeMinutes: totalMinutes,
-      craftTime: { hours, minutes, seconds },
+      craftTime: craftTimeDisplay,
       slots,
+      ...(vehicleBaseStats ? { vehicleBaseStats } : {}),
+      ...(armorBaseStats ? { armorBaseStats } : {}),
+      ...(weaponBaseStats ? { weaponBaseStats } : {}),
       _usedFallbackName: usedFallbackName // Track for priority rule validation
     })
   }

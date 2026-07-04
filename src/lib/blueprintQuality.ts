@@ -21,7 +21,15 @@ export function buildDefaultSlotQualities(blueprint: BlueprintWithSlots): Record
   const qualities: Record<number, number> = {}
   const slots = blueprint.slots ?? []
   for (let i = 0; i < slots.length; i++) {
-    qualities[i] = defaultQualityForSlotResource(resolveSlotResourceName(slots[i]))
+    const slot = slots[i]
+    const option = slot?.options?.[0]
+    const hasModifiers = (option?.modifiers?.length ?? 0) > 0
+    // Modifier simulation uses raw Q (matches in-game crafting curves / SC Crafter).
+    if (hasModifiers) {
+      qualities[i] = option?.minQuality ?? 1
+    } else {
+      qualities[i] = defaultQualityForSlotResource(resolveSlotResourceName(slot))
+    }
   }
   return qualities
 }
