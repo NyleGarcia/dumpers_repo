@@ -716,7 +716,12 @@ export default function CustomOrdersRoute() {
                     )}
 
                     <div className="mt-3">
-                      <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} />
+                      <OrderRequestLines
+                        order={order}
+                        showDfp={dfpDisplayEnabled}
+                        blueprintById={blueprintById}
+                        showEffectiveStats
+                      />
                     </div>
                     <OrderDeadlineNotice
                       order={order}

@@ -138,6 +138,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'WTS sellers can adjust list price with sliders: ±20% per line (partial listings) or ±10% on the order total (full listing only); 0% is the DFP base',
       'Same fields for both tags: lines, quality tiers, min reputation, notes, DFP pricing',
       'WTB/WTS tag and Partial OK / Full listing only badges shown on your orders',
+      'Active and completed orders show itemized materials and resulting stats (base → final) for blueprint lines',
       'Edit or delete pending listings while no one has accepted',
       'Release or cancel in-progress WTS sales — partial purchases restore unsold qty to the listing',
       'Track active, completed, and archived orders; confirm pickup on Active, then archive & rate on Completed',
