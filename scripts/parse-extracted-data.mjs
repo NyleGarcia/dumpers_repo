@@ -39,6 +39,7 @@ import {
 import { mergeHppMineableLocations } from './lib/mergeHppMineableLocations.mjs'
 import {
   buildEntityClassPathIndex,
+  buildRecordBasenameIndex,
   extractEntityBaseStats,
 } from './lib/entityBaseStats.mjs'
 import {
@@ -1215,6 +1216,35 @@ function parseSalvageModules(localization = {}) {
 }
 
 // ============================================================================
+// DEFAULT STARTER BLUEPRINTS
+// ============================================================================
+
+function parseDefaultBlueprintIds() {
+  console.log('  Parsing default starter blueprints...')
+  const path = join(
+    EXTRACTED_DATA,
+    'libs/foundry/records/crafting/globalparams/craftingglobalparams.json'
+  )
+  if (!existsSync(path)) {
+    validationIssues.push('Crafting global params file not found')
+    return new Set()
+  }
+
+  const json = readJson(path)
+  const records = json?._RecordValue_?.defaultBlueprintSelection?.blueprintRecords ?? []
+  const ids = new Set()
+
+  for (const ref of records) {
+    if (typeof ref !== 'string' || /dismantle/i.test(ref)) continue
+    const match = ref.match(/bp_craft_([^/\\]+)\.json$/i)
+    if (match) ids.add(match[1].toLowerCase())
+  }
+
+  console.log(`  Found ${ids.size} default starter blueprints`)
+  return ids
+}
+
+// ============================================================================
 // BLUEPRINT PARSING
 // ============================================================================
 
@@ -2388,6 +2418,7 @@ function parseBlueprintDefinitions(localization = {}) {
   
   const blueprints = []
   const entityPathIndex = buildEntityClassPathIndex(EXTRACTED_DATA)
+  const recordIndex = buildRecordBasenameIndex(EXTRACTED_DATA)
   
   for (const file of blueprintFiles) {
     const json = readJson(file)
@@ -3337,7 +3368,12 @@ function parseBlueprintDefinitions(localization = {}) {
     
     const craftTimeDisplay = { hours, minutes, seconds }
     
-    const entityBaseStats = extractEntityBaseStats(entityClass, entityPathIndex)
+    const entityBaseStats = extractEntityBaseStats(
+      entityClass || internalName,
+      entityPathIndex,
+      EXTRACTED_DATA,
+      recordIndex
+    )
     let vehicleBaseStats = null
     let armorBaseStats = null
     let weaponBaseStats = null
@@ -4381,7 +4417,14 @@ async function main() {
   })
   
   // Enrich blueprint definitions with mission reward data
+  const defaultBlueprintIds = parseDefaultBlueprintIds()
+
   const enrichedBlueprints = blueprintDefs.map(bp => {
+    const internalKey = (bp.internalName || bp.file || '').toLowerCase()
+    if (defaultBlueprintIds.has(internalKey)) {
+      return { ...bp, isDefault: true, rewardMissions: [], missionPools: [] }
+    }
+
     const bpName = bp.name.toLowerCase().replace('bp_craft_', '')
     const poolKeys = blueprintMissions[bpName] || []
     const rewardMissions = buildBlueprintRewardMissionsFromContracts(
@@ -4429,8 +4472,10 @@ async function main() {
     _extracted: new Date().toISOString(),
     version: gameBuildVersion ?? 'unknown',
     blueprints: cleanedBlueprints,
+    defaultBlueprintIds: [...defaultBlueprintIds].sort(),
     summary: {
       totalBlueprints: cleanedBlueprints.length,
+      defaultBlueprints: cleanedBlueprints.filter(b => b.isDefault).length,
       blueprintsWithRewards: cleanedBlueprints.filter(b => b.isReward).length,
       rewardBlueprintsNeedingLocalization: rewardBlueprintsWithFallback.length,
       nonRewardBlueprintsWithFallback: nonRewardBlueprintsWithFallback.length

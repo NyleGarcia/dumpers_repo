@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { resolveIsOrderable, catalogIsReward } from '../lib/blueprintOrderable'
+import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { buildMissionList, getMissionsForBlueprint, missionKey, type MissionListEntry, type Region } from '../lib/missions'
 import { findBrowseMissionEntry, getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import {
@@ -556,13 +557,19 @@ export default function TargetsRoute() {
                         </div>
                       </button>
                       <div className="flex flex-col items-end gap-1 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => void toggleAcquired(bp.internalName)}
-                          className="px-2.5 py-1 text-[10px] font-bold text-emerald-900 bg-emerald-500 hover:bg-emerald-400 border border-emerald-400 rounded shadow-sm transition-colors"
-                        >
-                          ✓ Got It!
-                        </button>
+                        {isDefaultBlueprint(bp.internalName) ? (
+                          <span className="px-2.5 py-1 text-[10px] font-bold text-emerald-300/80 bg-emerald-950/40 border border-emerald-700/40 rounded">
+                            Starter BP
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => void toggleAcquired(bp.internalName)}
+                            className="px-2.5 py-1 text-[10px] font-bold text-emerald-900 bg-emerald-500 hover:bg-emerald-400 border border-emerald-400 rounded shadow-sm transition-colors"
+                          >
+                            ✓ Got It!
+                          </button>
+                        )}
                         <div className="flex items-center gap-1">
                           {addableMissions.length > 0 && (
                             <button

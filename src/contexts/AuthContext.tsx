@@ -16,9 +16,14 @@ import {
   writeGuestAcquiredBlueprints,
   writeGuestGroupBlueprintVariants,
 } from '../lib/localGuestCache'
-import { maybeMigrateOfflineData } from '../lib/offlineMigration'
+import {
+  applyDefaultAcquiredState,
+  isDefaultBlueprint,
+  DEFAULT_BLUEPRINT_IDS,
+} from '../lib/defaultBlueprints'
 import { fetchOrgLogoStatus, resolveOrgLogoUrl } from '../lib/orgLogo'
 import { removeTargetBlueprint } from '../lib/targetList'
+import { maybeMigrateOfflineData } from '../lib/offlineMigration'
 import { ensureDfpEngine } from '../lib/dfpEngine'
 import {
   buildBootstrapSteps,
@@ -125,7 +130,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     writeGuestPreviewSession(true)
     setIsGuestPreview(true)
     ensureGuestCacheSchema()
-    setAcquiredBlueprints(readGuestAcquiredBlueprints())
+    const acquired = applyDefaultAcquiredState(readGuestAcquiredBlueprints())
+    writeGuestAcquiredBlueprints(acquired)
+    setAcquiredBlueprints(acquired)
   }, [])
 
   const exitGuestPreview = useCallback(() => {
@@ -136,7 +143,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user || !isGuestPreview) return
     ensureGuestCacheSchema()
-    setAcquiredBlueprints(readGuestAcquiredBlueprints())
+    const acquired = applyDefaultAcquiredState(readGuestAcquiredBlueprints())
+    writeGuestAcquiredBlueprints(acquired)
+    setAcquiredBlueprints(acquired)
   }, [user, isGuestPreview])
 
   useEffect(() => {
@@ -245,14 +254,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (error) {
       console.error('Error fetching acquired blueprints:', error)
-      return {}
+      return applyDefaultAcquiredState({})
     }
 
     const acquired: Record<string, boolean> = {}
     data?.forEach((item: { blueprint_id: string }) => {
       acquired[item.blueprint_id] = true
     })
-    return acquired
+
+    const missingDefaults = DEFAULT_BLUEPRINT_IDS.filter((id) => !acquired[id])
+    if (missingDefaults.length > 0) {
+      const { error: insertError } = await supabase.from('acquired_blueprints').insert(
+        missingDefaults.map((blueprint_id) => ({ user_id: userId, blueprint_id }))
+      )
+      if (insertError && insertError.code !== '23505') {
+        console.error('Error seeding default blueprints:', insertError)
+      }
+    }
+
+    return applyDefaultAcquiredState(acquired)
   }, [])
 
   const profileRef = useRef(profile)
@@ -498,6 +518,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const toggleAcquired = useCallback(async (blueprintId: string) => {
+    if (isDefaultBlueprint(blueprintId)) {
+      return
+    }
+
     const activeUser = userRef.current
     const activeProfile = profileRef.current
     const isGuestMode = !activeUser && readGuestPreviewSession()

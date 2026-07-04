@@ -6,6 +6,7 @@ import BlueprintCategoryTags from './BlueprintCategoryTags'
 import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
 import { calculateBlueprintDfpWithParts, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
 import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
+import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { useAuth } from '../contexts/AuthContext'
 import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
 
@@ -31,6 +32,7 @@ export default function BlueprintCard({
 }) {
   const { dfpDisplayEnabled } = useAuth()
   const dfpEngineReady = useDfpEngineReady()
+  const isStarterBlueprint = isDefaultBlueprint(blueprint.internalName || blueprint.file)
 
   const defaultSlotQualities = useMemo(
     () => buildDefaultSlotQualities(blueprint),
@@ -51,9 +53,8 @@ export default function BlueprintCard({
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation()
-    if (canModify) {
-      onToggleAcquired()
-    }
+    if (isStarterBlueprint || !canModify) return
+    onToggleAcquired()
   }
 
   const handleTargetClick = (e) => {
@@ -79,15 +80,17 @@ export default function BlueprintCard({
 
   const hasOverride = isSuperAdmin && effectiveIsOrderable !== catalogIsReward
   const hasCategoryTags = categoryTags.length > 0
-  const hasRewardLabel = typeof blueprint.isReward === 'boolean' || isSuperAdmin
+  const hasRewardLabel =
+    isStarterBlueprint || typeof blueprint.isReward === 'boolean' || isSuperAdmin
   const showActionFooter = showTargetControl || showMissionsControl || hasRewardLabel
+  const acquiredLocked = isStarterBlueprint || isAcquired
 
   return (
     <div
       onClick={(e) => onClick(blueprint, e)}
       className={`group relative flex flex-col h-full min-w-0 max-w-full bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-all duration-200 overflow-hidden ${
-        isAcquired 
-          ? 'border-green-500/50 ring-1 ring-green-500/20' 
+        acquiredLocked
+          ? 'border-green-500/50 ring-1 ring-green-500/20'
           : 'border-slate-700 hover:border-red-500/30'
       }`}
     >
@@ -108,17 +111,27 @@ export default function BlueprintCard({
           )}
           <button
             onClick={handleCheckboxClick}
-            disabled={!canModify}
+            disabled={!canModify || isStarterBlueprint}
             className={`ml-2 shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
-              isAcquired
+              acquiredLocked
                 ? 'bg-green-500 border-green-500 text-white'
                 : canModify
                   ? 'bg-transparent border-slate-500 hover:border-green-400'
                   : 'bg-transparent border-slate-600 cursor-not-allowed opacity-50'
-            }`}
-            title={!canModify ? (isPending ? 'Awaiting officer approval' : 'Sign in to track blueprints') : isAcquired ? 'Mark as not acquired' : 'Mark as acquired'}
+            } ${isStarterBlueprint ? 'cursor-default opacity-100' : ''}`}
+            title={
+              isStarterBlueprint
+                ? 'Starter blueprint — always in your collection'
+                : !canModify
+                  ? isPending
+                    ? 'Awaiting officer approval'
+                    : 'Sign in to track blueprints'
+                  : isAcquired
+                    ? 'Mark as not acquired'
+                    : 'Mark as acquired'
+            }
           >
-            {isAcquired && (
+            {acquiredLocked && (
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
               </svg>
@@ -207,7 +220,11 @@ export default function BlueprintCard({
             {hasRewardLabel && (
               <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1.5 min-h-[1rem]">
                 <span className="text-xs text-slate-500">
-                  {effectiveIsOrderable ? '★ Reward Blueprint' : '🔶 Standard'}
+                  {isStarterBlueprint
+                    ? '⚙ Default Blueprint'
+                    : effectiveIsOrderable
+                      ? '★ Reward Blueprint'
+                      : '🔶 Standard'}
                 </span>
                 {hasOverride && (
                   <span className="text-[10px] text-slate-600">

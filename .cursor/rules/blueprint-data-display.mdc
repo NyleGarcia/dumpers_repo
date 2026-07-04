@@ -1,0 +1,48 @@
+---
+description: Blueprint parsing vs site display rules for unreleased/null-entity items
+alwaysApply: true
+---
+
+# Blueprint Data vs Display
+
+## Null `entityClass` blueprints (unreleased / WIP items)
+
+Some crafting blueprint records exist in game files before their SCItem entity is wired up (`processSpecificData.entityClass: null`). Example: `cool_s04_cnou_pioneer` (Crusader Pioneer S4 cooler).
+
+### Parsing (`scripts/parse-extracted-data.mjs`, `src/data/game-blueprints.json`)
+
+- **Keep** these blueprints in parsed output — do **not** filter or drop them during extraction.
+- Preserve `entityClass: null` (or omit only if the source truly has no field).
+- Base stats may be absent until an entity SCItem exists; that is expected.
+
+When `showOnlyRewards` is on, default blueprints are hidden (they are not mission rewards).
+
+### Site display (Blueprint browser / list UI)
+
+- **Do not show** blueprints with a null/missing `entityClass` in the member-facing BP list.
+- Default blueprints live under the **Default Blueprints** main category only (not FPS Weapons / Armour / etc.).
+- Default blueprints use the **⚙ Default Blueprint** label — not ★ Reward or 🔶 Standard.
+- Starter blueprints are **auto-added** to `acquired_blueprints` on login and **cannot be unchecked** by members.
+
+## Starter / default blueprints
+
+New characters receive a fixed whitelist from game files:
+
+- Source: `extracted-data/libs/foundry/records/crafting/globalparams/craftingglobalparams.json`
+- Field: `defaultBlueprintSelection` (`DefaultBlueprintSelection_Whitelist`)
+- Parse this list into app data when implementing starter-BP features; do not hardcode names only.
+
+Currently whitelisted crafting blueprints (8 items + 1 dismantle record):
+
+| internalName | Display name |
+|---|---|
+| `behr_pistol_ballistic_01` | S-38 Pistol |
+| `behr_pistol_ballistic_01_mag` | S-38 Magazine (20 cap) |
+| `behr_rifle_ballistic_01` | P4-AR Rifle |
+| `behr_rifle_ballistic_01_mag` | P4-AR Magazine (40 cap) |
+| `cds_armor_light_helmet_01_01_01` | Field Recon Suit Helmet |
+| `cds_armor_light_core_01_01_01` | Field Recon Suit Core |
+| `cds_armor_light_arms_01_01_01` | Field Recon Suit Arms |
+| `cds_armor_light_legs_01_01_01` | Field Recon Suit Legs |
+
+Also includes `globalgenericdismantle` (dismantle recipe, not a craftable item blueprint).

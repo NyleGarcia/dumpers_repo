@@ -1,9 +1,11 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
+import { isDefaultBlueprint } from './defaultBlueprints'
 
 export interface BlueprintOrderableSource {
   internalName?: string
   file?: string
   isReward?: boolean
+  isDefault?: boolean
   rewardMissions?: unknown[]
 }
 
@@ -60,6 +62,7 @@ export function resolveIsOrderable(
 ): boolean {
   const id = blueprint.internalName
   if (!id) return false
+  if (blueprint.isDefault || isDefaultBlueprint(id)) return false
   if (id in overridesMap) return overridesMap[id]
   
   // Check if explicitly marked as reward
@@ -78,6 +81,10 @@ export function resolveIsOrderableById(
 }
 
 export function hasRewardMissions(blueprint: BlueprintOrderableSource): boolean {
+  if (blueprint.isDefault || isDefaultBlueprint(blueprint.internalName)) {
+    return false
+  }
+
   // Check explicit rewardMissions array
   if (Array.isArray(blueprint.rewardMissions) && blueprint.rewardMissions.length > 0) {
     return true

@@ -37,6 +37,12 @@ import {
   extractBlueprintResources,
 } from '../lib/blueprintResources'
 import { buildBlueprintGridItems } from '../lib/blueprintVariantGroups'
+import {
+  DEFAULT_BLUEPRINTS_CATEGORY,
+  isBlueprintListable,
+  isDefaultBlueprint,
+  isDefaultBlueprintsCategory,
+} from '../lib/defaultBlueprints'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -47,6 +53,7 @@ const getArmorWeight = (bp) => getArmorWeightFromTaxonomy(bp)
 const getArmorSlot = (bp) => getArmorSlotFromPath(bp)
 
 const MAIN_CATEGORY_GROUPS = {
+  [DEFAULT_BLUEPRINTS_CATEGORY]: [],
   'FPS Weapons': ['FPSWeapons'],
   'FPS Armour': ['FPSArmours'],
   'Ammo': ['Ammo'],
@@ -266,9 +273,14 @@ export default function BlueprintsRoute() {
     
     return blueprints.filter(bp => {
       if (!bp.blueprintName || !bp.internalName) return false
+      if (!isBlueprintListable(bp)) return false
+
+      const isDefault = isDefaultBlueprint(bp.internalName)
+      if (showOnlyRewards && isDefault) return false
       
       const matchesSearch = searchTerm === '' || bp.blueprintName.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesReward = !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
+      const matchesReward =
+        isDefault || !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
       
       // When viewing a specific user (not "all" and not self), only show their acquired blueprints
       const isViewingSpecificOther = selectedUserId !== 'all' && selectedUserId !== user?.id
@@ -306,9 +318,16 @@ export default function BlueprintsRoute() {
     const mainCounts = {}
     
     materialFilteredBlueprints.forEach(bp => {
+      if (isDefaultBlueprint(bp.internalName)) {
+        mainCounts[DEFAULT_BLUEPRINTS_CATEGORY] =
+          (mainCounts[DEFAULT_BLUEPRINTS_CATEGORY] || 0) + 1
+        return
+      }
+
       if (!bp.categoryName) return
       
       const mainCat = Object.keys(MAIN_CATEGORY_GROUPS).find(key => 
+        !isDefaultBlueprintsCategory(key) &&
         MAIN_CATEGORY_GROUPS[key].includes(bp.categoryName)
       )
       if (!mainCat) return
@@ -359,8 +378,9 @@ export default function BlueprintsRoute() {
     const types = {}
     
     materialFilteredBlueprints.forEach(bp => {
+      if (isDefaultBlueprint(bp.internalName)) return
       if (!bp.categoryName) return
-      
+
       const validCategories = MAIN_CATEGORY_GROUPS['FPS Armour'] || []
       if (!validCategories.includes(bp.categoryName)) return
       
@@ -404,6 +424,7 @@ export default function BlueprintsRoute() {
     
     const counts = {}
     materialFilteredBlueprints.forEach(bp => {
+      if (isDefaultBlueprint(bp.internalName)) return
       if (!bp.categoryName) return
       
       const validCategories = MAIN_CATEGORY_GROUPS[selectedMainCategory] || []
@@ -427,6 +448,12 @@ export default function BlueprintsRoute() {
 
     if (selectedMainCategory) {
       results = results.filter(bp => {
+        if (isDefaultBlueprintsCategory(selectedMainCategory)) {
+          return isDefaultBlueprint(bp.internalName)
+        }
+
+        if (isDefaultBlueprint(bp.internalName)) return false
+
         const validCategories = MAIN_CATEGORY_GROUPS[selectedMainCategory] || []
         if (!validCategories.includes(bp.categoryName)) return false
         
@@ -517,7 +544,9 @@ export default function BlueprintsRoute() {
     (bp) => {
       const effectiveIsOrderable = resolveIsOrderable(bp, overridesMap)
       const catalogReward = bp.isReward === true
+      const isStarter = isDefaultBlueprint(bp.internalName)
       const canTarget =
+        !isStarter &&
         (isApproved || isGuest) &&
         !displayAcquiredBlueprints[bp.internalName] &&
         canAddBlueprintToTargetList(bp, overridesMap)
@@ -532,7 +561,7 @@ export default function BlueprintsRoute() {
             setModalOriginRect(e.currentTarget.getBoundingClientRect())
             setSelectedBlueprint(bp)
           }}
-          isAcquired={!!displayAcquiredBlueprints[bp.internalName]}
+          isAcquired={!!displayAcquiredBlueprints[bp.internalName] || isStarter}
           onToggleAcquired={() => toggleAcquired(bp.internalName)}
           canModify={canModifyBlueprints}
           isPending={isPending}
@@ -974,7 +1003,10 @@ export default function BlueprintsRoute() {
           }}
           isApproved={isApproved}
           isGuest={isGuest}
-          isAcquired={!!displayAcquiredBlueprints[selectedBlueprint.internalName]}
+          isAcquired={
+            isDefaultBlueprint(selectedBlueprint.internalName) ||
+            !!displayAcquiredBlueprints[selectedBlueprint.internalName]
+          }
           isOnTarget={isOnTargetList(selectedBlueprint.internalName)}
           effectiveIsOrderable={resolveIsOrderable(selectedBlueprint, overridesMap)}
           canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}

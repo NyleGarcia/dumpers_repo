@@ -25,6 +25,7 @@ import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import BrandRevealModalShell from './layout/BrandRevealModalShell'
 import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
+import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 
 interface SlotOption {
   type?: string
@@ -113,6 +114,7 @@ export default function BlueprintDetailsModal({
   )
   const hasRewardMissions = rewardMissions.length > 0
   const canBrowseMissions = isApproved || isGuest
+  const isStarterBlueprint = isDefaultBlueprint(blueprint.internalName || blueprint.file)
 
   useEffect(() => {
     setSlotQualities(buildDefaultSlotQualities(blueprintWithSlots))
@@ -209,7 +211,9 @@ export default function BlueprintDetailsModal({
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2 text-sm items-center">
           <BlueprintCategoryTags blueprint={blueprint} size="md" />
-          {effectiveIsOrderable ? (
+          {isStarterBlueprint ? (
+            <span className="px-2.5 py-1 bg-sky-900/50 text-sky-300 rounded-lg">⚙ Default Blueprint</span>
+          ) : effectiveIsOrderable ? (
             <span className="px-2.5 py-1 bg-amber-900/50 text-amber-400 rounded-lg">★ Reward</span>
           ) : (
             <span className="px-2.5 py-1 bg-slate-800 text-slate-400 rounded-lg">🔶 Standard</span>
@@ -422,33 +426,41 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
         </svg>
         Final Combined Modifiers
       </h3>
-      
-      <div className="space-y-2">
+
+      <div className="space-y-3">
         {modifiers.map((mod, idx) => (
           <div
             key={idx}
-            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 py-1.5 border-b border-slate-700/30 last:border-0"
+            className="py-2 border-b border-slate-700/30 last:border-0"
           >
-            <span className="text-slate-300 text-sm font-medium">{mod.propertyLabel}</span>
-            <div className="flex items-center gap-3 text-xs">
-              {mod.baseValue !== undefined && mod.finalValue !== undefined && (
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-1">
+              <span className="text-slate-300 text-sm font-medium">{mod.propertyLabel}</span>
+              <span className={`font-mono text-sm font-semibold ${getAggregatedModifierColorClass(mod)}`}>
+                {formatAggregatedModifierDisplay(mod)}
+              </span>
+            </div>
+            {mod.baseValue !== undefined && mod.finalValue !== undefined ? (
+              <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs font-mono">
                 <span className="text-slate-500">
-                  {formatStatValue(mod.baseValue)} →{' '}
+                  BASE{' '}
+                  <span className="text-slate-300">{formatStatValue(mod.baseValue)}</span>
+                </span>
+                <span className="text-slate-500">
+                  FINAL{' '}
                   <span className={getAggregatedModifierColorClass(mod)}>
                     {formatStatValue(mod.finalValue)}
                   </span>
                 </span>
-              )}
-              <span className={`font-mono font-semibold ${getAggregatedModifierColorClass(mod)}`}>
-                {formatAggregatedModifierDisplay(mod)}
-              </span>
-            </div>
+              </div>
+            ) : (
+              <p className="text-[10px] text-slate-600 italic">Base stat unavailable for this property</p>
+            )}
           </div>
         ))}
       </div>
-      
+
       <p className="text-[10px] text-slate-500 mt-3">
-        Select quality bands (for known resources) or adjust sliders to simulate different resource qualities.
+        Adjust quality sliders to simulate how resource quality affects final item stats.
       </p>
     </div>
   )
