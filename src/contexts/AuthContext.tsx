@@ -19,9 +19,16 @@ import {
 import { maybeMigrateOfflineData } from '../lib/offlineMigration'
 import { fetchOrgLogoStatus, resolveOrgLogoUrl } from '../lib/orgLogo'
 import { removeTargetBlueprint } from '../lib/targetList'
+import { ensureDfpEngine } from '../lib/dfpEngine'
+import {
+  buildBootstrapSteps,
+  patchBootstrapStep,
+  type BootstrapStep,
+} from '../lib/bootstrapSteps'
 import type { User, Session } from '@supabase/supabase-js'
 
 const AUTH_BOOTSTRAP_TIMEOUT_MS = 12_000
+const BOOTSTRAP_FAILSAFE_MS = 45_000
 
 function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -54,6 +61,7 @@ interface AuthContextType {
   profile: Profile | null
   session: Session | null
   loading: boolean
+  bootstrapSteps: BootstrapStep[]
   isBanned: boolean
   acquiredBlueprints: Record<string, boolean>
   signInWithGoogle: () => Promise<void>
@@ -99,6 +107,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [bootstrapSteps, setBootstrapSteps] = useState<BootstrapStep[]>(() => buildBootstrapSteps(false))
+  const initialBootstrapDone = useRef(false)
   const [isBanned, setIsBanned] = useState(false)
   const isBannedRef = useRef(false)
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
@@ -280,14 +290,75 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAutoApproveEnabled(siteSettings.autoApproveEnabled)
   }, [checkBanned, handleBannedUser, fetchProfile, fetchAcquiredBlueprints, fetchSiteSettings])
 
+  const setStep = useCallback((id: string, patch: Partial<Pick<BootstrapStep, 'status' | 'progress'>>) => {
+    setBootstrapSteps((prev) => patchBootstrapStep(prev, id, patch))
+  }, [])
+
+  const loadUserDataWithProgress = useCallback(
+    async (sessionUser: User, isSignIn = false) => {
+      setStep('clearance', { status: 'active', progress: 20 })
+      const banned = await checkBanned(sessionUser.id, sessionUser.email)
+      if (banned) {
+        setStep('clearance', { status: 'error', progress: 100 })
+        await handleBannedUser()
+        return false
+      }
+      setStep('clearance', { status: 'done', progress: 100 })
+
+      setStep('profile', { status: 'active', progress: 25 })
+      const profileData = await fetchProfile(sessionUser.id)
+      setIsBanned(false)
+      setProfile(profileData)
+
+      if (!profileData) {
+        const stillBanned = await checkBanned(sessionUser.id, sessionUser.email)
+        if (stillBanned) {
+          setStep('profile', { status: 'error', progress: 100 })
+          await handleBannedUser()
+          return false
+        }
+      }
+      setStep('profile', { status: 'done', progress: 100 })
+
+      if (isSignIn) {
+        await maybeMigrateOfflineData(sessionUser.id)
+      }
+
+      setStep('blueprints', { status: 'active', progress: 30 })
+      const acquired = await fetchAcquiredBlueprints(sessionUser.id)
+      setAcquiredBlueprints(acquired)
+      setStep('blueprints', { status: 'done', progress: 100 })
+
+      setStep('settings', { status: 'active', progress: 40 })
+      const siteSettings = await fetchSiteSettings()
+      setDfpDisplayEnabled(siteSettings.dfpDisplayEnabled)
+      setAutoApproveEnabled(siteSettings.autoApproveEnabled)
+      setStep('settings', { status: 'done', progress: 100 })
+
+      return true
+    },
+    [
+      checkBanned,
+      handleBannedUser,
+      fetchProfile,
+      fetchAcquiredBlueprints,
+      fetchSiteSettings,
+      setStep,
+    ]
+  )
+
   useEffect(() => {
     let cancelled = false
 
     const bootstrapAuth = async () => {
+      setLoading(true)
+      setBootstrapSteps(buildBootstrapSteps(false))
+
       try {
         const hash = window.location.hash
         const isOAuthCallback = hash.includes('access_token')
 
+        setStep('session', { status: 'active', progress: 15 })
         const { data: { session }, error } = await withTimeout(
           supabase.auth.getSession(),
           AUTH_BOOTSTRAP_TIMEOUT_MS,
@@ -303,19 +374,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session)
         setUser(session?.user ?? null)
 
+        const stepsAfterSession = buildBootstrapSteps(!!session?.user).map((step) =>
+          step.id === 'session' ? { ...step, status: 'done' as const, progress: 100 } : step
+        )
+        setBootstrapSteps(stepsAfterSession)
+
         if (session?.user) {
-          void loadUserData(session.user, false)
+          const ok = await loadUserDataWithProgress(session.user, isOAuthCallback)
+          if (!ok || cancelled) return
         }
+
+        setBootstrapSteps((prev) => patchBootstrapStep(prev, 'dfp', { status: 'active', progress: 20 }))
+        await ensureDfpEngine()
+        if (cancelled) return
+        setBootstrapSteps((prev) => patchBootstrapStep(prev, 'dfp', { status: 'done', progress: 100 }))
       } catch (err) {
         console.error('Auth bootstrap failed:', err)
+        setBootstrapSteps((prev) =>
+          prev.map((step) =>
+            step.status === 'active'
+              ? { ...step, status: 'error', progress: 100 }
+              : step.status === 'pending'
+                ? { ...step, status: 'skipped' }
+                : step
+          )
+        )
       } finally {
-        setLoading(false)
+        if (!cancelled) {
+          initialBootstrapDone.current = true
+          setLoading(false)
+        }
       }
     }
 
     void bootstrapAuth()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!initialBootstrapDone.current) return
+
       setSession(session)
       setUser(session?.user ?? null)
 
@@ -331,14 +427,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       cancelled = true
       subscription.unsubscribe()
     }
-  }, [loadUserData])
+  }, [loadUserData, loadUserDataWithProgress, setStep])
 
   useEffect(() => {
     if (!loading) return
     const id = window.setTimeout(() => {
-      console.warn('Auth loading failsafe: forcing shell render')
+      console.warn('Bootstrap failsafe: completing with partial data')
+      setBootstrapSteps((prev) =>
+        prev.map((step) =>
+          step.status === 'active'
+            ? { ...step, status: 'error', progress: 100 }
+            : step.status === 'pending'
+              ? { ...step, status: 'skipped' }
+              : step
+        )
+      )
+      initialBootstrapDone.current = true
       setLoading(false)
-    }, AUTH_BOOTSTRAP_TIMEOUT_MS + 3_000)
+    }, BOOTSTRAP_FAILSAFE_MS)
     return () => window.clearTimeout(id)
   }, [loading])
 
@@ -682,6 +788,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       profile,
       session,
       loading,
+      bootstrapSteps,
       isBanned,
       acquiredBlueprints,
       signInWithGoogle,
@@ -724,6 +831,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       profile,
       session,
       loading,
+      bootstrapSteps,
       isBanned,
       acquiredBlueprints,
       signInWithGoogle,

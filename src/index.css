@@ -255,6 +255,20 @@
   }
 }
 
+@keyframes shimmer {
+  0% {
+    opacity: 0.2;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0.2;
+    transform: translateX(200%);
+  }
+}
+
 @keyframes site-btn-burn-glow {
   0% {
     box-shadow:

@@ -1,13 +1,6 @@
-import React, { useEffect } from 'react'
-import { ensureDfpEngine } from '../lib/dfpEngine'
+import React from 'react'
 
-/** Preload DFP engine in the background — never block app shell render. */
+/** DFP engine loads during auth bootstrap; this wrapper keeps the provider tree unchanged. */
 export default function DfpInitGate({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    ensureDfpEngine().catch((err: unknown) => {
-      console.error('DFP engine preload failed:', err)
-    })
-  }, [])
-
   return <>{children}</>
 }

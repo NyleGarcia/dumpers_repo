@@ -13,12 +13,14 @@ import WelcomeModal from './WelcomeModal'
 import SupportTicketsModal from './SupportTicketsModal'
 import AppChrome from './layout/AppChrome'
 import AnalyticsTracker from './AnalyticsTracker'
+import AppBootstrapScreen from './bootstrap/AppBootstrapScreen'
 
 export default function Layout() {
   const {
     user,
     profile,
     loading,
+    bootstrapSteps,
     isBanned,
     isPending,
     isGhostMode,
@@ -78,14 +80,7 @@ export default function Layout() {
   }
 
   if (loading) {
-    return (
-      <div className="site-page-bg min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin mx-auto" />
-          <p className="text-slate-400 text-lg font-medium">Loading...</p>
-        </div>
-      </div>
-    )
+    return <AppBootstrapScreen steps={bootstrapSteps} />
   }
 
   if (isBanned) {
