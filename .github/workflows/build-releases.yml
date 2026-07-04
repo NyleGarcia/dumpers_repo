@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Binaries
         run: |
-          cd scripts/bp-dumper
+          cd scripts/bp-dumper-go
           mkdir -p dist
           
           # Windows x64
@@ -38,9 +38,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            scripts/bp-dumper/dist/bp-dumper-windows.exe
-            scripts/bp-dumper/dist/bp-dumper-mac-intel
-            scripts/bp-dumper/dist/bp-dumper-mac-silicon
-            scripts/bp-dumper/dist/bp-dumper-linux
+            scripts/bp-dumper-go/dist/bp-dumper-windows.exe
+            scripts/bp-dumper-go/dist/bp-dumper-mac-intel
+            scripts/bp-dumper-go/dist/bp-dumper-mac-silicon
+            scripts/bp-dumper-go/dist/bp-dumper-linux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

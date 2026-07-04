@@ -1,0 +1,82 @@
+# BP Dumper
+
+A cross-platform utility to batch-import historical blueprint JSON exports or trail active logs from your game client to your account.
+
+---
+
+## 🚀 Quick Start (No Python Required)
+If you are non-technical or don't want to install Python:
+1. Go to the **Releases** tab of this repository on GitHub.
+2. Download the pre-built file for your system:
+   * **Windows**: Download `bp-dumper-windows.exe`.
+   * **macOS**: Download `bp-dumper-mac`.
+   * **Linux**: Download `bp-dumper-linux`.
+3. Put the downloaded file in any folder and **double-click it** (or double-click to run in terminal).
+4. The built-in setup wizard will guide you through the settings (auto-detecting your game, prompting for your Webhook URL/API Key) and save them into a local `.env` file so you only have to do it once!
+
+---
+
+## 🛠️ Python/Developer Setup Instructions
+
+### 1. Prerequisites
+- **Python 3.8+** must be installed on your system.
+  - Windows: Make sure **"Add Python to PATH"** is selected during installation.
+  - macOS/Linux: Usually installed by default. Verify via `python3 --version`.
+
+### 2. Installation
+Open your terminal (or command prompt) inside this folder and run:
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## How to Run
+
+### Windows (Quick Start)
+1. Double-click the **`dumper.bat`** file.
+2. Enter the path to your JSON export file when prompted, **or leave it blank** and press **Enter** to automatically scrape your local Star Citizen installation logs.
+3. Enter your Secret API Key (generate one in your website settings under "API Access").
+4. Enter the Supabase Webhook URL.
+
+### macOS & Linux (Quick Start)
+1. Open your terminal inside this folder and run:
+   ```bash
+   chmod +x dumper.sh dumper.py
+   ./dumper.sh
+   ```
+2. Enter the path to your JSON export file when prompted, **or leave it blank** and press **Enter** to automatically scrape local Star Citizen log files.
+3. Choose whether to perform a dry run (local only, no API key required).
+4. Enter your Secret API Key and Supabase Webhook URL when prompted.
+
+### Advanced Usage (CLI One-Liners)
+You can pass arguments directly to **`dumper.bat`** (Windows) or **`dumper.sh`** (macOS/Linux) to bypass the prompts and run it in a single command. 
+
+They accept all the same arguments as `dumper.py`:
+
+```bash
+# Dry Run Mode: Auto-detect and scan local Star Citizen logs (no API key required)
+./dumper.sh --url "http://localhost/mock" --dry-run
+# Windows: dumper.bat --url "http://localhost/mock" --dry-run
+
+# Dry Run Mode: Scan a specific JSON export file
+./dumper.sh /path/to/your/export.json --url "http://localhost/mock" --dry-run
+
+# Real Mode: Auto-detect logs and import using environment key
+export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
+./dumper.sh --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
+
+# Real Mode: Scan specific Game.log file directly and pass key as parameter
+./dumper.sh /path/to/Game.log \
+  --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook" \
+  --key "dr_your_secret_api_key"
+```
+
+---
+
+## Output Description
+The script will display the status of each unique blueprint:
+- **`★ Would Import`**: (Dry run mode only) The blueprint was detected locally and is ready to import.
+- **`★ Successfully Imported`**: The blueprint was added to your account.
+- **`↻ Already Acquired`**: The blueprint was already present (skipped, no duplicate created).
+- **`✗ Failed`**: The API returned an error (e.g., account pending approval, banned, or invalid ID).
