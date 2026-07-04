@@ -15,6 +15,11 @@ import time
 from pathlib import Path
 from typing import Optional
 
+try:
+    from mapping import BLUEPRINT_NAME_TO_INTERNAL_NAMES
+except ImportError:
+    BLUEPRINT_NAME_TO_INTERNAL_NAMES = {}
+
 
 
 # Default Star Citizen path locations
@@ -284,13 +289,19 @@ def parse_blueprints_from_log(path: Path) -> list[str]:
 
                 elif m := PATTERN_BLUEPRINT.search(line):
                     product_name = m.group(1).strip()
-                    discovered.append(product_name)
                     corr = state.correlate_blueprint(ts)
                     ts_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts)) if ts else time.strftime("%Y-%m-%d %H:%M:%S")
                     if corr:
                         print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
                     else:
                         print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
+                    
+                    # Translate to internalNames
+                    mapped_ids = BLUEPRINT_NAME_TO_INTERNAL_NAMES.get(product_name.lower())
+                    if mapped_ids:
+                        discovered.extend(mapped_ids)
+                    else:
+                        discovered.append(product_name)
     except OSError as e:
         print(f"{Colors.YELLOW}Warning: Could not read log file {path.name} ({e}){Colors.RESET}")
     return discovered
@@ -453,29 +464,33 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                             else:
                                 print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
                             
+                            # Translate to internalNames
+                            mapped_ids = BLUEPRINT_NAME_TO_INTERNAL_NAMES.get(product_name.lower(), [product_name])
+                            
                             # Cache validation & dispatch
-                            if product_name not in acquired_blueprints:
-                                acquired_blueprints.add(product_name)
-                                save_cache_file(cache_path, acquired_blueprints)
-                                if args.dry_run:
-                                    print(f"  [Live] {Colors.GREEN}★ Would Import (Dry Run):{Colors.RESET} {product_name}")
-                                else:
-                                    payload = {
-                                        "type": "blueprint_received",
-                                        "blueprint": product_name
-                                    }
-                                    try:
-                                        res = session.post(args.url, json=payload, timeout=15)
-                                        if res.status_code == 200:
-                                            is_duplicate = res.json().get("duplicate", False)
-                                            if is_duplicate:
-                                                print(f"  [Live] {Colors.YELLOW}↻ Already Acquired (Sync):{Colors.RESET} {product_name}")
+                            for blueprint_id in mapped_ids:
+                                if blueprint_id not in acquired_blueprints:
+                                    acquired_blueprints.add(blueprint_id)
+                                    save_cache_file(cache_path, acquired_blueprints)
+                                    if args.dry_run:
+                                        print(f"  [Live] {Colors.GREEN}★ Would Import (Dry Run):{Colors.RESET} {blueprint_id}")
+                                    else:
+                                        payload = {
+                                            "type": "blueprint_received",
+                                            "blueprint": blueprint_id
+                                        }
+                                        try:
+                                            res = session.post(args.url, json=payload, timeout=15)
+                                            if res.status_code == 200:
+                                                is_duplicate = res.json().get("duplicate", False)
+                                                if is_duplicate:
+                                                    print(f"  [Live] {Colors.YELLOW}↻ Already Acquired (Sync):{Colors.RESET} {blueprint_id}")
+                                                else:
+                                                    print(f"  [Live] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {blueprint_id}")
                                             else:
-                                                print(f"  [Live] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {product_name}")
-                                        else:
-                                            print(f"  [Live] {Colors.RED}✗ Failed to import:{Colors.RESET} {product_name} (HTTP {res.status_code})")
-                                    except Exception as e:
-                                        print(f"  [Live] {Colors.RED}✗ Connection Error:{Colors.RESET} {product_name} ({e})")
+                                                print(f"  [Live] {Colors.RED}✗ Failed to import:{Colors.RESET} {blueprint_id} (HTTP {res.status_code})")
+                                        except Exception as e:
+                                            print(f"  [Live] {Colors.RED}✗ Connection Error:{Colors.RESET} {blueprint_id} ({e})")
                 last_size = st.st_size
             else:
                 time.sleep(0.5)

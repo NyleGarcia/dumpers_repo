@@ -272,7 +272,6 @@ func parseBlueprintsFromLog(path string, state *WatcherState) ([]string, error) 
 
 		} else if m := patternBlueprint.FindStringSubmatch(line); len(m) >= 2 {
 			productName := strings.TrimSpace(m[1])
-			discovered = append(discovered, productName)
 			tsStr := ts.Format("2006-01-02 15:04:05")
 			corr, found := state.CorrelateBlueprint(ts)
 			if found {
@@ -281,6 +280,14 @@ func parseBlueprintsFromLog(path string, state *WatcherState) ([]string, error) 
 			} else {
 				fmt.Printf("  [%s] [%s] %sBlueprint received: %s%s%s (no recent mission to correlate)%s\n",
 					tsStr, filename, color.Magenta, color.Green, productName, color.Magenta, color.Reset)
+			}
+
+			// Translate to internalNames
+			if ids, ok := blueprintNameToInternalNames[strings.ToLower(productName)]; ok {
+				discovered = append(discovered, ids...)
+			} else {
+				// Fallback to sending raw name if not found in catalog mapping
+				discovered = append(discovered, productName)
 			}
 		}
 	}
@@ -1140,13 +1147,23 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 							tsStr, filepath.Base(path), color.Magenta, color.Green, productName, color.Magenta, color.Reset)
 					}
 
-					if !acquiredBps[productName] {
-						acquiredBps[productName] = true
-						saveCacheFile(cachePath, acquiredBps)
-						if dryRun {
-							fmt.Printf("  [Live] %s★ Would Import (Dry Run):%s %s\n", color.Green, color.Reset, productName)
-						} else {
-							go uploadLiveBlueprint(url, apiKey, productName)
+					// Translate to internalNames
+					var ids []string
+					if mappedIds, ok := blueprintNameToInternalNames[strings.ToLower(productName)]; ok {
+						ids = mappedIds
+					} else {
+						ids = []string{productName}
+					}
+
+					for _, blueprintId := range ids {
+						if !acquiredBps[blueprintId] {
+							acquiredBps[blueprintId] = true
+							saveCacheFile(cachePath, acquiredBps)
+							if dryRun {
+								fmt.Printf("  [Live] %s★ Would Import (Dry Run):%s %s\n", color.Green, color.Reset, blueprintId)
+							} else {
+								go uploadLiveBlueprint(url, apiKey, blueprintId)
+							}
 						}
 					}
 				}
