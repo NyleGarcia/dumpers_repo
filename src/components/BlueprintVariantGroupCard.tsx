@@ -77,7 +77,7 @@ export default function BlueprintVariantGroupCard({
 
       {expanded && (
         <div className="p-3 sm:p-4 bg-slate-950/40">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 min-[1920px]:grid-cols-6 gap-3 sm:gap-4 items-stretch">
             {members.map((bp) => (
               <div key={bp.internalName || bp.file} className="h-full min-h-0">
                 {renderBlueprintCard(bp)}
