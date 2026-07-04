@@ -8,9 +8,13 @@ import argparse
 import json
 import os
 import sys
-import urllib.error
-import urllib.request
 from pathlib import Path
+
+try:
+    import requests
+except ImportError:
+    print("Error: The 'requests' library is not installed. Run 'pip install -r requirements.txt' first.", file=sys.stderr)
+    sys.exit(1)
 
 # ANSI colors for nice terminal feedback
 class Colors:
@@ -98,43 +102,36 @@ def main():
     dupe_count = 0
     fail_count = 0
 
+    session = requests.Session()
+    session.headers.update({
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    })
+
     for idx, bp_id in enumerate(unique_blueprints, 1):
-        payload = json.dumps({
+        payload = {
             "type": "blueprint_received",
             "blueprint": bp_id
-        }).encode("utf-8")
-
-        req = urllib.request.Request(
-            args.url,
-            data=payload,
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            },
-            method="POST"
-        )
+        }
 
         try:
-            with urllib.request.urlopen(req) as res:
-                response_data = json.loads(res.read().decode("utf-8"))
-                
-                is_duplicate = response_data.get("duplicate", False)
+            res = session.post(args.url, json=payload, timeout=15)
+            response_json = res.json()
+
+            if res.status_code == 200:
+                is_duplicate = response_json.get("duplicate", False)
                 if is_duplicate:
                     dupe_count += 1
                     print(f"  [{idx}/{len(unique_blueprints)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
                 else:
                     success_count += 1
                     print(f"  [{idx}/{len(unique_blueprints)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
-        except urllib.error.HTTPError as e:
-            fail_count += 1
-            error_msg = e.read().decode("utf-8")
-            try:
-                error_json = json.loads(error_msg)
-                reason = error_json.get("error", "Unknown API error")
-            except Exception:
-                reason = error_msg or f"HTTP {e.code}"
-            print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {reason}){Colors.RESET}")
-        except Exception as e:
+            else:
+                fail_count += 1
+                reason = response_json.get("error", f"HTTP {res.status_code}")
+                print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {reason}){Colors.RESET}")
+
+        except requests.RequestException as e:
             fail_count += 1
             print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Connection Error:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {e}){Colors.RESET}")
 
