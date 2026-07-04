@@ -5,14 +5,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-import {
-  green,
-  cyan,
-  yellow,
-  magenta,
-  red,
-  gray,
-} from 'https://deno.land/std@0.168.0/fmt/colors.ts'
+
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -53,7 +46,7 @@ serve(async (req) => {
       .maybeSingle()
 
     if (keyError || !keyData) {
-      console.log(`${red('✗ Invalid API key')} ${gray(`(key=${apiKey.slice(0, 8)}…)`)}`)
+      console.log(`✗ Invalid API key (key=${apiKey.slice(0, 8)}…)`)
       return new Response(JSON.stringify({ error: 'Invalid API key' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -61,7 +54,7 @@ serve(async (req) => {
     }
 
     const userId = keyData.user_id
-    console.log(`${cyan('→ Authenticated')} ${gray(`user=${userId.slice(0, 8)}…`)}`)
+    console.log(`→ Authenticated user=${userId.slice(0, 8)}…`)
 
     // Check ban status
     const { data: banData } = await supabase
@@ -71,7 +64,7 @@ serve(async (req) => {
       .maybeSingle()
 
     if (banData) {
-      console.log(`${red('✗ Banned user')} ${gray(`user=${userId.slice(0, 8)}…`)}`)
+      console.log(`✗ Banned user user=${userId.slice(0, 8)}…`)
       return new Response(JSON.stringify({ error: 'User is banned' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -86,7 +79,7 @@ serve(async (req) => {
       .maybeSingle()
 
     if (!profileData || profileData.role === 'pending') {
-      console.log(`${yellow('⏳ Pending approval')} ${gray(`user=${userId.slice(0, 8)}…`)}`)
+      console.log(`⏳ Pending approval user=${userId.slice(0, 8)}…`)
       return new Response(JSON.stringify({ error: 'Account pending approval' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -125,9 +118,9 @@ serve(async (req) => {
 
       const isDupe = insertError?.code === '23505'
       if (isDupe) {
-        console.log(`${yellow('↻ Blueprint already acquired:')} ${gray(blueprintId)} ${gray(`user=${userId.slice(0, 8)}…`)}`)
+        console.log(`↻ Blueprint already acquired: ${blueprintId} user=${userId.slice(0, 8)}…`)
       } else {
-        console.log(`${magenta('★ Blueprint received:')} ${green(blueprintId)} ${gray(`user=${userId.slice(0, 8)}…`)}`)
+        console.log(`★ Blueprint received: ${blueprintId} user=${userId.slice(0, 8)}…`)
       }
 
       // Clear from mission tracker targets (mirrors UI toggleAcquired behavior)
@@ -148,12 +141,12 @@ serve(async (req) => {
       })
     }
 
-    console.log(`${yellow('? Unhandled event type:')} ${gray(payload?.type ?? '(none)')}`)
+    console.log(`? Unhandled event type: ${payload?.type ?? '(none)'}`)
     return new Response(JSON.stringify({ message: 'Event type not handled' }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (err) {
-    console.error(`${red('✗ Internal error:')}`, err)
+    console.error(`✗ Internal error:`, err)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
