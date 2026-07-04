@@ -34,9 +34,7 @@ export default function Layout() {
     isSuperAdmin,
     isGuestPreview,
     exitGuestPreview,
-    signInWithGoogle,
   } = useAuth()
-  const [guestSigningIn, setGuestSigningIn] = React.useState(false)
   const navGroups = getVisibleNavGroups(visibilityContext, canAccess)
   const showAdminPanelButton = canUseFeature('admin_panel')
   const showSettingsButton = canUseFeature('settings')
@@ -69,15 +67,6 @@ export default function Layout() {
 
     checkWelcome()
   }, [user, isApproved, isGuestPreview, welcomeChecked])
-
-  const handleGuestSignIn = async () => {
-    setGuestSigningIn(true)
-    try {
-      await signInWithGoogle()
-    } catch {
-      setGuestSigningIn(false)
-    }
-  }
 
   if (loading) {
     return <AppBootstrapScreen steps={bootstrapSteps} />
@@ -112,9 +101,7 @@ export default function Layout() {
         onOpenAdmin={() => setShowAdminPanel(true)}
         onOpenSupport={() => setShowSupportModal(true)}
         onSignOut={signOut}
-        onGuestSignIn={handleGuestSignIn}
         onExitGuestPreview={exitGuestPreview}
-        guestSigningIn={guestSigningIn}
       >
         <Outlet />
       </AppChrome>

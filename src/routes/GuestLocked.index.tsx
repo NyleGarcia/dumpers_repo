@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useSearch } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
-import { useAuth } from '../contexts/AuthContext'
+import OAuthSignInButtons from '../components/auth/OAuthSignInButtons'
 import type { FeatureId } from '../lib/featureAccess'
 import { getGuestFeatureCopy, GUEST_MEMBERSHIP_PITCH } from '../lib/guestFeatureCopy'
 
@@ -11,22 +11,8 @@ interface GuestLockedSearch {
 
 export default function GuestLockedRoute() {
   const { feature = 'custom_orders' } = useSearch({ strict: false }) as GuestLockedSearch
-  const { signInWithGoogle, signInWithDiscord } = useAuth()
-  const [signingIn, setSigningIn] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const copy = getGuestFeatureCopy(feature)
-
-  const handleSignIn = async (provider: 'google' | 'discord') => {
-    setSigningIn(true)
-    try {
-      if (provider === 'google') {
-        await signInWithGoogle()
-      } else {
-        await signInWithDiscord()
-      }
-    } catch {
-      setSigningIn(false)
-    }
-  }
 
   return (
     <FeaturePageLayout
@@ -73,23 +59,14 @@ export default function GuestLockedRoute() {
           paid tiers. New accounts may need a quick officer approval before community tools unlock.
         </div>
 
+        {error && (
+          <div className="p-3 rounded-lg bg-red-900/50 border border-red-500/50 text-red-400 text-sm">
+            {error}
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => void handleSignIn('google')}
-            disabled={signingIn}
-            className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium transition-colors disabled:opacity-50"
-          >
-            {signingIn ? 'Signing in...' : 'Sign in with Google'}
-          </button>
-          <button
-            type="button"
-            onClick={() => void handleSignIn('discord')}
-            disabled={signingIn}
-            className="px-4 py-2 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-medium transition-colors disabled:opacity-50"
-          >
-            {signingIn ? 'Signing in...' : 'Sign in with Discord'}
-          </button>
+          <OAuthSignInButtons layout="row" onError={setError} />
           <Link
             to="/"
             className="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:text-white hover:border-slate-500 text-sm transition-colors"

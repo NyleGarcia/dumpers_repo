@@ -10,6 +10,7 @@ import AppNotificationBell from './AppNotificationBell'
 import AppUserMenu from './AppUserMenu'
 import GuestPreviewBanner from './GuestPreviewBanner'
 import GhostModeBanner from './GhostModeBanner'
+import SignInMenu from '../auth/SignInMenu'
 
 interface AppChromeProps {
   children: React.ReactNode
@@ -30,9 +31,7 @@ interface AppChromeProps {
   onOpenAdmin: () => void
   onOpenSupport: () => void
   onSignOut: () => void
-  onGuestSignIn: () => void
   onExitGuestPreview: () => void
-  guestSigningIn?: boolean
 }
 
 export default function AppChrome({
@@ -54,9 +53,7 @@ export default function AppChrome({
   onOpenAdmin,
   onOpenSupport,
   onSignOut,
-  onGuestSignIn,
   onExitGuestPreview: _onExitGuestPreview,
-  guestSigningIn = false,
 }: AppChromeProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
@@ -74,14 +71,7 @@ export default function AppChrome({
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {isGuestPreview ? (
-              <button
-                type="button"
-                onClick={onGuestSignIn}
-                disabled={guestSigningIn}
-                className="px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-medium transition-colors disabled:opacity-50"
-              >
-                {guestSigningIn ? 'Signing in...' : 'Sign in'}
-              </button>
+              <SignInMenu />
             ) : (
               <>
                 <AppNotificationBell disabled={isPending || isGhostMode} />

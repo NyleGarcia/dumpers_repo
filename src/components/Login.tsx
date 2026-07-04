@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import SiteBrandTitle from './SiteBrandTitle'
 import { SITE_COPYRIGHT, SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
-import AuthProviderIcon from './settings/AuthProviderIcon'
+import OAuthSignInButtons from './auth/OAuthSignInButtons'
 
 export default function Login() {
-  const { signInWithGoogle, signInWithDiscord, loading, enterGuestPreview } = useAuth()
+  const { loading, enterGuestPreview } = useAuth()
   const [error, setError] = useState<string | null>(null)
   const [autoApproveEnabled, setAutoApproveEnabled] = useState<boolean | null>(null)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchAutoApprove = async () => {
       const { data, error } = await supabase.rpc('get_auto_approve_enabled')
       if (!error && data !== null) {
@@ -21,24 +21,6 @@ export default function Login() {
     }
     fetchAutoApprove()
   }, [])
-
-  const handleGoogleLogin = async () => {
-    try {
-      setError(null)
-      await signInWithGoogle()
-    } catch {
-      setError('Failed to sign in with Google. Please try again.')
-    }
-  }
-
-  const handleDiscordLogin = async () => {
-    try {
-      setError(null)
-      await signInWithDiscord()
-    } catch {
-      setError('Failed to sign in with Discord. Please try again.')
-    }
-  }
 
   return (
     <div className="site-page-bg min-h-screen flex items-center justify-center p-4">
@@ -52,7 +34,7 @@ export default function Login() {
             <div className="text-center">
               <h2 className="text-xl font-semibold text-white mb-2">Welcome</h2>
               <p className="text-slate-400 text-sm">
-                Sign in with your Google or Discord account to track blueprints and sync across devices.
+                Sign in with Google or Discord to track blueprints and sync across devices.
               </p>
             </div>
 
@@ -62,23 +44,7 @@ export default function Login() {
               </div>
             )}
 
-            <button
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white hover:bg-gray-100 text-gray-800 font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <AuthProviderIcon provider="google" />
-              {loading ? 'Signing in...' : 'Sign in with Google'}
-            </button>
-
-            <button
-              onClick={handleDiscordLogin}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-[#5865F2] hover:bg-[#4752C4] text-white font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <AuthProviderIcon provider="discord" />
-              {loading ? 'Signing in...' : 'Sign in with Discord'}
-            </button>
+            <OAuthSignInButtons disabled={loading} onError={setError} />
 
             {autoApproveEnabled === false && (
               <div className="text-center text-slate-500 text-xs">

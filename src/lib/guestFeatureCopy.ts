@@ -11,7 +11,7 @@ export const GUEST_MEMBERSHIP_PITCH = {
   headline: 'Member accounts are free',
   subhead: 'Full access to every member tool. No subscriptions. No paid tiers.',
   bullets: [
-    'Completely free — sign in with Google',
+    'Completely free — sign in with Google or Discord',
     'No subscriptions or recurring charges',
     'Full member access once approved (officer review is for community safety, not payment)',
   ],
