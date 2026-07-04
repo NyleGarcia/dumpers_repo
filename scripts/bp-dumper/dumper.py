@@ -176,6 +176,24 @@ def save_env_file(env_path: Path, variables: dict):
     except Exception:
         pass
 
+def load_cache_file(cache_path: Path) -> set:
+    if cache_path.is_file():
+        try:
+            with open(cache_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    return set(data)
+        except Exception:
+            pass
+    return set()
+
+def save_cache_file(cache_path: Path, cache_set: set):
+    try:
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(sorted(list(cache_set)), f, indent=2)
+    except Exception:
+        pass
+
 def main():
     if sys.platform == "win32":
         try:
@@ -431,18 +449,12 @@ def main():
         print(f"{Colors.YELLOW}No blueprints discovered.{Colors.RESET}")
         return
 
-    print(f"{Colors.CYAN}Starting import of {len(unique_blueprints)} unique blueprint(s) from {source_name}...{Colors.RESET}")
-    print()
+    # Load local dumper cache
+    cache_path = Path(__file__).resolve().parent / ".dumper_cache.json"
+    acquired_blueprints = load_cache_file(cache_path)
 
-    success_count = 0
-    dupe_count = 0
-    fail_count = 0
-
-    if args.dry_run:
-        for idx, bp_id in enumerate(unique_blueprints, 1):
-            success_count += 1
-            print(f"  [{idx}/{len(unique_blueprints)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {bp_id}")
-    else:
+    # If running in non-dry-run mode, synchronize with the server
+    if not args.dry_run:
         try:
             import requests
         except ImportError:
@@ -455,7 +467,46 @@ def main():
             "Content-Type": "application/json"
         })
 
-        for idx, bp_id in enumerate(unique_blueprints, 1):
+        # Sync from database (Option 2: Webhook GET Sync)
+        print(f"{Colors.DIM}Synchronizing blueprints list from server...{Colors.RESET}")
+        try:
+            res = session.get(args.url, timeout=15)
+            if res.status_code == 200:
+                response_json = res.json()
+                if response_json.get("success"):
+                    server_bps = response_json.get("blueprints", [])
+                    acquired_blueprints.update(server_bps)
+                    save_cache_file(cache_path, acquired_blueprints)
+                    print(f"Synced {len(server_bps)} blueprints from account.")
+            else:
+                print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
+        except Exception as e:
+            print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
+
+    # Option 1: Local Cache Filter
+    to_import = [bp for bp in unique_blueprints if bp not in acquired_blueprints]
+    skipped_count = len(unique_blueprints) - len(to_import)
+
+    if skipped_count > 0:
+        print(f"{Colors.DIM}Skipped {skipped_count} blueprint(s) already acquired (cached or server-synced).{Colors.RESET}")
+
+    if not to_import:
+        print(f"{Colors.GREEN}All discovered blueprints are already acquired! Nothing to import.{Colors.RESET}")
+        return
+
+    print(f"{Colors.CYAN}Starting import of {len(to_import)} unique blueprint(s) from {source_name}...{Colors.RESET}")
+    print()
+
+    success_count = 0
+    dupe_count = 0
+    fail_count = 0
+
+    if args.dry_run:
+        for idx, bp_id in enumerate(to_import, 1):
+            success_count += 1
+            print(f"  [{idx}/{len(to_import)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {bp_id}")
+    else:
+        for idx, bp_id in enumerate(to_import, 1):
             payload = {
                 "type": "blueprint_received",
                 "blueprint": bp_id
@@ -469,14 +520,18 @@ def main():
                     is_duplicate = response_json.get("duplicate", False)
                     if is_duplicate:
                         dupe_count += 1
-                        print(f"  [{idx}/{len(unique_blueprints)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
+                        print(f"  [{idx}/{len(to_import)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
                     else:
                         success_count += 1
-                        print(f"  [{idx}/{len(unique_blueprints)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
+                        print(f"  [{idx}/{len(to_import)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
+                    
+                    # Update local cache immediately
+                    acquired_blueprints.add(bp_id)
+                    save_cache_file(cache_path, acquired_blueprints)
                 else:
                     fail_count += 1
                     reason = response_json.get("error", f"HTTP {res.status_code}")
-                    print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {reason}){Colors.RESET}")
+                    print(f"  [{idx}/{len(to_import)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {reason}){Colors.RESET}")
 
             except requests.RequestException as e:
                 fail_count += 1
