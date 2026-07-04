@@ -62,15 +62,15 @@ def main():
     )
     parser.add_argument(
         "--key",
-        help="Your secret API key. If omitted, the script will read the SCMDB_API_KEY environment variable."
+        help="Your secret API key. If omitted, the script will read the LOG_WATCHER_API_KEY environment variable."
     )
 
     args = parser.parse_args()
 
     # Resolve API Key
-    api_key = args.key or os.getenv("SCMDB_API_KEY")
+    api_key = args.key or os.getenv("LOG_WATCHER_API_KEY")
     if not api_key:
-        print(f"{Colors.RED}Error: API key must be provided via --key or SCMDB_API_KEY environment variable.{Colors.RESET}", file=sys.stderr)
+        print(f"{Colors.RED}Error: API key must be provided via --key or LOG_WATCHER_API_KEY environment variable.{Colors.RESET}", file=sys.stderr)
         sys.exit(1)
 
     # Validate JSON File

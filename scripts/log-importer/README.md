@@ -1,6 +1,6 @@
-# SCMDB Log Importer
+# Log Importer
 
-A cross-platform utility to batch-import historical blueprint JSON exports from `watcher.py import` to your SCMDB account.
+A cross-platform utility to batch-import historical blueprint JSON exports from `watcher.py import` to your account.
 
 ## Setup Instructions
 
@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 ### Windows (Quick Start)
 1. Double-click the **`import.bat`** file.
-2. Enter the path to your SCMDB JSON export file when prompted.
+2. Enter the path to your JSON export file when prompted.
 3. Enter your Secret API Key (generate one in your website settings under "API Access").
 4. Enter the Supabase Webhook URL (from the admin/setup guides).
 5. The script will automatically install dependencies and run the import.
@@ -32,8 +32,8 @@ Run the script using python:
 # 1. Add executable permissions (first time only)
 chmod +x import-blueprints.py
 
-# 2. Run the script (via SCMDB_API_KEY environment variable)
-export SCMDB_API_KEY="dr_your_secret_api_key"
+# 2. Run the script (via LOG_WATCHER_API_KEY environment variable)
+export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
 python3 import-blueprints.py /path/to/your/export.json --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
 ```
 

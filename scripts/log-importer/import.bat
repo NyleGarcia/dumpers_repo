@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 echo ====================================================
-echo             SCMDB Log Importer CLI Setup
+echo             Log Importer CLI Setup
 echo ====================================================
 echo.
 
@@ -33,7 +33,7 @@ echo.
 
 :: 1. JSON file path
 :prompt_file
-set /p "JSON_FILE=Enter path to SCMDB JSON export file: "
+set /p "JSON_FILE=Enter path to JSON export file: "
 :: Strip quotes if pasted
 set "JSON_FILE=!JSON_FILE:"=!"
 if not exist "!JSON_FILE!" (
