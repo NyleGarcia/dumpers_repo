@@ -1,8 +1,22 @@
 # BP Dumper
 
-A cross-platform utility to batch-import historical blueprint JSON exports from your log watcher to your account.
+A cross-platform utility to batch-import historical blueprint JSON exports or trail active logs from your game client to your account.
 
-## Setup Instructions
+---
+
+## 🚀 Quick Start (No Python Required)
+If you are non-technical or don't want to install Python:
+1. Go to the **Releases** tab of this repository on GitHub.
+2. Download the pre-built file for your system:
+   * **Windows**: Download `bp-dumper-windows.exe`.
+   * **macOS**: Download `bp-dumper-mac`.
+   * **Linux**: Download `bp-dumper-linux`.
+3. Put the downloaded file in any folder and **double-click it** (or double-click to run in terminal).
+4. The built-in setup wizard will guide you through the settings (auto-detecting your game, prompting for your Webhook URL/API Key) and save them into a local `.env` file so you only have to do it once!
+
+---
+
+## 🛠️ Python/Developer Setup Instructions
 
 ### 1. Prerequisites
 - **Python 3.8+** must be installed on your system.
