@@ -7,45 +7,40 @@ on:
 
 jobs:
   build:
-    name: Build for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-            artifact_name: dumper.exe
-            asset_name: bp-dumper-windows.exe
-          - os: macos-latest
-            artifact_name: dumper
-            asset_name: bp-dumper-mac
-          - os: ubuntu-latest
-            artifact_name: dumper
-            asset_name: bp-dumper-linux
-
+    name: Build Go Executables
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          python-version: '3.11'
+          go-version: '1.21'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller requests
-
-      - name: Build with PyInstaller
-        shell: bash
+      - name: Build Binaries
         run: |
           cd scripts/bp-dumper
-          pyinstaller --onefile --console --name dumper dumper.py
+          mkdir -p dist
+          
+          # Windows x64
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/bp-dumper-windows.exe
+          
+          # macOS Intel & Apple Silicon
+          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/bp-dumper-mac-intel
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/bp-dumper-mac-silicon
+          
+          # Linux x64
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/bp-dumper-linux
 
       - name: Upload binaries to Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: scripts/bp-dumper/dist/${{ matrix.artifact_name }}
+          files: |
+            scripts/bp-dumper/dist/bp-dumper-windows.exe
+            scripts/bp-dumper/dist/bp-dumper-mac-intel
+            scripts/bp-dumper/dist/bp-dumper-mac-silicon
+            scripts/bp-dumper/dist/bp-dumper-linux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
