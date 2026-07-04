@@ -956,7 +956,7 @@ export default function BlueprintsRoute() {
             {blueprintGridItems.map((item) => {
               if (item.kind === 'single') {
                 return (
-                  <div key={item.blueprint.internalName} className="min-h-0">
+                  <div key={item.blueprint.internalName} className="h-full min-h-0">
                     {renderBlueprintCard(item.blueprint)}
                   </div>
                 )
