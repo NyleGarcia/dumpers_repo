@@ -35,24 +35,25 @@ pip install -r requirements.txt
 3. Choose whether to perform a dry run (local only, no API key required).
 4. Enter your Secret API Key and Supabase Webhook URL when prompted.
 
-### Advanced Usage (CLI Commands)
-If you prefer to bypass the prompts, you can run `dumper.py` directly:
+### Advanced Usage (CLI One-Liners)
+You can pass arguments directly to **`dumper.bat`** (Windows) or **`dumper.sh`** (macOS/Linux) to bypass the prompts and run it in a single command. 
+
+They accept all the same arguments as `dumper.py`:
+
 ```bash
 # Dry Run Mode: Auto-detect and scan local Star Citizen logs (no API key required)
-python3 dumper.py --url "http://localhost/mock" --dry-run
+./dumper.sh --url "http://localhost/mock" --dry-run
+# Windows: dumper.bat --url "http://localhost/mock" --dry-run
 
 # Dry Run Mode: Scan a specific JSON export file
-python3 dumper.py /path/to/your/export.json --url "http://localhost/mock" --dry-run
+./dumper.sh /path/to/your/export.json --url "http://localhost/mock" --dry-run
 
-# Dry Run Mode: Scan a custom log directory
-python3 dumper.py --url "http://localhost/mock" --log-dir "/path/to/logbackups" --dry-run
-
-# Real Mode: Auto-detect logs and import using env key
+# Real Mode: Auto-detect logs and import using environment key
 export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
-python3 dumper.py --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
+./dumper.sh --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
 
-# Real Mode: Scan specific JSON export and pass key directly
-python3 dumper.py /path/to/your/export.json \
+# Real Mode: Scan specific Game.log file directly and pass key as parameter
+./dumper.sh /path/to/Game.log \
   --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook" \
   --key "dr_your_secret_api_key"
 ```

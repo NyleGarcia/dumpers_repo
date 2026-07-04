@@ -17,6 +17,13 @@ if ! command -v python3 &> /dev/null; then
     PYTHON_CMD="python"
 fi
 
+# Bypass interactive mode if arguments are passed
+if [ "$#" -gt 0 ]; then
+    $PYTHON_CMD -m pip install -r requirements.txt &> /dev/null
+    $PYTHON_CMD dumper.py "$@"
+    exit $?
+fi
+
 # Install dependencies
 echo "[1/3] Installing dependencies..."
 $PYTHON_CMD -m pip install -r requirements.txt

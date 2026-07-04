@@ -6,6 +6,13 @@ echo             BP Dumper CLI Setup
 echo ====================================================
 echo.
 
+:: Check for CLI arguments and bypass interactive mode
+if not "%~1"=="" (
+    python -m pip install -r requirements.txt >nul 2>&1
+    python dumper.py %*
+    exit /b %errorlevel%
+)
+
 :: Check Python installation
 where python >nul 2>nul
 if %errorlevel% neq 0 (
