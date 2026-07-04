@@ -39,6 +39,7 @@ class Colors:
     CYAN = "\033[96m"
     YELLOW = "\033[93m"
     RED = "\033[91m"
+    MAGENTA = "\033[95m"
     DIM = "\033[2m"
     RESET = "\033[0m"
 
@@ -48,6 +49,7 @@ def disable_colors():
     Colors.CYAN = ""
     Colors.YELLOW = ""
     Colors.RED = ""
+    Colors.MAGENTA = ""
     Colors.DIM = ""
     Colors.RESET = ""
 
