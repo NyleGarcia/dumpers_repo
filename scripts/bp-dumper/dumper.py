@@ -6,6 +6,7 @@ Works on macOS, Windows, and Linux. Requires Python 3.
 
 import argparse
 from collections import deque
+import concurrent.futures
 import json
 import os
 import re
@@ -144,6 +145,13 @@ def parse_blueprints_from_log(path: Path) -> list[str]:
         print(f"{Colors.YELLOW}Warning: Could not read log file {path.name} ({e}){Colors.RESET}")
     return discovered
 
+def process_log_file(task_info):
+    """Worker function for a single thread to process one file."""
+    index, total, path = task_info
+    size_mb = path.stat().st_size / (1024 * 1024)
+    print(f"  [{index:>3}/{total}] Scanning {path.name} ({size_mb:.2f} MB)...")
+    return parse_blueprints_from_log(path)
+
 def main():
     if sys.platform == "win32":
         try:
@@ -226,10 +234,12 @@ def main():
             if not log_files:
                 print(f"{Colors.RED}Error: No .log files found in directory: {args.file_path}{Colors.RESET}", file=sys.stderr)
                 sys.exit(1)
-            print(f"Scanning {len(log_files)} log file(s) in {args.file_path.name}...")
+            print(f"Scanning {len(log_files)} log file(s) in {args.file_path.name} (Multithreaded)...")
             all_bps = []
-            for path in log_files:
-                all_bps.extend(parse_blueprints_from_log(path))
+            work_items = [(i, len(log_files), path) for i, path in enumerate(log_files, 1)]
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                for res in executor.map(process_log_file, work_items):
+                    all_bps.extend(res)
             unique_blueprints = sorted(list(set(all_bps)))
             source_name = f"direct directory scan ({len(log_files)} file(s))"
         else:
@@ -279,10 +289,12 @@ def main():
             print(f"{Colors.RED}Error: No log files found in detected directories: {[str(d) for d in log_dirs]}{Colors.RESET}", file=sys.stderr)
             sys.exit(1)
 
-        print(f"Scanning {len(log_files)} log file(s)...")
+        print(f"Scanning {len(log_files)} log file(s) (Multithreaded)...")
         all_bps = []
-        for path in log_files:
-            all_bps.extend(parse_blueprints_from_log(path))
+        work_items = [(i, len(log_files), path) for i, path in enumerate(log_files, 1)]
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            for res in executor.map(process_log_file, work_items):
+                all_bps.extend(res)
         
         unique_blueprints = sorted(list(set(all_bps)))
         source_name = f"direct log scan ({len(log_files)} file(s))"
