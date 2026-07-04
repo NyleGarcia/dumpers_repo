@@ -2,12 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { type BlueprintWithSlots } from '../lib/blueprintResources'
 import {
-  calculateSlotModifiers,
   aggregateModifiers,
-  formatModifierPercent,
-  getModifierColorClass,
+  formatAggregatedModifierDisplay,
   formatStatValue,
+  getAggregatedModifierColorClass,
   getPropertyLabel,
+  calculateSlotModifiers,
 } from '../lib/qualityModifiers'
 import {
   buildDefaultSlotQualities,
@@ -433,14 +433,14 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
             <div className="flex items-center gap-3 text-xs">
               {mod.baseValue !== undefined && mod.finalValue !== undefined && (
                 <span className="text-slate-500">
-                  {formatStatValue(mod.baseValue)} → {' '}
-                  <span className={getModifierColorClass(mod.combinedModifier, mod.property)}>
+                  {formatStatValue(mod.baseValue)} →{' '}
+                  <span className={getAggregatedModifierColorClass(mod)}>
                     {formatStatValue(mod.finalValue)}
                   </span>
                 </span>
               )}
-              <span className={`font-mono font-semibold ${getModifierColorClass(mod.combinedModifier, mod.property)}`}>
-                {formatModifierPercent(mod.combinedModifier)}
+              <span className={`font-mono font-semibold ${getAggregatedModifierColorClass(mod)}`}>
+                {formatAggregatedModifierDisplay(mod)}
               </span>
             </div>
           </div>

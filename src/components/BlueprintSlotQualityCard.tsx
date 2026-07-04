@@ -2,8 +2,8 @@ import { resourceLabelClassName } from '../config/resourceTypes'
 import { slugifyResourceName } from '../lib/blueprintResources'
 import { getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
 import {
-  formatModifierPercent,
-  getModifierColorClass,
+  formatSlotModifierDisplay,
+  getSlotModifierColorClass,
   type SlotModifierResult,
 } from '../lib/qualityModifiers'
 
@@ -149,8 +149,8 @@ export default function BlueprintSlotQualityCard({
               {modifierResults.map((result, idx) => (
                 <div key={idx} className="flex justify-between items-center text-xs">
                   <span className="text-slate-400">{result.propertyLabel}</span>
-                  <span className={getModifierColorClass(result.modifier, result.property)}>
-                    {formatModifierPercent(result.modifier)}
+                  <span className={getSlotModifierColorClass(result)}>
+                    {formatSlotModifierDisplay(result)}
                   </span>
                 </div>
               ))}

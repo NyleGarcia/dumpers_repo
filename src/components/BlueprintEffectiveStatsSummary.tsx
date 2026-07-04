@@ -1,9 +1,9 @@
 import React from 'react'
 import type { AggregatedModifier } from '../lib/qualityModifiers'
 import {
-  formatModifierPercent,
+  formatAggregatedModifierDisplay,
   formatStatValue,
-  getModifierColorClass,
+  getAggregatedModifierColorClass,
 } from '../lib/qualityModifiers'
 
 interface BlueprintEffectiveStatsSummaryProps {
@@ -43,17 +43,15 @@ export default function BlueprintEffectiveStatsSummary({
               {mod.baseValue !== undefined && mod.finalValue !== undefined && (
                 <span className="text-slate-500">
                   {formatStatValue(mod.baseValue)} →{' '}
-                  <span
-                    className={getModifierColorClass(mod.combinedModifier, mod.property)}
-                  >
+                  <span className={getAggregatedModifierColorClass(mod)}>
                     {formatStatValue(mod.finalValue)}
                   </span>
                 </span>
               )}
               <span
-                className={`font-mono font-semibold ${getModifierColorClass(mod.combinedModifier, mod.property)}`}
+                className={`font-mono font-semibold ${getAggregatedModifierColorClass(mod)}`}
               >
-                {formatModifierPercent(mod.combinedModifier)}
+                {formatAggregatedModifierDisplay(mod)}
               </span>
             </span>
           </div>

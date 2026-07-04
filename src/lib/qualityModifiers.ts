@@ -9,6 +9,7 @@ export interface Modifier {
   endQuality: number
   modifierAtStart: number
   modifierAtEnd: number
+  isIntegerAdditive?: boolean
 }
 
 /** Raw modifier shape from game-blueprints.json (parse-extracted-data.mjs output) */
@@ -21,6 +22,10 @@ export interface RawModifier {
   modifierAtEnd?: number
   baseAmount?: number
   perQuality?: number
+  additiveAtStart?: number
+  additiveAtEnd?: number
+  additiveModifierAtStart?: number
+  additiveModifierAtEnd?: number
   isIntegerAdditive?: boolean
 }
 
@@ -38,6 +43,28 @@ export function normalizeModifier(raw: RawModifier | Modifier | null | undefined
   const startQuality = raw.startQuality ?? 0
   const endQuality = raw.endQuality ?? 1000
   const range = endQuality - startQuality
+
+  if (raw.isIntegerAdditive) {
+    const start =
+      raw.additiveAtStart ??
+      raw.additiveModifierAtStart ??
+      raw.modifierAtStart ??
+      raw.baseAmount ??
+      0
+    const end =
+      raw.additiveAtEnd ??
+      raw.additiveModifierAtEnd ??
+      raw.modifierAtEnd ??
+      start
+    return {
+      gameplayProperty,
+      startQuality,
+      endQuality,
+      modifierAtStart: start,
+      modifierAtEnd: end,
+      isIntegerAdditive: true,
+    }
+  }
 
   if (raw.modifierAtStart !== undefined && raw.modifierAtEnd !== undefined) {
     return {
@@ -86,6 +113,9 @@ export interface SlotModifierResult {
   propertyLabel: string
   modifier: number
   percentChange: number
+  /** Flat stat delta from LinearIntegerAdditive crafting ranges */
+  additiveAmount?: number
+  isIntegerAdditive?: boolean
 }
 
 export interface AggregatedModifier {
@@ -93,8 +123,10 @@ export interface AggregatedModifier {
   propertyLabel: string
   combinedModifier: number
   percentChange: number
+  additiveChange?: number
   baseValue?: number
   finalValue?: number
+  isIntegerAdditive?: boolean
 }
 
 const PROPERTY_LABELS: Record<string, string> = {
@@ -213,6 +245,25 @@ export function formatModifierPercent(modifier: number): string {
   return `${sign}${percentChange.toFixed(2)}%`
 }
 
+export function formatAdditiveModifier(value: number): string {
+  const sign = value >= 0 ? '+' : ''
+  return `${sign}${value}`
+}
+
+export function formatSlotModifierDisplay(result: SlotModifierResult): string {
+  if (result.isIntegerAdditive) {
+    return formatAdditiveModifier(result.additiveAmount ?? 0)
+  }
+  return formatModifierPercent(result.modifier)
+}
+
+export function formatAggregatedModifierDisplay(mod: AggregatedModifier): string {
+  if (mod.isIntegerAdditive) {
+    return formatAdditiveModifier(mod.additiveChange ?? 0)
+  }
+  return formatModifierPercent(mod.combinedModifier)
+}
+
 /**
  * Get the color class for a modifier value.
  * For stats where lower is better, colors are inverted.
@@ -227,6 +278,26 @@ export function getModifierColorClass(modifier: number, property?: string): stri
     return inverted ? 'text-red-400' : 'text-green-400'
   }
   return 'text-slate-400'
+}
+
+export function getAdditiveColorClass(value: number): string {
+  if (value > 0) return 'text-green-400'
+  if (value < 0) return 'text-red-400'
+  return 'text-slate-400'
+}
+
+export function getSlotModifierColorClass(result: SlotModifierResult): string {
+  if (result.isIntegerAdditive) {
+    return getAdditiveColorClass(result.additiveAmount ?? 0)
+  }
+  return getModifierColorClass(result.modifier, result.property)
+}
+
+export function getAggregatedModifierColorClass(mod: AggregatedModifier): string {
+  if (mod.isIntegerAdditive) {
+    return getAdditiveColorClass(mod.additiveChange ?? 0)
+  }
+  return getModifierColorClass(mod.combinedModifier, mod.property)
 }
 
 /**
@@ -251,13 +322,25 @@ export function calculateSlotModifiers(
 
   const results: SlotModifierResult[] = []
   for (const [_property, mods] of byProperty) {
-    const modifier = interpolateModifier(quality, mods)
-    results.push({
-      property: mods[0].gameplayProperty,
-      propertyLabel: getPropertyLabel(mods[0].gameplayProperty),
-      modifier,
-      percentChange: (modifier - 1) * 100,
-    })
+    const isIntegerAdditive = mods.some((mod) => mod.isIntegerAdditive)
+    const value = interpolateModifier(quality, mods)
+    if (isIntegerAdditive) {
+      results.push({
+        property: mods[0].gameplayProperty,
+        propertyLabel: getPropertyLabel(mods[0].gameplayProperty),
+        modifier: 1,
+        percentChange: 0,
+        additiveAmount: Math.round(value),
+        isIntegerAdditive: true,
+      })
+    } else {
+      results.push({
+        property: mods[0].gameplayProperty,
+        propertyLabel: getPropertyLabel(mods[0].gameplayProperty),
+        modifier: value,
+        percentChange: (value - 1) * 100,
+      })
+    }
   }
 
   return results
@@ -271,40 +354,63 @@ export function aggregateModifiers(
   slotResults: SlotModifierResult[][],
   baseStats?: Record<string, number>
 ): AggregatedModifier[] {
-  const byProperty = new Map<string, { label: string; percentChanges: number[]; originalProperty: string }>()
+  const byProperty = new Map<
+    string,
+    {
+      label: string
+      percentChanges: number[]
+      additiveAmounts: number[]
+      originalProperty: string
+      isIntegerAdditive: boolean
+    }
+  >()
 
   for (const slotResult of slotResults) {
     for (const result of slotResult) {
       const key = result.property.toLowerCase()
       if (!byProperty.has(key)) {
-        byProperty.set(key, { label: result.propertyLabel, percentChanges: [], originalProperty: result.property })
+        byProperty.set(key, {
+          label: result.propertyLabel,
+          percentChanges: [],
+          additiveAmounts: [],
+          originalProperty: result.property,
+          isIntegerAdditive: !!result.isIntegerAdditive,
+        })
       }
-      // Store percentage change, not the modifier
-      byProperty.get(key)!.percentChanges.push(result.percentChange)
+      const entry = byProperty.get(key)!
+      if (result.isIntegerAdditive) {
+        entry.isIntegerAdditive = true
+        entry.additiveAmounts.push(result.additiveAmount ?? 0)
+      } else {
+        entry.percentChanges.push(result.percentChange)
+      }
     }
   }
 
   const aggregated: AggregatedModifier[] = []
   for (const [property, data] of byProperty) {
-    // ADD the percentage changes together (not multiply)
     const percentChange = data.percentChanges.reduce((acc, p) => acc + p, 0)
-    const combinedModifier = 1 + (percentChange / 100)
+    const additiveChange = data.additiveAmounts.reduce((acc, p) => acc + p, 0)
+    const combinedModifier = 1 + percentChange / 100
 
-    // Find base stat if available (case-insensitive comparison)
-    // vehicleBaseStats uses keys like "Health_MaxHealth" while gameplayProperty uses "Health_Maxhealth"
     const baseKey = Object.keys(baseStats || {}).find(
-      k => k.toLowerCase() === property.toLowerCase()
+      (k) => k.toLowerCase() === property.toLowerCase()
     )
     const baseValue = baseKey ? baseStats![baseKey] : undefined
-    const finalValue = baseValue !== undefined ? Math.round(baseValue * combinedModifier * 100) / 100 : undefined
+    const finalValue =
+      baseValue !== undefined
+        ? Math.round((baseValue * combinedModifier + additiveChange) * 100) / 100
+        : undefined
 
     aggregated.push({
       property: data.originalProperty,
       propertyLabel: data.label,
       combinedModifier,
       percentChange,
+      additiveChange: data.isIntegerAdditive ? additiveChange : undefined,
       baseValue,
       finalValue,
+      isIntegerAdditive: data.isIntegerAdditive,
     })
   }
 

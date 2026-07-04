@@ -11,6 +11,8 @@ import {
 export interface StoredEffectiveStat {
   propertyLabel: string
   percentChange: number
+  additiveChange?: number
+  isIntegerAdditive?: boolean
   baseValue?: number
   finalValue?: number
 }
@@ -105,33 +107,38 @@ export function serializeEffectiveStats(modifiers: AggregatedModifier[]): Stored
   return modifiers.map((mod) => ({
     propertyLabel: mod.propertyLabel,
     percentChange: Math.round(mod.percentChange * 10) / 10,
+    ...(mod.isIntegerAdditive ? { additiveChange: mod.additiveChange, isIntegerAdditive: true } : {}),
     ...(mod.baseValue !== undefined && mod.finalValue !== undefined
       ? { baseValue: mod.baseValue, finalValue: mod.finalValue }
       : {}),
   }))
 }
 
-export function formatStoredStatLine(stat: StoredEffectiveStat): string {
-  const pct =
-    stat.percentChange >= 0
-      ? `+${stat.percentChange.toFixed(1)}%`
-      : `${stat.percentChange.toFixed(1)}%`
-  if (stat.baseValue !== undefined && stat.finalValue !== undefined) {
-    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue)} → ${formatStatValue(stat.finalValue)} (${pct})`
+function formatStoredStatChange(stat: StoredEffectiveStat): string {
+  if (stat.isIntegerAdditive) {
+    const val = stat.additiveChange ?? 0
+    return val >= 0 ? `+${val}` : `${val}`
   }
-  return `${stat.propertyLabel}: ${pct}`
+  return stat.percentChange >= 0
+    ? `+${stat.percentChange.toFixed(1)}%`
+    : `${stat.percentChange.toFixed(1)}%`
+}
+
+export function formatStoredStatLine(stat: StoredEffectiveStat): string {
+  const change = formatStoredStatChange(stat)
+  if (stat.baseValue !== undefined && stat.finalValue !== undefined) {
+    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue)} → ${formatStatValue(stat.finalValue)} (${change})`
+  }
+  return `${stat.propertyLabel}: ${change}`
 }
 
 /** Discord/markdown-friendly single stat (no property label prefix when used in list). */
 export function formatStoredStatCompact(stat: StoredEffectiveStat): string {
-  const pct =
-    stat.percentChange >= 0
-      ? `+${stat.percentChange.toFixed(1)}%`
-      : `${stat.percentChange.toFixed(1)}%`
+  const change = formatStoredStatChange(stat)
   if (stat.baseValue !== undefined && stat.finalValue !== undefined) {
-    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue)}→${formatStatValue(stat.finalValue)} (${pct})`
+    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue)}→${formatStatValue(stat.finalValue)} (${change})`
   }
-  return `${stat.propertyLabel}: ${pct}`
+  return `${stat.propertyLabel}: ${change}`
 }
 
 export function buildBlueprintLineSnapshot(

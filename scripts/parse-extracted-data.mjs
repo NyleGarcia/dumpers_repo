@@ -2439,14 +2439,15 @@ function parseBlueprintDefinitions(localization = {}) {
                     perQuality: ((range.modifierAtEnd ?? 1.0) - (range.modifierAtStart ?? 1.0)) / ((range.endQuality ?? 1000) - (range.startQuality ?? 0))
                   })
                 } else if (range && range._Type_ === 'CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive') {
-                  // Integer additive modifiers (e.g., power generation on ship components)
+                  const start = range.additiveModifierAtStart ?? range.modifierAtStart ?? 0
+                  const end = range.additiveModifierAtEnd ?? range.modifierAtEnd ?? start
                   slotModifiers.push({
                     property,
                     startQuality: range.startQuality ?? 0,
                     endQuality: range.endQuality ?? 1000,
-                    baseAmount: range.modifierAtStart ?? 0,
-                    perQuality: ((range.modifierAtEnd ?? 0) - (range.modifierAtStart ?? 0)) / ((range.endQuality ?? 1000) - (range.startQuality ?? 0)),
-                    isIntegerAdditive: true
+                    additiveAtStart: start,
+                    additiveAtEnd: end,
+                    isIntegerAdditive: true,
                   })
                 }
               }
