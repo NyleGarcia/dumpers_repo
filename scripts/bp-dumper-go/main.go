@@ -444,6 +444,18 @@ func scanDirectoryConcurrently(dirPath string) ([]string, error) {
 		return nil, fmt.Errorf("no .log files found in directory: %s", dirPath)
 	}
 
+	// Merge local translations if any
+	localLocMap := parseLocalLocalization(dirPath)
+	if len(localLocMap) == 0 {
+		localLocMap = parseLocalLocalization(filepath.Dir(dirPath))
+	}
+	for k, v := range localLocMap {
+		blueprintNameToInternalNames[k] = v
+	}
+	if len(localLocMap) > 0 {
+		fmt.Printf("%sLoaded %d custom translations from local global.ini (StarStrings/localization mod active)%s\n", color.Green, len(localLocMap), color.Reset)
+	}
+
 	fmt.Printf("Scanning %d log file(s) in %s (Multithreaded)...\n", len(files), filepath.Base(dirPath))
 
 	var wg sync.WaitGroup
@@ -494,6 +506,70 @@ func normalizePath(path string) string {
 		return filepath.Clean(strings.ReplaceAll(path, "/", "\\"))
 	}
 	return path
+}
+
+func parseLocalLocalization(channelDir string) map[string][]string {
+	localMap := make(map[string][]string)
+	locDir := filepath.Join(channelDir, "data", "Localization")
+	if info, err := os.Stat(locDir); err != nil || !info.IsDir() {
+		return localMap
+	}
+
+	filepath.Walk(locDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+		if !info.IsDir() && strings.ToLower(info.Name()) == "global.ini" {
+			file, err := os.Open(path)
+			if err != nil {
+				return nil
+			}
+			defer file.Close()
+
+			scanner := bufio.NewScanner(file)
+			for scanner.Scan() {
+				line := strings.TrimSpace(scanner.Text())
+				if line == "" || strings.HasPrefix(line, ";") || strings.HasPrefix(line, "#") {
+					continue
+				}
+				parts := strings.SplitN(line, "=", 2)
+				if len(parts) != 2 {
+					continue
+				}
+				key := strings.TrimSpace(parts[0])
+				val := strings.TrimSpace(parts[1])
+				val = strings.Trim(val, `"'`)
+				if key == "" || val == "" {
+					continue
+				}
+
+				internalName := ""
+				if strings.HasPrefix(key, "item_Name_") {
+					internalName = strings.TrimPrefix(key, "item_Name_")
+				} else if strings.HasSuffix(key, "_Name") {
+					internalName = strings.TrimSuffix(key, "_Name")
+				}
+
+				if internalName != "" {
+					internalName = strings.ToLower(internalName)
+					valLower := strings.ToLower(val)
+					// Avoid duplicates
+					exists := false
+					for _, existing := range localMap[valLower] {
+						if existing == internalName {
+							exists = true
+							break
+						}
+					}
+					if !exists {
+						localMap[valLower] = append(localMap[valLower], internalName)
+					}
+				}
+			}
+		}
+		return nil
+	})
+	return localMap
 }
 
 func main() {
@@ -751,6 +827,16 @@ func main() {
 			os.Exit(1)
 		}
 
+		// Load local translations if any
+		channelDir := filepath.Dir(watchFile)
+		localLocMap := parseLocalLocalization(channelDir)
+		for k, v := range localLocMap {
+			blueprintNameToInternalNames[k] = v
+		}
+		if len(localLocMap) > 0 {
+			fmt.Printf("%sLoaded %d custom translations from local global.ini (StarStrings/localization mod active)%s\n", color.Green, len(localLocMap), color.Reset)
+		}
+
 		state := NewWatcherState()
 		watchLogFile(watchFile, state, acquiredBlueprints, dryRun, url, apiKey)
 		return
@@ -795,6 +881,15 @@ func main() {
 			} else {
 				// Direct single log file scan
 				fmt.Printf("Scanning single log file: %s...\n", filepath.Base(filePath))
+				channelDir := filepath.Dir(filePath)
+				localLocMap := parseLocalLocalization(channelDir)
+				for k, v := range localLocMap {
+					blueprintNameToInternalNames[k] = v
+				}
+				if len(localLocMap) > 0 {
+					fmt.Printf("%sLoaded %d custom translations from local global.ini (StarStrings/localization mod active)%s\n", color.Green, len(localLocMap), color.Reset)
+				}
+
 				state := NewWatcherState()
 				bps, _ := parseBlueprintsFromLog(filePath, state)
 				bpMap := make(map[string]bool)

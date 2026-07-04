@@ -500,6 +500,46 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
         if fh:
             fh.close()
 
+def parse_local_localization(channel_dir: Path) -> dict:
+    local_map = {}
+    loc_dir = channel_dir / "data" / "Localization"
+    if not loc_dir.exists() or not loc_dir.is_dir():
+        return local_map
+    
+    for path in loc_dir.rglob("global.ini"):
+        if not path.is_file():
+            continue
+        try:
+            with open(path, "r", encoding="utf-8-sig", errors="ignore") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith(";") or line.startswith("#"):
+                        continue
+                    parts = line.split("=", 1)
+                    if len(parts) != 2:
+                        continue
+                    key, val = parts[0].strip(), parts[1].strip()
+                    val = val.strip("'\"")
+                    if not key or not val:
+                        continue
+                    
+                    internal_name = ""
+                    if key.startswith("item_Name_"):
+                        internal_name = key[10:]
+                    elif key.endswith("_Name"):
+                        internal_name = key[:-5]
+                    
+                    if internal_name:
+                        internal_name = internal_name.lower()
+                        val_lower = val.lower()
+                        if val_lower not in local_map:
+                            local_map[val_lower] = []
+                        if internal_name not in local_map[val_lower]:
+                            local_map[val_lower].append(internal_name)
+        except Exception:
+            pass
+    return local_map
+
 def main():
     if sys.platform == "win32":
         try:
@@ -732,6 +772,13 @@ def main():
             except Exception as e:
                 print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
 
+        # Load local translations if any
+        channel_dir = watch_file.parent
+        local_loc_map = parse_local_localization(channel_dir)
+        if local_loc_map:
+            BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+            print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
+
         state = WatcherState()
         watch_log_file(watch_file, state, acquired_blueprints, args, session)
         return
@@ -758,6 +805,12 @@ def main():
             else:
                 # Direct single log file parsing (e.g., Game.log)
                 print(f"Scanning single log file: {args.file_path.name}...")
+                channel_dir = args.file_path.parent
+                local_loc_map = parse_local_localization(channel_dir)
+                if local_loc_map:
+                    BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+                    print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
+
                 all_bps = parse_blueprints_from_log(args.file_path)
                 unique_blueprints = sorted(list(set(all_bps)))
                 source_name = args.file_path.name
@@ -767,6 +820,15 @@ def main():
             if not log_files:
                 print(f"{Colors.RED}Error: No .log files found in directory: {args.file_path}{Colors.RESET}", file=sys.stderr)
                 sys.exit(1)
+
+            # Merge local translations if any
+            local_loc_map = parse_local_localization(args.file_path)
+            if not local_loc_map:
+                local_loc_map = parse_local_localization(args.file_path.parent)
+            if local_loc_map:
+                BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+                print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
+
             print(f"Scanning {len(log_files)} log file(s) in {args.file_path.name} (Multithreaded)...")
             all_bps = []
             work_items = [(i, len(log_files), path) for i, path in enumerate(log_files, 1)]
@@ -814,9 +876,18 @@ def main():
 
         # Collect log files
         log_files = []
+        local_loaded = False
         for d in log_dirs:
             if d.is_dir():
                 log_files.extend(d.glob("*.log"))
+                if not local_loaded:
+                    local_loc_map = parse_local_localization(d)
+                    if not local_loc_map:
+                        local_loc_map = parse_local_localization(d.parent)
+                    if local_loc_map:
+                        BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+                        print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
+                        local_loaded = True
         
         if not log_files:
             print(f"{Colors.RED}Error: No log files found in detected directories: {[str(d) for d in log_dirs]}{Colors.RESET}", file=sys.stderr)
