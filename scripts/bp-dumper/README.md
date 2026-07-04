@@ -32,7 +32,10 @@ Run the script using python:
 # 1. Add executable permissions (first time only)
 chmod +x dumper.py
 
-# 2. Run the script (via LOG_WATCHER_API_KEY environment variable)
+# 2. Run in Dry Run Mode (local only, no API key required)
+python3 dumper.py /path/to/your/export.json --url "http://localhost/mock" --dry-run
+
+# 3. Run in Real Mode (via LOG_WATCHER_API_KEY environment variable)
 export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
 python3 dumper.py /path/to/your/export.json --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
 ```
@@ -48,6 +51,7 @@ python3 dumper.py /path/to/your/export.json \
 
 ## Output Description
 The script will display the status of each unique blueprint:
+- **`★ Would Import`**: (Dry run mode only) The blueprint was detected locally and is ready to import.
 - **`★ Successfully Imported`**: The blueprint was added to your account.
 - **`↻ Already Acquired`**: The blueprint was already present (skipped, no duplicate created).
 - **`✗ Failed`**: The API returned an error (e.g., account pending approval, banned, or invalid ID).

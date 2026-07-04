@@ -41,7 +41,17 @@ if not exist "!JSON_FILE!" (
     goto prompt_file
 )
 
-:: 2. Secret API key
+:: 2. Dry run check
+set /p "DRY_RUN=Dry run only? (Y/N, Enter = N): "
+if /i "!DRY_RUN!"=="y" (
+    echo.
+    echo [3/3] Running dumper script in dry run mode...
+    echo.
+    python dumper.py "!JSON_FILE!" --url "http://localhost/mock" --dry-run
+    goto end
+)
+
+:: 3. Secret API key
 :prompt_key
 set /p "API_KEY=Enter your Secret API Key (e.g. dr_...): "
 set "API_KEY=!API_KEY:"=!"
@@ -50,7 +60,7 @@ if "!API_KEY!"=="" (
     goto prompt_key
 )
 
-:: 3. Webhook URL
+:: 4. Webhook URL
 :prompt_url
 set /p "URL=Enter Supabase Edge Function Webhook URL: "
 set "URL=!URL:"=!"
@@ -63,6 +73,8 @@ echo.
 echo [3/3] Running dumper script...
 echo.
 python dumper.py "!JSON_FILE!" --url "!URL!" --key "!API_KEY!"
+
+:end
 echo.
 echo ====================================================
 echo Import Complete.

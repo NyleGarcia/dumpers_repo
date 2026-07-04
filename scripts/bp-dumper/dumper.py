@@ -64,14 +64,21 @@ def main():
         "--key",
         help="Your secret API key. If omitted, the script will read the LOG_WATCHER_API_KEY environment variable."
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Dry run: scan and log blueprints locally without making network calls or requiring an API key."
+    )
 
     args = parser.parse_args()
 
-    # Resolve API Key
-    api_key = args.key or os.getenv("LOG_WATCHER_API_KEY")
-    if not api_key:
-        print(f"{Colors.RED}Error: API key must be provided via --key or LOG_WATCHER_API_KEY environment variable.{Colors.RESET}", file=sys.stderr)
-        sys.exit(1)
+    # Resolve API Key (only required if not performing a dry run)
+    api_key = None
+    if not args.dry_run:
+        api_key = args.key or os.getenv("LOG_WATCHER_API_KEY")
+        if not api_key:
+            print(f"{Colors.RED}Error: API key must be provided via --key or LOG_WATCHER_API_KEY environment variable.{Colors.RESET}", file=sys.stderr)
+            sys.exit(1)
 
     # Validate JSON File
     if not args.file_path.is_file():
@@ -102,47 +109,55 @@ def main():
     dupe_count = 0
     fail_count = 0
 
-    session = requests.Session()
-    session.headers.update({
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    })
+    if args.dry_run:
+        for idx, bp_id in enumerate(unique_blueprints, 1):
+            success_count += 1
+            print(f"  [{idx}/{len(unique_blueprints)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {bp_id}")
+    else:
+        session = requests.Session()
+        session.headers.update({
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        })
 
-    for idx, bp_id in enumerate(unique_blueprints, 1):
-        payload = {
-            "type": "blueprint_received",
-            "blueprint": bp_id
-        }
+        for idx, bp_id in enumerate(unique_blueprints, 1):
+            payload = {
+                "type": "blueprint_received",
+                "blueprint": bp_id
+            }
 
-        try:
-            res = session.post(args.url, json=payload, timeout=15)
-            response_json = res.json()
+            try:
+                res = session.post(args.url, json=payload, timeout=15)
+                response_json = res.json()
 
-            if res.status_code == 200:
-                is_duplicate = response_json.get("duplicate", False)
-                if is_duplicate:
-                    dupe_count += 1
-                    print(f"  [{idx}/{len(unique_blueprints)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
+                if res.status_code == 200:
+                    is_duplicate = response_json.get("duplicate", False)
+                    if is_duplicate:
+                        dupe_count += 1
+                        print(f"  [{idx}/{len(unique_blueprints)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
+                    else:
+                        success_count += 1
+                        print(f"  [{idx}/{len(unique_blueprints)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
                 else:
-                    success_count += 1
-                    print(f"  [{idx}/{len(unique_blueprints)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
-            else:
-                fail_count += 1
-                reason = response_json.get("error", f"HTTP {res.status_code}")
-                print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {reason}){Colors.RESET}")
+                    fail_count += 1
+                    reason = response_json.get("error", f"HTTP {res.status_code}")
+                    print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {reason}){Colors.RESET}")
 
-        except requests.RequestException as e:
-            fail_count += 1
-            print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Connection Error:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {e}){Colors.RESET}")
+            except requests.RequestException as e:
+                fail_count += 1
+                print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Connection Error:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {e}){Colors.RESET}")
 
     print()
     print(f"{Colors.CYAN}Import Finished Summary:{Colors.RESET}")
-    print(f"  {Colors.GREEN}★ Imported:    {success_count}{Colors.RESET}")
-    print(f"  {Colors.YELLOW}↻ Duplicates:  {dupe_count}{Colors.RESET}")
-    if fail_count > 0:
-        print(f"  {Colors.RED}✗ Failed:      {fail_count}{Colors.RESET}")
+    if args.dry_run:
+        print(f"  {Colors.GREEN}★ Would Import: {success_count}{Colors.RESET}")
     else:
-        print(f"  ✗ Failed:      0")
+        print(f"  {Colors.GREEN}★ Imported:     {success_count}{Colors.RESET}")
+        print(f"  {Colors.YELLOW}↻ Duplicates:   {dupe_count}{Colors.RESET}")
+        if fail_count > 0:
+            print(f"  {Colors.RED}✗ Failed:       {fail_count}{Colors.RESET}")
+        else:
+            print(f"  ✗ Failed:       0")
 
 if __name__ == "__main__":
     main()
