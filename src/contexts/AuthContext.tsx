@@ -32,6 +32,11 @@ import {
 } from '../lib/bootstrapSteps'
 import type { User, Session, UserIdentity } from '@supabase/supabase-js'
 import type { OAuthProviderId } from '../lib/authProviders'
+import {
+  getDiscordOAuthOptions,
+  markDiscordAppAuthorized,
+  userHasDiscordIdentity,
+} from '../lib/discordOAuth'
 
 const AUTH_BOOTSTRAP_TIMEOUT_MS = 12_000
 const BOOTSTRAP_FAILSAFE_MS = 45_000
@@ -393,12 +398,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (isOAuthCallback && session && !error) {
           window.history.replaceState(null, '', window.location.pathname)
+          if (userHasDiscordIdentity(session.user.identities)) {
+            markDiscordAppAuthorized()
+          }
         }
 
         if (cancelled) return
 
         setSession(session)
         setUser(session?.user ?? null)
+
+        if (session?.user && userHasDiscordIdentity(session.user.identities)) {
+          markDiscordAppAuthorized()
+        }
 
         const stepsAfterSession = buildBootstrapSteps(!!session?.user).map((step) =>
           step.id === 'session' ? { ...step, status: 'done' as const, progress: 100 } : step
@@ -506,7 +518,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const oauthProviderOptions = useCallback(
     (provider: OAuthProviderId) => ({
       ...oauthRedirectOptions,
-      ...(provider === 'discord' ? { scopes: 'identify email' } : {}),
+      ...(provider === 'discord' ? getDiscordOAuthOptions() : {}),
     }),
     [oauthRedirectOptions]
   )
