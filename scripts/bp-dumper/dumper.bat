@@ -1,18 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
 
-echo ====================================================
-echo             BP Dumper CLI Setup
-echo ====================================================
-echo.
-
-:: Check for CLI arguments and bypass interactive mode
-if not "%~1"=="" (
-    python -m pip install -r requirements.txt >nul 2>&1
-    python dumper.py %*
-    exit /b %errorlevel%
-)
-
 :: Check Python installation
 where python >nul 2>nul
 if %errorlevel% neq 0 (
@@ -24,78 +12,15 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: Install dependencies
-echo [1/3] Installing dependencies...
-python -m pip install --upgrade pip >nul 2>&1
-python -m pip install -r requirements.txt
-if %errorlevel% neq 0 (
-    echo [WARNING] Failed to install dependencies via pip. Retrying...
-    pip install -r requirements.txt
-)
-echo.
+:: Install dependencies silently
+python -m pip install -r requirements.txt >nul 2>&1
 
-:: Prompts
-echo [2/3] Configuration Settings:
-echo.
+:: Run python script forwarding all args
+python dumper.py %*
 
-:: 1. JSON file path / Directory
-:prompt_file
-set "JSON_FILE="
-set /p "JSON_FILE=Enter path to JSON export or folder (Leave empty to auto-detect SC logs): "
-if not "!JSON_FILE!"=="" (
-    :: Strip quotes if pasted
-    set "JSON_FILE=!JSON_FILE:"=!"
-    if not exist "!JSON_FILE!" (
-        echo [ERROR] Path does not exist: "!JSON_FILE!"
-        goto prompt_file
-    )
+if not "%~1"=="" (
+    exit /b %errorlevel%
 )
 
-:: 2. Dry run check
-set /p "DRY_RUN=Dry run only? (Y/N, Enter = N): "
-if /i "!DRY_RUN!"=="y" (
-    echo.
-    echo [3/3] Running dumper script in dry run mode...
-    echo.
-    if "!JSON_FILE!"=="" (
-        python dumper.py --url "http://localhost/mock" --dry-run
-    ) else (
-        python dumper.py "!JSON_FILE!" --url "http://localhost/mock" --dry-run
-    )
-    goto end
-)
-
-:: 3. Secret API key
-:prompt_key
-set /p "API_KEY=Enter your Secret API Key (e.g. dr_...): "
-set "API_KEY=!API_KEY:"=!"
-if "!API_KEY!"=="" (
-    echo [ERROR] API Key is required.
-    goto prompt_key
-)
-
-:: 4. Webhook URL
-:prompt_url
-set /p "URL=Enter Supabase Edge Function Webhook URL: "
-set "URL=!URL:"=!"
-if "!URL!"=="" (
-    echo [ERROR] Webhook URL is required.
-    goto prompt_url
-)
-
-echo.
-echo [3/3] Running dumper script...
-echo.
-if "!JSON_FILE!"=="" (
-    python dumper.py --url "!URL!" --key "!API_KEY!"
-) else (
-    python dumper.py "!JSON_FILE!" --url "!URL!" --key "!API_KEY!"
-)
-
-:end
-echo.
-echo ====================================================
-echo Import Complete.
-echo ====================================================
 echo.
 pause

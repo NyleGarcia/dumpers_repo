@@ -148,6 +148,34 @@ def process_log_file(task_info):
     print(f"  [{index:>3}/{total}] Scanning {path.name} ({size_mb:.2f} MB)...")
     return parse_blueprints_from_log(path)
 
+def load_env_file(env_path: Path) -> dict:
+    env = {}
+    if env_path.is_file():
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    if "=" in line:
+                        k, v = line.split("=", 1)
+                        env[k.strip()] = v.strip().strip('"').strip("'")
+        except Exception:
+            pass
+    return env
+
+def save_env_file(env_path: Path, variables: dict):
+    try:
+        with open(env_path, "w", encoding="utf-8") as f:
+            f.write("# Saved Configuration Settings\n")
+            for k, v in variables.items():
+                if v:
+                    # Strip quotes before saving
+                    clean_v = str(v).strip().strip('"').strip("'")
+                    f.write(f"{k}={clean_v}\n")
+    except Exception:
+        pass
+
 def main():
     if sys.platform == "win32":
         try:
@@ -190,16 +218,118 @@ def main():
 
     args = parser.parse_args()
 
-    # Resolve URL & API Key (only required if not performing a dry run)
+    # Load configuration from .env file
+    env_path = Path(__file__).resolve().parent / ".env"
+    env_vars = load_env_file(env_path)
+
+    # Determine if we should run in interactive mode
+    # We run interactively if stdout is a terminal AND either:
+    # 1. No command-line arguments are passed
+    # 2. --dry-run was passed, but we don't have a target file/folder
+    # 3. We are running in real mode, but --url (or API key) is missing
+    is_interactive = sys.stdout.isatty() and (
+        len(sys.argv) == 1 or
+        (len(sys.argv) == 2 and args.dry_run) or
+        (not args.dry_run and not args.url and not env_vars.get("SUPABASE_WEBHOOK_URL"))
+    )
+
+    if is_interactive:
+        print(f"{Colors.CYAN}===================================================={Colors.RESET}")
+        print(f"{Colors.CYAN}             BP Dumper Configuration Wizard{Colors.RESET}")
+        print(f"{Colors.CYAN}===================================================={Colors.RESET}")
+        print()
+
+        # 1. Prompt file path / directory
+        default_path = env_vars.get("LOG_PATH", "")
+        path_prompt = "Enter path to JSON export or folder (Leave empty to auto-detect SC logs)"
+        if default_path:
+            path_prompt += f" [{default_path}]"
+        path_prompt += ": "
+        
+        try:
+            user_path = input(path_prompt).strip().strip('"').strip("'")
+        except (KeyboardInterrupt, EOFError):
+            print("\nAborted.")
+            sys.exit(0)
+            
+        if not user_path and default_path:
+            user_path = default_path
+        
+        if user_path:
+            args.file_path = Path(user_path)
+
+        # 2. Prompt Dry Run
+        try:
+            user_dry_run = input("Dry run only? (Y/N, Enter = N): ").strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            print("\nAborted.")
+            sys.exit(0)
+            
+        if user_dry_run == 'y':
+            args.dry_run = True
+
+        # 3. Prompt URL (only if not dry run)
+        if not args.dry_run:
+            default_url = env_vars.get("SUPABASE_WEBHOOK_URL", "")
+            url_prompt = "Enter Supabase Edge Function Webhook URL"
+            if default_url:
+                url_prompt += f" [{default_url}]"
+            url_prompt += ": "
+            
+            try:
+                user_url = input(url_prompt).strip().strip('"').strip("'")
+            except (KeyboardInterrupt, EOFError):
+                print("\nAborted.")
+                sys.exit(0)
+                
+            if not user_url and default_url:
+                user_url = default_url
+            args.url = user_url
+
+        # 4. Prompt Key (only if not dry run)
+        if not args.dry_run:
+            default_key = env_vars.get("LOG_WATCHER_API_KEY", "")
+            key_prompt = "Enter your Secret API Key (e.g. dr_...)"
+            if default_key:
+                masked_key = f"{default_key[:6]}...{default_key[-4:]}" if len(default_key) > 10 else default_key
+                key_prompt += f" [{masked_key}]"
+            key_prompt += ": "
+            
+            try:
+                user_key = input(key_prompt).strip().strip('"').strip("'")
+            except (KeyboardInterrupt, EOFError):
+                print("\nAborted.")
+                sys.exit(0)
+                
+            if not user_key and default_key:
+                user_key = default_key
+            args.key = user_key
+
+        print()
+
+        # Save variables to .env file immediately
+        new_env = {
+            "LOG_PATH": str(args.file_path) if args.file_path else "",
+            "SUPABASE_WEBHOOK_URL": args.url if args.url else "",
+            "LOG_WATCHER_API_KEY": args.key if args.key else ""
+        }
+        env_vars.update(new_env)
+        save_env_file(env_path, env_vars)
+
+    # Resolve URL & API Key (checks CLI args -> ENV variables -> .env file)
+    url = args.url or os.getenv("SUPABASE_WEBHOOK_URL") or env_vars.get("SUPABASE_WEBHOOK_URL")
     api_key = None
     if not args.dry_run:
-        if not args.url:
-            print(f"{Colors.RED}Error: Webhook URL must be provided via --url.{Colors.RESET}", file=sys.stderr)
+        if not url:
+            print(f"{Colors.RED}Error: Webhook URL must be provided via --url or configured in .env file.{Colors.RESET}", file=sys.stderr)
             sys.exit(1)
-        api_key = args.key or os.getenv("LOG_WATCHER_API_KEY")
+        api_key = args.key or os.getenv("LOG_WATCHER_API_KEY") or env_vars.get("LOG_WATCHER_API_KEY")
         if not api_key:
-            print(f"{Colors.RED}Error: API key must be provided via --key or LOG_WATCHER_API_KEY environment variable.{Colors.RESET}", file=sys.stderr)
+            print(f"{Colors.RED}Error: API key must be provided via --key, LOG_WATCHER_API_KEY environment variable, or configured in .env file.{Colors.RESET}", file=sys.stderr)
             sys.exit(1)
+
+    # Update script args.url with resolved URL for reference
+    args.url = url
 
     unique_blueprints = []
     source_name = ""
