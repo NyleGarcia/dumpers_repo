@@ -6,12 +6,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
-	"runtime"
 	"sort"
 	"strings"
 	"sync"
@@ -427,6 +425,49 @@ func findSCRoots(driveRoot string) []string {
 		}
 	}
 	return roots
+}
+
+func scanDirectoryConcurrently(dirPath string) ([]string, error) {
+	files, err := filepath.Glob(filepath.Join(dirPath, "*.log"))
+	if err != nil {
+		return nil, err
+	}
+	if len(files) == 0 {
+		return nil, fmt.Errorf("no .log files found in directory: %s", dirPath)
+	}
+
+	fmt.Printf("Scanning %d log file(s) in %s (Multithreaded)...\n", len(files), filepath.Base(dirPath))
+
+	var wg sync.WaitGroup
+	resultsChan := make(chan []string, len(files))
+	state := NewWatcherState()
+
+	for i, f := range files {
+		wg.Add(1)
+		go func(idx int, path string) {
+			defer wg.Done()
+			info, err := os.Stat(path)
+			if err != nil {
+				resultsChan <- nil
+				return
+			}
+			sizeMB := float64(info.Size()) / (1024 * 1024)
+			fmt.Printf("  [%3d/%d] Scanning %s (%.2f MB)...\n", idx+1, len(files), filepath.Base(path), sizeMB)
+			bps, _ := parseBlueprintsFromLog(path, state)
+			resultsChan <- bps
+		}(i, f)
+	}
+
+	wg.Wait()
+	close(resultsChan)
+
+	var allBps []string
+	for bps := range resultsChan {
+		if bps != nil {
+			allBps = append(allBps, bps...)
+		}
+	}
+	return allBps, nil
 }
 
 func main() {
