@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"sort"
 	"strings"
 	"sync"
@@ -470,25 +471,77 @@ func scanDirectoryConcurrently(dirPath string) ([]string, error) {
 	return allBps, nil
 }
 
+func normalizePath(path string) string {
+	if path == "" {
+		return ""
+	}
+	if runtime.GOOS == "windows" {
+		// Convert WSL paths /mnt/x/ to X:\
+		if len(path) >= 7 && strings.HasPrefix(path, "/mnt/") && path[6] == '/' {
+			drive := strings.ToUpper(string(path[5]))
+			remaining := path[7:]
+			remaining = strings.ReplaceAll(remaining, "/", "\\")
+			return drive + ":\\" + remaining
+		}
+		// Convert / to \ for all paths on Windows
+		return filepath.Clean(strings.ReplaceAll(path, "/", "\\"))
+	}
+	return path
+}
+
 func main() {
 	enableWindowsANSI()
 	if !isTTY() {
 		disableColors()
 	}
 
-	filePathFlag := flag.String("file", "", "Path to the JSON file or log file to parse.")
-	urlFlag := flag.String("url", "", "Supabase log-watcher-webhook Edge Function URL.")
-	keyFlag := flag.String("key", "", "Your secret API key.")
-	dryRunFlag := flag.Bool("dry-run", false, "Dry run: scan blueprints locally without making API calls.")
-	watchFlag := flag.Bool("watch", false, "Watch mode: trails a Game.log file in real-time.")
-	logDirFlag := flag.String("log-dir", "", "Directly scan a specific directory for log files.")
+	var (
+		filePath string
+		url      string
+		apiKey   string
+		dryRun   bool
+		watch    bool
+		logDir   string
+	)
+
+	flag.StringVar(&filePath, "file", "", "Path to the JSON file or log file to parse.")
+	flag.StringVar(&filePath, "f", "", "Path to the JSON file or log file to parse (shorthand).")
+
+	flag.StringVar(&url, "url", "", "Supabase log-watcher-webhook Edge Function URL.")
+	flag.StringVar(&url, "u", "", "Supabase log-watcher-webhook Edge Function URL (shorthand).")
+
+	flag.StringVar(&apiKey, "key", "", "Your secret API key.")
+	flag.StringVar(&apiKey, "k", "", "Your secret API key (shorthand).")
+
+	flag.BoolVar(&dryRun, "dry-run", false, "Dry run: scan blueprints locally without making API calls.")
+	flag.BoolVar(&dryRun, "d", false, "Dry run (shorthand).")
+
+	flag.BoolVar(&watch, "watch", false, "Watch mode: trails a Game.log file in real-time.")
+	flag.BoolVar(&watch, "w", false, "Watch mode (shorthand).")
+
+	flag.StringVar(&logDir, "log-dir", "", "Directly scan a specific directory for log files.")
+	flag.StringVar(&logDir, "l", "", "Directly scan a specific directory for log files (shorthand).")
 
 	// Support positional file path (standard parsing behavior)
 	flag.Parse()
-	filePath := *filePathFlag
+
+	// If filePath wasn't set by flags, check first positional arg
 	if filePath == "" && len(flag.Args()) > 0 {
 		filePath = flag.Arg(0)
+		// Check if we captured -w or -d as a trailing positional arg because Go flag package stops parsing on positional args
+		for _, arg := range flag.Args() {
+			if arg == "-w" || arg == "--watch" {
+				watch = true
+			}
+			if arg == "-d" || arg == "--dry-run" {
+				dryRun = true
+			}
+		}
 	}
+
+	// Normalize paths immediately
+	filePath = normalizePath(filePath)
+	logDir = normalizePath(logDir)
 
 	// Determine environment paths
 	exePath, err := os.Executable()
@@ -501,8 +554,8 @@ func main() {
 
 	// Determine if running interactively
 	isInteractive := isTTY() && (len(os.Args) == 1 ||
-		(len(os.Args) == 2 && *dryRunFlag) ||
-		(!*dryRunFlag && *urlFlag == "" && envVars["SUPABASE_WEBHOOK_URL"] == ""))
+		(len(os.Args) == 2 && dryRun) ||
+		(!dryRun && url == "" && envVars["SUPABASE_WEBHOOK_URL"] == ""))
 
 	if isInteractive {
 		fmt.Printf("%s====================================================%s\n", color.Cyan, color.Reset)
@@ -533,7 +586,7 @@ func main() {
 		userDryRun, _ := reader.ReadString('\n')
 		userDryRun = strings.ToLower(strings.TrimSpace(userDryRun))
 		if userDryRun == "y" {
-			*dryRunFlag = true
+			dryRun = true
 		}
 
 		// 3. Watch Mode Prompt
@@ -541,11 +594,11 @@ func main() {
 		userWatch, _ := reader.ReadString('\n')
 		userWatch = strings.ToLower(strings.TrimSpace(userWatch))
 		if userWatch == "y" {
-			*watchFlag = true
+			watch = true
 		}
 
 		// 4. URL Prompt
-		if !*dryRunFlag {
+		if !dryRun {
 			defaultURL := envVars["SUPABASE_WEBHOOK_URL"]
 			urlPrompt := "Enter Supabase Edge Function Webhook URL"
 			if defaultURL != "" {
@@ -558,11 +611,11 @@ func main() {
 			if userURL == "" && defaultURL != "" {
 				userURL = defaultURL
 			}
-			*urlFlag = userURL
+			url = userURL
 		}
 
 		// 5. Key Prompt
-		if !*dryRunFlag {
+		if !dryRun {
 			defaultKey := envVars["LOG_WATCHER_API_KEY"]
 			keyPrompt := "Enter your Secret API Key (e.g. dr_...)"
 			if defaultKey != "" {
@@ -579,7 +632,7 @@ func main() {
 			if userKey == "" && defaultKey != "" {
 				userKey = defaultKey
 			}
-			*keyFlag = userKey
+			apiKey = userKey
 		}
 
 		fmt.Println()
@@ -587,14 +640,13 @@ func main() {
 		// Save configuration immediately
 		saveVars := map[string]string{
 			"LOG_PATH":             filePath,
-			"SUPABASE_WEBHOOK_URL": *urlFlag,
-			"LOG_WATCHER_API_KEY":  *keyFlag,
+			"SUPABASE_WEBHOOK_URL": url,
+			"LOG_WATCHER_API_KEY":  apiKey,
 		}
 		saveEnvFile(envPath, saveVars)
 	}
 
-	// Resolve config variables
-	url := *urlFlag
+	// Resolve config variables from env if not set in interactive wizard or CLI flags
 	if url == "" {
 		url = os.Getenv("SUPABASE_WEBHOOK_URL")
 		if url == "" {
@@ -602,7 +654,6 @@ func main() {
 		}
 	}
 
-	apiKey := *keyFlag
 	if apiKey == "" {
 		apiKey = os.Getenv("LOG_WATCHER_API_KEY")
 		if apiKey == "" {
@@ -611,7 +662,7 @@ func main() {
 	}
 
 	// Validate config if not dry run
-	if !*dryRunFlag {
+	if !dryRun {
 		if url == "" {
 			fmt.Printf("%sError: Webhook URL must be provided via --url or configured in .env file.%s\n", color.Red, color.Reset)
 			os.Exit(1)
@@ -627,7 +678,7 @@ func main() {
 	acquiredBlueprints := loadCacheFile(cachePath)
 
 	// Fetch current server state if not dry-run
-	if !*dryRunFlag {
+	if !dryRun {
 		fmt.Printf("%sSynchronizing blueprints list from server...%s\n", color.Dim, color.Reset)
 		req, err := http.NewRequest("GET", url, nil)
 		if err == nil {
@@ -652,7 +703,7 @@ func main() {
 	}
 
 	// Watch Mode Routing
-	if *watchFlag {
+	if watch {
 		watchFile := ""
 		if filePath != "" {
 			info, err := os.Stat(filePath)
@@ -664,8 +715,8 @@ func main() {
 				}
 			}
 		} else {
-			if *logDirFlag != "" {
-				watchFile = filepath.Join(*logDirFlag, "Game.log")
+			if logDir != "" {
+				watchFile = filepath.Join(logDir, "Game.log")
 			} else {
 				// Try auto detect
 				installs := detectSCInstalls()
@@ -694,7 +745,7 @@ func main() {
 		}
 
 		state := NewWatcherState()
-		watchLogFile(watchFile, state, acquiredBlueprints, *dryRunFlag, url, apiKey)
+		watchLogFile(watchFile, state, acquiredBlueprints, dryRun, url, apiKey)
 		return
 	}
 
@@ -769,8 +820,8 @@ func main() {
 	} else {
 		// Auto detect logs
 		var logDirs []string
-		if *logDirFlag != "" {
-			logDirs = []string{*logDirFlag}
+		if logDir != "" {
+			logDirs = []string{logDir}
 		} else {
 			fmt.Printf("%sScanning local system for Star Citizen installations...%s\n", color.Dim, color.Reset)
 			installs := detectSCInstalls()
@@ -890,7 +941,7 @@ func main() {
 	failCount := 0
 
 	for idx, bpID := range toImport {
-		if *dryRunFlag {
+		if dryRun {
 			successCount++
 			fmt.Printf("  [%d/%d] %s★ Would Import:%s %s\n", idx+1, len(toImport), color.Green, color.Reset, bpID)
 		} else {
@@ -941,7 +992,7 @@ func main() {
 
 	fmt.Println()
 	fmt.Printf("%sImport Finished Summary:%s\n", color.Cyan, color.Reset)
-	if *dryRunFlag {
+	if dryRun {
 		fmt.Printf("  %s★ Would Import: %d%s\n", color.Green, successCount, color.Reset)
 	} else {
 		fmt.Printf("  %s★ Imported:     %d%s\n", color.Green, successCount, color.Reset)
