@@ -218,8 +218,11 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Enable Ghost Mode to hide from member lists while keeping personal tools',
       'Ghost Mode keeps blueprints, Mission Tracker, Resource Tracker, Mining Tracker, and the Info Archive — orders, fulfillment, webhooks, and support stay hidden',
       'Turn Ghost Mode off anytime from Privacy settings',
+      'Generate and copy a personal API key for external tool integration (e.g. Log Watcher webhook)',
+      'API keys authorize external tools to update your acquired blueprints automatically',
+      'Regenerate your key from Settings if it is compromised',
     ],
-    relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker'],
+    relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker', 'Log Watcher'],
   },
   {
     id: 'support',

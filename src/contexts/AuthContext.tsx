@@ -70,6 +70,7 @@ interface AuthContextType {
   isBanned: boolean
   acquiredBlueprints: Record<string, boolean>
   signInWithGoogle: () => Promise<void>
+  signInWithDiscord: () => Promise<void>
   signOut: () => Promise<void>
   toggleAcquired: (blueprintId: string) => Promise<void>
   updateRsiHandle: (handle: string) => Promise<boolean>
@@ -508,6 +509,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  const signInWithDiscord = useCallback(async () => {
+    writeGuestPreviewSession(false)
+    setIsGuestPreview(false)
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'discord',
+      options: {
+        redirectTo: window.location.origin,
+      },
+    })
+    if (error) {
+      console.error('Error signing in with Discord:', error)
+      throw error
+    }
+  }, [])
+
   const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut()
     if (error) {
@@ -816,6 +833,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isBanned,
       acquiredBlueprints,
       signInWithGoogle,
+      signInWithDiscord,
       signOut,
       toggleAcquired,
       updateRsiHandle,
@@ -859,6 +877,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isBanned,
       acquiredBlueprints,
       signInWithGoogle,
+      signInWithDiscord,
       signOut,
       toggleAcquired,
       updateRsiHandle,

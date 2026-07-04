@@ -401,6 +401,55 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             />
           </SettingsSection>
 
+          <SettingsSection
+            title="API Access"
+            description="Integration with external tools like the Log Watcher"
+          >
+            <SettingsField
+              label="Secret API Key"
+              hint="Use this key to authorize external tools to update your blueprints automatically."
+            >
+              <div className="flex gap-2">
+                <button
+                  onClick={async () => {
+                    setMessage(null)
+                    try {
+                      const { data, error } = await supabase.rpc('get_or_create_api_key')
+                      if (error) throw error
+                      if (data) {
+                        await navigator.clipboard.writeText(data)
+                        setMessage({ type: 'success', text: 'API Key copied to clipboard!' })
+                      }
+                    } catch {
+                      setMessage({ type: 'error', text: 'Failed to generate API Key' })
+                    }
+                  }}
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded-lg transition-colors border border-slate-700"
+                >
+                  Copy API Key
+                </button>
+                <button
+                  onClick={async () => {
+                    setMessage(null)
+                    try {
+                      const { data, error } = await supabase.rpc('regenerate_api_key')
+                      if (error) throw error
+                      if (data) {
+                        await navigator.clipboard.writeText(data)
+                        setMessage({ type: 'success', text: 'New API Key generated and copied! Old key is revoked.' })
+                      }
+                    } catch {
+                      setMessage({ type: 'error', text: 'Failed to regenerate API Key' })
+                    }
+                  }}
+                  className="px-4 py-2.5 bg-red-950/50 hover:bg-red-900/50 text-red-400 text-sm font-medium rounded-lg transition-colors border border-red-500/30"
+                >
+                  Regenerate
+                </button>
+              </div>
+            </SettingsField>
+          </SettingsSection>
+
           {isSuperAdmin && (
             <SettingsSection
               title="Site"
@@ -428,7 +477,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               />
               <SettingsToggle
                 label="Auto-approve new signups"
-                description="When enabled, new Google sign-ins are automatically approved as members instead of requiring officer approval."
+                description="When enabled, new sign-ins are automatically approved as members instead of requiring officer approval."
                 checked={autoApproveEnabled}
                 onChange={handleAutoApproveChange}
                 saving={savingAutoApprove}
