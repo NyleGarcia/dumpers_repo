@@ -22,6 +22,7 @@ Some crafting blueprint records exist in game files before their SCItem entity i
 - Default blueprints remain visible when the ★ Rewards filter is on (they are not mission rewards, but members always need access).
 - Default blueprints use the **⚙ Default Blueprint** label — not ★ Reward or 🔶 Standard.
 - Starter blueprints are **orderable** (WTB/WTS), **auto-added** to `acquired_blueprints` on login, and **cannot be unchecked** by members.
+- **Armor base stats** (`armorBaseStats`) are extracted from SCItem clothing/suit params: damage mitigation multiplier, temperature min/max, radiation capacity/dissipation. Backpack stubs without entity clothing data may omit BASE/FINAL (expected).
 
 ## Starter / default blueprints
 

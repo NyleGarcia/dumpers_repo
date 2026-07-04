@@ -3378,12 +3378,12 @@ function parseBlueprintDefinitions(localization = {}) {
     let armorBaseStats = null
     let weaponBaseStats = null
     if (entityBaseStats) {
-      if (category.startsWith('VehicleComponent')) {
-        vehicleBaseStats = entityBaseStats
-      } else if (category.startsWith('VehicleWeapons') || category === 'FPSWeapons') {
-        weaponBaseStats = entityBaseStats
-      } else if (category.startsWith('Armor')) {
+      if (category === 'FPSArmours' || category.startsWith('Armor')) {
         armorBaseStats = entityBaseStats
+      } else if (category === 'FPSWeapons' || category.startsWith('VehicleWeapons')) {
+        weaponBaseStats = entityBaseStats
+      } else if (category.startsWith('VehicleComponent')) {
+        vehicleBaseStats = entityBaseStats
       } else {
         vehicleBaseStats = entityBaseStats
       }

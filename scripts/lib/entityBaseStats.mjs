@@ -98,9 +98,36 @@ function firstDamageFromAmmo(ammoJson) {
   return null
 }
 
+function resolveAmmoParamsRef(entityJson, entityFile, recordIndex, extractedDataRoot) {
+  let ammoParamsRef = null
+  let magRef = null
+
+  walkObjectTree(entityJson?._RecordValue_, (node) => {
+    if (node._Type_ === 'SCItemWeaponComponentParams' && node.ammoContainerRecord) {
+      magRef = node.ammoContainerRecord
+    }
+    if (node.ammoParamsRecord) {
+      ammoParamsRef = node.ammoParamsRecord
+    }
+  })
+
+  if (magRef) {
+    const magPath = resolveRecordRef(magRef, entityFile, recordIndex, extractedDataRoot)
+    if (magPath) {
+      const magJson = readJson(magPath)
+      walkObjectTree(magJson?._RecordValue_, (node) => {
+        if (node.ammoParamsRecord) {
+          ammoParamsRef = node.ammoParamsRecord
+        }
+      })
+    }
+  }
+
+  return ammoParamsRef
+}
+
 function extractWeaponDamage(entityJson, entityFile, recordIndex, extractedDataRoot) {
   let damage = null
-  let ammoRef = null
 
   walkObjectTree(entityJson?._RecordValue_, (node) => {
     if (damage != null) return
@@ -109,21 +136,134 @@ function extractWeaponDamage(entityJson, entityFile, recordIndex, extractedDataR
       else if (node.DamagePhysical > 0) damage = node.DamagePhysical
       else if (node.DamageDistortion > 0) damage = node.DamageDistortion
     }
-    if (!ammoRef && node.ammoParamsRecord) {
-      ammoRef = node.ammoParamsRecord
-    }
   })
 
   if (damage != null) return damage
 
-  if (ammoRef) {
-    const ammoPath = resolveRecordRef(ammoRef, entityFile, recordIndex, extractedDataRoot)
-    if (ammoPath) {
-      return firstDamageFromAmmo(readJson(ammoPath))
+  const ammoParamsRef = resolveAmmoParamsRef(entityJson, entityFile, recordIndex, extractedDataRoot)
+  if (!ammoParamsRef) return null
+
+  const ammoPath = resolveRecordRef(ammoParamsRef, entityFile, recordIndex, extractedDataRoot)
+  if (!ammoPath) return null
+
+  return firstDamageFromAmmo(readJson(ammoPath))
+}
+
+function maxNumericField(recordValue, fieldName) {
+  let max = null
+  walkObjectTree(recordValue, (node) => {
+    const val = node[fieldName]
+    if (typeof val === 'number' && val > 0) {
+      max = max == null ? val : Math.max(max, val)
+    }
+  })
+  return max
+}
+
+function extractFpsWeaponStats(recordValue, entityJson, entityFile, recordIndex, extractedDataRoot) {
+  const stats = {}
+  const baseDamage = extractWeaponDamage(entityJson, entityFile, recordIndex, extractedDataRoot)
+  const damageMultiplier = maxNumericField(recordValue, 'damageMultiplier') ?? 1
+
+  if (baseDamage != null) {
+    stats.Weapon_Damage = Math.round(baseDamage * damageMultiplier * 100) / 100
+  }
+
+  const fireRate = maxNumericField(recordValue, 'fireRate')
+  if (fireRate != null) {
+    stats.Weapon_Firerate = fireRate
+  }
+
+  let recoilConfigRef = null
+  walkObjectTree(recordValue, (node) => {
+    if (node._Type_ === 'SCItemWeaponComponentParams' && node.actorProceduralRecoilConfig) {
+      recoilConfigRef = node.actorProceduralRecoilConfig
+    }
+  })
+
+  if (recoilConfigRef) {
+    const configPath = resolveRecordRef(recoilConfigRef, entityFile, recordIndex, extractedDataRoot)
+    const configJson = configPath ? readJson(configPath) : null
+    const setups = configJson?._RecordValue_?.actorProceduralRecoilSetup
+    const modifiersRef =
+      Array.isArray(setups) && setups.length > 0
+        ? setups[0].actorProceduralRecoilModifiers
+        : null
+
+    if (modifiersRef) {
+      const modPath = resolveRecordRef(modifiersRef, configPath, recordIndex, extractedDataRoot)
+      const modVal = modPath ? readJson(modPath)?._RecordValue_ : null
+      const hands = modVal?.actorProceduralHandsRecoilModifiers
+      const aim = modVal?.actorProceduralAimRecoilModifiers
+
+      if (aim?.curveRecoil?.recoilSmoothTimeModifier != null) {
+        stats.Weapon_Recoil_Smoothness = aim.curveRecoil.recoilSmoothTimeModifier
+      } else if (aim?.recoil_time != null) {
+        stats.Weapon_Recoil_Smoothness = aim.recoil_time
+      }
+
+      if (aim?.decay != null) {
+        stats.Weapon_Recoil_Handling = aim.decay
+      }
+
+      if (hands?.fireRecoilStrengthFirst != null) {
+        stats.Weapon_Recoil_Kick = hands.fireRecoilStrengthFirst
+      } else if (hands?.fireRecoilStrength != null) {
+        stats.Weapon_Recoil_Kick = hands.fireRecoilStrength
+      }
     }
   }
 
-  return null
+  return stats
+}
+
+function extractArmorStats(recordValue, entityFile, recordIndex, extractedDataRoot) {
+  const stats = {}
+  let clothingParams = null
+  let suitArmorParams = null
+
+  walkObjectTree(recordValue, (node) => {
+    if (node._Type_ === 'SCItemClothingParams') clothingParams = node
+    if (node._Type_ === 'SCItemSuitArmorParams') suitArmorParams = node
+  })
+
+  const temperature = clothingParams?.TemperatureResistance
+  if (temperature) {
+    if (temperature.MinResistance != null) {
+      stats.Armor_Temperaturemin = temperature.MinResistance
+    }
+    if (temperature.MaxResistance != null) {
+      stats.Armor_Temperaturemax = temperature.MaxResistance
+    }
+  }
+
+  const radiation = clothingParams?.RadiationResistance
+  if (radiation) {
+    if (radiation.RadiationDissipationRate != null) {
+      stats.Armor_Radiationdissipation = radiation.RadiationDissipationRate
+    }
+    if (radiation.MaximumRadiationCapacity != null) {
+      stats.Armor_Radiationcapacity = radiation.MaximumRadiationCapacity
+    }
+  }
+
+  if (suitArmorParams?.damageResistance) {
+    const drPath = resolveRecordRef(
+      suitArmorParams.damageResistance,
+      entityFile,
+      recordIndex,
+      extractedDataRoot
+    )
+    const physical =
+      drPath != null
+        ? readJson(drPath)?._RecordValue_?.damageResistance?.PhysicalResistance?.Multiplier
+        : null
+    if (physical != null) {
+      stats.Armor_Damagemitigation = physical
+    }
+  }
+
+  return stats
 }
 
 function extractItemResourceStats(components) {
@@ -161,9 +301,25 @@ function getAttachType(components) {
   return attach?.AttachDef?.Type || ''
 }
 
-function entityLooksLikeWeapon(components, entityClass, entityFile) {
+function entityLooksLikeArmor(components, attachType) {
+  if (/^Char_Armor/i.test(attachType)) return true
+  return (components ?? []).some(
+    (c) =>
+      c?._Type_ === 'SCItemSuitArmorParams' ||
+      c?._Type_ === 'SCItemClothingParams'
+  )
+}
+
+function entityLooksLikeFpsWeapon(components, attachType) {
+  if ((components ?? []).some((c) => c?._Type_ === 'SCItemWeaponComponentParams')) {
+    return /^WeaponPersonal|^WeaponMounted|^FPS/i.test(attachType) || attachType === 'WeaponPersonal'
+  }
+  return false
+}
+
+function entityLooksLikeWeapon(components, entityClass, entityFile, attachType) {
+  if (entityLooksLikeFpsWeapon(components, attachType)) return true
   if ((components ?? []).some((c) => c?._Type_ === 'SCItemWeaponComponentParams')) return true
-  const attachType = getAttachType(components)
   if (/weapon|mininglaser|tractorbeam|missile|turret|salvage/i.test(attachType)) return true
   const id = `${entityClass || ''} ${entityFile || ''}`.toLowerCase()
   return /[/\\]weapons[/\\]|mining_laser_|tractorbeam|_mag\.json/.test(id)
@@ -189,7 +345,6 @@ function resolveEntityFile(entityClass, entityPathIndex) {
   const key = String(entityClass).toLowerCase()
   if (entityPathIndex.has(key)) return entityPathIndex.get(key)
 
-  // Common blueprint entityClass variants (e.g. fuel nozzles, missing _scitem suffix)
   const candidates = [
     `${key}_scitem`,
     key.replace(/^fuel_nozzle_/, 'nozzle_fuelgiver_'),
@@ -233,6 +388,15 @@ function extractTractorAndSalvageStats(root, { includeSalvage, includeTractor })
         stats.Weapon_Hullscraping_Speed = node.salvageSpeedMultiplier
       }
     }
+
+    if (node._Type_ === 'SCItemMiningLaserParams' || node._Type_ === 'SCItemWeaponMiningLaserParams') {
+      if (node.optimalRange != null) stats.Mining_OptimalRange = node.optimalRange
+      if (node.maximumRange != null) stats.Mining_MaxRange = node.maximumRange
+      if (node.extractionPower != null) stats.Mining_ExtractionPower = node.extractionPower
+      if (node.laserPower != null && stats.Weapon_Damage_Override_Laser == null) {
+        stats.Weapon_Damage_Override_Laser = node.laserPower
+      }
+    }
   })
 
   return stats
@@ -258,11 +422,18 @@ export function extractEntityBaseStats(
   const components = recordValue?.Components
   if (!Array.isArray(components)) return null
 
-  const isWeapon = entityLooksLikeWeapon(components, entityClass, file)
+  const attachType = getAttachType(components)
+  const isArmor = entityLooksLikeArmor(components, attachType)
+  const isFpsWeapon = entityLooksLikeFpsWeapon(components, attachType)
+  const isWeapon = entityLooksLikeWeapon(components, entityClass, file, attachType)
   const isSalvageModule = entityLooksLikeSalvageModule(components, entityClass, file)
   const isTractor = entityHasTractorBeamParams(recordValue)
 
   const stats = {}
+
+  if (isArmor) {
+    Object.assign(stats, extractArmorStats(recordValue, file, recordIndex, extractedDataRoot))
+  }
 
   for (const comp of components) {
     if (!comp) continue
@@ -293,7 +464,6 @@ export function extractEntityBaseStats(
       }
     }
 
-    // Legacy FPS weapon component (fallback)
     if (comp._Type_ === 'WeaponComponentParams') {
       if (comp.damage?.damagePhysical != null && stats.Weapon_Damage == null) {
         stats.Weapon_Damage = comp.damage.damagePhysical
@@ -303,7 +473,6 @@ export function extractEntityBaseStats(
       }
     }
 
-    // Obsolete shield type (fallback)
     if (comp._Type_ === 'SShieldComponentParams' && comp.MaxCapacity != null && stats.Shield_Maxhealth == null) {
       stats.Shield_Maxhealth = comp.MaxCapacity
     }
@@ -318,7 +487,12 @@ export function extractEntityBaseStats(
     })
   )
 
-  if (isWeapon) {
+  if (isFpsWeapon) {
+    Object.assign(
+      stats,
+      extractFpsWeaponStats(recordValue, json, file, recordIndex, extractedDataRoot)
+    )
+  } else if (isWeapon) {
     const weaponDamage = extractWeaponDamage(json, file, recordIndex, extractedDataRoot)
     if (weaponDamage != null && stats.Weapon_Damage == null) {
       stats.Weapon_Damage = weaponDamage
