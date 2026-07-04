@@ -26,22 +26,27 @@ pip install -r requirements.txt
 4. Enter the Supabase Webhook URL (from the admin/setup guides).
 5. The script will automatically install dependencies and run the import.
 
-### macOS & Linux (Terminal)
-Run the script using python:
-```bash
-# 1. Add executable permissions (first time only)
-chmod +x dumper.py
+### macOS & Linux (Quick Start)
+1. Open your terminal inside this folder and run:
+   ```bash
+   chmod +x dumper.sh dumper.py
+   ./dumper.sh
+   ```
+2. Enter the path to your JSON export file when prompted.
+3. Choose whether to perform a dry run (local only, no API key required).
+4. Enter your Secret API Key and Supabase Webhook URL when prompted.
 
-# 2. Run in Dry Run Mode (local only, no API key required)
+### Advanced Usage (CLI Commands)
+If you prefer to bypass the prompts, you can run `dumper.py` directly:
+```bash
+# Dry Run Mode (local only, no API key required)
 python3 dumper.py /path/to/your/export.json --url "http://localhost/mock" --dry-run
 
-# 3. Run in Real Mode (via LOG_WATCHER_API_KEY environment variable)
+# Real Mode (via LOG_WATCHER_API_KEY environment variable)
 export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
 python3 dumper.py /path/to/your/export.json --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
-```
 
-Or pass the key directly as a CLI argument:
-```bash
+# Real Mode (passing key directly)
 python3 dumper.py /path/to/your/export.json \
   --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook" \
   --key "dr_your_secret_api_key"
