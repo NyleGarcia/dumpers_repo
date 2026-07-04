@@ -26,30 +26,11 @@
   }
 
   /*
-   * Main content column — scales with viewport on ultrawide displays while
-   * keeping side margins so the slide-out nav (w-64) does not cover content.
+   * Main content column — 4% viewport margin each side (92vw) on all screen sizes.
    */
   .site-shell {
-    @apply w-full mx-auto px-4 sm:px-5 lg:px-6 xl:px-8;
-    max-width: min(96vw, 80rem);
-  }
-
-  @media (min-width: 1536px) {
-    .site-shell {
-      max-width: min(94vw, 96rem);
-    }
-  }
-
-  @media (min-width: 1920px) {
-    .site-shell {
-      max-width: min(92vw, 108rem);
-    }
-  }
-
-  @media (min-width: 2560px) {
-    .site-shell {
-      max-width: min(90vw, 120rem);
-    }
+    @apply w-full mx-auto px-4 sm:px-5 lg:px-6;
+    max-width: 92vw;
   }
 
   .site-page-title {
