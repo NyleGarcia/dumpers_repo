@@ -11,14 +11,18 @@ interface GuestLockedSearch {
 
 export default function GuestLockedRoute() {
   const { feature = 'custom_orders' } = useSearch({ strict: false }) as GuestLockedSearch
-  const { signInWithGoogle } = useAuth()
+  const { signInWithGoogle, signInWithDiscord } = useAuth()
   const [signingIn, setSigningIn] = useState(false)
   const copy = getGuestFeatureCopy(feature)
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (provider: 'google' | 'discord') => {
     setSigningIn(true)
     try {
-      await signInWithGoogle()
+      if (provider === 'google') {
+        await signInWithGoogle()
+      } else {
+        await signInWithDiscord()
+      }
     } catch {
       setSigningIn(false)
     }
@@ -63,7 +67,8 @@ export default function GuestLockedRoute() {
         </div>
 
         <div className="p-4 bg-amber-950/40 rounded-xl border border-amber-500/30 text-sm text-amber-200/90">
-          <strong className="text-amber-100">Offline Mode</strong> — Sign in with Google for a <strong className="text-amber-100 font-medium">free member account</strong> with{' '}
+          <strong className="text-amber-100">Offline Mode</strong> — Sign in for a{' '}
+          <strong className="text-amber-100 font-medium">free member account</strong> with{' '}
           <strong className="text-amber-100 font-medium">full access</strong> — no subscriptions, no
           paid tiers. New accounts may need a quick officer approval before community tools unlock.
         </div>
@@ -71,11 +76,19 @@ export default function GuestLockedRoute() {
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
-            onClick={() => void handleSignIn()}
+            onClick={() => void handleSignIn('google')}
             disabled={signingIn}
             className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium transition-colors disabled:opacity-50"
           >
             {signingIn ? 'Signing in...' : 'Sign in with Google'}
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleSignIn('discord')}
+            disabled={signingIn}
+            className="px-4 py-2 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {signingIn ? 'Signing in...' : 'Sign in with Discord'}
           </button>
           <Link
             to="/"

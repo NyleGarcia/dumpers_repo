@@ -4,6 +4,7 @@ import { deleteAccount, supabase } from '../lib/supabase'
 import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
+import ConnectedAccountsSettings from './settings/ConnectedAccountsSettings'
 import OrgLogoUploadField from './settings/OrgLogoUploadField'
 import AppModal from './layout/AppModal'
 
@@ -375,6 +376,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             </div>
           </SettingsSection>
 
+          <ConnectedAccountsSettings onMessage={setMessage} />
+
           <SettingsSection
             title="Display"
             description="Customize how the Blueprints catalog is shown"
@@ -428,7 +431,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               />
               <SettingsToggle
                 label="Auto-approve new signups"
-                description="When enabled, new Google sign-ins are automatically approved as members instead of requiring officer approval."
+                description="When enabled, new sign-ins are automatically approved as members instead of requiring officer approval."
                 checked={autoApproveEnabled}
                 onChange={handleAutoApproveChange}
                 saving={savingAutoApprove}

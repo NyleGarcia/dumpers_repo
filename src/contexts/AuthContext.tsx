@@ -30,7 +30,8 @@ import {
   patchBootstrapStep,
   type BootstrapStep,
 } from '../lib/bootstrapSteps'
-import type { User, Session } from '@supabase/supabase-js'
+import type { User, Session, UserIdentity } from '@supabase/supabase-js'
+import type { OAuthProviderId } from '../lib/authProviders'
 
 const AUTH_BOOTSTRAP_TIMEOUT_MS = 12_000
 const BOOTSTRAP_FAILSAFE_MS = 45_000
@@ -70,6 +71,11 @@ interface AuthContextType {
   isBanned: boolean
   acquiredBlueprints: Record<string, boolean>
   signInWithGoogle: () => Promise<void>
+  signInWithDiscord: () => Promise<void>
+  getLinkedIdentities: () => Promise<UserIdentity[]>
+  linkWithGoogle: () => Promise<void>
+  linkWithDiscord: () => Promise<void>
+  unlinkProvider: (identity: UserIdentity) => Promise<void>
   signOut: () => Promise<void>
   toggleAcquired: (blueprintId: string) => Promise<void>
   updateRsiHandle: (handle: string) => Promise<boolean>
@@ -492,18 +498,83 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const acquiredRef = useRef(acquiredBlueprints)
   acquiredRef.current = acquiredBlueprints
 
-  const signInWithGoogle = useCallback(async () => {
-    writeGuestPreviewSession(false)
-    setIsGuestPreview(false)
+  const oauthRedirectOptions = useMemo(
+    () => ({ redirectTo: window.location.origin }),
+    []
+  )
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin,
-      },
-    })
+  const oauthProviderOptions = useCallback(
+    (provider: OAuthProviderId) => ({
+      ...oauthRedirectOptions,
+      ...(provider === 'discord' ? { scopes: 'identify email' } : {}),
+    }),
+    [oauthRedirectOptions]
+  )
+
+  const signInWithOAuthProvider = useCallback(
+    async (provider: OAuthProviderId) => {
+      writeGuestPreviewSession(false)
+      setIsGuestPreview(false)
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: oauthProviderOptions(provider),
+      })
+      if (error) {
+        console.error(`Error signing in with ${provider}:`, error)
+        throw error
+      }
+    },
+    [oauthProviderOptions]
+  )
+
+  const signInWithGoogle = useCallback(
+    () => signInWithOAuthProvider('google'),
+    [signInWithOAuthProvider]
+  )
+
+  const signInWithDiscord = useCallback(
+    () => signInWithOAuthProvider('discord'),
+    [signInWithOAuthProvider]
+  )
+
+  const getLinkedIdentities = useCallback(async (): Promise<UserIdentity[]> => {
+    const { data, error } = await supabase.auth.getUserIdentities()
     if (error) {
-      console.error('Error signing in:', error)
+      console.error('Error fetching linked identities:', error)
+      throw error
+    }
+    return data?.identities ?? []
+  }, [])
+
+  const linkWithOAuthProvider = useCallback(
+    async (provider: OAuthProviderId) => {
+      const { error } = await supabase.auth.linkIdentity({
+        provider,
+        options: oauthProviderOptions(provider),
+      })
+      if (error) {
+        console.error(`Error linking ${provider}:`, error)
+        throw error
+      }
+    },
+    [oauthProviderOptions]
+  )
+
+  const linkWithGoogle = useCallback(
+    () => linkWithOAuthProvider('google'),
+    [linkWithOAuthProvider]
+  )
+
+  const linkWithDiscord = useCallback(
+    () => linkWithOAuthProvider('discord'),
+    [linkWithOAuthProvider]
+  )
+
+  const unlinkProvider = useCallback(async (identity: UserIdentity) => {
+    const { error } = await supabase.auth.unlinkIdentity(identity)
+    if (error) {
+      console.error('Error unlinking identity:', error)
       throw error
     }
   }, [])
@@ -816,6 +887,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isBanned,
       acquiredBlueprints,
       signInWithGoogle,
+      signInWithDiscord,
+      getLinkedIdentities,
+      linkWithGoogle,
+      linkWithDiscord,
+      unlinkProvider,
       signOut,
       toggleAcquired,
       updateRsiHandle,
@@ -859,6 +935,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isBanned,
       acquiredBlueprints,
       signInWithGoogle,
+      signInWithDiscord,
+      getLinkedIdentities,
+      linkWithGoogle,
+      linkWithDiscord,
+      unlinkProvider,
       signOut,
       toggleAcquired,
       updateRsiHandle,
