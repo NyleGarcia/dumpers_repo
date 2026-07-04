@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `089_org_logo.sql` (franchise org logo upload for blueprint modal). Apply through `089` in order if catching up.
+**Latest migration:** `110_user_api_keys.sql` (user API keys for Log Watcher webhook). Apply through `110` in order if catching up.
 
 ---
 
@@ -93,6 +93,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 50 | `087_drop_shop_data.sql` | Drop shop tables and RPCs (Shops feature removed from app) |
 | 51 | `088_mining_tracker_location.sql` | Mining tracker location field |
 | 52 | `089_org_logo.sql` | Supabase Storage bucket + super-admin org logo (`ORG_LOGO.png`) |
+| 53 | `110_user_api_keys.sql` | User API keys for external tool auth (Log Watcher webhook) |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -118,6 +119,7 @@ npx supabase functions deploy unban-user
 npx supabase functions deploy delete-account
 npx supabase functions deploy validate-rsi-handle
 npx supabase functions deploy send-discord
+npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 ```
 
 | Function | Purpose |
@@ -126,6 +128,7 @@ npx supabase functions deploy send-discord
 | `delete-account` | User self-service account deletion |
 | `validate-rsi-handle` | Validate RSI Handles against robertsspaceindustries.com |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
+| `log-watcher-webhook` | Receives blueprint events from external tools (Log Watcher); uses Bearer API key auth |
 
 Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose service_role in frontend code.
 
