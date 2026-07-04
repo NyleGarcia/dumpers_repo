@@ -126,17 +126,165 @@ def detect_sc_installs() -> dict[str, Path]:
                     found[channel] = channel_dir
     return found
 
-# Log parsing patterns
+# Log parsing patterns & structures
+PATTERN_TIMESTAMP = re.compile(r"^<([0-9T:\-.Z]+)>")
+PATTERN_MARKER = re.compile(
+    r"CreateMarker.*missionId \[([^\]]+)\].*generator name \[([^\]]+)\].*contract \[([^\]]+)\]"
+)
+PATTERN_MARKER_DEF_ID = re.compile(r"contractDefinitionId\[([^\]]+)\]")
+PATTERN_ACCEPTED = re.compile(r'Added notification "Contract Accepted:.*?MissionId: \[([^\]]+)\]')
+PATTERN_END_MISSION = re.compile(
+    r"<EndMission>.*MissionId\[([^\]]+)\].*CompletionType\[(\w+)\].*Reason\[([^\]]+)\]"
+)
 PATTERN_BLUEPRINT = re.compile(r'Added notification "Received Blueprint: ([^:]+):')
+
+BLUEPRINT_CORRELATION_WINDOW_SEC = 5.0
+
+class MissionEntry:
+    def __init__(self, debug_name: str, generator: str, contract_definition_id=None):
+        self.debug_name = debug_name
+        self.generator = generator
+        self.contract_definition_id = contract_definition_id
+
+class ActiveMission:
+    def __init__(self, guid: str, debug_name: str, generator: str, start_ts: float, contract_definition_id=None):
+        self.guid = guid
+        self.debug_name = debug_name
+        self.generator = generator
+        self.start_ts = start_ts
+        self.contract_definition_id = contract_definition_id
+
+class MissionLifecycleEvent:
+    def __init__(self, trigger: str, guid: str, debug_name: str, ts: float, contract_definition_id=None):
+        self.trigger = trigger
+        self.guid = guid
+        self.debug_name = debug_name
+        self.ts = ts
+        self.contract_definition_id = contract_definition_id
+
+class WatcherState:
+    def __init__(self) -> None:
+        self.guid_map = {}
+        self.active = {}
+        self.recent_lifecycle = deque(maxlen=32)
+
+    def record_marker(self, guid: str, generator: str, contract: str, contract_definition_id=None) -> None:
+        if guid not in self.guid_map:
+            self.guid_map[guid] = MissionEntry(
+                debug_name=contract,
+                generator=generator,
+                contract_definition_id=contract_definition_id,
+            )
+
+    def record_accepted(self, guid: str, ts: float) -> ActiveMission:
+        entry = self.guid_map.get(guid)
+        debug_name = entry.debug_name if entry else "Unknown"
+        generator = entry.generator if entry else "Unknown"
+        def_id = entry.contract_definition_id if entry else None
+        active = ActiveMission(
+            guid=guid,
+            debug_name=debug_name,
+            generator=generator,
+            start_ts=ts,
+            contract_definition_id=def_id,
+        )
+        self.active[guid] = active
+        self.recent_lifecycle.append(
+            MissionLifecycleEvent(
+                trigger="accept",
+                guid=guid,
+                debug_name=debug_name,
+                ts=ts,
+                contract_definition_id=def_id,
+            )
+        )
+        return active
+
+    def record_end(self, guid: str, completion: str, ts: float) -> Optional[ActiveMission]:
+        active = self.active.pop(guid, None)
+        entry = self.guid_map.get(guid)
+        debug_name = active.debug_name if active else (entry.debug_name if entry else "Unknown")
+        def_id = (
+            active.contract_definition_id if active
+            else (entry.contract_definition_id if entry else None)
+        )
+        if completion == "Complete":
+            self.recent_lifecycle.append(
+                MissionLifecycleEvent(
+                    trigger="complete",
+                    guid=guid,
+                    debug_name=debug_name,
+                    ts=ts,
+                    contract_definition_id=def_id,
+                )
+            )
+        return active
+
+    def correlate_blueprint(self, ts: float) -> Optional[MissionLifecycleEvent]:
+        best = None
+        best_delta = BLUEPRINT_CORRELATION_WINDOW_SEC + 1.0
+        for e in self.recent_lifecycle:
+            delta = ts - e.ts
+            if 0.0 <= delta <= BLUEPRINT_CORRELATION_WINDOW_SEC and delta < best_delta:
+                best = e
+                best_delta = delta
+        return best
+
+def parse_log_timestamp(line: str) -> Optional[float]:
+    m = PATTERN_TIMESTAMP.match(line)
+    if not m:
+        return None
+    raw = m.group(1).replace("Z", "+00:00")
+    try:
+        from datetime import datetime
+        return datetime.fromisoformat(raw).timestamp()
+    except ValueError:
+        return None
 
 def parse_blueprints_from_log(path: Path) -> list[str]:
     discovered = []
+    state = WatcherState()
     try:
         with open(path, "rb") as f:
             for raw in f:
                 line = raw.decode("utf-8", errors="replace").rstrip("\r\n")
-                if m := PATTERN_BLUEPRINT.search(line):
-                    discovered.append(m.group(1).strip())
+                if not line:
+                    continue
+                ts = parse_log_timestamp(line) or 0.0
+
+                if m := PATTERN_MARKER.search(line):
+                    def_id_match = PATTERN_MARKER_DEF_ID.search(line)
+                    def_id = def_id_match.group(1) if def_id_match else None
+                    state.record_marker(m.group(1), m.group(2), m.group(3), def_id)
+
+                elif m := PATTERN_ACCEPTED.search(line):
+                    active = state.record_accepted(m.group(1), ts)
+                    print(f"  [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
+
+                elif m := PATTERN_END_MISSION.search(line):
+                    guid, completion, reason = m.group(1), m.group(2), m.group(3)
+                    active = state.record_end(guid, completion, ts)
+                    entry = state.guid_map.get(guid)
+                    
+                    debug_name = active.debug_name if active else (entry.debug_name if entry else "Unknown")
+                    
+                    if completion == "Complete":
+                        print(f"  [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                    elif completion == "Abandon":
+                        print(f"  [{path.name}] {Colors.RED}Mission abandoned: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                    elif completion == "Fail":
+                        print(f"  [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                    else:
+                        print(f"  [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+
+                elif m := PATTERN_BLUEPRINT.search(line):
+                    product_name = m.group(1).strip()
+                    discovered.append(product_name)
+                    corr = state.correlate_blueprint(ts)
+                    if corr:
+                        print(f"  [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
+                    else:
+                        print(f"  [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
     except OSError as e:
         print(f"{Colors.YELLOW}Warning: Could not read log file {path.name} ({e}){Colors.RESET}")
     return discovered
