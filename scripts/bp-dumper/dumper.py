@@ -13,11 +13,7 @@ import re
 import sys
 from pathlib import Path
 
-try:
-    import requests
-except ImportError:
-    print("Error: The 'requests' library is not installed. Run 'pip install -r requirements.txt' first.", file=sys.stderr)
-    sys.exit(1)
+
 
 # Default Star Citizen path locations
 DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
@@ -175,7 +171,6 @@ def main():
     )
     parser.add_argument(
         "--url",
-        required=True,
         help="Supabase log-watcher-webhook Edge Function URL (e.g. https://<project>.supabase.co/functions/v1/log-watcher-webhook)"
     )
     parser.add_argument(
@@ -195,9 +190,12 @@ def main():
 
     args = parser.parse_args()
 
-    # Resolve API Key (only required if not performing a dry run)
+    # Resolve URL & API Key (only required if not performing a dry run)
     api_key = None
     if not args.dry_run:
+        if not args.url:
+            print(f"{Colors.RED}Error: Webhook URL must be provided via --url.{Colors.RESET}", file=sys.stderr)
+            sys.exit(1)
         api_key = args.key or os.getenv("LOG_WATCHER_API_KEY")
         if not api_key:
             print(f"{Colors.RED}Error: API key must be provided via --key or LOG_WATCHER_API_KEY environment variable.{Colors.RESET}", file=sys.stderr)
@@ -315,6 +313,12 @@ def main():
             success_count += 1
             print(f"  [{idx}/{len(unique_blueprints)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {bp_id}")
     else:
+        try:
+            import requests
+        except ImportError:
+            print("Error: The 'requests' library is not installed. Run 'pip install -r requirements.txt' to import blueprints to your account.", file=sys.stderr)
+            sys.exit(1)
+
         session = requests.Session()
         session.headers.update({
             "Authorization": f"Bearer {api_key}",
