@@ -157,9 +157,9 @@ npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 
 Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose service_role in frontend code.
 
-### Log Watcher webhook API
+### BP Dumper webhook API
 
-Members generate a personal API key from **Settings → API Access**. External tools call the deployed `log-watcher-webhook` Edge Function.
+Members generate a personal API key from **Settings → BP Dumper**. Only the BP Dumper desktop program uses this key; it calls the deployed `log-watcher-webhook` Edge Function.
 
 **Base URL:** `https://YOUR_PROJECT.supabase.co/functions/v1/log-watcher-webhook`
 

@@ -766,7 +766,7 @@ def main():
         # 4. Prompt Key (only if not dry run)
         if not args.dry_run:
             default_key = env_vars.get("LOG_WATCHER_API_KEY", "")
-            key_prompt = "Enter your Secret API Key (e.g. dr_...)"
+            key_prompt = "Enter your BP Dumper API key from Settings (e.g. dr_...)"
             if default_key:
                 masked_key = f"{default_key[:6]}...{default_key[-4:]}" if len(default_key) > 10 else default_key
                 key_prompt += f" [{masked_key}]"

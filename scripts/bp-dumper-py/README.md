@@ -36,7 +36,7 @@ pip install -r requirements.txt
 ### Windows (Quick Start)
 1. Double-click the **`dumper.bat`** file.
 2. Enter the path to your JSON export file when prompted, **or leave it blank** and press **Enter** to automatically scrape your local Star Citizen installation logs.
-3. Enter your Secret API Key (generate one in your website settings under "API Access").
+3. Enter your Secret API Key (generate one in Settings under **BP Dumper**).
 4. Enter the Supabase Webhook URL.
 
 ### macOS & Linux (Quick Start)

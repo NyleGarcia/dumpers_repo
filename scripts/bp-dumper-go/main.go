@@ -827,7 +827,7 @@ func main() {
 		// 5. Key Prompt
 		if !dryRun {
 			defaultKey := envVars["LOG_WATCHER_API_KEY"]
-			keyPrompt := "Enter your Secret API Key (e.g. dr_...)"
+			keyPrompt := "Enter your BP Dumper API key from Settings (e.g. dr_...)"
 			if defaultKey != "" {
 				maskedKey := defaultKey
 				if len(defaultKey) > 10 {

@@ -1,5 +1,5 @@
 // Supabase Edge Function: log-watcher-webhook
-// Receives blueprint events from external tools (e.g. Log Watcher)
+// Receives blueprint events from the BP Dumper desktop program
 // Auth: Bearer API key (verify_jwt = false)
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
@@ -180,7 +180,7 @@ serve(async (req) => {
             supabase,
             userId,
             'log_watcher_ambiguous_blueprint',
-            'Log Watcher: mark blueprint manually',
+            'BP Dumper: mark blueprint manually',
             `Could not auto-mark ${displayName}. Search for that name on Blueprints and mark the correct variant yourself.`,
             {
               displayName,
@@ -231,7 +231,7 @@ serve(async (req) => {
           supabase,
           userId,
           'log_watcher_blueprint_acquired',
-          'Log Watcher: blueprint acquired',
+          'BP Dumper: blueprint acquired',
           `${blueprintName} was added to your acquired blueprints.`,
           {
             blueprintName,

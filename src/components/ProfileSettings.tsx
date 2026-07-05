@@ -432,12 +432,12 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
           <ConnectedAccountsSettings onMessage={setMessage} />
 
           <SettingsSection
-            title="API Access"
-            description="Integration with external tools like the Log Watcher"
+            title="BP Dumper"
+            description="Personal API access for the BP Dumper desktop program only"
           >
             <SettingsField
               label="Secret API Key"
-              hint="Use this key to authorize external tools to update your blueprints automatically."
+              hint="This key works only with BP Dumper. It cannot be used with other tools or integrations. Copy it into the program during setup."
             >
               <div className="flex gap-2">
                 <button
