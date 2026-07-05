@@ -224,6 +224,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Generate and copy a personal API key from API Access for external tool integration (Log Watcher webhook)',
       'API keys authorize external tools to update your acquired blueprints automatically',
       'Regenerate your API key from Settings if it is compromised',
+      'Clear Collected Blueprints to reset your acquired blueprint list (starter blueprints may reappear on refresh)',
+      'Clear Tracked Resources to wipe all quantities and notes from My Resources in the Resource Tracker',
     ],
     relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker', 'Log Watcher'],
   },

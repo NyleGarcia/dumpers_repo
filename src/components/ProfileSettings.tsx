@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { deleteAccount, supabase } from '../lib/supabase'
+import { notifyPersonalResourcesWiped } from '../lib/userDataEvents'
 import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
@@ -24,6 +25,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updateAutoApprove,
     signOut,
     isSuperAdmin,
+    refreshAcquiredBlueprints,
   } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
@@ -42,6 +44,10 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
+  const [wipingBlueprints, setWipingBlueprints] = useState(false)
+  const [wipingResources, setWipingResources] = useState(false)
+  const [showBlueprintWipeConfirm, setShowBlueprintWipeConfirm] = useState(false)
+  const [showResourceWipeConfirm, setShowResourceWipeConfirm] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const [_checkingOrders, setCheckingOrders] = useState(true)
@@ -273,6 +279,53 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     onClose()
   }
 
+  const handleWipeBlueprints = async () => {
+    setWipingBlueprints(true)
+    setMessage(null)
+
+    try {
+      const { data, error } = await supabase.rpc('wipe_my_acquired_blueprints')
+      if (error) throw error
+      if (!data?.success) throw new Error(data?.error || 'Wipe failed')
+
+      await refreshAcquiredBlueprints()
+      setShowBlueprintWipeConfirm(false)
+      setMessage({
+        type: 'success',
+        text: 'Collected blueprints cleared. Starter blueprints may reappear on refresh.',
+      })
+    } catch (err) {
+      setMessage({
+        type: 'error',
+        text: err instanceof Error ? err.message : 'Failed to clear collected blueprints',
+      })
+    }
+
+    setWipingBlueprints(false)
+  }
+
+  const handleWipeResources = async () => {
+    setWipingResources(true)
+    setMessage(null)
+
+    try {
+      const { data, error } = await supabase.rpc('wipe_my_resource_inventory')
+      if (error) throw error
+      if (!data?.success) throw new Error(data?.error || 'Wipe failed')
+
+      notifyPersonalResourcesWiped()
+      setShowResourceWipeConfirm(false)
+      setMessage({ type: 'success', text: 'Tracked resources cleared.' })
+    } catch (err) {
+      setMessage({
+        type: 'error',
+        text: err instanceof Error ? err.message : 'Failed to clear tracked resources',
+      })
+    }
+
+    setWipingResources(false)
+  }
+
   return (
     <AppModal
       title="Settings"
@@ -494,6 +547,77 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               />
             </SettingsSection>
           )}
+
+          <SettingsSection
+            title="My Data"
+            description="Reset your personal collection data"
+            variant="danger"
+          >
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-slate-400 mb-2">
+                  Remove all blueprints you have marked as collected. Starter blueprints may be
+                  re-added automatically on your next visit.
+                </p>
+                {!showBlueprintWipeConfirm ? (
+                  <button
+                    onClick={() => setShowBlueprintWipeConfirm(true)}
+                    className="w-full px-4 py-2.5 bg-red-950/50 hover:bg-red-900/50 text-red-400 border border-red-500/30 text-sm font-medium rounded-lg transition-colors"
+                  >
+                    Clear Collected Blueprints
+                  </button>
+                ) : (
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowBlueprintWipeConfirm(false)}
+                      disabled={wipingBlueprints}
+                      className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleWipeBlueprints}
+                      disabled={wipingBlueprints}
+                      className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {wipingBlueprints ? 'Clearing...' : 'Confirm Clear'}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 border-t border-slate-700/50">
+                <p className="text-sm text-slate-400 mb-2">
+                  Remove all quantities and notes from My Resources in the Resource Tracker.
+                </p>
+                {!showResourceWipeConfirm ? (
+                  <button
+                    onClick={() => setShowResourceWipeConfirm(true)}
+                    className="w-full px-4 py-2.5 bg-red-950/50 hover:bg-red-900/50 text-red-400 border border-red-500/30 text-sm font-medium rounded-lg transition-colors"
+                  >
+                    Clear Tracked Resources
+                  </button>
+                ) : (
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowResourceWipeConfirm(false)}
+                      disabled={wipingResources}
+                      className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleWipeResources}
+                      disabled={wipingResources}
+                      className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {wipingResources ? 'Clearing...' : 'Confirm Clear'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </SettingsSection>
 
           <SettingsSection
             title="Account"

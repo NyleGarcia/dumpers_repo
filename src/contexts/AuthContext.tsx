@@ -91,6 +91,7 @@ interface AuthContextType {
   fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   refreshProfile: () => Promise<void>
+  refreshAcquiredBlueprints: () => Promise<void>
   displayName: string
   isOfficerOrAbove: boolean
   isSuperAdmin: boolean
@@ -285,6 +286,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return applyDefaultAcquiredState(acquired)
   }, [])
+
+  const refreshAcquiredBlueprints = useCallback(async () => {
+    if (!user?.id) return
+    const acquired = await fetchAcquiredBlueprints(user.id)
+    setAcquiredBlueprints(acquired)
+  }, [user?.id, fetchAcquiredBlueprints])
 
   const profileRef = useRef(profile)
   profileRef.current = profile
@@ -914,6 +921,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       refreshProfile,
+      refreshAcquiredBlueprints,
       displayName,
       isOfficerOrAbove,
       isSuperAdmin,
@@ -962,6 +970,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
       refreshProfile,
+      refreshAcquiredBlueprints,
       displayName,
       isOfficerOrAbove,
       isSuperAdmin,

@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAsyncEffect } from './useAsyncEffect'
 import { useBlueprintData } from '../routes/blueprints'
 import { buildResourceLabelMap } from '../lib/blueprintResources'
+import { PERSONAL_RESOURCES_WIPED_EVENT } from '../lib/userDataEvents'
 import {
   fetchPersonalInventoryCards,
   fetchResourceCatalog,
@@ -139,6 +140,14 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     if (cancelled) return
     await loadCatalog()
   }, [blueprints, enableCatalogSync, inventoryScope, inventoryUserId, withInventory, includeInactive])
+
+  useEffect(() => {
+    const onWiped = () => {
+      void loadCatalog()
+    }
+    window.addEventListener(PERSONAL_RESOURCES_WIPED_EVENT, onWiped)
+    return () => window.removeEventListener(PERSONAL_RESOURCES_WIPED_EVENT, onWiped)
+  }, [loadCatalog])
 
   return {
     catalog,
