@@ -4,6 +4,7 @@ import { deleteAllUserNotifications, deleteUserNotification } from '../../lib/op
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { useNotificationInbox } from '../../hooks/useNotificationInbox'
 import NotificationBody from '../NotificationBody'
+import { getNotificationVisual, NotificationStatusIcon } from '../../lib/notificationPresentation'
 
 interface AppNotificationBellProps {
   disabled?: boolean
@@ -104,15 +105,20 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
               <p className="px-4 py-6 text-sm text-slate-500 text-center">No new notifications</p>
             ) : (
               <ul className="max-h-72 overflow-y-auto overscroll-contain">
-                {notifications.map((n) => (
+                {notifications.map((n) => {
+                  const visual = getNotificationVisual(n.type)
+                  return (
                   <li
                     key={n.id}
                     className="border-b border-slate-700/80 last:border-b-0 px-4 py-3 text-sm"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="font-medium text-slate-200">{n.title}</p>
-                        <NotificationBody notification={n} onNavigate={close} />
+                      <div className="min-w-0 flex gap-2">
+                        {visual && <NotificationStatusIcon variant={visual} />}
+                        <div className="min-w-0">
+                          <p className="font-medium text-slate-200">{n.title}</p>
+                          <NotificationBody notification={n} onNavigate={close} />
+                        </div>
                       </div>
                       <button
                         type="button"
@@ -123,7 +129,8 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
                       </button>
                     </div>
                   </li>
-                ))}
+                  )
+                })}
               </ul>
             )}
           </div>

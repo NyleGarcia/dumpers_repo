@@ -1,9 +1,11 @@
 name: Build Executables on Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+  # Tag releases disabled until Log Watcher launch — use workflow_dispatch only.
+  # push:
+  #   tags:
+  #     - 'v*'
 
 jobs:
   build:

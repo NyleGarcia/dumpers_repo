@@ -15,6 +15,35 @@ import time
 from pathlib import Path
 from typing import Optional
 
+from blueprint_lookup import cache_key_for_input, resolve_blueprint_input
+
+
+def is_blueprint_acquired(acquired: set, raw_input: str) -> bool:
+    key = cache_key_for_input(raw_input)
+    return key in acquired or raw_input in acquired
+
+
+def post_blueprint_event(session, url: str, blueprint_input: str, contract_definition_id: str | None = None):
+    """POST blueprint as-is; server checks internalName first, then display-name mapping."""
+    payload = {
+        "type": "blueprint_received",
+        "blueprint": blueprint_input,
+    }
+    if contract_definition_id:
+        payload["contractDefinitionId"] = contract_definition_id
+
+    res = session.post(url, json=payload, timeout=15)
+    body = {}
+    try:
+        body = res.json()
+    except Exception:
+        pass
+    internal_name = body.get("blueprint")
+    if not internal_name:
+        local = resolve_blueprint_input(blueprint_input, contract_definition_id)
+        if local.get("ok"):
+            internal_name = local["internal_name"]
+    return res.status_code, body.get("duplicate", False), internal_name
 
 
 # Default Star Citizen path locations
@@ -453,29 +482,34 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                             else:
                                 print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
                             
-                            # Cache validation & dispatch
-                            if product_name not in acquired_blueprints:
-                                acquired_blueprints.add(product_name)
-                                save_cache_file(cache_path, acquired_blueprints)
-                                if args.dry_run:
-                                    print(f"  [Live] {Colors.GREEN}★ Would Import (Dry Run):{Colors.RESET} {product_name}")
+                            contract_def_id = corr.contract_definition_id if corr else None
+
+                            cache_key = cache_key_for_input(product_name)
+                            if cache_key in acquired_blueprints or product_name in acquired_blueprints:
+                                continue
+
+                            if args.dry_run:
+                                print(f"  [Live] {Colors.GREEN}★ Would Import (Dry Run):{Colors.RESET} {product_name}")
+                                continue
+
+                            try:
+                                status, is_duplicate, internal_name = post_blueprint_event(
+                                    session, args.url, product_name, contract_def_id
+                                )
+                                if status == 200:
+                                    if is_duplicate:
+                                        print(f"  [Live] {Colors.YELLOW}↻ Already Acquired (Sync):{Colors.RESET} {product_name}")
+                                    else:
+                                        print(f"  [Live] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {product_name}")
+                                    if internal_name:
+                                        acquired_blueprints.add(internal_name)
+                                        save_cache_file(cache_path, acquired_blueprints)
+                                elif status == 202:
+                                    print(f"  [Live] {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {product_name}")
                                 else:
-                                    payload = {
-                                        "type": "blueprint_received",
-                                        "blueprint": product_name
-                                    }
-                                    try:
-                                        res = session.post(args.url, json=payload, timeout=15)
-                                        if res.status_code == 200:
-                                            is_duplicate = res.json().get("duplicate", False)
-                                            if is_duplicate:
-                                                print(f"  [Live] {Colors.YELLOW}↻ Already Acquired (Sync):{Colors.RESET} {product_name}")
-                                            else:
-                                                print(f"  [Live] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {product_name}")
-                                        else:
-                                            print(f"  [Live] {Colors.RED}✗ Failed to import:{Colors.RESET} {product_name} (HTTP {res.status_code})")
-                                    except Exception as e:
-                                        print(f"  [Live] {Colors.RED}✗ Connection Error:{Colors.RESET} {product_name} ({e})")
+                                    print(f"  [Live] {Colors.RED}✗ Failed to import:{Colors.RESET} {product_name} (HTTP {status})")
+                            except Exception as e:
+                                print(f"  [Live] {Colors.RED}✗ Connection Error:{Colors.RESET} {product_name} ({e})")
                 last_size = st.st_size
             else:
                 time.sleep(0.5)
@@ -856,7 +890,7 @@ def main():
             print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
 
     # Option 1: Local Cache Filter
-    to_import = [bp for bp in unique_blueprints if bp not in acquired_blueprints]
+    to_import = [bp for bp in unique_blueprints if not is_blueprint_acquired(acquired_blueprints, bp)]
     skipped_count = len(unique_blueprints) - len(to_import)
 
     if skipped_count > 0:
@@ -876,38 +910,39 @@ def main():
     if args.dry_run:
         for idx, bp_id in enumerate(to_import, 1):
             success_count += 1
-            print(f"  [{idx}/{len(to_import)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {bp_id}")
+            resolved = resolve_blueprint_input(bp_id)
+            label = bp_id
+            if resolved.get("ok"):
+                label = f"{resolved['blueprint_name']} → {resolved['internal_name']}"
+            elif resolved.get("error") == "ambiguous_blueprint":
+                label = f"{bp_id} (ambiguous — would notify)"
+            print(f"  [{idx}/{len(to_import)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {label}")
     else:
         for idx, bp_id in enumerate(to_import, 1):
-            payload = {
-                "type": "blueprint_received",
-                "blueprint": bp_id
-            }
-
             try:
-                res = session.post(args.url, json=payload, timeout=15)
-                response_json = res.json()
-
-                if res.status_code == 200:
-                    is_duplicate = response_json.get("duplicate", False)
+                status, is_duplicate, internal_name = post_blueprint_event(session, args.url, bp_id)
+                if status == 200:
                     if is_duplicate:
                         dupe_count += 1
                         print(f"  [{idx}/{len(to_import)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
                     else:
                         success_count += 1
                         print(f"  [{idx}/{len(to_import)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
-                    
-                    # Update local cache immediately
-                    acquired_blueprints.add(bp_id)
-                    save_cache_file(cache_path, acquired_blueprints)
+                    if internal_name:
+                        acquired_blueprints.add(internal_name)
+                        save_cache_file(cache_path, acquired_blueprints)
+                elif status == 202:
+                    success_count += 1
+                    print(f"  [{idx}/{len(to_import)}] {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {bp_id}")
+                elif status == 400:
+                    fail_count += 1
+                    print(f"  [{idx}/{len(to_import)}] {Colors.RED}✗ Unknown blueprint:{Colors.RESET} {bp_id}")
                 else:
                     fail_count += 1
-                    reason = response_json.get("error", f"HTTP {res.status_code}")
-                    print(f"  [{idx}/{len(to_import)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {reason}){Colors.RESET}")
-
+                    print(f"  [{idx}/{len(to_import)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} (HTTP {status})")
             except requests.RequestException as e:
                 fail_count += 1
-                print(f"  [{idx}/{len(unique_blueprints)}] {Colors.RED}✗ Connection Error:{Colors.RESET} {bp_id} {Colors.DIM}(Reason: {e}){Colors.RESET}")
+                print(f"  [{idx}/{len(to_import)}] {Colors.RED}✗ Connection Error:{Colors.RESET} {bp_id} (Reason: {e})")
 
     print()
     print(f"{Colors.CYAN}Import Finished Summary:{Colors.RESET}")

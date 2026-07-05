@@ -916,10 +916,10 @@ func main() {
 		return
 	}
 
-	// Filter based on cache
+	// Filter based on cache (resolved internalName keys)
 	var toImport []string
 	for _, bp := range uniqueBlueprints {
-		if !acquiredBlueprints[bp] {
+		if !isBlueprintAcquired(acquiredBlueprints, bp) {
 			toImport = append(toImport, bp)
 		}
 	}
@@ -942,35 +942,24 @@ func main() {
 
 	for idx, bpID := range toImport {
 		if dryRun {
+			resolved := resolveBlueprintInput(bpID, "")
+			label := bpID
+			if resolved.OK {
+				label = fmt.Sprintf("%s → %s", resolved.BlueprintName, resolved.InternalName)
+			} else if resolved.Error == "ambiguous_blueprint" {
+				label = fmt.Sprintf("%s (ambiguous — would notify)", bpID)
+			}
 			successCount++
-			fmt.Printf("  [%d/%d] %s★ Would Import:%s %s\n", idx+1, len(toImport), color.Green, color.Reset, bpID)
+			fmt.Printf("  [%d/%d] %s★ Would Import:%s %s\n", idx+1, len(toImport), color.Green, color.Reset, label)
 		} else {
-			payload := map[string]string{
-				"type":      "blueprint_received",
-				"blueprint": bpID,
-			}
-			body, _ := json.Marshal(payload)
-			req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
-			if err != nil {
-				failCount++
-				fmt.Printf("  [%d/%d] %s✗ Connection Error:%s %s (%v)\n", idx+1, len(toImport), color.Red, color.Reset, bpID, err)
-				continue
-			}
-			req.Header.Set("Authorization", "Bearer "+apiKey)
-			req.Header.Set("Content-Type", "application/json")
-
-			client := &http.Client{Timeout: 15 * time.Second}
-			res, err := client.Do(req)
+			status, isDupe, internalName, err := postBlueprintEvent(url, apiKey, bpID, "")
 			if err != nil {
 				failCount++
 				fmt.Printf("  [%d/%d] %s✗ Connection Error:%s %s (%v)\n", idx+1, len(toImport), color.Red, color.Reset, bpID, err)
 				continue
 			}
 
-			if res.StatusCode == 200 {
-				var resJSON map[string]interface{}
-				json.NewDecoder(res.Body).Decode(&resJSON)
-				isDupe := resJSON["duplicate"] == true
+			if status == 200 {
 				if isDupe {
 					dupeCount++
 					fmt.Printf("  [%d/%d] %s↻ Already Acquired:%s %s\n", idx+1, len(toImport), color.Yellow, color.Reset, bpID)
@@ -978,15 +967,20 @@ func main() {
 					successCount++
 					fmt.Printf("  [%d/%d] %s★ Successfully Imported:%s %s\n", idx+1, len(toImport), color.Green, color.Reset, bpID)
 				}
-
-				// Update local cache
-				acquiredBlueprints[bpID] = true
-				saveCacheFile(cachePath, acquiredBlueprints)
+				if internalName != "" {
+					acquiredBlueprints[internalName] = true
+					saveCacheFile(cachePath, acquiredBlueprints)
+				}
+			} else if status == 202 {
+				successCount++
+				fmt.Printf("  [%d/%d] %s⚠ Notification sent — mark manually:%s %s\n", idx+1, len(toImport), color.Yellow, color.Reset, bpID)
+			} else if status == 400 {
+				failCount++
+				fmt.Printf("  [%d/%d] %s✗ Unknown blueprint:%s %s\n", idx+1, len(toImport), color.Red, color.Reset, bpID)
 			} else {
 				failCount++
-				fmt.Printf("  [%d/%d] %s✗ Failed:%s %s (HTTP %d)\n", idx+1, len(toImport), color.Red, color.Reset, bpID, res.StatusCode)
+				fmt.Printf("  [%d/%d] %s✗ Failed:%s %s (HTTP %d)\n", idx+1, len(toImport), color.Red, color.Reset, bpID, status)
 			}
-			res.Body.Close()
 		}
 	}
 
@@ -1140,14 +1134,40 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 							tsStr, filepath.Base(path), color.Magenta, color.Green, productName, color.Magenta, color.Reset)
 					}
 
-					if !acquiredBps[productName] {
-						acquiredBps[productName] = true
-						saveCacheFile(cachePath, acquiredBps)
-						if dryRun {
-							fmt.Printf("  [Live] %s★ Would Import (Dry Run):%s %s\n", color.Green, color.Reset, productName)
+					contractDefID := ""
+					if found {
+						contractDefID = corr.ContractDefinitionID
+					}
+
+					cacheKey := cacheKeyForInput(productName)
+					if acquiredBps[cacheKey] || acquiredBps[productName] {
+						continue
+					}
+
+					if dryRun {
+						fmt.Printf("  [Live] %s★ Would Import (Dry Run):%s %s\n", color.Green, color.Reset, productName)
+						continue
+					}
+
+					status, isDupe, internalName, err := postBlueprintEvent(url, apiKey, productName, contractDefID)
+					if err != nil {
+						fmt.Printf("  [Live] %s✗ Connection Error:%s %s (%v)\n", color.Red, color.Reset, productName, err)
+						continue
+					}
+					if status == 200 {
+						if isDupe {
+							fmt.Printf("  [Live] %s↻ Already Acquired (Sync):%s %s\n", color.Yellow, color.Reset, productName)
 						} else {
-							go uploadLiveBlueprint(url, apiKey, productName)
+							fmt.Printf("  [Live] %s★ Successfully Imported:%s %s\n", color.Green, color.Reset, productName)
 						}
+						if internalName != "" {
+							acquiredBps[internalName] = true
+							saveCacheFile(cachePath, acquiredBps)
+						}
+					} else if status == 202 {
+						fmt.Printf("  [Live] %s⚠ Notification sent — mark manually:%s %s\n", color.Yellow, color.Reset, productName)
+					} else {
+						fmt.Printf("  [Live] %s✗ Failed to import:%s %s (HTTP %d)\n", color.Red, color.Reset, productName, status)
 					}
 				}
 			}
@@ -1158,16 +1178,24 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 	}
 }
 
-func uploadLiveBlueprint(url, apiKey, blueprint string) {
+func isBlueprintAcquired(acquired map[string]bool, input string) bool {
+	key := cacheKeyForInput(input)
+	return acquired[key] || acquired[input]
+}
+
+func postBlueprintEvent(url, apiKey, blueprintInput, contractDefID string) (httpStatus int, duplicate bool, internalName string, err error) {
+	// POST as-is: server checks internalName first, then display-name mapping.
 	payload := map[string]string{
 		"type":      "blueprint_received",
-		"blueprint": blueprint,
+		"blueprint": blueprintInput,
+	}
+	if contractDefID != "" {
+		payload["contractDefinitionId"] = contractDefID
 	}
 	body, _ := json.Marshal(payload)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
-		fmt.Printf("  [Live] %s✗ Connection Error:%s %s (Request failed: %v)\n", color.Red, color.Reset, blueprint, err)
-		return
+		return 0, false, "", err
 	}
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Content-Type", "application/json")
@@ -1175,20 +1203,24 @@ func uploadLiveBlueprint(url, apiKey, blueprint string) {
 	client := &http.Client{Timeout: 15 * time.Second}
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("  [Live] %s✗ Connection Error:%s %s (%v)\n", color.Red, color.Reset, blueprint, err)
-		return
+		return 0, false, "", err
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode == 200 {
-		var resJSON map[string]interface{}
-		json.NewDecoder(res.Body).Decode(&resJSON)
-		if resJSON["duplicate"] == true {
-			fmt.Printf("  [Live] %s↻ Already Acquired (Sync):%s %s\n", color.Yellow, color.Reset, blueprint)
-		} else {
-			fmt.Printf("  [Live] %s★ Successfully Imported:%s %s\n", color.Green, color.Reset, blueprint)
-		}
+	var resJSON map[string]interface{}
+	_ = json.NewDecoder(res.Body).Decode(&resJSON)
+
+	internalName = ""
+	if bp, ok := resJSON["blueprint"].(string); ok {
+		internalName = bp
 	} else {
-		fmt.Printf("  [Live] %s✗ Failed to import:%s %s (HTTP %d)\n", color.Red, color.Reset, blueprint, res.StatusCode)
+		resolved := resolveBlueprintInput(blueprintInput, contractDefID)
+		if resolved.OK {
+			internalName = resolved.InternalName
+		}
 	}
+
+	dup := resJSON["duplicate"] == true
+	return res.StatusCode, dup, internalName, nil
 }
+
