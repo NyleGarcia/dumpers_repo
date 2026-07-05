@@ -704,6 +704,22 @@ def main():
         if not user_path and default_path:
             user_path = default_path
         
+        if not user_path:
+            print(f"{Colors.DIM}Auto-detecting Star Citizen installations...{Colors.RESET}")
+            installs = detect_sc_installs()
+            if installs:
+                chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+                detected_dir = installs[chosen_channel]
+                print(f"{Colors.GREEN}Detected channel {chosen_channel} at: {detected_dir}{Colors.RESET}")
+                user_path = str(detected_dir)
+            else:
+                fallback = Path(DEFAULT_WIN_PATH)
+                if fallback.is_dir():
+                    live_dir = fallback / "LIVE"
+                    if live_dir.is_dir():
+                        print(f"{Colors.GREEN}Detected default fallback at: {live_dir}{Colors.RESET}")
+                        user_path = str(live_dir)
+
         if user_path:
             args.file_path = Path(user_path)
 

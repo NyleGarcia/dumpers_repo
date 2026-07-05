@@ -760,6 +760,31 @@ func main() {
 		if userPath == "" && defaultPath != "" {
 			userPath = defaultPath
 		}
+		if userPath == "" {
+			fmt.Printf("%sScanning local system for Star Citizen installations...%s\n", color.Dim, color.Reset)
+			installs := detectSCInstalls()
+			if len(installs) > 0 {
+				chosenChannel := "LIVE"
+				if _, ok := installs["LIVE"]; !ok {
+					for k := range installs {
+						chosenChannel = k
+						break
+					}
+				}
+				detectedDir := installs[chosenChannel]
+				fmt.Printf("%sDetected channel %s at: %s%s\n", color.Green, chosenChannel, detectedDir, color.Reset)
+				userPath = detectedDir
+			} else {
+				fallback := DefaultWinPath
+				if info, err := os.Stat(fallback); err == nil && info.IsDir() {
+					liveDir := filepath.Join(fallback, "LIVE")
+					if info2, err2 := os.Stat(liveDir); err2 == nil && info2.IsDir() {
+						fmt.Printf("%sDetected default fallback at: %s%s\n", color.Green, liveDir, color.Reset)
+						userPath = liveDir
+					}
+				}
+			}
+		}
 		if userPath != "" {
 			filePath = userPath
 		}
