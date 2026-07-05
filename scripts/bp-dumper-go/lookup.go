@@ -11,8 +11,6 @@ import (
 var lookupJSON []byte
 
 var (
-	bpCraftScitemPath      = regexp.MustCompile(`(?i)bp_craft_([^/]+?)_scitem\.json$`)
-	bpCraftSimplePath      = regexp.MustCompile(`(?i)bp_craft_([^/]+?)\.json$`)
 	componentPrefixPattern = regexp.MustCompile(`(?i)^(?:civ|ind|mil|ste|com)/([0-9])/[a-d]\s+`)
 )
 

@@ -10,8 +10,6 @@ from typing import Any, TypedDict
 _LOOKUP_PATH = Path(__file__).resolve().parent / "lookup.json"
 _cached: dict[str, Any] | None = None
 
-_BP_CRAFT_SCITEM = re.compile(r"bp_craft_([^/]+?)_scitem\.json$", re.I)
-_BP_CRAFT_SIMPLE = re.compile(r"bp_craft_([^/]+?)\.json$", re.I)
 
 
 class ResolveResult(TypedDict, total=False):
