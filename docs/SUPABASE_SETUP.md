@@ -161,7 +161,7 @@ Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose s
 
 Members generate a personal API key from **Settings → BP Dumper**. Only the BP Dumper desktop program uses this key; it calls the deployed `log-watcher-webhook` Edge Function.
 
-**Base URL:** `https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook` (hardcoded in BP Dumper; members only need their API key)
+**Base URL:** `https://api.dumpers-repo.com/functions/v1/log-watcher-webhook` (hardcoded in BP Dumper; members only need their API key)
 
 **Auth header (all requests):** `Authorization: Bearer dr_<your_api_key>`
 
@@ -192,7 +192,7 @@ Members generate a personal API key from **Settings → BP Dumper**. Only the BP
 **Example curl**
 
 ```bash
-curl -X POST "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook" \
+curl -X POST "https://api.dumpers-repo.com/functions/v1/log-watcher-webhook" \
   -H "Authorization: Bearer dr_YOUR_KEY" \
   -H "Content-Type: application/json" \
   -d '{"type":"blueprint_received","blueprint":"behr_smg_ballistic_01"}'
