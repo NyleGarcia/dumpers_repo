@@ -93,8 +93,9 @@ function tryAbbreviatedMiningLaserResolve(
   byInternal: Record<string, { blueprintName: string; categoryName: string | null }>
 ): BlueprintResolveSuccess | null {
   const trimmed = rawInput.trim()
-  let size: number | null = null
-  let product = ''
+
+  let size: number
+  let product: string
 
   const s00Match = trimmed.match(/^s00\s+(.+)$/i)
   if (s00Match) {
@@ -108,7 +109,7 @@ function tryAbbreviatedMiningLaserResolve(
   }
 
   const prefix = ABBREVIATED_MINING_PREFIXES[product]
-  if (prefix == null || size == null || Number.isNaN(size)) return null
+  if (prefix == null || Number.isNaN(size)) return null
 
   return resolveFromInternalKey(byInternal, `${prefix}_s${size}`, 'display')
 }
