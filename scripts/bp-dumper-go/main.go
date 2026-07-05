@@ -688,6 +688,7 @@ func main() {
 		watch      bool
 		logDir     string
 		minVersion string
+		configure  bool
 	)
 
 	flag.StringVar(&filePath, "file", "", "Path to the JSON file or log file to parse.")
@@ -711,19 +712,25 @@ func main() {
 	flag.StringVar(&minVersion, "min-version", "", "Only parse logs with game version equal to or greater than this (e.g. 4.8).")
 	flag.StringVar(&minVersion, "v", "", "Only parse logs with game version equal to or greater than this (shorthand).")
 
+	flag.BoolVar(&configure, "configure", false, "Force running the configuration wizard.")
+	flag.BoolVar(&configure, "c", false, "Force running the configuration wizard (shorthand).")
+
 	// Support positional file path (standard parsing behavior)
 	flag.Parse()
 
 	// If filePath wasn't set by flags, check first positional arg
 	if filePath == "" && len(flag.Args()) > 0 {
 		filePath = flag.Arg(0)
-		// Check if we captured -w or -d as a trailing positional arg because Go flag package stops parsing on positional args
+		// Check if we captured -w, -d, or -c as a trailing positional arg because Go flag package stops parsing on positional args
 		for _, arg := range flag.Args() {
 			if arg == "-w" || arg == "--watch" {
 				watch = true
 			}
 			if arg == "-d" || arg == "--dry-run" {
 				dryRun = true
+			}
+			if arg == "-c" || arg == "--configure" {
+				configure = true
 			}
 		}
 	}
@@ -741,10 +748,14 @@ func main() {
 	envPath := filepath.Join(baseDir, ".env")
 	envVars := loadEnvFile(envPath)
 
-	// Determine if running interactively
-	isInteractive := isTTY() && (len(os.Args) == 1 ||
-		(len(os.Args) == 2 && dryRun) ||
-		(!dryRun && apiKey == "" && os.Getenv("LOG_WATCHER_API_KEY") == "" && envVars["LOG_WATCHER_API_KEY"] == ""))
+	// Load watch mode from env if not explicitly provided as flag
+	if !watch && envVars["WATCH_MODE"] == "true" {
+		watch = true
+	}
+
+	isInteractive := configure || (isTTY() && !dryRun && (
+		(apiKey == "" && os.Getenv("LOG_WATCHER_API_KEY") == "" && envVars["LOG_WATCHER_API_KEY"] == "") ||
+		(url == "" && os.Getenv("SUPABASE_WEBHOOK_URL") == "" && envVars["SUPABASE_WEBHOOK_URL"] == "")))
 
 	if isInteractive {
 		fmt.Printf("%s====================================================%s\n", color.Cyan, color.Reset)
@@ -868,6 +879,7 @@ func main() {
 			"LOG_WATCHER_API_KEY":  apiKey,
 			"IMPORT_OLD_LOGS":      importOldLogs,
 			"MIN_GAME_VERSION":     minVersion,
+			"WATCH_MODE":           fmt.Sprintf("%t", watch),
 		}
 		saveEnvFile(envPath, saveVars)
 	}

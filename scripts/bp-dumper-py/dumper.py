@@ -669,6 +669,11 @@ def main():
         "--min-version", "-v",
         help="Only parse logs with game version equal to or greater than this (e.g. 4.8)."
     )
+    parser.add_argument(
+        "--configure", "-c",
+        action="store_true",
+        help="Force running the configuration wizard."
+    )
 
     args = parser.parse_args()
 
@@ -676,16 +681,15 @@ def main():
     env_path = Path(__file__).resolve().parent / ".env"
     env_vars = load_env_file(env_path)
 
+    # Load watch mode from env if not explicitly provided as flag
+    if not args.watch and env_vars.get("WATCH_MODE") == "true":
+        args.watch = True
+
     # Determine if we should run in interactive mode
-    # We run interactively if stdout is a terminal AND either:
-    # 1. No command-line arguments are passed
-    # 2. --dry-run was passed, but we don't have a target file/folder
-    # 3. We are running in real mode, but API key is missing
-    is_interactive = sys.stdout.isatty() and (
-        len(sys.argv) == 1 or
-        (len(sys.argv) == 2 and args.dry_run) or
-        (not args.dry_run and not args.key and not os.getenv("LOG_WATCHER_API_KEY") and not env_vars.get("LOG_WATCHER_API_KEY"))
-    )
+    is_interactive = args.configure or (sys.stdout.isatty() and not args.dry_run and (
+        (not args.key and not os.getenv("LOG_WATCHER_API_KEY") and not env_vars.get("LOG_WATCHER_API_KEY")) or
+        (not args.url and not os.getenv("SUPABASE_WEBHOOK_URL") and not env_vars.get("SUPABASE_WEBHOOK_URL"))
+    ))
 
     if is_interactive:
         print(f"{Colors.CYAN}===================================================={Colors.RESET}")
@@ -802,7 +806,8 @@ def main():
             "SUPABASE_WEBHOOK_URL": resolved_url if not args.dry_run else "",
             "LOG_WATCHER_API_KEY": args.key if args.key else "",
             "IMPORT_OLD_LOGS": import_old_logs,
-            "MIN_GAME_VERSION": args.min_version if args.min_version else ""
+            "MIN_GAME_VERSION": args.min_version if args.min_version else "",
+            "WATCH_MODE": "true" if args.watch else "false"
         }
         env_vars.update(new_env)
         save_env_file(env_path, env_vars)
