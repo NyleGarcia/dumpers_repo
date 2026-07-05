@@ -49,6 +49,7 @@ def post_blueprint_event(session, url: str, blueprint_input: str, contract_defin
 DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
 SCAN_MAX_DEPTH = 4
 MIN_GAME_VERSION = ""
+DUMPER_VERSION = "1.1.0"
 
 # Skip system/cache folders during drive scans
 SCAN_SKIP_DIRS = frozenset(name.lower() for name in (
@@ -1017,6 +1018,11 @@ def main():
                             save_env_file(env_path, env_vars)
                             global MIN_GAME_VERSION
                             MIN_GAME_VERSION = server_min_ver
+
+                        latest_ver = response_json.get("latestDumperVersion", "")
+                        if latest_ver and latest_ver != DUMPER_VERSION:
+                            print(f"{Colors.YELLOW}[Update] New dumper version available: {latest_ver} (You have {DUMPER_VERSION}).{Colors.RESET}")
+                            print(f"{Colors.YELLOW}Download the latest release from: https://github.com/NyleGarcia/dumpers_repo/releases{Colors.RESET}\n")
                 else:
                     print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
             except Exception as e:

@@ -359,6 +359,8 @@ func saveCacheFile(path string, cache map[string]bool) {
 	}
 }
 
+const DumperVersion = "1.1.0"
+
 // Helpers for folder scans
 var scanSkipDirs = map[string]bool{
 	"windows": true, "windows.old": true, "winsxs": true,
@@ -927,9 +929,10 @@ func main() {
 			res, err := client.Do(req)
 			if err == nil && res.StatusCode == 200 {
 				var resJSON struct {
-					Success        bool     `json:"success"`
-					Blueprints     []string `json:"blueprints"`
-					MinGameVersion string   `json:"minGameVersion"`
+					Success             bool     `json:"success"`
+					Blueprints          []string `json:"blueprints"`
+					MinGameVersion      string   `json:"minGameVersion"`
+					LatestDumperVersion string   `json:"latestDumperVersion"`
 				}
 				if err := json.NewDecoder(res.Body).Decode(&resJSON); err == nil && resJSON.Success {
 					for _, bp := range resJSON.Blueprints {
@@ -944,6 +947,13 @@ func main() {
 						envVars["MIN_GAME_VERSION"] = resJSON.MinGameVersion
 						saveEnvFile(envPath, envVars)
 						minVersion = resJSON.MinGameVersion
+					}
+
+					if resJSON.LatestDumperVersion != "" && resJSON.LatestDumperVersion != DumperVersion {
+						fmt.Printf("%s[Update] New dumper version available: %s (You have %s).%s\n",
+							color.Yellow, resJSON.LatestDumperVersion, DumperVersion, color.Reset)
+						fmt.Printf("%sDownload the latest release from: https://github.com/NyleGarcia/dumpers_repo/releases%s\n\n",
+							color.Yellow, color.Reset)
 					}
 				}
 				res.Body.Close()

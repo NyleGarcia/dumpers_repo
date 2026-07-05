@@ -134,7 +134,8 @@ serve(async (req) => {
 
       const list = bpsData.map((row: { blueprint_id: string }) => row.blueprint_id)
       const minGameVersion = Deno.env.get('MIN_GAME_VERSION') ?? ''
-      return new Response(JSON.stringify({ success: true, blueprints: list, minGameVersion }), {
+      const latestDumperVersion = Deno.env.get('LATEST_DUMPER_VERSION') ?? '1.1.0'
+      return new Response(JSON.stringify({ success: true, blueprints: list, minGameVersion, latestDumperVersion }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
