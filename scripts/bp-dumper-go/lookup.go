@@ -71,6 +71,9 @@ func normalizeDisplayKey(value string) string {
 
 func normalizeInternalKey(input string) string {
 	normalized := strings.ToLower(strings.TrimSpace(strings.ReplaceAll(input, "\\", "/")))
+	if strings.HasSuffix(normalized, ",p") {
+		normalized = normalized[:len(normalized)-2]
+	}
 	if m := bpCraftScitemPath.FindStringSubmatch(normalized); len(m) >= 2 {
 		return m[1]
 	}

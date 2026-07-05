@@ -36,6 +36,8 @@ def _normalize_display_key(value: str) -> str:
 
 def normalize_internal_key(raw_input: str) -> str:
     normalized = raw_input.replace("\\", "/").strip().lower()
+    if normalized.endswith(",p"):
+        normalized = normalized[:-2]
     m = _BP_CRAFT_SCITEM.search(normalized)
     if m:
         return m.group(1)
