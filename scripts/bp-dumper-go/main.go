@@ -12,6 +12,7 @@ import (
 	"regexp"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -435,7 +436,7 @@ func findSCRoots(driveRoot string) []string {
 	return roots
 }
 
-func scanDirectoryConcurrently(dirPath string) ([]string, error) {
+func scanDirectoryConcurrently(dirPath string, minVersion string) ([]string, error) {
 	files, err := filepath.Glob(filepath.Join(dirPath, "*.log"))
 	if err != nil {
 		return nil, err
@@ -466,6 +467,11 @@ func scanDirectoryConcurrently(dirPath string) ([]string, error) {
 		wg.Add(1)
 		go func(idx int, path string) {
 			defer wg.Done()
+			if !isLogVersionAllowed(path, minVersion) {
+				fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", idx+1, len(files), filepath.Base(path), minVersion)
+				resultsChan <- nil
+				return
+			}
 			info, err := os.Stat(path)
 			if err != nil {
 				resultsChan <- nil
@@ -506,6 +512,56 @@ func normalizePath(path string) string {
 		return filepath.Clean(strings.ReplaceAll(path, "/", "\\"))
 	}
 	return path
+}
+
+func isLogVersionAllowed(path string, minVersion string) bool {
+	if minVersion == "" {
+		return true
+	}
+	parts := strings.Split(minVersion, ".")
+	if len(parts) == 0 {
+		return true
+	}
+	minMajor, _ := strconv.Atoi(parts[0])
+	minMinor := 0
+	if len(parts) > 1 {
+		minMinor, _ = strconv.Atoi(parts[1])
+	}
+
+	file, err := os.Open(path)
+	if err != nil {
+		return false
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	lineCount := 0
+	for scanner.Scan() && lineCount < 150 {
+		lineCount++
+		line := scanner.Text()
+		idx := strings.Index(strings.ToLower(line), "product version:")
+		if idx != -1 {
+			versionPart := strings.TrimSpace(line[idx+16:])
+			versionPart = strings.TrimLeft(versionPart, " \t-=:")
+			vParts := strings.Split(versionPart, ".")
+			if len(vParts) > 0 {
+				major, _ := strconv.Atoi(vParts[0])
+				minor := 0
+				if len(vParts) > 1 {
+					minorStr := vParts[1]
+					if dashIdx := strings.Index(minorStr, "-"); dashIdx != -1 {
+						minorStr = minorStr[:dashIdx]
+					}
+					minor, _ = strconv.Atoi(minorStr)
+				}
+				if major > minMajor || (major == minMajor && minor >= minMinor) {
+					return true
+				}
+				return false
+			}
+		}
+	}
+	return true
 }
 
 func parseLocalLocalization(channelDir string) map[string][]string {
@@ -579,12 +635,13 @@ func main() {
 	}
 
 	var (
-		filePath string
-		url      string
-		apiKey   string
-		dryRun   bool
-		watch    bool
-		logDir   string
+		filePath   string
+		url        string
+		apiKey     string
+		dryRun     bool
+		watch      bool
+		logDir     string
+		minVersion string
 	)
 
 	flag.StringVar(&filePath, "file", "", "Path to the JSON file or log file to parse.")
@@ -604,6 +661,9 @@ func main() {
 
 	flag.StringVar(&logDir, "log-dir", "", "Directly scan a specific directory for log files.")
 	flag.StringVar(&logDir, "l", "", "Directly scan a specific directory for log files (shorthand).")
+
+	flag.StringVar(&minVersion, "min-version", "", "Only parse logs with game version equal to or greater than this (e.g. 4.8).")
+	flag.StringVar(&minVersion, "v", "", "Only parse logs with game version equal to or greater than this (shorthand).")
 
 	// Support positional file path (standard parsing behavior)
 	flag.Parse()
@@ -727,6 +787,20 @@ func main() {
 			importOldLogs = "false"
 		}
 
+		// 7. Min Game Version Prompt
+		defaultMinVer := envVars["MIN_GAME_VERSION"]
+		minVerPrompt := "Minimum game version to parse (e.g. 4.8, Enter = None)"
+		if defaultMinVer != "" {
+			minVerPrompt += fmt.Sprintf(" [%s]", defaultMinVer)
+		}
+		fmt.Print(minVerPrompt + ": ")
+		userMinVer, _ := reader.ReadString('\n')
+		userMinVer = strings.TrimSpace(userMinVer)
+		if userMinVer == "" && defaultMinVer != "" {
+			userMinVer = defaultMinVer
+		}
+		minVersion = userMinVer
+
 		fmt.Println()
 
 		// Save configuration immediately
@@ -735,6 +809,7 @@ func main() {
 			"SUPABASE_WEBHOOK_URL": url,
 			"LOG_WATCHER_API_KEY":  apiKey,
 			"IMPORT_OLD_LOGS":      importOldLogs,
+			"MIN_GAME_VERSION":     minVersion,
 		}
 		saveEnvFile(envPath, saveVars)
 	}
@@ -751,6 +826,13 @@ func main() {
 		apiKey = os.Getenv("LOG_WATCHER_API_KEY")
 		if apiKey == "" {
 			apiKey = envVars["LOG_WATCHER_API_KEY"]
+		}
+	}
+
+	if minVersion == "" {
+		minVersion = os.Getenv("MIN_GAME_VERSION")
+		if minVersion == "" {
+			minVersion = envVars["MIN_GAME_VERSION"]
 		}
 	}
 
@@ -875,6 +957,11 @@ func main() {
 					wg.Add(1)
 					go func(i int, p string) {
 						defer wg.Done()
+						if !isLogVersionAllowed(p, minVersion) {
+							fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", i+1, len(filesToScan), filepath.Base(p), minVersion)
+							resultsChan <- nil
+							return
+						}
 						bps, _ := parseBlueprintsFromLog(p, state)
 						resultsChan <- bps
 					}(idx, path)
@@ -1082,6 +1169,10 @@ func main() {
 				sourceName = filepath.Base(filePath)
 			} else {
 				// Direct single log file scan
+				if !isLogVersionAllowed(filePath, minVersion) {
+					fmt.Printf("Skipping log file %s (game version is below minimum %s)\n", filepath.Base(filePath), minVersion)
+					os.Exit(0)
+				}
 				fmt.Printf("Scanning single log file: %s...\n", filepath.Base(filePath))
 				channelDir := filepath.Dir(filePath)
 				localLocMap := parseLocalLocalization(channelDir)
@@ -1106,7 +1197,7 @@ func main() {
 			}
 		} else {
 			// Directory scan
-			bps, err := scanDirectoryConcurrently(filePath)
+			bps, err := scanDirectoryConcurrently(filePath, minVersion)
 			if err != nil {
 				fmt.Printf("%sError: %v%s\n", color.Red, err, color.Reset)
 				os.Exit(1)
@@ -1183,6 +1274,11 @@ func main() {
 			wg.Add(1)
 			go func(idx int, p string) {
 				defer wg.Done()
+				if !isLogVersionAllowed(p, minVersion) {
+					fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", idx+1, len(filesToScan), filepath.Base(p), minVersion)
+					resultsChan <- nil
+					return
+				}
 				info, err := os.Stat(p)
 				if err != nil {
 					resultsChan <- nil

@@ -25,6 +25,7 @@ except ImportError:
 # Default Star Citizen path locations
 DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
 SCAN_MAX_DEPTH = 4
+MIN_GAME_VERSION = ""
 
 # Skip system/cache folders during drive scans
 SCAN_SKIP_DIRS = frozenset(name.lower() for name in (
@@ -309,6 +310,9 @@ def parse_blueprints_from_log(path: Path) -> list[str]:
 def process_log_file(task_info):
     """Worker function for a single thread to process one file."""
     index, total, path = task_info
+    if not is_log_version_allowed(path, MIN_GAME_VERSION):
+        print(f"  [{index:>3}/{total}] Skipping {path.name} (game version is below minimum {MIN_GAME_VERSION})")
+        return []
     size_mb = path.stat().st_size / (1024 * 1024)
     print(f"  [{index:>3}/{total}] Scanning {path.name} ({size_mb:.2f} MB)...")
     return parse_blueprints_from_log(path)
@@ -500,6 +504,45 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
         if fh:
             fh.close()
 
+def is_log_version_allowed(path: Path, min_version: str) -> bool:
+    if not min_version:
+        return True
+    try:
+        parts = min_version.split(".")
+        min_major = int(parts[0])
+        min_minor = int(parts[1]) if len(parts) > 1 else 0
+    except Exception:
+        return True
+
+    if not path.is_file():
+        return False
+
+    try:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            for i, line in enumerate(f):
+                if i > 150:
+                    break
+                idx = line.lower().find("product version:")
+                if idx != -1:
+                    version_part = line[idx+16:].strip()
+                    version_part = version_part.lstrip(" \t-=:")
+                    v_parts = version_part.split(".")
+                    if v_parts:
+                        try:
+                            major = int(v_parts[0])
+                            minor_str = v_parts[1] if len(v_parts) > 1 else "0"
+                            if "-" in minor_str:
+                                minor_str = minor_str.split("-")[0]
+                            minor = int(minor_str)
+                            if major > min_major or (major == min_major and minor >= min_minor):
+                                return True
+                            return False
+                        except Exception:
+                            pass
+    except Exception:
+        pass
+    return True
+
 def parse_local_localization(channel_dir: Path) -> dict:
     local_map = {}
     loc_dir = channel_dir / "data" / "Localization"
@@ -583,6 +626,10 @@ def main():
         "--log-dir",
         type=Path,
         help="Directly scan a specific directory for log files instead of auto-detecting Star Citizen."
+    )
+    parser.add_argument(
+        "--min-version", "-v",
+        help="Only parse logs with game version equal to or greater than this (e.g. 4.8)."
     )
 
     args = parser.parse_args()
@@ -694,6 +741,22 @@ def main():
         if user_import_old == "n":
             import_old_logs = "false"
 
+        # 7. Min Game Version Prompt
+        default_min_ver = env_vars.get("MIN_GAME_VERSION", "")
+        min_ver_prompt = "Minimum game version to parse (e.g. 4.8, Enter = None)"
+        if default_min_ver:
+            min_ver_prompt += f" [{default_min_ver}]"
+        min_ver_prompt += ": "
+        try:
+            user_min_ver = input(min_ver_prompt).strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nAborted.")
+            sys.exit(0)
+        
+        if not user_min_ver and default_min_ver:
+            user_min_ver = default_min_ver
+        args.min_version = user_min_ver
+
         print()
 
         # Save variables to .env file immediately
@@ -701,7 +764,8 @@ def main():
             "LOG_PATH": str(args.file_path) if args.file_path else "",
             "SUPABASE_WEBHOOK_URL": args.url if args.url else "",
             "LOG_WATCHER_API_KEY": args.key if args.key else "",
-            "IMPORT_OLD_LOGS": import_old_logs
+            "IMPORT_OLD_LOGS": import_old_logs,
+            "MIN_GAME_VERSION": args.min_version if args.min_version else ""
         }
         env_vars.update(new_env)
         save_env_file(env_path, env_vars)
@@ -720,6 +784,11 @@ def main():
 
     # Update script args.url with resolved URL for reference
     args.url = url
+
+    min_version = args.min_version or os.getenv("MIN_GAME_VERSION") or env_vars.get("MIN_GAME_VERSION", "")
+    args.min_version = min_version
+    global MIN_GAME_VERSION
+    MIN_GAME_VERSION = min_version
 
     # First run: Import old logs from backup paths if specified
     if env_vars.get("IMPORT_OLD_LOGS") == "true":
@@ -934,6 +1003,9 @@ def main():
                     sys.exit(1)
             else:
                 # Direct single log file parsing (e.g., Game.log)
+                if not is_log_version_allowed(args.file_path, MIN_GAME_VERSION):
+                    print(f"Skipping log file {args.file_path.name} (game version is below minimum {MIN_GAME_VERSION})")
+                    sys.exit(0)
                 print(f"Scanning single log file: {args.file_path.name}...")
                 channel_dir = args.file_path.parent
                 local_loc_map = parse_local_localization(channel_dir)
