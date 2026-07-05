@@ -11,8 +11,9 @@ import (
 var lookupJSON []byte
 
 var (
-	bpCraftScitemPath = regexp.MustCompile(`(?i)bp_craft_([^/]+?)_scitem\.json$`)
-	bpCraftSimplePath = regexp.MustCompile(`(?i)bp_craft_([^/]+?)\.json$`)
+	bpCraftScitemPath      = regexp.MustCompile(`(?i)bp_craft_([^/]+?)_scitem\.json$`)
+	bpCraftSimplePath      = regexp.MustCompile(`(?i)bp_craft_([^/]+?)\.json$`)
+	componentPrefixPattern = regexp.MustCompile(`(?i)^(?:civ|ind|mil|ste|com)/[0-9]/[a-d]\s+`)
 )
 
 type lookupMeta struct {
@@ -66,7 +67,8 @@ func loadLookup() (*lookupMeta, error) {
 }
 
 func normalizeDisplayKey(value string) string {
-	return strings.ToLower(strings.TrimSpace(value))
+	val := strings.ToLower(strings.TrimSpace(value))
+	return componentPrefixPattern.ReplaceAllString(val, "")
 }
 
 func normalizeInternalKey(input string) string {

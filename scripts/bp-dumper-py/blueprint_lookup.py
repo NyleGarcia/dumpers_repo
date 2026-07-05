@@ -31,7 +31,8 @@ def _load_lookup() -> dict[str, Any]:
 
 
 def _normalize_display_key(value: str) -> str:
-    return value.strip().lower()
+    val = value.strip().lower()
+    return re.sub(r"^(?:civ|ind|mil|ste|com)/[0-9]/[a-d]\s+", "", val, flags=re.I)
 
 
 def normalize_internal_key(raw_input: str) -> str:

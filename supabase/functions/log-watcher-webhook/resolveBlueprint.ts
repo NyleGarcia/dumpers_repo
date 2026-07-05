@@ -28,7 +28,8 @@ export type ResolveResult = ResolveSuccess | ResolveFailure
 type LookupData = typeof lookup
 
 function normalizeDisplayKey(value: string): string {
-  return value.trim().toLowerCase()
+  const val = value.trim().toLowerCase()
+  return val.replace(/^(?:civ|ind|mil|ste|com)\/[0-9]\/[a-d]\s+/i, '')
 }
 
 /** Extract catalog internalName from bp_craft file paths or return normalized key. */
