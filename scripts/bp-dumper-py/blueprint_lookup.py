@@ -81,6 +81,13 @@ def resolve_blueprint_input(raw_input: str, contract_definition_id: str | None =
         }
 
     candidates = list(display_entry.get("candidates") or [])
+    prefix_match = re.match(r"^(?:civ|ind|mil|ste|com)/([0-9])/[a-d]\s+", text, flags=re.I)
+    if prefix_match:
+        size_digit = prefix_match.group(1)
+        filtered = [c for c in candidates if c.get("categoryName") and f"S{size_digit}" in c["categoryName"]]
+        if filtered:
+            candidates = filtered
+
     contract_key = (contract_definition_id or "").strip().lower()
     if contract_key:
         pool_ids = set(data.get("byContractDefinitionId", {}).get(contract_key, []))

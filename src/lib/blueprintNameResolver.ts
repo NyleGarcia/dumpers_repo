@@ -103,6 +103,13 @@ export function resolveBlueprintInput(
   }
 
   let candidates = ambiguous.candidates
+  const prefixMatch = rawInput.match(/^(?:civ|ind|mil|ste|com)\/([0-9])\/[a-d]\s+/i)
+  if (prefixMatch) {
+    const sizeDigit = prefixMatch[1]
+    const filtered = candidates.filter((c) => c.categoryName && c.categoryName.includes('S' + sizeDigit))
+    if (filtered.length > 0) candidates = filtered
+  }
+
   const contractKey = context.contractDefinitionId?.trim().toLowerCase()
   if (contractKey) {
     const poolIds = new Set(

@@ -13,7 +13,7 @@ var lookupJSON []byte
 var (
 	bpCraftScitemPath      = regexp.MustCompile(`(?i)bp_craft_([^/]+?)_scitem\.json$`)
 	bpCraftSimplePath      = regexp.MustCompile(`(?i)bp_craft_([^/]+?)\.json$`)
-	componentPrefixPattern = regexp.MustCompile(`(?i)^(?:civ|ind|mil|ste|com)/[0-9]/[a-d]\s+`)
+	componentPrefixPattern = regexp.MustCompile(`(?i)^(?:civ|ind|mil|ste|com)/([0-9])/[a-d]\s+`)
 )
 
 type lookupMeta struct {
@@ -126,6 +126,20 @@ func resolveBlueprintInput(rawInput, contractDefinitionID string) resolveResult 
 	}
 
 	candidates := ambiguous.Candidates
+	prefixMatches := componentPrefixPattern.FindStringSubmatch(input)
+	if len(prefixMatches) == 2 {
+		sizeDigit := prefixMatches[1]
+		filtered := make([]lookupCandidate, 0)
+		for _, c := range candidates {
+			if c.CategoryName != nil && strings.Contains(*c.CategoryName, "S"+sizeDigit) {
+				filtered = append(filtered, c)
+			}
+		}
+		if len(filtered) > 0 {
+			candidates = filtered
+		}
+	}
+
 	contractKey := strings.ToLower(strings.TrimSpace(contractDefinitionID))
 	if contractKey != "" {
 		poolIDs := data.ByContractDefinitionId[contractKey]
