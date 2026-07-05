@@ -12,6 +12,7 @@ import (
 	"regexp"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -272,7 +273,6 @@ func parseBlueprintsFromLog(path string, state *WatcherState) ([]string, error) 
 
 		} else if m := patternBlueprint.FindStringSubmatch(line); len(m) >= 2 {
 			productName := strings.TrimSpace(m[1])
-			discovered = append(discovered, productName)
 			tsStr := ts.Format("2006-01-02 15:04:05")
 			corr, found := state.CorrelateBlueprint(ts)
 			if found {
@@ -282,6 +282,8 @@ func parseBlueprintsFromLog(path string, state *WatcherState) ([]string, error) 
 				fmt.Printf("  [%s] [%s] %sBlueprint received: %s%s%s (no recent mission to correlate)%s\n",
 					tsStr, filename, color.Magenta, color.Green, productName, color.Magenta, color.Reset)
 			}
+
+			discovered = append(discovered, productName)
 		}
 	}
 	return discovered, scanner.Err()
@@ -357,6 +359,8 @@ func saveCacheFile(path string, cache map[string]bool) {
 	}
 }
 
+const DumperVersion = "1.1.0"
+
 // Helpers for folder scans
 var scanSkipDirs = map[string]bool{
 	"windows": true, "windows.old": true, "winsxs": true,
@@ -428,13 +432,71 @@ func findSCRoots(driveRoot string) []string {
 	return roots
 }
 
-func scanDirectoryConcurrently(dirPath string) ([]string, error) {
+func isBlueprintAcquired(acquired map[string]bool, input string) bool {
+	key := cacheKeyForInput(input)
+	return acquired[key] || acquired[input]
+}
+
+func postBlueprintEvent(url, apiKey, blueprintInput, contractDefID string) (httpStatus int, duplicate bool, internalName string, err error) {
+	// POST as-is: server checks internalName first, then display-name mapping.
+	payload := map[string]string{
+		"type":      "blueprint_received",
+		"blueprint": blueprintInput,
+	}
+	if contractDefID != "" {
+		payload["contractDefinitionId"] = contractDefID
+	}
+	body, _ := json.Marshal(payload)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	if err != nil {
+		return 0, false, "", err
+	}
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{Timeout: 15 * time.Second}
+	res, err := client.Do(req)
+	if err != nil {
+		return 0, false, "", err
+	}
+	defer res.Body.Close()
+
+	var resJSON map[string]interface{}
+	_ = json.NewDecoder(res.Body).Decode(&resJSON)
+
+	internalName = ""
+	if bp, ok := resJSON["blueprint"].(string); ok {
+		internalName = bp
+	} else {
+		resolved := resolveBlueprintInput(blueprintInput, contractDefID)
+		if resolved.OK {
+			internalName = resolved.InternalName
+		}
+	}
+	isDupe := false
+	if d, ok := resJSON["duplicate"].(bool); ok {
+		isDupe = d
+	}
+	return res.StatusCode, isDupe, internalName, nil
+}
+
+func scanDirectoryConcurrently(dirPath string, minVersion string) ([]string, error) {
 	files, err := filepath.Glob(filepath.Join(dirPath, "*.log"))
 	if err != nil {
 		return nil, err
 	}
 	if len(files) == 0 {
 		return nil, fmt.Errorf("no .log files found in directory: %s", dirPath)
+	}
+
+	// Merge local translations if any
+	localLocMap := parseLocalLocalization(dirPath)
+	if len(localLocMap) == 0 {
+		localLocMap = parseLocalLocalization(filepath.Dir(dirPath))
+	}
+	if len(localLocMap) > 0 {
+		registerCustomTranslations(localLocMap)
+		fmt.Printf("%sLoaded %d custom translations from local global.ini (StarStrings/localization mod active)%s\n", color.Green, len(localLocMap), color.Reset)
 	}
 
 	fmt.Printf("Scanning %d log file(s) in %s (Multithreaded)...\n", len(files), filepath.Base(dirPath))
@@ -447,6 +509,11 @@ func scanDirectoryConcurrently(dirPath string) ([]string, error) {
 		wg.Add(1)
 		go func(idx int, path string) {
 			defer wg.Done()
+			if !isLogVersionAllowed(path, minVersion) {
+				fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", idx+1, len(files), filepath.Base(path), minVersion)
+				resultsChan <- nil
+				return
+			}
 			info, err := os.Stat(path)
 			if err != nil {
 				resultsChan <- nil
@@ -489,6 +556,120 @@ func normalizePath(path string) string {
 	return path
 }
 
+func isLogVersionAllowed(path string, minVersion string) bool {
+	if minVersion == "" {
+		return true
+	}
+	parts := strings.Split(minVersion, ".")
+	if len(parts) == 0 {
+		return true
+	}
+	minMajor, _ := strconv.Atoi(parts[0])
+	minMinor := 0
+	if len(parts) > 1 {
+		minMinor, _ = strconv.Atoi(parts[1])
+	}
+
+	file, err := os.Open(path)
+	if err != nil {
+		return false
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	lineCount := 0
+	for scanner.Scan() && lineCount < 150 {
+		lineCount++
+		line := scanner.Text()
+		idx := strings.Index(strings.ToLower(line), "product version:")
+		if idx != -1 {
+			versionPart := strings.TrimSpace(line[idx+16:])
+			versionPart = strings.TrimLeft(versionPart, " \t-=:")
+			vParts := strings.Split(versionPart, ".")
+			if len(vParts) > 0 {
+				major, _ := strconv.Atoi(vParts[0])
+				minor := 0
+				if len(vParts) > 1 {
+					minorStr := vParts[1]
+					if dashIdx := strings.Index(minorStr, "-"); dashIdx != -1 {
+						minorStr = minorStr[:dashIdx]
+					}
+					minor, _ = strconv.Atoi(minorStr)
+				}
+				if major > minMajor || (major == minMajor && minor >= minMinor) {
+					return true
+				}
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func parseLocalLocalization(channelDir string) map[string][]string {
+	localMap := make(map[string][]string)
+	locDir := filepath.Join(channelDir, "data", "Localization")
+	if info, err := os.Stat(locDir); err != nil || !info.IsDir() {
+		return localMap
+	}
+
+	filepath.Walk(locDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+		if !info.IsDir() && strings.ToLower(info.Name()) == "global.ini" {
+			file, err := os.Open(path)
+			if err != nil {
+				return nil
+			}
+			defer file.Close()
+
+			scanner := bufio.NewScanner(file)
+			for scanner.Scan() {
+				line := strings.TrimSpace(scanner.Text())
+				if line == "" || strings.HasPrefix(line, ";") || strings.HasPrefix(line, "#") {
+					continue
+				}
+				parts := strings.SplitN(line, "=", 2)
+				if len(parts) != 2 {
+					continue
+				}
+				key := strings.TrimSpace(parts[0])
+				val := strings.TrimSpace(parts[1])
+				val = strings.Trim(val, `"'`)
+				if key == "" || val == "" {
+					continue
+				}
+
+				internalName := ""
+				if strings.HasPrefix(key, "item_Name_") {
+					internalName = strings.TrimPrefix(key, "item_Name_")
+				} else if strings.HasSuffix(key, "_Name") {
+					internalName = strings.TrimSuffix(key, "_Name")
+				}
+
+				if internalName != "" {
+					internalName = strings.ToLower(internalName)
+					valLower := strings.ToLower(val)
+					// Avoid duplicates
+					exists := false
+					for _, existing := range localMap[valLower] {
+						if existing == internalName {
+							exists = true
+							break
+						}
+					}
+					if !exists {
+						localMap[valLower] = append(localMap[valLower], internalName)
+					}
+				}
+			}
+		}
+		return nil
+	})
+	return localMap
+}
+
 func main() {
 	enableWindowsANSI()
 	if !isTTY() {
@@ -496,12 +677,13 @@ func main() {
 	}
 
 	var (
-		filePath string
-		url      string
-		apiKey   string
-		dryRun   bool
-		watch    bool
-		logDir   string
+		filePath   string
+		url        string
+		apiKey     string
+		dryRun     bool
+		watch      bool
+		logDir     string
+		minVersion string
 	)
 
 	flag.StringVar(&filePath, "file", "", "Path to the JSON file or log file to parse.")
@@ -521,6 +703,9 @@ func main() {
 
 	flag.StringVar(&logDir, "log-dir", "", "Directly scan a specific directory for log files.")
 	flag.StringVar(&logDir, "l", "", "Directly scan a specific directory for log files (shorthand).")
+
+	flag.StringVar(&minVersion, "min-version", "", "Only parse logs with game version equal to or greater than this (e.g. 4.8).")
+	flag.StringVar(&minVersion, "v", "", "Only parse logs with game version equal to or greater than this (shorthand).")
 
 	// Support positional file path (standard parsing behavior)
 	flag.Parse()
@@ -576,6 +761,31 @@ func main() {
 		userPath = strings.Trim(userPath, `"'`)
 		if userPath == "" && defaultPath != "" {
 			userPath = defaultPath
+		}
+		if userPath == "" {
+			fmt.Printf("%sScanning local system for Star Citizen installations...%s\n", color.Dim, color.Reset)
+			installs := detectSCInstalls()
+			if len(installs) > 0 {
+				chosenChannel := "LIVE"
+				if _, ok := installs["LIVE"]; !ok {
+					for k := range installs {
+						chosenChannel = k
+						break
+					}
+				}
+				detectedDir := installs[chosenChannel]
+				fmt.Printf("%sDetected channel %s at: %s%s\n", color.Green, chosenChannel, detectedDir, color.Reset)
+				userPath = detectedDir
+			} else {
+				fallback := DefaultWinPath
+				if info, err := os.Stat(fallback); err == nil && info.IsDir() {
+					liveDir := filepath.Join(fallback, "LIVE")
+					if info2, err2 := os.Stat(liveDir); err2 == nil && info2.IsDir() {
+						fmt.Printf("%sDetected default fallback at: %s%s\n", color.Green, liveDir, color.Reset)
+						userPath = liveDir
+					}
+				}
+			}
 		}
 		if userPath != "" {
 			filePath = userPath
@@ -635,6 +845,29 @@ func main() {
 			apiKey = userKey
 		}
 
+		// 6. Import Old Logs Prompt
+		fmt.Print("Import old logs on first run? (Y/N, Enter = Y): ")
+		userImportOld, _ := reader.ReadString('\n')
+		userImportOld = strings.ToLower(strings.TrimSpace(userImportOld))
+		importOldLogs := "true"
+		if userImportOld == "n" {
+			importOldLogs = "false"
+		}
+
+		// 7. Min Game Version Prompt
+		defaultMinVer := envVars["MIN_GAME_VERSION"]
+		minVerPrompt := "Minimum game version to parse (e.g. 4.8, Enter = None)"
+		if defaultMinVer != "" {
+			minVerPrompt += fmt.Sprintf(" [%s]", defaultMinVer)
+		}
+		fmt.Print(minVerPrompt + ": ")
+		userMinVer, _ := reader.ReadString('\n')
+		userMinVer = strings.TrimSpace(userMinVer)
+		if userMinVer == "" && defaultMinVer != "" {
+			userMinVer = defaultMinVer
+		}
+		minVersion = userMinVer
+
 		fmt.Println()
 
 		// Save configuration immediately
@@ -642,6 +875,8 @@ func main() {
 			"LOG_PATH":             filePath,
 			"SUPABASE_WEBHOOK_URL": url,
 			"LOG_WATCHER_API_KEY":  apiKey,
+			"IMPORT_OLD_LOGS":      importOldLogs,
+			"MIN_GAME_VERSION":     minVersion,
 		}
 		saveEnvFile(envPath, saveVars)
 	}
@@ -658,6 +893,13 @@ func main() {
 		apiKey = os.Getenv("LOG_WATCHER_API_KEY")
 		if apiKey == "" {
 			apiKey = envVars["LOG_WATCHER_API_KEY"]
+		}
+	}
+
+	if minVersion == "" {
+		minVersion = os.Getenv("MIN_GAME_VERSION")
+		if minVersion == "" {
+			minVersion = envVars["MIN_GAME_VERSION"]
 		}
 	}
 
@@ -687,8 +929,10 @@ func main() {
 			res, err := client.Do(req)
 			if err == nil && res.StatusCode == 200 {
 				var resJSON struct {
-					Success    bool     `json:"success"`
-					Blueprints []string `json:"blueprints"`
+					Success             bool     `json:"success"`
+					Blueprints          []string `json:"blueprints"`
+					MinGameVersion      string   `json:"minGameVersion"`
+					LatestDumperVersion string   `json:"latestDumperVersion"`
 				}
 				if err := json.NewDecoder(res.Body).Decode(&resJSON); err == nil && resJSON.Success {
 					for _, bp := range resJSON.Blueprints {
@@ -696,10 +940,206 @@ func main() {
 					}
 					saveCacheFile(cachePath, acquiredBlueprints)
 					fmt.Printf("Synced %d blueprints from account.\n", len(resJSON.Blueprints))
+
+					if resJSON.MinGameVersion != "" && resJSON.MinGameVersion != envVars["MIN_GAME_VERSION"] {
+						fmt.Printf("%s[Server Sync] Updating local MIN_GAME_VERSION to %s (was %s)%s\n",
+							color.Green, resJSON.MinGameVersion, envVars["MIN_GAME_VERSION"], color.Reset)
+						envVars["MIN_GAME_VERSION"] = resJSON.MinGameVersion
+						saveEnvFile(envPath, envVars)
+						minVersion = resJSON.MinGameVersion
+					}
+
+					if resJSON.LatestDumperVersion != "" && resJSON.LatestDumperVersion != DumperVersion {
+						fmt.Printf("%s[Update] New dumper version available: %s (You have %s).%s\n",
+							color.Yellow, resJSON.LatestDumperVersion, DumperVersion, color.Reset)
+						fmt.Printf("%sDownload the latest release from: https://github.com/NyleGarcia/dumpers_repo/releases%s\n\n",
+							color.Yellow, color.Reset)
+					}
 				}
 				res.Body.Close()
 			}
 		}
+	}
+
+	// First run: Import old logs from backup paths if specified
+	if envVars["IMPORT_OLD_LOGS"] == "true" {
+		fmt.Printf("\n%s[First Run] Scanning historical logs in backup folder...%s\n", color.Cyan, color.Reset)
+		var oldLogDirs []string
+		if logDir != "" {
+			oldLogDirs = []string{logDir}
+		} else {
+			// Find channel/logbackups
+			var cp string
+			if filePath != "" {
+				info, err := os.Stat(filePath)
+				if err == nil {
+					if info.IsDir() {
+						cp = filePath
+					} else {
+						cp = filepath.Dir(filePath)
+					}
+				}
+			}
+			if cp == "" {
+				cp = envVars["BACKUP_PATH"]
+				if cp != "" {
+					cp = filepath.Dir(cp)
+				}
+			}
+			if cp == "" {
+				installs := detectSCInstalls()
+				if len(installs) > 0 {
+					chosenChannel := "LIVE"
+					if _, ok := installs["LIVE"]; !ok {
+						for k := range installs {
+							chosenChannel = k
+							break
+						}
+					}
+					cp = installs[chosenChannel]
+				} else {
+					fallback := DefaultWinPath
+					if info, err := os.Stat(fallback); err == nil && info.IsDir() {
+						cp = filepath.Join(fallback, "LIVE")
+					}
+				}
+			}
+
+			if cp != "" {
+				oldLogDirs = []string{cp, filepath.Join(cp, "logbackups")}
+			}
+		}
+
+		if len(oldLogDirs) > 0 {
+			var filesToScan []string
+			for _, d := range oldLogDirs {
+				matches, _ := filepath.Glob(filepath.Join(d, "*.log"))
+				// Exclude active Game.log to avoid locked files or watch overlap
+				for _, match := range matches {
+					if filepath.Base(match) != "Game.log" {
+						filesToScan = append(filesToScan, match)
+					}
+				}
+			}
+
+			if len(filesToScan) > 0 {
+				fmt.Printf("Scanning %d historical log file(s)...\n", len(filesToScan))
+				// Merge local translations
+				for _, d := range oldLogDirs {
+					localLocMap := parseLocalLocalization(d)
+					if len(localLocMap) > 0 {
+						registerCustomTranslations(localLocMap)
+					}
+				}
+
+				var oldBps []string
+				var wg sync.WaitGroup
+				resultsChan := make(chan []string, len(filesToScan))
+				state := NewWatcherState()
+
+				for idx, path := range filesToScan {
+					wg.Add(1)
+					go func(i int, p string) {
+						defer wg.Done()
+						if !isLogVersionAllowed(p, minVersion) {
+							fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", i+1, len(filesToScan), filepath.Base(p), minVersion)
+							resultsChan <- nil
+							return
+						}
+						bps, _ := parseBlueprintsFromLog(p, state)
+						resultsChan <- bps
+					}(idx, path)
+				}
+				wg.Wait()
+				close(resultsChan)
+				for bps := range resultsChan {
+					oldBps = append(oldBps, bps...)
+				}
+
+				bpMap := make(map[string]bool)
+				for _, bp := range oldBps {
+					bpMap[bp] = true
+				}
+				var uniqueOld []string
+				for k := range bpMap {
+					uniqueOld = append(uniqueOld, k)
+				}
+
+				if len(uniqueOld) > 0 {
+					var toSend []string
+					for _, rawName := range uniqueOld {
+						if !isBlueprintAcquired(acquiredBlueprints, rawName) {
+							toSend = append(toSend, rawName)
+						}
+					}
+
+					if len(toSend) > 0 {
+						fmt.Printf("Uploading %d historical blueprints...\n", len(toSend))
+						successCount := 0
+						dupeCount := 0
+						failCount := 0
+						for idx, bpID := range toSend {
+							if dryRun {
+								successCount++
+								resolved := resolveBlueprintInput(bpID, "")
+								label := bpID
+								if resolved.OK {
+									label = fmt.Sprintf("%s → %s", resolved.BlueprintName, resolved.InternalName)
+								} else if resolved.Error == "ambiguous_blueprint" {
+									label = fmt.Sprintf("%s (ambiguous — would notify)", bpID)
+								}
+								fmt.Printf("  [%d/%d] %s★ Would Import:%s %s\n", idx+1, len(toSend), color.Green, color.Reset, label)
+							} else {
+								status, isDupe, internalName, err := postBlueprintEvent(url, apiKey, bpID, "")
+								if err != nil {
+									failCount++
+									fmt.Printf("  [%d/%d] %s✗ Connection Error:%s %s (%v)\n", idx+1, len(toSend), color.Red, color.Reset, bpID, err)
+									continue
+								}
+								if status == 200 {
+									if isDupe {
+										dupeCount++
+										fmt.Printf("  [%d/%d] %s↻ Already Acquired:%s %s\n", idx+1, len(toSend), color.Yellow, color.Reset, bpID)
+									} else {
+										successCount++
+										fmt.Printf("  [%d/%d] %s★ Successfully Imported:%s %s\n", idx+1, len(toSend), color.Green, color.Reset, bpID)
+									}
+									if internalName != "" {
+										acquiredBlueprints[internalName] = true
+									}
+								} else if status == 202 {
+									successCount++
+									fmt.Printf("  [%d/%d] %s⚠ Notification sent — mark manually:%s %s\n", idx+1, len(toSend), color.Yellow, color.Reset, bpID)
+								} else if status == 400 {
+									failCount++
+									fmt.Printf("  [%d/%d] %s✗ Unknown blueprint:%s %s\n", idx+1, len(toSend), color.Red, color.Reset, bpID)
+								} else {
+									failCount++
+									fmt.Printf("  [%d/%d] %s✗ Failed:%s %s (HTTP %d)\n", idx+1, len(toSend), color.Red, color.Reset, bpID, status)
+								}
+							}
+						}
+						fmt.Printf("\nImport complete: %s%d successfully imported%s, %s%d already acquired%s, %s%d failed%s\n",
+							color.Green, successCount, color.Reset,
+							color.Yellow, dupeCount, color.Reset,
+							color.Red, failCount, color.Reset,
+						)
+						saveCacheFile(cachePath, acquiredBlueprints)
+					} else {
+						fmt.Println("All historical blueprints already acquired.")
+					}
+				} else {
+					fmt.Println("No blueprints found in historical logs.")
+				}
+			} else {
+				fmt.Println("No historical logs to scan.")
+			}
+		}
+
+		// Save disabled state
+		envVars["IMPORT_OLD_LOGS"] = "false"
+		saveEnvFile(envPath, envVars)
+		fmt.Printf("%s[First Run] Historical import complete. Disabling future auto-imports.%s\n\n", color.Green, color.Reset)
 	}
 
 	// Watch Mode Routing
@@ -742,6 +1182,14 @@ func main() {
 			fmt.Printf("%sError: Could not resolve a valid Game.log for watch mode.%s\n", color.Red, color.Reset)
 			fmt.Println("Please specify the path directly (e.g. ./bp-dumper --watch /path/to/Game.log)")
 			os.Exit(1)
+		}
+
+		// Load local translations if any
+		channelDir := filepath.Dir(watchFile)
+		localLocMap := parseLocalLocalization(channelDir)
+		if len(localLocMap) > 0 {
+			registerCustomTranslations(localLocMap)
+			fmt.Printf("%sLoaded %d custom translations from local global.ini (StarStrings/localization mod active)%s\n", color.Green, len(localLocMap), color.Reset)
 		}
 
 		state := NewWatcherState()
@@ -787,7 +1235,18 @@ func main() {
 				sourceName = filepath.Base(filePath)
 			} else {
 				// Direct single log file scan
+				if !isLogVersionAllowed(filePath, minVersion) {
+					fmt.Printf("Skipping log file %s (game version is below minimum %s)\n", filepath.Base(filePath), minVersion)
+					os.Exit(0)
+				}
 				fmt.Printf("Scanning single log file: %s...\n", filepath.Base(filePath))
+				channelDir := filepath.Dir(filePath)
+				localLocMap := parseLocalLocalization(channelDir)
+				if len(localLocMap) > 0 {
+					registerCustomTranslations(localLocMap)
+					fmt.Printf("%sLoaded %d custom translations from local global.ini (StarStrings/localization mod active)%s\n", color.Green, len(localLocMap), color.Reset)
+				}
+
 				state := NewWatcherState()
 				bps, _ := parseBlueprintsFromLog(filePath, state)
 				bpMap := make(map[string]bool)
@@ -802,7 +1261,7 @@ func main() {
 			}
 		} else {
 			// Directory scan
-			bps, err := scanDirectoryConcurrently(filePath)
+			bps, err := scanDirectoryConcurrently(filePath, minVersion)
 			if err != nil {
 				fmt.Printf("%sError: %v%s\n", color.Red, err, color.Reset)
 				os.Exit(1)
@@ -879,6 +1338,11 @@ func main() {
 			wg.Add(1)
 			go func(idx int, p string) {
 				defer wg.Done()
+				if !isLogVersionAllowed(p, minVersion) {
+					fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", idx+1, len(filesToScan), filepath.Base(p), minVersion)
+					resultsChan <- nil
+					return
+				}
 				info, err := os.Stat(p)
 				if err != nil {
 					resultsChan <- nil
@@ -916,7 +1380,7 @@ func main() {
 		return
 	}
 
-	// Filter based on cache (resolved internalName keys)
+	// Filter based on cache
 	var toImport []string
 	for _, bp := range uniqueBlueprints {
 		if !isBlueprintAcquired(acquiredBlueprints, bp) {
@@ -942,6 +1406,7 @@ func main() {
 
 	for idx, bpID := range toImport {
 		if dryRun {
+			successCount++
 			resolved := resolveBlueprintInput(bpID, "")
 			label := bpID
 			if resolved.OK {
@@ -949,7 +1414,6 @@ func main() {
 			} else if resolved.Error == "ambiguous_blueprint" {
 				label = fmt.Sprintf("%s (ambiguous — would notify)", bpID)
 			}
-			successCount++
 			fmt.Printf("  [%d/%d] %s★ Would Import:%s %s\n", idx+1, len(toImport), color.Green, color.Reset, label)
 		} else {
 			status, isDupe, internalName, err := postBlueprintEvent(url, apiKey, bpID, "")
@@ -958,7 +1422,6 @@ func main() {
 				fmt.Printf("  [%d/%d] %s✗ Connection Error:%s %s (%v)\n", idx+1, len(toImport), color.Red, color.Reset, bpID, err)
 				continue
 			}
-
 			if status == 200 {
 				if isDupe {
 					dupeCount++
@@ -1140,7 +1603,7 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 					}
 
 					cacheKey := cacheKeyForInput(productName)
-					if acquiredBps[cacheKey] || acquiredBps[productName] {
+					if acquiredBps[cacheKey] || acquiredBps[productName] || isBlueprintAcquired(acquiredBps, productName) {
 						continue
 					}
 
@@ -1178,49 +1641,4 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 	}
 }
 
-func isBlueprintAcquired(acquired map[string]bool, input string) bool {
-	key := cacheKeyForInput(input)
-	return acquired[key] || acquired[input]
-}
-
-func postBlueprintEvent(url, apiKey, blueprintInput, contractDefID string) (httpStatus int, duplicate bool, internalName string, err error) {
-	// POST as-is: server checks internalName first, then display-name mapping.
-	payload := map[string]string{
-		"type":      "blueprint_received",
-		"blueprint": blueprintInput,
-	}
-	if contractDefID != "" {
-		payload["contractDefinitionId"] = contractDefID
-	}
-	body, _ := json.Marshal(payload)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
-	if err != nil {
-		return 0, false, "", err
-	}
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{Timeout: 15 * time.Second}
-	res, err := client.Do(req)
-	if err != nil {
-		return 0, false, "", err
-	}
-	defer res.Body.Close()
-
-	var resJSON map[string]interface{}
-	_ = json.NewDecoder(res.Body).Decode(&resJSON)
-
-	internalName = ""
-	if bp, ok := resJSON["blueprint"].(string); ok {
-		internalName = bp
-	} else {
-		resolved := resolveBlueprintInput(blueprintInput, contractDefID)
-		if resolved.OK {
-			internalName = resolved.InternalName
-		}
-	}
-
-	dup := resJSON["duplicate"] == true
-	return res.StatusCode, dup, internalName, nil
-}
 

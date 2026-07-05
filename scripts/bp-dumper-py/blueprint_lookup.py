@@ -36,6 +36,8 @@ def _normalize_display_key(value: str) -> str:
 
 def normalize_internal_key(raw_input: str) -> str:
     normalized = raw_input.replace("\\", "/").strip().lower()
+    if normalized.endswith(",p"):
+        normalized = normalized[:-2]
     m = _BP_CRAFT_SCITEM.search(normalized)
     if m:
         return m.group(1)
@@ -107,3 +109,34 @@ def cache_key_for_input(raw_input: str) -> str:
     if result.get("ok"):
         return result["internal_name"]
     return normalize_internal_key(raw_input)
+
+
+def register_custom_translations(translations: dict[str, list[str]]):
+    data = _load_lookup()
+    by_display = data.setdefault("byDisplayName", {})
+    by_internal = data.setdefault("byInternalName", {})
+    for localized_name, internal_names in translations.items():
+        if not internal_names:
+            continue
+        # lowercase key
+        key = _normalize_display_key(localized_name)
+        if len(internal_names) == 1:
+            internal_name = internal_names[0]
+            blueprint_name = by_internal.get(internal_name, {}).get("blueprintName", localized_name.title())
+            by_display[key] = {
+                "internalName": internal_name,
+                "blueprintName": blueprint_name
+            }
+        else:
+            candidates = []
+            for internal_name in internal_names:
+                blueprint_name = by_internal.get(internal_name, {}).get("blueprintName", internal_name)
+                candidates.append({
+                    "internalName": internal_name,
+                    "blueprintName": blueprint_name
+                })
+            by_display[key] = {
+                "ambiguous": True,
+                "displayName": localized_name,
+                "candidates": candidates
+            }

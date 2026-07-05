@@ -48,14 +48,15 @@ extracted-data/
 
 # SCMDB BP Dumpers Cache & Binaries
 .dumper_cache.json
-scripts/bp-dumper-go/dumper
-scripts/bp-dumper-go/dumper-mac
-scripts/bp-dumper-go/dumper-windows.exe
-scripts/bp-dumper-go/dumper.exe
-scripts/bp-dumper-go/dist/
+scripts/bp-dumper-go/dumper*
 scripts/bp-dumper-go/bp-dumper*
+scripts/bp-dumper-go/dist/
 scripts/bp-dumper-py/.dumper_cache.json
 scripts/bp-dumper-py/dist/
 scripts/bp-dumper-py/build/
 scripts/bp-dumper-py/*.spec
+
+# Python Cache
+__pycache__/
+*.pyc
 

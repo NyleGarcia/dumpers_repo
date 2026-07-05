@@ -20,7 +20,8 @@
     "audit-mission-rewards": "node scripts/audit-blueprint-mission-rewards.mjs",
     "audit-hpp-mining-locations": "node scripts/audit-hpp-mining-locations.mjs",
     "rebuild-mission-rewards": "node scripts/rebuild-blueprint-reward-missions.mjs && node scripts/audit-blueprint-mission-rewards.mjs",
-    "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs"
+    "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs",
+    "generate-dumper-mappings": "node scripts/generate-blueprint-name-lookup.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",

@@ -71,6 +71,9 @@ func normalizeDisplayKey(value string) string {
 
 func normalizeInternalKey(input string) string {
 	normalized := strings.ToLower(strings.TrimSpace(strings.ReplaceAll(input, "\\", "/")))
+	if strings.HasSuffix(normalized, ",p") {
+		normalized = normalized[:len(normalized)-2]
+	}
 	if m := bpCraftScitemPath.FindStringSubmatch(normalized); len(m) >= 2 {
 		return m[1]
 	}
@@ -167,4 +170,52 @@ func cacheKeyForInput(rawInput string) string {
 		return resolved.InternalName
 	}
 	return normalizeInternalKey(rawInput)
+}
+
+func registerCustomTranslations(translations map[string][]string) {
+	data, err := loadLookup()
+	if err != nil {
+		return
+	}
+	for localizedName, internalNames := range translations {
+		if len(internalNames) == 0 {
+			continue
+		}
+		key := normalizeDisplayKey(localizedName)
+		if len(internalNames) == 1 {
+			internalName := internalNames[0]
+			blueprintName := internalName
+			if entry, ok := data.ByInternalName[internalName]; ok {
+				blueprintName = entry.BlueprintName
+			}
+			unique := lookupUniqueDisplay{
+				InternalName:  internalName,
+				BlueprintName: blueprintName,
+			}
+			raw, _ := json.Marshal(unique)
+			data.ByDisplayName[key] = raw
+		} else {
+			candidates := make([]lookupCandidate, len(internalNames))
+			for i, internalName := range internalNames {
+				blueprintName := internalName
+				var cat *string
+				if entry, ok := data.ByInternalName[internalName]; ok {
+					blueprintName = entry.BlueprintName
+					cat = entry.CategoryName
+				}
+				candidates[i] = lookupCandidate{
+					InternalName:  internalName,
+					BlueprintName: blueprintName,
+					CategoryName:  cat,
+				}
+			}
+			ambiguous := lookupAmbiguousDisplay{
+				Ambiguous:   true,
+				DisplayName: localizedName,
+				Candidates:  candidates,
+			}
+			raw, _ := json.Marshal(ambiguous)
+			data.ByDisplayName[key] = raw
+		}
+	}
 }
