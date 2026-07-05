@@ -22,10 +22,15 @@ def is_blueprint_acquired(acquired: set, raw_input: str) -> bool:
     return key in acquired or raw_input in acquired
 
 def post_blueprint_event(session, url: str, blueprint_input: str, contract_definition_id: str | None = None):
-    """POST blueprint as-is; server checks internalName first, then display-name mapping."""
+    """POST blueprint: resolve locally first (so local global.ini translations and prefix stripping work), fall back to raw."""
+    post_value = blueprint_input
+    local = resolve_blueprint_input(blueprint_input, contract_definition_id)
+    if local.get("ok"):
+        post_value = local["internal_name"]
+
     payload = {
         "type": "blueprint_received",
-        "blueprint": blueprint_input,
+        "blueprint": post_value,
     }
     if contract_definition_id:
         payload["contractDefinitionId"] = contract_definition_id
@@ -36,11 +41,7 @@ def post_blueprint_event(session, url: str, blueprint_input: str, contract_defin
         body = res.json()
     except Exception:
         pass
-    internal_name = body.get("blueprint")
-    if not internal_name:
-        local = resolve_blueprint_input(blueprint_input, contract_definition_id)
-        if local.get("ok"):
-            internal_name = local["internal_name"]
+    internal_name = body.get("blueprint") or (local["internal_name"] if local.get("ok") else None)
     return res.status_code, body.get("duplicate", False), internal_name
 
 
