@@ -35,6 +35,11 @@ jobs:
           # Linux x64
           GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/bp-dumper-linux
 
+      - name: Package Python Dumper
+        run: |
+          cd scripts/bp-dumper-py
+          zip -r ../bp-dumper-py.zip dumper.py blueprint_lookup.py lookup.json requirements.txt README.md dumper.bat dumper.sh
+
       - name: Upload binaries to Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
@@ -44,5 +49,6 @@ jobs:
             scripts/bp-dumper-go/dist/bp-dumper-mac-intel
             scripts/bp-dumper-go/dist/bp-dumper-mac-silicon
             scripts/bp-dumper-go/dist/bp-dumper-linux
+            scripts/bp-dumper-py.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
