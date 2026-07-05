@@ -851,7 +851,13 @@ def main():
     parser.add_argument(
         "--watch", "-w",
         action="store_true",
-        help="Watch mode: trails a Game.log file in real-time, importing new blueprints instantly."
+        default=None,
+        help="Watch mode: trails a Game.log file in real-time (default: on)."
+    )
+    parser.add_argument(
+        "--no-watch",
+        action="store_true",
+        help="Disable watch mode (batch import only)."
     )
     parser.add_argument(
         "--log-dir",
@@ -874,8 +880,16 @@ def main():
     env_path = Path(__file__).resolve().parent / ".env"
     env_vars = load_env_file(env_path)
 
-    # Load watch mode from env if not explicitly provided as flag
-    if not args.watch and env_vars.get("WATCH_MODE") == "true":
+    # Resolve watch mode: default on; --no-watch or WATCH_MODE=false disables
+    if args.no_watch:
+        args.watch = False
+    elif args.watch is True:
+        args.watch = True
+    elif env_vars.get("WATCH_MODE") == "false":
+        args.watch = False
+    elif env_vars.get("WATCH_MODE") == "true":
+        args.watch = True
+    else:
         args.watch = True
 
     is_interactive = args.configure or (sys.stdout.isatty() and not args.dry_run and (
@@ -934,14 +948,15 @@ def main():
             args.dry_run = True
 
         # 3. Prompt Watch Mode
+        args.watch = True
         try:
-            user_watch = input("Watch mode (trail log file in real-time)? (Y/N, Enter = N): ").strip().lower()
+            user_watch = input("Watch mode (trail log file in real-time)? (Y/N, Enter = Y): ").strip().lower()
         except (KeyboardInterrupt, EOFError):
             print("\nAborted.")
             sys.exit(0)
             
-        if user_watch == 'y':
-            args.watch = True
+        if user_watch == 'n':
+            args.watch = False
 
         # 4. Prompt Key (only if not dry run)
         if not args.dry_run:
@@ -1020,8 +1035,10 @@ def main():
     global MIN_GAME_VERSION
     MIN_GAME_VERSION = min_version
 
-    # First run: Import old logs from backup paths if specified
+    # First run: Import old logs from backup paths if specified (runs before watch mode)
+    did_import_old_logs = False
     if env_vars.get("IMPORT_OLD_LOGS") == "true":
+        did_import_old_logs = True
         print(f"\n{Colors.CYAN}[First Run] Scanning historical logs in backup folder...{Colors.RESET}")
         old_log_dirs = []
         if args.log_dir:
@@ -1133,8 +1150,10 @@ def main():
         save_env_file(env_path, env_vars)
         print(f"{Colors.GREEN}[First Run] Historical import complete. Disabling future auto-imports.{Colors.RESET}\n")
 
-    # Watch Mode execution
+    # Watch Mode execution (after optional historical import)
     if args.watch:
+        if did_import_old_logs:
+            print(f"{Colors.CYAN}[Watch Mode] Historical import finished. Tailing Game.log for new blueprints...{Colors.RESET}\n")
         watch_file = None
         if args.file_path:
             if args.file_path.is_file():

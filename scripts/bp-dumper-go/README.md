@@ -72,7 +72,7 @@ You can create or modify a `.env` file in the dumper directory to configure the 
 | :--- | :--- | :--- |
 | `LOG_WATCHER_API_KEY` | Your personal BP Dumper API key (from settings) | *None* |
 | `SUPABASE_WEBHOOK_URL`| The target log-watcher edge function | *Direct project URL* |
-| `WATCH_MODE` | Set `true` to tail active logs automatically | `false` |
+| `WATCH_MODE` | Set `false` to disable live log tailing | `true` |
 
 ---
 

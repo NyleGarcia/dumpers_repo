@@ -7,6 +7,8 @@
  * 
  * Run after: .\scripts\extract-game-data.ps1
  * Output: src/data/*.json files
+ *
+ * When SUPABASE_ACCESS_TOKEN is set, also updates the log-watcher MIN_GAME_VERSION secret.
  */
 
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
@@ -48,15 +50,13 @@ import {
   REWARD_POOL_TRACKING_EXCLUSIONS,
   REDWIND_BRIDGE,
 } from './lib/orphanPoolBridges.mjs'
+import { readGameBuildVersion } from './lib/gameBuildVersion.mjs'
+import { loadProjectEnv, syncMinGameVersionSecret } from './lib/syncMinGameVersionSecret.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
 const EXTRACTED_DATA = join(PROJECT_ROOT, 'extracted-data')
 const OUTPUT_DIR = join(PROJECT_ROOT, 'src', 'data')
-const GAME_BUILD_FILE = join(EXTRACTED_DATA, 'game-build.json')
-const DEFAULT_SC_LIVE_PATH =
-  process.env.STAR_CITIZEN_LIVE_PATH ||
-  'C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE'
 
 // Expected paths for validation - if these change, game data structure changed
 const EXPECTED_PATHS = {
@@ -130,52 +130,6 @@ function saveJson(filename, data) {
   const outputPath = join(OUTPUT_DIR, filename)
   writeFileSync(outputPath, JSON.stringify(data, null, 2))
   console.log(`  ✓ Saved ${filename}`)
-}
-
-/**
- * Format manifest version as major.minor.x (e.g. 4.8.183.37006 -> 4.8.x).
- */
-function formatGameBuildVersion(manifestData) {
-  const raw = manifestData?.Version
-  if (typeof raw === 'string' && raw && raw !== 'None') {
-    const [major, minor] = raw.split('.')
-    if (major && minor) return `${major}.${minor}.x`
-  }
-
-  const branch = manifestData?.Branch
-  if (typeof branch === 'string') {
-    const match = branch.match(/(\d+)\.(\d+)/)
-    if (match) return `${match[1]}.${match[2]}.x`
-  }
-
-  return null
-}
-
-/**
- * Read the Star Citizen LIVE build version from extracted game-build.json
- * or directly from build_manifest.id in the game install folder.
- */
-function readGameBuildVersion() {
-  const buildFile = readJson(GAME_BUILD_FILE)
-  if (buildFile) {
-    if (typeof buildFile.version === 'string' && /^\d+\.\d+\.x$/.test(buildFile.version)) {
-      return buildFile.version
-    }
-    const formatted = formatGameBuildVersion({
-      Version: buildFile.internalVersion ?? buildFile.version,
-      Branch: buildFile.branch,
-    })
-    if (formatted) return formatted
-  }
-
-  const manifestPath = join(DEFAULT_SC_LIVE_PATH, 'build_manifest.id')
-  if (existsSync(manifestPath)) {
-    const manifest = readJson(manifestPath)
-    const formatted = formatGameBuildVersion(manifest?.Data)
-    if (formatted) return formatted
-  }
-
-  return null
 }
 
 /**
@@ -4391,9 +4345,12 @@ async function main() {
   // Parse quality bands
   const qualityData = parseQualityBands()
   
-  const gameBuildVersion = readGameBuildVersion()
+  const gameBuildVersion = readGameBuildVersion({ extractedData: EXTRACTED_DATA })
   if (gameBuildVersion) {
     console.log(`\nGame build: ${gameBuildVersion}`)
+    loadProjectEnv()
+    console.log('\nSyncing MIN_GAME_VERSION to Supabase...')
+    await syncMinGameVersionSecret(gameBuildVersion)
   } else {
     console.warn('\n⚠️  Could not determine game build version (game-build.json / build_manifest.id missing)')
   }

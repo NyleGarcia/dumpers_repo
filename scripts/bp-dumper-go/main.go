@@ -693,6 +693,7 @@ func main() {
 		apiKey     string
 		dryRun     bool
 		watch      bool
+		noWatch    bool
 		logDir     string
 		minVersion string
 		configure  bool
@@ -710,8 +711,9 @@ func main() {
 	flag.BoolVar(&dryRun, "dry-run", false, "Dry run: scan blueprints locally without making API calls.")
 	flag.BoolVar(&dryRun, "d", false, "Dry run (shorthand).")
 
-	flag.BoolVar(&watch, "watch", false, "Watch mode: trails a Game.log file in real-time.")
-	flag.BoolVar(&watch, "w", false, "Watch mode (shorthand).")
+	flag.BoolVar(&watch, "watch", true, "Watch mode: trails a Game.log file in real-time (default: on).")
+	flag.BoolVar(&watch, "w", true, "Watch mode (shorthand).")
+	flag.BoolVar(&noWatch, "no-watch", false, "Disable watch mode (batch import only).")
 
 	flag.StringVar(&logDir, "log-dir", "", "Directly scan a specific directory for log files.")
 	flag.StringVar(&logDir, "l", "", "Directly scan a specific directory for log files (shorthand).")
@@ -732,6 +734,9 @@ func main() {
 		for _, arg := range flag.Args() {
 			if arg == "-w" || arg == "--watch" {
 				watch = true
+			}
+			if arg == "-no-watch" || arg == "--no-watch" {
+				noWatch = true
 			}
 			if arg == "-d" || arg == "--dry-run" {
 				dryRun = true
@@ -755,9 +760,13 @@ func main() {
 	envPath := filepath.Join(baseDir, ".env")
 	envVars := loadEnvFile(envPath)
 
-	// Load watch mode from env if not explicitly provided as flag
-	if !watch && envVars["WATCH_MODE"] == "true" {
-		watch = true
+	// Resolve watch mode: default on; --no-watch or WATCH_MODE=false disables
+	if noWatch {
+		watch = false
+	} else if watch {
+		if envVars["WATCH_MODE"] == "false" {
+			watch = false
+		}
 	}
 
 	isInteractive := configure || (isTTY() && !dryRun && (
@@ -821,11 +830,12 @@ func main() {
 		}
 
 		// 3. Watch Mode Prompt
-		fmt.Print("Watch mode (trail log file in real-time)? (Y/N, Enter = N): ")
+		watch = true
+		fmt.Print("Watch mode (trail log file in real-time)? (Y/N, Enter = Y): ")
 		userWatch, _ := reader.ReadString('\n')
 		userWatch = strings.ToLower(strings.TrimSpace(userWatch))
-		if userWatch == "y" {
-			watch = true
+		if userWatch == "n" {
+			watch = false
 		}
 
 		// 4. Key Prompt
@@ -972,8 +982,10 @@ func main() {
 		}
 	}
 
-	// First run: Import old logs from backup paths if specified
+	// First run: Import old logs from backup paths if specified (runs before watch mode)
+	didImportOldLogs := false
 	if envVars["IMPORT_OLD_LOGS"] == "true" {
+		didImportOldLogs = true
 		fmt.Printf("\n%s[First Run] Scanning historical logs in backup folder...%s\n", color.Cyan, color.Reset)
 		var oldLogDirs []string
 		if logDir != "" {
@@ -1153,8 +1165,11 @@ func main() {
 		fmt.Printf("%s[First Run] Historical import complete. Disabling future auto-imports.%s\n\n", color.Green, color.Reset)
 	}
 
-	// Watch Mode Routing
+	// Watch Mode Routing (after optional historical import)
 	if watch {
+		if didImportOldLogs {
+			fmt.Printf("%s[Watch Mode] Historical import finished. Tailing Game.log for new blueprints...%s\n\n", color.Cyan, color.Reset)
+		}
 		watchFile := ""
 		if filePath != "" {
 			info, err := os.Stat(filePath)
