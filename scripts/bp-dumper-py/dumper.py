@@ -247,6 +247,7 @@ try:
 except ImportError:
     DUMPER_VERSION = "dev"
 DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
+DEFAULT_RELEASES_URL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"
 
 # Skip system/cache folders during drive scans
 SCAN_SKIP_DIRS = frozenset(name.lower() for name in (
@@ -1223,7 +1224,7 @@ def main():
                         latest_ver = response_json.get("latestDumperVersion", "")
                         if latest_ver and latest_ver != DUMPER_VERSION:
                             print(f"{Colors.YELLOW}[Update] New dumper version available: {latest_ver} (You have {DUMPER_VERSION}).{Colors.RESET}")
-                            print(f"{Colors.YELLOW}Download the latest release from: https://github.com/NyleGarcia/dumpers_repo/releases{Colors.RESET}\n")
+                            print(f"{Colors.YELLOW}Download the latest release from: {DEFAULT_RELEASES_URL}{Colors.RESET}\n")
                 else:
                     print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
             except Exception as e:

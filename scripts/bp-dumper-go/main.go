@@ -362,6 +362,7 @@ func saveCacheFile(path string, cache map[string]bool) {
 var DumperVersion = "1.1.2"
 
 const DefaultWebhookURL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
+const DefaultReleasesURL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"
 
 // Helpers for folder scans
 var scanSkipDirs = map[string]bool{
@@ -973,8 +974,8 @@ func main() {
 					if resJSON.LatestDumperVersion != "" && resJSON.LatestDumperVersion != DumperVersion {
 						fmt.Printf("%s[Update] New dumper version available: %s (You have %s).%s\n",
 							color.Yellow, resJSON.LatestDumperVersion, DumperVersion, color.Reset)
-						fmt.Printf("%sDownload the latest release from: https://github.com/NyleGarcia/dumpers_repo/releases%s\n\n",
-							color.Yellow, color.Reset)
+						fmt.Printf("%sDownload the latest release from: %s%s\n\n",
+							color.Yellow, DefaultReleasesURL, color.Reset)
 					}
 				}
 				res.Body.Close()
