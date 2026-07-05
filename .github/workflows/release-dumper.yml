@@ -1,5 +1,6 @@
 name: Release BP Dumper
 
+# Runs semantic-release when dumper sources change; requires conventional commits (feat:/fix:) to cut a new tag.
 on:
   push:
     branches: [main]
