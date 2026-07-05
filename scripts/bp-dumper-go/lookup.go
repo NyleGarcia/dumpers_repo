@@ -76,11 +76,13 @@ func normalizeInternalKey(input string) string {
 	if strings.HasSuffix(normalized, ",p") {
 		normalized = normalized[:len(normalized)-2]
 	}
-	if m := bpCraftScitemPath.FindStringSubmatch(normalized); len(m) >= 2 {
-		return m[1]
-	}
-	if m := bpCraftSimplePath.FindStringSubmatch(normalized); len(m) >= 2 {
-		return m[1]
+	normalized = strings.TrimPrefix(normalized, "bp_craft_")
+	if strings.HasSuffix(normalized, "_scitem.json") {
+		normalized = strings.TrimSuffix(normalized, "_scitem.json")
+	} else if strings.HasSuffix(normalized, ".json") {
+		normalized = strings.TrimSuffix(normalized, ".json")
+	} else if strings.HasSuffix(normalized, "_scitem") {
+		normalized = strings.TrimSuffix(normalized, "_scitem")
 	}
 	return normalized
 }

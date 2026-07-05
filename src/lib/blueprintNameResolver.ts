@@ -39,10 +39,16 @@ export function normalizeInternalKey(input: string): string {
   if (normalized.endsWith(',p')) {
     normalized = normalized.slice(0, -2)
   }
-  const scitemMatch = normalized.match(/bp_craft_([^/]+?)_scitem\.json$/i)
-  if (scitemMatch) return scitemMatch[1]
-  const simpleMatch = normalized.match(/bp_craft_([^/]+?)\.json$/i)
-  if (simpleMatch) return simpleMatch[1]
+  if (normalized.startsWith('bp_craft_')) {
+    normalized = normalized.slice(9)
+  }
+  if (normalized.endsWith('_scitem.json')) {
+    normalized = normalized.slice(0, -12)
+  } else if (normalized.endsWith('.json')) {
+    normalized = normalized.slice(0, -5)
+  } else if (normalized.endsWith('_scitem')) {
+    normalized = normalized.slice(0, -7)
+  }
   return normalized
 }
 
