@@ -359,7 +359,7 @@ func saveCacheFile(path string, cache map[string]bool) {
 	}
 }
 
-const DumperVersion = "1.1.0"
+var DumperVersion = "1.1.2"
 
 const DefaultWebhookURL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 

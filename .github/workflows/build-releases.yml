@@ -1,20 +1,19 @@
 name: Build Executables on Release
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Release Tag (e.g. v1.1.0)'
+        description: 'Release Tag (e.g. v1.1.2)'
         required: true
-        default: 'v1.1.0'
-  # Tag releases disabled until Log Watcher launch — use workflow_dispatch only.
-  # push:
-  #   tags:
-  #     - 'v*'
+        default: 'v1.1.2'
 
 jobs:
   build:
-    name: Build Go Executables
+    name: Build Go and Python Dumpers
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,35 +21,39 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Read dumper version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./scripts/bp-dumper/version.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building BP Dumper v$VERSION"
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.21'
           cache: false
 
-      - name: Build Binaries
+      - name: Build Go binaries
+        env:
+          DUMPER_VERSION: ${{ steps.version.outputs.version }}
         run: |
           cd scripts/bp-dumper-go
           mkdir -p dist
-          
-          # Windows x64
-          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/bp-dumper-windows.exe
-          
-          # macOS Intel & Apple Silicon
-          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/bp-dumper-mac-intel
-          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/bp-dumper-mac-silicon
-          
-          # Linux x64
-          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/bp-dumper-linux
+          LDFLAGS="-X main.DumperVersion=${DUMPER_VERSION} -s -w"
 
-      - name: Package Python Dumper
+          GOOS=windows GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-windows.exe
+          GOOS=darwin GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-mac-intel
+          GOOS=darwin GOARCH=arm64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-mac-silicon
+          GOOS=linux GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-linux
+
+      - name: Package Python dumper
         run: |
           cd scripts/bp-dumper-py
-          zip -r ../bp-dumper-py.zip dumper.py blueprint_lookup.py lookup.json requirements.txt README.md dumper.bat dumper.sh
+          zip -r ../bp-dumper-py.zip dumper.py _version.py blueprint_lookup.py lookup.json requirements.txt README.md dumper.bat dumper.sh
 
-      - name: Upload binaries to Release
+      - name: Upload binaries to GitHub Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
           tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
           files: |

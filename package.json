@@ -21,7 +21,9 @@
     "audit-hpp-mining-locations": "node scripts/audit-hpp-mining-locations.mjs",
     "rebuild-mission-rewards": "node scripts/rebuild-blueprint-reward-missions.mjs && node scripts/audit-blueprint-mission-rewards.mjs",
     "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs",
-    "generate-dumper-mappings": "node scripts/generate-blueprint-name-lookup.mjs"
+    "generate-dumper-mappings": "node scripts/generate-blueprint-name-lookup.mjs",
+    "sync-dumper-version": "node scripts/sync-dumper-version.mjs",
+    "release:dumper": "semantic-release"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
@@ -45,6 +47,11 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.2.0",
     "postcss": "^8.4.38",
+    "semantic-release": "^24.2.7",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.2",
     "supabase": "^2.108.0",
     "tailwindcss": "^4.3.1",
     "typescript-eslint": "^8.62.0",

@@ -242,7 +242,10 @@ def post_blueprint_event(session, url: str, blueprint_input: str, contract_defin
 DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
 SCAN_MAX_DEPTH = 4
 MIN_GAME_VERSION = ""
-DUMPER_VERSION = "1.1.0"
+try:
+    from _version import __version__ as DUMPER_VERSION
+except ImportError:
+    DUMPER_VERSION = "dev"
 DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 
 # Skip system/cache folders during drive scans

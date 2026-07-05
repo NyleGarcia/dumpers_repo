@@ -23,11 +23,15 @@ A blazingly fast, zero-dependency cross-platform utility written in Go (with Pyt
 Compile an optimized static binary for your current operating system:
 ```bash
 cd scripts/bp-dumper-go
+VERSION=$(node -p "require('../bp-dumper/version.json').version")
+LDFLAGS="-X main.DumperVersion=${VERSION} -s -w"
 # Build for your host OS
-go build -ldflags="-s -w" -o bp-dumper
+go build -ldflags="$LDFLAGS" -o bp-dumper
 # Or build for Windows target from UNIX/macOS
-GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o bp-dumper-windows.exe
+GOOS=windows GOARCH=amd64 go build -ldflags="$LDFLAGS" -o bp-dumper-windows.exe
 ```
+
+Pre-built binaries are published automatically on each semver tag — see `scripts/bp-dumper/README.md`.
 
 ### Python version
 ```bash
