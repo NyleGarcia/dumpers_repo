@@ -44,19 +44,20 @@ You can pass arguments directly to the compiled binary to bypass the setup wizar
 
 ```bash
 # Dry Run Mode: Auto-detect and scan local Star Citizen logs (no API key required)
-./bp-dumper --url "http://localhost/mock" --dry-run
+./bp-dumper --dry-run
 
 # Watch Mode (Live): Trail Game.log in real-time and upload discovered blueprints instantly
-./bp-dumper --watch --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook" --key "dr_your_secret_api_key"
+./bp-dumper --watch --key "dr_your_secret_api_key"
 
-# Real Mode: Auto-detect logs and import using environment key
+# Real Mode: Auto-detect logs and import using environment key (webhook URL is built in)
 export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
-./bp-dumper --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
+./bp-dumper
 
 # Real Mode: Scan specific Game.log file directly and pass key as parameter
-./bp-dumper /path/to/Game.log \
-  --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook" \
-  --key "dr_your_secret_api_key"
+./bp-dumper /path/to/Game.log --key "dr_your_secret_api_key"
+
+# Optional: override webhook URL (e.g. local dev)
+./bp-dumper --url "http://localhost/mock" --dry-run
 ```
 
 ---

@@ -56,20 +56,21 @@ They accept all the same arguments as `dumper.py`:
 
 ```bash
 # Dry Run Mode: Auto-detect and scan local Star Citizen logs (no API key required)
-./dumper.sh --url "http://localhost/mock" --dry-run
-# Windows: dumper.bat --url "http://localhost/mock" --dry-run
+./dumper.sh --dry-run
+# Windows: dumper.bat --dry-run
 
 # Dry Run Mode: Scan a specific JSON export file
-./dumper.sh /path/to/your/export.json --url "http://localhost/mock" --dry-run
+./dumper.sh /path/to/your/export.json --dry-run
 
-# Real Mode: Auto-detect logs and import using environment key
+# Real Mode: Auto-detect logs and import using environment key (webhook URL is built in)
 export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
-./dumper.sh --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook"
+./dumper.sh
 
 # Real Mode: Scan specific Game.log file directly and pass key as parameter
-./dumper.sh /path/to/Game.log \
-  --url "https://YOUR_PROJECT_ID.supabase.co/functions/v1/log-watcher-webhook" \
-  --key "dr_your_secret_api_key"
+./dumper.sh /path/to/Game.log --key "dr_your_secret_api_key"
+
+# Optional: override webhook URL (e.g. local dev)
+./dumper.sh --url "http://localhost/mock" --dry-run
 ```
 
 ---

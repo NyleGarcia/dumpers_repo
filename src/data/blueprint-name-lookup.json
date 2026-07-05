@@ -1,9 +1,9 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-07-04T23:55:02.256Z",
+  "_extracted": "2026-07-05T01:00:33.496Z",
   "stats": {
-    "internalNames": 1560,
-    "displayNames": 1544,
+    "internalNames": 1553,
+    "displayNames": 1537,
     "ambiguousDisplayNames": 15,
     "contractDefinitions": 1371
   },
@@ -5500,36 +5500,8 @@
       "blueprintName": "Socoria",
       "categoryName": "Veh. Comp. S3"
     },
-    "bp_craftnozzle_s0_industrial_gradea_template": {
-      "blueprintName": "Bp Craftnozzle S0 Industrial Gradea Template",
-      "categoryName": "Veh. Comp. S0"
-    },
-    "bp_craftnozzle_s0_industrial_gradeb_template": {
-      "blueprintName": "Bp Craftnozzle S0 Industrial Gradeb Template",
-      "categoryName": "Veh. Comp. S0"
-    },
-    "bp_craftnozzle_s0_industrial_gradec_template": {
-      "blueprintName": "Bp Craftnozzle S0 Industrial Gradec Template",
-      "categoryName": "Veh. Comp. S0"
-    },
-    "bp_craftnozzle_s0_industrial_graded_template": {
-      "blueprintName": "Bp Craftnozzle S0 Industrial Graded Template",
-      "categoryName": "Veh. Comp. S0"
-    },
-    "bp_craftnozzle_s0_industrial_template": {
-      "blueprintName": "Bp Craftnozzle S0 Industrial Template",
-      "categoryName": "Veh. Comp. S0"
-    },
-    "bp_craftnozzle_s0_template": {
-      "blueprintName": "Bp Craftnozzle S0 Template",
-      "categoryName": "Veh. Comp. S0"
-    },
-    "bp_craftnozzle_template": {
-      "blueprintName": "Bp Craftnozzle Template",
-      "categoryName": "Veh. Comp. S0"
-    },
     "nozzle_fuelgiver_grin_nozzlefast": {
-      "blueprintName": "Greycat Fast Nozzle",
+      "blueprintName": "Norfield",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzlesecure": {
@@ -5541,11 +5513,11 @@
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzleverysecure": {
-      "blueprintName": "Greycat Very Secure Nozzle",
+      "blueprintName": "Harkin",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_misc_nozzlestandard": {
-      "blueprintName": "MISC Standard Nozzle",
+      "blueprintName": "RN-7s",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_shin_nozzleexpensivefast": {
@@ -11839,37 +11811,9 @@
       "internalName": "radr_wlop_s03_socoria",
       "blueprintName": "Socoria"
     },
-    "bp craftnozzle s0 industrial gradea template": {
-      "internalName": "bp_craftnozzle_s0_industrial_gradea_template",
-      "blueprintName": "Bp Craftnozzle S0 Industrial Gradea Template"
-    },
-    "bp craftnozzle s0 industrial gradeb template": {
-      "internalName": "bp_craftnozzle_s0_industrial_gradeb_template",
-      "blueprintName": "Bp Craftnozzle S0 Industrial Gradeb Template"
-    },
-    "bp craftnozzle s0 industrial gradec template": {
-      "internalName": "bp_craftnozzle_s0_industrial_gradec_template",
-      "blueprintName": "Bp Craftnozzle S0 Industrial Gradec Template"
-    },
-    "bp craftnozzle s0 industrial graded template": {
-      "internalName": "bp_craftnozzle_s0_industrial_graded_template",
-      "blueprintName": "Bp Craftnozzle S0 Industrial Graded Template"
-    },
-    "bp craftnozzle s0 industrial template": {
-      "internalName": "bp_craftnozzle_s0_industrial_template",
-      "blueprintName": "Bp Craftnozzle S0 Industrial Template"
-    },
-    "bp craftnozzle s0 template": {
-      "internalName": "bp_craftnozzle_s0_template",
-      "blueprintName": "Bp Craftnozzle S0 Template"
-    },
-    "bp craftnozzle template": {
-      "internalName": "bp_craftnozzle_template",
-      "blueprintName": "Bp Craftnozzle Template"
-    },
-    "greycat fast nozzle": {
+    "norfield": {
       "internalName": "nozzle_fuelgiver_grin_nozzlefast",
-      "blueprintName": "Greycat Fast Nozzle"
+      "blueprintName": "Norfield"
     },
     "marlin": {
       "internalName": "nozzle_fuelgiver_grin_nozzlesecure",
@@ -11879,13 +11823,13 @@
       "internalName": "nozzle_fuelgiver_grin_nozzleveryfast",
       "blueprintName": "Lindstrom"
     },
-    "greycat very secure nozzle": {
+    "harkin": {
       "internalName": "nozzle_fuelgiver_grin_nozzleverysecure",
-      "blueprintName": "Greycat Very Secure Nozzle"
+      "blueprintName": "Harkin"
     },
-    "misc standard nozzle": {
+    "rn-7s": {
       "internalName": "nozzle_fuelgiver_misc_nozzlestandard",
-      "blueprintName": "MISC Standard Nozzle"
+      "blueprintName": "RN-7s"
     },
     "bendix": {
       "internalName": "nozzle_fuelgiver_shin_nozzleexpensivefast",

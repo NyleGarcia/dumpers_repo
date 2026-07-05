@@ -50,6 +50,7 @@ DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
 SCAN_MAX_DEPTH = 4
 MIN_GAME_VERSION = ""
 DUMPER_VERSION = "1.1.0"
+DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 
 # Skip system/cache folders during drive scans
 SCAN_SKIP_DIRS = frozenset(name.lower() for name in (
@@ -641,7 +642,7 @@ def main():
     )
     parser.add_argument(
         "--url",
-        help="Supabase log-watcher-webhook Edge Function URL (e.g. https://<project>.supabase.co/functions/v1/log-watcher-webhook)"
+        help="Override Supabase webhook URL (optional; built-in default is used)."
     )
     parser.add_argument(
         "--key",
@@ -677,11 +678,11 @@ def main():
     # We run interactively if stdout is a terminal AND either:
     # 1. No command-line arguments are passed
     # 2. --dry-run was passed, but we don't have a target file/folder
-    # 3. We are running in real mode, but --url (or API key) is missing
+    # 3. We are running in real mode, but API key is missing
     is_interactive = sys.stdout.isatty() and (
         len(sys.argv) == 1 or
         (len(sys.argv) == 2 and args.dry_run) or
-        (not args.dry_run and not args.url and not env_vars.get("SUPABASE_WEBHOOK_URL"))
+        (not args.dry_run and not args.key and not os.getenv("LOG_WATCHER_API_KEY") and not env_vars.get("LOG_WATCHER_API_KEY"))
     )
 
     if is_interactive:
@@ -745,24 +746,6 @@ def main():
         if user_watch == 'y':
             args.watch = True
 
-        # 4. Prompt URL (only if not dry run)
-        if not args.dry_run:
-            default_url = env_vars.get("SUPABASE_WEBHOOK_URL", "")
-            url_prompt = "Enter Supabase Edge Function Webhook URL"
-            if default_url:
-                url_prompt += f" [{default_url}]"
-            url_prompt += ": "
-            
-            try:
-                user_url = input(url_prompt).strip().strip('"').strip("'")
-            except (KeyboardInterrupt, EOFError):
-                print("\nAborted.")
-                sys.exit(0)
-                
-            if not user_url and default_url:
-                user_url = default_url
-            args.url = user_url
-
         # 4. Prompt Key (only if not dry run)
         if not args.dry_run:
             default_key = env_vars.get("LOG_WATCHER_API_KEY", "")
@@ -811,9 +794,10 @@ def main():
         print()
 
         # Save variables to .env file immediately
+        resolved_url = args.url or env_vars.get("SUPABASE_WEBHOOK_URL") or DEFAULT_WEBHOOK_URL
         new_env = {
             "LOG_PATH": str(args.file_path) if args.file_path else "",
-            "SUPABASE_WEBHOOK_URL": args.url if args.url else "",
+            "SUPABASE_WEBHOOK_URL": resolved_url if not args.dry_run else "",
             "LOG_WATCHER_API_KEY": args.key if args.key else "",
             "IMPORT_OLD_LOGS": import_old_logs,
             "MIN_GAME_VERSION": args.min_version if args.min_version else ""
@@ -821,13 +805,10 @@ def main():
         env_vars.update(new_env)
         save_env_file(env_path, env_vars)
 
-    # Resolve URL & API Key (checks CLI args -> ENV variables -> .env file)
-    url = args.url or os.getenv("SUPABASE_WEBHOOK_URL") or env_vars.get("SUPABASE_WEBHOOK_URL")
+    # Resolve URL & API Key (checks CLI args -> ENV variables -> .env file -> built-in default)
+    url = args.url or os.getenv("SUPABASE_WEBHOOK_URL") or env_vars.get("SUPABASE_WEBHOOK_URL") or DEFAULT_WEBHOOK_URL
     api_key = None
     if not args.dry_run:
-        if not url:
-            print(f"{Colors.RED}Error: Webhook URL must be provided via --url or configured in .env file.{Colors.RESET}", file=sys.stderr)
-            sys.exit(1)
         api_key = args.key or os.getenv("LOG_WATCHER_API_KEY") or env_vars.get("LOG_WATCHER_API_KEY")
         if not api_key:
             print(f"{Colors.RED}Error: API key must be provided via --key, LOG_WATCHER_API_KEY environment variable, or configured in .env file.{Colors.RESET}", file=sys.stderr)

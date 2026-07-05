@@ -361,6 +361,8 @@ func saveCacheFile(path string, cache map[string]bool) {
 
 const DumperVersion = "1.1.0"
 
+const DefaultWebhookURL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
+
 // Helpers for folder scans
 var scanSkipDirs = map[string]bool{
 	"windows": true, "windows.old": true, "winsxs": true,
@@ -689,8 +691,8 @@ func main() {
 	flag.StringVar(&filePath, "file", "", "Path to the JSON file or log file to parse.")
 	flag.StringVar(&filePath, "f", "", "Path to the JSON file or log file to parse (shorthand).")
 
-	flag.StringVar(&url, "url", "", "Supabase log-watcher-webhook Edge Function URL.")
-	flag.StringVar(&url, "u", "", "Supabase log-watcher-webhook Edge Function URL (shorthand).")
+	flag.StringVar(&url, "url", "", "Override Supabase webhook URL (optional; built-in default is used).")
+	flag.StringVar(&url, "u", "", "Override Supabase webhook URL (shorthand).")
 
 	flag.StringVar(&apiKey, "key", "", "Your secret API key.")
 	flag.StringVar(&apiKey, "k", "", "Your secret API key (shorthand).")
@@ -740,7 +742,7 @@ func main() {
 	// Determine if running interactively
 	isInteractive := isTTY() && (len(os.Args) == 1 ||
 		(len(os.Args) == 2 && dryRun) ||
-		(!dryRun && url == "" && envVars["SUPABASE_WEBHOOK_URL"] == ""))
+		(!dryRun && apiKey == "" && os.Getenv("LOG_WATCHER_API_KEY") == "" && envVars["LOG_WATCHER_API_KEY"] == ""))
 
 	if isInteractive {
 		fmt.Printf("%s====================================================%s\n", color.Cyan, color.Reset)
@@ -807,24 +809,7 @@ func main() {
 			watch = true
 		}
 
-		// 4. URL Prompt
-		if !dryRun {
-			defaultURL := envVars["SUPABASE_WEBHOOK_URL"]
-			urlPrompt := "Enter Supabase Edge Function Webhook URL"
-			if defaultURL != "" {
-				urlPrompt += fmt.Sprintf(" [%s]", defaultURL)
-			}
-			fmt.Print(urlPrompt + ": ")
-			userURL, _ := reader.ReadString('\n')
-			userURL = strings.TrimSpace(userURL)
-			userURL = strings.Trim(userURL, `"'`)
-			if userURL == "" && defaultURL != "" {
-				userURL = defaultURL
-			}
-			url = userURL
-		}
-
-		// 5. Key Prompt
+		// 4. Key Prompt
 		if !dryRun {
 			defaultKey := envVars["LOG_WATCHER_API_KEY"]
 			keyPrompt := "Enter your BP Dumper API key from Settings (e.g. dr_...)"
@@ -870,6 +855,10 @@ func main() {
 
 		fmt.Println()
 
+		if !dryRun && url == "" {
+			url = DefaultWebhookURL
+		}
+
 		// Save configuration immediately
 		saveVars := map[string]string{
 			"LOG_PATH":             filePath,
@@ -886,6 +875,9 @@ func main() {
 		url = os.Getenv("SUPABASE_WEBHOOK_URL")
 		if url == "" {
 			url = envVars["SUPABASE_WEBHOOK_URL"]
+		}
+		if url == "" {
+			url = DefaultWebhookURL
 		}
 	}
 
@@ -906,8 +898,7 @@ func main() {
 	// Validate config if not dry run
 	if !dryRun {
 		if url == "" {
-			fmt.Printf("%sError: Webhook URL must be provided via --url or configured in .env file.%s\n", color.Red, color.Reset)
-			os.Exit(1)
+			url = DefaultWebhookURL
 		}
 		if apiKey == "" {
 			fmt.Printf("%sError: API key must be provided via --key, LOG_WATCHER_API_KEY environment variable, or configured in .env file.%s\n", color.Red, color.Reset)

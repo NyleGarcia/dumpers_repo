@@ -2424,6 +2424,9 @@ function parseBlueprintDefinitions(localization = {}) {
   for (const file of blueprintFiles) {
     const json = readJson(file)
     if (!json?._RecordValue_?.blueprint) continue
+
+    const fileBase = basename(file, '.json').toLowerCase()
+    if (fileBase.includes('template')) continue // Dev crafting templates, not player blueprints
     
     const bp = json._RecordValue_.blueprint
     const recordName = json._RecordName_ || ''
@@ -2925,34 +2928,88 @@ function parseBlueprintDefinitions(localization = {}) {
     
     // Special handling for Nozzles (Nozzle_FuelGiver_GRIN_NozzleFast)
     // Localization pattern: Nozzle_FuelGiver_{MFG}_Nozzle{Type}_Name
+    // Also try entity class form: item_NameFuel_Nozzle_GRIN_NozzleVerySecure → "Harkin"
     if (!blueprintName && internalName?.toLowerCase().includes('nozzle_fuelgiver')) {
-      const nozzleMatch = internalName.match(/Nozzle_FuelGiver_(\w+)_Nozzle(\w+)/i)
-      if (nozzleMatch) {
-        const [, mfg, variant] = nozzleMatch
-        // Map manufacturer codes
-        const mfgMap = { 'grin': 'GRIN', 'shin': 'SHIN', 'misc': 'MISC' }
-        const locMfg = mfgMap[mfg.toLowerCase()] || mfg.toUpperCase()
-        // Format variant with proper case (fast -> Fast, veryfast -> VeryFast)
-        const locVariant = variant.charAt(0).toUpperCase() + variant.slice(1).toLowerCase()
-        
-        const keysToTry = [
-          `Nozzle_FuelGiver_${locMfg}_Nozzle${locVariant}_Name`,
-          `Nozzle_FuelGiver_${locMfg}_Nozzle${variant}_Name`,
-          `item_Name_Nozzle_FuelGiver_${locMfg}_Nozzle${locVariant}`,
-        ]
-        for (const k of keysToTry) {
-          if (localization[k]) { blueprintName = localization[k]; break }
-          // Try case-insensitive
-          if (localization._lowerMap?.[k.toLowerCase()]) {
-            blueprintName = localization._lowerMap[k.toLowerCase()]
-            break
+      const nozzleVariantLoc = {
+        fast: 'Fast',
+        secure: 'Secure',
+        veryfast: 'VeryFast',
+        verysecure: 'VerySecure',
+        standard: 'Standard',
+        expensivefast: 'ExpensiveFast',
+        expensivesecure: 'ExpensiveSecure',
+        mostexpensive: 'MostExpensive',
+      }
+
+      const nozzleSources = []
+      const recordMatch = fullName?.match(/Nozzle_FuelGiver_(\w+)_Nozzle(\w+)/i)
+      if (recordMatch) {
+        nozzleSources.push({ mfg: recordMatch[1].toUpperCase(), variant: recordMatch[2] })
+      }
+      const internalMatch = internalName.match(/nozzle_fuelgiver_(\w+)_nozzle(\w+)/i)
+      if (internalMatch) {
+        const variantKey = internalMatch[2].toLowerCase()
+        nozzleSources.push({
+          mfg: internalMatch[1].toUpperCase(),
+          variant: nozzleVariantLoc[variantKey] || internalMatch[2],
+        })
+      }
+      if (entityClass) {
+        const entityMatch = entityClass.match(/fuel_nozzle_(\w+)_nozzle(\w+)/i)
+        if (entityMatch) {
+          const variantKey = entityMatch[2].toLowerCase()
+          const locVariant = nozzleVariantLoc[variantKey] || entityMatch[2]
+          const locClass = `Fuel_Nozzle_${entityMatch[1].toUpperCase()}_Nozzle${locVariant}`
+          const entityKeys = [
+            `item_Name${locClass}`,
+            `item_Name_${locClass}`,
+          ]
+          for (const k of entityKeys) {
+            if (localization[k]) { blueprintName = localization[k]; break }
+            if (localization._lowerMap?.[k.toLowerCase()]) {
+              blueprintName = localization._lowerMap[k.toLowerCase()]
+              break
+            }
+          }
+          if (!blueprintName) {
+            nozzleSources.push({ mfg: entityMatch[1].toUpperCase(), variant: locVariant })
           }
         }
-        // If no localization, create a nice display name
-        if (!blueprintName) {
+      }
+
+      if (!blueprintName) {
+        for (const { mfg, variant } of nozzleSources) {
+          const keysToTry = [
+            `Nozzle_FuelGiver_${mfg}_Nozzle${variant}_Name`,
+            `Nozzle_FuelGiver_${mfg}_Nozzle${variant.toLowerCase()}_Name`,
+            `item_Name_Nozzle_FuelGiver_${mfg}_Nozzle${variant}`,
+            `item_NameFuel_Nozzle_${mfg}_Nozzle${variant}`,
+            `item_Name_Fuel_Nozzle_${mfg}_Nozzle${variant}`,
+          ]
+          for (const k of keysToTry) {
+            if (localization[k]) { blueprintName = localization[k]; break }
+            if (localization._lowerMap?.[k.toLowerCase()]) {
+              blueprintName = localization._lowerMap[k.toLowerCase()]
+              break
+            }
+          }
+          if (blueprintName) break
+        }
+      }
+
+      // Last resort: generic manufacturer + variant label (avoid for reward blueprints when possible)
+      if (!blueprintName) {
+        const fallbackMatch = internalMatch || recordMatch
+        if (fallbackMatch) {
+          const mfg = (fallbackMatch[1] || '').toUpperCase()
+          const variantKey = (fallbackMatch[2] || '').toLowerCase()
           const mfgNames = { GRIN: 'Greycat', MISC: 'MISC', SHIN: 'Shubin' }
-          const variantNames = { fast: 'Fast', secure: 'Secure', veryfast: 'Very Fast', verysecure: 'Very Secure', standard: 'Standard', expensivefast: 'Premium Fast', expensivesecure: 'Premium Secure', mostexpensive: 'Premium' }
-          blueprintName = `${mfgNames[locMfg] || locMfg} ${variantNames[variant.toLowerCase()] || variant} Nozzle`
+          const variantNames = {
+            fast: 'Fast', secure: 'Secure', veryfast: 'Very Fast', verysecure: 'Very Secure',
+            standard: 'Standard', expensivefast: 'Premium Fast', expensivesecure: 'Premium Secure',
+            mostexpensive: 'Premium',
+          }
+          blueprintName = `${mfgNames[mfg] || mfg} ${variantNames[variantKey] || fallbackMatch[2]} Nozzle`
         }
       }
     }
