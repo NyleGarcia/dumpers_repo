@@ -51,7 +51,7 @@ DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
 SCAN_MAX_DEPTH = 4
 MIN_GAME_VERSION = ""
 DUMPER_VERSION = "1.1.0"
-DEFAULT_WEBHOOK_URL = "https://api.dumpers-repo.com/functions/v1/log-watcher-webhook"
+DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 
 # Skip system/cache folders during drive scans
 SCAN_SKIP_DIRS = frozenset(name.lower() for name in (

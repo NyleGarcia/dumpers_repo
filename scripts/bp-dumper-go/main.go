@@ -361,7 +361,7 @@ func saveCacheFile(path string, cache map[string]bool) {
 
 const DumperVersion = "1.1.0"
 
-const DefaultWebhookURL = "https://api.dumpers-repo.com/functions/v1/log-watcher-webhook"
+const DefaultWebhookURL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 
 // Helpers for folder scans
 var scanSkipDirs = map[string]bool{
