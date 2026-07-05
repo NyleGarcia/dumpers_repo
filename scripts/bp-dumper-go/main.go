@@ -440,10 +440,15 @@ func isBlueprintAcquired(acquired map[string]bool, input string) bool {
 }
 
 func postBlueprintEvent(url, apiKey, blueprintInput, contractDefID string) (httpStatus int, duplicate bool, internalName string, err error) {
-	// POST as-is: server checks internalName first, then display-name mapping.
+	postValue := blueprintInput
+	resolved := resolveBlueprintInput(blueprintInput, contractDefID)
+	if resolved.OK {
+		postValue = resolved.InternalName
+	}
+
 	payload := map[string]string{
 		"type":      "blueprint_received",
-		"blueprint": blueprintInput,
+		"blueprint": postValue,
 	}
 	if contractDefID != "" {
 		payload["contractDefinitionId"] = contractDefID
@@ -469,11 +474,8 @@ func postBlueprintEvent(url, apiKey, blueprintInput, contractDefID string) (http
 	internalName = ""
 	if bp, ok := resJSON["blueprint"].(string); ok {
 		internalName = bp
-	} else {
-		resolved := resolveBlueprintInput(blueprintInput, contractDefID)
-		if resolved.OK {
-			internalName = resolved.InternalName
-		}
+	} else if resolved.OK {
+		internalName = resolved.InternalName
 	}
 	isDupe := false
 	if d, ok := resJSON["duplicate"].(bool); ok {
