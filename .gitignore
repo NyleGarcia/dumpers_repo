@@ -56,3 +56,7 @@ scripts/bp-dumper-py/dist/
 scripts/bp-dumper-py/build/
 scripts/bp-dumper-py/*.spec
 
+# Python Cache
+__pycache__/
+*.pyc
+
