@@ -7,8 +7,10 @@ import BlueprintRewardMissionsModal from '../components/BlueprintRewardMissionsM
 import BlueprintVariantGroupCard from '../components/BlueprintVariantGroupCard'
 import BlueprintMaterialFilter from '../components/BlueprintMaterialFilter'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import BpDumperCallout from '../components/bpDumper/BpDumperCallout'
 import RsiVerifiedBadge from '../components/RsiVerifiedBadge'
 import { useAuth } from '../contexts/AuthContext'
+import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
@@ -98,6 +100,7 @@ export default function BlueprintsRoute() {
     orgLogoUpdatedAt,
     groupBlueprintVariants,
   } = useAuth()
+  const { openBpDumperModal } = useBpDumperModal()
   const isGuest = !user && isGuestPreview
   const uiScope = getBlueprintsUiScope(user?.id, isGuestPreview)
   const hydratedUiScopeRef = React.useRef<string | null | undefined>(undefined)
@@ -670,6 +673,17 @@ export default function BlueprintsRoute() {
     <FeaturePageLayout
       title="Blueprints"
       subtitle="Comprehensive Crafting Database & Mission Rewards Tracker"
+      actions={
+        !isGuestPreview ? (
+          <button
+            type="button"
+            onClick={openBpDumperModal}
+            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-600 rounded-lg transition-colors"
+          >
+            BP Dumper
+          </button>
+        ) : null
+      }
       meta={
         <>
           <span>LIVE {blueprintDataVersion}</span>
@@ -688,6 +702,10 @@ export default function BlueprintsRoute() {
           <strong className="text-amber-100">Offline Mode</strong> — Your "Acquired" marks are saved locally in this browser.
           Sign in to sync them to your account.
         </div>
+      )}
+
+      {!isGuestPreview && (
+        <BpDumperCallout onOpenModal={openBpDumperModal} />
       )}
 
       <div className="space-y-3 mb-6 w-full min-w-0">

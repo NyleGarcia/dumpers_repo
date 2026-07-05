@@ -16,6 +16,7 @@ interface AppUserMenuProps {
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
   onOpenSettings: () => void
+  onOpenBpDumper: () => void
   onOpenDbActions: () => void
   onOpenDiscord: () => void
   onOpenAdmin: () => void
@@ -34,6 +35,7 @@ export default function AppUserMenu({
   showDbActionsButton,
   showAdminPanelButton,
   onOpenSettings,
+  onOpenBpDumper,
   onOpenDbActions,
   onOpenDiscord,
   onOpenAdmin,
@@ -293,6 +295,19 @@ export default function AppUserMenu({
                   Info Archive
                 </Link>
               </div>
+            )}
+
+            {showSettingsButton && (
+              <button
+                type="button"
+                onClick={() => {
+                  close()
+                  onOpenBpDumper()
+                }}
+                className="w-full px-4 py-2 text-left text-amber-300 hover:bg-slate-700 transition-colors"
+              >
+                BP Dumper
+              </button>
             )}
 
             {showSettingsButton && (

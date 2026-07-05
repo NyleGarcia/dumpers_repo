@@ -28,6 +28,14 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Building BP Dumper v$VERSION"
 
+      - name: Sync min game version into dumper sources
+        id: mingame
+        run: |
+          node scripts/lib/syncDumperMinGameVersion.mjs
+          MIN_VER=$(node -p "require('./src/data/game-build-version.json').version.replace(/\\.x$/,'').match(/^\\d+\\.\\d+/)[0]")
+          echo "min_version=$MIN_VER" >> "$GITHUB_OUTPUT"
+          echo "Min game version: $MIN_VER"
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -37,10 +45,11 @@ jobs:
       - name: Build Go binaries
         env:
           DUMPER_VERSION: ${{ steps.version.outputs.version }}
+          MIN_GAME_VERSION: ${{ steps.mingame.outputs.min_version }}
         run: |
           cd scripts/bp-dumper-go
           mkdir -p dist
-          LDFLAGS="-X main.DumperVersion=${DUMPER_VERSION} -s -w"
+          LDFLAGS="-X main.DumperVersion=${DUMPER_VERSION} -X main.MinGameVersion=${MIN_GAME_VERSION} -s -w"
 
           GOOS=windows GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-windows.exe
           GOOS=darwin GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-mac-intel
@@ -50,7 +59,7 @@ jobs:
       - name: Package Python dumper
         run: |
           cd scripts/bp-dumper-py
-          zip -r ../bp-dumper-py.zip dumper.py _version.py blueprint_lookup.py lookup.json requirements.txt README.md dumper.bat dumper.sh
+          zip -r ../bp-dumper-py.zip dumper.py _version.py _min_game_version.py blueprint_lookup.py lookup.json requirements.txt README.md dumper.bat dumper.sh
 
       - name: Upload binaries to GitHub Release
         uses: softprops/action-gh-release@v2

@@ -46,6 +46,8 @@ export default {
           'scripts/bp-dumper/CHANGELOG.md',
           'scripts/bp-dumper-go/main.go',
           'scripts/bp-dumper-py/_version.py',
+          'scripts/bp-dumper-py/_min_game_version.py',
+          'src/data/bp-dumper-version.json',
         ],
         message: 'chore(release): bp-dumper ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },

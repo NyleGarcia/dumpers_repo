@@ -8,7 +8,7 @@
  * Run after: .\scripts\extract-game-data.ps1
  * Output: src/data/*.json files
  *
- * When SUPABASE_ACCESS_TOKEN is set, also updates the log-watcher MIN_GAME_VERSION secret.
+ * After parsing, bakes major.minor into BP Dumper Go/Python sources.
  */
 
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
@@ -51,7 +51,7 @@ import {
   REDWIND_BRIDGE,
 } from './lib/orphanPoolBridges.mjs'
 import { readGameBuildVersion } from './lib/gameBuildVersion.mjs'
-import { loadProjectEnv, syncMinGameVersionSecret } from './lib/syncMinGameVersionSecret.mjs'
+import { syncDumperMinGameVersion } from './lib/syncDumperMinGameVersion.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -4348,9 +4348,9 @@ async function main() {
   const gameBuildVersion = readGameBuildVersion({ extractedData: EXTRACTED_DATA })
   if (gameBuildVersion) {
     console.log(`\nGame build: ${gameBuildVersion}`)
-    loadProjectEnv()
-    console.log('\nSyncing MIN_GAME_VERSION to Supabase...')
-    await syncMinGameVersionSecret(gameBuildVersion)
+    saveJson('game-build-version.json', { version: gameBuildVersion })
+    console.log('\nSyncing min game version into BP Dumper build...')
+    syncDumperMinGameVersion(gameBuildVersion)
   } else {
     console.warn('\n⚠️  Could not determine game build version (game-build.json / build_manifest.id missing)')
   }

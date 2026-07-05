@@ -26,6 +26,7 @@ interface AppChromeProps {
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
   onOpenSettings: () => void
+  onOpenBpDumper: () => void
   onOpenDbActions: () => void
   onOpenDiscord: () => void
   onOpenAdmin: () => void
@@ -48,6 +49,7 @@ export default function AppChrome({
   showDbActionsButton,
   showAdminPanelButton,
   onOpenSettings,
+  onOpenBpDumper,
   onOpenDbActions,
   onOpenDiscord,
   onOpenAdmin,
@@ -86,6 +88,7 @@ export default function AppChrome({
                   showDbActionsButton={showDbActionsButton}
                   showAdminPanelButton={showAdminPanelButton}
                   onOpenSettings={onOpenSettings}
+                  onOpenBpDumper={onOpenBpDumper}
                   onOpenDbActions={onOpenDbActions}
                   onOpenDiscord={onOpenDiscord}
                   onOpenAdmin={onOpenAdmin}

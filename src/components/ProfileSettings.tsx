@@ -432,55 +432,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
           <ConnectedAccountsSettings onMessage={setMessage} />
 
           <SettingsSection
-            title="BP Dumper"
-            description="Personal API access for the BP Dumper desktop program only"
-          >
-            <SettingsField
-              label="Secret API Key"
-              hint="This key works only with BP Dumper. It cannot be used with other tools or integrations. Copy it into the program during setup."
-            >
-              <div className="flex gap-2">
-                <button
-                  onClick={async () => {
-                    setMessage(null)
-                    try {
-                      const { data, error } = await supabase.rpc('get_or_create_api_key')
-                      if (error) throw error
-                      if (data) {
-                        await navigator.clipboard.writeText(data)
-                        setMessage({ type: 'success', text: 'API Key copied to clipboard!' })
-                      }
-                    } catch {
-                      setMessage({ type: 'error', text: 'Failed to generate API Key' })
-                    }
-                  }}
-                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded-lg transition-colors border border-slate-700"
-                >
-                  Copy API Key
-                </button>
-                <button
-                  onClick={async () => {
-                    setMessage(null)
-                    try {
-                      const { data, error } = await supabase.rpc('regenerate_api_key')
-                      if (error) throw error
-                      if (data) {
-                        await navigator.clipboard.writeText(data)
-                        setMessage({ type: 'success', text: 'New API Key generated and copied! Old key is revoked.' })
-                      }
-                    } catch {
-                      setMessage({ type: 'error', text: 'Failed to regenerate API Key' })
-                    }
-                  }}
-                  className="px-4 py-2.5 bg-red-950/50 hover:bg-red-900/50 text-red-400 text-sm font-medium rounded-lg transition-colors border border-red-500/30"
-                >
-                  Regenerate
-                </button>
-              </div>
-            </SettingsField>
-          </SettingsSection>
-
-          <SettingsSection
             title="Display"
             description="Customize how the Blueprints catalog is shown"
           >

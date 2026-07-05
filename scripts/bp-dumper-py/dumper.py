@@ -241,7 +241,10 @@ def post_blueprint_event(session, url: str, blueprint_input: str, contract_defin
 # Default Star Citizen path locations
 DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
 SCAN_MAX_DEPTH = 4
-MIN_GAME_VERSION = ""
+try:
+    from _min_game_version import MIN_GAME_VERSION
+except ImportError:
+    MIN_GAME_VERSION = "4.8"
 try:
     from _version import __version__ as DUMPER_VERSION
 except ImportError:
@@ -818,7 +821,6 @@ def parse_local_localization(channel_dir: Path) -> dict:
     return local_map
 
 def main():
-    global MIN_GAME_VERSION
     if sys.platform == "win32":
         try:
             import ctypes
@@ -867,10 +869,6 @@ def main():
         "--log-dir",
         type=Path,
         help="Directly scan a specific directory for log files instead of auto-detecting Star Citizen."
-    )
-    parser.add_argument(
-        "--min-version", "-v",
-        help="Only parse logs with game version equal to or greater than this (e.g. 4.8)."
     )
     parser.add_argument(
         "--configure", "-c",
@@ -991,22 +989,6 @@ def main():
         if user_import_old == "n":
             import_old_logs = "false"
 
-        # 7. Min Game Version Prompt
-        default_min_ver = env_vars.get("MIN_GAME_VERSION", "")
-        min_ver_prompt = "Minimum game version to parse (e.g. 4.8, Enter = None)"
-        if default_min_ver:
-            min_ver_prompt += f" [{default_min_ver}]"
-        min_ver_prompt += ": "
-        try:
-            user_min_ver = input(min_ver_prompt).strip()
-        except (KeyboardInterrupt, EOFError):
-            print("\nAborted.")
-            sys.exit(0)
-        
-        if not user_min_ver and default_min_ver:
-            user_min_ver = default_min_ver
-        args.min_version = user_min_ver
-
         print()
 
         # Save variables to .env file immediately
@@ -1016,7 +998,6 @@ def main():
             "SUPABASE_WEBHOOK_URL": resolved_url if not args.dry_run else "",
             "LOG_WATCHER_API_KEY": args.key if args.key else "",
             "IMPORT_OLD_LOGS": import_old_logs,
-            "MIN_GAME_VERSION": args.min_version if args.min_version else "",
             "WATCH_MODE": "true" if args.watch else "false"
         }
         env_vars.update(new_env)
@@ -1033,11 +1014,6 @@ def main():
 
     # Update script args.url with resolved URL for reference
     args.url = url
-
-    min_version = args.min_version or os.getenv("MIN_GAME_VERSION") or env_vars.get("MIN_GAME_VERSION", "")
-    args.min_version = min_version
-    global MIN_GAME_VERSION
-    MIN_GAME_VERSION = min_version
 
     # First run: Import old logs from backup paths if specified (runs before watch mode)
     did_import_old_logs = False
@@ -1213,13 +1189,6 @@ def main():
                         acquired_blueprints.update(server_bps)
                         save_cache_file(cache_path, acquired_blueprints)
                         print(f"Synced {len(server_bps)} blueprints from account.")
-                        
-                        server_min_ver = response_json.get("minGameVersion", "")
-                        if server_min_ver and server_min_ver != env_vars.get("MIN_GAME_VERSION", ""):
-                            print(f"{Colors.GREEN}[Server Sync] Updating local MIN_GAME_VERSION to {server_min_ver} (was {env_vars.get('MIN_GAME_VERSION', 'None')}){Colors.RESET}")
-                            env_vars["MIN_GAME_VERSION"] = server_min_ver
-                            save_env_file(env_path, env_vars)
-                            MIN_GAME_VERSION = server_min_ver
 
                         latest_ver = response_json.get("latestDumperVersion", "")
                         if latest_ver and latest_ver != DUMPER_VERSION:

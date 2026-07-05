@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import BpDumperCallout from '../components/bpDumper/BpDumperCallout'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
+import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { resolveIsOrderable, catalogIsReward } from '../lib/blueprintOrderable'
@@ -264,6 +266,7 @@ function formatEmptyMissionMessage(blueprintId: string): string {
 
 export default function TargetsRoute() {
   const { acquiredBlueprints, isApproved, isGuestPreview, user, toggleAcquired } = useAuth()
+  const { openBpDumperModal } = useBpDumperModal()
   const isGuest = isGuestPreview && !user
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
@@ -434,6 +437,8 @@ export default function TargetsRoute() {
           Browse Missions
         </button>
       </div>
+
+      <BpDumperCallout onOpenModal={openBpDumperModal} />
 
       {isGuest && viewMode === 'tracker' && (
         <div className="mb-4 px-3 py-2 rounded-lg border border-amber-500/30 bg-amber-950/30 text-xs text-amber-200/90">

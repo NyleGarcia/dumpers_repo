@@ -76,3 +76,31 @@ export function readGameBuildVersion(options = {}) {
 
   return null
 }
+
+/**
+ * Read game build version from committed src/data (CI / no local extraction).
+ */
+export function readBundledGameBuildVersion(projectRoot) {
+  const versionFile = join(projectRoot, 'src', 'data', 'game-build-version.json')
+  const fromVersionFile = readJson(versionFile)
+  if (typeof fromVersionFile?.version === 'string' && fromVersionFile.version) {
+    return fromVersionFile.version
+  }
+
+  const blueprintsFile = join(projectRoot, 'src', 'data', 'game-blueprints.json')
+  const blueprints = readJson(blueprintsFile)
+  if (typeof blueprints?.version === 'string' && blueprints.version) {
+    return blueprints.version
+  }
+
+  return null
+}
+
+/**
+ * Best available game build version: extracted install data, then bundled app data.
+ */
+export function resolveGameBuildVersion(options = {}) {
+  const extractedData = options.extractedData
+  const projectRoot = options.projectRoot ?? (extractedData ? join(extractedData, '..') : process.cwd())
+  return readGameBuildVersion(options) ?? readBundledGameBuildVersion(projectRoot)
+}

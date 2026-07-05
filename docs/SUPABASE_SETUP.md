@@ -157,9 +157,19 @@ npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 
 Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose service_role in frontend code.
 
+### Edge Function secrets
+
+Set these under **Project Settings → Edge Functions → Secrets** (or let semantic-release create them):
+
+| Secret | Purpose | How it is updated |
+|--------|---------|-------------------|
+| `LATEST_DUMPER_VERSION` | Latest BP Dumper semver shown to desktop clients | Updated by semantic-release when dumper releases ship |
+
+BP Dumper's minimum Star Citizen **major.minor** (e.g. `4.8`) is **baked into each release build**, not stored in Supabase. When game data is parsed (`parse-extracted-data.mjs`), `npm run sync-min-game-version` updates `scripts/bp-dumper-go/main.go` and `scripts/bp-dumper-py/_min_game_version.py` from `src/data/game-build-version.json`.
+
 ### BP Dumper webhook API
 
-Members generate a personal API key from **Settings → BP Dumper**. Only the BP Dumper desktop program uses this key; it calls the deployed `log-watcher-webhook` Edge Function.
+Members copy a personal API key from the **BP Dumper** modal (avatar menu, or Blueprints / Mission Tracker callout). Only the BP Dumper desktop program uses this key; it calls the deployed `log-watcher-webhook` Edge Function.
 
 **Base URL:** `https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook` (hardcoded in BP Dumper; members only need their API key)
 

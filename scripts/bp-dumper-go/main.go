@@ -360,6 +360,7 @@ func saveCacheFile(path string, cache map[string]bool) {
 }
 
 var DumperVersion = "1.1.2"
+var MinGameVersion = "4.8"
 
 const DefaultWebhookURL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 const DefaultReleasesURL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"
@@ -490,7 +491,7 @@ func postBlueprintEvent(url, apiKey, blueprintInput, contractDefID string) (http
 	return res.StatusCode, isDupe, internalName, nil
 }
 
-func scanDirectoryConcurrently(dirPath string, minVersion string) ([]string, error) {
+func scanDirectoryConcurrently(dirPath string, minimumVersion string) ([]string, error) {
 	files, err := filepath.Glob(filepath.Join(dirPath, "*.log"))
 	if err != nil {
 		return nil, err
@@ -519,8 +520,8 @@ func scanDirectoryConcurrently(dirPath string, minVersion string) ([]string, err
 		wg.Add(1)
 		go func(idx int, path string) {
 			defer wg.Done()
-			if !isLogVersionAllowed(path, minVersion) {
-				fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", idx+1, len(files), filepath.Base(path), minVersion)
+			if !isLogVersionAllowed(path, minimumVersion) {
+				fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", idx+1, len(files), filepath.Base(path), minimumVersion)
 				resultsChan <- nil
 				return
 			}
@@ -566,11 +567,11 @@ func normalizePath(path string) string {
 	return path
 }
 
-func isLogVersionAllowed(path string, minVersion string) bool {
-	if minVersion == "" {
+func isLogVersionAllowed(path string, minimumVersion string) bool {
+	if minimumVersion == "" {
 		return true
 	}
-	parts := strings.Split(minVersion, ".")
+	parts := strings.Split(minimumVersion, ".")
 	if len(parts) == 0 {
 		return true
 	}
@@ -696,7 +697,6 @@ func main() {
 		watch      bool
 		noWatch    bool
 		logDir     string
-		minVersion string
 		configure  bool
 	)
 
@@ -718,9 +718,6 @@ func main() {
 
 	flag.StringVar(&logDir, "log-dir", "", "Directly scan a specific directory for log files.")
 	flag.StringVar(&logDir, "l", "", "Directly scan a specific directory for log files (shorthand).")
-
-	flag.StringVar(&minVersion, "min-version", "", "Only parse logs with game version equal to or greater than this (e.g. 4.8).")
-	flag.StringVar(&minVersion, "v", "", "Only parse logs with game version equal to or greater than this (shorthand).")
 
 	flag.BoolVar(&configure, "configure", false, "Force running the configuration wizard.")
 	flag.BoolVar(&configure, "c", false, "Force running the configuration wizard (shorthand).")
@@ -869,20 +866,6 @@ func main() {
 			importOldLogs = "false"
 		}
 
-		// 7. Min Game Version Prompt
-		defaultMinVer := envVars["MIN_GAME_VERSION"]
-		minVerPrompt := "Minimum game version to parse (e.g. 4.8, Enter = None)"
-		if defaultMinVer != "" {
-			minVerPrompt += fmt.Sprintf(" [%s]", defaultMinVer)
-		}
-		fmt.Print(minVerPrompt + ": ")
-		userMinVer, _ := reader.ReadString('\n')
-		userMinVer = strings.TrimSpace(userMinVer)
-		if userMinVer == "" && defaultMinVer != "" {
-			userMinVer = defaultMinVer
-		}
-		minVersion = userMinVer
-
 		fmt.Println()
 
 		if !dryRun && url == "" {
@@ -895,7 +878,6 @@ func main() {
 			"SUPABASE_WEBHOOK_URL": url,
 			"LOG_WATCHER_API_KEY":  apiKey,
 			"IMPORT_OLD_LOGS":      importOldLogs,
-			"MIN_GAME_VERSION":     minVersion,
 			"WATCH_MODE":           fmt.Sprintf("%t", watch),
 		}
 		saveEnvFile(envPath, saveVars)
@@ -916,13 +898,6 @@ func main() {
 		apiKey = os.Getenv("LOG_WATCHER_API_KEY")
 		if apiKey == "" {
 			apiKey = envVars["LOG_WATCHER_API_KEY"]
-		}
-	}
-
-	if minVersion == "" {
-		minVersion = os.Getenv("MIN_GAME_VERSION")
-		if minVersion == "" {
-			minVersion = envVars["MIN_GAME_VERSION"]
 		}
 	}
 
@@ -953,7 +928,6 @@ func main() {
 				var resJSON struct {
 					Success             bool     `json:"success"`
 					Blueprints          []string `json:"blueprints"`
-					MinGameVersion      string   `json:"minGameVersion"`
 					LatestDumperVersion string   `json:"latestDumperVersion"`
 				}
 				if err := json.NewDecoder(res.Body).Decode(&resJSON); err == nil && resJSON.Success {
@@ -962,14 +936,6 @@ func main() {
 					}
 					saveCacheFile(cachePath, acquiredBlueprints)
 					fmt.Printf("Synced %d blueprints from account.\n", len(resJSON.Blueprints))
-
-					if resJSON.MinGameVersion != "" && resJSON.MinGameVersion != envVars["MIN_GAME_VERSION"] {
-						fmt.Printf("%s[Server Sync] Updating local MIN_GAME_VERSION to %s (was %s)%s\n",
-							color.Green, resJSON.MinGameVersion, envVars["MIN_GAME_VERSION"], color.Reset)
-						envVars["MIN_GAME_VERSION"] = resJSON.MinGameVersion
-						saveEnvFile(envPath, envVars)
-						minVersion = resJSON.MinGameVersion
-					}
 
 					if resJSON.LatestDumperVersion != "" && resJSON.LatestDumperVersion != DumperVersion {
 						fmt.Printf("%s[Update] New dumper version available: %s (You have %s).%s\n",
@@ -1065,8 +1031,8 @@ func main() {
 					wg.Add(1)
 					go func(i int, p string) {
 						defer wg.Done()
-						if !isLogVersionAllowed(p, minVersion) {
-							fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", i+1, len(filesToScan), filepath.Base(p), minVersion)
+						if !isLogVersionAllowed(p, MinGameVersion) {
+							fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", i+1, len(filesToScan), filepath.Base(p), MinGameVersion)
 							resultsChan <- nil
 							return
 						}
@@ -1262,8 +1228,8 @@ func main() {
 				sourceName = filepath.Base(filePath)
 			} else {
 				// Direct single log file scan
-				if !isLogVersionAllowed(filePath, minVersion) {
-					fmt.Printf("Skipping log file %s (game version is below minimum %s)\n", filepath.Base(filePath), minVersion)
+				if !isLogVersionAllowed(filePath, MinGameVersion) {
+					fmt.Printf("Skipping log file %s (game version is below minimum %s)\n", filepath.Base(filePath), MinGameVersion)
 					os.Exit(0)
 				}
 				fmt.Printf("Scanning single log file: %s...\n", filepath.Base(filePath))
@@ -1288,7 +1254,7 @@ func main() {
 			}
 		} else {
 			// Directory scan
-			bps, err := scanDirectoryConcurrently(filePath, minVersion)
+			bps, err := scanDirectoryConcurrently(filePath, MinGameVersion)
 			if err != nil {
 				fmt.Printf("%sError: %v%s\n", color.Red, err, color.Reset)
 				os.Exit(1)
@@ -1365,8 +1331,8 @@ func main() {
 			wg.Add(1)
 			go func(idx int, p string) {
 				defer wg.Done()
-				if !isLogVersionAllowed(p, minVersion) {
-					fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", idx+1, len(filesToScan), filepath.Base(p), minVersion)
+				if !isLogVersionAllowed(p, MinGameVersion) {
+					fmt.Printf("  [%3d/%d] Skipping %s (game version is below minimum %s)\n", idx+1, len(filesToScan), filepath.Base(p), MinGameVersion)
 					resultsChan <- nil
 					return
 				}
