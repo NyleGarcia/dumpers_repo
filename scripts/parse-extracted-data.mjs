@@ -13,6 +13,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
 import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
 import { extractAllGameLore } from './lib/gameLore.mjs'
+import { buildBlueprintNameLookup, saveBlueprintNameLookup } from './lib/blueprintNameLookup.mjs'
 import { HATHOR_PAF_OLP_MARKERS } from './lib/hathorPafSites.mjs'
 import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 import {
@@ -4481,6 +4482,11 @@ async function main() {
       nonRewardBlueprintsWithFallback: nonRewardBlueprintsWithFallback.length
     }
   })
+
+  saveBlueprintNameLookup(
+    buildBlueprintNameLookup(cleanedBlueprints, contractData, missionBlueprints),
+    join(dirname(fileURLToPath(import.meta.url)), '..')
+  )
   
   // Mining data (replaces mining-locations.json partially)
   saveJson('game-mining.json', {

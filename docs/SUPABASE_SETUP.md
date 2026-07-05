@@ -168,13 +168,20 @@ Members generate a personal API key from **Settings → API Access**. External t
 **POST — mark blueprint acquired**
 
 ```json
-{ "type": "blueprint_received", "blueprint": "<internalName>" }
+{
+  "type": "blueprint_received",
+  "blueprint": "<displayName or internalName from Game.log>",
+  "contractDefinitionId": "<optional — from log marker for disambiguation>"
+}
 ```
 
-- `blueprint` must be the catalog **internalName** (e.g. `behr_smg_ballistic_01`), not Game.log display text.
-- Response: `{ "success": true, "blueprint": "...", "duplicate": false }`
-- Idempotent: duplicate inserts return `duplicate: true` without error.
-- Also clears the blueprint from the member's Mission Tracker target list.
+- `blueprint` should be the catalog **internalName** when the client can resolve it (preferred). If not, send the original Game.log display text — the server checks internalName first, then maps display names.
+- Optional `contractDefinitionId` from log markers helps disambiguate armor variants.
+- Response `200`: `{ "success": true, "blueprint": "<internalName>", "blueprintName": "...", "resolvedVia": "internal"|"display"|"contract", "duplicate": false }` — green-check site notification on new inserts only.
+- Response `202`: `{ "error": "ambiguous_blueprint", "displayName": "...", "notificationSent": true }` — sends a red-× site notification to mark manually on Blueprints.
+- Response `400`: unknown blueprint (not in catalog).
+- Idempotent: duplicate inserts return `duplicate: true` without error or success notification.
+- Also clears the blueprint from the member's Mission Tracker target list on new acquire.
 
 **GET — sync acquired blueprint IDs**
 

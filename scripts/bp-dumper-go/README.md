@@ -4,16 +4,22 @@ A blazingly fast, zero-dependency cross-platform utility written in Go to batch-
 
 ---
 
-## 🚀 Quick Start (Pre-Compiled Executables)
-If you are non-technical or don't want to compile Go from source:
-1. Go to the **Releases** tab of this repository on GitHub.
-2. Download the pre-built file for your system:
-   * **Windows**: Download `bp-dumper-windows.exe`.
-   * **macOS (Intel)**: Download `bp-dumper-mac-intel`.
-   * **macOS (Apple Silicon)**: Download `bp-dumper-mac-silicon`.
-   * **Linux**: Download `bp-dumper-linux`.
-3. Put the downloaded file in any folder and **double-click it** (or double-click to run in terminal).
-4. The built-in setup wizard will guide you through the settings (auto-detecting your game, prompting for your Webhook URL/API Key) and save them into a local `.env` file so you only have to do it once!
+## 🚀 Quick Start (Build from source)
+Pre-built release binaries are not published yet. Build locally or run the Python script:
+
+**Go (recommended):**
+```bash
+cd scripts/bp-dumper-go
+go build -ldflags="-s -w" -o bp-dumper.exe   # Windows
+./bp-dumper.exe
+```
+
+**Python:**
+```bash
+cd scripts/bp-dumper-py
+pip install -r requirements.txt
+python dumper.py --dry-run
+```
 
 ---
 
