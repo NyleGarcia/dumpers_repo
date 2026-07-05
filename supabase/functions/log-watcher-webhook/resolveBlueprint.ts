@@ -1,4 +1,4 @@
-import lookup from './lookup.json'
+import lookup from './lookup.json' with { type: 'json' }
 
 export interface ResolveContext {
   contractDefinitionId?: string | null
