@@ -927,8 +927,9 @@ func main() {
 			res, err := client.Do(req)
 			if err == nil && res.StatusCode == 200 {
 				var resJSON struct {
-					Success    bool     `json:"success"`
-					Blueprints []string `json:"blueprints"`
+					Success        bool     `json:"success"`
+					Blueprints     []string `json:"blueprints"`
+					MinGameVersion string   `json:"minGameVersion"`
 				}
 				if err := json.NewDecoder(res.Body).Decode(&resJSON); err == nil && resJSON.Success {
 					for _, bp := range resJSON.Blueprints {
@@ -936,6 +937,14 @@ func main() {
 					}
 					saveCacheFile(cachePath, acquiredBlueprints)
 					fmt.Printf("Synced %d blueprints from account.\n", len(resJSON.Blueprints))
+
+					if resJSON.MinGameVersion != "" && resJSON.MinGameVersion != envVars["MIN_GAME_VERSION"] {
+						fmt.Printf("%s[Server Sync] Updating local MIN_GAME_VERSION to %s (was %s)%s\n",
+							color.Green, resJSON.MinGameVersion, envVars["MIN_GAME_VERSION"], color.Reset)
+						envVars["MIN_GAME_VERSION"] = resJSON.MinGameVersion
+						saveEnvFile(envPath, envVars)
+						minVersion = resJSON.MinGameVersion
+					}
 				}
 				res.Body.Close()
 			}

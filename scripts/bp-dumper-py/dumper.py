@@ -1009,6 +1009,14 @@ def main():
                         acquired_blueprints.update(server_bps)
                         save_cache_file(cache_path, acquired_blueprints)
                         print(f"Synced {len(server_bps)} blueprints from account.")
+                        
+                        server_min_ver = response_json.get("minGameVersion", "")
+                        if server_min_ver and server_min_ver != env_vars.get("MIN_GAME_VERSION", ""):
+                            print(f"{Colors.GREEN}[Server Sync] Updating local MIN_GAME_VERSION to {server_min_ver} (was {env_vars.get('MIN_GAME_VERSION', 'None')}){Colors.RESET}")
+                            env_vars["MIN_GAME_VERSION"] = server_min_ver
+                            save_env_file(env_path, env_vars)
+                            global MIN_GAME_VERSION
+                            MIN_GAME_VERSION = server_min_ver
                 else:
                     print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
             except Exception as e:
