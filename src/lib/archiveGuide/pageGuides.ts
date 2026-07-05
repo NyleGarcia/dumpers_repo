@@ -199,6 +199,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'In-app alerts for marketplace activity from the header bell.',
     details: [
       'Bell icon in the header shows your unread notification count',
+      'Notifications are grouped into collapsible categories — BP Dumper, WTB & Craft Orders, WTS Listings, Support, Mining Ledger, and more',
+      'Every category stays visible even when empty; expand a section to see its alerts or a None placeholder',
       'Alerts cover marketplace events such as order acceptances, ready-for-pickup, and status changes',
       'Order alerts include a clickable link in the message — Fulfillment for seller/fulfiller actions, Custom Orders → Completed to archive & rate',
       'Itemized order summaries reflect blueprint stats and materials when the order includes them',

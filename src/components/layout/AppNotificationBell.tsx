@@ -1,10 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouterState } from '@tanstack/react-router'
 import { deleteAllUserNotifications, deleteUserNotification } from '../../lib/operations'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { useNotificationInbox } from '../../hooks/useNotificationInbox'
 import NotificationBody from '../NotificationBody'
 import { getNotificationVisual, NotificationStatusIcon } from '../../lib/notificationPresentation'
+import {
+  defaultCollapsedCategories,
+  groupNotificationsByCategory,
+  loadNotificationInboxCollapsed,
+  NOTIFICATION_CATEGORIES,
+  saveNotificationInboxCollapsed,
+  type NotificationCategoryId,
+} from '../../lib/notificationCategories'
 
 interface AppNotificationBellProps {
   disabled?: boolean
@@ -14,8 +22,16 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const collapsedInitializedRef = useRef(false)
   const { notifications, unreadCount, refresh, clearAll, removeOne } = useNotificationInbox(disabled)
   const routerLocation = useRouterState({ select: (s) => s.location })
+  const groupedNotifications = useMemo(
+    () => groupNotificationsByCategory(notifications),
+    [notifications]
+  )
+  const [collapsedCategories, setCollapsedCategories] = useState<Set<NotificationCategoryId>>(
+    () => loadNotificationInboxCollapsed() ?? new Set()
+  )
 
   const close = useCallback(() => setOpen(false), [])
 
@@ -28,6 +44,22 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
   useEffect(() => {
     if (open && !disabled) void refresh()
   }, [open, disabled, refresh])
+
+  useEffect(() => {
+    if (!open || collapsedInitializedRef.current || loadNotificationInboxCollapsed()) return
+    collapsedInitializedRef.current = true
+    setCollapsedCategories(defaultCollapsedCategories(groupedNotifications))
+  }, [open, groupedNotifications])
+
+  const toggleCategory = useCallback((categoryId: NotificationCategoryId) => {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev)
+      if (next.has(categoryId)) next.delete(categoryId)
+      else next.add(categoryId)
+      saveNotificationInboxCollapsed(next)
+      return next
+    })
+  }, [])
 
   const handleDismiss = async (notificationId: string) => {
     const result = await deleteUserNotification(notificationId)
@@ -86,54 +118,101 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
       </button>
 
       {open && !disabled && (
-          <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-slate-800 rounded-xl shadow-xl z-[60] overflow-hidden border border-slate-700">
-            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-700">
-              <p className="text-white font-medium text-sm">Notifications</p>
-              {unreadCount > 0 && (
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => void handleDismissAll()}
-                  className="text-xs text-slate-400 hover:text-white disabled:opacity-50"
-                >
-                  Clear all
-                </button>
-              )}
-            </div>
-
-            {notifications.length === 0 ? (
-              <p className="px-4 py-6 text-sm text-slate-500 text-center">No new notifications</p>
-            ) : (
-              <ul className="max-h-72 overflow-y-auto overscroll-contain">
-                {notifications.map((n) => {
-                  const visual = getNotificationVisual(n.type)
-                  return (
-                  <li
-                    key={n.id}
-                    className="border-b border-slate-700/80 last:border-b-0 px-4 py-3 text-sm"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0 flex gap-2">
-                        {visual && <NotificationStatusIcon variant={visual} />}
-                        <div className="min-w-0">
-                          <p className="font-medium text-slate-200">{n.title}</p>
-                          <NotificationBody notification={n} onNavigate={close} />
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => void handleDismiss(n.id)}
-                        className="shrink-0 text-xs text-purple-300 hover:text-purple-200"
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  </li>
-                  )
-                })}
-              </ul>
+        <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-slate-800 rounded-xl shadow-xl z-[60] overflow-hidden border border-slate-700">
+          <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-700">
+            <p className="text-white font-medium text-sm">Notifications</p>
+            {unreadCount > 0 && (
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => void handleDismissAll()}
+                className="text-xs text-slate-400 hover:text-white disabled:opacity-50"
+              >
+                Clear all
+              </button>
             )}
           </div>
+
+          <div className="max-h-96 overflow-y-auto overscroll-contain">
+            {NOTIFICATION_CATEGORIES.map((category) => {
+              const items = groupedNotifications[category.id]
+              const isCollapsed = collapsedCategories.has(category.id)
+
+              return (
+                <section key={category.id} className="border-b border-slate-700/80 last:border-b-0">
+                  <button
+                    type="button"
+                    onClick={() => toggleCategory(category.id)}
+                    aria-expanded={!isCollapsed}
+                    className="w-full flex items-center justify-between gap-2 px-4 py-2.5 bg-slate-800/60 hover:bg-slate-800 transition-colors text-left"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <svg
+                        className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-200 ${
+                          isCollapsed ? '-rotate-90' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                      <span className="text-xs font-medium text-slate-300 truncate">{category.label}</span>
+                    </div>
+                    <span
+                      className={`text-[10px] tabular-nums shrink-0 ${
+                        items.length > 0 ? 'text-slate-400' : 'text-slate-600'
+                      }`}
+                    >
+                      {items.length}
+                    </span>
+                  </button>
+
+                  {!isCollapsed && (
+                    items.length === 0 ? (
+                      <p className="px-4 py-2 text-xs text-slate-600">None</p>
+                    ) : (
+                      <ul>
+                        {items.map((notification) => {
+                          const visual = getNotificationVisual(notification.type)
+                          return (
+                            <li
+                              key={notification.id}
+                              className="border-t border-slate-700/50 px-4 py-3 text-sm"
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="min-w-0 flex gap-2">
+                                  {visual && <NotificationStatusIcon variant={visual} />}
+                                  <div className="min-w-0">
+                                    <p className="font-medium text-slate-200">{notification.title}</p>
+                                    <NotificationBody notification={notification} onNavigate={close} />
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => void handleDismiss(notification.id)}
+                                  className="shrink-0 text-xs text-purple-300 hover:text-purple-200"
+                                >
+                                  Clear
+                                </button>
+                              </div>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    )
+                  )}
+                </section>
+              )
+            })}
+          </div>
+        </div>
       )}
     </div>
   )
