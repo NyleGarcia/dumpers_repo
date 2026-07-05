@@ -685,10 +685,8 @@ def main():
     if not args.watch and env_vars.get("WATCH_MODE") == "true":
         args.watch = True
 
-    # Determine if we should run in interactive mode
     is_interactive = args.configure or (sys.stdout.isatty() and not args.dry_run and (
-        (not args.key and not os.getenv("LOG_WATCHER_API_KEY") and not env_vars.get("LOG_WATCHER_API_KEY")) or
-        (not args.url and not os.getenv("SUPABASE_WEBHOOK_URL") and not env_vars.get("SUPABASE_WEBHOOK_URL"))
+        not args.key and not os.getenv("LOG_WATCHER_API_KEY") and not env_vars.get("LOG_WATCHER_API_KEY")
     ))
 
     if is_interactive:

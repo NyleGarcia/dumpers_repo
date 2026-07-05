@@ -754,8 +754,7 @@ func main() {
 	}
 
 	isInteractive := configure || (isTTY() && !dryRun && (
-		(apiKey == "" && os.Getenv("LOG_WATCHER_API_KEY") == "" && envVars["LOG_WATCHER_API_KEY"] == "") ||
-		(url == "" && os.Getenv("SUPABASE_WEBHOOK_URL") == "" && envVars["SUPABASE_WEBHOOK_URL"] == "")))
+		apiKey == "" && os.Getenv("LOG_WATCHER_API_KEY") == "" && envVars["LOG_WATCHER_API_KEY"] == ""))
 
 	if isInteractive {
 		fmt.Printf("%s====================================================%s\n", color.Cyan, color.Reset)
