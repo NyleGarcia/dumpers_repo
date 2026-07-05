@@ -618,6 +618,7 @@ def parse_local_localization(channel_dir: Path) -> dict:
     return local_map
 
 def main():
+    global MIN_GAME_VERSION
     if sys.platform == "win32":
         try:
             import ctypes
@@ -1016,7 +1017,6 @@ def main():
                             print(f"{Colors.GREEN}[Server Sync] Updating local MIN_GAME_VERSION to {server_min_ver} (was {env_vars.get('MIN_GAME_VERSION', 'None')}){Colors.RESET}")
                             env_vars["MIN_GAME_VERSION"] = server_min_ver
                             save_env_file(env_path, env_vars)
-                            global MIN_GAME_VERSION
                             MIN_GAME_VERSION = server_min_ver
 
                         latest_ver = response_json.get("latestDumperVersion", "")
@@ -1032,7 +1032,7 @@ def main():
         channel_dir = watch_file.parent
         local_loc_map = parse_local_localization(channel_dir)
         if local_loc_map:
-            BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+            register_custom_translations(local_loc_map)
             print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
         state = WatcherState()
@@ -1067,7 +1067,7 @@ def main():
                 channel_dir = args.file_path.parent
                 local_loc_map = parse_local_localization(channel_dir)
                 if local_loc_map:
-                    BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+                    register_custom_translations(local_loc_map)
                     print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
                 all_bps = parse_blueprints_from_log(args.file_path)
@@ -1085,7 +1085,7 @@ def main():
             if not local_loc_map:
                 local_loc_map = parse_local_localization(args.file_path.parent)
             if local_loc_map:
-                BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+                register_custom_translations(local_loc_map)
                 print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
             print(f"Scanning {len(log_files)} log file(s) in {args.file_path.name} (Multithreaded)...")
@@ -1144,7 +1144,7 @@ def main():
                     if not local_loc_map:
                         local_loc_map = parse_local_localization(d.parent)
                     if local_loc_map:
-                        BLUEPRINT_NAME_TO_INTERNAL_NAMES.update(local_loc_map)
+                        register_custom_translations(local_loc_map)
                         print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
                         local_loaded = True
         
