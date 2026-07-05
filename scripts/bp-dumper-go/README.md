@@ -1,70 +1,86 @@
-# BP Dumper
+# 🛰️ BP Dumper
 
-A blazingly fast, zero-dependency cross-platform utility written in Go to batch-import historical blueprint JSON exports or trail active logs from your Star Citizen client in real-time to your account.
+A blazingly fast, zero-dependency cross-platform utility written in Go (with Python parity) to scan historical Star Citizen logs and trail active game notifications in real-time, syncing discovered blueprints instantly with your profile.
+
+> [!TIP]
+> **Client-Side Resolution Engine:** Includes built-in support for localized game mods (e.g. StarStrings). The utility auto-detects `global.ini` localization overrides, normalizes component prefixes (`Civ/0/A`, `Mil/1/A`, etc.), resolves nozzles (`Norfield`, `Harkin`), and maps them directly to canonical database IDs *before* transmitting.
 
 ---
 
-## 🚀 Quick Start (Build from source)
-Pre-built release binaries are not published yet. Build locally or run the Python script:
+## 🚀 Key Features
 
-**Go (recommended):**
+* **Wizard Setup:** Interactive configuration on first run with automated Star Citizen installation directory detection.
+* **Env Persistence:** Bypasses the setup wizard automatically on subsequent runs by saving settings directly to `.env`.
+* **Local Resolution:** Resolves ship component and nozzle modifications locally using client-side catalogs and `global.ini` parsing.
+* **Watch Mode:** Active real-time tailing (`Game.log`) to push discovered blueprints to your webhook immediately as you play.
+* **Dry Run Support:** Test scanning logs and printing mock import summaries without writing to the cloud or requiring an API key.
+
+---
+
+## 🛠️ Installation & Compilation
+
+### Go version (Recommended)
+Compile an optimized static binary for your current operating system:
 ```bash
 cd scripts/bp-dumper-go
-go build -ldflags="-s -w" -o bp-dumper.exe   # Windows
-./bp-dumper.exe
+# Build for your host OS
+go build -ldflags="-s -w" -o bp-dumper
+# Or build for Windows target from UNIX/macOS
+GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o bp-dumper-windows.exe
 ```
 
-**Python:**
+### Python version
 ```bash
 cd scripts/bp-dumper-py
-pip install -r requirements.txt
-python dumper.py --dry-run
+uv pip install -r requirements.txt
+uv run python dumper.py
 ```
 
 ---
 
-## 🛠️ Developer Setup & Compilation
+## 📖 How to Run
 
-### 1. Prerequisites
-- **Go 1.21+** must be installed on your system.
-
-### 2. Compilation
-Compile a optimized static binary for your current operating system:
+### Interactive Wizard (First Run)
+Simply run the executable with no flags. If `.env` is missing, the setup wizard will launch:
 ```bash
-go build -ldflags="-s -w" -o bp-dumper
-# On Windows: go build -ldflags="-s -w" -o bp-dumper.exe
+./bp-dumper
 ```
 
----
-
-## How to Run
-
-### Command Line Arguments
-You can pass arguments directly to the compiled binary to bypass the setup wizard and run it in headless/scripted modes:
-
+### Command Line Flags
+Bypass `.env` values or override behavior directly:
 ```bash
 # Dry Run Mode: Auto-detect and scan local Star Citizen logs (no API key required)
 ./bp-dumper --dry-run
 
-# Watch Mode (Live): Trail Game.log in real-time and upload discovered blueprints instantly
-./bp-dumper --watch --key "dr_your_secret_api_key"
+# Run in Watch Mode (live tailing) using your API key
+./bp-dumper --watch --key "dr_your_api_key"
 
-# Real Mode: Auto-detect logs and import using environment key (webhook URL is built in)
-export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
-./bp-dumper
+# Scan a specific file directly
+./bp-dumper /path/to/Game.log --key "dr_your_api_key"
 
-# Real Mode: Scan specific Game.log file directly and pass key as parameter
-./bp-dumper /path/to/Game.log --key "dr_your_secret_api_key"
-
-# Optional: override webhook URL (e.g. local dev)
-./bp-dumper --url "http://localhost/mock" --dry-run
+# Rerun the configuration wizard to update settings
+./bp-dumper --configure
 ```
 
 ---
 
-## Output Description
-The utility displays the status of each blueprint and mission in color prefixing dates and times:
-- **`★ Would Import`**: (Dry run mode only) The blueprint was detected locally and is ready to import.
-- **`★ Successfully Imported`**: The blueprint was added to your account.
-- **`↻ Already Acquired`**: The blueprint was already present (skipped, no duplicate created).
-- **`✗ Failed`**: The API returned an error (e.g., account pending approval, banned, or invalid ID).
+## ⚙️ Environment Variables (`.env`)
+
+You can create or modify a `.env` file in the dumper directory to configure the runner headlessly:
+
+| Variable | Description | Default |
+| :--- | :--- | :--- |
+| `LOG_WATCHER_API_KEY` | Your personal BP Dumper API key (from settings) | *None* |
+| `SUPABASE_WEBHOOK_URL`| The target log-watcher edge function | *Direct project URL* |
+| `WATCH_MODE` | Set `true` to tail active logs automatically | `false` |
+
+---
+
+## 📊 Output Indicators
+
+* **`★ Would Import`**: (Dry run only) Blueprint parsed and matched canonical catalog.
+* **`★ Successfully Imported`**: Blueprint sent and saved to your account database.
+* **`↻ Already Acquired`**: Skipped (already acquired on account).
+* **`⚠ Notification sent — mark manually`**: Blueprint is ambiguous (will prompt site notification for manual resolution).
+* **`✗ Unknown blueprint`**: Failed to resolve or match catalog (logged as failure).
+
