@@ -481,6 +481,11 @@ func postBlueprintEvent(url, apiKey, blueprintInput, contractDefID string) (http
 	if d, ok := resJSON["duplicate"].(bool); ok {
 		isDupe = d
 	}
+	if res.StatusCode == 400 {
+		if errMsg, ok := resJSON["error"].(string); ok && errMsg != "" {
+			return res.StatusCode, isDupe, internalName, fmt.Errorf("%s (posted: %q)", errMsg, postValue)
+		}
+	}
 	return res.StatusCode, isDupe, internalName, nil
 }
 
@@ -655,7 +660,7 @@ func parseLocalLocalization(channelDir string) map[string][]string {
 				}
 
 				if internalName != "" {
-					internalName = normalizeInternalKey(internalName)
+					internalName = canonicalInternalKey(internalName)
 					valLower := strings.ToLower(val)
 					// Avoid duplicates
 					exists := false

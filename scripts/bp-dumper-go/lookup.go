@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"encoding/json"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -12,7 +13,26 @@ var lookupJSON []byte
 
 var (
 	componentPrefixPattern = regexp.MustCompile(`(?i)^(?:civ|ind|mil|ste|com)/([0-9])/[a-d]\s+`)
+	displayQuoteSuffix     = regexp.MustCompile(`\s+'[^']+'\s*$`)
+	abbreviatedS00Pattern  = regexp.MustCompile(`(?i)^s00\s+(.+)$`)
+	abbreviatedSizePattern = regexp.MustCompile(`(?i)^s(\d+)\s+(.+)$`)
 )
+
+// StarStrings display aliases → canonical lookup display keys.
+var starStringsDisplayAliases = map[string]string{
+	"lawson mining laser": "klein-sv mining laser",
+	"pitman mining laser": "mining laser drak golem s1",
+}
+
+// StarStrings abbreviated mining laser product names → internal name prefix.
+var abbreviatedMiningPrefixes = map[string]string{
+	"helix":    "mining_laser_thcn_helix",
+	"hofstede": "mining_laser_shin_hofstede",
+	"klein":    "mining_laser_shin_klein",
+	"lawson":   "mining_laser_shin_klein",
+	"pitman":   "mining_laser_drak_golem",
+	"golem":    "mining_laser_drak_golem",
+}
 
 type lookupMeta struct {
 	ByInternalName         map[string]lookupInternalEntry `json:"byInternalName"`
@@ -66,7 +86,9 @@ func loadLookup() (*lookupMeta, error) {
 
 func normalizeDisplayKey(value string) string {
 	val := strings.ToLower(strings.TrimSpace(value))
-	return componentPrefixPattern.ReplaceAllString(val, "")
+	val = componentPrefixPattern.ReplaceAllString(val, "")
+	val = displayQuoteSuffix.ReplaceAllString(val, "")
+	return strings.TrimSpace(val)
 }
 
 func normalizeInternalKey(input string) string {
@@ -85,6 +107,74 @@ func normalizeInternalKey(input string) string {
 	return normalized
 }
 
+func canonicalInternalKey(input string) string {
+	return strings.TrimPrefix(normalizeInternalKey(input), "scitem_")
+}
+
+func resolveFromInternalKey(data *lookupMeta, internalKey string) (resolveResult, bool) {
+	entry, ok := data.ByInternalName[internalKey]
+	if !ok {
+		return resolveResult{}, false
+	}
+	return resolveResult{
+		OK:            true,
+		InternalName:  internalKey,
+		BlueprintName: entry.BlueprintName,
+	}, true
+}
+
+func resolveFromDisplayKey(data *lookupMeta, displayKey string) (resolveResult, bool) {
+	rawDisplay, ok := data.ByDisplayName[displayKey]
+	if !ok {
+		return resolveResult{}, false
+	}
+
+	var unique lookupUniqueDisplay
+	if err := json.Unmarshal(rawDisplay, &unique); err == nil && unique.InternalName != "" {
+		return resolveResult{
+			OK:            true,
+			InternalName:  unique.InternalName,
+			BlueprintName: unique.BlueprintName,
+		}, true
+	}
+	return resolveResult{}, false
+}
+
+func tryAbbreviatedMiningLaserResolve(data *lookupMeta, input string) (resolveResult, bool) {
+	var size int
+	var product string
+
+	if m := abbreviatedS00Pattern.FindStringSubmatch(input); len(m) == 2 {
+		size = 0
+		product = strings.ToLower(strings.TrimSpace(m[1]))
+	} else if m := abbreviatedSizePattern.FindStringSubmatch(input); len(m) == 3 {
+		parsedSize, err := strconv.Atoi(m[1])
+		if err != nil {
+			return resolveResult{}, false
+		}
+		size = parsedSize
+		product = strings.ToLower(strings.TrimSpace(m[2]))
+	} else {
+		return resolveResult{}, false
+	}
+
+	prefix, ok := abbreviatedMiningPrefixes[product]
+	if !ok {
+		return resolveResult{}, false
+	}
+
+	internalKey := prefix + "_s" + strconv.Itoa(size)
+	return resolveFromInternalKey(data, internalKey)
+}
+
+func tryStarStringsDisplayAlias(data *lookupMeta, input string) (resolveResult, bool) {
+	aliasKey, ok := starStringsDisplayAliases[normalizeDisplayKey(input)]
+	if !ok {
+		return resolveResult{}, false
+	}
+	return resolveFromDisplayKey(data, aliasKey)
+}
+
 // resolveBlueprintInput: internalName first, then display-name mapping, then contract disambiguation.
 func resolveBlueprintInput(rawInput, contractDefinitionID string) resolveResult {
 	data, err := loadLookup()
@@ -97,17 +187,19 @@ func resolveBlueprintInput(rawInput, contractDefinitionID string) resolveResult 
 		return resolveResult{OK: false, Error: "unknown_blueprint"}
 	}
 
-	internalKey := normalizeInternalKey(input)
-	if entry, ok := data.ByInternalName[internalKey]; ok {
-		return resolveResult{
-			OK:            true,
-			InternalName:  internalKey,
-			BlueprintName: entry.BlueprintName,
-		}
+	internalKey := canonicalInternalKey(input)
+	if resolved, ok := resolveFromInternalKey(data, internalKey); ok {
+		return resolved
 	}
 
 	rawDisplay, ok := data.ByDisplayName[normalizeDisplayKey(input)]
 	if !ok {
+		if resolved, ok := tryStarStringsDisplayAlias(data, input); ok {
+			return resolved
+		}
+		if resolved, ok := tryAbbreviatedMiningLaserResolve(data, strings.TrimSpace(input)); ok {
+			return resolved
+		}
 		return resolveResult{OK: false, Error: "unknown_blueprint", DisplayName: input}
 	}
 
@@ -198,37 +290,40 @@ func registerCustomTranslations(translations map[string][]string) {
 			continue
 		}
 		key := normalizeDisplayKey(localizedName)
-		if len(internalNames) == 1 {
-			internalName := internalNames[0]
-			blueprintName := internalName
-			if entry, ok := data.ByInternalName[internalName]; ok {
-				blueprintName = entry.BlueprintName
+		if key == "" {
+			continue
+		}
+
+		validCandidates := make([]lookupCandidate, 0, len(internalNames))
+		for _, rawInternal := range internalNames {
+			internalName := canonicalInternalKey(rawInternal)
+			entry, ok := data.ByInternalName[internalName]
+			if !ok {
+				continue
 			}
-			unique := lookupUniqueDisplay{
+			validCandidates = append(validCandidates, lookupCandidate{
 				InternalName:  internalName,
-				BlueprintName: blueprintName,
+				BlueprintName: entry.BlueprintName,
+				CategoryName:  entry.CategoryName,
+			})
+		}
+		if len(validCandidates) == 0 {
+			continue
+		}
+
+		if len(validCandidates) == 1 {
+			c := validCandidates[0]
+			unique := lookupUniqueDisplay{
+				InternalName:  c.InternalName,
+				BlueprintName: c.BlueprintName,
 			}
 			raw, _ := json.Marshal(unique)
 			data.ByDisplayName[key] = raw
 		} else {
-			candidates := make([]lookupCandidate, len(internalNames))
-			for i, internalName := range internalNames {
-				blueprintName := internalName
-				var cat *string
-				if entry, ok := data.ByInternalName[internalName]; ok {
-					blueprintName = entry.BlueprintName
-					cat = entry.CategoryName
-				}
-				candidates[i] = lookupCandidate{
-					InternalName:  internalName,
-					BlueprintName: blueprintName,
-					CategoryName:  cat,
-				}
-			}
 			ambiguous := lookupAmbiguousDisplay{
 				Ambiguous:   true,
 				DisplayName: localizedName,
-				Candidates:  candidates,
+				Candidates:  validCandidates,
 			}
 			raw, _ := json.Marshal(ambiguous)
 			data.ByDisplayName[key] = raw

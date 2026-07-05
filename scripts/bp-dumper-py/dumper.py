@@ -27,7 +27,9 @@ def _load_lookup() -> dict[str, Any]:
 
 def _normalize_display_key(value: str) -> str:
     val = value.strip().lower()
-    return re.sub(r"^(?:civ|ind|mil|ste|com)/[0-9]/[a-d]\s+", "", val, flags=re.I)
+    val = re.sub(r"^(?:civ|ind|mil|ste|com)/[0-9]/[a-d]\s+", "", val, flags=re.I)
+    val = re.sub(r"\s+'[^']+'\s*$", "", val)
+    return val.strip()
 
 def normalize_internal_key(raw_input: str) -> str:
     normalized = raw_input.replace("\\", "/").strip().lower()
@@ -43,24 +45,90 @@ def normalize_internal_key(raw_input: str) -> str:
         normalized = normalized[:-7]
     return normalized
 
+def _canonical_internal_key(raw_input: str) -> str:
+    normalized = normalize_internal_key(raw_input)
+    return normalized[7:] if normalized.startswith("scitem_") else normalized
+
+STARSTRINGS_DISPLAY_ALIASES = {
+    "lawson mining laser": "klein-sv mining laser",
+    "pitman mining laser": "mining laser drak golem s1",
+}
+
+ABBREVIATED_MINING_PREFIXES = {
+    "helix": "mining_laser_thcn_helix",
+    "hofstede": "mining_laser_shin_hofstede",
+    "klein": "mining_laser_shin_klein",
+    "lawson": "mining_laser_shin_klein",
+    "pitman": "mining_laser_drak_golem",
+    "golem": "mining_laser_drak_golem",
+}
+
+def _resolve_from_internal_key(by_internal: dict[str, Any], internal_key: str) -> dict[str, Any] | None:
+    entry = by_internal.get(internal_key)
+    if not entry:
+        return None
+    return {
+        "ok": True,
+        "internal_name": internal_key,
+        "blueprint_name": entry.get("blueprintName", internal_key),
+    }
+
+def _try_abbreviated_mining_laser_resolve(text: str, by_internal: dict[str, Any]) -> dict[str, Any] | None:
+    trimmed = text.strip()
+    size: int | None = None
+    product = ""
+
+    s00_match = re.match(r"(?i)^s00\s+(.+)$", trimmed)
+    if s00_match:
+        size = 0
+        product = s00_match.group(1).strip().lower()
+    else:
+        size_match = re.match(r"(?i)^s(\d+)\s+(.+)$", trimmed)
+        if not size_match:
+            return None
+        size = int(size_match.group(1))
+        product = size_match.group(2).strip().lower()
+
+    prefix = ABBREVIATED_MINING_PREFIXES.get(product)
+    if prefix is None or size is None:
+        return None
+    return _resolve_from_internal_key(by_internal, f"{prefix}_s{size}")
+
+def _try_starstrings_display_alias(text: str, data: dict[str, Any]) -> dict[str, Any] | None:
+    alias_key = STARSTRINGS_DISPLAY_ALIASES.get(_normalize_display_key(text))
+    if not alias_key:
+        return None
+    display_entry = data.get("byDisplayName", {}).get(alias_key)
+    if not display_entry or display_entry.get("ambiguous"):
+        return None
+    if not display_entry.get("internalName"):
+        return None
+    return {
+        "ok": True,
+        "internal_name": display_entry["internalName"],
+        "blueprint_name": display_entry.get("blueprintName", text),
+    }
+
 def resolve_blueprint_input(raw_input: str, contract_definition_id: str | None = None) -> dict[str, Any]:
     data = _load_lookup()
     text = raw_input.strip()
     if not text:
         return {"ok": False, "error": "unknown_blueprint"}
 
-    internal_key = normalize_internal_key(text)
+    internal_key = _canonical_internal_key(text)
     by_internal = data.get("byInternalName", {})
-    if internal_key in by_internal:
-        entry = by_internal[internal_key]
-        return {
-            "ok": True,
-            "internal_name": internal_key,
-            "blueprint_name": entry.get("blueprintName", internal_key),
-        }
+    internal_match = _resolve_from_internal_key(by_internal, internal_key)
+    if internal_match:
+        return internal_match
 
     display_entry = data.get("byDisplayName", {}).get(_normalize_display_key(text))
     if not display_entry:
+        alias_match = _try_starstrings_display_alias(text, data)
+        if alias_match:
+            return alias_match
+        abbreviated_match = _try_abbreviated_mining_laser_resolve(text, by_internal)
+        if abbreviated_match:
+            return abbreviated_match
         return {"ok": False, "error": "unknown_blueprint", "display_name": text}
 
     if not display_entry.get("ambiguous"):
@@ -115,25 +183,30 @@ def register_custom_translations(translations: dict[str, list[str]]):
         if not internal_names:
             continue
         key = _normalize_display_key(localized_name)
-        if len(internal_names) == 1:
-            internal_name = internal_names[0]
-            blueprint_name = by_internal.get(internal_name, {}).get("blueprintName", localized_name.title())
-            by_display[key] = {
+        if not key:
+            continue
+
+        valid_candidates = []
+        for raw_internal in internal_names:
+            internal_name = _canonical_internal_key(raw_internal)
+            entry = by_internal.get(internal_name)
+            if not entry:
+                continue
+            valid_candidates.append({
                 "internalName": internal_name,
-                "blueprintName": blueprint_name
-            }
+                "blueprintName": entry.get("blueprintName", internal_name),
+                "categoryName": entry.get("categoryName"),
+            })
+        if not valid_candidates:
+            continue
+
+        if len(valid_candidates) == 1:
+            by_display[key] = valid_candidates[0]
         else:
-            candidates = []
-            for internal_name in internal_names:
-                blueprint_name = by_internal.get(internal_name, {}).get("blueprintName", internal_name)
-                candidates.append({
-                    "internalName": internal_name,
-                    "blueprintName": blueprint_name
-                })
             by_display[key] = {
                 "ambiguous": True,
                 "displayName": localized_name,
-                "candidates": candidates
+                "candidates": valid_candidates,
             }
 
 def is_blueprint_acquired(acquired: set, raw_input: str) -> bool:
@@ -730,7 +803,7 @@ def parse_local_localization(channel_dir: Path) -> dict:
                         internal_name = key[:-5]
                     
                     if internal_name:
-                        internal_name = normalize_internal_key(internal_name)
+                        internal_name = _canonical_internal_key(internal_name)
                         val_lower = val.lower()
                         if val_lower not in local_map:
                             local_map[val_lower] = []
