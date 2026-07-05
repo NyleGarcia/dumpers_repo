@@ -646,12 +646,14 @@ func parseLocalLocalization(channelDir string) map[string][]string {
 				internalName := ""
 				if strings.HasPrefix(key, "item_Name_") {
 					internalName = strings.TrimPrefix(key, "item_Name_")
+				} else if strings.HasPrefix(key, "item_Name") {
+					internalName = strings.TrimPrefix(key, "item_Name")
 				} else if strings.HasSuffix(key, "_Name") {
 					internalName = strings.TrimSuffix(key, "_Name")
 				}
 
 				if internalName != "" {
-					internalName = strings.ToLower(internalName)
+					internalName = normalizeInternalKey(internalName)
 					valLower := strings.ToLower(val)
 					// Avoid duplicates
 					exists := false

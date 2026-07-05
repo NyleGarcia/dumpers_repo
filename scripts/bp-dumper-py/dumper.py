@@ -604,11 +604,13 @@ def parse_local_localization(channel_dir: Path) -> dict:
                     internal_name = ""
                     if key.startswith("item_Name_"):
                         internal_name = key[10:]
+                    elif key.startswith("item_Name"):
+                        internal_name = key[9:]
                     elif key.endswith("_Name"):
                         internal_name = key[:-5]
                     
                     if internal_name:
-                        internal_name = internal_name.lower()
+                        internal_name = normalize_internal_key(internal_name)
                         val_lower = val.lower()
                         if val_lower not in local_map:
                             local_map[val_lower] = []
