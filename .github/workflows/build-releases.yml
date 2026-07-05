@@ -2,6 +2,11 @@ name: Build Executables on Release
 
 on:
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release Tag (e.g. v1.1.0)'
+        required: true
+        default: 'v1.1.0'
   # Tag releases disabled until Log Watcher launch — use workflow_dispatch only.
   # push:
   #   tags:
@@ -42,8 +47,9 @@ jobs:
 
       - name: Upload binaries to Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
           files: |
             scripts/bp-dumper-go/dist/bp-dumper-windows.exe
             scripts/bp-dumper-go/dist/bp-dumper-mac-intel
