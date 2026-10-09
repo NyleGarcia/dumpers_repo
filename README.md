@@ -320,9 +320,9 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 
 | Item | Detail |
 |------|--------|
-| **Canonical Windows client** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/) → native `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) (not PyInstaller) |
-| **Python reference / non-Windows** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) |
-| **Downloads (members)** | **Windows (recommended):** Microsoft Store; **Windows alternate:** GitHub Releases `DumperApps.exe` (unsigned — Defender often flags it); **macOS/Linux/scripts:** `BPDumper-python-scripts.zip` |
+| **Canonical native client** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/) → Windows `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) (not PyInstaller); Linux `DumperApps-linux-amd64` / `-arm64` (Wine / Proton / Lutris installs auto-detected) |
+| **Python reference / macOS** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) |
+| **Downloads (members)** | **Windows (recommended):** Microsoft Store; **Windows alternate:** GitHub Releases `DumperApps.exe` (unsigned — Defender often flags it); **Linux:** GitHub Releases `DumperApps-linux-amd64` (`chmod +x`); **macOS/scripts:** `BPDumper-python-scripts.zip` |
 | **Member setup** | Store: install, choose LIVE folder, paste API key, Start. Exe: run → **auto-find install** (or paste path) → paste API key |
 | **Trust / release integrity** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SHA256SUMS/cosign (Authenticode not used) |
 | **Store listing** | Legacy / not in member UI — `apps/bp-dumper-store/` parked; do not advertise |

@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"syscall"
 
@@ -56,8 +57,8 @@ func requirePathMissing() {
 		"%sPath required.%s\n"+
 			"Enter your Star Citizen LIVE folder (the folder that contains Game.log),\n"+
 			"or leave blank in the wizard to auto-detect, or pass --log-dir / LOG_PATH.\n"+
-			"Example: C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\n",
-		colors.Red, colors.Reset,
+			"Example: %s\n",
+		colors.Red, colors.Reset, discover.ExampleLIVEPath,
 	)
 	pressAnyKey()
 	os.Exit(1)
@@ -83,9 +84,9 @@ func promptLivePathUntilValid(reader *bufio.Reader, defaultPath string) (string,
 	fmt.Printf(
 		"%sStar Citizen LIVE folder is required.%s\n"+
 			"Enter the LIVE folder that contains Game.log (not the RSI Launcher folder).\n"+
-			"Example: C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\n"+
+			"Example: %s\n"+
 			"Leave blank to auto-detect, or paste a path to override.\n\n",
-		colors.Yellow, colors.Reset,
+		colors.Yellow, colors.Reset, discover.ExampleLIVEPath,
 	)
 	for {
 		pathPrompt := "LIVE / Game.log path"
@@ -302,8 +303,8 @@ func main() {
 	if err := singleinstance.Acquire(); err != nil {
 		fmt.Printf(
 			"%sBP Dumper is already running.%s\n"+
-				"Close the other window (DumperApps.exe or the Python script) before starting another.\n",
-			colors.Yellow, colors.Reset,
+				"Close the other window (%s or the Python script) before starting another.\n",
+			colors.Yellow, colors.Reset, api.AssetName(),
 		)
 		pressAnyKey()
 		os.Exit(1)
@@ -342,7 +343,7 @@ func main() {
 		fmt.Printf("%s====================================================%s\n", colors.Cyan, colors.Reset)
 		fmt.Printf("%s             BP Dumper Configuration Wizard%s\n", colors.Cyan, colors.Reset)
 		fmt.Printf("%s====================================================%s\n\n", colors.Cyan, colors.Reset)
-		fmt.Printf("%sSource: github.com/Sinedrone-Sentinel/dumpers_repo (native Windows client)%s\n", colors.Dim, colors.Reset)
+		fmt.Printf("%sSource: github.com/Sinedrone-Sentinel/dumpers_repo (native %s client)%s\n", colors.Dim, platformLabel(), colors.Reset)
 		fmt.Printf("%sTrust:  OpenSSF Scorecard + site Trust links under Dumper Apps%s\n", colors.Dim, colors.Reset)
 		fmt.Printf("%sTip:    Leave the path blank — BP Dumper searches for your LIVE install.%s\n", colors.Dim, colors.Reset)
 		fmt.Printf("%s        Or paste your LIVE folder path (the folder that contains Game.log).%s\n\n", colors.Dim, colors.Reset)
@@ -680,6 +681,18 @@ func main() {
 	}
 
 	fmt.Println("Watch mode disabled. Historical import finished (or nothing to do).")
+}
+
+func platformLabel() string {
+	switch runtime.GOOS {
+	case "windows":
+		return "Windows"
+	case "linux":
+		return "Linux"
+	case "darwin":
+		return "macOS"
+	}
+	return runtime.GOOS
 }
 
 func boolStr(v bool) string {

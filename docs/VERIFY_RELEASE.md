@@ -3,11 +3,12 @@
 Official builds are published on [GitHub Releases](https://github.com/Sinedrone-Sentinel/dumpers_repo/releases):
 
 - **`DumperApps.exe`** — Windows portable client
+- **`DumperApps-linux-amd64`** / **`DumperApps-linux-arm64`** — Linux native client (static binary)
 - **`BPDumper-python-scripts.zip`** — Python watcher folder (includes `lookup.json`) for macOS / Linux / advanced Windows
 
 Each release also includes:
 
-- **`SHA256SUMS`** — hex digests of release assets (including `DumperApps.exe` and `BPDumper-python-scripts.zip`)
+- **`SHA256SUMS`** — hex digests of release assets (including `DumperApps.exe`, the `DumperApps-linux-*` binaries and `BPDumper-python-scripts.zip`)
 - **`SHA256SUMS.sig`** — Sigstore/cosign **bundle** signature over `SHA256SUMS` (keyless OIDC from GitHub Actions)
 
 Each published Windows build is **VirusTotal-gated in CI** before the GitHub Release leaves draft (see [TRUST_AND_SIGNING.md](TRUST_AND_SIGNING.md)). Releases include `VIRUSTOTAL.txt` with the report URL.

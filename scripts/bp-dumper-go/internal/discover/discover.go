@@ -86,10 +86,13 @@ func findSCRoots(driveRoot string, maxDepth int) []string {
 	return roots
 }
 
-// DetectSCInstalls returns channel name → channel directory (Windows only; empty elsewhere).
+// DetectSCInstalls returns channel name → channel directory.
+// Windows scans fixed drives; Linux/macOS scan Wine/Proton prefixes and mounts.
+// When a channel shows up more than once (several prefixes), the one with the
+// most recently written Game.log wins.
 func DetectSCInstalls() map[string]string {
 	found := map[string]string{}
-	for _, root := range fixedDriveRoots() {
+	for _, root := range scanRoots() {
 		for _, scRoot := range findSCRoots(root, ScanMaxDepth) {
 			entries, err := os.ReadDir(scRoot)
 			if err != nil {
@@ -104,13 +107,25 @@ func DetectSCInstalls() map[string]string {
 					continue
 				}
 				channel := strings.ToUpper(e.Name())
-				if _, exists := found[channel]; !exists {
+				if prev, exists := found[channel]; !exists || gameLogNewer(channelDir, prev) {
 					found[channel] = channelDir
 				}
 			}
 		}
 	}
 	return found
+}
+
+func gameLogNewer(a, b string) bool {
+	ai, err := os.Stat(filepath.Join(a, "Game.log"))
+	if err != nil {
+		return false
+	}
+	bi, err := os.Stat(filepath.Join(b, "Game.log"))
+	if err != nil {
+		return true
+	}
+	return ai.ModTime().After(bi.ModTime())
 }
 
 func PreferLIVE(installs map[string]string) (channel, path string) {
@@ -124,7 +139,10 @@ func PreferLIVE(installs map[string]string) (channel, path string) {
 }
 
 func FallbackLIVE() string {
-	live := filepath.Join(DefaultWinPath, "LIVE")
+	live := defaultLIVE()
+	if live == "" {
+		return ""
+	}
 	if fi, err := os.Stat(live); err == nil && fi.IsDir() {
 		return live
 	}
@@ -133,7 +151,7 @@ func FallbackLIVE() string {
 
 // ValidateLogPath accepts a LIVE/channel folder or a Game.log / .log / .json file path.
 func ValidateLogPath(userPath string) (channelOrFile string, errMsg string) {
-	userPath = strings.TrimSpace(strings.Trim(userPath, `"' `))
+	userPath = expandHome(strings.TrimSpace(strings.Trim(userPath, `"' `)))
 	if userPath == "" {
 		return "", "Path is required. Enter your Star Citizen LIVE folder (the folder that contains Game.log)."
 	}
@@ -153,4 +171,16 @@ func ValidateLogPath(userPath string) (channelOrFile string, errMsg string) {
 		return userPath, ""
 	}
 	return userPath, ""
+}
+
+// expandHome turns a leading ~/ into the user's home dir (shells do this, prompts don't).
+func expandHome(p string) string {
+	if p != "~" && !strings.HasPrefix(p, "~/") {
+		return p
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return p
+	}
+	return filepath.Join(home, strings.TrimPrefix(p, "~"))
 }

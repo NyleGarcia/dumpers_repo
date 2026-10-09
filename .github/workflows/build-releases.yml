@@ -115,6 +115,24 @@ jobs:
       - name: Pack Python scripts zip (must include lookup.json)
         run: node scripts/pack-bp-dumper-py-zip.mjs dist
 
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5
+        with:
+          go-version: '1.24.x'
+          cache-dependency-path: scripts/bp-dumper-go/go.sum
+
+      - name: Build native Linux binaries (Go)
+        env:
+          VERSION: ${{ needs.resolve-tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          node scripts/copy-blueprint-lookup.mjs
+          cd scripts/bp-dumper-go
+          for arch in amd64 arm64; do
+            CGO_ENABLED=0 GOOS=linux GOARCH="$arch" go build -trimpath \
+              -ldflags "-s -w -X main.Version=${VERSION}" \
+              -o "$GITHUB_WORKSPACE/dist/DumperApps-linux-${arch}" .
+          done
+
       - name: Install cosign
         uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
 
@@ -122,7 +140,7 @@ jobs:
         working-directory: dist
         run: |
           set -euo pipefail
-          sha256sum DumperApps.exe BPDumper-python-scripts.zip > SHA256SUMS
+          sha256sum DumperApps.exe DumperApps-linux-amd64 DumperApps-linux-arm64 BPDumper-python-scripts.zip > SHA256SUMS
           cosign sign-blob --yes --bundle SHA256SUMS.sig SHA256SUMS
           echo "SHA256SUMS:"
           cat SHA256SUMS
@@ -154,6 +172,8 @@ jobs:
           body_path: dist/VIRUSTOTAL_RELEASE_FOOTER.md
           files: |
             dist/DumperApps.exe
+            dist/DumperApps-linux-amd64
+            dist/DumperApps-linux-arm64
             dist/BPDumper-python-scripts.zip
             dist/SHA256SUMS
             dist/SHA256SUMS.sig

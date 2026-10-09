@@ -3,10 +3,16 @@
 package discover
 
 import (
+	"path/filepath"
+
 	"golang.org/x/sys/windows"
 )
 
-func fixedDriveRoots() []string {
+// ExampleLIVEPath is shown in prompts as a sample LIVE folder.
+const ExampleLIVEPath = DefaultWinPath + `\LIVE`
+
+// scanRoots returns every fixed drive root (C:\, D:\, …).
+func scanRoots() []string {
 	var roots []string
 	for c := 'A'; c <= 'Z'; c++ {
 		root := string(c) + `:\`
@@ -16,4 +22,8 @@ func fixedDriveRoots() []string {
 		}
 	}
 	return roots
+}
+
+func defaultLIVE() string {
+	return filepath.Join(DefaultWinPath, "LIVE")
 }

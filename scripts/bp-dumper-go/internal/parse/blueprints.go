@@ -122,11 +122,31 @@ func IsLogVersionAllowed(path, minVersion string) bool {
 	return true
 }
 
+// childDirFold returns dir/name matching name case-insensitively. Windows
+// ignores case, but Wine installs on Linux keep CIG's "Data" spelling.
+func childDirFold(dir, name string) string {
+	if dir == "" {
+		return ""
+	}
+	if fi, err := os.Stat(filepath.Join(dir, name)); err == nil && fi.IsDir() {
+		return filepath.Join(dir, name)
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return ""
+	}
+	for _, e := range entries {
+		if e.IsDir() && strings.EqualFold(e.Name(), name) {
+			return filepath.Join(dir, e.Name())
+		}
+	}
+	return ""
+}
+
 func ParseLocalLocalization(channelDir string) map[string][]string {
 	localMap := map[string][]string{}
-	locDir := filepath.Join(channelDir, "data", "Localization")
-	fi, err := os.Stat(locDir)
-	if err != nil || !fi.IsDir() {
+	locDir := childDirFold(childDirFold(channelDir, "data"), "Localization")
+	if locDir == "" {
 		return localMap
 	}
 	_ = filepath.WalkDir(locDir, func(path string, d os.DirEntry, err error) error {

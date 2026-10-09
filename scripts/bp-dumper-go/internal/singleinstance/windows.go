@@ -3,13 +3,8 @@
 package singleinstance
 
 import (
-	"errors"
-
 	"golang.org/x/sys/windows"
 )
-
-// ErrAlreadyRunning is returned when another BP Dumper already holds MutexName.
-var ErrAlreadyRunning = errors.New("already running")
 
 var held windows.Handle
 

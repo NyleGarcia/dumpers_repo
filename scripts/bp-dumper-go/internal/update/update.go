@@ -35,15 +35,12 @@ func HandleUpdateRequired(err *api.UpdateRequiredError, currentVersion string) {
 	if latest == "" {
 		latest = "newer"
 	}
-	url := err.DownloadURL
-	if url == "" {
-		url = api.DefaultDownloadURL
-	}
+	url := api.PlatformDownloadURL(err.DownloadURL)
 	fmt.Printf(
 		"\n%s[Update required] This BP Dumper (%s) is outdated. Latest is %s.%s\n",
 		colors.Red, currentVersion, latest, colors.Reset,
 	)
-	fmt.Printf("%sDownload the new DumperApps.exe from GitHub Releases and replace this file:%s\n", colors.Yellow, colors.Reset)
+	fmt.Printf("%sDownload the new %s from GitHub Releases and replace this file:%s\n", colors.Yellow, api.AssetName(), colors.Reset)
 	fmt.Printf("  %s\n", url)
 	fmt.Printf("  Releases: %s\n", api.DefaultReleasesURL)
 	pressAnyKeyToExit()

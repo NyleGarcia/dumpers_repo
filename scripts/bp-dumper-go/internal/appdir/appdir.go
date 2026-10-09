@@ -3,11 +3,15 @@ package appdir
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
 // IsMsix reports Microsoft Store / MSIX packaging (WindowsApps or package family env).
 func IsMsix() bool {
+	if runtime.GOOS != "windows" {
+		return false
+	}
 	if os.Getenv("PACKAGE_FAMILY_NAME") != "" || os.Getenv("MsixPackageFamilyName") != "" {
 		return true
 	}
@@ -30,6 +34,7 @@ func IsMsix() bool {
 
 // Dir returns the directory that holds .env / .dumper_cache.json.
 // Portable exe: beside the binary. Store/MSIX: %LOCALAPPDATA%\BP Dumper (WindowsApps is not writable).
+// Linux/macOS binary in a read-only dir (e.g. /usr/local/bin): $XDG_CONFIG_HOME/bp-dumper.
 func Dir() string {
 	if IsMsix() {
 		local := os.Getenv("LOCALAPPDATA")
@@ -50,5 +55,31 @@ func Dir() string {
 	if err == nil {
 		exe = resolved
 	}
-	return filepath.Dir(exe)
+	dir := filepath.Dir(exe)
+	if runtime.GOOS != "windows" && !writable(dir) {
+		return userConfigDir()
+	}
+	return dir
+}
+
+func writable(dir string) bool {
+	f, err := os.CreateTemp(dir, ".bp-dumper-write-test-*")
+	if err != nil {
+		return false
+	}
+	name := f.Name()
+	_ = f.Close()
+	_ = os.Remove(name)
+	return true
+}
+
+func userConfigDir() string {
+	base, err := os.UserConfigDir()
+	if err != nil {
+		wd, _ := os.Getwd()
+		return wd
+	}
+	dir := filepath.Join(base, "bp-dumper")
+	_ = os.MkdirAll(dir, 0o755)
+	return dir
 }

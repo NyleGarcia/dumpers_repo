@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -18,6 +20,28 @@ const (
 	DefaultReleasesURL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"
 	DefaultDownloadURL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases/latest/download/DumperApps.exe"
 )
+
+// AssetName is the GitHub Release asset for this build:
+// DumperApps.exe on Windows, DumperApps-<os>-<arch> elsewhere.
+func AssetName() string {
+	return assetName(runtime.GOOS, runtime.GOARCH)
+}
+
+func assetName(goos, goarch string) string {
+	if goos == "windows" {
+		return "DumperApps.exe"
+	}
+	return "DumperApps-" + goos + "-" + goarch
+}
+
+// PlatformDownloadURL swaps the Windows exe in a server-sent download URL
+// for this platform's asset (the webhook only knows about DumperApps.exe).
+func PlatformDownloadURL(url string) string {
+	if url == "" {
+		url = DefaultDownloadURL
+	}
+	return strings.Replace(url, "DumperApps.exe", AssetName(), 1)
+}
 
 type UpdateRequiredError struct {
 	Latest      string
